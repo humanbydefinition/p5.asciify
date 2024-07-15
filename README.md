@@ -75,7 +75,7 @@ The libraries `P5Asciify` class provides a static method `setDefaultOptions(opti
 - `invertMode` (boolean): A boolean value indicating whether the ASCII conversion should be inverted. The default value is `false`.
 
 ```javascript
-// Can be called anywhere in the sketch 
+// Can be called anywhere inside the setup() function or the draw() loop
 // (any amount of parameters can be passed)
 P5Asciify.setDefaultOptions({
     enabled: true,
