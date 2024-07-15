@@ -39,6 +39,11 @@ By default, when no font is provided by the user, [UrsaFont](https://ursafrank.i
 Similar to using [`loadFont(fontPath)`](https://p5js.org/reference/p5/loadFont/) inside the sketches [`preload()`](https://p5js.org/reference/p5/preload/) function, `loadAsciiFont(fontPath)` is used here aswell to load a custom font for the ASCII conversion. Similar to [`loadFont()`](https://p5js.org/reference/p5/loadFont/), the allowed font formats are `.ttf` and `.otf`.
 
 ```javascript
+/**
+ * A preload function is required for the library to work, 
+ * but can technically be left empty, 
+ * since calling loadAsciiFont() is not required
+ **/
 function preload() {
   loadAsciiFont('path/to/font.ttf');
 }
