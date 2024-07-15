@@ -7,7 +7,7 @@
 *Special thanks to [`@davepagurek`](https://github.com/davepagurek) for helping me learn how to create a p5.js addon library! (✿◠‿◠)*
 
 # Getting started
-Download the latest version of p5.asciify from the [Releases]() page and embed `p5.asciify.js` or `p5.asciify.min.js` in your project's HTML file after importing the [`p5.js`](https://github.com/processing/p5.js) library, but before loading your sketch file.
+Download the latest version of p5.asciify from the [Releases](https://github.com/humanbydefinition/p5.asciify/releases) page and embed `p5.asciify.js` or `p5.asciify.min.js` in your project's HTML file after importing the [`p5.js`](https://github.com/processing/p5.js) library, but before loading your sketch file.
 
 ```html
 <!-- Import the p5.js library -->
