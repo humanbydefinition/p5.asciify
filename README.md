@@ -23,9 +23,7 @@ Download the latest version of p5.asciify from the [Releases]() page and embed `
 
 *Note: The unminified version of the library is useful for debugging purposes, containing some basic error handling and warnings. In a production environment when the sketch is final, it is recommended to use the minified version.*
 
-```
 At this point, the sketch to which the library has been added should already be converted to ASCII characters! (｡◕‿‿◕｡)  
-```
 
 **Important:** As of now, this addon library requires the sketch to contain a [`preload()`](https://p5js.org/reference/p5/preload/) function to work. This is because the library needs to load the default ascii font used for the ASCII conversion before the sketch starts, if none is provided by the user. You may leave the function completely empty if you don't need to load any assets.
 
