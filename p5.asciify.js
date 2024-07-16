@@ -25,6 +25,10 @@ p5.prototype.loadAsciiFont = function (fontPath) {
 p5.prototype.registerPreloadMethod('loadAsciiFont', p5.prototype);
 
 p5.prototype.setupAsciifier = function () {
+    if (this._renderer.drawingContext instanceof CanvasRenderingContext2D) {
+        throw new P5Asciify.P5AsciifyError("setupAsciifier() | WebGL renderer is required for P5Asciify to work.");
+    }
+
     P5Asciify.framebuffer = createFramebuffer({ format: this.FLOAT });
     P5Asciify.characterset.createTexture({ fontSize: 512 });
 }
