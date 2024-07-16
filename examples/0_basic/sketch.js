@@ -9,7 +9,7 @@ function preload() {
 }
 
 function setup() {
-	createCanvas(windowWidth, windowHeight, WEBGL); // Feel free to use any renderer you like, as long as the result is drawn to the canvas
+	createCanvas(windowWidth, windowHeight, WEBGL); // WebGL mode is required currently
 
 	sketchFramebuffer = createFramebuffer({ format: FLOAT });
 
