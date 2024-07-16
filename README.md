@@ -109,8 +109,8 @@ function draw() {
 	background(0);
 	fill(255);
 
-    // Tim Rodenbroeker-esque rotating 3D box (⌐■_■)
-    // https://timrodenbroeker.de/ (no affiliation)
+    	// Tim Rodenbroeker-esque rotating 3D box (⌐■_■)
+    	// https://timrodenbroeker.de/ (no affiliation)
 	push(); 
 	rotateX(radians(frameCount * 3));
 	rotateZ(radians(frameCount));
@@ -120,11 +120,11 @@ function draw() {
 
 	sketchFramebuffer.end();
 
-    // Draw something on the main canvas for the library to pick up on
+    	// Draw something on the main canvas for the library to pick up on
 	background(0);
 	image(sketchFramebuffer, -windowWidth / 2, -windowHeight / 2);
 
-    // Update the asciify font based on any condition
+    	// Update the asciify font based on any condition
 	if (frameCount == 100) {
 		updateAsciiFont("path/to/new/font.ttf");
 	}
