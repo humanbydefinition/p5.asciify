@@ -11,10 +11,15 @@ p5.prototype.registerMethod("init", function () {
     });
 });
 
+window.preload = function() {};
+
 p5.prototype.loadAsciiFont = function (fontPath) {
-    P5Asciify.font = this.loadFont(
+    const selectedAsciiFont = this.loadFont(
         fontPath,
         () => {
+            P5Asciify.font = selectedAsciiFont;
+            P5Asciify.characterset.setFontObject(P5Asciify.font);
+            P5Asciify.grid.resizeCellDimensions(P5Asciify.characterset.maxGlyphDimensions.width, P5Asciify.characterset.maxGlyphDimensions.height);
             this._decrementPreload();
         },
         () => {
@@ -50,7 +55,7 @@ p5.prototype.updateAsciiFont = function (fontPath) {
 
 p5.prototype.asciify = function () {
     if (!P5Asciify.config.enabled) return;
-    
+
     P5Asciify.framebuffer.begin();
 
     P5Asciify.shader.setUniform('u_characterTexture', P5Asciify.characterset.texture);
@@ -246,9 +251,9 @@ class P5Asciify {
             // Calculate the number of columns and rows for the texture based on the number of characters
             this.charsetCols = Math.ceil(Math.sqrt(this.characters.length));
             this.charsetRows = Math.ceil(this.characters.length / this.charsetCols);
-    
+
             let dimensions = this.getMaxGlyphDimensions(fontSize); // Calculate the dimensions of the texture
-    
+
             // Create a 2D texture for the characters
             this.texture = createGraphics(dimensions.width * this.charsetCols, dimensions.height * this.charsetRows);
             this.texture.pixelDensity(1);
@@ -257,14 +262,14 @@ class P5Asciify {
             this.texture.textSize(fontSize);
             this.texture.textAlign(LEFT, TOP);
             this.texture.noStroke();
-    
+
             // Draw each character to to a cell/tile in the texture
             for (let i = 0; i < this.characters.length; i++) {
                 const col = i % this.charsetCols;
                 const row = Math.floor(i / this.charsetCols);
                 const x = dimensions.width * col;
                 const y = dimensions.height * row;
-    
+
                 const character = this.characters[i];
                 this.texture.text(character, x, y);
             }
