@@ -243,37 +243,31 @@ class P5Asciify {
         }
 
         createTexture({ fontSize }) {
+            // Calculate the number of columns and rows for the texture based on the number of characters
             this.charsetCols = Math.ceil(Math.sqrt(this.characters.length));
             this.charsetRows = Math.ceil(this.characters.length / this.charsetCols);
-
-            let dimensions = this.getMaxGlyphDimensions(fontSize);
-
-            if (!this.texture) {
-                this.texture = createFramebuffer({ format: FLOAT, width: dimensions.width * this.charsetCols, height: dimensions.height * this.charsetRows });
-            } else {
-                this.texture.resize(dimensions.width * this.charsetCols, dimensions.height * this.charsetRows);
-            }
-
-            this.texture.begin();
-
-            clear();
-            textFont(this.font);
-            fill(255);
-            textSize(fontSize);
-            textAlign(LEFT, TOP);
-            noStroke();
-
+    
+            let dimensions = this.getMaxGlyphDimensions(fontSize); // Calculate the dimensions of the texture
+    
+            // Create a 2D texture for the characters
+            this.texture = createGraphics(dimensions.width * this.charsetCols, dimensions.height * this.charsetRows);
+            this.texture.pixelDensity(1);
+            this.texture.textFont(this.font);
+            this.texture.fill(255);
+            this.texture.textSize(fontSize);
+            this.texture.textAlign(LEFT, TOP);
+            this.texture.noStroke();
+    
+            // Draw each character to to a cell/tile in the texture
             for (let i = 0; i < this.characters.length; i++) {
                 const col = i % this.charsetCols;
                 const row = Math.floor(i / this.charsetCols);
                 const x = dimensions.width * col;
                 const y = dimensions.height * row;
-
+    
                 const character = this.characters[i];
-                text(character, x - ((dimensions.width * this.charsetCols) / 2), y - ((dimensions.height * this.charsetRows) / 2));
+                this.texture.text(character, x, y);
             }
-
-            this.texture.end();
         }
     };
 
