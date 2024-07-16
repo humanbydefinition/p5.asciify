@@ -1,10 +1,7 @@
 let sketchFramebuffer;
 
 function preload() {
-	/**
-	 * Optionally load a custom font to use for the ASCII characters.
-	 * The preload() function is mandatory for using this library, but it can be left empty if no assets need to be loaded
-	 */
+	//Optionally load a custom font to use for the ASCII characters.
 	//loadAsciiFont('path/to/your/font.ttf');
 }
 
