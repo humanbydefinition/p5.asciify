@@ -26,10 +26,9 @@ Download the latest version of p5.asciify from the [Releases](https://github.com
 At this point, your [`p5.js`](https://github.com/processing/p5.js) canvas in [`WebGL`](https://p5js.org/reference/p5/WEBGL/) mode, to which the library has been added, should already be converted to ASCII characters!  
 (｡◕‿‿◕｡)
 
-[`P2D`](https://p5js.org/reference/p5/P2D/) rendering mode is **not** supported at the moment, but hopefully will be in the future.   ʕっ•ᴥ•ʔっ
-
 **Important:** As of now, this addon library requires the sketch to contain a [`preload()`](https://p5js.org/reference/p5/preload/) function to work. This is because the library needs to load the default ascii font used for the ASCII conversion before the sketch starts, if none is provided by the user. You may leave the function completely empty if you don't need to load any assets.
 
+[`P2D`](https://p5js.org/reference/p5/P2D/) rendering mode is **not** supported at the moment, but hopefully will be in the future.   ʕっ•ᴥ•ʔっ
 
 To customize the ASCII conversion further, the library provides functionality which is described in the following [`Usage`](#usage) section.
 
