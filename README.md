@@ -23,8 +23,6 @@ Download the latest version of p5.asciify from the [Releases](https://github.com
 <script src="sketch.js"></script>
 ```
 
-*Note: The unminified version of the library is useful for debugging purposes, containing some basic error handling and warnings. In a production environment when the sketch is final, it is recommended to use the minified version.*
-
 At this point, your [`p5.js`](https://github.com/processing/p5.js) canvas in [`WebGL`](https://p5js.org/reference/p5/WEBGL/) mode, to which the library has been added, should already be converted to ASCII characters!  
 (｡◕‿‿◕｡)
 
