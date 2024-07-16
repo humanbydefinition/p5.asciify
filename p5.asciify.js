@@ -4,7 +4,6 @@ p5.prototype.registerMethod("init", function () {
     this._incrementPreload();
 
     P5Asciify.font = this.loadFont(P5Asciify.URSAFONT_BASE64, () => {
-
         P5Asciify.characterset = new P5Asciify.CharacterSet({ font: P5Asciify.font, characters: P5Asciify.config.characters, fontSize: P5Asciify.fontSize });
         P5Asciify.grid = new P5Asciify.Grid({ cellWidth: P5Asciify.characterset.maxGlyphDimensions.width, cellHeight: P5Asciify.characterset.maxGlyphDimensions.height });
 
@@ -25,7 +24,12 @@ p5.prototype.loadAsciiFont = function (fontPath) {
 };
 p5.prototype.registerPreloadMethod('loadAsciiFont', p5.prototype);
 
-p5.prototype.registerMethod("afterSetup", p5.prototype.setupAsciifier = () => P5Asciify.setup());
+p5.prototype.setupAsciifier = function () {
+    P5Asciify.framebuffer = createFramebuffer({ format: this.FLOAT });
+    P5Asciify.characterset.createTexture({ fontSize: 512 });
+}
+
+p5.prototype.registerMethod("afterSetup", p5.prototype.setupAsciifier);
 
 p5.prototype.updateAsciiFont = function (fontPath) {
     P5Asciify.font = this.loadFont(
@@ -42,7 +46,7 @@ p5.prototype.updateAsciiFont = function (fontPath) {
 
 p5.prototype.asciify = function () {
     if (!P5Asciify.config.enabled) return;
-
+    
     P5Asciify.framebuffer.begin();
 
     P5Asciify.shader.setUniform('u_characterTexture', P5Asciify.characterset.texture);
@@ -63,6 +67,8 @@ p5.prototype.asciify = function () {
     this.quad(-1, -1, 1, -1, 1, 1, -1, 1);
 
     P5Asciify.framebuffer.end();
+
+    this.clear();
 
     this.image(P5Asciify.framebuffer, -this.windowWidth / 2, -this.windowHeight / 2);
 };
@@ -89,11 +95,6 @@ class P5Asciify {
     static font = null;
     static characterset = null;
     static grid = null;
-
-    static setup() {
-        this.framebuffer = createFramebuffer({ format: this.FLOAT });
-        this.characterset.createTexture({ fontSize: 512 });
-    }
 
     static setDefaultOptions(options) {
         const charactersUpdated = options.characters && options.characters !== this.config.characters;
@@ -187,8 +188,6 @@ class P5Asciify {
         }
     };
 
-
-
     static CharacterSet = class {
         constructor({ font, fontSize = 16, characters }) {
             this.font = font;
@@ -204,7 +203,7 @@ class P5Asciify {
 
             this.maxGlyphDimensions = this.getMaxGlyphDimensions(this.fontSize);
 
-            if(!init) {
+            if (!init) {
                 this.createTexture({ fontSize: 512 });
             }
         }
