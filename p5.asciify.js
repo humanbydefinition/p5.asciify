@@ -11,7 +11,7 @@ p5.prototype.registerMethod("init", function () {
     });
 });
 
-window.preload = function() {};
+window.preload = function () { };
 
 p5.prototype.loadAsciiFont = function (fontPath) {
     const selectedAsciiFont = this.loadFont(
@@ -32,6 +32,10 @@ p5.prototype.registerPreloadMethod('loadAsciiFont', p5.prototype);
 p5.prototype.setupAsciifier = function () {
     if (this._renderer.drawingContext instanceof CanvasRenderingContext2D) {
         throw new P5Asciify.P5AsciifyError("setupAsciifier() | WebGL renderer is required for P5Asciify to work.");
+    }
+
+    if (P5Asciify.compareP5Versions(this.VERSION, "1.7.0") < 0) {
+        throw new P5Asciify.P5AsciifyError("P5Asciify requires p5.js v1.7.0 or higher to work.");
     }
 
     P5Asciify.framebuffer = createFramebuffer({ format: this.FLOAT });
@@ -104,6 +108,21 @@ class P5Asciify {
     static font = null;
     static characterset = null;
     static grid = null;
+
+    static compareP5Versions(v1, v2) {
+        const v1Parts = v1.split('.').map(Number);
+        const v2Parts = v2.split('.').map(Number);
+
+        for (let i = 0; i < Math.max(v1Parts.length, v2Parts.length); i++) {
+            const v1Part = v1Parts[i] ?? 0;
+            const v2Part = v2Parts[i] ?? 0;
+
+            if (v1Part !== v2Part) return v1Part > v2Part ? 1 : -1;
+        }
+
+        return 0;
+    }
+
 
     static setDefaultOptions(options) {
         const charactersUpdated = options.characters && options.characters !== this.config.characters;
