@@ -1,6 +1,4 @@
 p5.prototype.registerMethod("init", function () {
-    P5Asciify.shader = this.createShader(P5Asciify.VERT_SHADER_CODE, P5Asciify.FRAG_SHADER_CODE);
-
     this._incrementPreload();
 
     P5Asciify.font = this.loadFont(P5Asciify.URSAFONT_BASE64, () => {
@@ -30,18 +28,20 @@ p5.prototype.loadAsciiFont = function (fontPath) {
 p5.prototype.registerPreloadMethod('loadAsciiFont', p5.prototype);
 
 p5.prototype.setupAsciifier = function () {
+    
     if (this._renderer.drawingContext instanceof CanvasRenderingContext2D) {
         throw new P5Asciify.P5AsciifyError("setupAsciifier() | WebGL renderer is required for P5Asciify to work.");
     }
 
-    if (P5Asciify.compareP5Versions(this.VERSION, "1.9.0") < 0) {
-        throw new P5Asciify.P5AsciifyError("P5Asciify requires p5.js v1.9.0 or higher to work.");
+    if (P5Asciify.compareP5Versions(this.VERSION, "1.7.0") < 0) {
+        throw new P5Asciify.P5AsciifyError("P5Asciify requires p5.js v1.7.0 or higher to work.");
     }
 
+    P5Asciify.shader = this.createShader(P5Asciify.VERT_SHADER_CODE, P5Asciify.FRAG_SHADER_CODE);
     P5Asciify.framebuffer = createFramebuffer({ format: this.FLOAT });
+
     P5Asciify.characterset.createTexture({ fontSize: 512 });
 }
-
 p5.prototype.registerMethod("afterSetup", p5.prototype.setupAsciifier);
 
 p5.prototype.updateAsciiFont = function (fontPath) {
@@ -61,6 +61,8 @@ p5.prototype.asciify = function () {
     if (!P5Asciify.config.enabled) return;
 
     P5Asciify.framebuffer.begin();
+  
+    this.pixelDensity(1);
 
     P5Asciify.shader.setUniform('u_characterTexture', P5Asciify.characterset.texture);
     P5Asciify.shader.setUniform('u_charsetCols', P5Asciify.characterset.charsetCols);
