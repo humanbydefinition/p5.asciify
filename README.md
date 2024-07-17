@@ -4,7 +4,7 @@
 
 `p5.asciify` is a [`p5.js`](https://github.com/processing/p5.js) addon library for converting the main [`WebGL`](https://p5js.org/reference/p5/WEBGL/) drawing canvas into a grid of ASCII characters. 
 
-To use `p5.asciify` with a [`p5.js`](https://github.com/processing/p5.js) sketch in [`WEBGL`](https://p5js.org/reference/p5/WEBGL/) mode, ensure to include [`p5.js`](https://github.com/processing/p5.js) version `v1.9.X` or later in your project.
+To use `p5.asciify` with a [`p5.js`](https://github.com/processing/p5.js) sketch in [`WEBGL`](https://p5js.org/reference/p5/WEBGL/) mode, ensure to include [`p5.js`](https://github.com/processing/p5.js) version `v1.8.0` or later in your project.
 
 To see `p5.asciify` in action, check out the example sketches in the prepared collection on the [p5.js web editor](https://editor.p5js.org/): 
 [`p5.asciify examples`](https://editor.p5js.org/humanbydefinition/collections/DUa3pcJqn).
