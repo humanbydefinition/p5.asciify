@@ -10,11 +10,8 @@ To see `p5.asciify` in action, check out the example sketches in the prepared co
 [`p5.asciify examples`](https://editor.p5js.org/humanbydefinition/collections/DUa3pcJqn).
 
 I would love to see your creations using `p5.asciify`! Feel free to tag me on social media so I can enjoy and share your amazing work too. (ﾉ◕ヮ◕)ﾉ*:・ﾟ✧ 
- 
+
 [![Instagram](https://img.shields.io/badge/Instagram-lightgrey?style=social&logo=instagram)](https://www.instagram.com/humanbydefinition/)
-
-
-
 
 *Special thanks to [`@davepagurek`](https://github.com/davepagurek) for helping me learn how to create a p5.js addon library! (✿◠‿◠)*
 
@@ -28,6 +25,14 @@ Download the latest version of p5.asciify from the [Releases](https://github.com
 <!-- Import the p5.asciify library -->
 <!-- <script src="p5.asciify.js"></script> -->
 <script src="p5.asciify.min.js"></script>
+
+<!-- 
+ Alternatively, import p5.asciify directly from a CDN
+
+ script src="https://cdn.jsdelivr.net/npm/p5.asciify@0.0.1/p5.asciify.js></script>
+ or 
+ <script src="https://cdn.jsdelivr.net/npm/p5.asciify@0.0.1/p5.asciify.min.js"></script>
+ -->
 
 <!-- Load your sketch file -->
 <script src="sketch.js"></script>
