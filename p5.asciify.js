@@ -33,8 +33,8 @@ p5.prototype.setupAsciifier = function () {
         throw new P5Asciify.P5AsciifyError("setupAsciifier() | WebGL renderer is required for P5Asciify to work.");
     }
 
-    if (P5Asciify.compareP5Versions(this.VERSION, "1.7.0") < 0) {
-        throw new P5Asciify.P5AsciifyError("P5Asciify requires p5.js v1.7.0 or higher to work.");
+    if (P5Asciify.compareP5Versions(this.VERSION, "1.8.0") < 0) {
+        throw new P5Asciify.P5AsciifyError("P5Asciify requires p5.js v1.8.0 or higher to work.");
     }
 
     P5Asciify.shader = this.createShader(P5Asciify.VERT_SHADER_CODE, P5Asciify.FRAG_SHADER_CODE);
