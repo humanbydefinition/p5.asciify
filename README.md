@@ -4,7 +4,7 @@
 
 `p5.asciify` is a [`p5.js`](https://github.com/processing/p5.js) addon library for converting the main [`WebGL`](https://p5js.org/reference/p5/WEBGL/) drawing canvas into a grid of ASCII characters. 
 
-To use `p5.asciify` with a [`p5.js`](https://github.com/processing/p5.js) sketch in [`WEBGL`](https://p5js.org/reference/p5/WEBGL/) mode, ensure to include [`p5.js`](https://github.com/processing/p5.js) version [`v1.7.0`](https://github.com/processing/p5.js/releases/tag/v1.7.0) or later in your project, as it relies on the [`createFramebuffer()`](https://p5js.org/reference/#/p5/createFramebuffer) function.
+To use `p5.asciify` with a [`p5.js`](https://github.com/processing/p5.js) sketch in [`WEBGL`](https://p5js.org/reference/p5/WEBGL/) mode, ensure to include [`p5.js`](https://github.com/processing/p5.js) version `v1.9.X` or later in your project.
 
 To see `p5.asciify` in action, check out the example sketches in the prepared collection on the [p5.js web editor](https://editor.p5js.org/): 
 [`p5.asciify examples`](https://editor.p5js.org/humanbydefinition/collections/DUa3pcJqn).
@@ -19,10 +19,10 @@ I would love to see your creations using `p5.asciify`! Feel free to tag me on so
 Download the latest version of p5.asciify from the [Releases](https://github.com/humanbydefinition/p5.asciify/releases) page and embed `p5.asciify.js` or `p5.asciify.min.js` in your project's HTML file after importing the [`p5.js`](https://github.com/processing/p5.js) library, but before loading your sketch file.
 
 ```html
-<!-- Import the p5.js library -->
+<!-- Import p5.js -->
 <script src="p5.min.js"></script> 
 
-<!-- Import the p5.asciify library -->
+<!-- Import p5.asciify -->
 <!-- <script src="p5.asciify.js"></script> -->
 <script src="p5.asciify.min.js"></script>
 
@@ -34,7 +34,7 @@ Download the latest version of p5.asciify from the [Releases](https://github.com
  <script src="https://cdn.jsdelivr.net/npm/p5.asciify@0.0.1/p5.asciify.min.js"></script>
  -->
 
-<!-- Load your sketch file -->
+<!-- Load your sketch -->
 <script src="sketch.js"></script>
 ```
 
