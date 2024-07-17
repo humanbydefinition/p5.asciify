@@ -1,0 +1,40 @@
+{
+  "name": "p5.asciify",
+  "version": "0.0.1",
+  "description": "Apply real-time ASCII conversion to your favourite p5.js sketches instantly.",
+  "main": "p5.asciify.js",
+  "directories": {
+    "example": "examples"
+  },
+  "dependencies": {
+    "p5": ">=1.7.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/humanbydefinition/p5-asciify.git"
+  },
+  "keywords": [
+    "p5-library",
+    "p5js",
+    "ascii",
+    "javascript",
+    "webgl",
+    "glsl"
+  ],
+  "author": "humanbydefinition",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/humanbydefinition/p5-asciify/issues"
+  },
+  "homepage": "https://github.com/humanbydefinition/p5-asciify#readme",
+  "files": [
+    "p5.asciify.js",
+    "p5.asciify.min.js",
+    "README.md",
+    "LICENSE"
+  ]
+}
