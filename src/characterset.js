@@ -43,6 +43,20 @@ class P5AsciifyCharacterSet {
         this.createTexture({ fontSize: 512 });
     }
 
+    getUnsupportedCharacters(characters) {
+        const badCharacters = new Set();
+    
+        for (const char of characters) {
+            const charCode = char.codePointAt(0);
+            const existsInFont = this.glyphs.some(glyph => glyph.unicodes.includes(charCode));
+            if (!existsInFont) {
+                badCharacters.add(char);
+            }
+        }
+    
+        return Array.from(badCharacters);
+    }
+
     setFontSize(fontSize) {
         this.fontSize = fontSize;
         this.maxGlyphDimensions = this.getMaxGlyphDimensions(this.fontSize);
