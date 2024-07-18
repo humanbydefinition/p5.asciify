@@ -13,11 +13,23 @@ class P5Asciify {
     };
 
     static shader = null;
+
     static framebuffer = null;
+    static bufferDimensions = { width: 0, height: 0 };
 
     static font = null;
     static characterset = null;
     static grid = null;
+
+    static checkFramebufferDimensions() {
+        // If the buffer dimensions do not match with the actual framebuffer dimensions, update the buffer dimensions
+        if (this.bufferDimensions.width !== this.framebuffer.width || this.bufferDimensions.height !== this.framebuffer.height) {
+            this.bufferDimensions.width = this.framebuffer.width;
+            this.bufferDimensions.height = this.framebuffer.height;
+
+            this.grid.reset();
+        }
+    }
 
     static setDefaultOptions(options) {
         const charactersUpdated = options.characters && options.characters !== this.config.characters;

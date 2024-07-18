@@ -54,6 +54,8 @@ p5.prototype.setupAsciifier = function () {
     P5Asciify.shader = this.createShader(P5AsciifyConstants.VERT_SHADER_CODE, P5AsciifyConstants.FRAG_SHADER_CODE);
     P5Asciify.framebuffer = createFramebuffer({ format: this.FLOAT });
 
+    P5Asciify.bufferDimensions = { width: P5Asciify.framebuffer.width, height: P5Asciify.framebuffer.height };
+
     P5Asciify.characterset.createTexture({ fontSize: 512 });
 }
 p5.prototype.registerMethod("afterSetup", p5.prototype.setupAsciifier);
@@ -106,10 +108,8 @@ p5.prototype.asciify = function () {
     P5Asciify.framebuffer.end();
 
     this.clear();
-
     this.image(P5Asciify.framebuffer, -this.windowWidth / 2, -this.windowHeight / 2);
+
+    P5Asciify.checkFramebufferDimensions();
 };
 p5.prototype.registerMethod("post", p5.prototype.asciify);
-
-p5.prototype.handleWindowResize = () => P5Asciify.grid.reset();
-window.addEventListener('resize', function () { p5.instance.handleWindowResize(); });
