@@ -47,11 +47,17 @@ class P5Asciify {
             delete newConfig.fontSize;
         }
 
-        this.config = newConfig;
-
         if (charactersUpdated) {
-            this.characterset.setCharacterSet(this.config.characters);
+            const badCharacters = this.characterset.getUnsupportedCharacters(options.characters);
+            if (badCharacters.length === 0) {
+                newConfig.characters = options.characters;
+                this.characterset.setCharacterSet(options.characters);
+            } else {
+                console.warn(`P5Asciify: The following characters are not supported by the current font: [${Array.from(badCharacters).join(', ')}]. Character set not updated.`);
+            }
         }
+
+        this.config = newConfig;
 
         if (fontSizeUpdated) {
             this.characterset.setFontSize(this.config.fontSize);
