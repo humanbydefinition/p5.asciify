@@ -22,7 +22,6 @@ class P5Asciify {
     static grid = null;
 
     static checkFramebufferDimensions() {
-        // If the buffer dimensions do not match with the actual framebuffer dimensions, update the buffer dimensions
         if (this.bufferDimensions.width !== this.framebuffer.width || this.bufferDimensions.height !== this.framebuffer.height) {
             this.bufferDimensions.width = this.framebuffer.width;
             this.bufferDimensions.height = this.framebuffer.height;
