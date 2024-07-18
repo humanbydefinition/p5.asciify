@@ -51,10 +51,16 @@ p5.prototype.setupAsciifier = function () {
         throw new P5AsciifyError("P5Asciify requires p5.js v1.8.0 or higher to work.");
     }
 
-    P5Asciify.shader = this.createShader(P5AsciifyConstants.VERT_SHADER_CODE, P5AsciifyConstants.FRAG_SHADER_CODE);
-    P5Asciify.framebuffer = createFramebuffer({ format: this.FLOAT });
+    P5Asciify.sobelShader = this.createShader(P5AsciifyConstants.VERT_SHADER_CODE, P5AsciifyConstants.SOBEL_FRAG_SHADER_CODE);
+    P5Asciify.sobelFramebuffer = createFramebuffer({ format: this.FLOAT });
 
-    P5Asciify.bufferDimensions = { width: P5Asciify.framebuffer.width, height: P5Asciify.framebuffer.height };
+    P5Asciify.sampleShader = this.createShader(P5AsciifyConstants.VERT_SHADER_CODE, P5AsciifyConstants.SAMPLE_FRAG_SHADER_CODE);
+    P5Asciify.sampleFramebuffer = createFramebuffer({ format: this.FLOAT, width: P5Asciify.grid.cols, height: P5Asciify.grid.rows });
+
+    P5Asciify.asciiShader = this.createShader(P5AsciifyConstants.VERT_SHADER_CODE, P5AsciifyConstants.ASCII_FRAG_SHADER_CODE);
+    P5Asciify.asciiFramebuffer = createFramebuffer({ format: this.FLOAT });
+
+    P5Asciify.asciiFramebufferDimensions = { width: P5Asciify.asciiFramebuffer.width, height: P5Asciify.asciiFramebuffer.height };
 
     P5Asciify.characterset.createTexture({ fontSize: 512 });
 }
@@ -84,31 +90,79 @@ p5.prototype.updateAsciiFont = function (fontPath) {
 p5.prototype.asciify = function () {
     if (!P5Asciify.config.enabled) return;
 
-    P5Asciify.framebuffer.begin();
-
     this.pixelDensity(1);
 
-    P5Asciify.shader.setUniform('u_characterTexture', P5Asciify.characterset.texture);
-    P5Asciify.shader.setUniform('u_charsetCols', P5Asciify.characterset.charsetCols);
-    P5Asciify.shader.setUniform('u_charsetRows', P5Asciify.characterset.charsetRows);
-    P5Asciify.shader.setUniform('u_totalChars', P5Asciify.characterset.characters.length);
-    P5Asciify.shader.setUniform('u_sketchTexture', this._renderer);
-    P5Asciify.shader.setUniform('u_gridPixelDimensions', [P5Asciify.grid.width, P5Asciify.grid.height]);
-    P5Asciify.shader.setUniform('u_gridOffsetDimensions', [P5Asciify.grid.offsetX, P5Asciify.grid.offsetY]);
-    P5Asciify.shader.setUniform('u_gridCellDimensions', [P5Asciify.grid.cols, P5Asciify.grid.rows]);
-    P5Asciify.shader.setUniform('u_characterColor', P5Asciify.config.characterColor);
-    P5Asciify.shader.setUniform('u_characterColorMode', P5Asciify.config.characterColorMode);
-    P5Asciify.shader.setUniform('u_backgroundColor', P5Asciify.config.backgroundColor);
-    P5Asciify.shader.setUniform('u_backgroundColorMode', P5Asciify.config.backgroundColorMode);
-    P5Asciify.shader.setUniform('u_invertMode', P5Asciify.config.invertMode);
+    P5Asciify.sobelFramebuffer.begin();
 
-    this.shader(P5Asciify.shader);
+    this.shader(P5Asciify.sobelShader);
+    P5Asciify.sobelShader.setUniform('u_texture', this._renderer);
+    P5Asciify.sobelShader.setUniform('u_textureSize', [this.windowWidth, this.windowHeight]);
+    P5Asciify.sobelShader.setUniform('u_threshold', 0.5);
+
+    this.rect(0, 0, this.windowWidth, this.windowHeight);
+
+    P5Asciify.sobelFramebuffer.end();
+    
+
+    P5Asciify.sampleFramebuffer.begin();
+
+    this.shader(P5Asciify.sampleShader);
+    P5Asciify.sampleShader.setUniform('u_image' , P5Asciify.sobelFramebuffer);
+    P5Asciify.sampleShader.setUniform('u_gridCellDimensions', [P5Asciify.grid.cols, P5Asciify.grid.rows]);
+    P5Asciify.sampleShader.setUniform('u_threshold', 1);
+
+    
+    this.rect(0, 0, this.windowWidth, this.windowHeight);
+
+    P5Asciify.sampleFramebuffer.end();
+
+
+    P5Asciify.asciiFramebuffer.begin();
+
+    this.shader(P5Asciify.asciiShader);
+    P5Asciify.asciiShader.setUniform('u_characterTexture', P5Asciify.characterset.texture);
+    P5Asciify.asciiShader.setUniform('u_charsetCols', P5Asciify.characterset.charsetCols);
+    P5Asciify.asciiShader.setUniform('u_charsetRows', P5Asciify.characterset.charsetRows);
+    P5Asciify.asciiShader.setUniform('u_totalChars', P5Asciify.characterset.characters.length);
+    P5Asciify.asciiShader.setUniform('u_sketchTexture', this._renderer);
+    P5Asciify.asciiShader.setUniform('u_gridPixelDimensions', [P5Asciify.grid.width, P5Asciify.grid.height]);
+    P5Asciify.asciiShader.setUniform('u_gridOffsetDimensions', [P5Asciify.grid.offsetX, P5Asciify.grid.offsetY]);
+    P5Asciify.asciiShader.setUniform('u_gridCellDimensions', [P5Asciify.grid.cols, P5Asciify.grid.rows]);
+    P5Asciify.asciiShader.setUniform('u_characterColor', P5Asciify.config.characterColor);
+    P5Asciify.asciiShader.setUniform('u_characterColorMode', P5Asciify.config.characterColorMode);
+    P5Asciify.asciiShader.setUniform('u_backgroundColor', P5Asciify.config.backgroundColor);
+    P5Asciify.asciiShader.setUniform('u_backgroundColorMode', P5Asciify.config.backgroundColorMode);
+    P5Asciify.asciiShader.setUniform('u_invertMode', P5Asciify.config.invertMode);
+    P5Asciify.asciiShader.setUniform('u_renderMode', 0);
     this.quad(-1, -1, 1, -1, 1, 1, -1, 1);
 
-    P5Asciify.framebuffer.end();
+    P5Asciify.asciiFramebuffer.end();
+
+    P5Asciify.asciiFramebuffer.begin();
+
+    shader(P5Asciify.asciiShader);
+	P5Asciify.asciiShader.setUniform('u_characterTexture', P5Asciify.characterset.texture);
+    P5Asciify.asciiShader.setUniform('u_charsetCols', P5Asciify.characterset.charsetCols);
+    P5Asciify.asciiShader.setUniform('u_charsetRows', P5Asciify.characterset.charsetRows);
+    P5Asciify.asciiShader.setUniform('u_totalChars', P5Asciify.characterset.characters.length);
+	P5Asciify.asciiShader.setUniform('u_edgesTexture', P5Asciify.sampleFramebuffer); // Used for detecting the edges to apply the edge characters to
+	P5Asciify.asciiShader.setUniform('u_sketchTexture', this._renderer); // Used for coloring the edge characters
+	P5Asciify.asciiShader.setUniform('u_asciiBrightnessTexture', P5Asciify.asciiFramebuffer); // If no edge is present, apply the pixel from the brightness ascii buffer
+	P5Asciify.asciiShader.setUniform('u_gridPixelDimensions', [P5Asciify.grid.width, P5Asciify.grid.height]);
+    P5Asciify.asciiShader.setUniform('u_gridOffsetDimensions', [P5Asciify.grid.offsetX, P5Asciify.grid.offsetY]);
+    P5Asciify.asciiShader.setUniform('u_gridCellDimensions', [P5Asciify.grid.cols, P5Asciify.grid.rows]);
+    P5Asciify.asciiShader.setUniform('u_characterColor', [1.0, 0.0, 0.0]);
+    P5Asciify.asciiShader.setUniform('u_characterColorMode', 1);
+    P5Asciify.asciiShader.setUniform('u_backgroundColor', P5Asciify.config.backgroundColor);
+    P5Asciify.asciiShader.setUniform('u_backgroundColorMode', P5Asciify.config.backgroundColorMode);
+    P5Asciify.asciiShader.setUniform('u_invertMode', P5Asciify.config.invertMode);
+	P5Asciify.asciiShader.setUniform('u_renderMode', 1); // 0: render ascii brightness, 1: render ascii edges
+	rect(0, 0, windowWidth, windowHeight);
+
+    P5Asciify.asciiFramebuffer.end();
 
     this.clear();
-    this.image(P5Asciify.framebuffer, -this.windowWidth / 2, -this.windowHeight / 2);
+    this.image(P5Asciify.asciiFramebuffer, -this.windowWidth / 2, -this.windowHeight / 2);
 
     P5Asciify.checkFramebufferDimensions();
 };

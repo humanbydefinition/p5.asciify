@@ -12,21 +12,28 @@ class P5Asciify {
         invertMode: false
     };
 
-    static shader = null;
+    static sobelShader = null;
+    static sampleShader = null;
+    static asciiShader = null;
 
-    static framebuffer = null;
-    static bufferDimensions = { width: 0, height: 0 };
+    static sobelFramebuffer = null;
+    static sampleFramebuffer = null;
+    static asciiFramebuffer = null;
+
+    static asciiFramebufferDimensions = { width: 0, height: 0 };
 
     static font = null;
     static characterset = null;
     static grid = null;
 
     static checkFramebufferDimensions() {
-        if (this.bufferDimensions.width !== this.framebuffer.width || this.bufferDimensions.height !== this.framebuffer.height) {
-            this.bufferDimensions.width = this.framebuffer.width;
-            this.bufferDimensions.height = this.framebuffer.height;
+        if (this.asciiFramebufferDimensions.width !== this.asciiFramebuffer.width || this.asciiFramebufferDimensions.height !== this.asciiFramebuffer.height) {
+            this.asciiFramebufferDimensions.width = this.asciiFramebuffer.width;
+            this.asciiFramebufferDimensions.height = this.asciiFramebuffer.height;
 
             this.grid.reset();
+
+            this.sampleFramebuffer.resize(this.grid.cols, this.grid.rows);
         }
     }
 
