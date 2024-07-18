@@ -13,12 +13,12 @@ function setup() {
 	P5Asciify.setDefaultOptions({ // These are the default options, you can change them as needed in setup() or draw()
 		enabled: true,
 		characters: ' .:-=+*#%@',
-		fontSize: 32,
+		fontSize: 16,
 		characterColor: "#ff0000",
 		characterColorMode: 0,
 		backgroundColor: "#000000",
 		backgroundColorMode: 1,
-		invertMode: true,
+		invertMode: false,
 	});
 }
 
