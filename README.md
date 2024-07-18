@@ -29,7 +29,7 @@ Download the latest version of p5.asciify from the [Releases](https://github.com
 <!-- 
  Alternatively, import p5.asciify directly from a CDN
 
- script src="https://cdn.jsdelivr.net/npm/p5.asciify@0.0.2/p5.asciify.js></script>
+ <script src="https://cdn.jsdelivr.net/npm/p5.asciify@0.0.2/p5.asciify.js></script>
  or 
  <script src="https://cdn.jsdelivr.net/npm/p5.asciify@0.0.2/p5.asciify.min.js"></script>
  -->
