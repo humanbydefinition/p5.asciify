@@ -4,38 +4,30 @@
  * This function is registered as a method to be called during the initialization phase of p5.js.
  */
 p5.prototype.registerMethod("init", function () {
-    this._incrementPreload();
-
     this.width = this.windowWidth;
     this.height = this.windowHeight;
-
-    P5Asciify.font = this.loadFont(P5AsciifyConstants.URSAFONT_BASE64, () => {
-
-        P5Asciify.characterset = new P5AsciifyCharacterSet({ font: P5Asciify.font, characters: P5Asciify.config.characters, fontSize: P5Asciify.fontSize });
-        P5Asciify.grid = new P5AsciifyGrid({ cellWidth: P5Asciify.characterset.maxGlyphDimensions.width, cellHeight: P5Asciify.characterset.maxGlyphDimensions.height });
-
-        this._decrementPreload();
-    });
 });
 
 window.preload = function () { }; // In case the user doesn't define a preload function, we need to define it here to avoid errors
+
+/**
+ * Preloads the default ASCII font for P5Asciify.
+ * This function is registered as a method to be called before the preload phase of p5.js.
+ */
+p5.prototype.preloadAsciiFont = function () {
+    this._incrementPreload();
+    this.loadAsciiFont(P5AsciifyConstants.URSAFONT_BASE64);
+}
+p5.prototype.registerMethod("beforePreload", p5.prototype.preloadAsciiFont);
 
 /**
  * Loads an ASCII font and sets it as the current font for P5Asciify.
  * @param {string} fontPath - The path to the ASCII font file.
  */
 p5.prototype.loadAsciiFont = function (fontPath) {
-    const selectedAsciiFont = this.loadFont(
-        fontPath,
-        () => {
-            P5Asciify.font = selectedAsciiFont;
-            P5Asciify.characterset.setFontObject(P5Asciify.font);
-            P5Asciify.grid.resizeCellDimensions(P5Asciify.characterset.maxGlyphDimensions.width, P5Asciify.characterset.maxGlyphDimensions.height);
-            this._decrementPreload();
-        },
-        () => {
-            throw new P5AsciifyError(`loadAsciiFont() | Failed to load font from path: '${fontPath}'`);
-        }
+    P5Asciify.font = this.loadFont(fontPath,
+        () => { this._decrementPreload(); },
+        () => { throw new P5AsciifyError(`loadAsciiFont() | Failed to load font from path: '${fontPath}'`); }
     );
 };
 p5.prototype.registerPreloadMethod('loadAsciiFont', p5.prototype);
@@ -54,6 +46,9 @@ p5.prototype.setupAsciifier = function () {
         throw new P5AsciifyError("P5Asciify requires p5.js v1.8.0 or higher to work.");
     }
 
+    P5Asciify.characterset = new P5AsciifyCharacterSet({ font: P5Asciify.font, characters: P5Asciify.config.characters, fontSize: P5Asciify.config.fontSize });
+    P5Asciify.grid = new P5AsciifyGrid({ cellWidth: P5Asciify.characterset.maxGlyphDimensions.width, cellHeight: P5Asciify.characterset.maxGlyphDimensions.height });
+
     P5Asciify.sobelShader = this.createShader(P5AsciifyConstants.VERT_SHADER_CODE, P5AsciifyConstants.SOBEL_FRAG_SHADER_CODE);
     P5Asciify.sobelFramebuffer = createFramebuffer({ format: this.FLOAT });
 
@@ -68,9 +63,6 @@ p5.prototype.setupAsciifier = function () {
     P5Asciify.characterset.createTexture({ fontSize: 512 });
 
     this.pixelDensity(1);
-    
-    P5Asciify.grid.reset();
-    P5Asciify.sampleFramebuffer.resize(P5Asciify.grid.cols, P5Asciify.grid.rows);
 }
 p5.prototype.registerMethod("afterSetup", p5.prototype.setupAsciifier);
 
@@ -91,10 +83,11 @@ p5.prototype.updateAsciiFont = function (fontPath) {
     );
 };
 
-p5.prototype.addPush = function () {
-    this.push();
-};
-p5.prototype.registerMethod("pre", p5.prototype.addPush);
+p5.prototype.preDrawAddPush = function () { this.push(); };
+p5.prototype.registerMethod("pre", p5.prototype.preDrawAddPush);
+
+p5.prototype.postDrawAddPop = function () { this.pop(); };
+p5.prototype.registerMethod("post", p5.prototype.postDrawAddPop);
 
 /**
  * Renders the ASCII representation of the current sketch.
@@ -102,9 +95,9 @@ p5.prototype.registerMethod("pre", p5.prototype.addPush);
  */
 p5.prototype.asciify = function () {
 
-    this.pop();
-
     if (!P5Asciify.config.enabled) return;
+
+    /**
 
     P5Asciify.sobelFramebuffer.begin();
 
@@ -129,6 +122,8 @@ p5.prototype.asciify = function () {
     this.rect(0, 0, this.width, this.height);
 
     P5Asciify.sampleFramebuffer.end();
+
+    **/
 
 
     P5Asciify.asciiFramebuffer.begin();
@@ -155,14 +150,14 @@ p5.prototype.asciify = function () {
     P5Asciify.asciiFramebuffer.begin();
 
     shader(P5Asciify.asciiShader);
-	P5Asciify.asciiShader.setUniform('u_characterTexture', P5Asciify.characterset.texture);
+    P5Asciify.asciiShader.setUniform('u_characterTexture', P5Asciify.characterset.texture);
     P5Asciify.asciiShader.setUniform('u_charsetCols', P5Asciify.characterset.charsetCols);
     P5Asciify.asciiShader.setUniform('u_charsetRows', P5Asciify.characterset.charsetRows);
     P5Asciify.asciiShader.setUniform('u_totalChars', P5Asciify.characterset.characters.length);
-	P5Asciify.asciiShader.setUniform('u_edgesTexture', P5Asciify.sampleFramebuffer); // Used for detecting the edges to apply the edge characters to
-	P5Asciify.asciiShader.setUniform('u_sketchTexture', this._renderer); // Used for coloring the edge characters
-	P5Asciify.asciiShader.setUniform('u_asciiBrightnessTexture', P5Asciify.asciiFramebuffer); // If no edge is present, apply the pixel from the brightness ascii buffer
-	P5Asciify.asciiShader.setUniform('u_gridPixelDimensions', [P5Asciify.grid.width, P5Asciify.grid.height]);
+    P5Asciify.asciiShader.setUniform('u_edgesTexture', P5Asciify.sampleFramebuffer); // Used for detecting the edges to apply the edge characters to
+    P5Asciify.asciiShader.setUniform('u_sketchTexture', this._renderer); // Used for coloring the edge characters
+    P5Asciify.asciiShader.setUniform('u_asciiBrightnessTexture', P5Asciify.asciiFramebuffer); // If no edge is present, apply the pixel from the brightness ascii buffer
+    P5Asciify.asciiShader.setUniform('u_gridPixelDimensions', [P5Asciify.grid.width, P5Asciify.grid.height]);
     P5Asciify.asciiShader.setUniform('u_gridOffsetDimensions', [P5Asciify.grid.offsetX, P5Asciify.grid.offsetY]);
     P5Asciify.asciiShader.setUniform('u_gridCellDimensions', [P5Asciify.grid.cols, P5Asciify.grid.rows]);
     P5Asciify.asciiShader.setUniform('u_characterColor', [1.0, 0.0, 0.0]);
@@ -170,8 +165,8 @@ p5.prototype.asciify = function () {
     P5Asciify.asciiShader.setUniform('u_backgroundColor', P5Asciify.config.backgroundColor);
     P5Asciify.asciiShader.setUniform('u_backgroundColorMode', P5Asciify.config.backgroundColorMode);
     P5Asciify.asciiShader.setUniform('u_invertMode', P5Asciify.config.invertMode);
-	P5Asciify.asciiShader.setUniform('u_renderMode', 1); // 0: render ascii brightness, 1: render ascii edges
-	rect(0, 0, this.width, this.height);
+    P5Asciify.asciiShader.setUniform('u_renderMode', 1); // 0: render ascii brightness, 1: render ascii edges
+    rect(0, 0, this.width, this.height);
 
     P5Asciify.asciiFramebuffer.end();
 
