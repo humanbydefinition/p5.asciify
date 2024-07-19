@@ -18,13 +18,13 @@ class P5AsciifyGrid {
         this.width = this.cols * this.cellWidth;
         this.height = this.rows * this.cellHeight;
 
-        this.offsetX = Math.floor((windowWidth - this.width) / 2);
-        this.offsetY = Math.floor((windowHeight - this.height) / 2);
+        this.offsetX = Math.floor((width - this.width) / 2);
+        this.offsetY = Math.floor((height - this.height) / 2);
     }
 
     _calculateGridCellDimensions() {
-        const cellsX = Math.floor(windowWidth / this.cellWidth);
-        const cellsY = Math.floor(windowHeight / this.cellHeight);
+        const cellsX = Math.floor(width / this.cellWidth);
+        const cellsY = Math.floor(height / this.cellHeight);
         return [cellsX, cellsY];
     }
 

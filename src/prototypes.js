@@ -6,6 +6,9 @@
 p5.prototype.registerMethod("init", function () {
     this._incrementPreload();
 
+    this.width = this.windowWidth;
+    this.height = this.windowHeight;
+
     P5Asciify.font = this.loadFont(P5AsciifyConstants.URSAFONT_BASE64, () => {
 
         P5Asciify.characterset = new P5AsciifyCharacterSet({ font: P5Asciify.font, characters: P5Asciify.config.characters, fontSize: P5Asciify.fontSize });
@@ -15,7 +18,7 @@ p5.prototype.registerMethod("init", function () {
     });
 });
 
-window.preload = function () { };
+window.preload = function () { }; // In case the user doesn't define a preload function, we need to define it here to avoid errors
 
 /**
  * Loads an ASCII font and sets it as the current font for P5Asciify.
@@ -63,6 +66,11 @@ p5.prototype.setupAsciifier = function () {
     P5Asciify.asciiFramebufferDimensions = { width: P5Asciify.asciiFramebuffer.width, height: P5Asciify.asciiFramebuffer.height };
 
     P5Asciify.characterset.createTexture({ fontSize: 512 });
+
+    this.pixelDensity(1);
+    
+    P5Asciify.grid.reset();
+    P5Asciify.sampleFramebuffer.resize(P5Asciify.grid.cols, P5Asciify.grid.rows);
 }
 p5.prototype.registerMethod("afterSetup", p5.prototype.setupAsciifier);
 
@@ -83,23 +91,29 @@ p5.prototype.updateAsciiFont = function (fontPath) {
     );
 };
 
+p5.prototype.addPush = function () {
+    this.push();
+};
+p5.prototype.registerMethod("pre", p5.prototype.addPush);
+
 /**
  * Renders the ASCII representation of the current sketch.
  * This function is registered as a method to be called after the draw phase of p5.js.
  */
 p5.prototype.asciify = function () {
-    if (!P5Asciify.config.enabled) return;
 
-    this.pixelDensity(1);
+    this.pop();
+
+    if (!P5Asciify.config.enabled) return;
 
     P5Asciify.sobelFramebuffer.begin();
 
     this.shader(P5Asciify.sobelShader);
     P5Asciify.sobelShader.setUniform('u_texture', this._renderer);
-    P5Asciify.sobelShader.setUniform('u_textureSize', [this.windowWidth, this.windowHeight]);
+    P5Asciify.sobelShader.setUniform('u_textureSize', [this.width, this.height]);
     P5Asciify.sobelShader.setUniform('u_threshold', 0.5);
 
-    this.rect(0, 0, this.windowWidth, this.windowHeight);
+    this.rect(0, 0, this.width, this.height);
 
     P5Asciify.sobelFramebuffer.end();
     
@@ -112,7 +126,7 @@ p5.prototype.asciify = function () {
     P5Asciify.sampleShader.setUniform('u_threshold', 1);
 
     
-    this.rect(0, 0, this.windowWidth, this.windowHeight);
+    this.rect(0, 0, this.width, this.height);
 
     P5Asciify.sampleFramebuffer.end();
 
@@ -134,7 +148,7 @@ p5.prototype.asciify = function () {
     P5Asciify.asciiShader.setUniform('u_backgroundColorMode', P5Asciify.config.backgroundColorMode);
     P5Asciify.asciiShader.setUniform('u_invertMode', P5Asciify.config.invertMode);
     P5Asciify.asciiShader.setUniform('u_renderMode', 0);
-    this.quad(-1, -1, 1, -1, 1, 1, -1, 1);
+    this.rect(0, 0, this.width, this.height);
 
     P5Asciify.asciiFramebuffer.end();
 
@@ -157,12 +171,12 @@ p5.prototype.asciify = function () {
     P5Asciify.asciiShader.setUniform('u_backgroundColorMode', P5Asciify.config.backgroundColorMode);
     P5Asciify.asciiShader.setUniform('u_invertMode', P5Asciify.config.invertMode);
 	P5Asciify.asciiShader.setUniform('u_renderMode', 1); // 0: render ascii brightness, 1: render ascii edges
-	rect(0, 0, windowWidth, windowHeight);
+	rect(0, 0, this.width, this.height);
 
     P5Asciify.asciiFramebuffer.end();
 
     this.clear();
-    this.image(P5Asciify.asciiFramebuffer, -this.windowWidth / 2, -this.windowHeight / 2);
+    this.image(P5Asciify.asciiFramebuffer, -this.width / 2, -this.height / 2);
 
     P5Asciify.checkFramebufferDimensions();
 };
