@@ -12,14 +12,8 @@ class P5Asciify {
         invertMode: false
     };
 
-    static sobelShader = null;
-    static sampleShader = null;
     static asciiShader = null;
-
-    static sobelFramebuffer = null;
-    static sampleFramebuffer = null;
     static asciiFramebuffer = null;
-
     static asciiFramebufferDimensions = { width: 0, height: 0 };
 
     static font = null;
@@ -72,4 +66,3 @@ class P5Asciify {
         }
     }
 }
-
