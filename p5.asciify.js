@@ -144,8 +144,6 @@ class P5Asciify {
         const charactersUpdated = options.characters && options.characters !== this.config.characters;
         const fontSizeUpdated = options.fontSize && options.fontSize !== this.config.fontSize;
 
-        console.log(frameCount);
-
         if (options.characterColor) {
             options.characterColor = P5AsciifyUtils.hexToShaderColor(options.characterColor);
         }
