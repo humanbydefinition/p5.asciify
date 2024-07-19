@@ -39,6 +39,7 @@ p5.prototype.setupAsciifier = function () {
     P5Asciify.characterset = new P5AsciifyCharacterSet({ font: P5Asciify.font, characters: P5Asciify.config.characters, fontSize: P5Asciify.config.fontSize });
     P5Asciify.grid = new P5AsciifyGrid({ cellWidth: P5Asciify.characterset.maxGlyphDimensions.width, cellHeight: P5Asciify.characterset.maxGlyphDimensions.height });
 
+
     P5Asciify.asciiShader = this.createShader(P5AsciifyConstants.VERT_SHADER_CODE, P5AsciifyConstants.ASCII_FRAG_SHADER_CODE);
     P5Asciify.asciiFramebuffer = createFramebuffer({ format: this.FLOAT });
 
