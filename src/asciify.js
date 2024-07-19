@@ -48,6 +48,11 @@ class P5Asciify {
             delete newConfig.fontSize;
         }
 
+        if (frameCount == 0) { // If we are still in setup(), the characterset and grid have not been initialized yet
+            this.config = newConfig;
+            return;   
+        }
+
         if (charactersUpdated) {
             const badCharacters = this.characterset.getUnsupportedCharacters(options.characters);
             if (badCharacters.length === 0) {
