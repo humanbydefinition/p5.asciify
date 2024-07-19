@@ -16,6 +16,7 @@ class P5Asciify {
     static asciiFramebuffer = null;
     static asciiFramebufferDimensions = { width: 0, height: 0 };
 
+    static font = null;
     static characterset = null;
     static grid = null;
 
