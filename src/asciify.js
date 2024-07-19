@@ -26,8 +26,6 @@ class P5Asciify {
             this.asciiFramebufferDimensions.height = this.asciiFramebuffer.height;
 
             this.grid.reset();
-
-            this.sampleFramebuffer.resize(this.grid.cols, this.grid.rows);
         }
     }
 
