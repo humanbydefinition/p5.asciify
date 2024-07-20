@@ -4,18 +4,16 @@ class P5AsciifyCharacterSet {
         this.fontSize = fontSize;
         this.characters = Array.from(characters);
 
-        this.reset(true);
+        this.reset();
     }
 
-    reset(init = false) {
+    reset() {
         this.glyphs = Object.values(this.font.font.glyphs.glyphs);
         this.glyphs = this.glyphs.filter(glyph => glyph.unicode !== undefined);
 
         this.maxGlyphDimensions = this.getMaxGlyphDimensions(this.fontSize);
 
-        if (!init) {
-            this.createTexture({ fontSize: 512 });
-        }
+        this.createTexture({ fontSize: 512 });
     }
 
     getMaxGlyphDimensions(fontSize) {
@@ -45,7 +43,7 @@ class P5AsciifyCharacterSet {
 
     getUnsupportedCharacters(characters) {
         const badCharacters = new Set();
-    
+
         for (const char of characters) {
             const charCode = char.codePointAt(0);
             const existsInFont = this.glyphs.some(glyph => glyph.unicodes.includes(charCode));
@@ -53,7 +51,7 @@ class P5AsciifyCharacterSet {
                 badCharacters.add(char);
             }
         }
-    
+
         return Array.from(badCharacters);
     }
 
@@ -69,16 +67,21 @@ class P5AsciifyCharacterSet {
 
         let dimensions = this.getMaxGlyphDimensions(fontSize); // Calculate the dimensions of the texture
 
-        // Create a 2D texture for the characters
-        this.texture = createGraphics(dimensions.width * this.charsetCols, dimensions.height * this.charsetRows);
-        this.texture.pixelDensity(1);
-        this.texture.textFont(this.font);
-        this.texture.fill(255);
-        this.texture.textSize(fontSize);
-        this.texture.textAlign(LEFT, TOP);
-        this.texture.noStroke();
+        if (!this.texture) {
+            this.texture = createFramebuffer({ format: FLOAT, width: dimensions.width * this.charsetCols, height: dimensions.height * this.charsetRows });
+        } else {
+            this.texture.resize(dimensions.width * this.charsetCols, dimensions.height * this.charsetRows);
+        }
 
-        // Draw each character to to a cell/tile in the texture
+        this.texture.begin();
+
+        clear();
+        textFont(this.font);
+        fill(255);
+        textSize(fontSize);
+        textAlign(LEFT, TOP);
+        noStroke();
+
         for (let i = 0; i < this.characters.length; i++) {
             const col = i % this.charsetCols;
             const row = Math.floor(i / this.charsetCols);
@@ -86,7 +89,9 @@ class P5AsciifyCharacterSet {
             const y = dimensions.height * row;
 
             const character = this.characters[i];
-            this.texture.text(character, x, y);
+            text(character, x - ((dimensions.width * this.charsetCols) / 2), y - ((dimensions.height * this.charsetRows) / 2));
         }
+
+        this.texture.end();
     }
 };

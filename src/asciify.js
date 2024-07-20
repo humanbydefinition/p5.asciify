@@ -1,5 +1,3 @@
-
-
 class P5Asciify {
     static config = {
         enabled: true,
@@ -12,6 +10,16 @@ class P5Asciify {
         invertMode: false
     };
 
+    static preEffectSetupQueue = [];
+    static preEffectManager = new P5AsciifyEffectManager();
+
+    static afterEffectSetupQueue = [];
+    static afterEffectManager = new P5AsciifyEffectManager();
+
+    static colorPalette = new P5AsciifyColorPalette();
+
+    static framebuffer = null;
+
     static asciiShader = null;
     static asciiFramebuffer = null;
     static asciiFramebufferDimensions = { width: 0, height: 0 };
@@ -20,6 +28,28 @@ class P5Asciify {
     static characterset = null;
     static grid = null;
 
+    static setup() {
+        this.characterset = new P5AsciifyCharacterSet({ font: this.font, characters: this.config.characters, fontSize: this.config.fontSize });
+        this.grid = new P5AsciifyGrid({ cellWidth: this.characterset.maxGlyphDimensions.width, cellHeight: this.characterset.maxGlyphDimensions.height });
+
+        this.colorPalette.setup();
+
+        this.preEffectManager.setupShaders();
+        this.preEffectManager.setupEffectQueue();
+
+        this.afterEffectManager.setupShaders();
+        this.afterEffectManager.setupEffectQueue();
+
+        this.framebuffer = createFramebuffer({ format: FLOAT });
+
+        this.asciiShader = createShader(P5AsciifyConstants.VERT_SHADER_CODE, P5AsciifyConstants.ASCII_FRAG_SHADER_CODE);
+        this.asciiFramebuffer = createFramebuffer({ format: this.FLOAT });
+
+        this.asciiFramebufferDimensions = { width: this.asciiFramebuffer.width, height: this.asciiFramebuffer.height };
+
+        pixelDensity(1);
+    }
+
     static checkFramebufferDimensions() {
         if (this.asciiFramebufferDimensions.width !== this.asciiFramebuffer.width || this.asciiFramebufferDimensions.height !== this.asciiFramebuffer.height) {
             this.asciiFramebufferDimensions.width = this.asciiFramebuffer.width;
@@ -27,6 +57,62 @@ class P5Asciify {
 
             this.grid.reset();
         }
+    }
+
+    static asciify() {
+
+        this.framebuffer.begin();
+        clear();
+        image(_renderer, -width / 2, -height / 2);
+        this.framebuffer.end();
+
+        for (const effect of this.preEffectManager._effects) {
+            if (effect.enabled) {
+                this.framebuffer.begin();
+                shader(effect.shader);
+                effect.setUniforms(this.framebuffer);
+                rect(0, 0, width, height);
+                this.framebuffer.end();
+            }
+        }
+
+        if (this.config.enabled) {
+            this.framebuffer.begin();
+
+            shader(this.asciiShader);
+            this.asciiShader.setUniform('u_characterTexture', this.characterset.texture);
+            this.asciiShader.setUniform('u_charsetCols', this.characterset.charsetCols);
+            this.asciiShader.setUniform('u_charsetRows', this.characterset.charsetRows);
+            this.asciiShader.setUniform('u_totalChars', this.characterset.characters.length);
+            this.asciiShader.setUniform('u_sketchTexture', this.framebuffer);
+            this.asciiShader.setUniform('u_gridPixelDimensions', [this.grid.width, this.grid.height]);
+            this.asciiShader.setUniform('u_gridOffsetDimensions', [this.grid.offsetX, this.grid.offsetY]);
+            this.asciiShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
+            this.asciiShader.setUniform('u_characterColor', this.config.characterColor);
+            this.asciiShader.setUniform('u_characterColorMode', this.config.characterColorMode);
+            this.asciiShader.setUniform('u_backgroundColor', this.config.backgroundColor);
+            this.asciiShader.setUniform('u_backgroundColorMode', this.config.backgroundColorMode);
+            this.asciiShader.setUniform('u_invertMode', this.config.invertMode);
+            this.asciiShader.setUniform('u_renderMode', 0);
+            rect(0, 0, width, height);
+
+            this.framebuffer.end();
+        }
+
+        for (const effect of this.afterEffectManager._effects) {
+            if (effect.enabled) {
+                this.framebuffer.begin();
+                shader(effect.shader);
+                effect.setUniforms(this.framebuffer);
+                rect(0, 0, width, height);
+                this.framebuffer.end();
+            }
+        }
+
+        clear();
+        image(this.framebuffer, -width / 2, -height / 2);
+
+        this.checkFramebufferDimensions();
     }
 
     static setDefaultOptions(options) {
@@ -48,7 +134,7 @@ class P5Asciify {
 
         if (frameCount == 0) { // If we are still in setup(), the characterset and grid have not been initialized yet
             this.config = newConfig;
-            return;   
+            return;
         }
 
         if (charactersUpdated) {
