@@ -68,7 +68,9 @@ class P5AsciifyColorPalette {
     removePalette(index) {
         if (index >= 0 && index < this.palettes.length) {
             this.palettes.splice(index, 1);
-            this.updateTexture();
+            if (frameCount > 0) {
+                this.updateTexture();
+            }
         } else {
             console.warn(`Index ${index} is out of range`);
         }
@@ -77,7 +79,9 @@ class P5AsciifyColorPalette {
     setPaletteColors(index, colors) {
         if (index >= 0 && index < this.palettes.length) {
             this.palettes[index] = colors;
-            this.updateTexture();
+            if (frameCount > 0) {
+                this.updateTexture();
+            }
         } else {
             console.warn(`Index ${index} is out of range`);
         }
