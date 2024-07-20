@@ -1,7 +1,3 @@
-p5.prototype.registerMethod("init", function () {
-    this._renderer = { isP3D: true};
-});
-
 window.preload = function () { }; // In case the user doesn't define a preload function, we need to define it here to avoid errors
 
 /**
@@ -104,3 +100,4 @@ p5.prototype.registerMethod("post", p5.prototype.postDrawAddPop);
  */
 p5.prototype.asciify = function () { P5Asciify.asciify(); };
 p5.prototype.registerMethod("post", p5.prototype.asciify);
+
