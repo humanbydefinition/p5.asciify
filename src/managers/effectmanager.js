@@ -1,12 +1,12 @@
 class P5AsciifyEffectManager {
 
     effectParams = {
-        "kaleidoscope": { "segments": 2, "angle": 0 },
+        "kaleidoscope": { "segments": 2, "angle": 0.0 },
         "distortion": { "frequency": 0.1, "amplitude": 0.1 },
         "grayscale": {},
         "invert": {},
-        "chromaticaberration": { "amount": 0.1, "angle": 0 },
-        "rotate": { "angle": 0 },
+        "chromaticaberration": { "amount": 0.1, "angle": 0.0 },
+        "rotate": { "angle": 0.0 },
         "brightness": { "brightness": 0.0 },
         "colorpalette": { "palette": ["#0f380f", "#306230", "#8bac0f", "#9bbc0f"] },
     }
