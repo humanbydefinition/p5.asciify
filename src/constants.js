@@ -27,8 +27,6 @@ class P5AsciifyConstants {
                                         uniform int u_totalChars;
 
                                         uniform sampler2D u_sketchTexture;
-                                        uniform sampler2D u_edgesTexture;
-                                        uniform sampler2D u_asciiBrightnessTexture;
 
                                         uniform vec2 u_gridCellDimensions;
                                         uniform vec2 u_gridPixelDimensions;
@@ -41,15 +39,13 @@ class P5AsciifyConstants {
 
                                         uniform int u_invertMode;
 
-                                        uniform int u_renderMode;
-
                                         out vec4 fragColor;
 
                                         void main() {
                                             vec2 adjustedCoord = (gl_FragCoord.xy - u_gridOffsetDimensions) / u_gridPixelDimensions;
 
                                             if(adjustedCoord.x < 0.0f || adjustedCoord.x > 1.0f || adjustedCoord.y < 0.0f || adjustedCoord.y > 1.0f) {
-                                                fragColor = vec4(u_backgroundColor, 1.0);
+                                                fragColor = vec4(u_backgroundColor, 1.0f);
                                                 return;
                                             }
 
@@ -59,23 +55,8 @@ class P5AsciifyConstants {
                                             vec2 centerCoord = cellCoord + vec2(0.5f);
                                             vec2 baseCoord = centerCoord / u_gridCellDimensions;
 
-                                            vec4 edgeColor; // edge color (only used in edges mode)
-                                            vec4 sketchColor; // Simulation color
-
-                                            if(u_renderMode == 1) { // edges mode
-                                                edgeColor = texture(u_edgesTexture, baseCoord);
-                                                sketchColor = texture(u_sketchTexture, baseCoord);
-
-                                                if(edgeColor.rgb == vec3(0.0f)) {
-                                                    fragColor = texture(u_asciiBrightnessTexture, gl_FragCoord.xy / vec2(textureSize(u_asciiBrightnessTexture, 0)));
-                                                    return;
-                                                }
-                                            } else { // Brightness mode
-                                                sketchColor = texture(u_sketchTexture, baseCoord);
-                                            }
-
-                                            // Calculate the brightness from the sketch color if the render mode is 0, otherwise use the edge color (rgb are the same for the edge color)
-                                            float brightness = u_renderMode == 1 ? edgeColor.r : dot(sketchColor.rgb, vec3(0.299f, 0.587f, 0.114f));
+                                            vec4 sketchColor = texture(u_sketchTexture, baseCoord);
+                                            float brightness = dot(sketchColor.rgb, vec3(0.299f, 0.587f, 0.114f));
 
                                             // Map the brightness to a character index
                                             int charIndex = int(brightness * float(u_totalChars));
