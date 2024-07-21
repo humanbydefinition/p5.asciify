@@ -63,17 +63,16 @@ function preload() {
 }
 
 function setup() {
-	  createCanvas(windowWidth, windowHeight, WEBGL); // WebGL mode is required currently
-
-	  loadAsciiFont('path/to/different/font.ttf'); // update the font here if needed
+  createCanvas(windowWidth, windowHeight, WEBGL); // WebGL mode is required currently
+  loadAsciiFont('path/to/different/font.ttf'); // update the font here if needed
 }
 
 function draw() {
-	  // Your drawing code here
+  // Your drawing code here
 
-	  if (frameCount === 60) {
-		  loadAsciiFont('path/to/another/font.ttf'); // update the font here if needed
-	  }
+  if (frameCount === 60) {
+    loadAsciiFont('path/to/another/font.ttf'); // update the font here if needed
+  }
 }
 
 ```
@@ -101,14 +100,14 @@ For a list of free and awesome textmode/pixel fonts that have been tested to wor
 ```javascript
 // (any amount of properties can be passed from the available options)
 setAsciiOptions({
-    enabled: true,
-	characters: '0123456789',
-	fontSize: 32,
-	characterColor: "#ff0000",
-	characterColorMode: 1,
-	backgroundColor: "#000000",
-	backgroundColorMode: 1,
-	invertMode: true
+  enabled: true,
+  characters: '0123456789',
+  fontSize: 32,
+  characterColor: "#ff0000",
+  characterColorMode: 1,
+  backgroundColor: "#000000",
+  backgroundColorMode: 1,
+  invertMode: true
 });
 ```
 
@@ -131,21 +130,21 @@ This function adds an effect to the ASCII conversion. The effects are applied in
 **Example:**
 ```javascript
 function setup() {
-	createCanvas(windowWidth, windowHeight, WEBGL); // WebGL mode is required currently
+  createCanvas(windowWidth, windowHeight, WEBGL); // WebGL mode is required currently
 
-	kaleidoscopeEffect = addAsciiEffect('pre', // 'pre' or 'post', depending on when the effect should be applied
-										'kaleidoscope', // the name of the effect (see below for available effects)
-										{ segments: 4, angle: 0 } // the parameters for the effect
-	);
+  kaleidoscopeEffect = addAsciiEffect('pre', // 'pre' or 'post', depending on when the effect should be applied
+				      'kaleidoscope', // the name of the effect (see below for available effects)
+				      { segments: 4, angle: 0 } // the parameters for the effect
+  );
 
-	// This pre-effect gets applied to the output of the kaleidoscope shader. 
-	//The third parameter is optional. If not provided, the default values will be used for the effect.
-	distortionEffect = addAsciiEffect('pre', 'distortion', { frequency: 0.1, amplitude: 0.1 });
+  // This pre-effect gets applied to the output of the kaleidoscope shader. 
+  //The third parameter is optional. If not provided, the default values will be used for the effect.
+  distortionEffect = addAsciiEffect('pre', 'distortion', { frequency: 0.1, amplitude: 0.1 });
 
-	grayscaleEffect = addAsciiEffect('post', 'grayscale'); // This post-effect gets applied after the ASCII conversion
+  grayscaleEffect = addAsciiEffect('post', 'grayscale'); // This post-effect gets applied after the ASCII conversion
 
-	// Keep the effect object around to change the parameters later, swap the effect order, or remove the effect from the rendering loop at any time
-	kaleidoscopeEffect.segments = 8;
+  // Keep the effect object around to change the parameters later, swap the effect order, or remove the effect from the rendering loop at any time
+  kaleidoscopeEffect.segments = 8;
 }
 ```
 
@@ -164,14 +163,14 @@ This function removes an effect from the ASCII conversion. The effect instance t
 
 ```javascript
 function setup() {
-    createCanvas(windowWidth, windowHeight, WEBGL); // WebGL mode is required currently
+  createCanvas(windowWidth, windowHeight, WEBGL); // WebGL mode is required currently
 
-    // Add some effects
-    let kaleidoscopeEffect = addAsciiEffect('pre', 'kaleidoscope', { segments: 4, angle: 0 });
-    let distortionEffect = addAsciiEffect('pre', 'distortion', { frequency: 0.1, amplitude: 0.1 });
+  // Add some effects
+  let kaleidoscopeEffect = addAsciiEffect('pre', 'kaleidoscope', { segments: 4, angle: 0 });
+  let distortionEffect = addAsciiEffect('pre', 'distortion', { frequency: 0.1, amplitude: 0.1 });
 
-    // Remove the distortion effect from the pre-effect rendering loop
-    removeAsciiEffect(distortionEffect);
+  // Remove the distortion effect from the pre-effect rendering loop
+  removeAsciiEffect(distortionEffect);
 }
 ```
 
@@ -191,15 +190,15 @@ This function swaps the order of two effects in the ASCII conversion. Swapping e
 
 ```javascript
 function setup() {
-	createCanvas(windowWidth, windowHeight, WEBGL); // WebGL mode is required currently
+  createCanvas(windowWidth, windowHeight, WEBGL); // WebGL mode is required currently
 
-	// Add some effects
-	let kaleidoscopeEffect = addAsciiEffect('pre', 'kaleidoscope', { segments: 4, angle: 0 });
-	let distortionEffect = addAsciiEffect('pre', 'distortion', { frequency: 0.1, amplitude: 0.1 });
+  // Add some effects
+  let kaleidoscopeEffect = addAsciiEffect('pre', 'kaleidoscope', { segments: 4, angle: 0 });
+  let distortionEffect = addAsciiEffect('pre', 'distortion', { frequency: 0.1, amplitude: 0.1 });
 
-	// Swap the order of the effects (kaleidoscopeEffect will be applied after distortionEffect)
-	// You may also swap effects between the pre- and post-effect rendering loops
-	swapAsciiEffects(kaleidoscopeEffect, distortionEffect);
+  // Swap the order of the effects (kaleidoscopeEffect will be applied after distortionEffect)
+  // You may also swap effects between the pre- and post-effect rendering loops
+  swapAsciiEffects(kaleidoscopeEffect, distortionEffect);
 }
 ```
 
