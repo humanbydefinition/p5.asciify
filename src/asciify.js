@@ -25,11 +25,11 @@ class P5Asciify {
     static asciiFramebufferDimensions = { width: 0, height: 0 };
 
     static font = null;
-    static characterset = new P5AsciifyCharacterSet({characters: this.config.characters, fontSize: this.config.fontSize });
+    static characterset = new P5AsciifyCharacterSet({ characters: this.config.characters, fontSize: this.config.fontSize });
     static grid = new P5AsciifyGrid({ cellWidth: 0, cellHeight: 0 });
 
     static setup() {
-        this.characterset.setup({font: this.font})
+        this.characterset.setup({ font: this.font })
         this.grid.resizeCellDimensions(this.characterset.maxGlyphDimensions.width, this.characterset.maxGlyphDimensions.height);
 
         this.colorPalette.setup();
@@ -115,7 +115,12 @@ class P5Asciify {
         this.checkFramebufferDimensions();
     }
 
-    static setDefaultOptions(options) {
+    static setDefaultOptions(options, warn = true) {
+
+        if (warn) {
+            console.warn(`'P5Asciify.setDefaultOptions()' is deprecated. Use 'setAsciiOptions()' instead. P5Asciify.setDefaultOptions() will be removed in v0.1.0.`);
+        }
+
         const charactersUpdated = options.characters && options.characters !== this.config.characters;
         const fontSizeUpdated = options.fontSize && options.fontSize !== this.config.fontSize;
 
