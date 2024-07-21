@@ -89,6 +89,10 @@ class P5AsciifyEffectManager {
         }
     }
 
+    hasEffect(effectInstance) {
+        return this._effects.includes(effectInstance);
+    }
+
     swapEffects(effectInstance1, effectInstance2) {
         const index1 = this._effects.indexOf(effectInstance1);
         const index2 = this._effects.indexOf(effectInstance2);
