@@ -51,6 +51,27 @@ class P5AsciifyEffectManager {
         }
     }
 
+    addExistingEffectAtIndex(effectInstance, index) {
+        if (this.hasEffect(effectInstance)) {
+            throw new P5AsciifyError(`Effect instance of type '${effectInstance.name}' already exists in the effect manager.`);
+        }
+
+        effectInstance.shader = this.effectShaders[effectInstance.name];
+        this._effects.splice(index, 0, effectInstance);
+
+        if (frameCount === 0) {
+            this._setupQueue.push(effectInstance);
+        }
+    }
+
+    getEffectIndex(effectInstance) {
+        const index = this._effects.indexOf(effectInstance);
+        if (index === -1) {
+            throw new P5AsciifyError(`Effect instance of type '${effectInstance.name}' does not exist in the effect manager.`);
+        }
+        return index;
+    }
+
     addEffect(effectName, userParams = {}) {
         if (!this.effectConstructors[effectName]) {
             throw new P5AsciifyError(

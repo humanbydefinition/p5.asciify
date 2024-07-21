@@ -106,32 +106,43 @@ p5.prototype.removeAsciiEffect = function (effectInstance) {
 p5.prototype.swapAsciiEffects = function (effectInstance1, effectInstance2) {
     let manager1 = null;
     let manager2 = null;
+    let index1 = -1;
+    let index2 = -1;
 
-    // Determine the manager for effectInstance1
+    // Determine the manager and index for effectInstance1
     if (P5Asciify.preEffectManager.hasEffect(effectInstance1)) {
         manager1 = P5Asciify.preEffectManager;
+        index1 = manager1.getEffectIndex(effectInstance1);
     } else if (P5Asciify.afterEffectManager.hasEffect(effectInstance1)) {
         manager1 = P5Asciify.afterEffectManager;
+        index1 = manager1.getEffectIndex(effectInstance1);
     } else {
         throw new P5AsciifyError(`Effect instance 1 not found in either pre or post effect managers.`);
     }
 
-    // Determine the manager for effectInstance2
+    // Determine the manager and index for effectInstance2
     if (P5Asciify.preEffectManager.hasEffect(effectInstance2)) {
         manager2 = P5Asciify.preEffectManager;
+        index2 = manager2.getEffectIndex(effectInstance2);
     } else if (P5Asciify.afterEffectManager.hasEffect(effectInstance2)) {
         manager2 = P5Asciify.afterEffectManager;
+        index2 = manager2.getEffectIndex(effectInstance2);
     } else {
         throw new P5AsciifyError(`Effect instance 2 not found in either pre or post effect managers.`);
     }
 
     // Swap the effects
-    if (manager1 === manager2) {
-        manager1.swapEffects(effectInstance1, effectInstance2);
+    if (manager1 !== manager2) {
+        manager1.removeEffect(effectInstance1);
+        manager2.removeEffect(effectInstance2);
+
+        manager1.addExistingEffectAtIndex(effectInstance2, index1);
+        manager2.addExistingEffectAtIndex(effectInstance1, index2);
     } else {
-        throw new P5AsciifyError(`Effects must be from the same manager to be swapped.`);
+        manager1.swapEffects(effectInstance1, effectInstance2);
     }
 };
+
 
 p5.prototype.preDrawAddPush = function () { this.push(); };
 p5.prototype.registerMethod("pre", p5.prototype.preDrawAddPush);
