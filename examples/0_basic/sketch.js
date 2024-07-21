@@ -10,7 +10,7 @@ function setup() {
 
 	sketchFramebuffer = createFramebuffer({ format: FLOAT });
 
-	P5Asciify.setDefaultOptions({ // These are the default options, you can change them as needed in setup() or draw()
+	P5Asciify.setDefaultOptions({ // These are the default options, you can change them as needed in preload(), setup() or draw()
 		enabled: true,
 		characters: ' .:-=+*#%@',
 		fontSize: 32,
