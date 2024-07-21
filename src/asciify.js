@@ -25,12 +25,12 @@ class P5Asciify {
     static asciiFramebufferDimensions = { width: 0, height: 0 };
 
     static font = null;
-    static characterset = null;
-    static grid = null;
+    static characterset = new P5AsciifyCharacterSet({characters: this.config.characters, fontSize: this.config.fontSize });
+    static grid = new P5AsciifyGrid({ cellWidth: 0, cellHeight: 0 });
 
     static setup() {
-        this.characterset = new P5AsciifyCharacterSet({ font: this.font, characters: this.config.characters, fontSize: this.config.fontSize });
-        this.grid = new P5AsciifyGrid({ cellWidth: this.characterset.maxGlyphDimensions.width, cellHeight: this.characterset.maxGlyphDimensions.height });
+        this.characterset.setup({font: this.font})
+        this.grid.resizeCellDimensions(this.characterset.maxGlyphDimensions.width, this.characterset.maxGlyphDimensions.height);
 
         this.colorPalette.setup();
 
