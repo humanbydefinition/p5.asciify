@@ -78,8 +78,6 @@ function draw() {
 
 ```
 
-Unlike [`loadFont()`](https://p5js.org/reference/p5/loadFont/), `loadAsciiFont()` does not have a return value, and is currently intended to be used like above.
-
 For a list of free and awesome textmode/pixel fonts that have been tested to work well with the library, check out the [Resources](#resources) section. 
 
 *Note: Feel free to use any font you like, but be aware that some fonts may not work well with the library, causing a bad ASCII conversion due to overlapping characters in the character texture.*
@@ -87,7 +85,7 @@ For a list of free and awesome textmode/pixel fonts that have been tested to wor
 <hr />
 
 ### Changing default options
-The `P5Asciify` class provides a static method `setDefaultOptions(options)`, which can be called within the sketch's [`preload()`](https://p5js.org/reference/p5/preload/), [`setup()`](https://p5js.org/reference/p5/setup/), or [`draw()`](https://p5js.org/reference/p5/draw/) functions to change the default options used for ASCII conversion. The options object passed to this method can include one or more of the following properties:
+`p5.asciify` provides a function `setAsciiOptions(options): void`, which can be called within the sketch's [`preload()`](https://p5js.org/reference/p5/preload/), [`setup()`](https://p5js.org/reference/p5/setup/), or [`draw()`](https://p5js.org/reference/p5/draw/) functions to change the default options used for ASCII conversion. The options object passed to this function can include one or more of the following properties:
 
 | Option                | Type    | Description                                                                                                                                                                                                 |
 |-----------------------|---------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -102,7 +100,7 @@ The `P5Asciify` class provides a static method `setDefaultOptions(options)`, whi
 
 ```javascript
 // (any amount of properties can be passed from the available options)
-P5Asciify.setDefaultOptions({
+setAsciiOptions({
     enabled: true,
 	characters: '0123456789',
 	fontSize: 32,
@@ -221,6 +219,8 @@ Currently, the following effects are available:
 | **invert**            | *no params*                                                                                     |
 | **kaleidoscope**      | `segments` (number): The number of segments in the kaleidoscope. The default value is `2`.<br>`angle` (number): The angle of the kaleidoscope in degrees. The default value is `0.0`. |
 | **rotate**            | `angle` (number): The angle of rotation in degrees. The default value is `0.0`.                 |
+
+All effects also have a common parameter `enabled` (boolean) which can be used to enable or disable the effect. The default value is `true`. Disabled effects currently also remain in the rendering loop, but do not apply any changes to the output.
 
 Feel free to suggest new effects or contribute your own!
 
