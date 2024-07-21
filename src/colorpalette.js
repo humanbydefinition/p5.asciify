@@ -12,7 +12,10 @@ class P5AsciifyColorPalette {
 
     setup() {
         this.texture = createFramebuffer({ width: 1, height: 1 });
-        this.updateTexture();
+
+        if (this.palettes.length > 0) {
+            this.updateTexture();
+        }
     }
 
     /**
