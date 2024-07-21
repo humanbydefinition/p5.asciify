@@ -2,8 +2,6 @@ class P5AsciifyGrid {
     constructor({ cellWidth, cellHeight }) {
         this.cellWidth = cellWidth;
         this.cellHeight = cellHeight;
-
-        this.reset();
     }
 
     reset() {

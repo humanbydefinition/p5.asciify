@@ -12,14 +12,33 @@ p5.prototype.registerMethod("beforePreload", p5.prototype.preloadAsciiFont);
 
 /**
  * Loads an ASCII font and sets it as the current font for P5Asciify.
- * @param {string} fontPath - The path to the ASCII font file.
+ * @param {string|object} font - The path to the ASCII font file or a font object.
  */
-p5.prototype.loadAsciiFont = function (fontPath) {
-    P5Asciify.font = this.loadFont(fontPath,
-        () => { this._decrementPreload(); },
-        () => { throw new P5AsciifyError(`loadAsciiFont() | Failed to load font from path: '${fontPath}'`); }
-    );
+p5.prototype.loadAsciiFont = function (font) {
+    const setFont = (loadedFont) => {
+        P5Asciify.font = loadedFont;
+        if (this.frameCount > 0) {
+            P5Asciify.characterset.setFontObject(loadedFont);
+            P5Asciify.grid.resizeCellDimensions(
+                P5Asciify.characterset.maxGlyphDimensions.width,
+                P5Asciify.characterset.maxGlyphDimensions.height
+            );
+        }
+    };
+
+    if (typeof font === 'string') {
+        this.loadFont(
+            font,
+            (loadedFont) => { setFont(loadedFont); this._decrementPreload(); },
+            () => { throw new P5AsciifyError(`loadAsciiFont() | Failed to load font from path: '${font}'`); }
+        );
+    } else if (typeof font === 'object') {
+        setFont(font);
+    } else {
+        throw new P5AsciifyError(`loadAsciiFont() | Invalid font parameter. Expected a string or an object.`);
+    }
 };
+
 p5.prototype.registerPreloadMethod('loadAsciiFont', p5.prototype);
 
 /**
@@ -27,46 +46,103 @@ p5.prototype.registerPreloadMethod('loadAsciiFont', p5.prototype);
  * This function is registered as a method to be called after the setup phase of p5.js.
  */
 p5.prototype.setupAsciifier = function () {
-
     if (this._renderer.drawingContext instanceof CanvasRenderingContext2D) {
-        throw new P5AsciifyError("setupAsciifier() | WebGL renderer is required for P5Asciify to work.");
+        throw new P5AsciifyError("WebGL renderer is required for p5.asciify to work.");
     }
 
     if (P5AsciifyUtils.compareVersions(this.VERSION, "1.8.0") < 0) {
-        throw new P5AsciifyError("P5Asciify requires p5.js v1.8.0 or higher to work.");
+        throw new P5AsciifyError("p5.asciify requires p5.js v1.8.0 or higher to work.");
     }
 
-    P5Asciify.characterset = new P5AsciifyCharacterSet({ font: P5Asciify.font, characters: P5Asciify.config.characters, fontSize: P5Asciify.config.fontSize });
-    P5Asciify.grid = new P5AsciifyGrid({ cellWidth: P5Asciify.characterset.maxGlyphDimensions.width, cellHeight: P5Asciify.characterset.maxGlyphDimensions.height });
-
-
-    P5Asciify.asciiShader = this.createShader(P5AsciifyConstants.VERT_SHADER_CODE, P5AsciifyConstants.ASCII_FRAG_SHADER_CODE);
-    P5Asciify.asciiFramebuffer = createFramebuffer({ format: this.FLOAT });
-
-    P5Asciify.asciiFramebufferDimensions = { width: P5Asciify.asciiFramebuffer.width, height: P5Asciify.asciiFramebuffer.height };
-
-    P5Asciify.characterset.createTexture({ fontSize: 512 });
-
-    this.pixelDensity(1);
+    P5Asciify.setup();
 }
 p5.prototype.registerMethod("afterSetup", p5.prototype.setupAsciifier);
 
 /**
  * Updates the current ASCII font used by P5Asciify.
- * @param {string} fontPath - The path to the new ASCII font file.
+ * @param {string|object} font - The path to the new ASCII font file or a font object.
  */
-p5.prototype.updateAsciiFont = function (fontPath) {
-    P5Asciify.font = this.loadFont(
-        fontPath,
-        () => {
-            P5Asciify.characterset.setFontObject(P5Asciify.font);
-            P5Asciify.grid.resizeCellDimensions(P5Asciify.characterset.maxGlyphDimensions.width, P5Asciify.characterset.maxGlyphDimensions.height);
-        },
-        () => {
-            throw new P5AsciifyError(`updateAsciiFont() | Failed to load font from path: '${fontPath}'`);
-        }
-    );
+p5.prototype.updateAsciiFont = function (font) {
+    console.warn(`updateAsciiFont() is deprecated. Use loadAsciiFont() instead. updateAsciiFont() will be removed in v0.1.0.`);
+    this.loadAsciiFont(font);
 };
+
+p5.prototype.setAsciiOptions = function (options) {
+    P5Asciify.setDefaultOptions(options, false);
+};
+
+p5.prototype.addAsciiEffect = function (effectType, effectName, userParams = {}) {
+    if (effectType === 'pre') {
+        return P5Asciify.preEffectManager.addEffect(effectName, userParams);
+    } else if (effectType === 'post') {
+        return P5Asciify.afterEffectManager.addEffect(effectName, userParams);
+    } else {
+        throw new P5AsciifyError(`Invalid effect type '${effectType}'. Valid types are 'pre' and 'after'.`);
+    }
+
+    ;
+}
+
+p5.prototype.removeAsciiEffect = function (effectInstance) {
+    let removed = false;
+
+    // Check preEffectManager
+    if (P5Asciify.preEffectManager.hasEffect(effectInstance)) {
+        P5Asciify.preEffectManager.removeEffect(effectInstance);
+        removed = true;
+    }
+
+    // Check afterEffectManager
+    if (P5Asciify.afterEffectManager.hasEffect(effectInstance)) {
+        P5Asciify.afterEffectManager.removeEffect(effectInstance);
+        removed = true;
+    }
+
+    if (!removed) {
+        throw new P5AsciifyError(`Effect instance not found in either pre or post effect managers.`);
+    }
+};
+
+p5.prototype.swapAsciiEffects = function (effectInstance1, effectInstance2) {
+    let manager1 = null;
+    let manager2 = null;
+    let index1 = -1;
+    let index2 = -1;
+
+    // Determine the manager and index for effectInstance1
+    if (P5Asciify.preEffectManager.hasEffect(effectInstance1)) {
+        manager1 = P5Asciify.preEffectManager;
+        index1 = manager1.getEffectIndex(effectInstance1);
+    } else if (P5Asciify.afterEffectManager.hasEffect(effectInstance1)) {
+        manager1 = P5Asciify.afterEffectManager;
+        index1 = manager1.getEffectIndex(effectInstance1);
+    } else {
+        throw new P5AsciifyError(`Effect instance 1 not found in either pre or post effect managers.`);
+    }
+
+    // Determine the manager and index for effectInstance2
+    if (P5Asciify.preEffectManager.hasEffect(effectInstance2)) {
+        manager2 = P5Asciify.preEffectManager;
+        index2 = manager2.getEffectIndex(effectInstance2);
+    } else if (P5Asciify.afterEffectManager.hasEffect(effectInstance2)) {
+        manager2 = P5Asciify.afterEffectManager;
+        index2 = manager2.getEffectIndex(effectInstance2);
+    } else {
+        throw new P5AsciifyError(`Effect instance 2 not found in either pre or post effect managers.`);
+    }
+
+    // Swap the effects
+    if (manager1 !== manager2) {
+        manager1.removeEffect(effectInstance1);
+        manager2.removeEffect(effectInstance2);
+
+        manager1.addExistingEffectAtIndex(effectInstance2, index1);
+        manager2.addExistingEffectAtIndex(effectInstance1, index2);
+    } else {
+        manager1.swapEffects(effectInstance1, effectInstance2);
+    }
+};
+
 
 p5.prototype.preDrawAddPush = function () { this.push(); };
 p5.prototype.registerMethod("pre", p5.prototype.preDrawAddPush);
@@ -78,34 +154,6 @@ p5.prototype.registerMethod("post", p5.prototype.postDrawAddPop);
  * Renders the ASCII representation of the current sketch.
  * This function is registered as a method to be called after the draw phase of p5.js.
  */
-p5.prototype.asciify = function () {
-
-    if (!P5Asciify.config.enabled) return;
-
-    P5Asciify.asciiFramebuffer.begin();
-
-    this.shader(P5Asciify.asciiShader);
-    P5Asciify.asciiShader.setUniform('u_characterTexture', P5Asciify.characterset.texture);
-    P5Asciify.asciiShader.setUniform('u_charsetCols', P5Asciify.characterset.charsetCols);
-    P5Asciify.asciiShader.setUniform('u_charsetRows', P5Asciify.characterset.charsetRows);
-    P5Asciify.asciiShader.setUniform('u_totalChars', P5Asciify.characterset.characters.length);
-    P5Asciify.asciiShader.setUniform('u_sketchTexture', this._renderer);
-    P5Asciify.asciiShader.setUniform('u_gridPixelDimensions', [P5Asciify.grid.width, P5Asciify.grid.height]);
-    P5Asciify.asciiShader.setUniform('u_gridOffsetDimensions', [P5Asciify.grid.offsetX, P5Asciify.grid.offsetY]);
-    P5Asciify.asciiShader.setUniform('u_gridCellDimensions', [P5Asciify.grid.cols, P5Asciify.grid.rows]);
-    P5Asciify.asciiShader.setUniform('u_characterColor', P5Asciify.config.characterColor);
-    P5Asciify.asciiShader.setUniform('u_characterColorMode', P5Asciify.config.characterColorMode);
-    P5Asciify.asciiShader.setUniform('u_backgroundColor', P5Asciify.config.backgroundColor);
-    P5Asciify.asciiShader.setUniform('u_backgroundColorMode', P5Asciify.config.backgroundColorMode);
-    P5Asciify.asciiShader.setUniform('u_invertMode', P5Asciify.config.invertMode);
-    P5Asciify.asciiShader.setUniform('u_renderMode', 0);
-    this.rect(0, 0, this.width, this.height);
-
-    P5Asciify.asciiFramebuffer.end();
-
-    this.clear();
-    this.image(P5Asciify.asciiFramebuffer, -this.width / 2, -this.height / 2);
-
-    P5Asciify.checkFramebufferDimensions();
-};
+p5.prototype.asciify = function () { P5Asciify.asciify(); };
 p5.prototype.registerMethod("post", p5.prototype.asciify);
+

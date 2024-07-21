@@ -9,7 +9,7 @@ To use `p5.asciify` with a [`p5.js`](https://github.com/processing/p5.js) sketch
 To see `p5.asciify` in action, check out the example sketches in the prepared collection on the [p5.js web editor](https://editor.p5js.org/): 
 [`p5.asciify examples`](https://editor.p5js.org/humanbydefinition/collections/DUa3pcJqn).
 
-I would love to see your creations using `p5.asciify`! Feel free to tag me on social media so I can enjoy and share your amazing work too. (ﾉ◕ヮ◕)ﾉ*:・ﾟ✧ 
+I would love to see your creations using `p5.asciify`! Feel free to tag me on social media or use the hashtag `#p5asciify` so I can enjoy and share your amazing work too. (ﾉ◕ヮ◕)ﾉ*:・ﾟ✧ 
 
 [![Instagram](https://img.shields.io/badge/Instagram-lightgrey?style=social&logo=instagram)](https://www.instagram.com/humanbydefinition/)
 
@@ -49,108 +49,182 @@ To customize the ASCII conversion further, the library provides functionality wh
 
 By default, when no font is provided by the user, [UrsaFont](https://ursafrank.itch.io/ursafont) by [UrsaFrank](https://www.stormrooster.com/) is used, which is an awesome textmode font, licensed under the [CC0 1.0 Universal License](https://creativecommons.org/publicdomain/zero/1.0/).
 
-### Loading an ascii font
-Similar to using [`loadFont(fontPath)`](https://p5js.org/reference/p5/loadFont/) inside the sketches [`preload()`](https://p5js.org/reference/p5/preload/) function, `loadAsciiFont(fontPath)` is used here aswell to load a custom font for the ASCII conversion. Similar to [`loadFont()`](https://p5js.org/reference/p5/loadFont/), the allowed font formats are `.ttf` and `.otf`.
+### Loading/updating the ascii font
+To use a custom font for the ASCII conversion, the library provides a function `loadAsciiFont(font | fontPath): void`, which can be called within the sketch's [`preload()`](https://p5js.org/reference/p5/preload/), [`setup()`](https://p5js.org/reference/p5/setup/), or [`draw()`](https://p5js.org/reference/p5/draw/) functions to load/update the ASCII font. When passing a font path, the allowed font formats are `.ttf` and `.otf`. You may also pass a [`p5.Font`](https://p5js.org/reference/p5/p5.Font/) object directly to the function. You can also pass a [`base64`](https://en.wikipedia.org/wiki/Base64)-encoded string representing a font file.
 
 ```javascript
-function preload() {
-  loadAsciiFont('path/to/font.ttf');
-}
-```
+let font;
 
-Unlike [`loadFont()`](https://p5js.org/reference/p5/loadFont/), `loadAsciiFont()` does not have a return value, and is currently intended to be used like above.
+function preload() {
+  font = loadFont('path/to/awesome/font.ttf');
+
+  loadAsciiFont('path/to/cool/font.ttf');
+  loadAsciiFont(font); // both are valid
+}
+
+function setup() {
+  createCanvas(windowWidth, windowHeight, WEBGL); // WebGL mode is required currently
+  loadAsciiFont('path/to/different/font.ttf'); // update the font here if needed
+}
+
+function draw() {
+  // Your drawing code here
+
+  if (frameCount === 60) {
+    loadAsciiFont('path/to/another/font.ttf'); // update the font here if needed
+  }
+}
+
+```
 
 For a list of free and awesome textmode/pixel fonts that have been tested to work well with the library, check out the [Resources](#resources) section. 
 
 *Note: Feel free to use any font you like, but be aware that some fonts may not work well with the library, causing a bad ASCII conversion due to overlapping characters in the character texture.*
 
+<hr />
 
 ### Changing default options
-The libraries `P5Asciify` class provides a static method `setDefaultOptions(options)` that can be called anywhere inside the sketches [`setup()`](https://p5js.org/reference/p5/setup/) function or [`draw()`](https://p5js.org/reference/p5/draw/) loop to change the default options used for the ASCII conversion. The options object passed to the method can contain one or more of the following properties:
+`p5.asciify` provides a function `setAsciiOptions(options): void`, which can be called within the sketch's [`preload()`](https://p5js.org/reference/p5/preload/), [`setup()`](https://p5js.org/reference/p5/setup/), or [`draw()`](https://p5js.org/reference/p5/draw/) functions to change the default options used for ASCII conversion. The options object passed to this function can include one or more of the following properties:
 
-- `enabled` (boolean): A boolean value indicating whether the ASCII conversion should be enabled. The default value is `true`.
-
-- `characters` (string): A string containing the characters to be used for the ASCII conversion. The characters are used in order of appearance, with the first character representing the darkest pixel and the last character representing the lightest pixel. The default value is `0123456789`.
-
-- `fontSize` (number): The size of the font used for the ASCII conversion. The default value is `16`. Allowed values range from `1` *L(° O °L)* to `512`. It is     recommended to use a font size that is a power of 2, such as 2, 4, 8, 16, 32, 64, etc.
-
-- `characterColorMode` (number): The mode used for the color of the characters used for the ASCII conversion. The default value is `0` *(sampled)*. Allowed values are `0` *(sampled)* and `1` *(fixed)*.
-    - `0` *(sampled)*: The color of a character is determined by sampling the central pixel of the cell it occupies on the canvas.
-    - `1` *(fixed)*: The color of a character is determined by the `characterColor` property.
-
-- `characterColor` (string): The color of the characters used for the ASCII conversion. The default value is `#ffffff`. Only used if the `characterColorMode` is set to `1` *(fixed)*.
-
-- `backgroundColorMode` (number): The mode used for the color of the background of a cell, not covered by the character. The default value is `1` *(fixed)*. Allowed values are `0` *(sampled)* and `1` *(fixed)*.
-    - `0` *(sampled)*: The color of a character is determined by sampling the central pixel of the cell it occupies on the canvas.
-    - `1` *(fixed)*: The color of a character is determined by the `characterColor` property.
-
-- `backgroundColor` (string): The color of the background of a cell, not covered by the character. The default value is `#000000`. Only used if the `backgroundColorMode` is set to `1` *(fixed)*.
-
-- `invertMode` (boolean): A boolean value indicating whether the ASCII conversion should be inverted. The default value is `false`.
+| Option                | Type    | Description                                                                                                                                                                                                 |
+|-----------------------|---------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `enabled`             | boolean | A boolean value indicating whether the ASCII conversion should be enabled. The default value is `true`.                                                                                                      |
+| `characters`          | string  | A string containing the characters to be used for the ASCII conversion. The characters are used in order of appearance, with the first character representing the darkest pixel and the last character representing the lightest pixel. The default value is `0123456789`. |
+| `fontSize`            | number  | The size of the font used for the ASCII conversion. The default value is `16`. Allowed values range from `1` *L(° O °L)* to `512`. It is recommended to use a font size that is a power of 2, such as 2, 4, 8, 16, 32, 64, etc. |
+| `characterColorMode`  | number  | The mode used for the color of the characters used for the ASCII conversion. The default value is `0` *(sampled)*. Allowed values are `0` *(sampled)* and `1` *(fixed)*. <br> - `0` *(sampled)*: The color of a character is determined by sampling the central pixel of the cell it occupies on the canvas. <br> - `1` *(fixed)*: The color of a character is determined by the `characterColor` property. |
+| `characterColor`      | string  | The color of the characters used for the ASCII conversion. The default value is `#ffffff`. Only used if the `characterColorMode` is set to `1` *(fixed)*.                                                     |
+| `backgroundColorMode` | number  | The mode used for the color of the background of a cell, not covered by the character. The default value is `1` *(fixed)*. Allowed values are `0` *(sampled)* and `1` *(fixed)*. <br> - `0` *(sampled)*: The color of a character is determined by sampling the central pixel of the cell it occupies on the canvas. <br> - `1` *(fixed)*: The color of a character is determined by the `backgroundColor` property. |
+| `backgroundColor`     | string  | The color of the background of a cell, not covered by the character. The default value is `#000000`. Only used if the `backgroundColorMode` is set to `1` *(fixed)*.                                          |
+| `invertMode`          | boolean | A boolean value indicating whether the ASCII conversion should be inverted. The default value is `false`.                                                                                                    |
 
 ```javascript
-// Can be called anywhere inside the setup() function or the draw() loop
-// (any amount of parameters can be passed)
-P5Asciify.setDefaultOptions({
-    enabled: true,
-	characters: '0123456789',
-	fontSize: 32,
-	characterColor: "#ff0000",
-	characterColorMode: 1,
-	backgroundColor: "#000000",
-	backgroundColorMode: 1,
-	invertMode: true
+// (any amount of properties can be passed from the available options)
+setAsciiOptions({
+  enabled: true,
+  characters: '0123456789',
+  fontSize: 32,
+  characterColor: "#ff0000",
+  characterColorMode: 1,
+  backgroundColor: "#000000",
+  backgroundColorMode: 1,
+  invertMode: true
 });
 ```
 
+<hr />
 
-### Updating the ascii font
-To update the font used for the ASCII conversion, call `updateAsciiFont(fontPath)` with the path to the new font file anywhere inside the sketches [`setup()`](https://p5js.org/reference/p5/setup/) function or [`draw()`](https://p5js.org/reference/p5/draw/) loop.
+### Working with effects
+To apply effects before and after the ASCII conversion, `p5.asciify` provides a set of functions that can be called anywhere inside the sketches [`setup()`](https://p5js.org/reference/p5/setup/) function or [`draw()`](https://p5js.org/reference/p5/draw/) loop. 
 
+#### addAsciiEffect(effectType: string, effectName: string, params: object): P5AsciifyEffect
+This function adds an effect to the ASCII conversion. The effects are applied in the order they are called, and the order of the effects can be changed by calling the functions in a different order.
+
+**Parameters:**
+
+| Parameter   | Type   | Description                                                                 |
+|-------------|--------|-----------------------------------------------------------------------------|
+| effectType  | string | 'pre' or 'post', depending on when the effect should be applied             |
+| effectName  | string | The name of the effect (see below for available effects)                    |
+| params      | object | *(optional)* The parameters for the effect. Each effect has its own set of parameters.   |
+
+**Example:**
 ```javascript
-let sketchFramebuffer;
-
-function preload() {
-	loadAsciiFont('UrsaFont.ttf');
-}
-
 function setup() {
-	createCanvas(windowWidth, windowHeight, WEBGL); // WebGL mode is required currently
-	sketchFramebuffer = createFramebuffer({ format: FLOAT });
-}
+  createCanvas(windowWidth, windowHeight, WEBGL); // WebGL mode is required currently
 
-function draw() {
-	sketchFramebuffer.begin();
-	background(0);
-	fill(255);
+  kaleidoscopeEffect = addAsciiEffect('pre', // 'pre' or 'post', depending on when the effect should be applied
+				      'kaleidoscope', // the name of the effect (see below for available effects)
+				      { segments: 4, angle: 0 } // the parameters for the effect
+  );
 
-    	// Tim Rodenbroeker-esque rotating 3D box (⌐■_■)
-    	// https://timrodenbroeker.de/ (no affiliation)
-	push(); 
-	rotateX(radians(frameCount * 3));
-	rotateZ(radians(frameCount));
-	directionalLight(255, 255, 255, 0, 0, -1);
-	box(800, 100, 100);
-	pop();
+  // This pre-effect gets applied to the output of the kaleidoscope shader. 
+  //The third parameter is optional. If not provided, the default values will be used for the effect.
+  distortionEffect = addAsciiEffect('pre', 'distortion', { frequency: 0.1, amplitude: 0.1 });
 
-	sketchFramebuffer.end();
+  grayscaleEffect = addAsciiEffect('post', 'grayscale'); // This post-effect gets applied after the ASCII conversion
 
-    	// Draw something on the main canvas for the library to pick up on
-	background(0);
-	image(sketchFramebuffer, -windowWidth / 2, -windowHeight / 2);
-
-    	// Update the asciify font based on any condition
-	if (frameCount == 100) {
-		updateAsciiFont("path/to/new/font.ttf");
-	}
-}
-
-function windowResized() {
-	resizeCanvas(windowWidth, windowHeight);
+  // Keep the effect object around to change the parameters later, swap the effect order, or remove the effect from the rendering loop at any time
+  kaleidoscopeEffect.segments = 8;
 }
 ```
 
-### Resources
+<hr />
+
+#### removeAsciiEffect(effectInstance: P5AsciifyEffect): void
+This function removes an effect from the ASCII conversion. The effect instance to be removed is passed as a parameter. If the instance exists in both the pre- and post-effect rendering loops, it will be removed from both.
+
+**Parameters:**
+
+| Parameter      | Type             | Description                                      |
+|----------------|------------------|--------------------------------------------------|
+| effectInstance | P5AsciifyEffect  | The instance of the effect to be removed.        |
+
+**Example:**
+
+```javascript
+function setup() {
+  createCanvas(windowWidth, windowHeight, WEBGL); // WebGL mode is required currently
+
+  // Add some effects
+  let kaleidoscopeEffect = addAsciiEffect('pre', 'kaleidoscope', { segments: 4, angle: 0 });
+  let distortionEffect = addAsciiEffect('pre', 'distortion', { frequency: 0.1, amplitude: 0.1 });
+
+  // Remove the distortion effect from the pre-effect rendering loop
+  removeAsciiEffect(distortionEffect);
+}
+```
+
+<hr />
+
+#### swapAsciiEffects(effectInstance1: P5AsciifyEffect, effectInstance2: P5AsciifyEffect): void
+This function swaps the order of two effects in the ASCII conversion. Swapping effect between the pre- and post-effect rendering loops is also supported.
+
+**Parameters:**
+
+| Parameter      | Type             | Description                                      |
+|----------------|------------------|--------------------------------------------------|
+| effectInstance1 | P5AsciifyEffect  | The first instance of the effect to be swapped.  |
+| effectInstance2 | P5AsciifyEffect  | The second instance of the effect to be swapped. |
+
+**Example:**
+
+```javascript
+function setup() {
+  createCanvas(windowWidth, windowHeight, WEBGL); // WebGL mode is required currently
+
+  // Add some effects
+  let kaleidoscopeEffect = addAsciiEffect('pre', 'kaleidoscope', { segments: 4, angle: 0 });
+  let distortionEffect = addAsciiEffect('pre', 'distortion', { frequency: 0.1, amplitude: 0.1 });
+
+  // Swap the order of the effects (kaleidoscopeEffect will be applied after distortionEffect)
+  // You may also swap effects between the pre- and post-effect rendering loops
+  swapAsciiEffects(kaleidoscopeEffect, distortionEffect);
+}
+```
+
+<hr />
+
+#### Available effects
+
+Currently, the following effects are available:
+
+| Effect                | Params                                                                                          |
+|-----------------------|-------------------------------------------------------------------------------------------------|
+| **brightness**        | `brightness` (number): The brightness value to apply. The default value is `0.0`.               |
+| **chromatic aberration** | `amount` (number): The amount of chromatic aberration to apply. The default value is `0.1`.<br>`angle` (number): The angle of the chromatic aberration in degrees. The default value is `0.0`. |
+| **color palette**     | `palette` (array): An array of colors to use for the color palette. The default value is `["#0f380f", "#306230", "#8bac0f", "#9bbc0f"]`. |
+| **distortion**        | `frequency` (number): The frequency of the distortion. The default value is `0.1`.<br>`amplitude` (number): The amplitude of the distortion. The default value is `0.1`. |
+| **grayscale**         | *no params*                                                                                     |
+| **invert**            | *no params*                                                                                     |
+| **kaleidoscope**      | `segments` (number): The number of segments in the kaleidoscope. The default value is `2`.<br>`angle` (number): The angle of the kaleidoscope in degrees. The default value is `0.0`. |
+| **rotate**            | `angle` (number): The angle of rotation in degrees. The default value is `0.0`.                 |
+
+All effects also have a common class variable `enabled` (boolean) which can be used to enable or disable the effect. This option is not passed as a parameter to [`addAsciiEffect()`](#addasciieffecteffecttype-string-effectname-string-params-object-p5asciifyeffect), but can be set directly on the effect instance  *(`effect.enabled = false;`)*. By default, all effects are enabled on creation.
+ Disabled effects currently also remain in the rendering loop, but do not apply any changes to the output.
+
+Feel free to suggest new effects or contribute your own!
+
+## Resources
 Besides the already awesome default font [`UrsaFont`](https://ursafrank.itch.io/ursafont) by [`UrsaFrank`](https://www.stormrooster.com/) which can be redistributed and modified under the [CC0 1.0 Universal License](https://creativecommons.org/publicdomain/zero/1.0/), here are some other free and awesome textmode/pixel fonts that have been tested to work well with the library:
 
 | Font  | Description | 
