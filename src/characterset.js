@@ -1,9 +1,11 @@
 class P5AsciifyCharacterSet {
-    constructor({ font, fontSize = 16, characters }) {
-        this.font = font;
+    constructor({ fontSize = 16, characters }) {
         this.fontSize = fontSize;
         this.characters = Array.from(characters);
+    }
 
+    setup({ font }) {
+        this.font = font;
         this.reset();
     }
 
