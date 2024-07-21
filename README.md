@@ -219,7 +219,8 @@ Currently, the following effects are available:
 | **kaleidoscope**      | `segments` (number): The number of segments in the kaleidoscope. The default value is `2`.<br>`angle` (number): The angle of the kaleidoscope in degrees. The default value is `0.0`. |
 | **rotate**            | `angle` (number): The angle of rotation in degrees. The default value is `0.0`.                 |
 
-All effects also have a common parameter `enabled` (boolean) which can be used to enable or disable the effect. The default value is `true`. Disabled effects currently also remain in the rendering loop, but do not apply any changes to the output.
+All effects also have a common parameter `enabled` (boolean) which can be used to enable or disable the effect. This option is not passed as a parameter to [`addAsciiEffect()`](#addasciieffecteffecttype-string-effectname-string-params-object-p5asciifyeffect), but can be set directly on the effect instance.
+ Disabled effects currently also remain in the rendering loop, but do not apply any changes to the output.
 
 Feel free to suggest new effects or contribute your own!
 
