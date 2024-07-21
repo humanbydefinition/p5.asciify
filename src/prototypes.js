@@ -63,8 +63,12 @@ p5.prototype.registerMethod("afterSetup", p5.prototype.setupAsciifier);
  * @param {string|object} font - The path to the new ASCII font file or a font object.
  */
 p5.prototype.updateAsciiFont = function (font) {
-        console.warn(`updateAsciiFont() is deprecated. Use loadAsciiFont() instead.\nupdateAsciiFont() will be removed in v0.1.0.`);
+    console.warn(`updateAsciiFont() is deprecated. Use loadAsciiFont() instead. updateAsciiFont() will be removed in v0.1.0.`);
     this.loadAsciiFont(font);
+};
+
+p5.prototype.setAsciiOptions = function (options) {
+    P5Asciify.setDefaultOptions(options, false);
 };
 
 p5.prototype.addAsciiEffect = function (effectType, effectName, userParams = {}) {
