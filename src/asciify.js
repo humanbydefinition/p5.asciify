@@ -25,11 +25,11 @@ class P5Asciify {
     static asciiFramebufferDimensions = { width: 0, height: 0 };
 
     static font = null;
-    static characterset = new P5AsciifyCharacterSet({ characters: this.config.characters, fontSize: this.config.fontSize });
+    static characterset = new P5AsciifyCharacterSet({ characters: "", fontSize: 16 });
     static grid = new P5AsciifyGrid({ cellWidth: 0, cellHeight: 0 });
 
     static setup() {
-        this.characterset.setup({ font: this.font })
+        this.characterset.setup({ font: this.font, characters: this.config.characters, fontSize: this.config.fontSize });
         this.grid.resizeCellDimensions(this.characterset.maxGlyphDimensions.width, this.characterset.maxGlyphDimensions.height);
 
         this.colorPalette.setup();
@@ -139,6 +139,7 @@ class P5Asciify {
 
         if (frameCount == 0) { // If we are still in setup(), the characterset and grid have not been initialized yet
             this.config = newConfig;
+            console.log("this.config", this.config);
             return;
         }
 
@@ -147,6 +148,7 @@ class P5Asciify {
             if (badCharacters.length === 0) {
                 newConfig.characters = options.characters;
                 this.characterset.setCharacterSet(options.characters);
+                console.log("P5Asciify: Character set updated.");
             } else {
                 console.warn(`P5Asciify: The following characters are not supported by the current font: [${Array.from(badCharacters).join(', ')}]. Character set not updated.`);
             }

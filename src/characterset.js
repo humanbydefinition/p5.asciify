@@ -4,8 +4,10 @@ class P5AsciifyCharacterSet {
         this.characters = Array.from(characters);
     }
 
-    setup({ font }) {
+    setup({ font, characters, fontSize }) {
         this.font = font;
+        this.characters = Array.from(characters);
+        this.fontSize = fontSize;
         this.reset();
     }
 
