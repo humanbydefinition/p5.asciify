@@ -139,7 +139,6 @@ class P5Asciify {
 
         if (frameCount == 0) { // If we are still in setup(), the characterset and grid have not been initialized yet
             this.config = newConfig;
-            console.log("this.config", this.config);
             return;
         }
 
