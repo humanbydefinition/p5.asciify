@@ -83,15 +83,25 @@ p5.prototype.addAsciiEffect = function (effectType, effectName, userParams = {})
     ;
 }
 
-p5.prototype.removeAsciiEffect = function (effectType, effectInstance) {
-    if (effectType === 'pre') {
+p5.prototype.removeAsciiEffect = function (effectInstance) {
+    let removed = false;
+
+    // Check preEffectManager
+    if (P5Asciify.preEffectManager.hasEffect(effectInstance)) {
         P5Asciify.preEffectManager.removeEffect(effectInstance);
-    } else if (effectType === 'post') {
-        P5Asciify.afterEffectManager.removeEffect(effectInstance);
-    } else {
-        throw new P5AsciifyError(`Invalid effect type '${effectType}'. Valid types are 'pre' and 'after'.`);
+        removed = true;
     }
-}
+
+    // Check afterEffectManager
+    if (P5Asciify.afterEffectManager.hasEffect(effectInstance)) {
+        P5Asciify.afterEffectManager.removeEffect(effectInstance);
+        removed = true;
+    }
+
+    if (!removed) {
+        throw new P5AsciifyError(`Effect instance not found in either pre or post effect managers.`);
+    }
+};
 
 p5.prototype.swapAsciiEffects = function (effectType, effectInstance1, effectInstance2) {
     if (effectType === 'pre') {
