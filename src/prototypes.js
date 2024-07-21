@@ -15,13 +15,25 @@ p5.prototype.registerMethod("beforePreload", p5.prototype.preloadAsciiFont);
  * @param {string|object} font - The path to the ASCII font file or a font object.
  */
 p5.prototype.loadAsciiFont = function (font) {
+    const setFont = (loadedFont) => {
+        P5Asciify.font = loadedFont;
+        if (this.frameCount > 0) {
+            P5Asciify.characterset.setFontObject(loadedFont);
+            P5Asciify.grid.resizeCellDimensions(
+                P5Asciify.characterset.maxGlyphDimensions.width,
+                P5Asciify.characterset.maxGlyphDimensions.height
+            );
+        }
+    };
+
     if (typeof font === 'string') {
-        P5Asciify.font = this.loadFont(font,
-            () => { this._decrementPreload(); },
+        this.loadFont(
+            font,
+            (loadedFont) => { setFont(loadedFont); this._decrementPreload(); },
             () => { throw new P5AsciifyError(`loadAsciiFont() | Failed to load font from path: '${font}'`); }
         );
     } else if (typeof font === 'object') {
-        P5Asciify.font = font;
+        setFont(font);
     } else {
         throw new P5AsciifyError(`loadAsciiFont() | Invalid font parameter. Expected a string or an object.`);
     }
@@ -51,24 +63,8 @@ p5.prototype.registerMethod("afterSetup", p5.prototype.setupAsciifier);
  * @param {string|object} font - The path to the new ASCII font file or a font object.
  */
 p5.prototype.updateAsciiFont = function (font) {
-    if (typeof font === 'string') {
-        P5Asciify.font = this.loadFont(
-            font,
-            () => {
-                P5Asciify.characterset.setFontObject(P5Asciify.font);
-                P5Asciify.grid.resizeCellDimensions(P5Asciify.characterset.maxGlyphDimensions.width, P5Asciify.characterset.maxGlyphDimensions.height);
-            },
-            () => {
-                throw new P5AsciifyError(`updateAsciiFont() | Failed to load font from path: '${font}'`);
-            }
-        );
-    } else if (typeof font === 'object') {
-        P5Asciify.font = font;
-        P5Asciify.characterset.setFontObject(P5Asciify.font);
-        P5Asciify.grid.resizeCellDimensions(P5Asciify.characterset.maxGlyphDimensions.width, P5Asciify.characterset.maxGlyphDimensions.height);
-    } else {
-        throw new P5AsciifyError(`updateAsciiFont() | Invalid font parameter. Expected a string or an object.`);
-    }
+        console.warn(`updateAsciiFont() is deprecated. Use loadAsciiFont() instead.\nupdateAsciiFont() will be removed in v0.1.0.`);
+    this.loadAsciiFont(font);
 };
 
 p5.prototype.addAsciiEffect = function (effectType, effectName, userParams = {}) {
