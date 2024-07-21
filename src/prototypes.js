@@ -103,15 +103,35 @@ p5.prototype.removeAsciiEffect = function (effectInstance) {
     }
 };
 
-p5.prototype.swapAsciiEffects = function (effectType, effectInstance1, effectInstance2) {
-    if (effectType === 'pre') {
-        P5Asciify.preEffectManager.swapEffects(effectInstance1, effectInstance2);
-    } else if (effectType === 'post') {
-        P5Asciify.afterEffectManager.swapEffects(effectInstance1, effectInstance2);
+p5.prototype.swapAsciiEffects = function (effectInstance1, effectInstance2) {
+    let manager1 = null;
+    let manager2 = null;
+
+    // Determine the manager for effectInstance1
+    if (P5Asciify.preEffectManager.hasEffect(effectInstance1)) {
+        manager1 = P5Asciify.preEffectManager;
+    } else if (P5Asciify.afterEffectManager.hasEffect(effectInstance1)) {
+        manager1 = P5Asciify.afterEffectManager;
     } else {
-        throw new P5AsciifyError(`Invalid effect type '${effectType}'. Valid types are 'pre' and 'after'.`);
+        throw new P5AsciifyError(`Effect instance 1 not found in either pre or post effect managers.`);
     }
-}
+
+    // Determine the manager for effectInstance2
+    if (P5Asciify.preEffectManager.hasEffect(effectInstance2)) {
+        manager2 = P5Asciify.preEffectManager;
+    } else if (P5Asciify.afterEffectManager.hasEffect(effectInstance2)) {
+        manager2 = P5Asciify.afterEffectManager;
+    } else {
+        throw new P5AsciifyError(`Effect instance 2 not found in either pre or post effect managers.`);
+    }
+
+    // Swap the effects
+    if (manager1 === manager2) {
+        manager1.swapEffects(effectInstance1, effectInstance2);
+    } else {
+        throw new P5AsciifyError(`Effects must be from the same manager to be swapped.`);
+    }
+};
 
 p5.prototype.preDrawAddPush = function () { this.push(); };
 p5.prototype.registerMethod("pre", p5.prototype.preDrawAddPush);
