@@ -51,19 +51,19 @@ class P5AsciifyConstants {
                                         void main() {
                                             vec2 adjustedCoord = (gl_FragCoord.xy - u_gridOffsetDimensions) / u_gridPixelDimensions;
 
-                                            if(adjustedCoord.x < 0.0f || adjustedCoord.x > 1.0f || adjustedCoord.y < 0.0f || adjustedCoord.y > 1.0f) {
-                                                fragColor = vec4(u_backgroundColor, 1.0f);
+                                            if (adjustedCoord.x < 0.0 || adjustedCoord.x > 1.0 || adjustedCoord.y < 0.0 || adjustedCoord.y > 1.0) {
+                                                fragColor = vec4(u_backgroundColor, 1.0);
                                                 return;
                                             }
 
                                             // Calculate the grid coordinate
                                             vec2 gridCoord = adjustedCoord * u_gridCellDimensions;
                                             vec2 cellCoord = floor(gridCoord);
-                                            vec2 centerCoord = cellCoord + vec2(0.5f);
+                                            vec2 centerCoord = cellCoord + vec2(0.5);
                                             vec2 baseCoord = centerCoord / u_gridCellDimensions;
 
                                             vec4 sketchColor = texture(u_sketchTexture, baseCoord);
-                                            float brightness = dot(sketchColor.rgb, vec3(0.299f, 0.587f, 0.114f));
+                                            float brightness = dot(sketchColor.rgb, vec3(0.299, 0.587, 0.114));
 
                                             // Map the brightness to a character index
                                             int charIndex = int(brightness * float(u_totalChars));
@@ -79,13 +79,19 @@ class P5AsciifyConstants {
                                             fractionalPart = rotate2D(u_rotationAngle) * fractionalPart; // Rotate fractional part
                                             fractionalPart += 0.5; // Move back to original coordinate space
 
+                                            // Calculate the texture coordinates
+                                            vec2 cellMin = charCoord;
+                                            vec2 cellMax = charCoord + vec2(1.0 / u_charsetCols, 1.0 / u_charsetRows);
                                             vec2 texCoord = charCoord + fractionalPart * vec2(1.0 / u_charsetCols, 1.0 / u_charsetRows);
 
-                                            // Get the color of the character from the charset texture
-                                            vec4 charColor = texture(u_characterTexture, texCoord);
+                                            // Determine if the texture coordinate is within the cell boundaries
+                                            bool outsideBounds = any(lessThan(texCoord, cellMin)) || any(greaterThan(texCoord, cellMax));
+
+                                            // Get the color of the character from the charset texture or use the background color if outside bounds
+                                            vec4 charColor = outsideBounds ? vec4(u_backgroundColor, 1.0) : texture(u_characterTexture, texCoord);
 
                                             // If the inversion mode is enabled, invert the character color
-                                            if(u_invertMode == 1) {
+                                            if (u_invertMode == 1) {
                                                 charColor.a = 1.0 - charColor.a;
                                                 charColor.rgb = vec3(1.0);
                                             }
@@ -93,15 +99,14 @@ class P5AsciifyConstants {
                                             // Calculate the final color of the character
                                             vec4 finalColor = (u_characterColorMode == 0) ? vec4(sketchColor.rgb * charColor.rgb, charColor.a) : vec4(u_characterColor * charColor.rgb, charColor.a);
 
-                                            // If the background color mode is 0, mix the simulation color and the final color based on the character's alpha value
+                                            // If the background color mode is 0, mix the sketch color and the final color based on the character's alpha value
                                             // Otherwise, mix the background color and the final color based on the character's alpha value
-                                            if(u_backgroundColorMode == 0) {
+                                            if (u_backgroundColorMode == 0) {
                                                 fragColor = mix(vec4(sketchColor.rgb, 1.0), finalColor, charColor.a);
                                             } else {
                                                 fragColor = mix(vec4(u_backgroundColor, 1.0), finalColor, charColor.a);
                                             }
-                                        }
-                                        `;
+                                        }`;
 
     static KALEIDOSCOPE_FRAG_SHADER_CODE = `#version 300 es
                                             precision highp float;
