@@ -38,8 +38,15 @@ class P5AsciifyConstants {
                                         uniform int u_backgroundColorMode;
 
                                         uniform int u_invertMode;
+                                        uniform float u_rotationAngle;
 
                                         out vec4 fragColor;
+
+                                        mat2 rotate2D(float angle) {
+                                            float s = sin(angle);
+                                            float c = cos(angle);
+                                            return mat2(c, -s, s, c);
+                                        }
 
                                         void main() {
                                             vec2 adjustedCoord = (gl_FragCoord.xy - u_gridOffsetDimensions) / u_gridPixelDimensions;
@@ -68,16 +75,19 @@ class P5AsciifyConstants {
 
                                             // Calculate the texture coordinate of the character in the charset texture
                                             vec2 charCoord = vec2(float(charCol) / u_charsetCols, float(charRow) / u_charsetRows);
-                                            vec2 fractionalPart = fract(gridCoord) * vec2(1.0f / u_charsetCols, 1.0f / u_charsetRows);
-                                            vec2 texCoord = charCoord + fractionalPart;
+                                            vec2 fractionalPart = fract(gridCoord) - 0.5; // Center fractional part around (0,0) for rotation
+                                            fractionalPart = rotate2D(u_rotationAngle) * fractionalPart; // Rotate fractional part
+                                            fractionalPart += 0.5; // Move back to original coordinate space
+
+                                            vec2 texCoord = charCoord + fractionalPart * vec2(1.0 / u_charsetCols, 1.0 / u_charsetRows);
 
                                             // Get the color of the character from the charset texture
                                             vec4 charColor = texture(u_characterTexture, texCoord);
 
                                             // If the inversion mode is enabled, invert the character color
                                             if(u_invertMode == 1) {
-                                                charColor.a = 1.0f - charColor.a;
-                                                charColor.rgb = vec3(1.0f);
+                                                charColor.a = 1.0 - charColor.a;
+                                                charColor.rgb = vec3(1.0);
                                             }
 
                                             // Calculate the final color of the character
@@ -86,11 +96,12 @@ class P5AsciifyConstants {
                                             // If the background color mode is 0, mix the simulation color and the final color based on the character's alpha value
                                             // Otherwise, mix the background color and the final color based on the character's alpha value
                                             if(u_backgroundColorMode == 0) {
-                                                fragColor = mix(vec4(sketchColor.rgb, 1.0f), finalColor, charColor.a);
+                                                fragColor = mix(vec4(sketchColor.rgb, 1.0), finalColor, charColor.a);
                                             } else {
-                                                fragColor = mix(vec4(u_backgroundColor, 1.0f), finalColor, charColor.a);
+                                                fragColor = mix(vec4(u_backgroundColor, 1.0), finalColor, charColor.a);
                                             }
-                                        }`;
+                                        }
+                                        `;
 
     static KALEIDOSCOPE_FRAG_SHADER_CODE = `#version 300 es
                                             precision highp float;

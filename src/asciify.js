@@ -7,7 +7,8 @@ class P5Asciify {
         characterColorMode: 0,
         backgroundColor: [0.0, 0.0, 0.0],
         backgroundColorMode: 1,
-        invertMode: false
+        invertMode: false,
+        rotationAngle: 0.0,
     };
 
     static preEffectSetupQueue = [];
@@ -93,7 +94,7 @@ class P5Asciify {
             this.asciiShader.setUniform('u_backgroundColor', this.config.backgroundColor);
             this.asciiShader.setUniform('u_backgroundColorMode', this.config.backgroundColorMode);
             this.asciiShader.setUniform('u_invertMode', this.config.invertMode);
-            this.asciiShader.setUniform('u_renderMode', 0);
+            this.asciiShader.setUniform('u_rotationAngle', radians(this.config.rotationAngle));
             rect(0, 0, width, height);
 
             this.framebuffer.end();
