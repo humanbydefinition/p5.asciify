@@ -6,7 +6,13 @@ window.preload = function () { }; // In case the user doesn't define a preload f
  */
 p5.prototype.preloadAsciiFont = function () {
     this._incrementPreload();
-    this.loadAsciiFont(P5AsciifyConstants.URSAFONT_BASE64);
+    this.loadFont(
+        P5AsciifyConstants.URSAFONT_BASE64,
+        (loadedFont) => {
+            P5Asciify.font = loadedFont;
+        },
+        () => { throw new P5AsciifyError(`loadAsciiFont() | Failed to load font from path: '${font}'`); }
+    );
 }
 p5.prototype.registerMethod("beforePreload", p5.prototype.preloadAsciiFont);
 
@@ -17,11 +23,13 @@ p5.prototype.registerMethod("beforePreload", p5.prototype.preloadAsciiFont);
 p5.prototype.loadAsciiFont = function (font) {
     const setFont = (loadedFont) => {
         P5Asciify.font = loadedFont;
+        this._decrementPreload();
         if (this.frameCount > 0) {
-            P5Asciify.characterset.setFontObject(loadedFont);
+            P5Asciify.brightnessCharacterSet.setFontObject(loadedFont);
+            P5Asciify.edgeCharacterSet.setFontObject(loadedFont);
             P5Asciify.grid.resizeCellDimensions(
-                P5Asciify.characterset.maxGlyphDimensions.width,
-                P5Asciify.characterset.maxGlyphDimensions.height
+                P5Asciify.brightnessCharacterSet.maxGlyphDimensions.width,
+                P5Asciify.brightnessCharacterSet.maxGlyphDimensions.height
             );
         }
     };
@@ -29,7 +37,7 @@ p5.prototype.loadAsciiFont = function (font) {
     if (typeof font === 'string') {
         this.loadFont(
             font,
-            (loadedFont) => { setFont(loadedFont); this._decrementPreload(); },
+            (loadedFont) => { setFont(loadedFont); },
             () => { throw new P5AsciifyError(`loadAsciiFont() | Failed to load font from path: '${font}'`); }
         );
     } else if (typeof font === 'object') {
