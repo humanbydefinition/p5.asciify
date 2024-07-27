@@ -41,8 +41,6 @@ class P5Asciify {
     static afterEffectSetupQueue = [];
     static afterEffectManager = new P5AsciifyEffectManager();
 
-    static colorPalette = new P5AsciifyColorPalette();
-
     static preEffectFramebuffer = null;
     static postEffectFramebuffer = null;
 
@@ -66,10 +64,8 @@ class P5Asciify {
         this.edgeCharacterSet.setup({ font: this.font, characters: this.config.edge.characters, fontSize: this.config.common.fontSize });
         this.grid.resizeCellDimensions(this.brightnessCharacterSet.maxGlyphDimensions.width, this.brightnessCharacterSet.maxGlyphDimensions.height);
 
-        this.colorPalette.setup();
-
-        this.preEffectManager.setup(this.colorPalette);
-        this.afterEffectManager.setup(this.colorPalette);
+        this.preEffectManager.setup();
+        this.afterEffectManager.setup();
 
         this.preEffectFramebuffer = createFramebuffer({ format: FLOAT });
         this.postEffectFramebuffer = createFramebuffer({ format: FLOAT });
