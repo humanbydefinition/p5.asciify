@@ -20,19 +20,13 @@ Download the latest version of p5.asciify from the [Releases](https://github.com
 
 ```html
 <!-- Import p5.js -->
-<script src="p5.min.js"></script> 
+<script src="https://cdn.jsdelivr.net/npm/p5@1.9.4/lib/p5.min.js"></script>
 
 <!-- Import p5.asciify -->
-<!-- <script src="p5.asciify.js"></script> -->
-<script src="p5.asciify.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/p5.asciify@0.0.6/dist/p5.asciify.min.js"></script>
 
-<!-- 
- Alternatively, import p5.asciify directly from a CDN
-
- <script src="https://cdn.jsdelivr.net/npm/p5.asciify@0.0.5/dist/p5.asciify.js"></script>
- or 
- <script src="https://cdn.jsdelivr.net/npm/p5.asciify@0.0.5/dist/p5.asciify.min.js"></script>
- -->
+<!-- If needed, import canvas recording libraries like p5.Capture after p5.asciify -->
+<script src="https://cdn.jsdelivr.net/npm/p5.capture@1.4.1/dist/p5.capture.umd.min.js"></script>
 
 <!-- Load your sketch -->
 <script src="sketch.js"></script>
@@ -84,30 +78,79 @@ For a list of free and awesome textmode/pixel fonts that have been tested to wor
 <hr />
 
 ### Changing default options
-`p5.asciify` provides a function `setAsciiOptions(options): void`, which can be called within the sketch's [`preload()`](https://p5js.org/reference/p5/preload/), [`setup()`](https://p5js.org/reference/p5/setup/), or [`draw()`](https://p5js.org/reference/p5/draw/) functions to change the default options used for ASCII conversion. The options object passed to this function can include one or more of the following properties:
+`p5.asciify` provides a function `setAsciiOptions(options): void`, which can be called within the sketch's [`preload()`](https://p5js.org/reference/p5/preload/), [`setup()`](https://p5js.org/reference/p5/setup/), or [`draw()`](https://p5js.org/reference/p5/draw/) functions to change the default options used for ASCII conversion. The options object essentially is a dictionary of three dictionaries: `common`, `brightness` and `edge`. The `common` dictionary contains the options that are common to both the brightness-based ASCII conversion and the edge-based ASCII conversion, like the font size. The other two dictionaries `brightness` and contain options specific to the brightness-based and edge-based ASCII conversion, respectively.
 
-| Option                | Type    | Description                                                                                                                                                                                                 |
-|-----------------------|---------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `enabled`             | boolean | A boolean value indicating whether the ASCII conversion should be enabled. The default value is `true`.                                                                                                      |
-| `characters`          | string  | A string containing the characters to be used for the ASCII conversion. The characters are used in order of appearance, with the first character representing the darkest pixel and the last character representing the lightest pixel. The default value is `0123456789`. |
-| `fontSize`            | number  | The size of the font used for the ASCII conversion. The default value is `16`. Allowed values range from `1` *L(° O °L)* to `512`. It is recommended to use a font size that is a power of 2, such as 2, 4, 8, 16, 32, 64, etc. |
-| `characterColorMode`  | number  | The mode used for the color of the characters used for the ASCII conversion. The default value is `0` *(sampled)*. Allowed values are `0` *(sampled)* and `1` *(fixed)*. <br> - `0` *(sampled)*: The color of a character is determined by sampling the central pixel of the cell it occupies on the canvas. <br> - `1` *(fixed)*: The color of a character is determined by the `characterColor` property. |
-| `characterColor`      | string  | The color of the characters used for the ASCII conversion. The default value is `#ffffff`. Only used if the `characterColorMode` is set to `1` *(fixed)*.                                                     |
-| `backgroundColorMode` | number  | The mode used for the color of the background of a cell, not covered by the character. The default value is `1` *(fixed)*. Allowed values are `0` *(sampled)* and `1` *(fixed)*. <br> - `0` *(sampled)*: The color of a character is determined by sampling the central pixel of the cell it occupies on the canvas. <br> - `1` *(fixed)*: The color of a character is determined by the `backgroundColor` property. |
-| `backgroundColor`     | string  | The color of the background of a cell, not covered by the character. The default value is `#000000`. Only used if the `backgroundColorMode` is set to `1` *(fixed)*.                                          |
-| `invertMode`          | boolean | A boolean value indicating whether the ASCII conversion should be inverted. The default value is `false`.                                                                                                    |
+**`common` options:**
+| Option                | Type    | Default value  | Description                                                                                                                                                                                                 |
+|-----------------------|---------|----------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `fontSize`            | number  | 16       | The size of the font used for the ASCII conversion. Allowed values range from `1` *L(° O °L)* to `512`. It is recommended to use a font size that is a power of 2, such as 2, 4, 8, 16, 32, 64, etc. |
+
+**`brightness` options:**
+| Option                | Type    | Default value  | Description                                                                                                                                                                                                 |
+|-----------------------|---------|----------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `enabled`             | boolean | true     | A boolean value indicating whether the brightness-based ASCII conversion should be enabled.                                                                                                      |
+| `characters`          | string  | '0123456789' | A string containing the characters to be used for the ASCII conversion. The characters are used in order of appearance, with the first character representing the darkest colors and the last character representing the brightest colors. |
+| `characterColorMode`  | number  | 0        | The mode used for the color of the characters used for the ASCII conversion. Allowed values are `0` *(sampled)* and `1` *(fixed)*. <br> - `0` *(sampled)*: The color of a character is determined by sampling the central pixel of the cell it occupies on the canvas. <br> - `1` *(fixed)*: The color of a character is determined by the `characterColor` property. |
+| `characterColor`      | string  | '#ffffff' | The color of the characters used for the ASCII conversion. Only used if the `characterColorMode` is set to `1` *(fixed)*.                                                     |
+| `backgroundColorMode` | number  | 1        | The mode used for the color of the background of a cell, not covered by the character. Allowed values are `0` *(sampled)* and `1` *(fixed)*. <br> - `0` *(sampled)*: The color of a character is determined by sampling the central pixel of the cell it occupies on the canvas. <br> - `1` *(fixed)*: The color of a character is determined by the `backgroundColor` property. |
+| `backgroundColor`     | string  | '#000000' | The color of the background of a cell, not covered by the character. Only used if the `backgroundColorMode` is set to `1` *(fixed)*.                                          |
+| `invertMode`          | boolean | false    | A boolean value indicating whether the background and character color should swap.                                                                                                    |
+| `rotationAngle`       | number  | 0        | The angle of rotation in degrees, which is applied to all characters from the brightness-based ASCII conversion.                                                                                                    |
+
+**`edge` options:**  
+| Option                | Type    | Default value  | Description                                                                                                                                                                                                 |
+|-----------------------|---------|----------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `enabled`             | boolean | false     | A boolean value indicating whether the edge-based ASCII conversion should be enabled.                                                                                                      |
+| `characters`          | string  | '-/\|\\-/\|\\' | A string containing the characters to be used for the ASCII conversion. |
+| `characterColorMode`  | number  | 0        | The mode used for the color of the characters used for the ASCII conversion. Allowed values are `0` *(sampled)* and `1` *(fixed)*. <br> - `0` *(sampled)*: The color of a character is determined by sampling the central pixel of the cell it occupies on the canvas. <br> - `1` *(fixed)*: The color of a character is determined by the `characterColor` property. |
+| `characterColor`      | string  | '#ffffff' | The color of the characters used for the ASCII conversion. Only used if the `characterColorMode` is set to `1` *(fixed)*.                                                     |
+| `backgroundColorMode` | number  | 1        | The mode used for the color of the background of a cell, not covered by the character. Allowed values are `0` *(sampled)* and `1` *(fixed)*. <br> - `0` *(sampled)*: The color of a character is determined by sampling the central pixel of the cell it occupies on the canvas. <br> - `1` *(fixed)*: The color of a character is determined by the `backgroundColor` property. |
+| `backgroundColor`     | string  | '#000000' | The color of the background of a cell, not covered by the character. Only used if the `backgroundColorMode` is set to `1` *(fixed)*.                                          |
+| `invertMode`          | boolean | false    | A boolean value indicating whether the background and character color should swap.                                                                                                    |
+| `rotationAngle`       | number  | 0        | The angle of rotation in degrees, which is applied to all characters from the edge-based ASCII conversion.              
+| `sobelThreshold`      | number  | 0.5      | The threshold value used for the Sobel edge detection algorithm.                                                                                                    |
+| `sampleThreshold`     | number  | 16      | The threshold value used when downscaling the sobel framebuffer to the grid size for the edge-based ASCII conversion.                                                                                                    |
 
 ```javascript
-// (any amount of properties can be passed from the available options)
-setAsciiOptions({
-  enabled: true,
-  characters: '0123456789',
-  fontSize: 32,
-  characterColor: "#ff0000",
-  characterColorMode: 1,
-  backgroundColor: "#000000",
-  backgroundColorMode: 1,
-  invertMode: true
+setAsciiOptions({ 
+    common: {
+        fontSize: 8,
+    },
+    brightness: {
+        enabled: true,
+        characters: "0123456789",
+        characterColor: "#ffffff",
+        characterColorMode: 0,
+        backgroundColor: "#000000",
+        backgroundColorMode: 1,
+        invertMode: false,
+        rotationAngle: 0,
+    },
+    edge: {
+        enabled: true,
+        characters: "-/|\\-/|\\",
+        characterColor: '#ffffff',
+        characterColorMode: 1,
+        backgroundColor: '#000000',
+        backgroundColorMode: 1,
+        invertMode: false,
+        rotationAngle: 0,
+        sobelThreshold: 0.01,
+        sampleThreshold: 16,
+    }
+});
+
+// Only changing selected options is also valid
+setAsciiOptions({ 
+    common: {
+        fontSize: 8,
+    },
+    brightness: {
+        enabled: true,
+        characters: "0123456789",
+        backgroundColorMode: 1,
+        invertMode: false,
+    },
 });
 ```
 
@@ -123,9 +166,9 @@ This function adds an effect to the ASCII conversion. The effects are applied in
 
 | Parameter   | Type   | Description                                                                 |
 |-------------|--------|-----------------------------------------------------------------------------|
-| effectType  | string | 'pre' or 'post', depending on when the effect should be applied             |
-| effectName  | string | The name of the effect (see below for available effects)                    |
-| params      | object | *(optional)* The parameters for the effect. Each effect has its own set of parameters.   |
+| `effectType`  | string | 'pre' or 'post', depending on when the effect should be applied             |
+| `effectName`  | string | The name of the effect (see below for available effects)                    |
+| `params`      | object | *(optional)* The parameters for the effect. Each effect has its own set of parameters.   |
 
 **Example:**
 ```javascript
@@ -157,7 +200,7 @@ This function removes an effect from the ASCII conversion. The effect instance t
 
 | Parameter      | Type             | Description                                      |
 |----------------|------------------|--------------------------------------------------|
-| effectInstance | P5AsciifyEffect  | The instance of the effect to be removed.        |
+| `effectInstance` | P5AsciifyEffect  | The instance of the effect to be removed.        |
 
 **Example:**
 
@@ -183,8 +226,8 @@ This function swaps the order of two effects in the ASCII conversion. Swapping e
 
 | Parameter      | Type             | Description                                      |
 |----------------|------------------|--------------------------------------------------|
-| effectInstance1 | P5AsciifyEffect  | The first instance of the effect to be swapped.  |
-| effectInstance2 | P5AsciifyEffect  | The second instance of the effect to be swapped. |
+| `effectInstance1` | P5AsciifyEffect  | The first instance of the effect to be swapped.  |
+| `effectInstance2` | P5AsciifyEffect  | The second instance of the effect to be swapped. |
 
 **Example:**
 

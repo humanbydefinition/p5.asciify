@@ -17,12 +17,26 @@ class P5AsciifyUtils {
 
     static compareVersions(v1, v2) {
         const [v1Parts, v2Parts] = [v1, v2].map(v => v.split('.').map(Number));
-    
+
         for (let i = 0; i < Math.max(v1Parts.length, v2Parts.length); i++) {
             const [v1Part, v2Part] = [v1Parts[i] ?? 0, v2Parts[i] ?? 0];
             if (v1Part !== v2Part) return v1Part > v2Part ? 1 : -1;
         }
-    
+
         return 0;
+    }
+
+    static deepMerge(target, source) {
+        const result = { ...target };
+
+        for (const key of Object.keys(source)) {
+            if (source[key] !== null && typeof source[key] === 'object' && !Array.isArray(source[key]) && key in target && typeof target[key] === 'object' && !Array.isArray(target[key])) {
+                result[key] = this.deepMerge(target[key], source[key]);
+            } else {
+                result[key] = source[key];
+            }
+        }
+
+        return result;
     }
 }

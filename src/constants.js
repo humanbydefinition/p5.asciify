@@ -27,6 +27,9 @@ class P5AsciifyConstants {
                                         uniform int u_totalChars;
 
                                         uniform sampler2D u_sketchTexture;
+                                        uniform sampler2D u_rotationTexture;
+                                        uniform sampler2D u_edgesTexture; 
+                                        uniform sampler2D u_asciiBrightnessTexture;
 
                                         uniform vec2 u_gridCellDimensions;
                                         uniform vec2 u_gridPixelDimensions;
@@ -37,9 +40,21 @@ class P5AsciifyConstants {
                                         uniform vec3 u_backgroundColor;
                                         uniform int u_backgroundColorMode;
 
+                                        uniform float u_rotationAngle;
+
                                         uniform int u_invertMode;
 
+                                        uniform int u_renderMode;
+
+                                        uniform bool u_brightnessEnabled;
+
                                         out vec4 fragColor;
+
+                                        mat2 rotate2D(float angle) {
+                                            float s = sin(angle);
+                                            float c = cos(angle);
+                                            return mat2(c, -s, s, c);
+                                        }
 
                                         void main() {
                                             vec2 adjustedCoord = (gl_FragCoord.xy - u_gridOffsetDimensions) / u_gridPixelDimensions;
@@ -55,12 +70,29 @@ class P5AsciifyConstants {
                                             vec2 centerCoord = cellCoord + vec2(0.5f);
                                             vec2 baseCoord = centerCoord / u_gridCellDimensions;
 
-                                            vec4 sketchColor = texture(u_sketchTexture, baseCoord);
-                                            float brightness = dot(sketchColor.rgb, vec3(0.299f, 0.587f, 0.114f));
+                                            vec4 edgeColor; // edge color (only used in edges mode)
+                                            vec4 sketchColor; // Simulation color
+
+                                            if(u_renderMode == 1) { // edges mode
+                                                edgeColor = texture(u_edgesTexture, baseCoord);
+                                                sketchColor = texture(u_sketchTexture, baseCoord);
+
+                                                if(edgeColor.rgb == vec3(0.0f)) {
+                                                    if (u_brightnessEnabled) {
+                                                    fragColor = texture(u_asciiBrightnessTexture, gl_FragCoord.xy / vec2(textureSize(u_asciiBrightnessTexture, 0)));
+                                                    } else {
+                                                     fragColor = vec4(u_backgroundColor, 1.0f);
+                                                    }
+                                                    return;
+                                                }
+                                            } else { // Brightness mode
+                                                sketchColor = texture(u_sketchTexture, baseCoord);
+                                            }
+
+                                            float brightness = u_renderMode == 1 ? edgeColor.r : dot(sketchColor.rgb, vec3(0.299f, 0.587f, 0.114f));
 
                                             // Map the brightness to a character index
                                             int charIndex = int(brightness * float(u_totalChars));
-                                            charIndex = min(charIndex, u_totalChars - 1);
 
                                             // Calculate the column and row of the character in the charset texture
                                             int charCol = charIndex % int(u_charsetCols);
@@ -68,11 +100,26 @@ class P5AsciifyConstants {
 
                                             // Calculate the texture coordinate of the character in the charset texture
                                             vec2 charCoord = vec2(float(charCol) / u_charsetCols, float(charRow) / u_charsetRows);
-                                            vec2 fractionalPart = fract(gridCoord) * vec2(1.0f / u_charsetCols, 1.0f / u_charsetRows);
-                                            vec2 texCoord = charCoord + fractionalPart;
+                                            
+                                            // Sample the rotation texture and calculate brightness for rotation angle
+                                            vec4 rotationColor = texture(u_rotationTexture, baseCoord);
+                                            float rotationBrightness = dot(rotationColor.rgb, vec3(0.299f, 0.587f, 0.114f));
+                                            float rotationAngle = rotationBrightness * 2.0 * 3.14159265; // Convert brightness to angle (0 to 2*PI radians)
 
-                                            // Get the color of the character from the charset texture
-                                            vec4 charColor = texture(u_characterTexture, texCoord);
+                                            vec2 fractionalPart = fract(gridCoord) - 0.5f; // Center fractional part around (0,0) for rotation
+                                            fractionalPart = rotate2D(u_rotationAngle) * fractionalPart; // Rotate fractional part
+                                            fractionalPart += 0.5f; // Move back to original coordinate space
+
+                                            // Calculate the texture coordinates
+                                            vec2 cellMin = charCoord;
+                                            vec2 cellMax = charCoord + vec2(1.0f / u_charsetCols, 1.0f / u_charsetRows);
+                                            vec2 texCoord = charCoord + fractionalPart * vec2(1.0f / u_charsetCols, 1.0f / u_charsetRows);
+
+                                            // Determine if the texture coordinate is within the cell boundaries
+                                            bool outsideBounds = any(lessThan(texCoord, cellMin)) || any(greaterThan(texCoord, cellMax));
+
+                                            // Get the color of the character from the charset texture or use the background color if outside bounds
+                                            vec4 charColor = outsideBounds ? vec4(u_backgroundColor, 1.0f) : texture(u_characterTexture, texCoord);
 
                                             // If the inversion mode is enabled, invert the character color
                                             if(u_invertMode == 1) {
@@ -83,13 +130,167 @@ class P5AsciifyConstants {
                                             // Calculate the final color of the character
                                             vec4 finalColor = (u_characterColorMode == 0) ? vec4(sketchColor.rgb * charColor.rgb, charColor.a) : vec4(u_characterColor * charColor.rgb, charColor.a);
 
-                                            // If the background color mode is 0, mix the simulation color and the final color based on the character's alpha value
+                                            // If the background color mode is 0, mix the sketch color and the final color based on the character's alpha value
                                             // Otherwise, mix the background color and the final color based on the character's alpha value
                                             if(u_backgroundColorMode == 0) {
                                                 fragColor = mix(vec4(sketchColor.rgb, 1.0f), finalColor, charColor.a);
                                             } else {
                                                 fragColor = mix(vec4(u_backgroundColor, 1.0f), finalColor, charColor.a);
                                             }
+
+                                            // Override final color with background color for out-of-bounds areas due to rotation
+                                            if (outsideBounds) {
+                                                fragColor = (u_backgroundColorMode == 0) 
+                                                            ? (u_invertMode == 1 ? (u_characterColorMode == 0 ? vec4(sketchColor.rgb, 1.0f) : vec4(u_characterColor, 1.0f)) : vec4(sketchColor.rgb, 1.0f)) 
+                                                            : (u_invertMode == 1 ? (u_characterColorMode == 0 ? vec4(sketchColor.rgb, 1.0f) : vec4(u_characterColor, 1.0f)) : vec4(u_backgroundColor, 1.0f));
+                                            }
+                                        }`;
+
+    static SAMPLE_FRAG_SHADER_CODE = `  #version 300 es
+                                        precision highp float;
+
+                                        uniform sampler2D u_image;
+
+                                        uniform vec2 u_gridCellDimensions; // New uniform to store the dimensions of the grid (number of columns and rows)
+                                        uniform int u_threshold;
+                                        out vec4 outColor;
+
+                                        const vec3 BLACK = vec3(0.0, 0.0, 0.0);
+
+                                        // Increase the size of the histogram arrays to handle larger cells
+                                        const int MAX_HISTOGRAM_SIZE = 16;
+                                        vec3 colorHistogram[MAX_HISTOGRAM_SIZE];
+                                        int countHistogram[MAX_HISTOGRAM_SIZE];
+
+                                        void main() {
+                                            vec2 bufferDimensions = u_gridCellDimensions;
+                                            vec2 imageDimensions = vec2(textureSize(u_image, 0));
+                                            vec2 gridCellDimensions = vec2(imageDimensions.x / bufferDimensions.x, imageDimensions.y / bufferDimensions.y);
+
+                                            ivec2 coords = ivec2(gl_FragCoord.xy);
+                                            int gridX = coords.x;
+                                            int gridY = coords.y;
+
+                                            ivec2 cellOrigin = ivec2(gridX * int(gridCellDimensions.x), gridY * int(gridCellDimensions.y));
+                                            int histogramIndex = 0;
+                                            int nonBlackCount = 0;
+
+                                            // Initialize histograms
+                                            for (int i = 0; i < MAX_HISTOGRAM_SIZE; i++) {
+                                                colorHistogram[i] = BLACK;
+                                                countHistogram[i] = 0;
+                                            }
+
+                                            // Iterate over the cell and populate the histograms
+                                            for (int i = 0; i < int(gridCellDimensions.x); i += 1) {
+                                                for (int j = 0; j < int(gridCellDimensions.y); j += 1) {
+                                                    ivec2 pixelCoords = cellOrigin + ivec2(i, j);
+                                                    vec3 color = texelFetch(u_image, pixelCoords, 0).rgb;
+
+                                                    if (color == BLACK) continue;
+
+                                                    nonBlackCount++;
+                                                    bool found = false;
+                                                    for (int k = 0; k < histogramIndex; k++) {
+                                                        if (colorHistogram[k] == color) {
+                                                            countHistogram[k]++;
+                                                            found = true;
+                                                            break;
+                                                        }
+                                                    }
+
+                                                    if (!found && histogramIndex < MAX_HISTOGRAM_SIZE) {
+                                                        colorHistogram[histogramIndex] = color;
+                                                        countHistogram[histogramIndex] = 1;
+                                                        histogramIndex++;
+                                                    }
+                                                }
+                                            }
+
+                                            vec3 mostFrequentColor = BLACK;
+                                            int highestCount = 0;
+
+                                            // Find the most frequent color
+                                            for (int k = 0; k < histogramIndex; k++) {
+                                                if (countHistogram[k] > highestCount) {
+                                                    mostFrequentColor = colorHistogram[k];
+                                                    highestCount = countHistogram[k];
+                                                }
+                                            }
+
+                                            // If the number of non-black pixels is below the threshold, output black, otherwise output the most frequent color
+                                            if (nonBlackCount < u_threshold) {
+                                                outColor = vec4(BLACK, 1.0);
+                                            } else {
+                                                outColor = vec4(mostFrequentColor, 1.0);
+                                            }
+                                        }`;
+
+    static SOBEL_FRAG_SHADER_CODE = `   #version 300 es
+                                        precision highp float;
+
+                                        in vec2 v_texCoord;
+                                        out vec4 fragColor;
+
+                                        uniform sampler2D u_texture;
+                                        uniform vec2 u_textureSize;
+                                        uniform float u_threshold;
+
+                                        void main() {
+                                            vec2 texelSize = 1.0 / u_textureSize;
+
+                                            float kernelX[9];
+                                            float kernelY[9];
+
+                                            kernelX[0] = -1.0; kernelX[1] = 0.0; kernelX[2] = 1.0;
+                                            kernelX[3] = -2.0; kernelX[4] = 0.0; kernelX[5] = 2.0;
+                                            kernelX[6] = -1.0; kernelX[7] = 0.0; kernelX[8] = 1.0;
+
+                                            kernelY[0] = -1.0; kernelY[1] = -2.0; kernelY[2] = -1.0;
+                                            kernelY[3] = 0.0; kernelY[4] = 0.0; kernelY[5] = 0.0;
+                                            kernelY[6] = 1.0; kernelY[7] = 2.0; kernelY[8] = 1.0;
+
+                                            vec3 texColor[9];
+                                            for(int i = 0; i < 3; i++) {
+                                                for(int j = 0; j < 3; j++) {
+                                                    texColor[i * 3 + j] = texture(u_texture, v_texCoord + vec2(i - 1, j - 1) * texelSize).rgb;
+                                                }
+                                            }
+
+                                            vec3 sobelX = vec3(0.0);
+                                            vec3 sobelY = vec3(0.0);
+                                            for(int i = 0; i < 9; i++) {
+                                                sobelX += kernelX[i] * texColor[i];
+                                                sobelY += kernelY[i] * texColor[i];
+                                            }
+
+                                            vec3 sobel = sqrt(sobelX * sobelX + sobelY * sobelY);
+                                            float intensity = length(sobel) / sqrt(3.0);
+
+                                            float angleDeg = degrees(atan(sobelY.r, sobelX.r));
+                                            vec3 edgeColor = vec3(0.0);
+
+                                            if(intensity > u_threshold) {
+                                                if(angleDeg >= -22.5 && angleDeg < 22.5) {
+                                                    edgeColor = vec3(0.1); // "-"
+                                                } else if(angleDeg >= 22.5 && angleDeg < 67.5) {
+                                                    edgeColor = vec3(0.2); // "/"
+                                                } else if(angleDeg >= 67.5 && angleDeg < 112.5) {
+                                                    edgeColor = vec3(0.3); // "|"
+                                                } else if(angleDeg >= 112.5 && angleDeg < 157.5) {
+                                                    edgeColor = vec3(0.4); // "\"
+                                                } else if(angleDeg >= 157.5 || angleDeg < -157.5) {
+                                                    edgeColor = vec3(0.6); // "-"
+                                                } else if(angleDeg >= -157.5 && angleDeg < -112.5) {
+                                                    edgeColor = vec3(0.7); // "/"
+                                                } else if(angleDeg >= -112.5 && angleDeg < -67.5) {
+                                                    edgeColor = vec3(0.8); // "|"
+                                                } else if(angleDeg >= -67.5 && angleDeg < -22.5) {
+                                                    edgeColor = vec3(0.9); // "\"
+                                                }
+                                            }
+
+                                            fragColor = vec4(edgeColor, 1.0);
                                         }`;
 
     static KALEIDOSCOPE_FRAG_SHADER_CODE = `#version 300 es
