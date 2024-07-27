@@ -53,12 +53,13 @@ function preload() {
   font = loadFont('path/to/awesome/font.ttf');
 
   loadAsciiFont('path/to/cool/font.ttf');
-  loadAsciiFont(font); // both are valid
+  // loadAsciiFont(font); // NOT valid here, since the font object is not yet fully loaded
 }
 
 function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL); // WebGL mode is required currently
   loadAsciiFont('path/to/different/font.ttf'); // update the font here if needed
+  loadAsciiFont(font); // valid, since the font object is fully loaded
 }
 
 function draw() {
@@ -66,6 +67,7 @@ function draw() {
 
   if (frameCount === 60) {
     loadAsciiFont('path/to/another/font.ttf'); // update the font here if needed
+    loadAsciiFont(font); // valid, since the font object is fully loaded
   }
 }
 
