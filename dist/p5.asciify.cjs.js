@@ -793,6 +793,7 @@ class P5AsciifyColorPalette {
         if (frameCount > 0) {
             this.updateTexture();
         }
+
         return this.palettes.length - 1;
     }
 
@@ -831,7 +832,7 @@ class P5AsciifyEffectManager {
         "chromaticaberration": { "amount": 0.1, "angle": 0.0 },
         "rotate": { "angle": 0.0 },
         "brightness": { "brightness": 0.0 },
-        "colorpalette": { "palette": ["#0f380f", "#306230", "#8bac0f", "#9bbc0f"], "paletteBuffer": this.colorPalette },
+        "colorpalette": { "palette": ["#0f380f", "#306230", "#8bac0f", "#9bbc0f"] },
     }
 
     effectShaders = {
@@ -853,7 +854,7 @@ class P5AsciifyEffectManager {
         "chromaticaberration": ({ shader, params }) => new P5AsciifyChromaticAberrationEffect({ shader, ...params }),
         "rotate": ({ shader, params }) => new P5AsciifyRotateEffect({ shader, ...params }),
         "brightness": ({ shader, params }) => new P5AsciifyBrightnessEffect({ shader, ...params }),
-        "colorpalette": ({ shader, params }) => new P5AsciifyColorPaletteEffect({ shader, ...params }),
+        "colorpalette": ({ shader, params }) => new P5AsciifyColorPaletteEffect({ shader, ...params, paletteBuffer: this.colorPalette }),
     }
 
     _setupQueue = [];
@@ -862,10 +863,10 @@ class P5AsciifyEffectManager {
         this._effects = [];
     }
 
-    setup(colorPalette) {
-        this.colorPalette = colorPalette;
+    setup() {
         this.setupShaders();
         this.setupEffectQueue();
+        this.colorPalette.setup();
     }
 
     setupShaders() {
@@ -877,6 +878,10 @@ class P5AsciifyEffectManager {
     setupEffectQueue() {
         for (let effectInstance of this._setupQueue) {
             effectInstance.shader = this.effectShaders[effectInstance.name];
+
+            if (effectInstance.name === "colorpalette") {
+                effectInstance.paletteBuffer = this.colorPalette;
+            }
         }
     }
 
@@ -1180,8 +1185,6 @@ class P5Asciify {
     static afterEffectSetupQueue = [];
     static afterEffectManager = new P5AsciifyEffectManager();
 
-    static colorPalette = new P5AsciifyColorPalette();
-
     static preEffectFramebuffer = null;
     static postEffectFramebuffer = null;
 
@@ -1205,10 +1208,8 @@ class P5Asciify {
         this.edgeCharacterSet.setup({ font: this.font, characters: this.config.edge.characters, fontSize: this.config.common.fontSize });
         this.grid.resizeCellDimensions(this.brightnessCharacterSet.maxGlyphDimensions.width, this.brightnessCharacterSet.maxGlyphDimensions.height);
 
-        this.colorPalette.setup();
-
-        this.preEffectManager.setup(this.colorPalette);
-        this.afterEffectManager.setup(this.colorPalette);
+        this.preEffectManager.setup();
+        this.afterEffectManager.setup();
 
         this.preEffectFramebuffer = createFramebuffer({ format: FLOAT });
         this.postEffectFramebuffer = createFramebuffer({ format: FLOAT });
