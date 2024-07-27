@@ -99,3 +99,5 @@ class P5AsciifyCharacterSet {
         this.texture.end();
     }
 };
+
+export default P5AsciifyCharacterSet;

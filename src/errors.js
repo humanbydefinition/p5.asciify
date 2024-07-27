@@ -4,3 +4,5 @@ class P5AsciifyError extends Error {
         this.name = "P5AsciifyError";
     }
 };
+
+export default P5AsciifyError;

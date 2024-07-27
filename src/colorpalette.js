@@ -90,3 +90,5 @@ class P5AsciifyColorPalette {
         }
     }
 }
+
+export default P5AsciifyColorPalette;

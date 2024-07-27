@@ -1,3 +1,5 @@
+import P5AsciifyEffect from './effect.js';
+
 class P5AsciifyRotateEffect extends P5AsciifyEffect {
     constructor({ shader, angle }) {
         super("rotate", shader);
@@ -18,3 +20,5 @@ class P5AsciifyRotateEffect extends P5AsciifyEffect {
         return this._angle;
     }
 }
+
+export default P5AsciifyRotateEffect;

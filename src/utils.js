@@ -40,3 +40,5 @@ class P5AsciifyUtils {
         return result;
     }
 }
+
+export default P5AsciifyUtils;

@@ -1,3 +1,5 @@
+import P5AsciifyEffect from './effect.js';
+
 class P5AsciifyKaleidoscopeEffect extends P5AsciifyEffect {
     constructor({ shader, segments, angle }) {
         super("kaleidoscope", shader);
@@ -27,3 +29,5 @@ class P5AsciifyKaleidoscopeEffect extends P5AsciifyEffect {
         return this._angle;
     }
 }
+
+export default P5AsciifyKaleidoscopeEffect;

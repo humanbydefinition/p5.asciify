@@ -1,3 +1,5 @@
+import P5AsciifyEffect from './effect.js';
+
 class P5AsciifyDistortionEffect extends P5AsciifyEffect {
     constructor({ shader, frequency, amplitude }) {
         super("distortion", shader);
@@ -29,3 +31,5 @@ class P5AsciifyDistortionEffect extends P5AsciifyEffect {
         return this._amplitude;
     }
 }
+
+export default P5AsciifyDistortionEffect;

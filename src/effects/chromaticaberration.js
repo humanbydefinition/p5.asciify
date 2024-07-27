@@ -1,3 +1,5 @@
+import P5AsciifyEffect from './effect.js';
+
 class P5AsciifyChromaticAberrationEffect extends P5AsciifyEffect {
     constructor({ shader, amount, angle }) {
         super("chromaticaberration", shader);
@@ -28,3 +30,5 @@ class P5AsciifyChromaticAberrationEffect extends P5AsciifyEffect {
         return this._angle;
     }
 }
+
+export default P5AsciifyChromaticAberrationEffect;

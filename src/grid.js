@@ -33,3 +33,5 @@ class P5AsciifyGrid {
         this.reset();
     }
 };
+
+export default P5AsciifyGrid;

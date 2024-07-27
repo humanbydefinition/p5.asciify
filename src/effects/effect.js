@@ -29,3 +29,5 @@ class P5AsciifyEffect {
         this._enabled = enabled;
     }
 }
+
+export default P5AsciifyEffect;

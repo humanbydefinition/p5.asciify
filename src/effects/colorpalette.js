@@ -1,3 +1,5 @@
+import P5AsciifyEffect from './effect.js';
+
 class P5AsciifyColorPaletteEffect extends P5AsciifyEffect {
     constructor({ shader, palette }) {
         super("colorpalette", shader);
@@ -19,3 +21,5 @@ class P5AsciifyColorPaletteEffect extends P5AsciifyEffect {
         P5Asciify.colorPalette.setPaletteColors(this._paletteId, this._palette);
     }
 }
+
+export default P5AsciifyColorPaletteEffect;
