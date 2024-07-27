@@ -2,13 +2,20 @@
   "name": "p5.asciify",
   "version": "0.0.8",
   "description": "Apply real-time ASCII conversion to your favourite p5.js sketches instantly.",
-  "main": "dist/p5.asciify.js",
+  "main": "dist/p5.asciify.cjs.js",
+  "module": "dist/p5.asciify.esm.js",
+  "browser": "dist/p5.asciify.umd.js",
   "dependencies": {
     "p5": ">=1.8.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^26.0.1",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "rollup": "^4.19.1"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "rollup -c",
+    "dev": "rollup -c -w"
   },
   "repository": {
     "type": "git",
@@ -29,9 +36,6 @@
   },
   "homepage": "https://github.com/humanbydefinition/p5-asciify",
   "files": [
-    "dist/p5.asciify.js",
-    "dist/p5.asciify.min.js",
-    "README.md",
-    "LICENSE"
+    "dist"
   ]
 }
