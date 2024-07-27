@@ -54,8 +54,8 @@ class P5Asciify {
     static sampleFramebuffer = null;
 
     static font = null;
-    static brightnessCharacterSet = new P5AsciifyCharacterSet({ characters: "", fontSize: 16 });
-    static edgeCharacterSet = new P5AsciifyCharacterSet({ characters: "", fontSize: 16 });
+    static brightnessCharacterSet = new P5AsciifyCharacterSet();
+    static edgeCharacterSet = new P5AsciifyCharacterSet();
     static grid = new P5AsciifyGrid({ cellWidth: 0, cellHeight: 0 });
 
     static setup() {
