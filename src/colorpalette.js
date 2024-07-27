@@ -65,6 +65,7 @@ class P5AsciifyColorPalette {
         if (frameCount > 0) {
             this.updateTexture();
         }
+
         return this.palettes.length - 1;
     }
 
