@@ -202,7 +202,7 @@ class P5Asciify {
         let used_deprecated_parent_options = deprecated_parent_options.filter(option => option in options);
 
         if (used_deprecated_parent_options.length > 0) {
-            console.warn(`Warning: Deprecated options detected (${used_deprecated_parent_options.join(', ')}). Refer to the documentation for updated options.`);
+            console.warn(`Warning: Deprecated options detected (${used_deprecated_parent_options.join(', ')}). Refer to the documentation for updated options. In v0.1.0, these options will be removed.`);
 
             // Move 'fontSize' to 'common' if it exists
             if ('fontSize' in options) {
