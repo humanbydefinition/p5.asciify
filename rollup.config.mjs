@@ -6,7 +6,7 @@ import pkg from './package.json' assert { type: 'json' };
 export default [
     // browser-friendly UMD build
     {
-        input: 'src/prototypes.js',
+        input: 'src/index.js',
         output: [
             {
                 name: 'p5.asciify',
@@ -28,7 +28,7 @@ export default [
 
     // CommonJS (for Node) and ES module (for bundlers) build.
     {
-        input: 'src/prototypes.js',
+        input: 'src/index.js',
         output: [
             { file: pkg.main, format: 'cjs' },
             { file: pkg.module, format: 'es' },
