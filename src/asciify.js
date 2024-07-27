@@ -1,6 +1,5 @@
 import P5AsciifyConstants from './constants.js';
 import P5AsciifyEffectManager from './managers/effectmanager.js';
-import P5AsciifyColorPalette from './colorpalette.js';
 import P5AsciifyCharacterSet from './characterset.js';
 import P5AsciifyGrid from './grid.js';
 import P5AsciifyUtils from './utils.js';
