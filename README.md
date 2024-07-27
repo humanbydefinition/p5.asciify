@@ -166,9 +166,9 @@ This function adds an effect to the ASCII conversion. The effects are applied in
 
 | Parameter   | Type   | Description                                                                 |
 |-------------|--------|-----------------------------------------------------------------------------|
-| effectType  | string | 'pre' or 'post', depending on when the effect should be applied             |
-| effectName  | string | The name of the effect (see below for available effects)                    |
-| params      | object | *(optional)* The parameters for the effect. Each effect has its own set of parameters.   |
+| `effectType`  | string | 'pre' or 'post', depending on when the effect should be applied             |
+| `effectName`  | string | The name of the effect (see below for available effects)                    |
+| `params`      | object | *(optional)* The parameters for the effect. Each effect has its own set of parameters.   |
 
 **Example:**
 ```javascript
@@ -200,7 +200,7 @@ This function removes an effect from the ASCII conversion. The effect instance t
 
 | Parameter      | Type             | Description                                      |
 |----------------|------------------|--------------------------------------------------|
-| effectInstance | P5AsciifyEffect  | The instance of the effect to be removed.        |
+| `effectInstance` | P5AsciifyEffect  | The instance of the effect to be removed.        |
 
 **Example:**
 
@@ -226,8 +226,8 @@ This function swaps the order of two effects in the ASCII conversion. Swapping e
 
 | Parameter      | Type             | Description                                      |
 |----------------|------------------|--------------------------------------------------|
-| effectInstance1 | P5AsciifyEffect  | The first instance of the effect to be swapped.  |
-| effectInstance2 | P5AsciifyEffect  | The second instance of the effect to be swapped. |
+| `effectInstance1` | P5AsciifyEffect  | The first instance of the effect to be swapped.  |
+| `effectInstance2` | P5AsciifyEffect  | The second instance of the effect to be swapped. |
 
 **Example:**
 
