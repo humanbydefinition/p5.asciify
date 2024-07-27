@@ -40,9 +40,13 @@ class P5AsciifyConstants {
                                         uniform vec3 u_backgroundColor;
                                         uniform int u_backgroundColorMode;
 
+                                        uniform float u_rotationAngle;
+
                                         uniform int u_invertMode;
 
                                         uniform int u_renderMode;
+
+                                        uniform bool u_brightnessEnabled;
 
                                         out vec4 fragColor;
 
@@ -74,7 +78,11 @@ class P5AsciifyConstants {
                                                 sketchColor = texture(u_sketchTexture, baseCoord);
 
                                                 if(edgeColor.rgb == vec3(0.0f)) {
+                                                    if (u_brightnessEnabled) {
                                                     fragColor = texture(u_asciiBrightnessTexture, gl_FragCoord.xy / vec2(textureSize(u_asciiBrightnessTexture, 0)));
+                                                    } else {
+                                                     fragColor = vec4(u_backgroundColor, 1.0f);
+                                                    }
                                                     return;
                                                 }
                                             } else { // Brightness mode
@@ -99,7 +107,7 @@ class P5AsciifyConstants {
                                             float rotationAngle = rotationBrightness * 2.0 * 3.14159265; // Convert brightness to angle (0 to 2*PI radians)
 
                                             vec2 fractionalPart = fract(gridCoord) - 0.5f; // Center fractional part around (0,0) for rotation
-                                            fractionalPart = rotate2D(rotationAngle) * fractionalPart; // Rotate fractional part
+                                            fractionalPart = rotate2D(u_rotationAngle) * fractionalPart; // Rotate fractional part
                                             fractionalPart += 0.5f; // Move back to original coordinate space
 
                                             // Calculate the texture coordinates
@@ -272,7 +280,7 @@ class P5AsciifyConstants {
                                                 } else if(angleDeg >= 112.5 && angleDeg < 157.5) {
                                                     edgeColor = vec3(0.4); // "\"
                                                 } else if(angleDeg >= 157.5 || angleDeg < -157.5) {
-                                                    edgeColor = vec3(0.5); // "-"
+                                                    edgeColor = vec3(0.6); // "-"
                                                 } else if(angleDeg >= -157.5 && angleDeg < -112.5) {
                                                     edgeColor = vec3(0.7); // "/"
                                                 } else if(angleDeg >= -112.5 && angleDeg < -67.5) {
@@ -283,8 +291,7 @@ class P5AsciifyConstants {
                                             }
 
                                             fragColor = vec4(edgeColor, 1.0);
-                                        }
-                                        `;
+                                        }`;
 
     static KALEIDOSCOPE_FRAG_SHADER_CODE = `#version 300 es
                                             precision highp float;
