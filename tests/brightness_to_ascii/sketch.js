@@ -19,7 +19,7 @@ function setup() {
         invertMode: false,
     });
 
-    grid = P5Asciify.grid; // TODO: Needs fixing in the library
+    grid = P5Asciify.grid;
 }
 
 function draw() {
