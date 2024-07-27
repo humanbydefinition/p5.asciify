@@ -1,8 +1,6 @@
 let sketchFramebuffer;
 
 let rectangles = [];
-let angleDirection = 1;
-let cooldownCounter = 120;
 let maxRectangles = 30;
 
 function setup() {
@@ -11,7 +9,7 @@ function setup() {
 
     setAsciiOptions({ // These are the default options, you can change them as needed in preload(), setup() or draw()
         common: {
-            fontSize: 16,
+            fontSize: 8,
         },
         brightness: {
             enabled: true,
@@ -68,6 +66,7 @@ class Rectangle {
         this.maxSize = random(50, 200);
         this.growing = true;
         this.color = color(random(255), random(255), random(255));
+        this.angle = random(TWO_PI);
     }
 
     update() {
@@ -86,7 +85,11 @@ class Rectangle {
     }
 
     display() {
+        push();
+        translate(this.x, this.y);
+        rotate(this.angle);
         fill(this.color);
-        rect(this.x - this.size / 2, this.y - this.size / 2, this.size, this.size);
+        rect(-this.size / 2, -this.size / 2, this.size, this.size);
+        pop();
     }
 }
