@@ -93,6 +93,7 @@ class P5AsciifyConstants {
 
                                             // Map the brightness to a character index
                                             int charIndex = int(brightness * float(u_totalChars));
+                                            charIndex = min(charIndex, u_totalChars - 1);
 
                                             // Calculate the column and row of the character in the charset texture
                                             int charCol = charIndex % int(u_charsetCols);
