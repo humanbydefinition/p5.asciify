@@ -93,6 +93,7 @@ class P5AsciifyConstants {
 
                                             // Map the brightness to a character index
                                             int charIndex = int(brightness * float(u_totalChars));
+                                            charIndex = min(charIndex, u_totalChars - 1);
 
                                             // Calculate the column and row of the character in the charset texture
                                             int charCol = charIndex % int(u_charsetCols);
@@ -1311,7 +1312,11 @@ class P5Asciify {
 
         this.postEffectFramebuffer.begin();
         clear();
-        image(this.asciiFramebuffer, -width / 2, -height / 2);
+        if (this.config.brightness.enabled || this.config.edge.enabled) {
+            image(this.asciiFramebuffer, -width / 2, -height / 2);
+        } else {
+            image(this.preEffectFramebuffer, -width / 2, -height / 2);
+        }
         this.postEffectFramebuffer.end();
 
         for (const effect of this.afterEffectManager._effects) {
@@ -1591,6 +1596,7 @@ p5.prototype.swapAsciiEffects = function (effectInstance1, effectInstance2) {
         manager1.swapEffects(effectInstance1, effectInstance2);
     }
 };
+
 
 p5.prototype.preDrawAddPush = function () { this.push(); };
 p5.prototype.registerMethod("pre", p5.prototype.preDrawAddPush);
