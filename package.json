@@ -5,6 +5,7 @@
   "main": "dist/p5.asciify.cjs.js",
   "module": "dist/p5.asciify.esm.js",
   "browser": "dist/p5.asciify.umd.js",
+  "type": "module",
   "dependencies": {
     "p5": ">=1.8.0"
   },
