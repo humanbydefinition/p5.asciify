@@ -8,8 +8,12 @@ import P5AsciifyInvertEffect from "../effects/invert.js";
 import P5AsciifyKaleidoscopeEffect from "../effects/kaleidoscope.js";
 import P5AsciifyRotateEffect from "../effects/rotate.js";
 import P5AsciifyConstants from "../constants.js";
+import P5AsciifyColorPalette from "../colorpalette.js";
+
 
 class P5AsciifyEffectManager {
+
+    colorPalette = new P5AsciifyColorPalette();
 
     effectParams = {
         "kaleidoscope": { "segments": 2, "angle": 0.0 },
@@ -19,7 +23,7 @@ class P5AsciifyEffectManager {
         "chromaticaberration": { "amount": 0.1, "angle": 0.0 },
         "rotate": { "angle": 0.0 },
         "brightness": { "brightness": 0.0 },
-        "colorpalette": { "palette": ["#0f380f", "#306230", "#8bac0f", "#9bbc0f"] },
+        "colorpalette": { "palette": ["#0f380f", "#306230", "#8bac0f", "#9bbc0f"], "paletteBuffer": this.colorPalette },
     }
 
     effectShaders = {
@@ -48,6 +52,12 @@ class P5AsciifyEffectManager {
 
     constructor() {
         this._effects = [];
+    }
+
+    setup(colorPalette) {
+        this.colorPalette = colorPalette;
+        this.setupShaders();
+        this.setupEffectQueue();
     }
 
     setupShaders() {

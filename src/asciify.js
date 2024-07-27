@@ -68,11 +68,8 @@ class P5Asciify {
 
         this.colorPalette.setup();
 
-        this.preEffectManager.setupShaders();
-        this.preEffectManager.setupEffectQueue();
-
-        this.afterEffectManager.setupShaders();
-        this.afterEffectManager.setupEffectQueue();
+        this.preEffectManager.setup(this.colorPalette);
+        this.afterEffectManager.setup(this.colorPalette);
 
         this.preEffectFramebuffer = createFramebuffer({ format: FLOAT });
         this.postEffectFramebuffer = createFramebuffer({ format: FLOAT });
