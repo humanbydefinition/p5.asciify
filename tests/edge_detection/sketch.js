@@ -1,10 +1,5 @@
 let sketchFramebuffer;
 
-let rectangles = [];
-let angleDirection = 1;
-let cooldownCounter = 120;
-let maxRectangles = 30;
-
 function setup() {
     createCanvas(windowWidth, windowHeight, WEBGL); // WebGL mode is required currently
     sketchFramebuffer = createFramebuffer({ format: FLOAT });
