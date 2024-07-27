@@ -3,6 +3,8 @@ import P5Asciify from './asciify.js';
 import P5AsciifyError from './errors.js';
 import P5AsciifyUtils from './utils.js';
 
+window.P5Asciify = P5Asciify;
+
 window.preload = function () { }; // In case the user doesn't define a preload function, we need to define it here to avoid errors
 
 /**
