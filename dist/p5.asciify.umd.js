@@ -612,24 +612,25 @@
     }
 
     class P5AsciifyColorPaletteEffect extends P5AsciifyEffect {
-        constructor({ shader, palette }) {
+        constructor({ shader, palette, paletteBuffer }) {
             super("colorpalette", shader);
             this._palette = palette;
-            this._paletteId = P5Asciify.colorPalette.addPalette(this._palette);
+            this.paletteBuffer = paletteBuffer;
+            this._paletteId = this.paletteBuffer.addPalette(this._palette);
         }
 
         setUniforms(framebuffer) {
             super.setUniforms(framebuffer);
 
-            this._shader.setUniform('u_colorPalette', P5Asciify.colorPalette.texture);
+            this._shader.setUniform('u_colorPalette', this.paletteBuffer.texture);
             this._shader.setUniform('u_colorPaletteRow', this._paletteId);
-            this._shader.setUniform('u_colorPaletteDimensions', [P5Asciify.colorPalette.texture.width, P5Asciify.colorPalette.texture.height]);
+            this._shader.setUniform('u_colorPaletteDimensions', [this.paletteBuffer.texture.width, this.paletteBuffer.texture.height]);
             this._shader.setUniform('u_colorPaletteLength', this._palette.length);
         }
 
         set palette(palette) {
             this._palette = palette;
-            P5Asciify.colorPalette.setPaletteColors(this._paletteId, this._palette);
+            this.paletteBuffer.setPaletteColors(this._paletteId, this._palette);
         }
     }
 
@@ -728,7 +729,102 @@
         }
     }
 
+    /**
+     * Represents a color palette texture.
+     */
+    class P5AsciifyColorPalette {
+        /**
+         * Creates a new instance of the ColorPaletteTexture class.
+         */
+        constructor() {
+            this.palettes = [];
+
+        }
+
+        setup() {
+            this.texture = createFramebuffer({ width: 1, height: 1 });
+
+            if (this.palettes.length > 0) {
+                this.updateTexture();
+            }
+        }
+
+        /**
+         * Updates the texture with the current palettes.
+         */
+        updateTexture() {
+            let maxColors = this.palettes.reduce((max, colors) => Math.max(max, colors.length), 1);
+            this.texture.resize(maxColors, this.palettes.length);
+
+            this.texture.loadPixels();
+
+            for (let y = 0; y < this.palettes.length; y++) {
+                let colors = this.palettes[y].map(c => color(c)); // Convert to p5.Color objects
+                for (let x = 0; x < colors.length; x++) {
+                    let index = (y * maxColors + x) * 4;
+                    let col = colors[x];
+                    this.texture.pixels[index] = red(col);
+                    this.texture.pixels[index + 1] = green(col);
+                    this.texture.pixels[index + 2] = blue(col);
+                    this.texture.pixels[index + 3] = alpha(col); // Use alpha value from p5.Color object
+                }
+                // Fill the rest of the row with transparent pixels if the palette is shorter
+                for (let x = colors.length; x < maxColors; x++) {
+                    let index = (y * maxColors + x) * 4;
+                    this.texture.pixels[index] = 0;
+                    this.texture.pixels[index + 1] = 0;
+                    this.texture.pixels[index + 2] = 0;
+                    this.texture.pixels[index + 3] = 0;
+                }
+            }
+            this.texture.updatePixels();
+        }
+
+        reset() {
+            this.palettes = [];
+
+            this.texture.resize(1, 1);
+
+            this.texture.begin();
+            clear();
+            this.texture.end();
+        }
+
+        addPalette(colors) {
+            this.palettes.push(colors);
+
+            if (frameCount > 0) {
+                this.updateTexture();
+            }
+            return this.palettes.length - 1;
+        }
+
+        removePalette(index) {
+            if (index >= 0 && index < this.palettes.length) {
+                this.palettes.splice(index, 1);
+                if (frameCount > 0) {
+                    this.updateTexture();
+                }
+            } else {
+                console.warn(`Index ${index} is out of range`);
+            }
+        }
+
+        setPaletteColors(index, colors) {
+            if (index >= 0 && index < this.palettes.length) {
+                this.palettes[index] = colors;
+                if (frameCount > 0) {
+                    this.updateTexture();
+                }
+            } else {
+                console.warn(`Index ${index} is out of range`);
+            }
+        }
+    }
+
     class P5AsciifyEffectManager {
+
+        colorPalette = new P5AsciifyColorPalette();
 
         effectParams = {
             "kaleidoscope": { "segments": 2, "angle": 0.0 },
@@ -738,7 +834,7 @@
             "chromaticaberration": { "amount": 0.1, "angle": 0.0 },
             "rotate": { "angle": 0.0 },
             "brightness": { "brightness": 0.0 },
-            "colorpalette": { "palette": ["#0f380f", "#306230", "#8bac0f", "#9bbc0f"] },
+            "colorpalette": { "palette": ["#0f380f", "#306230", "#8bac0f", "#9bbc0f"], "paletteBuffer": this.colorPalette },
         }
 
         effectShaders = {
@@ -767,6 +863,12 @@
 
         constructor() {
             this._effects = [];
+        }
+
+        setup(colorPalette) {
+            this.colorPalette = colorPalette;
+            this.setupShaders();
+            this.setupEffectQueue();
         }
 
         setupShaders() {
@@ -862,99 +964,6 @@
 
         getEffects() {
             return this._effects;
-        }
-    }
-
-    /**
-     * Represents a color palette texture.
-     */
-    class P5AsciifyColorPalette {
-        /**
-         * Creates a new instance of the ColorPaletteTexture class.
-         */
-        constructor() {
-            this.palettes = [];
-
-        }
-
-        setup() {
-            this.texture = createFramebuffer({ width: 1, height: 1 });
-
-            if (this.palettes.length > 0) {
-                this.updateTexture();
-            }
-        }
-
-        /**
-         * Updates the texture with the current palettes.
-         */
-        updateTexture() {
-            let maxColors = this.palettes.reduce((max, colors) => Math.max(max, colors.length), 1);
-            this.texture.resize(maxColors, this.palettes.length);
-
-            this.texture.loadPixels();
-
-            for (let y = 0; y < this.palettes.length; y++) {
-                let colors = this.palettes[y].map(c => color(c)); // Convert to p5.Color objects
-                for (let x = 0; x < colors.length; x++) {
-                    let index = (y * maxColors + x) * 4;
-                    let col = colors[x];
-                    this.texture.pixels[index] = red(col);
-                    this.texture.pixels[index + 1] = green(col);
-                    this.texture.pixels[index + 2] = blue(col);
-                    this.texture.pixels[index + 3] = alpha(col); // Use alpha value from p5.Color object
-                }
-                // Fill the rest of the row with transparent pixels if the palette is shorter
-                for (let x = colors.length; x < maxColors; x++) {
-                    let index = (y * maxColors + x) * 4;
-                    this.texture.pixels[index] = 0;
-                    this.texture.pixels[index + 1] = 0;
-                    this.texture.pixels[index + 2] = 0;
-                    this.texture.pixels[index + 3] = 0;
-                }
-            }
-            this.texture.updatePixels();
-        }
-
-        reset() {
-            this.palettes = [];
-
-            this.texture.resize(1, 1);
-
-            this.texture.begin();
-            clear();
-            this.texture.end();
-        }
-
-        addPalette(colors) {
-            this.palettes.push(colors);
-
-            if (frameCount > 0) {
-                this.updateTexture();
-            }
-            return this.palettes.length - 1;
-        }
-
-        removePalette(index) {
-            if (index >= 0 && index < this.palettes.length) {
-                this.palettes.splice(index, 1);
-                if (frameCount > 0) {
-                    this.updateTexture();
-                }
-            } else {
-                console.warn(`Index ${index} is out of range`);
-            }
-        }
-
-        setPaletteColors(index, colors) {
-            if (index >= 0 && index < this.palettes.length) {
-                this.palettes[index] = colors;
-                if (frameCount > 0) {
-                    this.updateTexture();
-                }
-            } else {
-                console.warn(`Index ${index} is out of range`);
-            }
         }
     }
 
@@ -1139,7 +1148,7 @@
         }
     }
 
-    let P5Asciify$1 = class P5Asciify {
+    class P5Asciify {
         static config = {
             common: {
                 fontSize: 16,
@@ -1201,11 +1210,8 @@
 
             this.colorPalette.setup();
 
-            this.preEffectManager.setupShaders();
-            this.preEffectManager.setupEffectQueue();
-
-            this.afterEffectManager.setupShaders();
-            this.afterEffectManager.setupEffectQueue();
+            this.preEffectManager.setup(this.colorPalette);
+            this.afterEffectManager.setup(this.colorPalette);
 
             this.preEffectFramebuffer = createFramebuffer({ format: FLOAT });
             this.postEffectFramebuffer = createFramebuffer({ format: FLOAT });
@@ -1445,7 +1451,9 @@
                 this.sampleFramebuffer.resize(this.grid.cols, this.grid.rows);
             }
         }
-    };
+    }
+
+    window.P5Asciify = P5Asciify;
 
     window.preload = function () { }; // In case the user doesn't define a preload function, we need to define it here to avoid errors
 
@@ -1458,7 +1466,7 @@
         this.loadFont(
             P5AsciifyConstants.URSAFONT_BASE64,
             (loadedFont) => {
-                P5Asciify$1.font = loadedFont;
+                P5Asciify.font = loadedFont;
             },
             () => { throw new P5AsciifyError(`loadAsciiFont() | Failed to load font from path: '${font}'`); }
         );
@@ -1471,14 +1479,14 @@
      */
     p5.prototype.loadAsciiFont = function (font) {
         const setFont = (loadedFont) => {
-            P5Asciify$1.font = loadedFont;
+            P5Asciify.font = loadedFont;
             this._decrementPreload();
             if (this.frameCount > 0) {
-                P5Asciify$1.brightnessCharacterSet.setFontObject(loadedFont);
-                P5Asciify$1.edgeCharacterSet.setFontObject(loadedFont);
-                P5Asciify$1.grid.resizeCellDimensions(
-                    P5Asciify$1.brightnessCharacterSet.maxGlyphDimensions.width,
-                    P5Asciify$1.brightnessCharacterSet.maxGlyphDimensions.height
+                P5Asciify.brightnessCharacterSet.setFontObject(loadedFont);
+                P5Asciify.edgeCharacterSet.setFontObject(loadedFont);
+                P5Asciify.grid.resizeCellDimensions(
+                    P5Asciify.brightnessCharacterSet.maxGlyphDimensions.width,
+                    P5Asciify.brightnessCharacterSet.maxGlyphDimensions.height
                 );
             }
         };
@@ -1511,7 +1519,7 @@
             throw new P5AsciifyError("p5.asciify requires p5.js v1.8.0 or higher to work.");
         }
 
-        P5Asciify$1.setup();
+        P5Asciify.setup();
     };
     p5.prototype.registerMethod("afterSetup", p5.prototype.setupAsciifier);
 
@@ -1525,14 +1533,14 @@
     };
 
     p5.prototype.setAsciiOptions = function (options) {
-        P5Asciify$1.setDefaultOptions(options, false);
+        P5Asciify.setDefaultOptions(options, false);
     };
 
     p5.prototype.addAsciiEffect = function (effectType, effectName, userParams = {}) {
         if (effectType === 'pre') {
-            return P5Asciify$1.preEffectManager.addEffect(effectName, userParams);
+            return P5Asciify.preEffectManager.addEffect(effectName, userParams);
         } else if (effectType === 'post') {
-            return P5Asciify$1.afterEffectManager.addEffect(effectName, userParams);
+            return P5Asciify.afterEffectManager.addEffect(effectName, userParams);
         } else {
             throw new P5AsciifyError(`Invalid effect type '${effectType}'. Valid types are 'pre' and 'after'.`);
         }
@@ -1542,14 +1550,14 @@
         let removed = false;
 
         // Check preEffectManager
-        if (P5Asciify$1.preEffectManager.hasEffect(effectInstance)) {
-            P5Asciify$1.preEffectManager.removeEffect(effectInstance);
+        if (P5Asciify.preEffectManager.hasEffect(effectInstance)) {
+            P5Asciify.preEffectManager.removeEffect(effectInstance);
             removed = true;
         }
 
         // Check afterEffectManager
-        if (P5Asciify$1.afterEffectManager.hasEffect(effectInstance)) {
-            P5Asciify$1.afterEffectManager.removeEffect(effectInstance);
+        if (P5Asciify.afterEffectManager.hasEffect(effectInstance)) {
+            P5Asciify.afterEffectManager.removeEffect(effectInstance);
             removed = true;
         }
 
@@ -1565,22 +1573,22 @@
         let index2 = -1;
 
         // Determine the manager and index for effectInstance1
-        if (P5Asciify$1.preEffectManager.hasEffect(effectInstance1)) {
-            manager1 = P5Asciify$1.preEffectManager;
+        if (P5Asciify.preEffectManager.hasEffect(effectInstance1)) {
+            manager1 = P5Asciify.preEffectManager;
             index1 = manager1.getEffectIndex(effectInstance1);
-        } else if (P5Asciify$1.afterEffectManager.hasEffect(effectInstance1)) {
-            manager1 = P5Asciify$1.afterEffectManager;
+        } else if (P5Asciify.afterEffectManager.hasEffect(effectInstance1)) {
+            manager1 = P5Asciify.afterEffectManager;
             index1 = manager1.getEffectIndex(effectInstance1);
         } else {
             throw new P5AsciifyError(`Effect instance 1 not found in either pre or post effect managers.`);
         }
 
         // Determine the manager and index for effectInstance2
-        if (P5Asciify$1.preEffectManager.hasEffect(effectInstance2)) {
-            manager2 = P5Asciify$1.preEffectManager;
+        if (P5Asciify.preEffectManager.hasEffect(effectInstance2)) {
+            manager2 = P5Asciify.preEffectManager;
             index2 = manager2.getEffectIndex(effectInstance2);
-        } else if (P5Asciify$1.afterEffectManager.hasEffect(effectInstance2)) {
-            manager2 = P5Asciify$1.afterEffectManager;
+        } else if (P5Asciify.afterEffectManager.hasEffect(effectInstance2)) {
+            manager2 = P5Asciify.afterEffectManager;
             index2 = manager2.getEffectIndex(effectInstance2);
         } else {
             throw new P5AsciifyError(`Effect instance 2 not found in either pre or post effect managers.`);
@@ -1609,7 +1617,7 @@
      * Renders the ASCII representation of the current sketch.
      * This function is registered as a method to be called after the draw phase of p5.js.
      */
-    p5.prototype.asciify = function () { P5Asciify$1.asciify(); };
+    p5.prototype.asciify = function () { P5Asciify.asciify(); };
     p5.prototype.registerMethod("post", p5.prototype.asciify);
 
 }));
