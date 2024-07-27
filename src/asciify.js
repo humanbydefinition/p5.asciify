@@ -87,7 +87,7 @@ class P5Asciify {
         if (this.asciiFramebufferDimensions.width !== this.asciiFramebuffer.width || this.asciiFramebufferDimensions.height !== this.asciiFramebuffer.height) {
             this.asciiFramebufferDimensions.width = this.asciiFramebuffer.width;
             this.asciiFramebufferDimensions.height = this.asciiFramebuffer.height;
-            
+
             this.grid.reset();
             this.sampleFramebuffer.resize(this.grid.cols, this.grid.rows);
         }
@@ -175,7 +175,11 @@ class P5Asciify {
 
         this.postEffectFramebuffer.begin();
         clear();
-        image(this.asciiFramebuffer, -width / 2, -height / 2);
+        if (this.config.brightness.enabled || this.config.edge.enabled) {
+            image(this.asciiFramebuffer, -width / 2, -height / 2);
+        } else {
+            image(this.preEffectFramebuffer, -width / 2, -height / 2);
+        }
         this.postEffectFramebuffer.end();
 
         for (const effect of this.afterEffectManager._effects) {
