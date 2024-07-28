@@ -255,14 +255,14 @@ Currently, the following effects are available:
 
 | Effect                | Params                                                                                          |
 |-----------------------|-------------------------------------------------------------------------------------------------|
-| **brightness**        | `brightness` (number): The brightness value to apply. The default value is `0.0`.               |
-| **chromatic aberration** | `amount` (number): The amount of chromatic aberration to apply. The default value is `0.1`.<br>`angle` (number): The angle of the chromatic aberration in degrees. The default value is `0.0`. |
-| **color palette**     | `palette` (array): An array of colors to use for the color palette. The default value is `["#0f380f", "#306230", "#8bac0f", "#9bbc0f"]`. |
-| **distortion**        | `frequency` (number): The frequency of the distortion. The default value is `0.1`.<br>`amplitude` (number): The amplitude of the distortion. The default value is `0.1`. |
-| **grayscale**         | *no params*                                                                                     |
-| **invert**            | *no params*                                                                                     |
-| **kaleidoscope**      | `segments` (number): The number of segments in the kaleidoscope. The default value is `2`.<br>`angle` (number): The angle of the kaleidoscope in degrees. The default value is `0.0`. |
-| **rotate**            | `angle` (number): The angle of rotation in degrees. The default value is `0.0`.                 |
+| **`brightness`**        | `brightness` (number): The brightness value to apply. The default value is `0.0`.               |
+| **`chromaticaberration`** | `amount` (number): The amount of chromatic aberration to apply. The default value is `0.1`.<br>`angle` (number): The angle of the chromatic aberration in degrees. The default value is `0.0`. |
+| **`colorpalette`**     | `palette` (array): An array of colors to use for the color palette. The default value is `["#0f380f", "#306230", "#8bac0f", "#9bbc0f"]`. |
+| **`distortion`**        | `frequency` (number): The frequency of the distortion. The default value is `0.1`.<br>`amplitude` (number): The amplitude of the distortion. The default value is `0.1`. |
+| **`grayscale`**         | *no params*                                                                                     |
+| **`invert`**            | *no params*                                                                                     |
+| **`kaleidoscope`**      | `segments` (number): The number of segments in the kaleidoscope. The default value is `2`.<br>`angle` (number): The angle of the kaleidoscope in degrees. The default value is `0.0`. |
+| **`rotate`**            | `angle` (number): The angle of rotation in degrees. The default value is `0.0`.                 |
 
 All effects also have a common class variable `enabled` (boolean) which can be used to enable or disable the effect. This option is not passed as a parameter to [`addAsciiEffect()`](#addasciieffecteffecttype-string-effectname-string-params-object-p5asciifyeffect), but can be set directly on the effect instance  *(`effect.enabled = false;`)*. By default, all effects are enabled on creation.
  Disabled effects currently also remain in the rendering loop, but do not apply any changes to the output.
