@@ -1,11 +1,10 @@
 /**
- * @module characterset
+ * @class P5AsciifyCharacterSet
  * @description
  * A class that represents a character set for the P5Asciify library.
  * It is responsible for maintaining a texture that contains all the characters in the character set.
  */
 class P5AsciifyCharacterSet {
-
     /**
      * Sets up the character set with a specified font, characters, and font size.
      * @param {Object} options - The setup options.

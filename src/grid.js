@@ -1,9 +1,25 @@
+/**
+ * @class P5AsciifyGrid
+ * @description
+ * Represents a 2D grid for the P5Asciify library.
+ * Handles the dimensions and resizing of the grid.
+ */
 class P5AsciifyGrid {
+    /**
+     * Creates an instance of P5AsciifyGrid.
+     * @param {Object} options - The grid options.
+     * @param {number} options.cellWidth - The width of each cell in the grid.
+     * @param {number} options.cellHeight - The height of each cell in the grid.
+     */
     constructor({ cellWidth, cellHeight }) {
         this.cellWidth = cellWidth;
         this.cellHeight = cellHeight;
     }
 
+    /**
+     * Resets the grid dimensions based on the current cell width and height.
+     * Calculates the number of columns and rows and resizes the grid accordingly.
+     */
     reset() {
         let [cols, rows] = this._calculateGridCellDimensions();
         this.cols = cols;
@@ -12,6 +28,11 @@ class P5AsciifyGrid {
         this._resizeGrid();
     }
 
+    /**
+     * Resizes the grid dimensions based on the current number of columns and rows, as well as the cell width and height.
+     * Adjusts the grid's offset to center it within the given width and height in the ASCII shader.
+     * @private
+     */
     _resizeGrid() {
         this.width = this.cols * this.cellWidth;
         this.height = this.rows * this.cellHeight;
@@ -20,12 +41,23 @@ class P5AsciifyGrid {
         this.offsetY = Math.floor((height - this.height) / 2);
     }
 
+    /**
+     * Calculates the number of columns and rows for the grid based on the current cell dimensions.
+     * @returns {number[]} An array containing the number of columns and rows.
+     * @private
+     */
     _calculateGridCellDimensions() {
         const cellsX = Math.floor(width / this.cellWidth);
         const cellsY = Math.floor(height / this.cellHeight);
         return [cellsX, cellsY];
     }
 
+    /**
+     * Resizes the cell dimensions of the grid.
+     * Recalculates the number of columns and rows and resizes the grid accordingly.
+     * @param {number} newCellWidth - The new width of each cell in the grid.
+     * @param {number} newCellHeight - The new height of each cell in the grid.
+     */
     resizeCellDimensions(newCellWidth, newCellHeight) {
         this.cellWidth = newCellWidth;
         this.cellHeight = newCellHeight;

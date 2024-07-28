@@ -1,5 +1,7 @@
+/**
+ * Constants for the P5Asciify library.
+ */
 class P5AsciifyConstants {
-
     static VERT_SHADER_CODE = ` #version 300 es
                                 precision highp float;
 
