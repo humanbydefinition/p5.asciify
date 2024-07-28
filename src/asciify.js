@@ -1,8 +1,12 @@
-import P5AsciifyConstants from './constants.js';
 import P5AsciifyEffectManager from './managers/effectmanager.js';
 import P5AsciifyCharacterSet from './characterset.js';
 import P5AsciifyGrid from './grid.js';
 import P5AsciifyUtils from './utils.js';
+
+import vertexShader from './shaders/vert/shader.vert';
+import asciiShader from './shaders/frag/ascii.frag';
+import sobelShader from './shaders/frag/sobel.frag';
+import sampleShader from './shaders/frag/sample.frag';
 
 
 class P5Asciify {
@@ -69,13 +73,13 @@ class P5Asciify {
         this.preEffectFramebuffer = createFramebuffer({ format: FLOAT });
         this.postEffectFramebuffer = createFramebuffer({ format: FLOAT });
 
-        this.asciiShader = createShader(P5AsciifyConstants.VERT_SHADER_CODE, P5AsciifyConstants.ASCII_FRAG_SHADER_CODE);
+        this.asciiShader = createShader(vertexShader, asciiShader);
         this.asciiFramebuffer = createFramebuffer({ format: this.FLOAT });
 
-        this.sobelShader = createShader(P5AsciifyConstants.VERT_SHADER_CODE, P5AsciifyConstants.SOBEL_FRAG_SHADER_CODE);
+        this.sobelShader = createShader(vertexShader, sobelShader);
         this.sobelFramebuffer = createFramebuffer({ format: this.FLOAT });
 
-        this.sampleShader = createShader(P5AsciifyConstants.VERT_SHADER_CODE, P5AsciifyConstants.SAMPLE_FRAG_SHADER_CODE);
+        this.sampleShader = createShader(vertexShader, sampleShader);
         this.sampleFramebuffer = createFramebuffer({ format: this.FLOAT, width: this.grid.cols, height: this.grid.rows });
 
         this.asciiFramebufferDimensions = { width: this.asciiFramebuffer.width, height: this.asciiFramebuffer.height };
