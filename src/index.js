@@ -86,6 +86,26 @@ p5.prototype.setAsciiOptions = function (options) {
     P5Asciify.setDefaultOptions(options, false);
 };
 
+/**
+ * Adds an ASCII effect to the P5Asciify library.
+ * Depending on the effect type, it adds the effect to either the pre-effect or post-effect manager.
+ *
+ * @function addAsciiEffect
+ * @memberof p5
+ * @param {string} effectType - The type of effect to add. Valid types are 'pre' and 'post'.
+ * @param {string} effectName - The name of the effect to add.
+ * @param {Object} [userParams={}] - Optional parameters to pass to the effect.
+ * @returns {Object} The added effect instance.
+ * @throws {P5AsciifyError} Throws an error if the effect type is invalid.
+ * 
+ * @example
+ * Adding a pre-effect
+ * p5.prototype.addAsciiEffect('pre', 'kaleidoscope', { segments: 6, angle: 30 });
+ *
+ * @example
+ * Adding a post-effect
+ * p5.prototype.addAsciiEffect('post', 'invert', { });
+ */
 p5.prototype.addAsciiEffect = function (effectType, effectName, userParams = {}) {
     if (effectType === 'pre') {
         return P5Asciify.preEffectManager.addEffect(effectName, userParams);
@@ -94,8 +114,6 @@ p5.prototype.addAsciiEffect = function (effectType, effectName, userParams = {})
     } else {
         throw new P5AsciifyError(`Invalid effect type '${effectType}'. Valid types are 'pre' and 'after'.`);
     }
-
-    ;
 }
 
 p5.prototype.removeAsciiEffect = function (effectInstance) {
