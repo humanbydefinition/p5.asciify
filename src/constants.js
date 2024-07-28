@@ -1,4 +1,6 @@
 /**
+ * @class P5AsciifyConstants
+ * @description
  * Constants for the P5Asciify library.
  */
 class P5AsciifyConstants {
