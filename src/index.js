@@ -1,7 +1,8 @@
-import P5AsciifyConstants from './constants.js';
 import P5Asciify from './asciify.js';
 import P5AsciifyError from './errors.js';
 import P5AsciifyUtils from './utils.js';
+
+import URSAFONT_BASE64 from './fonts/ursafont_base64.txt';
 
 window.P5Asciify = P5Asciify;
 
@@ -12,9 +13,11 @@ window.preload = function () { }; // In case the user doesn't define a preload f
  * This function is registered as a method to be called before the preload phase of p5.js.
  */
 p5.prototype.preloadAsciiFont = function () {
+
+
     this._incrementPreload();
     this.loadFont(
-        P5AsciifyConstants.URSAFONT_BASE64,
+        URSAFONT_BASE64,
         (loadedFont) => {
             P5Asciify.font = loadedFont;
         },
