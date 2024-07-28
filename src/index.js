@@ -171,7 +171,7 @@ p5.prototype.addAsciiEffect = function (effectType, effectName, userParams = {})
     } else if (effectType === 'post') {
         return P5Asciify.afterEffectManager.addEffect(effectName, userParams);
     } else {
-        throw new P5AsciifyError(`Invalid effect type '${effectType}'. Valid types are 'pre' and 'after'.`);
+        throw new P5AsciifyError(`Invalid effect type '${effectType}'. Valid types are 'pre' and 'post'.`);
     }
 }
 
