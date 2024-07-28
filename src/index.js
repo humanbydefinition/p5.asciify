@@ -4,17 +4,23 @@ import P5AsciifyUtils from './utils.js';
 
 import URSAFONT_BASE64 from './fonts/ursafont_base64.txt';
 
-window.P5Asciify = P5Asciify;
+
+window.P5Asciify = P5Asciify; // Expose P5Asciify to the global scope
 
 window.preload = function () { }; // In case the user doesn't define a preload function, we need to define it here to avoid errors
 
 /**
- * Preloads the default ASCII font for P5Asciify.
- * This function is registered as a method to be called before the preload phase of p5.js.
+ * Preloads the ASCII font for the P5Asciify library.
+ * This method increments the preload count and loads the font from a base64 encoded string.
+ * If the font is successfully loaded, it assigns the font to P5Asciify.font.
+ * If the font fails to load, it throws a P5AsciifyError.
+ * Not intended to be called directly by the user, as it is performed automatically before preload.
+ *
+ * @function preloadAsciiFont
+ * @memberof p5
+ * @throws {P5AsciifyError} Throws an error if the font fails to load.
  */
 p5.prototype.preloadAsciiFont = function () {
-
-
     this._incrementPreload();
     this.loadFont(
         URSAFONT_BASE64,
@@ -27,8 +33,25 @@ p5.prototype.preloadAsciiFont = function () {
 p5.prototype.registerMethod("beforePreload", p5.prototype.preloadAsciiFont);
 
 /**
- * Loads an ASCII font and sets it as the current font for P5Asciify.
- * @param {string|object} font - The path to the ASCII font file or a font object.
+ * Loads an ASCII font for the P5Asciify library.
+ * This method sets the font for P5Asciify from a specified path or font object.
+ * If a string path is provided, it loads the font from that path.
+ * If a font object is provided, it directly sets the font.
+ * After loading, it decrements the preload count and updates the character sets and grid dimensions.
+ *
+ * @function loadAsciiFont
+ * @memberof p5
+ * @param {string|Object} font - The path to the font file or the font object.
+ * @throws {P5AsciifyError} Throws an error if the font fails to load or if the font parameter is invalid.
+ * 
+ * @example
+ * Loading a font from a path
+ * loadAsciiFont('path/to/font.ttf');
+ *
+ * @example
+ * Loading a font from an object
+ * const fontObject = ...; // Assume this is a valid font object
+ * loadAsciiFont(fontObject);
  */
 p5.prototype.loadAsciiFont = function (font) {
     const setFont = (loadedFont) => {
@@ -56,12 +79,21 @@ p5.prototype.loadAsciiFont = function (font) {
         throw new P5AsciifyError(`loadAsciiFont() | Invalid font parameter. Expected a string or an object.`);
     }
 };
-
 p5.prototype.registerPreloadMethod('loadAsciiFont', p5.prototype);
 
 /**
- * Sets up the P5Asciify renderer and checks for compatibility.
- * This function is registered as a method to be called after the setup phase of p5.js.
+ * Sets up the P5Asciify library for use with p5.js.
+ * This method ensures that the WebGL renderer is being used and that the p5.js version is compatible.
+ * If the requirements are met, it initializes the P5Asciify setup.
+ * Not intended to be called directly by the user, as it is performed automatically after setup.
+ *
+ * @function setupAsciifier
+ * @memberof p5
+ * @throws {P5AsciifyError} Throws an error if the WebGL renderer is not used or if the p5.js version is below 1.8.0.
+ * 
+ * @example
+ * Setting up the asciifier
+ * p5.prototype.setupAsciifier();
  */
 p5.prototype.setupAsciifier = function () {
     if (this._renderer.drawingContext instanceof CanvasRenderingContext2D) {
@@ -77,14 +109,38 @@ p5.prototype.setupAsciifier = function () {
 p5.prototype.registerMethod("afterSetup", p5.prototype.setupAsciifier);
 
 /**
- * Updates the current ASCII font used by P5Asciify.
- * @param {string|object} font - The path to the new ASCII font file or a font object.
+ * Updates the ASCII font for the P5Asciify library.
+ * This method is deprecated and will be removed in v0.1.0. It currently calls the loadAsciiFont() method.
+ *
+ * @function updateAsciiFont
+ * @memberof p5
+ * @param {string|Object} font - The path to the font file or the font object.
+ * @deprecated Use {@link loadAsciiFont} instead.
+ * 
+ * @example
+ * Updating the ASCII font using a path
+ * updateAsciiFont('path/to/font.ttf');
+ *
+ * @example
+ * Updating the ASCII font using an object
+ * const fontObject = ...; // Assume this is a valid font object
+ * updateAsciiFont(fontObject);
  */
 p5.prototype.updateAsciiFont = function (font) {
     console.warn(`updateAsciiFont() is deprecated. Use loadAsciiFont() instead. updateAsciiFont() will be removed in v0.1.0.`);
     this.loadAsciiFont(font);
 };
 
+/**
+ * Sets the default options for the P5Asciify library.
+ *
+ * @function setAsciiOptions
+ * @memberof p5
+ * @param {Object} options - An object containing the options to set for ASCII rendering.
+ * 
+ * @example
+ * TODO: Add example
+ */
 p5.prototype.setAsciiOptions = function (options) {
     P5Asciify.setDefaultOptions(options, false);
 };
@@ -119,16 +175,29 @@ p5.prototype.addAsciiEffect = function (effectType, effectName, userParams = {})
     }
 }
 
+/**
+ * Removes an ASCII effect from the P5Asciify library.
+ * This method checks both the pre-effect and post-effect managers and removes the effect if found.
+ * If the effect is not found in either manager, it throws an error.
+ *
+ * @function removeAsciiEffect
+ * @memberof p5
+ * @param {Object} effectInstance - The instance of the effect to remove.
+ * @throws {P5AsciifyError} Throws an error if the effect instance is not found in either pre or post effect managers.
+ * 
+ * @example
+ * Removing an ASCII effect
+ * const effectInstance = ...; // Assume this is a valid effect instance
+ * removeAsciiEffect(effectInstance);
+ */
 p5.prototype.removeAsciiEffect = function (effectInstance) {
     let removed = false;
 
-    // Check preEffectManager
     if (P5Asciify.preEffectManager.hasEffect(effectInstance)) {
         P5Asciify.preEffectManager.removeEffect(effectInstance);
         removed = true;
     }
 
-    // Check afterEffectManager
     if (P5Asciify.afterEffectManager.hasEffect(effectInstance)) {
         P5Asciify.afterEffectManager.removeEffect(effectInstance);
         removed = true;
@@ -139,6 +208,24 @@ p5.prototype.removeAsciiEffect = function (effectInstance) {
     }
 };
 
+/**
+ * Swaps the positions of two ASCII effects in the P5Asciify library.
+ * This method determines the managers and indices of the provided effect instances and swaps their positions.
+ * If the effect instances belong to different managers, it removes them from their respective managers and re-adds them at the specified indices.
+ * If they belong to the same manager, it simply swaps their positions.
+ *
+ * @function swapAsciiEffects
+ * @memberof p5
+ * @param {Object} effectInstance1 - The first effect instance to swap.
+ * @param {Object} effectInstance2 - The second effect instance to swap.
+ * @throws {P5AsciifyError} Throws an error if either effect instance is not found in the pre or post effect managers.
+ * 
+ * @example
+ * Swapping two ASCII effects
+ * const effectInstance1 = ...; // Assume this is a valid effect instance
+ * const effectInstance2 = ...; // Assume this is another valid effect instance
+ * swapAsciiEffects(effectInstance1, effectInstance2);
+ */
 p5.prototype.swapAsciiEffects = function (effectInstance1, effectInstance2) {
     let manager1 = null;
     let manager2 = null;
@@ -179,16 +266,39 @@ p5.prototype.swapAsciiEffects = function (effectInstance1, effectInstance2) {
     }
 };
 
-
+/**
+ * Adds a push() call before the user's draw() function in p5.js.
+ * This method ensures that the drawing state is saved before any drawing operations.
+ * Not intended to be called directly by the user, as it is performed automatically before draw.
+ *
+ * @function preDrawAddPush
+ * @memberof p5
+ * 
+ * @example
+ * Adding a push before draw
+ * p5.prototype.preDrawAddPush();
+ */
 p5.prototype.preDrawAddPush = function () { this.push(); };
 p5.prototype.registerMethod("pre", p5.prototype.preDrawAddPush);
 
+/**
+ * Adds a pop() call after the user's draw() function in p5.js.
+ * This method ensures that the drawing state is restored after all drawing operations.
+ * Not intended to be called directly by the user, as it is performed automatically after draw.
+ *
+ * @function postDrawAddPop
+ * @memberof p5
+ */
 p5.prototype.postDrawAddPop = function () { this.pop(); };
 p5.prototype.registerMethod("post", p5.prototype.postDrawAddPop);
 
 /**
- * Renders the ASCII representation of the current sketch.
- * This function is registered as a method to be called after the draw phase of p5.js.
+ * Applies the ASCII effect to the content drawn on the p5.js canvas.
+ * This method calls the P5Asciify library to convert the canvas content into ASCII art after the user's draw() function is executed.
+ * Not intended to be called directly by the user, as it is performed automatically after draw.
+ *
+ * @function asciify
+ * @memberof p5
  */
 p5.prototype.asciify = function () { P5Asciify.asciify(); };
 p5.prototype.registerMethod("post", p5.prototype.asciify);
