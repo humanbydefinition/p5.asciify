@@ -1,3 +1,12 @@
+/**
+ * This example demonstrates how to use the effects available in the p5.asciify library, 
+ * which can be applied before or after the ASCII conversion.
+ * 
+ * The example creates a sketch that displays a number of rectangles that grow and shrink over time, 
+ * with a kaleidoscope effect that rotates the canvas. Besides the kaleidoscope effect,
+ * a distortion effect is applied to the sketch, which creates a wavy effect.
+ */
+
 let sketchFramebuffer;
 
 let rectangles = [];
@@ -10,17 +19,15 @@ function setup() {
     sketchFramebuffer = createFramebuffer({ format: FLOAT });
 
     setAsciiOptions({ // These are the default options, you can change them as needed in preload(), setup() or draw()
-        enabled: true,
-        characters: ' .:-=+*#%@',
-        fontSize: 8,
-        characterColor: "#ff0000",
-        characterColorMode: 0,
-        backgroundColor: "#000000",
-        backgroundColorMode: 1,
-        invertMode: false,
+        common: {
+            fontSize: 8,
+        },
+        brightness: {
+            characters: ' .:-=+*#%@',
+        }
     });
 
-	// Add pre-effects, which get applied before the ASCII conversion
+    // Add pre-effects, which get applied before the ASCII conversion
     distortionEffect = addAsciiEffect('pre', 'distortion', { frequency: 5.0, amplitude: 0.4 });
     kaleidoscopeEffect = addAsciiEffect('pre', 'kaleidoscope', { segments: 4, angle: 0 });
 
@@ -44,9 +51,9 @@ function draw() {
     background(0);
     image(sketchFramebuffer, -windowWidth / 2, -windowHeight / 2);
 
-	// Change the kaleidoscope angle direction randomly if the cooldown is over and a random chance is met
+    // Change the kaleidoscope angle direction randomly if the cooldown is over and a random chance is met
     if (cooldownCounter-- <= 0 && random() < 0.01) {
-        angleDirection *= -1; 
+        angleDirection *= -1;
         cooldownCounter = 120;
     }
 

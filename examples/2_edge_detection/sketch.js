@@ -1,34 +1,29 @@
+/**
+ * This example demonstrates how to use the edge detection feature of p5.asciify.
+ */
+
 let sketchFramebuffer;
 
 let rectangles = [];
 let maxRectangles = 30;
 
 function setup() {
-    createCanvas(windowWidth, windowHeight, WEBGL); // WebGL mode is required currently
+    createCanvas(windowWidth, windowHeight, WEBGL); 
     sketchFramebuffer = createFramebuffer({ format: FLOAT });
 
     setAsciiOptions({ // These are the default options, you can change them as needed in preload(), setup() or draw()
         common: {
             fontSize: 8,
         },
-        brightness: {
-            enabled: true,
-            characters: "0123456789",
-            characterColor: "#ffffff",
-            characterColorMode: 0,
-            backgroundColor: "#000000",
-            backgroundColorMode: 1,
-            invertMode: false,
-        },
         edge: {
-            enabled: true,
+            enabled: true, // false by default
             characters: "-/|\\-/|\\",
             characterColor: '#ffffff',
-            characterColorMode: 1,
+            characterColorMode: 1, // 0: sampled (default), 1: fixed
             backgroundColor: '#000000',
             backgroundColorMode: 1,
             invertMode: false,
-            sobelThreshold: 0.01,
+            sobelThreshold: 0.01, // Tune the threshold values to adjust the edge detection
             sampleThreshold: 16,
         }
     });
@@ -38,6 +33,7 @@ function setup() {
 
 function draw() {
     sketchFramebuffer.begin();
+    
     background(0);
     noStroke();
 
@@ -50,7 +46,7 @@ function draw() {
     while (rectangles.length < maxRectangles) rectangles.push(new Rectangle());
 
     sketchFramebuffer.end();
-    background(0);
+
     image(sketchFramebuffer, -windowWidth / 2, -windowHeight / 2);
 }
 
