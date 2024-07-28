@@ -1,5 +1,16 @@
+/**
+ * @class P5AsciifyUtils
+ * @description
+ * A utility class for the P5Asciify library.
+ * Provides static methods for various common tasks such as color conversion and version comparison.
+ */
 class P5AsciifyUtils {
 
+    /**
+     * Converts a hex color string to an RGB array.
+     * @param {string} hex - The hex color string (e.g., "#ff5733").
+     * @returns {number[]} An array containing the RGB values [r, g, b].
+     */
     static hexToRgb(hex) {
         let r = parseInt(hex.slice(1, 3), 16);
         let g = parseInt(hex.slice(3, 5), 16);
@@ -7,14 +18,30 @@ class P5AsciifyUtils {
         return [r, g, b];
     }
 
+    /**
+     * Converts an RGB array to a shader color array.
+     * @param {number[]} color - The RGB array [r, g, b].
+     * @returns {number[]} An array containing the shader color values [r/255, g/255, b/255].
+     */
     static rgbToShaderColor(color) {
         return [color[0] / 255, color[1] / 255, color[2] / 255];
     }
 
+    /**
+     * Converts a hex color string to a shader color array.
+     * @param {string} hex - The hex color string (e.g., "#ff5733").
+     * @returns {number[]} An array containing the shader color values [r/255, g/255, b/255].
+     */
     static hexToShaderColor(hex) {
         return this.rgbToShaderColor(this.hexToRgb(hex));
     }
 
+    /**
+     * Compares two version strings.
+     * @param {string} v1 - The first version string (e.g., "1.2.3").
+     * @param {string} v2 - The second version string (e.g., "1.2.4").
+     * @returns {number} 1 if v1 > v2, -1 if v1 < v2, 0 if v1 === v2.
+     */
     static compareVersions(v1, v2) {
         const [v1Parts, v2Parts] = [v1, v2].map(v => v.split('.').map(Number));
 
@@ -26,6 +53,12 @@ class P5AsciifyUtils {
         return 0;
     }
 
+    /**
+     * Deeply merges two objects into a new object.
+     * @param {Object} target - The target object to merge into.
+     * @param {Object} source - The source object to merge from.
+     * @returns {Object} The merged object.
+     */
     static deepMerge(target, source) {
         const result = { ...target };
 
@@ -40,3 +73,5 @@ class P5AsciifyUtils {
         return result;
     }
 }
+
+export default P5AsciifyUtils;

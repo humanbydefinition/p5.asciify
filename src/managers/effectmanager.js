@@ -1,4 +1,29 @@
+import P5AsciifyError from "../errors.js";
+import P5AsciifyBrightnessEffect from "../effects/brightness.js";
+import P5AsciifyChromaticAberrationEffect from "../effects/chromaticaberration.js";
+import P5AsciifyColorPaletteEffect from "../effects/colorpalette.js";
+import P5AsciifyDistortionEffect from "../effects/distortion.js";
+import P5AsciifyGrayscaleEffect from "../effects/grayscale.js";
+import P5AsciifyInvertEffect from "../effects/invert.js";
+import P5AsciifyKaleidoscopeEffect from "../effects/kaleidoscope.js";
+import P5AsciifyRotateEffect from "../effects/rotate.js";
+import P5AsciifyColorPalette from "../colorpalette.js";
+
+import kaleidoscopeShader from "../shaders/frag/kaleidoscope.frag";
+import distortionShader from "../shaders/frag/distortion.frag";
+import grayscaleShader from "../shaders/frag/grayscale.frag";
+import invertShader from "../shaders/frag/invert.frag";
+import chromaticAberrationShader from "../shaders/frag/chromaticaberration.frag";
+import rotateShader from "../shaders/frag/rotate.frag";
+import brightnessShader from "../shaders/frag/brightness.frag";
+import colorPaletteShader from "../shaders/frag/colorpalette.frag";
+
+import vertexShader from "../shaders/vert/shader.vert";
+
+
 class P5AsciifyEffectManager {
+
+    colorPalette = new P5AsciifyColorPalette();
 
     effectParams = {
         "kaleidoscope": { "segments": 2, "angle": 0.0 },
@@ -12,14 +37,14 @@ class P5AsciifyEffectManager {
     }
 
     effectShaders = {
-        "kaleidoscope": P5AsciifyConstants.KALEIDOSCOPE_FRAG_SHADER_CODE,
-        "distortion": P5AsciifyConstants.DISTORTION_FRAG_SHADER_CODE,
-        "grayscale": P5AsciifyConstants.GRAYSCALE_FRAG_SHADER_CODE,
-        "invert": P5AsciifyConstants.INVERT_FRAG_SHADER_CODE,
-        "chromaticaberration": P5AsciifyConstants.CHROMATIC_ABERRATION_FRAG_SHADER_CODE,
-        "rotate": P5AsciifyConstants.ROTATE_FRAG_SHADER_CODE,
-        "brightness": P5AsciifyConstants.BRIGHTNESS_FRAG_SHADER_CODE,
-        "colorpalette": P5AsciifyConstants.COLOR_PALETTE_FRAG_SHADER_CODE,
+        "kaleidoscope": kaleidoscopeShader,
+        "distortion": distortionShader,
+        "grayscale": grayscaleShader,
+        "invert": invertShader,
+        "chromaticaberration": chromaticAberrationShader,
+        "rotate": rotateShader,
+        "brightness": brightnessShader,
+        "colorpalette": colorPaletteShader,
     }
 
     effectConstructors = {
@@ -30,7 +55,7 @@ class P5AsciifyEffectManager {
         "chromaticaberration": ({ shader, params }) => new P5AsciifyChromaticAberrationEffect({ shader, ...params }),
         "rotate": ({ shader, params }) => new P5AsciifyRotateEffect({ shader, ...params }),
         "brightness": ({ shader, params }) => new P5AsciifyBrightnessEffect({ shader, ...params }),
-        "colorpalette": ({ shader, params }) => new P5AsciifyColorPaletteEffect({ shader, ...params }),
+        "colorpalette": ({ shader, params }) => new P5AsciifyColorPaletteEffect({ shader, ...params, paletteBuffer: this.colorPalette }),
     }
 
     _setupQueue = [];
@@ -39,15 +64,25 @@ class P5AsciifyEffectManager {
         this._effects = [];
     }
 
+    setup() {
+        this.setupShaders();
+        this.setupEffectQueue();
+        this.colorPalette.setup();
+    }
+
     setupShaders() {
         for (let effectName in this.effectShaders) {
-            this.effectShaders[effectName] = createShader(P5AsciifyConstants.VERT_SHADER_CODE, this.effectShaders[effectName]);
+            this.effectShaders[effectName] = createShader(vertexShader, this.effectShaders[effectName]);
         }
     }
 
     setupEffectQueue() {
         for (let effectInstance of this._setupQueue) {
             effectInstance.shader = this.effectShaders[effectInstance.name];
+
+            if (effectInstance.name === "colorpalette") {
+                effectInstance.paletteBuffer = this.colorPalette;
+            }
         }
     }
 
@@ -134,3 +169,5 @@ class P5AsciifyEffectManager {
         return this._effects;
     }
 }
+
+export default P5AsciifyEffectManager;
