@@ -1,7 +1,7 @@
 import resolve from '@rollup/plugin-node-resolve';
-import commonjs from '@rollup/plugin-commonjs';
 import terser from '@rollup/plugin-terser';
 import glslify from 'rollup-plugin-glslify';
+import { string } from "rollup-plugin-string";
 
 export default [
     {
@@ -12,8 +12,10 @@ export default [
         ],
         plugins: [
             glslify(),
+            string({
+                include: "**/*.txt"
+            }),
             resolve(), // so Rollup can find dependencies
-            commonjs() // so Rollup can convert dependencies to ES modules
         ]
     }
 ];
