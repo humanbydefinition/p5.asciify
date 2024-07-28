@@ -1,5 +1,8 @@
 /**
  * This example demonstrates how to use the edge detection feature of p5.asciify.
+ * 
+ * The example creates a sketch that displays a number of rectangles that grow and shrink over time.
+ * Each rectangle is displayed with a random color and angle.
  */
 
 let sketchFramebuffer;
@@ -33,7 +36,7 @@ function setup() {
 
 function draw() {
     sketchFramebuffer.begin();
-    
+
     background(0);
     noStroke();
 
