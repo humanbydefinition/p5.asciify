@@ -23,7 +23,7 @@ Download the latest version of p5.asciify from the [Releases](https://github.com
 <script src="https://cdn.jsdelivr.net/npm/p5@1.9.4/lib/p5.min.js"></script>
 
 <!-- Import p5.asciify -->
-<script src="https://cdn.jsdelivr.net/npm/p5.asciify@0.0.8/dist/p5.asciify.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/p5.asciify@0.0.9/dist/p5.asciify.min.js"></script>
 
 <!-- If needed, import canvas recording libraries like p5.Capture after p5.asciify -->
 <script src="https://cdn.jsdelivr.net/npm/p5.capture@1.4.1/dist/p5.capture.umd.min.js"></script>
