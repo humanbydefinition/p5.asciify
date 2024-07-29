@@ -63,6 +63,8 @@ class P5Asciify {
     static grid = new P5AsciifyGrid({ cellWidth: 0, cellHeight: 0 });
 
     static setup() {
+        pixelDensity(1);
+
         this.brightnessCharacterSet.setup({ font: this.font, characters: this.config.brightness.characters, fontSize: this.config.common.fontSize });
         this.edgeCharacterSet.setup({ font: this.font, characters: this.config.edge.characters, fontSize: this.config.common.fontSize });
         this.grid.resizeCellDimensions(this.brightnessCharacterSet.maxGlyphDimensions.width, this.brightnessCharacterSet.maxGlyphDimensions.height);
@@ -83,8 +85,6 @@ class P5Asciify {
         this.sampleFramebuffer = createFramebuffer({ format: this.FLOAT, width: this.grid.cols, height: this.grid.rows });
 
         this.asciiFramebufferDimensions = { width: this.asciiFramebuffer.width, height: this.asciiFramebuffer.height };
-
-        pixelDensity(1);
     }
 
     static checkFramebufferDimensions() {
