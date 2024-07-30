@@ -7,7 +7,7 @@ let sketchFramebuffer;
 let kaleidoscopeEffect;
 let distortionEffect;
 let brightnessEffect;
-let chromaticAberationEffect;
+let chromaticAberrationEffect;
 let colorPaletteEffect1;
 let colorPaletteEffect2;
 let grayscaleEffect;
@@ -35,8 +35,8 @@ function setup() {
     distortionEffect = addAsciiEffect('pre', 'distortion', { frequency: 0.1, amplitude: 0.1 });
     brightnessEffect = addAsciiEffect('pre', 'brightness', { brightness: 0.5 });
 
-    // TODO: Effect seems to affect the ascii edges conversion in a bad way when no grayscale other effect are applied after
-    chromaticAberationEffect = addAsciiEffect('pre', 'chromaticaberration', { amount: 0.10, angle: 0 });
+    // TODO: chromaticaberration effect seems to affect the ascii edges conversion in a bad way when no other effect are applied after
+    chromaticAberrationEffect = addAsciiEffect('pre', 'chromaticaberration', { amount: 0.10, angle: 0 });
     grayscaleEffect = addAsciiEffect('pre', 'grayscale', {});
 
     colorPaletteEffect1 = addAsciiEffect('pre', 'colorpalette', { palette: ['#ff0000', '#00ff00', '#0000ff', '#ffffff'] });
