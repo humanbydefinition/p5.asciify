@@ -8,7 +8,11 @@ import asciiShader from './shaders/frag/ascii.frag';
 import sobelShader from './shaders/frag/sobel.frag';
 import sampleShader from './shaders/frag/sample.frag';
 
-
+/**
+ * @class P5Asciify
+ * @description
+ * The main class for the P5Asciify library, responsible for setting up and running the rendering pipeline.
+ */
 class P5Asciify {
     static config = {
         common: {
@@ -62,6 +66,9 @@ class P5Asciify {
     static edgeCharacterSet = new P5AsciifyCharacterSet();
     static grid = new P5AsciifyGrid({ cellWidth: 0, cellHeight: 0 });
 
+    /**
+     * Sets up the P5Asciify library with the specified options after the user's setup() function finished.
+     */
     static setup() {
         pixelDensity(1);
 
@@ -87,6 +94,11 @@ class P5Asciify {
         this.asciiFramebufferDimensions = { width: this.asciiFramebuffer.width, height: this.asciiFramebuffer.height };
     }
 
+    /**
+     * Checks if the dimensions of the ASCII framebuffer have changed and resets the grid if necessary.
+     * This function is called every frame after the user's draw() function, 
+     * since I am not aware of a better way to do this since there is no hook for when the canvas is resized.
+     */
     static checkFramebufferDimensions() {
         if (this.asciiFramebufferDimensions.width !== this.asciiFramebuffer.width || this.asciiFramebufferDimensions.height !== this.asciiFramebuffer.height) {
             this.asciiFramebufferDimensions.width = this.asciiFramebuffer.width;
@@ -97,6 +109,9 @@ class P5Asciify {
         }
     }
 
+    /**
+     * Runs the rendering pipeline for the P5Asciify library.
+     */
     static asciify() {
         this.preEffectFramebuffer.begin();
         clear();
@@ -202,6 +217,11 @@ class P5Asciify {
         this.checkFramebufferDimensions();
     }
 
+    /**
+     * Sets the default options for the P5Asciify library.
+     * @param {object} options 
+     * @param {boolean} warn 
+     */
     static setDefaultOptions(options, warn = true) {
         // Define deprecated options
         let deprecated_parent_options = ['fontSize', 'enabled', 'characters', 'characterColor', 'characterColorMode', 'backgroundColor', 'backgroundColorMode', 'invertMode'];
