@@ -1,41 +1,79 @@
 # p5.asciify ( ͡° ͜ʖ ͡°)
 
-![header](/repo_assets/p5.asciify.animated-logo.gif)
+<p align="center">
+  <img src="https://github.com/humanbydefinition/p5.asciify/raw/main/repo_assets/p5.asciify.animated-logo.gif" />
+</p>
 
-`p5.asciify` is a [`p5.js`](https://github.com/processing/p5.js) addon library for converting the main [`WebGL`](https://p5js.org/reference/p5/WEBGL/) drawing canvas into a grid of ASCII characters in real-time. 
+`p5.asciify` is a [`p5.js`](https://p5js.org/) add-on library for converting the main canvas in [`WEBGL`](https://p5js.org/reference/p5/WEBGL/) mode into a grid of ASCII characters in real-time, allowing you to bring a retro, text-based aesthetic to your visualizations, adding a unique touch to your creative coding projects.
 
-To use `p5.asciify` with a [`p5.js`](https://github.com/processing/p5.js) sketch in [`WEBGL`](https://p5js.org/reference/p5/WEBGL/) mode, ensure to include [`p5.js`](https://github.com/processing/p5.js) version `v1.8.0` or later in your project.
+The main goal of `p5.asciify` is to provide an easy-to-use, customizable solution for converting the main [`p5.js`](https://p5js.org/) canvas into ASCII characters in real-time, offering a wide range of settings and effects to adjust the appearance of the ASCII grid to specific needs and artistic vision.
 
-To see `p5.asciify` in action, check out the example sketches in the prepared collection on the [p5.js web editor](https://editor.p5js.org/): 
+To see `p5.asciify` in action, check out the example sketches in the provided collection on the [p5.js web editor](https://editor.p5js.org/): 
 [`p5.asciify examples`](https://editor.p5js.org/humanbydefinition/collections/DUa3pcJqn).
 
-I would love to see your creations using `p5.asciify`! Feel free to tag me on social media or use the hashtag `#p5asciify` so I can enjoy and share your amazing work too. (ﾉ◕ヮ◕)ﾉ*:・ﾟ✧ 
+`p5.asciify` is actively developed and maintained by [**@humanbydefinition**](https://github.com/humanbydefinition), with new features and improvements being added regularly. The library is open-source and available here, where you can contribute to its development, report issues, or suggest new features. I highly value your feedback and contributions, so feel free to reach out!
+
+I would love to see your creations using `p5.asciify`! Feel free to tag me on social media or use the hashtag `#p5asciify` so I can enjoy and share your amazing work too.  
+(ﾉ◕ヮ◕)ﾉ*:・ﾟ✧ 
 
 [![Instagram](https://img.shields.io/badge/Instagram-lightgrey?style=social&logo=instagram)](https://www.instagram.com/humanbydefinition/)
 
 *Special thanks to [`@davepagurek`](https://github.com/davepagurek) for helping me learn how to create a p5.js addon library! (✿◠‿◠)*
 
-# Getting started
-Download the latest version of p5.asciify from the [Releases](https://github.com/humanbydefinition/p5.asciify/releases) page and embed `p5.asciify.js` or `p5.asciify.min.js` in your project's HTML file after importing the [`p5.js`](https://github.com/processing/p5.js) library, but before loading your sketch file.
+# Getting Started
 
-```html
-<!-- Import p5.js -->
-<script src="https://cdn.jsdelivr.net/npm/p5@1.9.4/lib/p5.min.js"></script>
+## Prerequisites
 
-<!-- Import p5.asciify -->
-<script src="https://cdn.jsdelivr.net/npm/p5.asciify@0.0.9/dist/p5.asciify.min.js"></script>
+- `p5.asciify` requires [`p5.js`](https://p5js.org/) version `1.8.0` or higher to work. 
+- `p5.asciify` only runs in [`WEBGL`](https://p5js.org/reference/#/p5/createCanvas) mode, so make sure to set up your canvas accordingly:
 
-<!-- If needed, import canvas recording libraries like p5.Capture after p5.asciify -->
-<script src="https://cdn.jsdelivr.net/npm/p5.capture@1.4.1/dist/p5.capture.umd.min.js"></script>
-
-<!-- Load your sketch -->
-<script src="sketch.js"></script>
+```javascript
+function setup() {
+  createCanvas(windowWidth, windowHeight, WEBGL);
+}
 ```
 
-At this point, your [`p5.js`](https://github.com/processing/p5.js) canvas in [`WebGL`](https://p5js.org/reference/p5/WEBGL/) mode, to which the library has been added, should already be converted to ASCII characters!  
-(｡◕‿‿◕｡)
+That's it! You're now ready to install and use `p5.asciify` in your [`p5.js`](https://p5js.org/) projects.
 
-[`P2D`](https://p5js.org/reference/p5/P2D/) rendering mode is **not** supported at the moment, but hopefully will be in the future.   ʕっ•ᴥ•ʔっ
+## Installation
+
+Download the latest version of `p5.asciify` from the [**GitHub releases page**](https://github.com/humanbydefinition/p5.asciify/releases). The library is distributed as a single JavaScript file, which you can include in your project by adding the following script tag to your HTML file <u>after</u> importing `p5.js`:
+
+```html
+<!-- Import p5.js before p5.asciify -->
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.9.4/lib/p5.js"></script>
+
+<!-- Import p5.asciify after p5.js -->
+<script src="path/to/library/p5.asciify.min.js"></script>
+```
+
+
+Alternatively, the library can be imported directly from a CDN like [**jsDelivr**](https://www.jsdelivr.com/):
+
+```html	
+<!-- Import p5.js before p5.asciify -->
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.9.4/lib/p5.js"></script>
+
+<!-- Import p5.asciify after p5.js -->
+<script src="https://cdn.jsdelivr.net/npm/p5.asciify@0.0.9/dist/p5.asciify.min.js"></script>
+```
+
+> [!TIP]
+> To capture a canvas with libraries like [`p5.capture`](https://github.com/tapioca24/p5.capture) and `p5.asciify` applied, make sure to import them **after** `p5.asciify` to ensure the correct rendering order.
+>
+> ```html
+> <!-- Import p5.js before p5.asciify -->
+> <script src="https://cdn.jsdelivr.net/npm/p5@1.9.4/lib/p5.js"></script>
+>
+> <!-- Import p5.asciify after p5.js -->
+> <script src="https://cdn.jsdelivr.net/npm/p5.asciify@0.0.9/dist/p5.asciify.min.js"></script>
+>
+> <!-- Import p5.capture after p5.asciify -->
+> <script src="https://cdn.jsdelivr.net/npm/p5.capture@1.4.1/dist/p5.capture.umd.min.js"></script>
+> ```
+
+At this point, when imported correctly, the [`p5.js`](https://p5js.org/) canvas in `WEBGL` mode should already be converted into a grid of ASCII characters with the default settings applied!  
+(｡◕‿‿◕｡)
 
 To customize the ASCII conversion further, the library provides functionality which is described in the following [`Usage`](#usage) section.
 
