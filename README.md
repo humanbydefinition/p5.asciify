@@ -71,8 +71,7 @@ Alternatively, the library can be imported directly from a CDN like [**jsDelivr*
 > <script src="https://cdn.jsdelivr.net/npm/p5.capture@1.4.1/dist/p5.capture.umd.min.js"></script>
 > ```
 
-At this point, when imported correctly, the [`p5.js`](https://p5js.org/) canvas in `WEBGL` mode should already be converted into a grid of ASCII characters with the default settings applied!  
-(｡◕‿‿◕｡)
+At this point, when imported correctly, the [`p5.js`](https://p5js.org/) canvas in `WEBGL` mode should already be converted into a grid of ASCII characters with the default settings applied! (｡◕‿‿◕｡)
 
 # Usage
 
