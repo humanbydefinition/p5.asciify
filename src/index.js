@@ -8,6 +8,7 @@ import URSAFONT_BASE64 from './fonts/ursafont_base64.txt';
 window.P5Asciify = P5Asciify; // Expose P5Asciify to the global scope
 
 window.preload = function () { }; // In case the user doesn't define a preload function, we need to define it here to avoid errors
+window.draw = function () { noLoop(); }; // In case the user doesn't define a draw function, we need to define it here to avoid errors
 
 /**
  * Preloads the ASCII font for the P5Asciify library.
