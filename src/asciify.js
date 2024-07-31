@@ -74,12 +74,13 @@ class P5Asciify {
 
         this.brightnessCharacterSet.setup({ font: this.font, characters: this.config.brightness.characters, fontSize: this.config.common.fontSize });
         this.edgeCharacterSet.setup({ font: this.font, characters: this.config.edge.characters, fontSize: this.config.common.fontSize });
+
         this.grid.resizeCellDimensions(this.brightnessCharacterSet.maxGlyphDimensions.width, this.brightnessCharacterSet.maxGlyphDimensions.height);
 
         this.preEffectManager.setup();
         this.afterEffectManager.setup();
 
-        this.preEffectFramebuffer = createFramebuffer({ format: FLOAT });
+        this.preEffectFramebuffer = _renderer.framebuffers.values().next().value;
         this.postEffectFramebuffer = createFramebuffer({ format: FLOAT });
 
         this.asciiShader = createShader(vertexShader, asciiShader);
@@ -113,11 +114,6 @@ class P5Asciify {
      * Runs the rendering pipeline for the P5Asciify library.
      */
     static asciify() {
-        this.preEffectFramebuffer.begin();
-        clear();
-        image(_renderer, -width / 2, -height / 2);
-        this.preEffectFramebuffer.end();
-
         for (const effect of this.preEffectManager._effects) {
             if (effect.enabled) {
                 this.preEffectFramebuffer.begin();
@@ -211,7 +207,6 @@ class P5Asciify {
             }
         }
 
-        clear();
         image(this.postEffectFramebuffer, -width / 2, -height / 2);
 
         this.checkFramebufferDimensions();
