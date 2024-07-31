@@ -1020,6 +1020,11 @@ var sobelShader = "#version 300 es\nprecision highp float;\n#define GLSLIFY 1\ni
 
 var sampleShader = "#version 300 es\nprecision highp float;\n#define GLSLIFY 1\nuniform sampler2D u_image;uniform vec2 u_gridCellDimensions;uniform int u_threshold;out vec4 outColor;const vec3 BLACK=vec3(0.0f,0.0f,0.0f);const int MAX_HISTOGRAM_SIZE=16;vec3 colorHistogram[MAX_HISTOGRAM_SIZE];int countHistogram[MAX_HISTOGRAM_SIZE];void main(){vec2 bufferDimensions=u_gridCellDimensions;vec2 imageDimensions=vec2(textureSize(u_image,0));vec2 gridCellDimensions=vec2(imageDimensions.x/bufferDimensions.x,imageDimensions.y/bufferDimensions.y);ivec2 coords=ivec2(gl_FragCoord.xy);int gridX=coords.x;int gridY=coords.y;ivec2 cellOrigin=ivec2(gridX*int(gridCellDimensions.x),gridY*int(gridCellDimensions.y));int histogramIndex=0;int nonBlackCount=0;for(int i=0;i<MAX_HISTOGRAM_SIZE;i++){colorHistogram[i]=BLACK;countHistogram[i]=0;}for(int i=0;i<int(gridCellDimensions.x);i+=1){for(int j=0;j<int(gridCellDimensions.y);j+=1){ivec2 pixelCoords=cellOrigin+ivec2(i,j);vec3 color=texelFetch(u_image,pixelCoords,0).rgb;if(color==BLACK)continue;nonBlackCount++;bool found=false;for(int k=0;k<histogramIndex;k++){if(colorHistogram[k]==color){countHistogram[k]++;found=true;break;}}if(!found&&histogramIndex<MAX_HISTOGRAM_SIZE){colorHistogram[histogramIndex]=color;countHistogram[histogramIndex]=1;histogramIndex++;}}}vec3 mostFrequentColor=BLACK;int highestCount=0;for(int k=0;k<histogramIndex;k++){if(countHistogram[k]>highestCount){mostFrequentColor=colorHistogram[k];highestCount=countHistogram[k];}}if(nonBlackCount<u_threshold){outColor=vec4(BLACK,1.0f);}else{outColor=vec4(mostFrequentColor,1.0f);}}"; // eslint-disable-line
 
+/**
+ * @class P5Asciify
+ * @description
+ * The main class for the P5Asciify library, responsible for setting up and running the rendering pipeline.
+ */
 class P5Asciify {
     static config = {
         common: {
@@ -1073,6 +1078,9 @@ class P5Asciify {
     static edgeCharacterSet = new P5AsciifyCharacterSet();
     static grid = new P5AsciifyGrid({ cellWidth: 0, cellHeight: 0 });
 
+    /**
+     * Sets up the P5Asciify library with the specified options after the user's setup() function finished.
+     */
     static setup() {
         pixelDensity(1);
 
@@ -1098,6 +1106,11 @@ class P5Asciify {
         this.asciiFramebufferDimensions = { width: this.asciiFramebuffer.width, height: this.asciiFramebuffer.height };
     }
 
+    /**
+     * Checks if the dimensions of the ASCII framebuffer have changed and resets the grid if necessary.
+     * This function is called every frame after the user's draw() function, 
+     * since I am not aware of a better way to do this since there is no hook for when the canvas is resized.
+     */
     static checkFramebufferDimensions() {
         if (this.asciiFramebufferDimensions.width !== this.asciiFramebuffer.width || this.asciiFramebufferDimensions.height !== this.asciiFramebuffer.height) {
             this.asciiFramebufferDimensions.width = this.asciiFramebuffer.width;
@@ -1108,6 +1121,9 @@ class P5Asciify {
         }
     }
 
+    /**
+     * Runs the rendering pipeline for the P5Asciify library.
+     */
     static asciify() {
         this.preEffectFramebuffer.begin();
         clear();
@@ -1213,6 +1229,11 @@ class P5Asciify {
         this.checkFramebufferDimensions();
     }
 
+    /**
+     * Sets the default options for the P5Asciify library.
+     * @param {object} options 
+     * @param {boolean} warn 
+     */
     static setDefaultOptions(options, warn = true) {
         // Define deprecated options
         let deprecated_parent_options = ['fontSize', 'enabled', 'characters', 'characterColor', 'characterColorMode', 'backgroundColor', 'backgroundColorMode', 'invertMode'];
