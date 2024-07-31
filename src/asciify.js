@@ -66,6 +66,8 @@ class P5Asciify {
     static edgeCharacterSet = new P5AsciifyCharacterSet();
     static grid = new P5AsciifyGrid({ cellWidth: 0, cellHeight: 0 });
 
+    static p5Canvas = null;
+
     /**
      * Sets up the P5Asciify library with the specified options after the user's setup() function finished.
      */
@@ -80,7 +82,7 @@ class P5Asciify {
         this.preEffectManager.setup();
         this.afterEffectManager.setup();
 
-        this.preEffectFramebuffer = _renderer.framebuffers.values().next().value;
+        this.preEffectFramebuffer = createFramebuffer({ format: FLOAT });
         this.postEffectFramebuffer = createFramebuffer({ format: FLOAT });
 
         this.asciiShader = createShader(vertexShader, asciiShader);
@@ -91,6 +93,8 @@ class P5Asciify {
 
         this.sampleShader = createShader(vertexShader, sampleShader);
         this.sampleFramebuffer = createFramebuffer({ format: this.FLOAT, width: this.grid.cols, height: this.grid.rows });
+
+        this.p5Canvas = _renderer;
 
         this.asciiFramebufferDimensions = { width: this.asciiFramebuffer.width, height: this.asciiFramebuffer.height };
     }
@@ -114,6 +118,10 @@ class P5Asciify {
      * Runs the rendering pipeline for the P5Asciify library.
      */
     static asciify() {
+        this.preEffectFramebuffer.begin();
+        image(this.p5Canvas, -width / 2, -height / 2);
+        this.preEffectFramebuffer.end();
+
         for (const effect of this.preEffectManager._effects) {
             if (effect.enabled) {
                 this.preEffectFramebuffer.begin();
@@ -189,7 +197,6 @@ class P5Asciify {
         }
 
         this.postEffectFramebuffer.begin();
-        clear();
         if (this.config.brightness.enabled || this.config.edge.enabled) {
             image(this.asciiFramebuffer, -width / 2, -height / 2);
         } else {
