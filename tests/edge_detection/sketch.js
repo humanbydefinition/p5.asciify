@@ -34,6 +34,14 @@ function draw() {
     image(sketchFramebuffer, -windowWidth / 2, -windowHeight / 2);
 }
 
+function keyPressed() {
+    if (key === 's') {
+        noLoop();
+    } else if (key === 'r') {
+        loop();
+    }
+}
+
 function windowResized() {
     resizeCanvas(windowWidth, windowHeight);
 }
