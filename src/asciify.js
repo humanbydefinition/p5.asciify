@@ -49,6 +49,8 @@ class P5Asciify {
 
     static afterEffectManager = new P5AsciifyEffectManager(this.colorPalette);
 
+    static sketchFramebuffer = null;
+
     static preEffectPrevFramebuffer = null;
     static preEffectNextFramebuffer = null;
 
@@ -78,6 +80,8 @@ class P5Asciify {
      */
     static setup() {
         pixelDensity(1);
+
+        this.sketchFramebuffer = createFramebuffer({ format: FLOAT });
 
         this.brightnessCharacterSet.setup({ type: "brightness", font: this.font, characters: this.brightnessOptions.characters, fontSize: this.commonOptions.fontSize });
         this.edgeCharacterSet.setup({ type: "edge", font: this.font, characters: this.edgeOptions.characters, fontSize: this.commonOptions.fontSize });
@@ -131,7 +135,7 @@ class P5Asciify {
     static asciify() {
         this.preEffectNextFramebuffer.begin();
         clear(); // do not remove this, even though it's tempting
-        image(_renderer, -width / 2, -height / 2);
+        image(this.sketchFramebuffer, -width / 2, -height / 2);
         this.preEffectNextFramebuffer.end();
 
         for (const effect of this.preEffectManager._effects) {

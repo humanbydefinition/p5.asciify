@@ -302,7 +302,10 @@ p5.prototype.swapAsciiEffects = function (effectInstance1, effectInstance2) {
  * Adding a push before draw
  * p5.prototype.preDrawAddPush();
  */
-p5.prototype.preDrawAddPush = function () { this.push(); };
+p5.prototype.preDrawAddPush = function () {
+    P5Asciify.sketchFramebuffer.begin();
+    this.push();
+};
 p5.prototype.registerMethod("pre", p5.prototype.preDrawAddPush);
 
 /**
@@ -313,7 +316,10 @@ p5.prototype.registerMethod("pre", p5.prototype.preDrawAddPush);
  * @function postDrawAddPop
  * @memberof p5
  */
-p5.prototype.postDrawAddPop = function () { this.pop(); };
+p5.prototype.postDrawAddPop = function () {
+    this.pop();
+    P5Asciify.sketchFramebuffer.end();
+};
 p5.prototype.registerMethod("post", p5.prototype.postDrawAddPop);
 
 /**
