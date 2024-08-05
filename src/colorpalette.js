@@ -9,7 +9,9 @@ class P5AsciifyColorPalette {
      * Creates a new instance of the ColorPaletteTexture class.
      */
     constructor() {
-        this.palettes = [];
+        this.palettes = {};
+        this.paletteRows = {};
+        this.nextId = 0;
     }
 
     /**
@@ -19,7 +21,7 @@ class P5AsciifyColorPalette {
     setup() {
         this.texture = createFramebuffer({ width: 1, height: 1 });
 
-        if (this.palettes.length > 0) {
+        if (Object.keys(this.palettes).length > 0) {
             this.updateTexture();
         }
     }
@@ -28,15 +30,18 @@ class P5AsciifyColorPalette {
      * Updates the texture with the current palettes.
      */
     updateTexture() {
-        let maxColors = this.palettes.reduce((max, colors) => Math.max(max, colors.length), 1);
-        this.texture.resize(maxColors, this.palettes.length);
+        let palettesArray = Object.values(this.palettes);
+        let maxColors = palettesArray.reduce((max, colors) => Math.max(max, colors.length), 1);
+        this.texture.resize(maxColors, palettesArray.length);
 
         this.texture.loadPixels();
 
-        for (let y = 0; y < this.palettes.length; y++) {
-            let colors = this.palettes[y].map(c => color(c)); // Convert to p5.Color objects
+        let rowIndex = 0;
+        for (let id in this.palettes) {
+            let colors = this.palettes[id].map(c => color(c)); // Convert to p5.Color objects
+            this.paletteRows[id] = rowIndex; // Update the row index for the current palette
             for (let x = 0; x < colors.length; x++) {
-                let index = (y * maxColors + x) * 4;
+                let index = (rowIndex * maxColors + x) * 4;
                 let col = colors[x];
                 this.texture.pixels[index] = red(col);
                 this.texture.pixels[index + 1] = green(col);
@@ -45,12 +50,13 @@ class P5AsciifyColorPalette {
             }
             // Fill the rest of the row with transparent pixels if the palette is shorter
             for (let x = colors.length; x < maxColors; x++) {
-                let index = (y * maxColors + x) * 4;
+                let index = (rowIndex * maxColors + x) * 4;
                 this.texture.pixels[index] = 0;
                 this.texture.pixels[index + 1] = 0;
                 this.texture.pixels[index + 2] = 0;
                 this.texture.pixels[index + 3] = 0;
             }
+            rowIndex++;
         }
         this.texture.updatePixels();
     }
@@ -58,47 +64,56 @@ class P5AsciifyColorPalette {
     /**
      * Adds a new color palette to the texture
      * @param {Array} colors - The array of colors to add
-     * @returns The index of the new palette
+     * @returns The ID of the new palette
      */
     addPalette(colors) {
-        this.palettes.push(colors);
+        const id = `palette-${this.nextId++}`;
+        this.palettes[id] = colors;
 
-        if (frameCount > 0) {
-            this.updateTexture();
-        }
+        this.updateTexture();
 
-        return this.palettes.length - 1;
+        return id;
     }
 
     /**
      * Removes a color palette from the texture
-     * @param {number} index - The index of the palette to remove
+     * @param {string} id - The ID of the palette to remove
      */
-    removePalette(index) {
-        if (index >= 0 && index < this.palettes.length) {
-            this.palettes.splice(index, 1);
+    removePalette(id) {
+        if (this.palettes[id]) {
+            delete this.palettes[id];
+            delete this.paletteRows[id];
             if (frameCount > 0) {
                 this.updateTexture();
             }
         } else {
-            console.warn(`Index ${index} is out of range`);
+            console.warn(`Palette with ID ${id} does not exist`);
         }
     }
 
     /**
      * Sets the colors for a specific color palette
-     * @param {number} index - The index of the palette to update
+     * @param {string} id - The ID of the palette to update
      * @param {Array} colors - The new array of colors for the palette
      */
-    setPaletteColors(index, colors) {
-        if (index >= 0 && index < this.palettes.length) {
-            this.palettes[index] = colors;
+    setPaletteColors(id, colors) {
+        if (this.palettes[id]) {
+            this.palettes[id] = colors;
             if (frameCount > 0) {
                 this.updateTexture();
             }
         } else {
-            console.warn(`Index ${index} is out of range`);
+            console.warn(`Palette with ID ${id} does not exist`);
         }
+    }
+
+    /**
+     * Gets the row index of a specific color palette
+     * @param {string} id - The ID of the palette
+     * @returns The row index of the palette, or -1 if the palette does not exist
+     */
+    getPaletteRow(id) {
+        return this.paletteRows[id] !== undefined ? this.paletteRows[id] : -1;
     }
 }
 

@@ -8,6 +8,7 @@ import URSAFONT_BASE64 from './fonts/ursafont_base64.txt';
 window.P5Asciify = P5Asciify; // Expose P5Asciify to the global scope
 
 window.preload = function () { }; // In case the user doesn't define a preload function, we need to define it here to avoid errors
+window.draw = function () { noLoop(); }; // In case the user doesn't define a draw function, we need to define it here to avoid errors
 
 /**
  * Preloads the ASCII font for the P5Asciify library.
@@ -109,29 +110,6 @@ p5.prototype.setupAsciifier = function () {
 p5.prototype.registerMethod("afterSetup", p5.prototype.setupAsciifier);
 
 /**
- * Updates the ASCII font for the P5Asciify library.
- * This method is deprecated and will be removed in v0.1.0. It currently calls the loadAsciiFont() method.
- *
- * @function updateAsciiFont
- * @memberof p5
- * @param {string|Object} font - The path to the font file or the font object.
- * @deprecated Use {@link loadAsciiFont} instead.
- * 
- * @example
- * Updating the ASCII font using a path
- * updateAsciiFont('path/to/font.ttf');
- *
- * @example
- * Updating the ASCII font using an object
- * const fontObject = ...; // Assume this is a valid font object
- * updateAsciiFont(fontObject);
- */
-p5.prototype.updateAsciiFont = function (font) {
-    console.warn(`updateAsciiFont() is deprecated. Use loadAsciiFont() instead. updateAsciiFont() will be removed in v0.1.0.`);
-    this.loadAsciiFont(font);
-};
-
-/**
  * Sets the default options for the P5Asciify library.
  *
  * @function setAsciiOptions
@@ -142,8 +120,35 @@ p5.prototype.updateAsciiFont = function (font) {
  * TODO: Add example
  */
 p5.prototype.setAsciiOptions = function (options) {
-    P5Asciify.setDefaultOptions(options, false);
+    const validOptions = ["common", "brightness", "edge"];
+    const unknownOptions = Object.keys(options).filter(option => !validOptions.includes(option));
+
+    if (unknownOptions.length) {
+        console.warn(`P5Asciify: Unknown options detected (${unknownOptions.join(', ')}). Refer to the documentation for valid options.`);
+        unknownOptions.forEach(option => delete options[option]);
+    }
+
+    const { brightness: brightnessOptions, edge: edgeOptions, common: commonOptions } = options;
+
+    const colorOptions = [brightnessOptions, edgeOptions];
+    colorOptions.forEach(opt => {
+        if (opt?.characterColor) opt.characterColor = P5AsciifyUtils.hexToShaderColor(opt.characterColor);
+        if (opt?.backgroundColor) opt.backgroundColor = P5AsciifyUtils.hexToShaderColor(opt.backgroundColor);
+    });
+
+    if (commonOptions?.fontSize && (commonOptions.fontSize < 1 || commonOptions.fontSize > 128)) {
+        console.warn(`P5Asciify: Font size ${commonOptions.fontSize} is out of bounds. It should be between 1 and 128. Font size not updated.`);
+        delete commonOptions.fontSize;
+    }
+
+    if (edgeOptions?.characters !== undefined && edgeOptions.characters.length !== 8) {
+        console.warn(`P5Asciify: The edge character set must contain exactly 8 characters. Character set not updated.`);
+        delete edgeOptions.characters;
+    }
+
+    P5Asciify.setDefaultOptions(brightnessOptions, edgeOptions, commonOptions);
 };
+
 
 /**
  * Adds an ASCII effect to the P5Asciify library.
@@ -166,13 +171,27 @@ p5.prototype.setAsciiOptions = function (options) {
  * p5.prototype.addAsciiEffect('post', 'invert', { });
  */
 p5.prototype.addAsciiEffect = function (effectType, effectName, userParams = {}) {
-    if (effectType === 'pre') {
-        return P5Asciify.preEffectManager.addEffect(effectName, userParams);
-    } else if (effectType === 'post') {
-        return P5Asciify.afterEffectManager.addEffect(effectName, userParams);
-    } else {
+    const managers = {
+        pre: P5Asciify.preEffectManager,
+        post: P5Asciify.afterEffectManager
+    };
+
+    const manager = managers[effectType];
+    if (!manager) {
         throw new P5AsciifyError(`Invalid effect type '${effectType}'. Valid types are 'pre' and 'post'.`);
     }
+
+    if (!manager.effectConstructors[effectName]) {
+        throw new P5AsciifyError(`Effect '${effectName}' does not exist! Available effects: ${Object.keys(manager.effectConstructors).join(", ")}`);
+    }
+
+    const validParams = Object.keys(manager.effectParams[effectName]);
+    const invalidKeys = Object.keys(userParams).filter(key => !validParams.includes(key));
+    if (invalidKeys.length > 0) {
+        throw new P5AsciifyError(`Invalid parameter(s) for effect '${effectName}': ${invalidKeys.join(", ")}\nValid parameters are: ${validParams.join(", ")}`);
+    }
+
+    return manager.addEffect(effectName, userParams);
 }
 
 /**
@@ -256,6 +275,11 @@ p5.prototype.swapAsciiEffects = function (effectInstance1, effectInstance2) {
 
     // Swap the effects
     if (manager1 !== manager2) {
+
+        if (manager1.hasEffect(effectInstance2) || manager2.hasEffect(effectInstance1)) {
+            throw new P5AsciifyError(`Effects cannot be swapped because one effect instance is already present in the other's manager.`);
+        }
+
         manager1.removeEffect(effectInstance1);
         manager2.removeEffect(effectInstance2);
 
@@ -302,4 +326,3 @@ p5.prototype.registerMethod("post", p5.prototype.postDrawAddPop);
  */
 p5.prototype.asciify = function () { P5Asciify.asciify(); };
 p5.prototype.registerMethod("post", p5.prototype.asciify);
-

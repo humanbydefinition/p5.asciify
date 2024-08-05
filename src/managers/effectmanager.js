@@ -1,4 +1,3 @@
-import P5AsciifyError from "../errors.js";
 import P5AsciifyBrightnessEffect from "../effects/brightness.js";
 import P5AsciifyChromaticAberrationEffect from "../effects/chromaticaberration.js";
 import P5AsciifyColorPaletteEffect from "../effects/colorpalette.js";
@@ -7,7 +6,6 @@ import P5AsciifyGrayscaleEffect from "../effects/grayscale.js";
 import P5AsciifyInvertEffect from "../effects/invert.js";
 import P5AsciifyKaleidoscopeEffect from "../effects/kaleidoscope.js";
 import P5AsciifyRotateEffect from "../effects/rotate.js";
-import P5AsciifyColorPalette from "../colorpalette.js";
 
 import kaleidoscopeShader from "../shaders/frag/kaleidoscope.frag";
 import distortionShader from "../shaders/frag/distortion.frag";
@@ -20,10 +18,7 @@ import colorPaletteShader from "../shaders/frag/colorpalette.frag";
 
 import vertexShader from "../shaders/vert/shader.vert";
 
-
 class P5AsciifyEffectManager {
-
-    colorPalette = new P5AsciifyColorPalette();
 
     effectParams = {
         "kaleidoscope": { "segments": 2, "angle": 0.0 },
@@ -55,19 +50,19 @@ class P5AsciifyEffectManager {
         "chromaticaberration": ({ shader, params }) => new P5AsciifyChromaticAberrationEffect({ shader, ...params }),
         "rotate": ({ shader, params }) => new P5AsciifyRotateEffect({ shader, ...params }),
         "brightness": ({ shader, params }) => new P5AsciifyBrightnessEffect({ shader, ...params }),
-        "colorpalette": ({ shader, params }) => new P5AsciifyColorPaletteEffect({ shader, ...params, paletteBuffer: this.colorPalette }),
+        "colorpalette": ({ shader, params }) => new P5AsciifyColorPaletteEffect({ shader, ...params, colorPalette: this.colorPalette }),
     }
 
     _setupQueue = [];
 
-    constructor() {
+    constructor(colorPalette) {
+        this.colorPalette = colorPalette;
         this._effects = [];
     }
 
     setup() {
         this.setupShaders();
         this.setupEffectQueue();
-        this.colorPalette.setup();
     }
 
     setupShaders() {
@@ -78,19 +73,12 @@ class P5AsciifyEffectManager {
 
     setupEffectQueue() {
         for (let effectInstance of this._setupQueue) {
+            effectInstance.setup();
             effectInstance.shader = this.effectShaders[effectInstance.name];
-
-            if (effectInstance.name === "colorpalette") {
-                effectInstance.paletteBuffer = this.colorPalette;
-            }
         }
     }
 
     addExistingEffectAtIndex(effectInstance, index) {
-        if (this.hasEffect(effectInstance)) {
-            throw new P5AsciifyError(`Effect instance of type '${effectInstance.name}' already exists in the effect manager.`);
-        }
-
         effectInstance.shader = this.effectShaders[effectInstance.name];
         this._effects.splice(index, 0, effectInstance);
 
@@ -100,29 +88,10 @@ class P5AsciifyEffectManager {
     }
 
     getEffectIndex(effectInstance) {
-        const index = this._effects.indexOf(effectInstance);
-        if (index === -1) {
-            throw new P5AsciifyError(`Effect instance of type '${effectInstance.name}' does not exist in the effect manager.`);
-        }
-        return index;
+        return this._effects.indexOf(effectInstance);
     }
 
     addEffect(effectName, userParams = {}) {
-        if (!this.effectConstructors[effectName]) {
-            throw new P5AsciifyError(
-                `Effect '${effectName}' does not exist! 
-                Available effects: ${Object.keys(this.effectConstructors).join(", ")}`
-            );
-        }
-
-        const validParams = Object.keys(this.effectParams[effectName]);
-        const invalidKeys = Object.keys(userParams).filter(key => !Object.keys(this.effectParams[effectName]).includes(key));
-        if (invalidKeys.length > 0) {
-            throw new P5AsciifyError(
-                `Invalid parameter(s) for effect '${effectName}': ${invalidKeys.join(", ")}
-                Valid parameters are: ${validParams.join(", ")}`
-            );
-        }
 
         const shader = frameCount === 0 ? null : this.effectShaders[effectName];
         const params = { ...this.effectParams[effectName], ...userParams };
@@ -131,18 +100,15 @@ class P5AsciifyEffectManager {
 
         if (frameCount === 0) {
             this._setupQueue.push(effectInstance);
+        } else {
+            effectInstance.setup();
         }
 
         return effectInstance;
     }
 
     removeEffect(effectInstance) {
-        const index = this._effects.indexOf(effectInstance);
-        if (index > -1) {
-            this._effects.splice(index, 1);
-        } else {
-            throw new P5AsciifyError(`Effect instance of type '${effectInstance.name}' cannot be removed because it does not exist in the effect manager.`);
-        }
+        this._effects.splice(this._effects.indexOf(effectInstance), 1);
     }
 
     hasEffect(effectInstance) {
@@ -152,14 +118,6 @@ class P5AsciifyEffectManager {
     swapEffects(effectInstance1, effectInstance2) {
         const index1 = this._effects.indexOf(effectInstance1);
         const index2 = this._effects.indexOf(effectInstance2);
-
-        if (index1 === -1) {
-            throw new P5AsciifyError(`First effect parameter of type '${effectInstance1.name}' cannot be swapped because it does not exist in the effect manager.`);
-        }
-
-        if (index2 === -1) {
-            throw new P5AsciifyError(`Second effect parameter of type '${effectInstance2.name}' cannot be swapped because it does not exist in the effect manager.`);
-        }
 
         // Swap the effects
         [this._effects[index1], this._effects[index2]] = [this._effects[index2], this._effects[index1]];

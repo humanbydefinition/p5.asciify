@@ -1,22 +1,4 @@
 /**
- * @class P5AsciifyError
- * @extends {Error}
- * @description
- * Custom error class for the P5Asciify library.
- * Represents errors specific to the P5Asciify library.
- */
-class P5AsciifyError extends Error {
-    /**
-     * Creates an instance of P5AsciifyError.
-     * @param {string} message - The error message.
-     */
-    constructor(message) {
-        super(message);
-        this.name = "P5AsciifyError";
-    }
-}
-
-/**
  * @class P5AsciifyEffect
  * @description
  * The base class for all effects in the P5Asciify library.
@@ -32,6 +14,10 @@ class P5AsciifyEffect {
         this._name = name;
         this._shader = shader;
         this._enabled = true;
+    }
+
+    setup() {
+        // Override this method in subclasses to set up the effect.
     }
 
     /**
@@ -203,7 +189,9 @@ class P5AsciifyColorPalette {
      * Creates a new instance of the ColorPaletteTexture class.
      */
     constructor() {
-        this.palettes = [];
+        this.palettes = {};
+        this.paletteRows = {};
+        this.nextId = 0;
     }
 
     /**
@@ -213,7 +201,7 @@ class P5AsciifyColorPalette {
     setup() {
         this.texture = createFramebuffer({ width: 1, height: 1 });
 
-        if (this.palettes.length > 0) {
+        if (Object.keys(this.palettes).length > 0) {
             this.updateTexture();
         }
     }
@@ -222,15 +210,18 @@ class P5AsciifyColorPalette {
      * Updates the texture with the current palettes.
      */
     updateTexture() {
-        let maxColors = this.palettes.reduce((max, colors) => Math.max(max, colors.length), 1);
-        this.texture.resize(maxColors, this.palettes.length);
+        let palettesArray = Object.values(this.palettes);
+        let maxColors = palettesArray.reduce((max, colors) => Math.max(max, colors.length), 1);
+        this.texture.resize(maxColors, palettesArray.length);
 
         this.texture.loadPixels();
 
-        for (let y = 0; y < this.palettes.length; y++) {
-            let colors = this.palettes[y].map(c => color(c)); // Convert to p5.Color objects
+        let rowIndex = 0;
+        for (let id in this.palettes) {
+            let colors = this.palettes[id].map(c => color(c)); // Convert to p5.Color objects
+            this.paletteRows[id] = rowIndex; // Update the row index for the current palette
             for (let x = 0; x < colors.length; x++) {
-                let index = (y * maxColors + x) * 4;
+                let index = (rowIndex * maxColors + x) * 4;
                 let col = colors[x];
                 this.texture.pixels[index] = red(col);
                 this.texture.pixels[index + 1] = green(col);
@@ -239,12 +230,13 @@ class P5AsciifyColorPalette {
             }
             // Fill the rest of the row with transparent pixels if the palette is shorter
             for (let x = colors.length; x < maxColors; x++) {
-                let index = (y * maxColors + x) * 4;
+                let index = (rowIndex * maxColors + x) * 4;
                 this.texture.pixels[index] = 0;
                 this.texture.pixels[index + 1] = 0;
                 this.texture.pixels[index + 2] = 0;
                 this.texture.pixels[index + 3] = 0;
             }
+            rowIndex++;
         }
         this.texture.updatePixels();
     }
@@ -252,47 +244,56 @@ class P5AsciifyColorPalette {
     /**
      * Adds a new color palette to the texture
      * @param {Array} colors - The array of colors to add
-     * @returns The index of the new palette
+     * @returns The ID of the new palette
      */
     addPalette(colors) {
-        this.palettes.push(colors);
+        const id = `palette-${this.nextId++}`;
+        this.palettes[id] = colors;
 
-        if (frameCount > 0) {
-            this.updateTexture();
-        }
+        this.updateTexture();
 
-        return this.palettes.length - 1;
+        return id;
     }
 
     /**
      * Removes a color palette from the texture
-     * @param {number} index - The index of the palette to remove
+     * @param {string} id - The ID of the palette to remove
      */
-    removePalette(index) {
-        if (index >= 0 && index < this.palettes.length) {
-            this.palettes.splice(index, 1);
+    removePalette(id) {
+        if (this.palettes[id]) {
+            delete this.palettes[id];
+            delete this.paletteRows[id];
             if (frameCount > 0) {
                 this.updateTexture();
             }
         } else {
-            console.warn(`Index ${index} is out of range`);
+            console.warn(`Palette with ID ${id} does not exist`);
         }
     }
 
     /**
      * Sets the colors for a specific color palette
-     * @param {number} index - The index of the palette to update
+     * @param {string} id - The ID of the palette to update
      * @param {Array} colors - The new array of colors for the palette
      */
-    setPaletteColors(index, colors) {
-        if (index >= 0 && index < this.palettes.length) {
-            this.palettes[index] = colors;
+    setPaletteColors(id, colors) {
+        if (this.palettes[id]) {
+            this.palettes[id] = colors;
             if (frameCount > 0) {
                 this.updateTexture();
             }
         } else {
-            console.warn(`Index ${index} is out of range`);
+            console.warn(`Palette with ID ${id} does not exist`);
         }
+    }
+
+    /**
+     * Gets the row index of a specific color palette
+     * @param {string} id - The ID of the palette
+     * @returns The row index of the palette, or -1 if the palette does not exist
+     */
+    getPaletteRow(id) {
+        return this.paletteRows[id] !== undefined ? this.paletteRows[id] : -1;
     }
 }
 
@@ -311,11 +312,14 @@ class P5AsciifyColorPaletteEffect extends P5AsciifyEffect {
      * @param {Array} options.palette - The array of colors for the palette.
      * @param {P5AsciifyColorPalette} options.paletteBuffer - The buffer to store the color palette.
      */
-    constructor({ shader, palette, paletteBuffer }) {
+    constructor({ shader, palette, colorPalette }) {
         super("colorpalette", shader);
         this._palette = palette;
-        this.paletteBuffer = paletteBuffer;
-        this._paletteId = this.paletteBuffer.addPalette(this._palette);
+        this.colorPalette = colorPalette;
+    }
+
+    setup() {
+        this._paletteId = this.colorPalette.addPalette(this._palette);
     }
 
     /**
@@ -324,9 +328,9 @@ class P5AsciifyColorPaletteEffect extends P5AsciifyEffect {
      */
     setUniforms(framebuffer) {
         super.setUniforms(framebuffer);
-        this._shader.setUniform('u_colorPalette', this.paletteBuffer.texture);
-        this._shader.setUniform('u_colorPaletteRow', this._paletteId);
-        this._shader.setUniform('u_colorPaletteDimensions', [this.paletteBuffer.texture.width, this.paletteBuffer.texture.height]);
+        this._shader.setUniform('u_colorPalette', this.colorPalette.texture);
+        this._shader.setUniform('u_colorPaletteRow', this.colorPalette.getPaletteRow(this._paletteId));
+        this._shader.setUniform('u_colorPaletteDimensions', [this.colorPalette.texture.width, this.colorPalette.texture.height]);
         this._shader.setUniform('u_colorPaletteLength', this._palette.length);
     }
 
@@ -336,7 +340,7 @@ class P5AsciifyColorPaletteEffect extends P5AsciifyEffect {
      */
     set palette(palette) {
         this._palette = palette;
-        this.paletteBuffer.setPaletteColors(this._paletteId, this._palette);
+        this.colorPalette.setPaletteColors(this._paletteId, this._palette);
     }
 
     /**
@@ -578,8 +582,6 @@ var vertexShader = "#version 300 es\nprecision highp float;\n#define GLSLIFY 1\n
 
 class P5AsciifyEffectManager {
 
-    colorPalette = new P5AsciifyColorPalette();
-
     effectParams = {
         "kaleidoscope": { "segments": 2, "angle": 0.0 },
         "distortion": { "frequency": 0.1, "amplitude": 0.1 },
@@ -610,19 +612,19 @@ class P5AsciifyEffectManager {
         "chromaticaberration": ({ shader, params }) => new P5AsciifyChromaticAberrationEffect({ shader, ...params }),
         "rotate": ({ shader, params }) => new P5AsciifyRotateEffect({ shader, ...params }),
         "brightness": ({ shader, params }) => new P5AsciifyBrightnessEffect({ shader, ...params }),
-        "colorpalette": ({ shader, params }) => new P5AsciifyColorPaletteEffect({ shader, ...params, paletteBuffer: this.colorPalette }),
+        "colorpalette": ({ shader, params }) => new P5AsciifyColorPaletteEffect({ shader, ...params, colorPalette: this.colorPalette }),
     }
 
     _setupQueue = [];
 
-    constructor() {
+    constructor(colorPalette) {
+        this.colorPalette = colorPalette;
         this._effects = [];
     }
 
     setup() {
         this.setupShaders();
         this.setupEffectQueue();
-        this.colorPalette.setup();
     }
 
     setupShaders() {
@@ -633,19 +635,12 @@ class P5AsciifyEffectManager {
 
     setupEffectQueue() {
         for (let effectInstance of this._setupQueue) {
+            effectInstance.setup();
             effectInstance.shader = this.effectShaders[effectInstance.name];
-
-            if (effectInstance.name === "colorpalette") {
-                effectInstance.paletteBuffer = this.colorPalette;
-            }
         }
     }
 
     addExistingEffectAtIndex(effectInstance, index) {
-        if (this.hasEffect(effectInstance)) {
-            throw new P5AsciifyError(`Effect instance of type '${effectInstance.name}' already exists in the effect manager.`);
-        }
-
         effectInstance.shader = this.effectShaders[effectInstance.name];
         this._effects.splice(index, 0, effectInstance);
 
@@ -655,29 +650,10 @@ class P5AsciifyEffectManager {
     }
 
     getEffectIndex(effectInstance) {
-        const index = this._effects.indexOf(effectInstance);
-        if (index === -1) {
-            throw new P5AsciifyError(`Effect instance of type '${effectInstance.name}' does not exist in the effect manager.`);
-        }
-        return index;
+        return this._effects.indexOf(effectInstance);
     }
 
     addEffect(effectName, userParams = {}) {
-        if (!this.effectConstructors[effectName]) {
-            throw new P5AsciifyError(
-                `Effect '${effectName}' does not exist! 
-                Available effects: ${Object.keys(this.effectConstructors).join(", ")}`
-            );
-        }
-
-        const validParams = Object.keys(this.effectParams[effectName]);
-        const invalidKeys = Object.keys(userParams).filter(key => !Object.keys(this.effectParams[effectName]).includes(key));
-        if (invalidKeys.length > 0) {
-            throw new P5AsciifyError(
-                `Invalid parameter(s) for effect '${effectName}': ${invalidKeys.join(", ")}
-                Valid parameters are: ${validParams.join(", ")}`
-            );
-        }
 
         const shader = frameCount === 0 ? null : this.effectShaders[effectName];
         const params = { ...this.effectParams[effectName], ...userParams };
@@ -686,18 +662,15 @@ class P5AsciifyEffectManager {
 
         if (frameCount === 0) {
             this._setupQueue.push(effectInstance);
+        } else {
+            effectInstance.setup();
         }
 
         return effectInstance;
     }
 
     removeEffect(effectInstance) {
-        const index = this._effects.indexOf(effectInstance);
-        if (index > -1) {
-            this._effects.splice(index, 1);
-        } else {
-            throw new P5AsciifyError(`Effect instance of type '${effectInstance.name}' cannot be removed because it does not exist in the effect manager.`);
-        }
+        this._effects.splice(this._effects.indexOf(effectInstance), 1);
     }
 
     hasEffect(effectInstance) {
@@ -708,20 +681,30 @@ class P5AsciifyEffectManager {
         const index1 = this._effects.indexOf(effectInstance1);
         const index2 = this._effects.indexOf(effectInstance2);
 
-        if (index1 === -1) {
-            throw new P5AsciifyError(`First effect parameter of type '${effectInstance1.name}' cannot be swapped because it does not exist in the effect manager.`);
-        }
-
-        if (index2 === -1) {
-            throw new P5AsciifyError(`Second effect parameter of type '${effectInstance2.name}' cannot be swapped because it does not exist in the effect manager.`);
-        }
-
         // Swap the effects
         [this._effects[index1], this._effects[index2]] = [this._effects[index2], this._effects[index1]];
     }
 
     getEffects() {
         return this._effects;
+    }
+}
+
+/**
+ * @class P5AsciifyError
+ * @extends {Error}
+ * @description
+ * Custom error class for the P5Asciify library.
+ * Represents errors specific to the P5Asciify library.
+ */
+class P5AsciifyError extends Error {
+    /**
+     * Creates an instance of P5AsciifyError.
+     * @param {string} message - The error message.
+     */
+    constructor(message) {
+        super(message);
+        this.name = "P5AsciifyError";
     }
 }
 
@@ -735,27 +718,45 @@ class P5AsciifyCharacterSet {
     /**
      * Sets up the character set with a specified font, characters, and font size.
      * @param {Object} options - The setup options.
+     * @param {string} options.type - The type of character set to set up. (e.g. "brightness", "edge")
      * @param {Object} options.font - The font object to use.
      * @param {string} options.characters - The string of characters to include in the character set.
      * @param {number} options.fontSize - The font size to use.
      */
-    setup({ font, characters, fontSize }) {
+    setup({ type, font, characters, fontSize }) {
+        this.type = type;
         this.font = font;
-        this.characters = Array.from(characters);
         this.fontSize = fontSize;
-        this.reset();
-    }
 
-    /**
-     * Resets the character set by reloading the glyphs and creating a new texture.
-     */
-    reset() {
-        this.glyphs = Object.values(this.font.font.glyphs.glyphs);
-        this.glyphs = this.glyphs.filter(glyph => glyph.unicode !== undefined);
+        this.fontGlyphs = Object.values(this.font.font.glyphs.glyphs).filter(glyph => glyph.unicode !== undefined);
+        this.characters = this.validateCharacters(characters);
+        this.characterGlyphs = this.loadCharacterGlyphs();
 
         this.maxGlyphDimensions = this.getMaxGlyphDimensions(this.fontSize);
 
-        this.createTexture({ fontSize: 512 });
+        this.createTexture(128);
+    }
+
+    loadCharacterGlyphs() {
+        // Load glyphs with unicode
+        let glyphs = Object.values(this.font.font.glyphs.glyphs).filter(glyph => glyph.unicode !== undefined);
+
+        // Create a map for character positions
+        let charPositionMap = new Map(this.characters.map((char, index) => [char, index]));
+
+        // Filter and sort glyphs based on character positions
+        let filteredGlyphs = glyphs
+            .filter(glyph => glyph.unicodes.some(u => this.characters.includes(String.fromCharCode(u))))
+            .sort((a, b) => charPositionMap.get(String.fromCharCode(a.unicodes[0])) - charPositionMap.get(String.fromCharCode(b.unicodes[0])));
+
+        // Assign colors to the sorted glyphs
+        filteredGlyphs.forEach((glyph, index) => {
+            glyph.r = index % 256; 
+            glyph.g = Math.floor(index / 256) % 256;
+            glyph.b = Math.floor(index / 65536);
+        });
+
+        return filteredGlyphs;
     }
 
     /**
@@ -764,7 +765,7 @@ class P5AsciifyCharacterSet {
      * @returns {Object} An object containing the maximum width and height of the glyphs.
      */
     getMaxGlyphDimensions(fontSize) {
-        return this.glyphs.reduce((maxDims, glyph) => {
+        return this.fontGlyphs.reduce((maxDims, glyph) => {
             const bounds = glyph.getPath(0, 0, fontSize).getBoundingBox();
             return {
                 width: Math.ceil(Math.max(maxDims.width, bounds.x2 - bounds.x1)),
@@ -779,7 +780,10 @@ class P5AsciifyCharacterSet {
      */
     setFontObject(font) {
         this.font = font;
-        this.reset();
+        this.fontGlyphs = Object.values(this.font.font.glyphs.glyphs).filter(glyph => glyph.unicode !== undefined);
+        this.characterGlyphs = this.loadCharacterGlyphs();
+        this.maxGlyphDimensions = this.getMaxGlyphDimensions(this.fontSize);
+        this.createTexture(128);
     }
 
     /**
@@ -787,8 +791,9 @@ class P5AsciifyCharacterSet {
      * @param {string} characters - The string of characters to set.
      */
     setCharacterSet(characters) {
-        this.characters = Array.from(characters);
-        this.createTexture({ fontSize: 512 });
+        this.characters = this.validateCharacters(characters);
+        this.characterGlyphs = this.loadCharacterGlyphs();
+        this.createTexture(128);
     }
 
     /**
@@ -799,7 +804,8 @@ class P5AsciifyCharacterSet {
      */
     setCharacter({ character, index }) {
         this.characters[index] = character;
-        this.createTexture({ fontSize: 512 });
+        this.characterGlyphs = this.loadCharacterGlyphs();
+        this.createTexture(128);
     }
 
     /**
@@ -808,17 +814,9 @@ class P5AsciifyCharacterSet {
      * @returns {string[]} An array of unsupported characters.
      */
     getUnsupportedCharacters(characters) {
-        const badCharacters = new Set();
-
-        for (const char of characters) {
-            const charCode = char.codePointAt(0);
-            const existsInFont = this.glyphs.some(glyph => glyph.unicodes.includes(charCode));
-            if (!existsInFont) {
-                badCharacters.add(char);
-            }
-        }
-
-        return Array.from(badCharacters);
+        return Array.from(new Set(Array.from(characters).filter(char =>
+            !this.fontGlyphs.some(glyph => glyph.unicodes.includes(char.codePointAt(0)))
+        )));
     }
 
     /**
@@ -832,13 +830,11 @@ class P5AsciifyCharacterSet {
 
     /**
      * Creates a texture containing all characters in the character set, arranged in a 2d grid.
-     * @param {Object} options - The texture creation options.
-     * @param {number} options.fontSize - The font size to use for rendering the texture.
+     * @param {number} fontSize - The font size to use for rendering the texture.
      */
-    createTexture({ fontSize }) {
+    createTexture(fontSize) {
         this.charsetCols = Math.ceil(Math.sqrt(this.characters.length));
         this.charsetRows = Math.ceil(this.characters.length / this.charsetCols);
-
         let dimensions = this.getMaxGlyphDimensions(fontSize);
 
         if (!this.texture) {
@@ -848,7 +844,30 @@ class P5AsciifyCharacterSet {
         }
 
         this.texture.begin();
+        this.drawCharacters(fontSize, dimensions);
+        this.texture.end();
+    }
 
+    /**
+     * Validates a string of characters to ensure they are supported by the current font.
+     * @param {string} characters 
+     * @param {string} defaultCharacters 
+     * @returns {string[]} The validated characters. If any characters are unsupported, the default characters are returned.
+     */
+    validateCharacters(characters) {
+        let unsupportedChars = this.getUnsupportedCharacters(characters);
+        if (unsupportedChars.length > 0) {
+            throw new P5AsciifyError(`The following ${this.type} characters are not supported by the current font: [${unsupportedChars.join(', ')}].`);
+        }
+        return Array.from(characters);
+    }
+
+    /**
+     * 
+     * @param {number} fontSize - The font size to use for drawing the characters on the texture.
+     * @param {*} dimensions - The maximum dimensions of the glyphs.
+     */
+    drawCharacters(fontSize, dimensions) {
         clear();
         textFont(this.font);
         fill(255);
@@ -859,14 +878,44 @@ class P5AsciifyCharacterSet {
         for (let i = 0; i < this.characters.length; i++) {
             const col = i % this.charsetCols;
             const row = Math.floor(i / this.charsetCols);
-            const x = dimensions.width * col;
-            const y = dimensions.height * row;
+            const x = dimensions.width * col - ((dimensions.width * this.charsetCols) / 2);
+            const y = dimensions.height * row - ((dimensions.height * this.charsetRows) / 2);
+            text(this.characters[i], x, y);
+        }
+    }
 
-            const character = this.characters[i];
-            text(character, x - ((dimensions.width * this.charsetCols) / 2), y - ((dimensions.height * this.charsetRows) / 2));
+    getCharsetColorArray(string) {
+        let colorArray = [];
+        for (let i = 0; i < string.length; i++) {
+            let char = string.charAt(i);
+            let glyph = this.characterGlyphs.find(glyph => glyph.unicodes.includes(char.codePointAt(0)));
+
+            if (glyph) {
+                colorArray.push([glyph.r, glyph.g, glyph.b]);
+            } else {
+                throw new Error("Could not find character in character set: " + char + ".");
+            }
         }
 
-        this.texture.end();
+        return colorArray;
+    }
+
+    appendCharacterSet(string) {
+        // Create a Set from the existing characters to ensure uniqueness
+        let uniqueCharacters = new Set(this.characters);
+
+        // Add new characters to the Set
+        for (let char of string) {
+            uniqueCharacters.add(char);
+        }
+
+        // Convert the Set back to an array and update the characters list
+        this.characters = Array.from(uniqueCharacters);
+
+        this.characterGlyphs = this.loadCharacterGlyphs();
+
+        // Recreate the texture with the updated characters list
+        this.createTexture(128);
     }
 }
 
@@ -935,6 +984,286 @@ class P5AsciifyGrid {
         this.cellHeight = newCellHeight;
 
         this.reset();
+    }
+}
+
+var asciiShader = "#version 300 es\nprecision highp float;\n#define GLSLIFY 1\nuniform sampler2D u_characterTexture;uniform float u_charsetCols;uniform float u_charsetRows;uniform int u_totalChars;uniform sampler2D u_sketchTexture;uniform sampler2D u_rotationTexture;uniform sampler2D u_edgesTexture;uniform sampler2D u_asciiBrightnessTexture;uniform vec2 u_gridCellDimensions;uniform vec2 u_gridPixelDimensions;uniform vec2 u_gridOffsetDimensions;uniform vec3 u_characterColor;uniform int u_characterColorMode;uniform vec3 u_backgroundColor;uniform int u_backgroundColorMode;uniform float u_rotationAngle;uniform int u_invertMode;uniform int u_renderMode;uniform bool u_brightnessEnabled;out vec4 fragColor;mat2 rotate2D(float angle){float s=sin(angle);float c=cos(angle);return mat2(c,-s,s,c);}void main(){vec2 adjustedCoord=(gl_FragCoord.xy-u_gridOffsetDimensions)/u_gridPixelDimensions;if(adjustedCoord.x<0.0f||adjustedCoord.x>1.0f||adjustedCoord.y<0.0f||adjustedCoord.y>1.0f){fragColor=vec4(u_backgroundColor,1.0f);return;}vec2 gridCoord=adjustedCoord*u_gridCellDimensions;vec2 cellCoord=floor(gridCoord);vec2 centerCoord=cellCoord+vec2(0.5f);vec2 baseCoord=centerCoord/u_gridCellDimensions;vec4 edgeColor;vec4 sketchColor;if(u_renderMode==1){edgeColor=texture(u_edgesTexture,baseCoord);sketchColor=texture(u_sketchTexture,baseCoord);if(edgeColor.rgb==vec3(0.0f)){if(u_brightnessEnabled){fragColor=texture(u_asciiBrightnessTexture,gl_FragCoord.xy/vec2(textureSize(u_asciiBrightnessTexture,0)));}else{fragColor=vec4(u_backgroundColor,1.0f);}return;}}else{sketchColor=texture(u_sketchTexture,baseCoord);}float brightness=u_renderMode==1 ? edgeColor.r : dot(sketchColor.rgb,vec3(0.299f,0.587f,0.114f));int charIndex=int(brightness*float(u_totalChars));charIndex=min(charIndex,u_totalChars-1);int charCol=charIndex % int(u_charsetCols);int charRow=charIndex/int(u_charsetCols);vec2 charCoord=vec2(float(charCol)/u_charsetCols,float(charRow)/u_charsetRows);vec4 rotationColor=texture(u_rotationTexture,baseCoord);float rotationBrightness=dot(rotationColor.rgb,vec3(0.299f,0.587f,0.114f));float rotationAngle=rotationBrightness*2.0f*3.14159265f;vec2 fractionalPart=fract(gridCoord)-0.5f;fractionalPart=rotate2D(u_rotationAngle)*fractionalPart;fractionalPart+=0.5f;vec2 cellMin=charCoord;vec2 cellMax=charCoord+vec2(1.0f/u_charsetCols,1.0f/u_charsetRows);vec2 texCoord=charCoord+fractionalPart*vec2(1.0f/u_charsetCols,1.0f/u_charsetRows);bool outsideBounds=any(lessThan(texCoord,cellMin))||any(greaterThan(texCoord,cellMax));vec4 charColor=outsideBounds ? vec4(u_backgroundColor,1.0f): texture(u_characterTexture,texCoord);if(u_invertMode==1){charColor.a=1.0f-charColor.a;charColor.rgb=vec3(1.0f);}vec4 finalColor=(u_characterColorMode==0)? vec4(sketchColor.rgb*charColor.rgb,charColor.a): vec4(u_characterColor*charColor.rgb,charColor.a);if(u_backgroundColorMode==0){fragColor=mix(vec4(sketchColor.rgb,1.0f),finalColor,charColor.a);}else{fragColor=mix(vec4(u_backgroundColor,1.0f),finalColor,charColor.a);}if(outsideBounds){fragColor=(u_backgroundColorMode==0)?(u_invertMode==1 ?(u_characterColorMode==0 ? vec4(sketchColor.rgb,1.0f): vec4(u_characterColor,1.0f)): vec4(sketchColor.rgb,1.0f)):(u_invertMode==1 ?(u_characterColorMode==0 ? vec4(sketchColor.rgb,1.0f): vec4(u_characterColor,1.0f)): vec4(u_backgroundColor,1.0f));}}"; // eslint-disable-line
+
+var sobelShader = "#version 300 es\nprecision highp float;\n#define GLSLIFY 1\nin vec2 v_texCoord;out vec4 fragColor;uniform sampler2D u_texture;uniform vec2 u_textureSize;uniform float u_threshold;void main(){vec2 texelSize=1.0f/u_textureSize;float kernelX[9];float kernelY[9];kernelX[0]=-1.0f;kernelX[1]=0.0f;kernelX[2]=1.0f;kernelX[3]=-2.0f;kernelX[4]=0.0f;kernelX[5]=2.0f;kernelX[6]=-1.0f;kernelX[7]=0.0f;kernelX[8]=1.0f;kernelY[0]=-1.0f;kernelY[1]=-2.0f;kernelY[2]=-1.0f;kernelY[3]=0.0f;kernelY[4]=0.0f;kernelY[5]=0.0f;kernelY[6]=1.0f;kernelY[7]=2.0f;kernelY[8]=1.0f;vec3 texColor[9];for(int i=0;i<3;i++){for(int j=0;j<3;j++){texColor[i*3+j]=texture(u_texture,v_texCoord+vec2(i-1,j-1)*texelSize).rgb;}}vec3 sobelX=vec3(0.0f);vec3 sobelY=vec3(0.0f);for(int i=0;i<9;i++){sobelX+=kernelX[i]*texColor[i];sobelY+=kernelY[i]*texColor[i];}vec3 sobel=sqrt(sobelX*sobelX+sobelY*sobelY);float intensity=length(sobel)/sqrt(3.0f);float angleDeg=degrees(atan(sobelY.r,sobelX.r));vec3 edgeColor=vec3(0.0f);if(intensity>u_threshold){if(angleDeg>=-22.5f&&angleDeg<22.5f){edgeColor=vec3(0.1f);}else if(angleDeg>=22.5f&&angleDeg<67.5f){edgeColor=vec3(0.2f);}else if(angleDeg>=67.5f&&angleDeg<112.5f){edgeColor=vec3(0.3f);}else if(angleDeg>=112.5f&&angleDeg<157.5f){edgeColor=vec3(0.4f);}else if(angleDeg>=157.5f||angleDeg<-157.5f){edgeColor=vec3(0.6f);}else if(angleDeg>=-157.5f&&angleDeg<-112.5f){edgeColor=vec3(0.7f);}else if(angleDeg>=-112.5f&&angleDeg<-67.5f){edgeColor=vec3(0.8f);}else if(angleDeg>=-67.5f&&angleDeg<-22.5f){edgeColor=vec3(0.9f);}}fragColor=vec4(edgeColor,1.0f);}"; // eslint-disable-line
+
+var sampleShader = "#version 300 es\nprecision highp float;\n#define GLSLIFY 1\nuniform sampler2D u_image;uniform vec2 u_gridCellDimensions;uniform int u_threshold;out vec4 outColor;const vec3 BLACK=vec3(0.0f,0.0f,0.0f);const int MAX_HISTOGRAM_SIZE=16;vec3 colorHistogram[MAX_HISTOGRAM_SIZE];int countHistogram[MAX_HISTOGRAM_SIZE];void main(){vec2 bufferDimensions=u_gridCellDimensions;vec2 imageDimensions=vec2(textureSize(u_image,0));vec2 gridCellDimensions=vec2(imageDimensions.x/bufferDimensions.x,imageDimensions.y/bufferDimensions.y);ivec2 coords=ivec2(gl_FragCoord.xy);int gridX=coords.x;int gridY=coords.y;ivec2 cellOrigin=ivec2(gridX*int(gridCellDimensions.x),gridY*int(gridCellDimensions.y));int histogramIndex=0;int nonBlackCount=0;for(int i=0;i<MAX_HISTOGRAM_SIZE;i++){colorHistogram[i]=BLACK;countHistogram[i]=0;}for(int i=0;i<int(gridCellDimensions.x);i+=1){for(int j=0;j<int(gridCellDimensions.y);j+=1){ivec2 pixelCoords=cellOrigin+ivec2(i,j);vec3 color=texelFetch(u_image,pixelCoords,0).rgb;if(color==BLACK)continue;nonBlackCount++;bool found=false;for(int k=0;k<histogramIndex;k++){if(colorHistogram[k]==color){countHistogram[k]++;found=true;break;}}if(!found&&histogramIndex<MAX_HISTOGRAM_SIZE){colorHistogram[histogramIndex]=color;countHistogram[histogramIndex]=1;histogramIndex++;}}}vec3 mostFrequentColor=BLACK;int highestCount=0;for(int k=0;k<histogramIndex;k++){if(countHistogram[k]>highestCount){mostFrequentColor=colorHistogram[k];highestCount=countHistogram[k];}}if(nonBlackCount<u_threshold){outColor=vec4(BLACK,1.0f);}else{outColor=vec4(mostFrequentColor,1.0f);}}"; // eslint-disable-line
+
+/**
+ * @class P5Asciify
+ * @description
+ * The main class for the P5Asciify library, responsible for setting up and running the rendering pipeline.
+ */
+class P5Asciify {
+
+    static commonOptions = {
+        fontSize: 16,
+    };
+
+    static brightnessOptions = {
+        enabled: true,
+        characters: "0123456789",
+        characterColor: [1.0, 1.0, 1.0],
+        characterColorMode: 0,
+        backgroundColor: [0.0, 0.0, 0.0],
+        backgroundColorMode: 1,
+        invertMode: false,
+        rotationAngle: 0,
+    };
+
+    static edgeOptions = {
+        enabled: false,
+        characters: "-/|\\-/|\\",
+        characterColor: [1.0, 1.0, 1.0],
+        characterColorMode: 0,
+        backgroundColor: [0.0, 0.0, 0.0],
+        backgroundColorMode: 1,
+        invertMode: false,
+        sobelThreshold: 0.5,
+        sampleThreshold: 16,
+        rotationAngle: 0,
+    };
+
+    static colorPalette = new P5AsciifyColorPalette();
+
+    static preEffectManager = new P5AsciifyEffectManager(this.colorPalette);
+
+    static afterEffectManager = new P5AsciifyEffectManager(this.colorPalette);
+
+    static preEffectPrevFramebuffer = null;
+    static preEffectNextFramebuffer = null;
+
+    static postEffectPrevFramebuffer = null;
+    static postEffectNextFramebuffer = null;
+
+    static asciiShader = null;
+    static asciiBrightnessFramebuffer = null;
+    static asciiEdgeFramebuffer = null;
+    static asciiFramebufferDimensions = { width: 0, height: 0 };
+
+    static sobelShader = null;
+    static sobelFramebuffer = null;
+
+    static sampleShader = null;
+    static sampleFramebuffer = null;
+
+    static font = null;
+    static brightnessCharacterSet = new P5AsciifyCharacterSet();
+    static edgeCharacterSet = new P5AsciifyCharacterSet();
+    static grid = new P5AsciifyGrid({ cellWidth: 0, cellHeight: 0 });
+
+    static p5Canvas = null;
+
+    /**
+     * Sets up the P5Asciify library with the specified options after the user's setup() function finished.
+     */
+    static setup() {
+        pixelDensity(1);
+
+        this.brightnessCharacterSet.setup({ type: "brightness", font: this.font, characters: this.brightnessOptions.characters, fontSize: this.commonOptions.fontSize });
+        this.edgeCharacterSet.setup({ type: "edge", font: this.font, characters: this.edgeOptions.characters, fontSize: this.commonOptions.fontSize });
+
+        this.grid.resizeCellDimensions(this.brightnessCharacterSet.maxGlyphDimensions.width, this.brightnessCharacterSet.maxGlyphDimensions.height);
+
+        this.colorPalette.setup();
+
+        this.preEffectManager.setup();
+        this.afterEffectManager.setup();
+
+        this.preEffectPrevFramebuffer = createFramebuffer({ format: FLOAT });
+        this.preEffectNextFramebuffer = createFramebuffer({ format: FLOAT });
+
+        this.postEffectPrevFramebuffer = createFramebuffer({ format: FLOAT });
+        this.postEffectNextFramebuffer = createFramebuffer({ format: FLOAT });
+
+        this.grayscaleShader = this.preEffectManager.effectShaders["grayscale"];
+
+        this.asciiShader = createShader(vertexShader, asciiShader);
+        this.asciiBrightnessFramebuffer = createFramebuffer({ format: this.FLOAT });
+        this.asciiEdgeFramebuffer = createFramebuffer({ format: this.FLOAT });
+
+        this.sobelShader = createShader(vertexShader, sobelShader);
+        this.sobelFramebuffer = createFramebuffer({ format: this.FLOAT });
+
+        this.sampleShader = createShader(vertexShader, sampleShader);
+        this.sampleFramebuffer = createFramebuffer({ format: this.FLOAT, width: this.grid.cols, height: this.grid.rows });
+
+        this.p5Canvas = _renderer;
+
+                // Assign the first framebuffer from the set to this.p5Canvas
+        this.p5Canvas = _renderer.framebuffers.values().next().value;
+
+        this.asciiFramebufferDimensions = { width: this.asciiBrightnessFramebuffer.width, height: this.asciiBrightnessFramebuffer.height };
+    }
+
+    /**
+     * Checks if the dimensions of the ASCII framebuffer have changed and resets the grid if necessary.
+     * This function is called every frame after the user's draw() function, 
+     * since I am not aware of a better way to do this since there is no hook for when the canvas is resized.
+     */
+    static checkFramebufferDimensions() {
+        if (this.asciiFramebufferDimensions.width !== this.asciiBrightnessFramebuffer.width || this.asciiFramebufferDimensions.height !== this.asciiBrightnessFramebuffer.height) {
+            this.asciiFramebufferDimensions.width = this.asciiBrightnessFramebuffer.width;
+            this.asciiFramebufferDimensions.height = this.asciiBrightnessFramebuffer.height;
+
+            this.grid.reset();
+            this.sampleFramebuffer.resize(this.grid.cols, this.grid.rows);
+        }
+    }
+
+    /**
+     * Runs the rendering pipeline for the P5Asciify library.
+     */
+    static asciify() {
+        this.preEffectNextFramebuffer.begin();
+        clear(); // do not remove this, even though it's tempting
+        image(this.p5Canvas, -width / 2, -height / 2);
+        this.preEffectNextFramebuffer.end();
+
+        for (const effect of this.preEffectManager._effects) {
+            [this.preEffectPrevFramebuffer, this.preEffectNextFramebuffer] = [this.preEffectNextFramebuffer, this.preEffectPrevFramebuffer];
+            if (effect.enabled) {
+                this.preEffectNextFramebuffer.begin();
+                shader(effect.shader);
+                effect.setUniforms(this.preEffectPrevFramebuffer);
+                rect(0, 0, width, height);
+                this.preEffectNextFramebuffer.end();
+            }
+        }
+
+        if (this.brightnessOptions.enabled) {
+            this.asciiBrightnessFramebuffer.begin();
+            shader(this.asciiShader);
+            this.asciiShader.setUniform('u_characterTexture', this.brightnessCharacterSet.texture);
+            this.asciiShader.setUniform('u_charsetCols', this.brightnessCharacterSet.charsetCols);
+            this.asciiShader.setUniform('u_charsetRows', this.brightnessCharacterSet.charsetRows);
+            this.asciiShader.setUniform('u_totalChars', this.brightnessCharacterSet.characters.length);
+            this.asciiShader.setUniform('u_sketchTexture', this.preEffectNextFramebuffer);
+            this.asciiShader.setUniform('u_gridPixelDimensions', [this.grid.width, this.grid.height]);
+            this.asciiShader.setUniform('u_gridOffsetDimensions', [this.grid.offsetX, this.grid.offsetY]);
+            this.asciiShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
+            this.asciiShader.setUniform('u_characterColor', this.brightnessOptions.characterColor);
+            this.asciiShader.setUniform('u_characterColorMode', this.brightnessOptions.characterColorMode);
+            this.asciiShader.setUniform('u_backgroundColor', this.brightnessOptions.backgroundColor);
+            this.asciiShader.setUniform('u_backgroundColorMode', this.brightnessOptions.backgroundColorMode);
+            this.asciiShader.setUniform('u_invertMode', this.brightnessOptions.invertMode);
+            this.asciiShader.setUniform('u_renderMode', 0);
+            this.asciiShader.setUniform('u_brightnessEnabled', this.brightnessOptions.enabled);
+            this.asciiShader.setUniform('u_rotationAngle', radians(this.brightnessOptions.rotationAngle));
+            rect(0, 0, width, height);
+            this.asciiBrightnessFramebuffer.end();
+        }
+
+        if (this.edgeOptions.enabled) {
+            this.sobelFramebuffer.begin();
+            shader(this.sobelShader);
+            this.sobelShader.setUniform('u_texture', this.preEffectNextFramebuffer);
+            this.sobelShader.setUniform('u_textureSize', [width, height]);
+            this.sobelShader.setUniform('u_threshold', this.edgeOptions.sobelThreshold);
+            rect(0, 0, width, height);
+            this.sobelFramebuffer.end();
+
+            this.sampleFramebuffer.begin();
+            shader(this.sampleShader);
+            this.sampleShader.setUniform('u_image', this.sobelFramebuffer);
+            this.sampleShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
+            this.sampleShader.setUniform('u_threshold', this.edgeOptions.sampleThreshold);
+            rect(0, 0, width, height);
+            this.sampleFramebuffer.end();
+
+            this.asciiEdgeFramebuffer.begin();
+            shader(this.asciiShader);
+            this.asciiShader.setUniform('u_characterTexture', this.edgeCharacterSet.texture);
+            this.asciiShader.setUniform('u_charsetCols', this.edgeCharacterSet.charsetCols);
+            this.asciiShader.setUniform('u_charsetRows', this.edgeCharacterSet.charsetRows);
+            this.asciiShader.setUniform('u_totalChars', this.edgeCharacterSet.characters.length);
+            this.asciiShader.setUniform('u_sketchTexture', this.preEffectNextFramebuffer);
+            this.asciiShader.setUniform('u_asciiBrightnessTexture', this.asciiBrightnessFramebuffer);
+            this.asciiShader.setUniform('u_edgesTexture', this.sampleFramebuffer);
+            this.asciiShader.setUniform('u_gridPixelDimensions', [this.grid.width, this.grid.height]);
+            this.asciiShader.setUniform('u_gridOffsetDimensions', [this.grid.offsetX, this.grid.offsetY]);
+            this.asciiShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
+            this.asciiShader.setUniform('u_characterColor', this.edgeOptions.characterColor);
+            this.asciiShader.setUniform('u_characterColorMode', this.edgeOptions.characterColorMode);
+            this.asciiShader.setUniform('u_backgroundColor', this.edgeOptions.backgroundColor);
+            this.asciiShader.setUniform('u_backgroundColorMode', this.edgeOptions.backgroundColorMode);
+            this.asciiShader.setUniform('u_invertMode', this.edgeOptions.invertMode);
+            this.asciiShader.setUniform('u_renderMode', 1);
+            this.asciiShader.setUniform('u_brightnessEnabled', this.brightnessOptions.enabled);
+            this.asciiShader.setUniform('u_rotationAngle', radians(this.edgeOptions.rotationAngle));
+            rect(0, 0, width, height);
+            this.asciiEdgeFramebuffer.end();
+        }
+
+        this.postEffectNextFramebuffer.begin();
+        clear(); // do not remove this, even though it's tempting
+        if (this.edgeOptions.enabled) {
+            image(this.asciiEdgeFramebuffer, -width / 2, -height / 2);
+        } else if (this.brightnessOptions.enabled) {
+            image(this.asciiBrightnessFramebuffer, -width / 2, -height / 2);
+        } else {
+            image(this.preEffectNextFramebuffer, -width / 2, -height / 2);
+        }
+        this.postEffectNextFramebuffer.end();
+
+        for (const effect of this.afterEffectManager._effects) {
+            [this.postEffectPrevFramebuffer, this.postEffectNextFramebuffer] = [this.postEffectNextFramebuffer, this.postEffectPrevFramebuffer];
+            if (effect.enabled) {
+                this.postEffectNextFramebuffer.begin();
+                shader(effect.shader);
+                effect.setUniforms(this.postEffectPrevFramebuffer);
+                rect(0, 0, width, height);
+                this.postEffectNextFramebuffer.end();
+            }
+        }
+
+        clear(); // do not remove this, even though it's tempting
+        image(this.postEffectNextFramebuffer, -width / 2, -height / 2);
+        this.checkFramebufferDimensions();
+    }
+
+    /**
+     * Sets the default options for the P5Asciify library.
+     * @param {object} options 
+     */
+    static setDefaultOptions(brightnessOptions, edgeOptions, commonOptions) {
+
+        // The parameters are pre-processed, so we can just spread them into the class variables
+        this.brightnessOptions = {
+            ...this.brightnessOptions,
+            ...brightnessOptions
+        };
+        this.edgeOptions = {
+            ...this.edgeOptions,
+            ...edgeOptions
+        };
+        this.commonOptions = {
+            ...this.commonOptions,
+            ...commonOptions
+        };
+
+        if (frameCount == 0) { // If we are still in the users setup(), the characterset and grid have not been initialized yet.
+            return;
+        }
+
+        if (brightnessOptions?.characters) {
+            this.brightnessCharacterSet.setCharacterSet(brightnessOptions.characters);
+        }
+
+        if (edgeOptions?.characters) {
+            this.edgeCharacterSet.setCharacterSet(edgeOptions.characters);
+        }
+
+        if (commonOptions?.fontSize) {
+            this.brightnessCharacterSet.setFontSize(commonOptions.fontSize);
+            this.edgeCharacterSet.setFontSize(commonOptions.fontSize);
+            this.grid.resizeCellDimensions(this.brightnessCharacterSet.maxGlyphDimensions.width, this.brightnessCharacterSet.maxGlyphDimensions.height);
+            this.sampleFramebuffer.resize(this.grid.cols, this.grid.rows);
+        }
     }
 }
 
@@ -1014,339 +1343,12 @@ class P5AsciifyUtils {
     }
 }
 
-var asciiShader = "#version 300 es\nprecision highp float;\n#define GLSLIFY 1\nuniform sampler2D u_characterTexture;uniform float u_charsetCols;uniform float u_charsetRows;uniform int u_totalChars;uniform sampler2D u_sketchTexture;uniform sampler2D u_rotationTexture;uniform sampler2D u_edgesTexture;uniform sampler2D u_asciiBrightnessTexture;uniform vec2 u_gridCellDimensions;uniform vec2 u_gridPixelDimensions;uniform vec2 u_gridOffsetDimensions;uniform vec3 u_characterColor;uniform int u_characterColorMode;uniform vec3 u_backgroundColor;uniform int u_backgroundColorMode;uniform float u_rotationAngle;uniform int u_invertMode;uniform int u_renderMode;uniform bool u_brightnessEnabled;out vec4 fragColor;mat2 rotate2D(float angle){float s=sin(angle);float c=cos(angle);return mat2(c,-s,s,c);}void main(){vec2 adjustedCoord=(gl_FragCoord.xy-u_gridOffsetDimensions)/u_gridPixelDimensions;if(adjustedCoord.x<0.0f||adjustedCoord.x>1.0f||adjustedCoord.y<0.0f||adjustedCoord.y>1.0f){fragColor=vec4(u_backgroundColor,1.0f);return;}vec2 gridCoord=adjustedCoord*u_gridCellDimensions;vec2 cellCoord=floor(gridCoord);vec2 centerCoord=cellCoord+vec2(0.5f);vec2 baseCoord=centerCoord/u_gridCellDimensions;vec4 edgeColor;vec4 sketchColor;if(u_renderMode==1){edgeColor=texture(u_edgesTexture,baseCoord);sketchColor=texture(u_sketchTexture,baseCoord);if(edgeColor.rgb==vec3(0.0f)){if(u_brightnessEnabled){fragColor=texture(u_asciiBrightnessTexture,gl_FragCoord.xy/vec2(textureSize(u_asciiBrightnessTexture,0)));}else{fragColor=vec4(u_backgroundColor,1.0f);}return;}}else{sketchColor=texture(u_sketchTexture,baseCoord);}float brightness=u_renderMode==1 ? edgeColor.r : dot(sketchColor.rgb,vec3(0.299f,0.587f,0.114f));int charIndex=int(brightness*float(u_totalChars));charIndex=min(charIndex,u_totalChars-1);int charCol=charIndex % int(u_charsetCols);int charRow=charIndex/int(u_charsetCols);vec2 charCoord=vec2(float(charCol)/u_charsetCols,float(charRow)/u_charsetRows);vec4 rotationColor=texture(u_rotationTexture,baseCoord);float rotationBrightness=dot(rotationColor.rgb,vec3(0.299f,0.587f,0.114f));float rotationAngle=rotationBrightness*2.0f*3.14159265f;vec2 fractionalPart=fract(gridCoord)-0.5f;fractionalPart=rotate2D(u_rotationAngle)*fractionalPart;fractionalPart+=0.5f;vec2 cellMin=charCoord;vec2 cellMax=charCoord+vec2(1.0f/u_charsetCols,1.0f/u_charsetRows);vec2 texCoord=charCoord+fractionalPart*vec2(1.0f/u_charsetCols,1.0f/u_charsetRows);bool outsideBounds=any(lessThan(texCoord,cellMin))||any(greaterThan(texCoord,cellMax));vec4 charColor=outsideBounds ? vec4(u_backgroundColor,1.0f): texture(u_characterTexture,texCoord);if(u_invertMode==1){charColor.a=1.0f-charColor.a;charColor.rgb=vec3(1.0f);}vec4 finalColor=(u_characterColorMode==0)? vec4(sketchColor.rgb*charColor.rgb,charColor.a): vec4(u_characterColor*charColor.rgb,charColor.a);if(u_backgroundColorMode==0){fragColor=mix(vec4(sketchColor.rgb,1.0f),finalColor,charColor.a);}else{fragColor=mix(vec4(u_backgroundColor,1.0f),finalColor,charColor.a);}if(outsideBounds){fragColor=(u_backgroundColorMode==0)?(u_invertMode==1 ?(u_characterColorMode==0 ? vec4(sketchColor.rgb,1.0f): vec4(u_characterColor,1.0f)): vec4(sketchColor.rgb,1.0f)):(u_invertMode==1 ?(u_characterColorMode==0 ? vec4(sketchColor.rgb,1.0f): vec4(u_characterColor,1.0f)): vec4(u_backgroundColor,1.0f));}}"; // eslint-disable-line
-
-var sobelShader = "#version 300 es\nprecision highp float;\n#define GLSLIFY 1\nin vec2 v_texCoord;out vec4 fragColor;uniform sampler2D u_texture;uniform vec2 u_textureSize;uniform float u_threshold;void main(){vec2 texelSize=1.0f/u_textureSize;float kernelX[9];float kernelY[9];kernelX[0]=-1.0f;kernelX[1]=0.0f;kernelX[2]=1.0f;kernelX[3]=-2.0f;kernelX[4]=0.0f;kernelX[5]=2.0f;kernelX[6]=-1.0f;kernelX[7]=0.0f;kernelX[8]=1.0f;kernelY[0]=-1.0f;kernelY[1]=-2.0f;kernelY[2]=-1.0f;kernelY[3]=0.0f;kernelY[4]=0.0f;kernelY[5]=0.0f;kernelY[6]=1.0f;kernelY[7]=2.0f;kernelY[8]=1.0f;vec3 texColor[9];for(int i=0;i<3;i++){for(int j=0;j<3;j++){texColor[i*3+j]=texture(u_texture,v_texCoord+vec2(i-1,j-1)*texelSize).rgb;}}vec3 sobelX=vec3(0.0f);vec3 sobelY=vec3(0.0f);for(int i=0;i<9;i++){sobelX+=kernelX[i]*texColor[i];sobelY+=kernelY[i]*texColor[i];}vec3 sobel=sqrt(sobelX*sobelX+sobelY*sobelY);float intensity=length(sobel)/sqrt(3.0f);float angleDeg=degrees(atan(sobelY.r,sobelX.r));vec3 edgeColor=vec3(0.0f);if(intensity>u_threshold){if(angleDeg>=-22.5f&&angleDeg<22.5f){edgeColor=vec3(0.1f);}else if(angleDeg>=22.5f&&angleDeg<67.5f){edgeColor=vec3(0.2f);}else if(angleDeg>=67.5f&&angleDeg<112.5f){edgeColor=vec3(0.3f);}else if(angleDeg>=112.5f&&angleDeg<157.5f){edgeColor=vec3(0.4f);}else if(angleDeg>=157.5f||angleDeg<-157.5f){edgeColor=vec3(0.6f);}else if(angleDeg>=-157.5f&&angleDeg<-112.5f){edgeColor=vec3(0.7f);}else if(angleDeg>=-112.5f&&angleDeg<-67.5f){edgeColor=vec3(0.8f);}else if(angleDeg>=-67.5f&&angleDeg<-22.5f){edgeColor=vec3(0.9f);}}fragColor=vec4(edgeColor,1.0f);}"; // eslint-disable-line
-
-var sampleShader = "#version 300 es\nprecision highp float;\n#define GLSLIFY 1\nuniform sampler2D u_image;uniform vec2 u_gridCellDimensions;uniform int u_threshold;out vec4 outColor;const vec3 BLACK=vec3(0.0f,0.0f,0.0f);const int MAX_HISTOGRAM_SIZE=16;vec3 colorHistogram[MAX_HISTOGRAM_SIZE];int countHistogram[MAX_HISTOGRAM_SIZE];void main(){vec2 bufferDimensions=u_gridCellDimensions;vec2 imageDimensions=vec2(textureSize(u_image,0));vec2 gridCellDimensions=vec2(imageDimensions.x/bufferDimensions.x,imageDimensions.y/bufferDimensions.y);ivec2 coords=ivec2(gl_FragCoord.xy);int gridX=coords.x;int gridY=coords.y;ivec2 cellOrigin=ivec2(gridX*int(gridCellDimensions.x),gridY*int(gridCellDimensions.y));int histogramIndex=0;int nonBlackCount=0;for(int i=0;i<MAX_HISTOGRAM_SIZE;i++){colorHistogram[i]=BLACK;countHistogram[i]=0;}for(int i=0;i<int(gridCellDimensions.x);i+=1){for(int j=0;j<int(gridCellDimensions.y);j+=1){ivec2 pixelCoords=cellOrigin+ivec2(i,j);vec3 color=texelFetch(u_image,pixelCoords,0).rgb;if(color==BLACK)continue;nonBlackCount++;bool found=false;for(int k=0;k<histogramIndex;k++){if(colorHistogram[k]==color){countHistogram[k]++;found=true;break;}}if(!found&&histogramIndex<MAX_HISTOGRAM_SIZE){colorHistogram[histogramIndex]=color;countHistogram[histogramIndex]=1;histogramIndex++;}}}vec3 mostFrequentColor=BLACK;int highestCount=0;for(int k=0;k<histogramIndex;k++){if(countHistogram[k]>highestCount){mostFrequentColor=colorHistogram[k];highestCount=countHistogram[k];}}if(nonBlackCount<u_threshold){outColor=vec4(BLACK,1.0f);}else{outColor=vec4(mostFrequentColor,1.0f);}}"; // eslint-disable-line
-
-/**
- * @class P5Asciify
- * @description
- * The main class for the P5Asciify library, responsible for setting up and running the rendering pipeline.
- */
-class P5Asciify {
-    static config = {
-        common: {
-            fontSize: 16,
-        },
-        brightness: {
-            enabled: true,
-            characters: "0123456789",
-            characterColor: [1.0, 1.0, 1.0],
-            characterColorMode: 0,
-            backgroundColor: [0.0, 0.0, 0.0],
-            backgroundColorMode: 1,
-            invertMode: false,
-            rotationAngle: 0,
-        },
-        edge: {
-            enabled: false,
-            characters: "-/|\\-/|\\",
-            characterColor: [1.0, 1.0, 1.0],
-            characterColorMode: 0,
-            backgroundColor: [0.0, 0.0, 0.0],
-            backgroundColorMode: 1,
-            invertMode: false,
-            sobelThreshold: 0.5,
-            sampleThreshold: 16,
-            rotationAngle: 0,
-        }
-    };
-
-    static preEffectSetupQueue = [];
-    static preEffectManager = new P5AsciifyEffectManager();
-
-    static afterEffectSetupQueue = [];
-    static afterEffectManager = new P5AsciifyEffectManager();
-
-    static preEffectFramebuffer = null;
-    static postEffectFramebuffer = null;
-
-    static asciiShader = null;
-    static asciiFramebuffer = null;
-    static asciiFramebufferDimensions = { width: 0, height: 0 };
-
-    static sobelShader = null;
-    static sobelFramebuffer = null;
-
-    static sampleShader = null;
-    static sampleFramebuffer = null;
-
-    static font = null;
-    static brightnessCharacterSet = new P5AsciifyCharacterSet();
-    static edgeCharacterSet = new P5AsciifyCharacterSet();
-    static grid = new P5AsciifyGrid({ cellWidth: 0, cellHeight: 0 });
-
-    /**
-     * Sets up the P5Asciify library with the specified options after the user's setup() function finished.
-     */
-    static setup() {
-        pixelDensity(1);
-
-        this.brightnessCharacterSet.setup({ font: this.font, characters: this.config.brightness.characters, fontSize: this.config.common.fontSize });
-        this.edgeCharacterSet.setup({ font: this.font, characters: this.config.edge.characters, fontSize: this.config.common.fontSize });
-        this.grid.resizeCellDimensions(this.brightnessCharacterSet.maxGlyphDimensions.width, this.brightnessCharacterSet.maxGlyphDimensions.height);
-
-        this.preEffectManager.setup();
-        this.afterEffectManager.setup();
-
-        this.preEffectFramebuffer = createFramebuffer({ format: FLOAT });
-        this.postEffectFramebuffer = createFramebuffer({ format: FLOAT });
-
-        this.asciiShader = createShader(vertexShader, asciiShader);
-        this.asciiFramebuffer = createFramebuffer({ format: this.FLOAT });
-
-        this.sobelShader = createShader(vertexShader, sobelShader);
-        this.sobelFramebuffer = createFramebuffer({ format: this.FLOAT });
-
-        this.sampleShader = createShader(vertexShader, sampleShader);
-        this.sampleFramebuffer = createFramebuffer({ format: this.FLOAT, width: this.grid.cols, height: this.grid.rows });
-
-        this.asciiFramebufferDimensions = { width: this.asciiFramebuffer.width, height: this.asciiFramebuffer.height };
-    }
-
-    /**
-     * Checks if the dimensions of the ASCII framebuffer have changed and resets the grid if necessary.
-     * This function is called every frame after the user's draw() function, 
-     * since I am not aware of a better way to do this since there is no hook for when the canvas is resized.
-     */
-    static checkFramebufferDimensions() {
-        if (this.asciiFramebufferDimensions.width !== this.asciiFramebuffer.width || this.asciiFramebufferDimensions.height !== this.asciiFramebuffer.height) {
-            this.asciiFramebufferDimensions.width = this.asciiFramebuffer.width;
-            this.asciiFramebufferDimensions.height = this.asciiFramebuffer.height;
-
-            this.grid.reset();
-            this.sampleFramebuffer.resize(this.grid.cols, this.grid.rows);
-        }
-    }
-
-    /**
-     * Runs the rendering pipeline for the P5Asciify library.
-     */
-    static asciify() {
-        this.preEffectFramebuffer.begin();
-        clear();
-        image(_renderer, -width / 2, -height / 2);
-        this.preEffectFramebuffer.end();
-
-        for (const effect of this.preEffectManager._effects) {
-            if (effect.enabled) {
-                this.preEffectFramebuffer.begin();
-                shader(effect.shader);
-                effect.setUniforms(this.preEffectFramebuffer);
-                rect(0, 0, width, height);
-                this.preEffectFramebuffer.end();
-            }
-        }
-
-        if (this.config.brightness.enabled) {
-            this.asciiFramebuffer.begin();
-            shader(this.asciiShader);
-            this.asciiShader.setUniform('u_characterTexture', this.brightnessCharacterSet.texture);
-            this.asciiShader.setUniform('u_charsetCols', this.brightnessCharacterSet.charsetCols);
-            this.asciiShader.setUniform('u_charsetRows', this.brightnessCharacterSet.charsetRows);
-            this.asciiShader.setUniform('u_totalChars', this.brightnessCharacterSet.characters.length);
-            this.asciiShader.setUniform('u_sketchTexture', this.preEffectFramebuffer);
-            this.asciiShader.setUniform('u_gridPixelDimensions', [this.grid.width, this.grid.height]);
-            this.asciiShader.setUniform('u_gridOffsetDimensions', [this.grid.offsetX, this.grid.offsetY]);
-            this.asciiShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
-            this.asciiShader.setUniform('u_characterColor', this.config.brightness.characterColor);
-            this.asciiShader.setUniform('u_characterColorMode', this.config.brightness.characterColorMode);
-            this.asciiShader.setUniform('u_backgroundColor', this.config.brightness.backgroundColor);
-            this.asciiShader.setUniform('u_backgroundColorMode', this.config.brightness.backgroundColorMode);
-            this.asciiShader.setUniform('u_invertMode', this.config.brightness.invertMode);
-            this.asciiShader.setUniform('u_renderMode', 0);
-            this.asciiShader.setUniform('u_brightnessEnabled', this.config.brightness.enabled);
-            this.asciiShader.setUniform('u_rotationAngle', radians(this.config.brightness.rotationAngle));
-            rect(0, 0, width, height);
-            this.asciiFramebuffer.end();
-        }
-
-        if (this.config.edge.enabled) {
-            this.sobelFramebuffer.begin();
-            shader(this.sobelShader);
-            this.sobelShader.setUniform('u_texture', this.preEffectFramebuffer);
-            this.sobelShader.setUniform('u_textureSize', [width, height]);
-            this.sobelShader.setUniform('u_threshold', this.config.edge.sobelThreshold);
-            rect(0, 0, width, height);
-            this.sobelFramebuffer.end();
-
-            this.sampleFramebuffer.begin();
-            shader(this.sampleShader);
-            this.sampleShader.setUniform('u_image', this.sobelFramebuffer);
-            this.sampleShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
-            this.sampleShader.setUniform('u_threshold', this.config.edge.sampleThreshold);
-            rect(0, 0, width, height);
-            this.sampleFramebuffer.end();
-
-            this.asciiFramebuffer.begin();
-            shader(this.asciiShader);
-            this.asciiShader.setUniform('u_characterTexture', this.edgeCharacterSet.texture);
-            this.asciiShader.setUniform('u_charsetCols', this.edgeCharacterSet.charsetCols);
-            this.asciiShader.setUniform('u_charsetRows', this.edgeCharacterSet.charsetRows);
-            this.asciiShader.setUniform('u_totalChars', this.edgeCharacterSet.characters.length);
-            this.asciiShader.setUniform('u_sketchTexture', this.preEffectFramebuffer);
-            this.asciiShader.setUniform('u_asciiBrightnessTexture', this.asciiFramebuffer);
-            this.asciiShader.setUniform('u_edgesTexture', this.sampleFramebuffer);
-            this.asciiShader.setUniform('u_gridPixelDimensions', [this.grid.width, this.grid.height]);
-            this.asciiShader.setUniform('u_gridOffsetDimensions', [this.grid.offsetX, this.grid.offsetY]);
-            this.asciiShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
-            this.asciiShader.setUniform('u_characterColor', this.config.edge.characterColor);
-            this.asciiShader.setUniform('u_characterColorMode', this.config.edge.characterColorMode);
-            this.asciiShader.setUniform('u_backgroundColor', this.config.edge.backgroundColor);
-            this.asciiShader.setUniform('u_backgroundColorMode', this.config.edge.backgroundColorMode);
-            this.asciiShader.setUniform('u_invertMode', this.config.edge.invertMode);
-            this.asciiShader.setUniform('u_renderMode', 1);
-            this.asciiShader.setUniform('u_brightnessEnabled', this.config.brightness.enabled);
-            this.asciiShader.setUniform('u_rotationAngle', radians(this.config.edge.rotationAngle));
-            rect(0, 0, width, height);
-            this.asciiFramebuffer.end();
-        }
-
-        this.postEffectFramebuffer.begin();
-        clear();
-        if (this.config.brightness.enabled || this.config.edge.enabled) {
-            image(this.asciiFramebuffer, -width / 2, -height / 2);
-        } else {
-            image(this.preEffectFramebuffer, -width / 2, -height / 2);
-        }
-        this.postEffectFramebuffer.end();
-
-        for (const effect of this.afterEffectManager._effects) {
-            if (effect.enabled) {
-                this.postEffectFramebuffer.begin();
-                shader(effect.shader);
-                effect.setUniforms(this.postEffectFramebuffer);
-                rect(0, 0, width, height);
-                this.postEffectFramebuffer.end();
-            }
-        }
-
-        clear();
-        image(this.postEffectFramebuffer, -width / 2, -height / 2);
-
-        this.checkFramebufferDimensions();
-    }
-
-    /**
-     * Sets the default options for the P5Asciify library.
-     * @param {object} options 
-     * @param {boolean} warn 
-     */
-    static setDefaultOptions(options, warn = true) {
-        // Define deprecated options
-        let deprecated_parent_options = ['fontSize', 'enabled', 'characters', 'characterColor', 'characterColorMode', 'backgroundColor', 'backgroundColorMode', 'invertMode'];
-
-        // Filter out the deprecated options used in the parent dictionary
-        let used_deprecated_parent_options = deprecated_parent_options.filter(option => option in options);
-
-        if (used_deprecated_parent_options.length > 0) {
-            console.warn(`Warning: Deprecated options detected (${used_deprecated_parent_options.join(', ')}). Refer to the documentation for updated options. In v0.1.0, these options will be removed.`);
-
-            // Move 'fontSize' to 'common' if it exists
-            if ('fontSize' in options) {
-                options.common = { fontSize: options.fontSize };
-                delete options.fontSize;
-            }
-
-            // Move remaining options to 'brightnessAsciiShader'
-            options.brightness = Object.assign({}, options);
-
-            if (options.characterColor) {
-                options.characterColor = P5AsciifyUtils.hexToShaderColor(options.characterColor);
-            }
-            if (options.backgroundColor) {
-                options.backgroundColor = P5AsciifyUtils.hexToShaderColor(options.backgroundColor);
-            }
-
-            // Remove deprecated options from the root level
-            deprecated_parent_options.forEach(option => delete options[option]);
-        }
-
-        if (warn) {
-            console.warn(`'P5Asciify.setDefaultOptions()' is deprecated. Use 'setAsciiOptions()' instead. P5Asciify.setDefaultOptions() will be removed in v0.1.0.`);
-        }
-
-        let brightnessCharactersUpdated = options.brightness && options.brightness.characters && options.brightness.characters !== this.config.brightness.characters;
-        let edgeCharactersUpdated = options.edge && options.edge.characters && options.edge.characters !== this.config.edge.characters;
-        let fontSizeUpdated = options.common && options.common.fontSize && options.common.fontSize !== this.config.common.fontSize;
-
-        if (options.brightness) {
-            if (options.brightness.characterColor) {
-                options.brightness.characterColor = P5AsciifyUtils.hexToShaderColor(options.brightness.characterColor);
-            }
-            if (options.brightness.backgroundColor) {
-                options.brightness.backgroundColor = P5AsciifyUtils.hexToShaderColor(options.brightness.backgroundColor);
-            }
-        }
-
-        if (options.edge) {
-            if (options.edge.characterColor) {
-                options.edge.characterColor = P5AsciifyUtils.hexToShaderColor(options.edge.characterColor);
-            }
-
-            if (options.edge.backgroundColor) {
-                options.edge.backgroundColor = P5AsciifyUtils.hexToShaderColor(options.edge.backgroundColor);
-            }
-        }
-
-        const newConfig = P5AsciifyUtils.deepMerge({ ...this.config }, options);
-        if (fontSizeUpdated && (options.common.fontSize > 512 || options.common.fontSize < 1)) {
-            console.warn(`P5Asciify: Font size ${options.common.fontSize} is out of bounds. It should be between 1 and 512. Font size not updated.`);
-            fontSizeUpdated = false;
-            newConfig.common.fontSize = this.config.common.fontSize;
-        }
-
-        // If the edge characters contain more or less than 8 characters, do not update the character set
-
-        if (edgeCharactersUpdated && options.edge.characters.length !== 8) {
-            console.warn(`P5Asciify: The edge character set must contain exactly 8 characters. Character set not updated.`);
-            edgeCharactersUpdated = false;
-            newConfig.edge.characters = this.config.edge.characters;
-        }
-
-        if (frameCount == 0) { // If we are still in setup(), the characterset and grid have not been initialized yet
-            this.config = newConfig;
-            return;
-        }
-
-        if (brightnessCharactersUpdated) {
-            const badCharacters = this.brightnessCharacterSet.getUnsupportedCharacters(options.brightness.characters);
-            if (badCharacters.length === 0) {
-                newConfig.brightness.characters = options.brightness.characters;
-                this.brightnessCharacterSet.setCharacterSet(options.brightness.characters);
-            } else {
-                console.warn(`P5Asciify: The following brightness characters are not supported by the current font: [${Array.from(badCharacters).join(', ')}]. Character set not updated.`);
-            }
-        }
-
-        if (edgeCharactersUpdated) {
-            const badCharacters = this.edgeCharacterSet.getUnsupportedCharacters(options.edge.characters);
-            if (badCharacters.length === 0) {
-                newConfig.edge.characters = options.edge.characters;
-                this.edgeCharacterSet.setCharacterSet(options.edge.characters);
-            } else {
-                console.warn(`P5Asciify: The following edge characters are not supported by the current font: [${Array.from(badCharacters).join(', ')}]. Character set not updated.`);
-            }
-        }
-
-        this.config = newConfig;
-
-        if (fontSizeUpdated) {
-            this.brightnessCharacterSet.setFontSize(this.config.common.fontSize);
-            this.edgeCharacterSet.setFontSize(this.config.common.fontSize);
-            this.grid.resizeCellDimensions(this.brightnessCharacterSet.maxGlyphDimensions.width, this.brightnessCharacterSet.maxGlyphDimensions.height);
-            this.sampleFramebuffer.resize(this.grid.cols, this.grid.rows);
-        }
-    }
-}
-
 var URSAFONT_BASE64 = "data:text/javascript;base64,AAEAAAAKAIAAAwAgT1MvMs+QEyQAAAEoAAAAYGNtYXAg7yVJAAAFjAAACSBnbHlmuHLTdAAAErQAAGi0aGVhZFvXdUwAAACsAAAANmhoZWELAQUCAAAA5AAAACRobXR4BACDgAAAAYgAAAQEbG9jYQAy54AAAA6sAAAECG1heHABIgCCAAABCAAAACBuYW1lVs/OSgAAe2gAAAOicG9zdABpADQAAH8MAAAAIAABAAAAAQAAzOWHqV8PPPUAAAQAAAAAAHxiGCcAAAAAfGIYJwAAAAAEAAQAAAAACAACAAEAAAAAAAEAAAQAAAAAAAQAAAAAAAcAAAEAAAAAAAAAAAAAAAAAAAEBAAEAAAEBAIAAIAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAgQAAZAABQAEAgACAAAAAAACAAIAAAACAAAzAMwAAAAABAAAAAAAAACAAACLAABw4wAAAAAAAAAAWUFMLgBAACAmawQAAAAAAAQAAAAAAAFRAAAAAAMABAAAAAAgAAAEAAAABAAAAAQAAAAEAAGABAABAAQAAIAEAACABAAAgAQAAIAEAAGABAABAAQAAQAEAACABAABAAQAAIAEAACABAABAAQAAIAEAACABAAAgAQAAIAEAACABAAAgAQAAIAEAACABAAAgAQAAIAEAACABAABAAQAAIAEAAEABAAAgAQAAIAEAACABAAAgAQAAIAEAACABAAAgAQAAIAEAACABAAAgAQAAIAEAACABAAAgAQAAIAEAACABAAAgAQAAIAEAACABAAAgAQAAIAEAACABAAAgAQAAIAEAACABAAAgAQAAIAEAACABAAAgAQAAIAEAACABAABAAQAAIAEAAEABAAAgAQAAIAEAAEABAAAgAQAAIAEAACABAAAgAQAAIAEAAEABAAAgAQAAIAEAAGABAAAgAQAAIAEAAGABAAAgAQAAIAEAACABAAAgAQAAIAEAAEABAAAgAQAAIAEAACABAAAgAQAAIAEAACABAAAgAQAAIAEAACABAABgAQAAQAEAACABAAAAAQAAgAEAACABAAAgAQAAIAEAACABAACAAQAAAAEAAIABAABgAQAAgAEAACABAAAgAQAAAAEAACABAAAAAQAAAAEAAAABAAAAAQAAAAEAAIABAADAAQAAAAEAAAABAAAgAQAAYAEAAAABAAAAAQAAIAEAAAA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AIAAAACA/YAAgAAAAIAAAP8AAoABAAAA/4AAAP+A/4AAgAAAAIAAAP8AA4AAAP8AAAAAgAAAAIAAAP+AAAD/gAAA/4AAAP+AAAD/gAAA/4AAAACAAAAAgAAAAIAAAACAAAAAgAAAAAAAAP+AAAD/gAAAAAAAAP8AAAAAgAAAAAAAAP+AAAD/gAAAAAAAAwCAAIAEAAQAABcAHQAjAAABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAAIAAAAAgAAA/4AAAACAAAAAgAAA/4AAAACAAAD9AAAA/4AAAACAAAD/gAAAAIAAgAAAAIAAAACAAAD/AAAAAQAAAP+AAAAEAAAA/4AAAP8AAAD/gAAAAIAAAP8AAAD/gAAA/4AAAACAAAABAAAAAIAAAAEAAAAAAP+AAAD/gAAAAQD+gP8AAAAAgAAAAIAAAAABAYACgAKABAAAAwAAAQEBAQGAAQAAAP8ABAAAAP6AAAAAAAABAQAAgAMABAAAEwAAAQEBAQEBAQEBAQEBAQEBAQEBAQECAAEAAAD/gAAA/4AAAACAAAAAgAAA/wAAAP+AAAD/gAAAAIAAAACABAAAAP+AAAD/gAAA/oAAAP+AAAD/gAAAAIAAAACAAAABgAAAAIAAAAAAAAEBAACAAwAEAAATAAABAQEBAQEBAQEBAQEBAQEBAQEBAQEAAQAAAACAAAAAgAAA/4AAAP+AAAD/AAAAAIAAAACAAAD/gAAA/4AEAAAA/4AAAP+AAAD+gAAA/4AAAP+AAAAAgAAAAIAAAAGAAAAAgAAAAAAABQCAAYADgAQAAAMABwATABcAGwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAAIAAAP+AAYAAgAAA/4D/AAEAAAABAAAA/wAAAP8AAAD/AAAAAQD/gACAAAD/gAGAAIAAAP+ABAAAAP+AAAAAgAAA/4AAAAAAAAD/gAAA/4AAAP+AAAAAgAAAAIAAAP8AAAD/gAAAAIAAAP+AAAAAAAABAQAAgAOAAwAACwAAAQEBAQEBAQEBAQEBAgAAgAAAAQAAAP8AAAD/gAAA/wAAAAEAAwAAAP8AAAD/gAAA/wAAAAEAAAAAgAAAAAAAAQCAAAACAAGAAAcAAAEBAQEBAQEBAQABAAAA/4AAAP8AAAAAgAGAAAD/AAAA/4AAAACAAAAAAAABAIABgAOAAgAAAwAAAQEBAQCAAwAAAP0AAgAAAP+AAAAAAAABAQAAgAIAAYAAAwAAAQEBAQEAAQAAAP8AAYAAAP8AAAAAAAABAIAAgAQAA4AAFwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAwABAAAA/4AAAP+AAAD/gAAA/4AAAP+AAAD/AAAAAIAAAACAAAAAgAAAAIAAAACAA4AAAP+AAAD/gAAA/4AAAP+AAAD/gAAA/4AAAACAAAAAgAAAAIAAAACAAAAAgAAAAAAAAwCAAIADgAQAAAsAEQAXAAABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAAIAAAAAgAAA/4AAAP4AAAD/gAAAAIAAgAAAAIAAAACAAAD/gAAA/4AAAAEAAAAEAAAA/4AAAP2AAAD/gAAAAIAAAAKAAAAAAP8AAAAAgAAAAID/AP+AAAD/AAAAAYAAAAABAIAAgAOABAAADQAAAQEBAQEBAQEBAQEBAQEBgAEAAAABAAAA/QAAAAEAAAD/AAAAAIAAAACABAAAAP0AAAD/gAAAAIAAAAGAAAAAgAAAAIAAAAABAIAAgAOABAAAGwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAAgAAAACAAAD/gAAA/4AAAP+AAAABgAAA/QAAAACAAAAAgAAAAIAAAACAAAD/AAAA/wAAAACABAAAAP+AAAD/AAAA/4AAAP+AAAD/gAAA/4AAAACAAAAAgAAAAIAAAACAAAABAAAA/wAAAAEAAAAAAAABAIAAgAOABAAAGwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAAgAAAACAAAD/gAAAAIAAAP+AAAD+AAAA/4AAAAEAAAABAAAA/wAAAAEAAAD/AAAA/wAAAACABAAAAP+AAAD/AAAA/4AAAP8AAAD/gAAAAIAAAACAAAD/gAAAAQAAAACAAAABAAAA/4AAAACAAAAAAAABAIAAgAOABAAAEQAAAQEBAQEBAQEBAQEBAQEBAQEBAYABAAAA/4AAAP+AAAABAAAAAQAAAP8AAAD+AAAAAIAAAACABAAAAP+AAAD/gAAA/wAAAAEAAAD9gAAAAQAAAAGAAAAAgAAAAAEAgACAA4AEAAATAAABAQEBAQEBAQEBAQEBAQEBAQEBAQCAAwAAAP4AAAABgAAAAIAAAP+AAAD+AAAA/4AAAAEAAAABAAAA/gAEAAAA/4AAAP8AAAD/gAAA/wAAAP+AAAAAgAAAAIAAAP+AAAABAAAAAAAAAgCAAIADgAQAABMAFwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQACAAAAAIAAAP8AAAD/AAAAAYAAAACAAAD/gAAA/gAAAP+AAAAAgACAAAABAAAABAAAAP+AAAD/gAAAAIAAAP8AAAD/gAAA/wAAAP+AAAAAgAAAAoAAAP6A/wAAAAEAAAEAgACAA4AEAAAPAAABAQEBAQEBAQEBAQEBAQEBAIADAAAA/4AAAP+AAAD/AAAAAIAAAACAAAD+gAAA/4AEAAAA/oAAAP+AAAD+gAAAAYAAAACAAAABAAAA/4AAAAAAAAMAgACAA4AEAAATABcAGwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAAgAAAACAAAD/gAAAAIAAAP+AAAD+AAAA/4AAAACAAAD/gAAAAIAAgAAAAQAAAP8AAAABAAAABAAAAP+AAAD/AAAA/4AAAP8AAAD/gAAAAIAAAAEAAAAAgAAAAQAAAAAA/wAAAAEA/oD/AAAAAQAAAAACAIAAgAOABAAACwAPAAABAQEBAQEBAQEBAQEBAQEBAQACAAAAAIAAAP8AAAD+gAAA/4AAAACAAIAAAAEAAAAEAAAA/4AAAP0AAAABAAAAAIAAAAGAAAAAAP6AAAABgAACAQABAAIAA4AAAwAHAAABAQEBAQEBAQEAAQAAAP8AAAABAAAA/wADgAAA/wAAAP+AAAD/AAAAAAIAgACAAgADgAADAAsAAAEBAQEBAQEBAQEBAQEAAQAAAP8AAAABAAAA/4AAAP8AAAAAgAOAAAD/AAAA/4AAAP8AAAD/gAAAAIAAAAABAQAAgAOABAAAGwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQKAAQAAAP+AAAD/gAAA/4AAAACAAAAAgAAAAIAAAP8AAAD/gAAA/4AAAP+AAAAAgAAAAIAAAACABAAAAP+AAAD/gAAA/4AAAP+AAAD/gAAA/4AAAP+AAAAAgAAAAIAAAACAAAAAgAAAAIAAAACAAAAAAAACAIABgAOAAwAAAwAHAAABAQEBAQEBAQCAAwAAAP0AAAADAAAA/QADAAAA/4AAAP+AAAD/gAAAAAEAgACAAwAEAAAbAAABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAIABAAAAAIAAAACAAAAAgAAA/4AAAP+AAAD/gAAA/wAAAACAAAAAgAAAAIAAAP+AAAD/gAAA/4AEAAAA/4AAAP+AAAD/gAAA/4AAAP+AAAD/gAAA/4AAAACAAAAAgAAAAIAAAACAAAAAgAAAAIAAAAAAAAIAgACAA4AEAAATABcAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAAgAAAACAAAD/gAAA/4AAAP8AAAAAgAAAAIAAAP8AAAD/AAAAAIAAgAEAAAD/AAQAAAD/gAAA/4AAAP+AAAD/gAAAAIAAAACAAAAAgAAA/4AAAACAAAD+AAAA/wAAAAACAIAAgAOABAAAEQAVAAABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQACAAAAAIAAAP6AAAAAgAAA/wAAAAGAAAD+AAAA/4AAAACAAgAAgAAA/4AEAAAA/4AAAP6AAAABAAAAAIAAAP2AAAD/gAAAAIAAAAKAAAD+AAAA/4AAAAAAAAIAgACAA4AEAAAPABMAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAYABAAAAAIAAAACAAAD/AAAA/wAAAP8AAAAAgAAAAIAAAAAAAQAAAAQAAAD/gAAA/4AAAP2AAAABAAAA/wAAAAKAAAAAgAAA/4D/AAAAAQAAAwCAAIADgAQAAAsADwATAAABAQEBAQEBAQEBAQEBAQEBAQEBAQCAAoAAAACAAAD/gAAAAIAAAP+AAAD9gAEAAAABAAAA/wAAAAEAAAAEAAAA/4AAAP8AAAD/gAAA/wAAAP+AAAADAP8AAAABAP6A/wAAAAEAAAAAAQCAAIADgAQAABMAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQACAAAAAIAAAP8AAAD/AAAAAQAAAAEAAAD/gAAA/gAAAP+AAAAAgAQAAAD/gAAA/4AAAACAAAD9gAAAAIAAAP+AAAD/gAAAAIAAAAKAAAAAAAACAIAAgAOABAAACwATAAABAQEBAQEBAQEBAQEBAQEBAQEBAQCAAgAAAACAAAAAgAAA/4AAAP+AAAD+AAEAAAAAgAAAAIAAAP+AAAAEAAAA/4AAAP+AAAD+gAAA/4AAAP+AAAADAP2AAAAAgAAAAYAAAACAAAEAgACAA4AEAAAXAAABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAAIAAAAAgAAA/wAAAP8AAAABAAAA/wAAAAEAAAABAAAA/4AAAP4AAAD/gAAAAIAEAAAA/4AAAP+AAAAAgAAA/wAAAP+AAAD/AAAAAIAAAP+AAAD/gAAAAIAAAAKAAAAAAAABAIAAgAOABAAACQAAAQEBAQEBAQEBAQCAAwAAAP4AAAABAAAA/wAAAP8ABAAAAP+AAAD/AAAA/4AAAP6AAAAAAQCAAIADgAQAABUAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAAIAAAAAgAAA/wAAAP8AAAABAAAA/4AAAAGAAAD/gAAA/gAAAP+AAAAAgAQAAAD/gAAA/4AAAACAAAD9gAAAAQAAAACAAAD+gAAA/4AAAACAAAACgAAAAAEAgACAA4AEAAALAAABAQEBAQEBAQEBAQEAgAEAAAABAAAAAQAAAP8AAAD/AAAA/wAEAAAA/gAAAAIAAAD8gAAAAQAAAP8AAAAAAAABAIAAgAOABAAACwAAAQEBAQEBAQEBAQEBAIADAAAA/wAAAAEAAAD9AAAAAQAAAP8ABAAAAP+AAAD9gAAA/4AAAACAAAACgAAAAAAAAQCAAIAEAAQAAA8AAAEBAQEBAQEBAQEBAQEBAQEBAAMAAAD/gAAA/4AAAP4AAAD/gAAAAQAAAAEAAAD+gAQAAAD/gAAA/YAAAP+AAAAAgAAAAQAAAP8AAAACgAAAAAAAAQCAAIADgAQAABsAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAgAEAAAAAgAAAAIAAAAEAAAD/gAAA/4AAAP+AAAAAgAAAAIAAAACAAAD/AAAA/4AAAP+AAAD/AAQAAAD/AAAAAIAAAACAAAD/gAAA/4AAAP+AAAD/gAAA/4AAAP+AAAD/gAAAAIAAAACAAAD/AAAAAAAAAQCAAIADgAQAAAUAAAEBAQEBAQCAAQAAAAIAAAD9AAQAAAD9AAAA/4AAAAABAIAAgAQABAAAEwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEAgAEAAAAAgAAAAIAAAACAAAABAAAA/wAAAP+AAAD/gAAA/4AAAP8ABAAAAP+AAAD/gAAAAIAAAACAAAD8gAAAAgAAAP+AAAAAgAAA/gAAAAAAAAEAgACABAAEAAATAAABAQEBAQEBAQEBAQEBAQEBAQEBAQCAAQAAAACAAAAAgAAAAIAAAAEAAAD/AAAA/4AAAP+AAAD/gAAA/wAEAAAA/4AAAP+AAAD/gAAAAYAAAPyAAAABAAAAAIAAAACAAAD+AAAAAAAAAgCAAIADgAQAAAsADwAAAQEBAQEBAQEBAQEBAQEBAQEAAgAAAACAAAD/gAAA/gAAAP+AAAAAgACAAAABAAAABAAAAP+AAAD9gAAA/4AAAACAAAACgAAAAAD9gAAAAoAAAgCAAIADgAQAAAkADQAAAQEBAQEBAQEBAQEBAQEAgAKAAAAAgAAA/4AAAP6AAAD/AAEAAAABAAAABAAAAP+AAAD+gAAA/4AAAP8AAAADAP6AAAABgAAAAAIAgACABAAEAAAPABcAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAAgAAAACAAAAAgAAA/4AAAP+AAAD+AAAA/4AAAACAAIAAAAEAAAD/gAAAAIAAAAQAAAD/gAAA/gAAAP8AAAAAgAAA/4AAAACAAAACgAAAAAD9gAAAAIAAAACAAAABgAACAIAAgAOABAAAEwAXAAABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAgAKAAAAAgAAA/4AAAP+AAAAAgAAAAIAAAP8AAAD/gAAA/4AAAP8AAQAAAAEAAAAEAAAA/4AAAP8AAAD/gAAA/4AAAP+AAAD/gAAAAIAAAACAAAD/AAAAAwD/AAAAAQAAAQCAAIADgAQAABsAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAAIAAAAAgAAA/wAAAP8AAAABgAAAAIAAAP+AAAD+AAAA/4AAAAEAAAABAAAA/oAAAP+AAAAAgAQAAAD/gAAA/4AAAACAAAD/AAAA/4AAAP8AAAD/gAAAAIAAAACAAAD/gAAAAQAAAACAAAABAAAAAAAAAQCAAIADgAQAAAcAAAEBAQEBAQEBAIADAAAA/wAAAP8AAAD/AAQAAAD/gAAA/QAAAAMAAAAAAAABAIAAgAOABAAACwAAAQEBAQEBAQEBAQEBAIABAAAAAQAAAAEAAAD/gAAA/gAAAP+ABAAAAP0AAAADAAAA/QAAAP+AAAAAgAAAAAAAAQCAAIADgAQAAA8AAAEBAQEBAQEBAQEBAQEBAQEAgAEAAAABAAAAAQAAAP+AAAD/gAAA/wAAAP+AAAD/gAQAAAD+AAAAAgAAAP4AAAD/AAAA/4AAAACAAAABAAAAAAAAAQCAAIAEAAQAABMAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAIABAAAAAIAAAACAAAAAgAAAAQAAAP8AAAD/gAAA/4AAAP+AAAD/AAQAAAD+AAAAAIAAAP+AAAACAAAA/IAAAACAAAAAgAAA/4AAAP+AAAAAAAABAIAAgAOABAAAGwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQCAAQAAAAEAAAABAAAA/4AAAP+AAAAAgAAAAIAAAP8AAAD/AAAA/wAAAACAAAAAgAAA/4AAAP+ABAAAAP8AAAABAAAA/wAAAP+AAAD/gAAA/4AAAP8AAAABAAAA/wAAAAEAAAAAgAAAAIAAAACAAAAAAAABAIAAgAOABAAADwAAAQEBAQEBAQEBAQEBAQEBAQCAAQAAAAEAAAABAAAA/4AAAP+AAAD/AAAA/4AAAP+ABAAAAP6AAAABgAAA/oAAAP+AAAD+gAAAAYAAAACAAAAAAAABAIAAgAOABAAAFwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAIADAAAA/4AAAP+AAAD/gAAA/4AAAAIAAAD9AAAAAIAAAACAAAAAgAAAAIAAAP4ABAAAAP8AAAD/gAAA/4AAAP+AAAD/gAAA/4AAAAEAAAAAgAAAAIAAAACAAAAAgAAAAAAAAQEAAIADAAQAAAcAAAEBAQEBAQEBAQACAAAA/wAAAAEAAAD+AAQAAAD/gAAA/YAAAP+AAAAAAAABAIAAgAQAA4AAFwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAIABAAAAAIAAAACAAAAAgAAAAIAAAACAAAD/AAAA/4AAAP+AAAD/gAAA/4AAAP+AA4AAAP+AAAD/gAAA/4AAAP+AAAD/gAAA/4AAAACAAAAAgAAAAIAAAACAAAAAgAAAAAAAAQEAAIADAAQAAAcAAAEBAQEBAQEBAQACAAAA/gAAAAEAAAD/AAQAAAD8gAAAAIAAAAKAAAAAAAABAIACAAQABAAAFwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAgAAgAAAAIAAAACAAAAAgAAA/wAAAP+AAAD/gAAA/4AAAP8AAAAAgAAAAIAAAACABAAAAP+AAAD/gAAA/4AAAP+AAAAAgAAAAIAAAP+AAAD/gAAAAIAAAACAAAAAgAAAAAAAAQCAAIADgAEAAAMAAAEBAQEAgAMAAAD9AAEAAAD/gAAAAAAAAQEAAoACgAQAAAkAAAEBAQEBAQEBAQEBAAEAAAAAgAAA/4AAAP+AAAD/gAQAAAD/gAAA/wAAAACAAAAAgAAAAAEAgACAA4ADAAAPAAABAQEBAQEBAQEBAQEBAQEBAQACgAAA/4AAAP+AAAD/AAAAAQAAAP6AAAD/gAAAAIADAAAA/YAAAACAAAABgAAA/oAAAP+AAAAAgAAAAYAAAAAAAAIAgACAA4AEAAAJAA0AAAEBAQEBAQEBAQEBAQEBAIABAAAAAYAAAACAAAD/gAAA/YABAAAAAQAAAAQAAAD/AAAA/4AAAP6AAAD/gAAAAgD+gAAAAYAAAAABAIAAgAOAAwAAEwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAAIAAAAAgAAA/wAAAP8AAAABAAAAAQAAAP+AAAD+AAAA/4AAAACAAwAAAP+AAAD/gAAAAIAAAP6AAAAAgAAA/4AAAP+AAAAAgAAAAYAAAAAAAAIAgACAA4AEAAAJAA0AAAEBAQEBAQEBAQEBAQEBAoABAAAA/YAAAP+AAAAAgAAAAYD/AAAAAQAAAAQAAAD8gAAAAIAAAAGAAAAAgAAA/4D+gAAAAYAAAAACAIAAgAOAAwAADQARAAABAQEBAQEBAQEBAQEBAQEBAQEBAAIAAAAAgAAA/gAAAAGAAAD+AAAA/4AAAACAAIAAAAEAAAADAAAA/4AAAP8AAAD/gAAA/4AAAACAAAABgAAAAAD/gAAAAIAAAAABAQAAgAOAA4AACwAAAQEBAQEBAQEBAQEBAYACAAAA/oAAAAEAAAD/AAAA/wAAAACAA4AAAP+AAAD/AAAA/4AAAP8AAAACgAAAAAAAAgCAAIADgAOAAA8AEwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAAIAAAAAgAAA/4AAAP4AAAABgAAA/oAAAP+AAAAAgACAAAABAAAAA4AAAP+AAAD+AAAA/4AAAACAAAAAgAAAAIAAAAEAAAAAAP8AAAABAAABAIAAgAOABAAACwAAAQEBAQEBAQEBAQEBAIABAAAAAYAAAACAAAD/AAAA/wAAAP8ABAAAAP8AAAD/gAAA/gAAAAIAAAD+AAAAAAAAAgGAAIACgAQAAAMABwAAAQEBAQEBAQEBgAEAAAD/AAAAAQAAAP8ABAAAAP+AAAD/gAAA/YAAAAACAIAAgAOABAAAAwAPAAABAQEBAQEBAQEBAQEBAQEBAoABAAAA/wAAAAEAAAD/gAAA/gAAAP+AAAABAAAAAQAEAAAA/4AAAP+AAAD+AAAA/4AAAACAAAABAAAA/wAAAAABAIAAgAOAA4AAEwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEAgAEAAAAAgAAAAQAAAP+AAAAAgAAAAIAAAP8AAAD/gAAA/4AAAP8AA4AAAP8AAAAAgAAA/4AAAP8AAAD/gAAA/4AAAACAAAAAgAAA/wAAAAAAAAEBgACAAwAEAAAHAAABAQEBAQEBAQGAAQAAAACAAAD/AAAA/4AEAAAA/QAAAP+AAAAAgAAAAAAAAQCAAIAEAAMAABMAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQABAAAAAIAAAAEAAAAAgAAA/wAAAP+AAAD/gAAA/4AAAP8AAAAAgAMAAAD/gAAAAIAAAP+AAAD+AAAAAYAAAP+AAAAAgAAA/oAAAAIAAAAAAAABAIAAgAOAAwAADwAAAQEBAQEBAQEBAQEBAQEBAQCAAQAAAACAAAABAAAAAIAAAP8AAAD/gAAA/4AAAP8AAwAAAP+AAAAAgAAA/4AAAP4AAAABgAAA/4AAAP8AAAAAAAACAIAAgAOAAwAACwAPAAABAQEBAQEBAQEBAQEBAQEBAQACAAAAAIAAAP+AAAD+AAAA/4AAAACAAIAAAAEAAAADAAAA/4AAAP6AAAD/gAAAAIAAAAGAAAAAAP6AAAABgAACAIAAgAOAAwAACQANAAABAQEBAQEBAQEBAQEBAQCAAoAAAACAAAD/gAAA/oAAAP8AAQAAAAEAAAADAAAA/4AAAP+AAAD/gAAA/wAAAAIA/4AAAACAAAAAAgCAAIAEAAMAAA0AEQAAAQEBAQEBAQEBAQEBAQEBAQEBAQACgAAAAIAAAP+AAAD/AAAA/oAAAP+AAAAAgACAAAABAAAAAwAAAP6AAAD/gAAA/4AAAAEAAAAAgAAAAIAAAAAA/4AAAACAAAAAAQEAAIADgAMAAAkAAAEBAQEBAQEBAQEBAAIAAAAAgAAA/wAAAP+AAAD/AAMAAAD/gAAA/wAAAAEAAAD+AAAAAAEAgACABAADAAATAAABAQEBAQEBAQEBAQEBAQEBAQEBAQEAAoAAAP6AAAABgAAAAIAAAP+AAAD9AAAAAgAAAP6AAAD/gAAAAIADAAAA/4AAAP+AAAD/gAAA/4AAAP+AAAAAgAAAAIAAAACAAAAAgAAAAAAAAQCAAIADgAOAABMAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQABAAAAAQAAAP8AAAAAgAAAAQAAAP+AAAD+gAAA/4AAAP+AAAAAgAOAAAD/gAAA/4AAAP6AAAAAgAAA/4AAAP+AAAAAgAAAAYAAAACAAAAAAAABAIAAgAOAAwAADwAAAQEBAQEBAQEBAQEBAQEBAQCAAQAAAACAAAAAgAAAAQAAAP+AAAD/gAAA/oAAAP+AAwAAAP4AAAAAgAAAAYAAAP2AAAAAgAAA/4AAAACAAAAAAAABAIAAgAOAAwAADwAAAQEBAQEBAQEBAQEBAQEBAQCAAQAAAAEAAAABAAAA/4AAAP+AAAD/AAAA/4AAAP+AAwAAAP6AAAABgAAA/oAAAP+AAAD/gAAAAIAAAACAAAAAAAABAIAAgAQAAwAAEwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEAgAEAAAAAgAAAAIAAAACAAAABAAAA/4AAAP8AAAD/gAAA/wAAAP+AAwAAAP6AAAAAgAAA/4AAAAGAAAD+AAAA/4AAAACAAAD/gAAAAIAAAAAAAAEAgACAA4ADAAAbAAABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAIABAAAAAQAAAAEAAAD/gAAA/4AAAACAAAAAgAAA/wAAAP8AAAD/AAAAAIAAAACAAAD/gAAA/4ADAAAA/4AAAACAAAD/gAAA/4AAAP+AAAD/gAAA/4AAAACAAAD/gAAAAIAAAACAAAAAgAAAAIAAAAAAAAEAgACAA4ADAAAPAAABAQEBAQEBAQEBAQEBAQEBAIABAAAAAQAAAAEAAAD/gAAA/gAAAAGAAAD+gAAA/4ADAAAA/wAAAAEAAAD+AAAA/4AAAACAAAAAgAAAAIAAAAAAAAEAgACAA4ADAAATAAABAQEBAQEBAQEBAQEBAQEBAQEBAQCAAwAAAP+AAAD/gAAA/4AAAAGAAAD9AAAAAIAAAACAAAAAgAAA/oADAAAA/4AAAP+AAAD/gAAA/4AAAP+AAAAAgAAAAIAAAACAAAAAgAAAAAAAAQCAAIADAAQAABMAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAYABgAAA/wAAAP+AAAAAgAAAAQAAAP6AAAD/gAAA/4AAAACAAAAAgAQAAAD/gAAA/wAAAP+AAAD/AAAA/4AAAACAAAABAAAAAIAAAAEAAAAAAAABAYAAgAKABAAAAwAAAQEBAQGAAQAAAP8ABAAAAPyAAAAAAAABAQAAgAOABAAAEwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAAGAAAAAgAAAAIAAAP+AAAD/gAAA/oAAAAEAAAAAgAAA/4AAAP8ABAAAAP+AAAD/AAAA/4AAAP8AAAD/gAAAAIAAAAEAAAAAgAAAAQAAAAAAAAEAgAGAA4ADAAAPAAABAQEBAQEBAQEBAQEBAQEBAQABAAAAAQAAAACAAAD/gAAA/wAAAP8AAAD/gAAAAIADAAAA/4AAAACAAAD/AAAA/4AAAACAAAD/gAAAAQAAAAAAAAEAAAAABAAEAAATAAABAQEBAQEBAQEBAQEBAQEBAQEBAQAAAYAAAAEAAAAAgAAAAIAAAACAAAD/AAAA/4AAAP+AAAD/AAAA/wAEAAAA/4AAAP+AAAD/gAAA/wAAAP6AAAABAAAAAQAAAACAAAAAgAAAAAAAAQIAAAAEAAQAAAMAAAEBAQECAAIAAAD+AAQAAAD8AAAAAAAAAgCAAIADgAQAABcAGwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQGAAYAAAP8AAAABAAAA/4AAAP+AAAABgAAA/QAAAACAAAAAgAAA/wAAAACAAAAAgAGAAIAAAP+ABAAAAP+AAAD/AAAA/4AAAP+AAAD/gAAA/4AAAACAAAAAgAAAAIAAAACAAAABAAAAAAAAAP+AAAAAAQCAAIADgAQAABsAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAgAEAAAABAAAAAQAAAP+AAAAAgAAA/wAAAAEAAAD/AAAA/wAAAP8AAAABAAAA/wAAAACAAAD/gAQAAAD+gAAAAYAAAP8AAAD/gAAA/4AAAP+AAAD/gAAA/4AAAACAAAAAgAAAAIAAAACAAAAAgAAAAAAABACAAIAEAAQAABcAGwAfACMAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAAoAAAP4AAAABgAAAAIAAAACAAAD/gAAA/YAAAAIAAAD+gAAA/4AAAP+AAAAAgAEAAAAAgAAAAQAAgAAA/4D9AACAAAD/gAQAAAD/gAAA/4AAAP+AAAD/gAAA/wAAAP+AAAAAgAAAAIAAAACAAAAAgAAAAQAAAP8A/4AAAACAAQAAAP+AAAD+gAAA/4AAAAAEAIAAgAQAA4AAAwAHAAsADwAAAQEBAQEBAQEBAQEBAQEBAQCAAIAAAP+AAQAAgAAA/4ABAACAAAD/gAEAAIAAAP+AA4AAAP0AAAADAAAA/QAAAAMAAAD9AAAAAwAAAP0AAAAAAQIAAAAEAAQAAAkAAAEBAQEBAQEBAQEDgACAAAD+AAAAAIAAAACAAAAAgAQAAAD8AAAAAQAAAAEAAAABAAAAAAgAAAAABAAEAAADAAcACwAPABMAFwAbAB8AAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAAABAAAA/wACAAEAAAD/AP8AAQAAAP8AAgABAAAA/wD9AAEAAAD/AAIAAQAAAP8A/wABAAAA/wACAAEAAAD/AAQAAAD/AAAAAQAAAP8AAAAAAAAA/wAAAAEAAAD/AAAAAAAAAP8AAAABAAAA/wAAAAAAAAD/AAAAAQAAAP8AAAAAAQIAAAADAAQAAAMAAAEBAQECAAEAAAD/AAQAAAD8AAAAAAAAAgGAAIACgAQAAAMABwAAAQEBAQEBAQEBgAEAAAD/AAAAAQAAAP8ABAAAAP6AAAD/gAAA/oAAAAABAgAAAAQAAgAAAwAAAQEBAQIAAgAAAP4AAgAAAP4AAAAAAAAEAIAAAAQABAAAAwAHAAsADwAAAQEBAQEBAQEBAQEBAQEBAQCAAIAAAP+AAQAAgAAA/4ABAACAAAD/gAEAAIAAAP+ABAAAAPwAAAAEAAAA/AAAAAQAAAD8AAAABAAAAPwAAAAAAQCAAIADgAOAABMAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAoABAAAA/oAAAP+AAAD/gAAA/4AAAACAAAAAgAAAAIAAAAEAAAD/gAOAAAD+AAAA/wAAAACAAAAAgAAAAIAAAACAAAAAgAAA/wAAAAEAAAAAAAABAAAAAAQABAAACwAAAQEBAQEBAQEBAQEBAAAEAAAA/gAAAP+AAAD/gAAA/4AAAP+ABAAAAPwAAAAAgAAAAIAAAACAAAAAgAAAAAAAAQCAAIAEAAOAABsAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAgACAAAAAgAAAAIAAAACAAAAAgAAAAIAAAACAAAD/gAAA/4AAAP+AAAD/gAAA/4AAAP+AAAD/gAOAAAD/gAAAAIAAAP8AAAABAAAA/oAAAAGAAAD9AAAAAIAAAP+AAAABAAAA/wAAAAGAAAD+gAAAAAAAAQAAAAACAAQAAAkAAAEBAQEBAQEBAQEAAACAAAAAgAAAAIAAAACAAAD+AAQAAAD/AAAA/wAAAP8AAAD/AAAAAAEAAAAABAAEAAATAAABAQEBAQEBAQEBAQEBAQEBAQEBAQKAAYAAAP8AAAD/AAAA/4AAAP+AAAD/AAAAAIAAAACAAAAAgAAAAQAEAAAA/wAAAP+AAAD/gAAA/wAAAP8AAAABgAAAAQAAAACAAAAAgAAAAAAAAQAAAAAEAAIAAA8AAAEBAQEBAQEBAQEBAQEBAQEBgAEAAAAAgAAAAIAAAACAAAD8AAAAAIAAAACAAAAAgAIAAAD/gAAA/4AAAP+AAAD/gAAAAIAAAACAAAAAgAAAAAAAAgAAAAAEAAQAAAMABwAAAQEBAQEBAQEAAAIAAAD+AAIAAgAAAP4ABAAAAP4AAAAAAAAA/gAAAAAEAAACAAQABAAAAwAHAAsADwAAAQEBAQEBAQEBAQEBAQEBAQAAAQAAAP8AAgABAAAA/wD/AAEAAAD/AAIAAQAAAP8ABAAAAP8AAAABAAAA/wAAAAAAAAD/AAAAAQAAAP8AAAAABAIAAAAEAAQAAAMABwALAA8AAAEBAQEBAQEBAQEBAQEBAQECAAEAAAD/AAEAAQAAAP8A/wABAAAA/wABAAEAAAD/AAQAAAD/AAAAAAAAAP8AAAAAAAAA/wAAAAAAAAD/AAAAAAEDAAAABAAEAAADAAABAQEBAwABAAAA/wAEAAAA/AAAAAAAAAEAAAAABAAEAAAFAAABAQEBAQEAAAQAAAD9AAAA/wAEAAAA/wAAAP0AAAAAAQAAAAABAAQAAAMAAAEBAQEAAAEAAAD/AAQAAAD8AAAAAAAAAwCAAIADAAOAAAMABwALAAABAQEBAQEBAQEBAQEAgACAAAD/gAEAAIAAAP+AAQAAgAAA/4ADgAAA/QAAAAMAAAD9AAAAAwAAAP0AAAAAAAABAYABgAQABAAACwAAAQEBAQEBAQEBAQEBAYABAAAAAIAAAAEAAAD+gAAA/4AAAP+ABAAAAP8AAAD/gAAA/wAAAACAAAAAgAAAAAAAAQAAAYACgAQAAAsAAAEBAQEBAQEBAQEBAQGAAQAAAP+AAAD/gAAA/oAAAAEAAAAAgAQAAAD+gAAA/4AAAP+AAAABAAAAAIAAAAAAAAEAAAAABAAEAAAJAAABAQEBAQEBAQEBAwABAAAA/AAAAAEAAAABAAAAAQAEAAAA/AAAAAKAAAAAgAAAAIAAAAABAIAAgAMABAAACwAAAQEBAQEBAQEBAQEBAgABAAAA/4AAAP6AAAD/gAAAAIAAAAEABAAAAP0AAAD/gAAAAIAAAAEAAAAAgAAAAAAAAQAAAAAEAAQAAAUAAAEBAQEBAQAAAQAAAAMAAAD8AAQAAAD9AAAA/wAAAAACAIAAgAMAAoAACwAPAAABAQEBAQEBAQEBAQEBAQEBAQABgAAAAIAAAP+AAAD+gAAAAQAAAP8A/4AAgAAA/4ACgAAA/4AAAP8AAAD/gAAAAIAAAAEAAAAAAAAA/wAAAAACAIAAgAMABAAACwAPAAABAQEBAQEBAQEBAQEBAQEBAgABAAAA/4AAAP6AAAABAAAA/wAAAAEA/oAAgAAA/4AEAAAA/QAAAP+AAAAAgAAAAQAAAACAAAD/gAAA/wAAAAABAIAAgAQABAAADQAAAQEBAQEBAQEBAQEBAQECAAIAAAD/AAAA/4AAAP6AAAD/gAAAAIAAAAEABAAAAP+AAAD9gAAA/4AAAACAAAABAAAAAIAAAAACAAAAAAQABAAAAwAHAAABAQEBAQEBAQAABAAAAPwAAQAAAAIAAAAEAAAA/AAAAAMA/gAAAAIAAAEAgACABAAEAAARAAABAQEBAQEBAQEBAQEBAQEBAQECAAIAAAD/AAAAAQAAAP8AAAD/gAAA/oAAAP+AAAAAgAAAAQAEAAAA/4AAAP+AAAD/gAAA/oAAAP+AAAAAgAAAAQAAAACAAAAAAQAAAAACgAKAAAsAAAEBAQEBAQEBAQEBAQAAAYAAAACAAAAAgAAA/wAAAP+AAAD/AAKAAAD/gAAA/4AAAP6AAAABAAAAAIAAAAAAAAEAAAAABAAEAAAFAAABAQEBAQEAAAQAAAD/AAAA/QAEAAAA/AAAAAMAAAAAAQCAAIAEAAQAABUAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQECAAIAAAD/AAAAAQAAAP8AAAABAAAA/wAAAP+AAAD+gAAA/4AAAACAAAABAAQAAAD/gAAA/4AAAP+AAAD/gAAA/4AAAP+AAAD/gAAAAIAAAAEAAAAAgAAAAAEBgAAABAACgAALAAABAQEBAQEBAQEBAQECgAGAAAD/AAAA/4AAAP8AAAAAgAAAAIACgAAA/wAAAP+AAAD/AAAAAYAAAACAAAAAAAABAAAAAAQABAAAEQAAAQEBAQEBAQEBAQEBAQEBAQEBAAAAgAAAAIAAAACAAAAAgAAAAIAAAACAAAAAgAAAAIAAAPwABAAAAP+AAAD/gAAA/4AAAP+AAAD/gAAA/4AAAP+AAAD/gAAAAAEAAAAABAABAAADAAABAQEBAAAEAAAA/AABAAAA/wAAAAAAAAEAAAAABAAEAAARAAABAQEBAQEBAQEBAQEBAQEBAQEDgACAAAD8AAAAAIAAAACAAAAAgAAAAIAAAACAAAAAgAAAAIAEAAAA/AAAAACAAAAAgAAAAIAAAACAAAAAgAAAAIAAAACAAAAAAQAAAgAEAAQAAAMAAAEBAQEAAAQAAAD8AAQAAAD+AAAAAAAAAgCAAIACAAOAAAMABwAAAQEBAQEBAQEAgACAAAD/gAEAAIAAAP+AA4AAAP0AAAADAAAA/QAAAAAEAIAAgAQABAAAAwAHAAsADwAAAQEBAQEBAQEBAQEBAQEBAQCAA4AAAPyAAIAAAACAAAAAgAAAAIAAAACAAAAAgAAABAAAAPyAAAADAP+AAAAAgP8A/4AAAACA/wD/gAAAAIAAAQAAAAAEAAQAAAUAAAEBAQEBAQMAAQAAAPwAAAADAAQAAAD8AAAAAQAAAAACAIAAgAQABAAAAwAHAAABAQEBAQEBAQCAA4AAAPyAAYAAAACAAAAEAAAA/IAAAAIA/4AAAACAAAMAgACABAAEAAADAAcACwAAAQEBAQEBAQEBAQEBAIADgAAA/IAAgAAAAIAAAAGAAAAAgAAABAAAAPyAAAADAP+AAAAAgP4A/4AAAACAAAAABAAAAIAEAAQAAAMABwALAA8AAAEBAQEBAQEBAQEBAQEBAQEAAAQAAAD8AAAABAAAAPwAAAAEAAAA/AAAAAQAAAD8AAQAAAD/gAAA/4AAAP+AAAD/gAAA/4AAAP+AAAD/gAAAAAYAgACABAAEAAADAAcACwAPABMAFwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAIADgAAA/IAAgAAAAIAAAAGAAAAAgAAA/oAAAACAAAD+gAAAAIAAAAGAAAAAgAAABAAAAPyAAAADAP+AAAAAgAAA/4AAAACA/wD/gAAAAID/AP+AAAAAgAAA/4AAAACAAAEAgACAAQADgAADAAABAQEBAIAAgAAA/4ADgAAA/QAAAAAAAAUAgACABAAEAAADAAcACwAPABMAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAIADgAAA/IAAgAAAAIAAAAGAAAAAgAAA/YAAAACAAAABgAAAAIAAAAQAAAD8gAAAAwD/gAAAAIAAAP+AAAAAgP4A/4AAAACAAAD/gAAAAIAAAAABAAADAAQABAAAAwAAAQEBAQAABAAAAPwABAAAAP8AAAAAAAAHAIAAgAQABAAAAwAHAAsADwATABcAGwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQCAA4AAAPyAAIAAAACAAAABgAAAAIAAAP2AAAAAgAAAAYAAAACAAAD9gAAAAIAAAAGAAAAAgAAABAAAAPyAAAADAP+AAAAAgAAA/4AAAACA/wD/gAAAAIAAAP+AAAAAgP8A/4AAAACAAAD/gAAAAIAAAAAEAAAAAAQAAgAAAwAHAAsADwAAAQEBAQEBAQEBAQEBAQEBAQAAAQAAAP8AAgABAAAA/wD/AAEAAAD/AAIAAQAAAP8AAgAAAP8AAAABAAAA/wAAAAAAAAD/AAAAAQAAAP8AAAAAAQAAAAAEAAQAAAkAAAEBAQEBAQEBAQEAAAEAAAABAAAAAQAAAAEAAAD8AAQAAAD/gAAA/4AAAP+AAAD9gAAAAAEBAAAAAgAEAAADAAABAQEBAQABAAAA/wAEAAAA/AAAAAAAAAEAAAAABAAEAAALAAABAQEBAQEBAQEBAQECgAGAAAD8AAAAAIAAAACAAAAAgAAAAQAEAAAA/AAAAAGAAAABAAAAAIAAAACAAAAAAAABAAABAAQAAgAAAwAAAQEBAQAABAAAAPwAAgAAAP8AAAAAAAABAAAAAAQABAAACwAAAQEBAQEBAQEBAQEBAgACAAAA/AAAAACAAAAAgAAAAIAAAACABAAAAPwAAAACAAAAAIAAAACAAAAAgAAAAAAAAQAAAAAEAAIAAAkAAAEBAQEBAQEBAQEDAAEAAAD8AAAAAQAAAAEAAAABAAIAAAD+AAAAAIAAAACAAAAAgAAAAAEAAAAABAAEAAALAAABAQEBAQEBAQEBAQEAAAIAAAAAgAAAAIAAAACAAAAAgAAA/AAEAAAA/4AAAP+AAAD/gAAA/4AAAP4AAAAAAAADAAAAAAQABAAAGwAnADMAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAAAEAAAAAgAAAAIAAAACAAAAAgAAAAIAAAACAAAD/AAAA/4AAAP+AAAD/gAAA/4AAAP+AAAD/gAIAAYAAAACAAAD/gAAA/4AAAP+AAAD/gP4AAIAAAACAAAAAgAAAAIAAAP6AAAD/gAQAAAD/gAAA/4AAAP+AAAD/gAAA/4AAAP+AAAD/AAAAAIAAAACAAAAAgAAAAIAAAACAAAAAgAAAAQAAAP+AAAD+gAAAAIAAAACAAAAAgAAA/oAAAP+AAAD/gAAA/4AAAP+AAAAAgAAAAAAAAQAAAAAEAAIAAAkAAAEBAQEBAQEBAQEAAAEAAAABAAAAAQAAAAEAAAD8AAIAAAD/gAAA/4AAAP+AAAD/gAAAAAEAAAAABAAEAAALAAABAQEBAQEBAQEBAQEAAAGAAAABAAAAAIAAAACAAAAAgAAA/AAEAAAA/4AAAP+AAAD/gAAA/wAAAP6AAAAAAAAEAAAAgAQABAAAAwAHAAsADwAAAQEBAQEBAQEBAQEBAQEBAQCAAYAAAP6AAgABgAAA/oD9gAGAAAD+gAIAAYAAAP6ABAAAAP6AAAABgAAA/oAAAP+AAAD+gAAAAYAAAP6AAAAAAQIAAgAEAAQAAAMAAAEBAQECAAIAAAD+AAQAAAD+AAAAAAAABACAAIAEAAQAAAMABwAjACcAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAAEAAAD/AAGAAQAAAP8A/gAAgAAAAIAAAACAAAAAgAAAAIAAAACAAAAAgAAA/4AAAP+AAAD/gAAA/4AAAP+AAAD/gAAA/4ABgACAAAD/gAQAAAD/gAAAAIAAAP+AAAAAAAAA/wAAAP+AAAD/gAAAAIAAAACAAAABAAAA/oAAAP+AAAD/gAAA/4AAAACAAAAAgAAAAIAAAAGAAAD/gAAAAAQAAAAABAAEAAADAAcACwAPAAABAQEBAQEBAQEBAQEBAQEBAAAAgAAA/4ADgACAAAD/gPyAAIAAAP+AA4AAgAAA/4AEAAAA/4AAAACAAAD/gAAA/QAAAP+AAAAAgAAA/4AAAAABAAAAAAIAAgAAAwAAAQEBAQAAAgAAAP4AAgAAAP4AAAAAAAAEAAAAAAIABAAAAwAHAAsADwAAAQEBAQEBAQEBAQEBAQEBAQAAAQAAAP8AAQABAAAA/wD/AAEAAAD/AAEAAQAAAP8ABAAAAP8AAAAAAAAA/wAAAAAAAAD/AAAAAAAAAP8AAAAAAQCAAQADgAOAABMAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAYABAAAA/4AAAAGAAAD+gAAAAIAAAP8AAAD/gAAA/4AAAACAAAAAgAOAAAD/gAAA/4AAAP+AAAD/gAAA/4AAAACAAAAAgAAAAIAAAACAAAAAAAABAQABAAOABAAAEwAAAQEBAQEBAQEBAQEBAQEBAQEBAQECAACAAAAAgAAAAIAAAP+AAAD/gAAA/4AAAP+AAAD/gAAAAIAAAACABAAAAP+AAAD/gAAA/wAAAACAAAD+gAAAAYAAAP+AAAABAAAAAIAAAAAAAAEBAAEABAADgAATAAABAQEBAQEBAQEBAQEBAQEBAQEBAQIAAQAAAACAAAAAgAAA/4AAAP+AAAD/AAAAAIAAAP6AAAABgAAA/4ADgAAA/4AAAP+AAAD/gAAA/4AAAP+AAAAAgAAAAIAAAACAAAAAgAAAAAAAAQEAAIADgAOAABMAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAgAAgAAAAIAAAACAAAD/gAAA/4AAAP+AAAD/gAAA/4AAAACAAAAAgAOAAAD+gAAAAIAAAP8AAAD/gAAA/4AAAACAAAAAgAAAAQAAAP+AAAAAAAABAQAAgAOABAAADwAAAQEBAQEBAQEBAQEBAQEBAQIAAIAAAACAAAAAgAAA/4AAAP6AAAD/gAAAAIAAAACABAAAAP8AAAD/AAAA/wAAAP+AAAAAgAAAAQAAAAEAAAAAAAACAIAAgAOAA4AAAwAJAAABAQEBAQEBAQEBAIADAAAA/QAAgAAAAgAAAP8AAAADgAAA/QAAAAKA/gAAAAEAAAABAAAAAAIAgACABAAEAAAbACcAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQECAACAAAAAgAAAAIAAAACAAAD/gAAA/4AAAP+AAAD/gAAA/4AAAP+AAAD/gAAAAIAAAACAAAAAgAAAAAD/gAAAAIAAAACAAAAAgAAA/4AAAAQAAAD/gAAA/4AAAP+AAAD/gAAA/4AAAP+AAAD/gAAAAIAAAACAAAAAgAAAAIAAAACAAAAAgAAA/4D/gAAA/4AAAP+AAAAAgAAAAIAAAACAAAEAAAIABAADAAADAAABAQEBAAAEAAAA/AADAAAA/wAAAAAAAAEAAAAABAAEAAALAAABAQEBAQEBAQEBAQEAAAQAAAD/gAAA/4AAAP+AAAD/gAAA/gAEAAAA/gAAAP+AAAD/gAAA/4AAAP+AAAAAAAABAAACAAIABAAAAwAAAQEBAQAAAgAAAP4ABAAAAP4AAAAAAAACAQAAgAOAA4AAFwAbAAABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAYABgAAAAIAAAP8AAAAAgAAAAIAAAP8AAAD/gAAA/wAAAACAAAAAgAAA/wAAAACAAIAAAACAAAADgAAA/wAAAP+AAAD/gAAA/4AAAP+AAAAAgAAA/4AAAACAAAAAgAAAAIAAAACAAAAAgP+AAAAAgAADAAAAAAQABAAACwAnADMAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAgAGAAAD/gAAA/4AAAP+AAAD/gAAAAIACgAEAAAD/gAAA/4AAAP+AAAD/gAAA/4AAAP+AAAD/AAAAAIAAAACAAAAAgAAAAIAAAACAAAAAgACAAIAAAP+AAAD+gAAAAIAAAACAAAAAgAQAAAD/gAAA/4AAAP+AAAD/gAAAAYAAAACAAAD/AAAA/4AAAP+AAAD/gAAA/4AAAP+AAAD/gAAAAQAAAACAAAAAgAAAAIAAAACAAAAAgAAA/oAAAP6AAAD/gAAAAIAAAACAAAAAgAAAAAAAAgCAAIADgAQAAA8AHwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAAEAAAABAAAAAIAAAP+AAAD/AAAA/wAAAP+AAAAAgAAAAQAAAAEAAAAAgAAA/4AAAP8AAAD/AAAA/4AAAACABAAAAP+AAAAAgAAA/wAAAP+AAAAAgAAA/4AAAAEAAAD+gAAA/4AAAACAAAD/AAAA/4AAAACAAAD/gAAAAQAAAAABAAAAAAQAA4AACwAAAQEBAQEBAQEBAQEBAQACAAAAAIAAAACAAAD8AAAAAIAAAACAA4AAAP+AAAD/gAAA/YAAAAKAAAAAgAAAAAAAAQAAAAACAAQAAA8AAAEBAQEBAQEBAQEBAQEBAQEAAACAAAAAgAAAAIAAAACAAAD/gAAA/4AAAP+AAAD/gAQAAAD/gAAA/4AAAP+AAAD/AAAA/4AAAP+AAAD/gAAAAAAAAQIAAAAEAAQAAA8AAAEBAQEBAQEBAQEBAQEBAQEDgACAAAD/gAAA/4AAAP+AAAD/gAAAAIAAAACAAAAAgAQAAAD8AAAAAIAAAACAAAAAgAAAAQAAAACAAAAAgAAAAAAAAQCAAIAEAAQAABcAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQIAAIAAAACAAAAAgAAAAIAAAP+AAAD/AAAA/4AAAP8AAAD/gAAAAIAAAACAAAAAgAQAAAD/gAAA/4AAAP+AAAD/gAAA/oAAAAEAAAD/AAAAAYAAAACAAAAAgAAAAIAAAAAAACAAAAAABAAEAAADAAcACwAPABMAFwAbAB8AIwAnACsALwAzADcAOwA/AEMARwBLAE8AUwBXAFsAXwBjAGcAawBvAHMAdwB7AH8AAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAAAAgAAA/4ABAACAAAD/gAEAAIAAAP+AAQAAgAAA/4D9gACAAAD/gAEAAIAAAP+AAQAAgAAA/4ABAACAAAD/gPyAAIAAAP+AAQAAgAAA/4ABAACAAAD/gAEAAIAAAP+A/YAAgAAA/4ABAACAAAD/gAEAAIAAAP+AAQAAgAAA/4D8gACAAAD/gAEAAIAAAP+AAQAAgAAA/4ABAACAAAD/gP2AAIAAAP+AAQAAgAAA/4ABAACAAAD/gAEAAIAAAP+A/IAAgAAA/4ABAACAAAD/gAEAAIAAAP+AAQAAgAAA/4D9gACAAAD/gAEAAIAAAP+AAQAAgAAA/4ABAACAAAD/gAQAAAD/gAAAAIAAAP+AAAAAgAAA/4AAAACAAAD/gAAAAAAAAP+AAAAAgAAA/4AAAACAAAD/gAAAAIAAAP+AAAAAAAAA/4AAAACAAAD/gAAAAIAAAP+AAAAAgAAA/4AAAAAAAAD/gAAAAIAAAP+AAAAAgAAA/4AAAACAAAD/gAAAAAAAAP+AAAAAgAAA/4AAAACAAAD/gAAAAIAAAP+AAAAAAAAA/4AAAACAAAD/gAAAAIAAAP+AAAAAgAAA/4AAAAAAAAD/gAAAAIAAAP+AAAAAgAAA/4AAAACAAAD/gAAAAAAAAP+AAAAAgAAA/4AAAACAAAD/gAAAAIAAAP+AAAAAAQAAAAAEAAQAAAsAAAEBAQEBAQEBAQEBAQAABAAAAP6AAAD/AAAA/4AAAP+AAAD/gAQAAAD8AAAAAIAAAACAAAAAgAAAAQAAAAAAAAEAAAAABAAEAAALAAABAQEBAQEBAQEBAQEAAAQAAAD/gAAA/4AAAP+AAAD/AAAA/oAEAAAA/oAAAP8AAAD/gAAA/4AAAP+AAAAAAAABAAABgAKABAAADwAAAQEBAQEBAQEBAQEBAQEBAQAAAQAAAACAAAAAgAAAAIAAAP8AAAD/gAAA/4AAAP+ABAAAAP+AAAD/gAAA/4AAAP8AAAAAgAAAAIAAAACAAAAAAAABAAAAAAKABAAADwAAAQEBAQEBAQEBAQEBAQEBAQAAAQAAAACAAAAAgAAAAIAAAP8AAAD/gAAA/4AAAP+ABAAAAP+AAAD/gAAA/4AAAP2AAAACAAAAAIAAAACAAAAAAAABAYAAAAQAAoAABQAAAQEBAQEBAYACgAAA/oAAAP8AAoAAAP8AAAD+gAAAAAEAAAAABAAEAAAJAAABAQEBAQEBAQEBAAACgAAAAIAAAACAAAAAgAAA/AAEAAAA/wAAAP8AAAD/AAAA/wAAAAACAAAAAAQABAAAGwAfAAABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQGAAQAAAACAAAAAgAAAAIAAAP+AAAD/gAAA/4AAAP8AAAD/gAAA/4AAAP+AAAAAgAAAAIAAAACAAAAAAAEAAAAEAAAA/4AAAP+AAAD/gAAA/wAAAP+AAAD/gAAA/4AAAACAAAAAgAAAAIAAAAEAAAAAgAAAAIAAAP8A/wAAAAEAAAEBgAGABAAEAAAFAAABAQEBAQEBgAEAAAABgAAA/YAEAAAA/oAAAP8AAAAAAQAAAAACgAKAAA8AAAEBAQEBAQEBAQEBAQEBAQEBgAEAAAD/gAAA/4AAAP+AAAD/AAAAAIAAAACAAAAAgAKAAAD/AAAA/4AAAP+AAAD/gAAAAQAAAACAAAAAgAAAAAAAAQGAAAAEAAQAAA8AAAEBAQEBAQEBAQEBAQEBAQEDAAEAAAD/gAAA/4AAAP+AAAD/AAAAAIAAAACAAAAAgAQAAAD/AAAA/4AAAP+AAAD+AAAAAoAAAACAAAAAgAAAAAAAAQGAAAAEAAKAAA8AAAEBAQEBAQEBAQEBAQEBAQEBgAEAAAAAgAAAAIAAAACAAAD/AAAA/4AAAP+AAAD/gAKAAAD/gAAA/4AAAP+AAAD/AAAAAIAAAACAAAAAgAAAAAAAAQGAAYAEAAQAAA8AAAEBAQEBAQEBAQEBAQEBAQEDAAEAAAD/gAAA/4AAAP+AAAD/AAAAAIAAAACAAAAAgAQAAAD/AAAA/4AAAP+AAAD/gAAAAQAAAACAAAAAgAAAAAAAAQAAAAAEAAQAABsAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAAAEAAAAAgAAAAIAAAACAAAAAgAAAAIAAAACAAAD/AAAA/4AAAP+AAAD/gAAA/4AAAP+AAAD/gAQAAAD/gAAA/4AAAP+AAAD/gAAA/4AAAP+AAAD/AAAAAIAAAACAAAAAgAAAAIAAAACAAAAAgAAAAAAAAQAAAAAEAAQAAB8AAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAAABAAAAAIAAAAEAAAAAgAAAAQAAAP+AAAD/gAAA/4AAAP+AAAD/gAAA/4AAAP8AAAAAgAAAAIAAAP+AAAD/gAQAAAD/gAAA/4AAAACAAAAAgAAA/wAAAP+AAAD/gAAA/4AAAP+AAAD/gAAA/4AAAAEAAAAAgAAAAQAAAACAAAAAAAABAAABgAQABAAADwAAAQEBAQEBAQEBAQEBAQEBAQAAAQAAAACAAAAAgAAAAgAAAP2AAAD/gAAA/4AAAP+ABAAAAP+AAAD/gAAA/4AAAP8AAAAAgAAAAIAAAACAAAAAAAABAAABgAQAAoAAAwAAAQEBAQAABAAAAPwAAoAAAP8AAAAAAAABAYAAAAKABAAAAwAAAQEBAQGAAQAAAP8ABAAAAPwAAAAAAAABAYAAAAQABAAAFwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAwABAAAA/4AAAP+AAAAAgAAAAIAAAP8AAAD/gAAA/4AAAP+AAAAAgAAAAIAAAACABAAAAP8AAAD/gAAA/wAAAP+AAAD/AAAAAIAAAACAAAAAgAAAAQAAAACAAAAAgAAAAAAAAQAAAAAEAAKAAA8AAAEBAQEBAQEBAQEBAQEBAQEAAAKAAAAAgAAAAIAAAACAAAD/AAAA/4AAAP+AAAD+AAKAAAD/gAAA/4AAAP+AAAD/AAAAAIAAAACAAAAAgAAAAAAAAQAAAYAEAAQAAA8AAAEBAQEBAQEBAQEBAQEBAQEDAAEAAAD/gAAA/4AAAP+AAAD9gAAAAgAAAACAAAAAgAQAAAD/AAAA/4AAAP+AAAD/gAAAAQAAAACAAAAAgAAAAAAAAQAAAgAEAAQAAA8AAAEBAQEBAQEBAQEBAQEBAQEAAAQAAAD/gAAA/4AAAP+AAAD/AAAA/4AAAP+AAAD/gAQAAAD/gAAA/4AAAP+AAAD/gAAAAIAAAACAAAAAgAAAAAAAAQAAAYACgAKAAAMAAAEBAQEAAAKAAAD9gAKAAAD/AAAAAAAAAQGAAAACgAKAAAMAAAEBAQEBgAEAAAD/AAKAAAD9gAAAAAAAAQAAAYAEAAQAABcAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQAAAQAAAACAAAABAAAAAIAAAAEAAAD/gAAA/4AAAP+AAAD/AAAA/4AAAP+AAAD/gAQAAAD/gAAA/4AAAACAAAAAgAAA/wAAAP+AAAD/gAAA/4AAAACAAAAAgAAAAIAAAAAAAAEAAAAABAAEAAAJAAABAQEBAQEBAQEBAYACgAAA/AAAAACAAAAAgAAAAIAEAAAA/AAAAAEAAAABAAAAAQAAAAABAAAAAAQABAAAEwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEDAAEAAAD/gAAA/4AAAP+AAAD/AAAA/oAAAAEAAAABAAAAAIAAAACABAAAAP6AAAD/AAAA/4AAAP+AAAD/gAAAAQAAAACAAAAAgAAAAQAAAAAAAAEAAAAABAAEAAATAAABAQEBAQEBAQEBAQEBAQEBAQEBAQAAAQAAAACAAAAAgAAAAQAAAAEAAAD+gAAA/wAAAP+AAAD/gAAA/4AEAAAA/wAAAP8AAAD/gAAA/4AAAP8AAAAAgAAAAIAAAACAAAABAAAAAAAAAQAAAAAEAAQAABsAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEDAAEAAAD/gAAA/4AAAP+AAAD/gAAA/4AAAP+AAAD/AAAAAIAAAACAAAAAgAAAAIAAAACAAAAAgAQAAAD/AAAA/4AAAP+AAAD/gAAA/4AAAP+AAAD/gAAAAQAAAACAAAAAgAAAAIAAAACAAAAAgAAAAAAAAQAAAAACgAQAABcAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQAAAQAAAACAAAAAgAAAAIAAAP+AAAD/gAAA/4AAAP8AAAAAgAAAAIAAAP+AAAD/gAQAAAD/gAAA/4AAAP+AAAD/AAAA/4AAAP+AAAD/gAAAAQAAAACAAAABAAAAAIAAAAAAAAEAAAAABAAEAAAfAAABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQAAAQAAAACAAAAAgAAAAIAAAACAAAAAgAAAAIAAAP8AAAD/gAAA/wAAAP+AAAD/AAAAAIAAAACAAAD/gAAA/4AEAAAA/4AAAP+AAAD/gAAA/4AAAP+AAAD/gAAA/wAAAACAAAAAgAAA/4AAAP+AAAABAAAAAIAAAAEAAAAAgAAAAAAAAQAAAAACgAQAAA8AAAEBAQEBAQEBAQEBAQEBAQEBgAEAAAD/gAAA/4AAAP+AAAD/AAAAAIAAAACAAAAAgAQAAAD9gAAA/4AAAP+AAAD/gAAAAQAAAACAAAAAgAAAAAAAAQGAAAAEAAQAAA8AAAEBAQEBAQEBAQEBAQEBAQEBgAEAAAAAgAAAAIAAAACAAAD/AAAA/4AAAP+AAAD/gAQAAAD+AAAA/4AAAP+AAAD/AAAAAIAAAACAAAAAgAAAAAAAAQAAAAAEAAKAAA8AAAEBAQEBAQEBAQEBAQEBAQEBgAKAAAD+AAAA/4AAAP+AAAD/AAAAAIAAAACAAAAAgAKAAAD/AAAA/4AAAP+AAAD/gAAAAQAAAACAAAAAgAAAAAAAAQGAAYACgAQAAAMAAAEBAQEBgAEAAAD/AAQAAAD9gAAAAAAAAQGAAYAEAAKAAAMAAAEBAQEBgAKAAAD9gAKAAAD/AAAAAAAAAQAAAAAEAAQAAB8AAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAwABAAAA/4AAAP+AAAAAgAAAAIAAAP8AAAD/gAAA/wAAAP+AAAD/AAAAAIAAAACAAAAAgAAAAIAAAACAAAAAgAQAAAD/AAAA/4AAAP8AAAD/gAAA/wAAAACAAAAAgAAA/4AAAP+AAAABAAAAAIAAAACAAAAAgAAAAIAAAACAAAAAAAABAAAAAAQABAAAIwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAAABAAAAAIAAAAEAAAAAgAAAAQAAAP+AAAD/gAAAAIAAAACAAAD/AAAA/4AAAP8AAAD/gAAA/wAAAACAAAAAgAAA/4AAAP+ABAAAAP+AAAD/gAAAAIAAAACAAAD/AAAA/4AAAP8AAAD/gAAA/wAAAACAAAAAgAAA/4AAAP+AAAABAAAAAIAAAAEAAAAAgAAAAAAAAQGAAYACgAKAAAMAAAEBAQEBgAEAAAD/AAKAAAD/AAAAAAAAAQAAAAAEAAKAABcAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQGAAQAAAACAAAAAgAAAAIAAAP8AAAD/gAAA/wAAAP+AAAD/AAAAAIAAAACAAAAAgAKAAAD/gAAA/4AAAP+AAAD/AAAAAIAAAACAAAD/gAAA/4AAAAEAAAAAgAAAAIAAAAAAAAEAAAGAAoAEAAAFAAABAQEBAQEBgAEAAAD9gAAAAYAEAAAA/YAAAAEAAAAAAQAAAAACgAKAAAUAAAEBAQEBAQAAAoAAAP8AAAD+gAKAAAD9gAAAAYAAAAABAAAAAAQABAAAHwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAAAEAAAAAgAAAAQAAAACAAAABAAAA/4AAAP+AAAAAgAAAAIAAAP8AAAD/gAAA/4AAAP+AAAD/gAAA/4AAAP+ABAAAAP+AAAD/gAAAAIAAAACAAAD/AAAA/4AAAP8AAAD/gAAA/wAAAACAAAAAgAAAAIAAAACAAAAAgAAAAIAAAAAAAAEAAAAABAAEAAALAAABAQEBAQEBAQEBAQEBgAEAAAABgAAA/oAAAP8AAAD+gAAAAYAEAAAA/oAAAP8AAAD+gAAAAYAAAAEAAAAAAAABAAAAAAQAAoAABwAAAQEBAQEBAQEAAAQAAAD+gAAA/wAAAP6AAoAAAP8AAAD+gAAAAYAAAAAAAAEBgAAABAAEAAAHAAABAQEBAQEBAQGAAQAAAAGAAAD+gAAA/wAEAAAA/oAAAP8AAAD+gAAAAAAAAQAAAAACgAQAAAcAAAEBAQEBAQEBAYABAAAA/wAAAP6AAAABgAQAAAD8AAAAAYAAAAEAAAAAAAABAAABgAQABAAABwAAAQEBAQEBAQEBgAEAAAABgAAA/AAAAAGABAAAAP6AAAD/AAAAAQAAAAAAAAQBAAEAAwADAAADAAcACwAPAAABAQEBAQEBAQEBAQEBAQEBAYABAAAA/wD/gACAAAD/gAGAAIAAAP+A/wABAAAA/wADAAAA/4AAAAAAAAD/AAAAAQAAAP8AAAAAAAAA/4AAAAACAIAAgAOAA4AACwAPAAABAQEBAQEBAQEBAQEBAQEBAQACAAAAAIAAAP+AAAD+AAAA/4AAAACAAIAAAAEAAAADgAAA/4AAAP4AAAD/gAAAAIAAAAIAAAD/gP8AAAABAAACAAAAAAQABAAAEwAfAAABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAAgAAAACAAAAAgAAA/4AAAP+AAAD+AAAA/4AAAP+AAAAAgAAAAIAAgAAA/4AAAACAAAABAAAAAIAAAP+AAAAEAAAA/4AAAP+AAAD+AAAA/4AAAP+AAAAAgAAAAIAAAAIAAAAAgAAA/4D/gAAA/wAAAP+AAAAAgAAAAQAAAACAABAAAAAABAAEAAADAAcACwAPABMAFwAbAB8AIwAnACsALwAzADcAOwA/AAABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAYAAgAAA/4ACAACAAAD/gP2AAIAAAP+AAgAAgAAA/4D9gACAAAD/gAIAAIAAAP+A/YAAgAAA/4ACAACAAAD/gP+AAIAAAP+AAgAAgAAA/4D9gACAAAD/gAIAAIAAAP+A/YAAgAAA/4ACAACAAAD/gP2AAIAAAP+AAgAAgAAA/4AEAAAA/4AAAACAAAD/gAAAAAAAAP+AAAAAgAAA/4AAAAAAAAD/gAAAAIAAAP+AAAAAAAAA/4AAAACAAAD/gAAAAAAAAP+AAAAAgAAA/4AAAAAAAAD/gAAAAIAAAP+AAAAAAAAA/4AAAACAAAD/gAAAAAAAAP+AAAAAgAAA/4AAAAAQAAAAAAQABAAAAwAHAAsADwATABcAGwAfACMAJwArAC8AMwA3ADsAPwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQAAAIAAAP+AAgAAgAAA/4D+gACAAAD/gAIAAIAAAP+A/oAAgAAA/4ACAACAAAD/gP6AAIAAAP+AAgAAgAAA/4D8gACAAAD/gAIAAIAAAP+A/oAAgAAA/4ACAACAAAD/gP6AAIAAAP+AAgAAgAAA/4D+gACAAAD/gAIAAIAAAP+ABAAAAP+AAAAAgAAA/4AAAAAAAAD/gAAAAIAAAP+AAAAAAAAA/4AAAACAAAD/gAAAAAAAAP+AAAAAgAAA/4AAAAAAAAD/gAAAAIAAAP+AAAAAAAAA/4AAAACAAAD/gAAAAAAAAP+AAAAAgAAA/4AAAAAAAAD/gAAAAIAAAP+AAAAAAwCAAIADgAQAABcAGwAfAAABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQIAAIAAAAEAAAD/AAAAAIAAAP+AAAABAAAA/wAAAP+AAAD/AAAA/4AAAACAAAABAP+AAAAAgAAA/4AAAACAAAAEAAAA/4AAAP+AAAD/gAAA/4AAAP+AAAD/gAAA/4AAAACAAAAAgAAAAYAAAACAAAD/gP+AAAAAgP8A/4AAAACAAAAAAQCAAIADgAOAAA8AAAEBAQEBAQEBAQEBAQEBAQEBAAIAAAAAgAAA/4AAAP+AAAD/AAAA/4AAAP+AAAAAgAOAAAD/gAAA/wAAAP+AAAD/AAAAAQAAAACAAAABAAAAAAAAAgCAAIADgAOAAAMACQAAAQEBAQEBAQEBAQCAAwAAAP0AAYAAAP8AAAACAAAAA4AAAP0AAAACgP8AAAD/AAAAAgAAAAABAIAAgAOAA4AAAwAAAQEBAQCAAwAAAP0AA4AAAP0AAAAAAAACAIAAgAOAA4AAAwALAAABAQEBAQEBAQEBAQEAgAMAAAD9AACAAAACAAAA/4AAAP8AAAADgAAA/QAAAAKA/gAAAAIAAAD/AAAAAQAAAQAAAAAEAAQAABMAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQACAAAAAIAAAACAAAD/gAAA/4AAAP4AAAD/gAAA/4AAAACAAAAAgAQAAAD/gAAA/4AAAP4AAAD/gAAA/4AAAACAAAAAgAAAAgAAAACAAAAAAAABAQABAAMAAwAACwAAAQEBAQEBAQEBAQEBAYABAAAAAIAAAP+AAAD/AAAA/4AAAACAAwAAAP+AAAD/AAAA/4AAAACAAAABAAAAAAAAAQCAAQAEAAQAABsAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQECAACAAAAAgAAAAQAAAP+AAAD/gAAAAIAAAP8AAAD/gAAA/wAAAACAAAD/gAAA/4AAAAEAAAAAgAQAAAD/gAAA/4AAAP+AAAD/gAAA/4AAAP+AAAAAgAAA/4AAAACAAAAAgAAAAIAAAACAAAAAgAAAAAAABgCAAIAEAAQAAAMABwALAA8AEwAXAAABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAgAOAAAD8gAEAAAAAgAAAAIAAAACAAAD+AAAAAIAAAAGAAAAAgAAA/gAAAAGAAAAEAAAA/IAAAAMA/wAAAAEAAAD/AAAAAQD+gP+AAAAAgAAA/4AAAACA/4D/gAAAAIAABgCAAIAEAAQAAAMABwALAA8AEwAXAAABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAgAOAAAD8gAEAAAAAgAAAAIAAAACAAAD+gAAAAYAAAP4AAAAAgAAAAYAAAACAAAAEAAAA/IAAAAMA/wAAAAEAAAD/AAAAAQD+gP+AAAAAgP+A/4AAAACAAAD/gAAAAIAABgCAAIAEAAQAABMAFwAbAB8AIwAnAAABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAgAAgAAAAIAAAAEAAAD/AAAA/4AAAP+AAAD/gAAA/wAAAAEAAAAAgAAAAAAAgAAA/oAAgAAA/4ACAACAAAD/gP4AAIAAAP+AAgAAgAAA/4AEAAAA/wAAAP+AAAD/gAAA/4AAAP8AAAABAAAAAIAAAACAAAAAgAAA/4D/gAAAAIABAAAA/4AAAACAAAD/gAAA/oAAAP+AAAAAgAAA/4AAAAACAQAAgAOABAAAFwAbAAABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAYABgAAAAIAAAP+AAAD/gAAAAIAAAP+AAAD/gAAA/4AAAACAAAD/gAAAAQAAAP8A/4AAgAAA/4AEAAAA/4AAAP8AAAD/gAAA/4AAAP+AAAD/gAAAAIAAAACAAAAAgAAAAIAAAAEAAAAAAAAA/wAAAAACAIAAgAQABAAAFwAbAAABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAYACgAAA/4AAAP+AAAD/gAAAAIAAAP+AAAD+gAAAAQAAAP8AAAABAAAAAIAAAP8A/wAAgAAA/4AEAAAA/gAAAAEAAAD/gAAA/4AAAP8AAAD/gAAAAIAAAAEAAAAAgAAAAIAAAACAAAD+gAAA/wAAAAABAIAAgAQABAAAGwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQIAAIAAAACAAAAAgAAAAIAAAP8AAAD/gAAAAIAAAP6AAAAAgAAA/4AAAP8AAAAAgAAAAIAAAACABAAAAP+AAAD/gAAA/4AAAP8AAAAAgAAA/wAAAP+AAAAAgAAAAQAAAP+AAAABAAAAAIAAAACAAAAAAAABAIAAgAQABAAAGwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQGAAYAAAP+AAAAAgAAAAQAAAP8AAAD/gAAAAIAAAP6AAAAAgAAA/4AAAP8AAAABAAAAAIAAAP+ABAAAAP8AAAD/gAAAAIAAAP6AAAAAgAAA/wAAAP+AAAAAgAAAAQAAAP+AAAABgAAA/4AAAACAAAAAAAABAIAAgAQABAAAFwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQABAAAAAIAAAAEAAAAAgAAA/4AAAP+AAAD/gAAA/4AAAP+AAAD/gAAA/4AAAACABAAAAP+AAAAAgAAA/4AAAP6AAAD/gAAA/4AAAP+AAAAAgAAAAIAAAACAAAABgAAAAAAAAQCAAIAEAAQAABsAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQECAACAAAAAgAAAAIAAAACAAAD/gAAA/4AAAP+AAAD/gAAA/4AAAP+AAAD/gAAAAIAAAACAAAAAgAQAAAD/gAAA/4AAAP+AAAD/gAAA/4AAAP+AAAD/gAAAAIAAAACAAAAAgAAAAIAAAACAAAAAgAAAAAAAAQEAAIADgAQAAAsAAAEBAQEBAQEBAQEBAQIAAYAAAP8AAAD/gAAA/wAAAACAAAAAgAQAAAD/AAAA/gAAAP+AAAABAAAAAIAAAAAAAAEAgACABAAEAAATAAABAQEBAQEBAQEBAQEBAQEBAQEBAQGAAoAAAP+AAAD/AAAAAIAAAACAAAD+gAAA/4AAAP8AAAAAgAAAAIAEAAAA/QAAAP+AAAABAAAAAIAAAAEAAAD+AAAA/4AAAAEAAAAAgAAAAAAAAAAYASYAAQAAAAAAAAAIAAAAAQAAAAAAAQAIAAgAAQAAAAAAAgAHABAAAQAAAAAAAwAIABcAAQAAAAAABAAQAB8AAQAAAAAABQALAC8AAQAAAAAABgAIADoAAQAAAAAACQAJAEIAAQAAAAAACgA6AEsAAQAAAAAADQARAIUAAQAAAAAADgAyAJYAAQAAAAAAEwAMAMgAAwABBAkAAAAQANQAAwABBAkAAQAQAOQAAwABBAkAAgAOAPQAAwABBAkAAwAQAQIAAwABBAkABAAgARIAAwABBAkABQAWATIAAwABBAkABgAQAUgAAwABBAkACQASAVgAAwABBAkACgB0AWoAAwABBAkADQAiAd4AAwABBAkADgBkAgAAAwABBAkAEwAYAmQoYykgMjAyMlVyc2FGb250UmVndWxhclVyc2FGb250VXJzYUZvbnQgUmVndWxhclZlcnNpb24gMS4wVXJzYUZvbnRVcnNhRnJhbmtBbiBvcGVuIGxpY2VuY2UgZ2VuZXJhbCBwdXJwb3NlIHRleHRtb2RlIGZvbnQgYnkgVXJzYUZyYW5rQ0MwIDEuMCBVbml2ZXJzYWxodHRwczovL2NyZWF0aXZlY29tbW9ucy5vcmcvcHVibGljZG9tYWluL3plcm8vMS4wL0hlbGxvIFdvcmxkIQAoAGMAKQAgADIAMAAyADIAVQByAHMAYQBGAG8AbgB0AFIAZQBnAHUAbABhAHIAVQByAHMAYQBGAG8AbgB0AFUAcgBzAGEARgBvAG4AdAAgAFIAZQBnAHUAbABhAHIAVgBlAHIAcwBpAG8AbgAgADEALgAwAFUAcgBzAGEARgBvAG4AdABVAHIAcwBhAEYAcgBhAG4AawBBAG4AIABvAHAAZQBuACAAbABpAGMAZQBuAGMAZQAgAGcAZQBuAGUAcgBhAGwAIABwAHUAcgBwAG8AcwBlACAAdABlAHgAdABtAG8AZABlACAAZgBvAG4AdAAgAGIAeQAgAFUAcgBzAGEARgByAGEAbgBrAEMAQwAwACAAMQAuADAAIABVAG4AaQB2AGUAcgBzAGEAbABoAHQAdABwAHMAOgAvAC8AYwByAGUAYQB0AGkAdgBlAGMAbwBtAG0AbwBuAHMALgBvAHIAZwAvAHAAdQBiAGwAaQBjAGQAbwBtAGEAaQBuAC8AegBlAHIAbwAvADEALgAwAC8ASABlAGwAbABvACAAVwBvAHIAbABkACEAAAADAAAAAAAAAGYAMwAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==\r\n";
 
 window.P5Asciify = P5Asciify; // Expose P5Asciify to the global scope
 
 window.preload = function () { }; // In case the user doesn't define a preload function, we need to define it here to avoid errors
+window.draw = function () { noLoop(); }; // In case the user doesn't define a draw function, we need to define it here to avoid errors
 
 /**
  * Preloads the ASCII font for the P5Asciify library.
@@ -1448,29 +1450,6 @@ p5.prototype.setupAsciifier = function () {
 p5.prototype.registerMethod("afterSetup", p5.prototype.setupAsciifier);
 
 /**
- * Updates the ASCII font for the P5Asciify library.
- * This method is deprecated and will be removed in v0.1.0. It currently calls the loadAsciiFont() method.
- *
- * @function updateAsciiFont
- * @memberof p5
- * @param {string|Object} font - The path to the font file or the font object.
- * @deprecated Use {@link loadAsciiFont} instead.
- * 
- * @example
- * Updating the ASCII font using a path
- * updateAsciiFont('path/to/font.ttf');
- *
- * @example
- * Updating the ASCII font using an object
- * const fontObject = ...; // Assume this is a valid font object
- * updateAsciiFont(fontObject);
- */
-p5.prototype.updateAsciiFont = function (font) {
-    console.warn(`updateAsciiFont() is deprecated. Use loadAsciiFont() instead. updateAsciiFont() will be removed in v0.1.0.`);
-    this.loadAsciiFont(font);
-};
-
-/**
  * Sets the default options for the P5Asciify library.
  *
  * @function setAsciiOptions
@@ -1481,8 +1460,35 @@ p5.prototype.updateAsciiFont = function (font) {
  * TODO: Add example
  */
 p5.prototype.setAsciiOptions = function (options) {
-    P5Asciify.setDefaultOptions(options, false);
+    const validOptions = ["common", "brightness", "edge"];
+    const unknownOptions = Object.keys(options).filter(option => !validOptions.includes(option));
+
+    if (unknownOptions.length) {
+        console.warn(`P5Asciify: Unknown options detected (${unknownOptions.join(', ')}). Refer to the documentation for valid options.`);
+        unknownOptions.forEach(option => delete options[option]);
+    }
+
+    const { brightness: brightnessOptions, edge: edgeOptions, common: commonOptions } = options;
+
+    const colorOptions = [brightnessOptions, edgeOptions];
+    colorOptions.forEach(opt => {
+        if (opt?.characterColor) opt.characterColor = P5AsciifyUtils.hexToShaderColor(opt.characterColor);
+        if (opt?.backgroundColor) opt.backgroundColor = P5AsciifyUtils.hexToShaderColor(opt.backgroundColor);
+    });
+
+    if (commonOptions?.fontSize && (commonOptions.fontSize < 1 || commonOptions.fontSize > 128)) {
+        console.warn(`P5Asciify: Font size ${commonOptions.fontSize} is out of bounds. It should be between 1 and 128. Font size not updated.`);
+        delete commonOptions.fontSize;
+    }
+
+    if (edgeOptions?.characters !== undefined && edgeOptions.characters.length !== 8) {
+        console.warn(`P5Asciify: The edge character set must contain exactly 8 characters. Character set not updated.`);
+        delete edgeOptions.characters;
+    }
+
+    P5Asciify.setDefaultOptions(brightnessOptions, edgeOptions, commonOptions);
 };
+
 
 /**
  * Adds an ASCII effect to the P5Asciify library.
@@ -1505,13 +1511,27 @@ p5.prototype.setAsciiOptions = function (options) {
  * p5.prototype.addAsciiEffect('post', 'invert', { });
  */
 p5.prototype.addAsciiEffect = function (effectType, effectName, userParams = {}) {
-    if (effectType === 'pre') {
-        return P5Asciify.preEffectManager.addEffect(effectName, userParams);
-    } else if (effectType === 'post') {
-        return P5Asciify.afterEffectManager.addEffect(effectName, userParams);
-    } else {
+    const managers = {
+        pre: P5Asciify.preEffectManager,
+        post: P5Asciify.afterEffectManager
+    };
+
+    const manager = managers[effectType];
+    if (!manager) {
         throw new P5AsciifyError(`Invalid effect type '${effectType}'. Valid types are 'pre' and 'post'.`);
     }
+
+    if (!manager.effectConstructors[effectName]) {
+        throw new P5AsciifyError(`Effect '${effectName}' does not exist! Available effects: ${Object.keys(manager.effectConstructors).join(", ")}`);
+    }
+
+    const validParams = Object.keys(manager.effectParams[effectName]);
+    const invalidKeys = Object.keys(userParams).filter(key => !validParams.includes(key));
+    if (invalidKeys.length > 0) {
+        throw new P5AsciifyError(`Invalid parameter(s) for effect '${effectName}': ${invalidKeys.join(", ")}\nValid parameters are: ${validParams.join(", ")}`);
+    }
+
+    return manager.addEffect(effectName, userParams);
 };
 
 /**
@@ -1595,6 +1615,11 @@ p5.prototype.swapAsciiEffects = function (effectInstance1, effectInstance2) {
 
     // Swap the effects
     if (manager1 !== manager2) {
+
+        if (manager1.hasEffect(effectInstance2) || manager2.hasEffect(effectInstance1)) {
+            throw new P5AsciifyError(`Effects cannot be swapped because one effect instance is already present in the other's manager.`);
+        }
+
         manager1.removeEffect(effectInstance1);
         manager2.removeEffect(effectInstance2);
 

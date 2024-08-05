@@ -16,6 +16,10 @@ class P5AsciifyEffect {
         this._enabled = true;
     }
 
+    setup() {
+        // Override this method in subclasses to set up the effect.
+    }
+
     /**
      * Sets the shader uniforms for the effect.
      * @param {Object} framebuffer - The framebuffer to apply the effect to.
