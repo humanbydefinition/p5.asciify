@@ -107,11 +107,6 @@ class P5Asciify {
         this.sampleShader = createShader(vertexShader, sampleShader);
         this.sampleFramebuffer = createFramebuffer({ format: this.FLOAT, width: this.grid.cols, height: this.grid.rows });
 
-        this.p5Canvas = _renderer;
-
-                // Assign the first framebuffer from the set to this.p5Canvas
-        this.p5Canvas = _renderer.framebuffers.values().next().value;
-
         this.asciiFramebufferDimensions = { width: this.asciiBrightnessFramebuffer.width, height: this.asciiBrightnessFramebuffer.height };
     }
 
@@ -136,7 +131,7 @@ class P5Asciify {
     static asciify() {
         this.preEffectNextFramebuffer.begin();
         clear(); // do not remove this, even though it's tempting
-        image(this.p5Canvas, -width / 2, -height / 2);
+        image(_renderer, -width / 2, -height / 2);
         this.preEffectNextFramebuffer.end();
 
         for (const effect of this.preEffectManager._effects) {
