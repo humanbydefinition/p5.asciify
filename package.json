@@ -3,6 +3,7 @@
   "version": "0.1.1",
   "description": "Apply real-time ASCII conversion to your favourite p5.js sketches instantly.",
   "type": "module",
+  "main": "dist/p5.asciify.min.js",
   "dependencies": {
     "p5": ">=1.8.0"
   },
