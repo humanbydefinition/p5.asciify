@@ -1034,6 +1034,8 @@ class P5Asciify {
 
     static afterEffectManager = new P5AsciifyEffectManager(this.colorPalette);
 
+    static sketchFramebuffer = null;
+
     static preEffectPrevFramebuffer = null;
     static preEffectNextFramebuffer = null;
 
@@ -1063,6 +1065,8 @@ class P5Asciify {
      */
     static setup() {
         pixelDensity(1);
+
+        this.sketchFramebuffer = createFramebuffer({ format: FLOAT });
 
         this.brightnessCharacterSet.setup({ type: "brightness", font: this.font, characters: this.brightnessOptions.characters, fontSize: this.commonOptions.fontSize });
         this.edgeCharacterSet.setup({ type: "edge", font: this.font, characters: this.edgeOptions.characters, fontSize: this.commonOptions.fontSize });
@@ -1116,7 +1120,7 @@ class P5Asciify {
     static asciify() {
         this.preEffectNextFramebuffer.begin();
         clear(); // do not remove this, even though it's tempting
-        image(_renderer, -width / 2, -height / 2);
+        image(this.sketchFramebuffer, -width / 2, -height / 2);
         this.preEffectNextFramebuffer.end();
 
         for (const effect of this.preEffectManager._effects) {
@@ -1637,7 +1641,10 @@ p5.prototype.swapAsciiEffects = function (effectInstance1, effectInstance2) {
  * Adding a push before draw
  * p5.prototype.preDrawAddPush();
  */
-p5.prototype.preDrawAddPush = function () { this.push(); };
+p5.prototype.preDrawAddPush = function () {
+    P5Asciify.sketchFramebuffer.begin();
+    this.push();
+};
 p5.prototype.registerMethod("pre", p5.prototype.preDrawAddPush);
 
 /**
@@ -1648,7 +1655,10 @@ p5.prototype.registerMethod("pre", p5.prototype.preDrawAddPush);
  * @function postDrawAddPop
  * @memberof p5
  */
-p5.prototype.postDrawAddPop = function () { this.pop(); };
+p5.prototype.postDrawAddPop = function () {
+    this.pop();
+    P5Asciify.sketchFramebuffer.end();
+};
 p5.prototype.registerMethod("post", p5.prototype.postDrawAddPop);
 
 /**
