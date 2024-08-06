@@ -133,14 +133,23 @@ class P5Asciify {
      * Runs the rendering pipeline for the P5Asciify library.
      */
     static asciify() {
+        // Initial rendering to preEffectNextFramebuffer
         this.preEffectNextFramebuffer.begin();
         clear(); // do not remove this, even though it's tempting
         image(this.sketchFramebuffer, -width / 2, -height / 2);
         this.preEffectNextFramebuffer.end();
 
+        // Copy preEffectNextFramebuffer to preEffectPrevFramebuffer
+        this.preEffectPrevFramebuffer.begin();
+        clear(); // do not remove this, even though it's tempting
+        image(this.sketchFramebuffer, -width / 2, -height / 2);
+        this.preEffectPrevFramebuffer.end();
+
         for (const effect of this.preEffectManager._effects) {
-            [this.preEffectPrevFramebuffer, this.preEffectNextFramebuffer] = [this.preEffectNextFramebuffer, this.preEffectPrevFramebuffer];
             if (effect.enabled) {
+                // Swap framebuffers only if the effect is enabled
+                [this.preEffectPrevFramebuffer, this.preEffectNextFramebuffer] = [this.preEffectNextFramebuffer, this.preEffectPrevFramebuffer];
+
                 this.preEffectNextFramebuffer.begin();
                 shader(effect.shader);
                 effect.setUniforms(this.preEffectPrevFramebuffer);
@@ -224,9 +233,20 @@ class P5Asciify {
         }
         this.postEffectNextFramebuffer.end();
 
+        this.postEffectPrevFramebuffer.begin();
+        clear(); // do not remove this, even though it's tempting
+        if (this.edgeOptions.enabled) {
+            image(this.asciiEdgeFramebuffer, -width / 2, -height / 2);
+        } else if (this.brightnessOptions.enabled) {
+            image(this.asciiBrightnessFramebuffer, -width / 2, -height / 2);
+        } else {
+            image(this.preEffectNextFramebuffer, -width / 2, -height / 2);
+        }
+        this.postEffectPrevFramebuffer.end();
+
         for (const effect of this.afterEffectManager._effects) {
-            [this.postEffectPrevFramebuffer, this.postEffectNextFramebuffer] = [this.postEffectNextFramebuffer, this.postEffectPrevFramebuffer];
             if (effect.enabled) {
+                [this.postEffectPrevFramebuffer, this.postEffectNextFramebuffer] = [this.postEffectNextFramebuffer, this.postEffectPrevFramebuffer];
                 this.postEffectNextFramebuffer.begin();
                 shader(effect.shader);
                 effect.setUniforms(this.postEffectPrevFramebuffer);
