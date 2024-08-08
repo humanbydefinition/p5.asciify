@@ -991,9 +991,7 @@ var asciiShader = "#version 300 es\nprecision highp float;\n#define GLSLIFY 1\nu
 
 var sobelShader = "#version 300 es\nprecision highp float;\n#define GLSLIFY 1\nin vec2 v_texCoord;out vec4 fragColor;uniform sampler2D u_texture;uniform vec2 u_textureSize;uniform float u_threshold;void main(){vec2 texelSize=1.0f/u_textureSize;float kernelX[9];float kernelY[9];kernelX[0]=-1.0f;kernelX[1]=0.0f;kernelX[2]=1.0f;kernelX[3]=-2.0f;kernelX[4]=0.0f;kernelX[5]=2.0f;kernelX[6]=-1.0f;kernelX[7]=0.0f;kernelX[8]=1.0f;kernelY[0]=-1.0f;kernelY[1]=-2.0f;kernelY[2]=-1.0f;kernelY[3]=0.0f;kernelY[4]=0.0f;kernelY[5]=0.0f;kernelY[6]=1.0f;kernelY[7]=2.0f;kernelY[8]=1.0f;vec3 texColor[9];for(int i=0;i<3;i++){for(int j=0;j<3;j++){texColor[i*3+j]=texture(u_texture,v_texCoord+vec2(i-1,j-1)*texelSize).rgb;}}vec3 sobelX=vec3(0.0f);vec3 sobelY=vec3(0.0f);for(int i=0;i<9;i++){sobelX+=kernelX[i]*texColor[i];sobelY+=kernelY[i]*texColor[i];}vec3 sobel=sqrt(sobelX*sobelX+sobelY*sobelY);float intensity=length(sobel)/sqrt(3.0f);float angleDeg=degrees(atan(sobelY.r,sobelX.r));vec3 edgeColor=vec3(0.0f);if(intensity>u_threshold){if(angleDeg>=-22.5f&&angleDeg<22.5f){edgeColor=vec3(0.1f);}else if(angleDeg>=22.5f&&angleDeg<67.5f){edgeColor=vec3(0.2f);}else if(angleDeg>=67.5f&&angleDeg<112.5f){edgeColor=vec3(0.3f);}else if(angleDeg>=112.5f&&angleDeg<157.5f){edgeColor=vec3(0.4f);}else if(angleDeg>=157.5f||angleDeg<-157.5f){edgeColor=vec3(0.6f);}else if(angleDeg>=-157.5f&&angleDeg<-112.5f){edgeColor=vec3(0.7f);}else if(angleDeg>=-112.5f&&angleDeg<-67.5f){edgeColor=vec3(0.8f);}else if(angleDeg>=-67.5f&&angleDeg<-22.5f){edgeColor=vec3(0.9f);}}fragColor=vec4(edgeColor,1.0f);}"; // eslint-disable-line
 
-var sampleShader = "#version 300 es\nprecision highp float;\n#define GLSLIFY 1\nuniform sampler2D u_image;uniform vec2 u_gridCellDimensions;uniform int u_threshold;out vec4 outColor;const vec3 BLACK=vec3(0.0f,0.0f,0.0f);const int MAX_HISTOGRAM_SIZE=16;vec3 colorHistogram[MAX_HISTOGRAM_SIZE];int countHistogram[MAX_HISTOGRAM_SIZE];void main(){vec2 bufferDimensions=u_gridCellDimensions;vec2 imageDimensions=vec2(textureSize(u_image,0));vec2 gridCellDimensions=vec2(imageDimensions.x/bufferDimensions.x,imageDimensions.y/bufferDimensions.y);ivec2 coords=ivec2(gl_FragCoord.xy);int gridX=coords.x;int gridY=coords.y;ivec2 cellOrigin=ivec2(gridX*int(gridCellDimensions.x),gridY*int(gridCellDimensions.y));int histogramIndex=0;int nonBlackCount=0;for(int i=0;i<MAX_HISTOGRAM_SIZE;i++){colorHistogram[i]=BLACK;countHistogram[i]=0;}for(int i=0;i<int(gridCellDimensions.x);i+=1){for(int j=0;j<int(gridCellDimensions.y);j+=1){ivec2 pixelCoords=cellOrigin+ivec2(i,j);vec3 color=texelFetch(u_image,pixelCoords,0).rgb;if(color==BLACK)continue;nonBlackCount++;bool found=false;for(int k=0;k<histogramIndex;k++){if(colorHistogram[k]==color){countHistogram[k]++;found=true;break;}}if(!found&&histogramIndex<MAX_HISTOGRAM_SIZE){colorHistogram[histogramIndex]=color;countHistogram[histogramIndex]=1;histogramIndex++;}}}vec3 mostFrequentColor=BLACK;int highestCount=0;for(int k=0;k<histogramIndex;k++){if(countHistogram[k]>highestCount){mostFrequentColor=colorHistogram[k];highestCount=countHistogram[k];}}if(nonBlackCount<u_threshold){outColor=vec4(BLACK,1.0f);}else{outColor=vec4(mostFrequentColor,1.0f);}}"; // eslint-disable-line
-
-var isometricShader = "#version 300 es\nprecision highp float;\n#define GLSLIFY 1\nuniform sampler2D u_asciiTexture;uniform vec2 u_resolution;uniform float u_tileWidth;uniform float u_tileHeight;out vec4 fragColor;vec4 sampleAsciiTexture(vec2 uv){vec2 texSize=u_resolution;vec2 texelCoords=uv*texSize;vec2 texelFloor=floor(texelCoords);vec2 texelFrac=fract(texelCoords);vec4 c00=texelFetch(u_asciiTexture,ivec2(texelFloor),0);vec4 c10=texelFetch(u_asciiTexture,ivec2(texelFloor)+ivec2(1,0),0);vec4 c01=texelFetch(u_asciiTexture,ivec2(texelFloor)+ivec2(0,1),0);vec4 c11=texelFetch(u_asciiTexture,ivec2(texelFloor)+ivec2(1,1),0);vec4 i1=mix(c00,c10,texelFrac.x);vec4 i2=mix(c01,c11,texelFrac.x);return mix(i1,i2,texelFrac.y);}void main(){vec2 ndc=(gl_FragCoord.xy/u_resolution)*2.0-1.0;float aspectRatio=u_resolution.x/u_resolution.y;float tileAspectRatio=u_tileWidth/u_tileHeight;float scale=min(u_resolution.x/(u_tileWidth+u_tileHeight*aspectRatio),u_resolution.y/(u_tileHeight+u_tileWidth*aspectRatio));vec2 isoUV;isoUV.x=(ndc.x+ndc.y)*0.5*u_tileWidth;isoUV.y=(ndc.y-ndc.x)*0.25*u_tileHeight*aspectRatio;isoUV.y*=tileAspectRatio;isoUV=isoUV/scale+0.5;if(isoUV.x>=0.0&&isoUV.x<=1.0&&isoUV.y>=0.0&&isoUV.y<=1.0){vec4 sampledColor=sampleAsciiTexture(isoUV);float sharpness=2.0;vec4 blurred=(sampleAsciiTexture(isoUV+vec2(1.0/u_resolution.x,0.0))+sampleAsciiTexture(isoUV-vec2(1.0/u_resolution.x,0.0))+sampleAsciiTexture(isoUV+vec2(0.0,1.0/u_resolution.y))+sampleAsciiTexture(isoUV-vec2(0.0,1.0/u_resolution.y)))*0.25;vec4 sharpened=mix(blurred,sampledColor,sharpness);fragColor=vec4(sharpened.rgb,1.0);}else{fragColor=vec4(0.0,0.0,0.0,1.0);}}"; // eslint-disable-line
+var sampleShader = "#version 300 es\nprecision highp float;\n#define GLSLIFY 1\nuniform sampler2D u_image;uniform vec2 u_gridCellDimensions;uniform int u_threshold;out vec4 outColor;const vec3 BLACK=vec3(0.0f,0.0f,0.0f);const int MAX_HISTOGRAM_SIZE=16;vec3 colorHistogram[MAX_HISTOGRAM_SIZE];int countHistogram[MAX_HISTOGRAM_SIZE];void main(){vec2 bufferDimensions=u_gridCellDimensions;vec2 imageDimensions=vec2(textureSize(u_image,0));vec2 gridCellDimensions=vec2(imageDimensions.x/bufferDimensions.x,imageDimensions.y/bufferDimensions.y);ivec2 coords=ivec2(gl_FragCoord.xy);int gridX=coords.x;int gridY=coords.y;ivec2 cellOrigin=ivec2(round(float(gridX)*gridCellDimensions.x),round(float(gridY)*gridCellDimensions.y));int histogramIndex=0;int nonBlackCount=0;for(int i=0;i<MAX_HISTOGRAM_SIZE;i++){colorHistogram[i]=BLACK;countHistogram[i]=0;}for(int i=0;i<int(round(gridCellDimensions.x));i+=1){for(int j=0;j<int(round(gridCellDimensions.y));j+=1){ivec2 pixelCoords=cellOrigin+ivec2(i,j);if(pixelCoords.x>=int(imageDimensions.x)||pixelCoords.y>=int(imageDimensions.y))continue;vec3 color=texelFetch(u_image,pixelCoords,0).rgb;if(color==BLACK)continue;nonBlackCount++;bool found=false;for(int k=0;k<histogramIndex;k++){if(colorHistogram[k]==color){countHistogram[k]++;found=true;break;}}if(!found&&histogramIndex<MAX_HISTOGRAM_SIZE){colorHistogram[histogramIndex]=color;countHistogram[histogramIndex]=1;histogramIndex++;}}}vec3 mostFrequentColor=BLACK;int highestCount=0;for(int k=0;k<histogramIndex;k++){if(countHistogram[k]>highestCount){mostFrequentColor=colorHistogram[k];highestCount=countHistogram[k];}}if(nonBlackCount<u_threshold){outColor=vec4(BLACK,1.0f);}else{outColor=vec4(mostFrequentColor,1.0f);}}"; // eslint-disable-line
 
 /**
  * @class P5Asciify
@@ -1028,10 +1026,6 @@ class P5Asciify {
         sobelThreshold: 0.5,
         sampleThreshold: 16,
         rotationAngle: 0,
-    };
-
-    static isoOptions = {
-        enabled: false,
     };
 
     static colorPalette = new P5AsciifyColorPalette();
@@ -1089,9 +1083,6 @@ class P5Asciify {
 
         this.postEffectPrevFramebuffer = createFramebuffer({ format: FLOAT });
         this.postEffectNextFramebuffer = createFramebuffer({ format: FLOAT });
-
-        this.isometricShader = createShader(vertexShader, isometricShader);
-        this.isometricFramebuffer = createFramebuffer({ format: this.FLOAT });
 
         this.asciiShader = createShader(vertexShader, asciiShader);
         this.asciiBrightnessFramebuffer = createFramebuffer({ format: this.FLOAT });
@@ -1214,34 +1205,9 @@ class P5Asciify {
             this.asciiEdgeFramebuffer.end();
         }
 
-        if (this.isoOptions.enabled) {
-            let isometricInputFramebuffer = null;
-
-            if (this.edgeOptions.enabled) {
-                isometricInputFramebuffer = this.asciiEdgeFramebuffer;
-            } else if (this.brightnessOptions.enabled) {
-                isometricInputFramebuffer = this.asciiBrightnessFramebuffer;
-            } else {
-                isometricInputFramebuffer = this.preEffectNextFramebuffer;
-            }
-
-            this.isometricFramebuffer.begin();
-            shader(this.isometricShader);
-            this.isometricShader.setUniform('u_asciiTexture', isometricInputFramebuffer);
-            this.isometricShader.setUniform('u_resolution', [this.asciiBrightnessFramebuffer.width, this.asciiBrightnessFramebuffer.height]);
-            this.isometricShader.setUniform('u_tileWidth', this.grid.cellWidth);
-            this.isometricShader.setUniform('u_tileHeight', this.grid.cellHeight);
-            this.isometricShader.setUniform('u_zoom', 64);
-            this.isometricShader.setUniform('u_textureSize', [this.asciiBrightnessFramebuffer.width, this.asciiBrightnessFramebuffer.height]);
-            rect(0, 0, width, height);
-            this.isometricFramebuffer.end();
-        }
-
         this.postEffectNextFramebuffer.begin();
         clear(); // do not remove this, even though it's tempting
-        if (this.isoOptions.enabled) {
-            image(this.isometricFramebuffer, -width / 2, -height / 2);
-        } else if (this.edgeOptions.enabled) {
+        if (this.edgeOptions.enabled) {
             image(this.asciiEdgeFramebuffer, -width / 2, -height / 2);
         } else if (this.brightnessOptions.enabled) {
             image(this.asciiBrightnessFramebuffer, -width / 2, -height / 2);
@@ -1252,9 +1218,7 @@ class P5Asciify {
 
         this.postEffectPrevFramebuffer.begin();
         clear(); // do not remove this, even though it's tempting
-        if (this.isoOptions.enabled) {
-            image(this.isometricFramebuffer, -width / 2, -height / 2);
-        } else if (this.edgeOptions.enabled) {
+        if (this.edgeOptions.enabled) {
             image(this.asciiEdgeFramebuffer, -width / 2, -height / 2);
         } else if (this.brightnessOptions.enabled) {
             image(this.asciiBrightnessFramebuffer, -width / 2, -height / 2);
@@ -1283,7 +1247,7 @@ class P5Asciify {
      * Sets the default options for the P5Asciify library.
      * @param {object} options 
      */
-    static setDefaultOptions(brightnessOptions, edgeOptions, commonOptions, isoOptions) {
+    static setDefaultOptions(brightnessOptions, edgeOptions, commonOptions) {
 
         // The parameters are pre-processed, so we can just spread them into the class variables
         this.brightnessOptions = {
@@ -1297,10 +1261,6 @@ class P5Asciify {
         this.commonOptions = {
             ...this.commonOptions,
             ...commonOptions
-        };
-        this.isoOptions = {
-            ...this.isoOptions,
-            ...isoOptions
         };
 
         if (frameCount == 0) { // If we are still in the users setup(), the characterset and grid have not been initialized yet.
@@ -1517,7 +1477,7 @@ p5.prototype.registerMethod("afterSetup", p5.prototype.setupAsciifier);
  * TODO: Add example
  */
 p5.prototype.setAsciiOptions = function (options) {
-    const validOptions = ["common", "brightness", "edge", "iso"];
+    const validOptions = ["common", "brightness", "edge"];
     const unknownOptions = Object.keys(options).filter(option => !validOptions.includes(option));
 
     if (unknownOptions.length) {
@@ -1525,7 +1485,7 @@ p5.prototype.setAsciiOptions = function (options) {
         unknownOptions.forEach(option => delete options[option]);
     }
 
-    const { brightness: brightnessOptions, edge: edgeOptions, common: commonOptions, iso: isoOptions } = options;
+    const { brightness: brightnessOptions, edge: edgeOptions, common: commonOptions } = options;
 
     const colorOptions = [brightnessOptions, edgeOptions];
     colorOptions.forEach(opt => {
@@ -1543,7 +1503,7 @@ p5.prototype.setAsciiOptions = function (options) {
         delete edgeOptions.characters;
     }
 
-    P5Asciify.setDefaultOptions(brightnessOptions, edgeOptions, commonOptions, isoOptions);
+    P5Asciify.setDefaultOptions(brightnessOptions, edgeOptions, commonOptions);
 };
 
 
