@@ -23,7 +23,7 @@ void main() {
     int gridX = coords.x;
     int gridY = coords.y;
 
-    ivec2 cellOrigin = ivec2(gridX * int(gridCellDimensions.x), gridY * int(gridCellDimensions.y));
+    ivec2 cellOrigin = ivec2(round(float(gridX) * gridCellDimensions.x), round(float(gridY) * gridCellDimensions.y));
     int histogramIndex = 0;
     int nonBlackCount = 0;
 
@@ -34,9 +34,10 @@ void main() {
     }
 
     // Iterate over the cell and populate the histograms
-    for(int i = 0; i < int(gridCellDimensions.x); i += 1) {
-        for(int j = 0; j < int(gridCellDimensions.y); j += 1) {
+    for(int i = 0; i < int(round(gridCellDimensions.x)); i += 1) {
+        for(int j = 0; j < int(round(gridCellDimensions.y)); j += 1) {
             ivec2 pixelCoords = cellOrigin + ivec2(i, j);
+            if(pixelCoords.x >= int(imageDimensions.x) || pixelCoords.y >= int(imageDimensions.y)) continue; // Check bounds
             vec3 color = texelFetch(u_image, pixelCoords, 0).rgb;
 
             if(color == BLACK)
