@@ -7,7 +7,6 @@ import vertexShader from './shaders/vert/shader.vert';
 import asciiShader from './shaders/frag/ascii.frag';
 import sobelShader from './shaders/frag/sobel.frag';
 import sampleShader from './shaders/frag/sample.frag';
-import isometricShader from './shaders/frag/isometric.frag';
 
 /**
  * @class P5Asciify
@@ -42,10 +41,6 @@ class P5Asciify {
         sobelThreshold: 0.5,
         sampleThreshold: 16,
         rotationAngle: 0,
-    };
-
-    static isoOptions = {
-        enabled: false,
     };
 
     static colorPalette = new P5AsciifyColorPalette();
@@ -103,9 +98,6 @@ class P5Asciify {
 
         this.postEffectPrevFramebuffer = createFramebuffer({ format: FLOAT });
         this.postEffectNextFramebuffer = createFramebuffer({ format: FLOAT });
-
-        this.isometricShader = createShader(vertexShader, isometricShader);
-        this.isometricFramebuffer = createFramebuffer({ format: this.FLOAT });
 
         this.asciiShader = createShader(vertexShader, asciiShader);
         this.asciiBrightnessFramebuffer = createFramebuffer({ format: this.FLOAT });
@@ -228,34 +220,9 @@ class P5Asciify {
             this.asciiEdgeFramebuffer.end();
         }
 
-        if (this.isoOptions.enabled) {
-            let isometricInputFramebuffer = null;
-
-            if (this.edgeOptions.enabled) {
-                isometricInputFramebuffer = this.asciiEdgeFramebuffer;
-            } else if (this.brightnessOptions.enabled) {
-                isometricInputFramebuffer = this.asciiBrightnessFramebuffer;
-            } else {
-                isometricInputFramebuffer = this.preEffectNextFramebuffer;
-            }
-
-            this.isometricFramebuffer.begin();
-            shader(this.isometricShader);
-            this.isometricShader.setUniform('u_asciiTexture', isometricInputFramebuffer);
-            this.isometricShader.setUniform('u_resolution', [this.asciiBrightnessFramebuffer.width, this.asciiBrightnessFramebuffer.height]);
-            this.isometricShader.setUniform('u_tileWidth', this.grid.cellWidth);
-            this.isometricShader.setUniform('u_tileHeight', this.grid.cellHeight);
-            this.isometricShader.setUniform('u_zoom', 64);
-            this.isometricShader.setUniform('u_textureSize', [this.asciiBrightnessFramebuffer.width, this.asciiBrightnessFramebuffer.height]);
-            rect(0, 0, width, height);
-            this.isometricFramebuffer.end();
-        }
-
         this.postEffectNextFramebuffer.begin();
         clear(); // do not remove this, even though it's tempting
-        if (this.isoOptions.enabled) {
-            image(this.isometricFramebuffer, -width / 2, -height / 2);
-        } else if (this.edgeOptions.enabled) {
+        if (this.edgeOptions.enabled) {
             image(this.asciiEdgeFramebuffer, -width / 2, -height / 2);
         } else if (this.brightnessOptions.enabled) {
             image(this.asciiBrightnessFramebuffer, -width / 2, -height / 2);
@@ -266,9 +233,7 @@ class P5Asciify {
 
         this.postEffectPrevFramebuffer.begin();
         clear(); // do not remove this, even though it's tempting
-        if (this.isoOptions.enabled) {
-            image(this.isometricFramebuffer, -width / 2, -height / 2);
-        } else if (this.edgeOptions.enabled) {
+        if (this.edgeOptions.enabled) {
             image(this.asciiEdgeFramebuffer, -width / 2, -height / 2);
         } else if (this.brightnessOptions.enabled) {
             image(this.asciiBrightnessFramebuffer, -width / 2, -height / 2);
@@ -297,7 +262,7 @@ class P5Asciify {
      * Sets the default options for the P5Asciify library.
      * @param {object} options 
      */
-    static setDefaultOptions(brightnessOptions, edgeOptions, commonOptions, isoOptions) {
+    static setDefaultOptions(brightnessOptions, edgeOptions, commonOptions) {
 
         // The parameters are pre-processed, so we can just spread them into the class variables
         this.brightnessOptions = {
@@ -311,10 +276,6 @@ class P5Asciify {
         this.commonOptions = {
             ...this.commonOptions,
             ...commonOptions
-        };
-        this.isoOptions = {
-            ...this.isoOptions,
-            ...isoOptions
         };
 
         if (frameCount == 0) { // If we are still in the users setup(), the characterset and grid have not been initialized yet.

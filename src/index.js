@@ -120,7 +120,7 @@ p5.prototype.registerMethod("afterSetup", p5.prototype.setupAsciifier);
  * TODO: Add example
  */
 p5.prototype.setAsciiOptions = function (options) {
-    const validOptions = ["common", "brightness", "edge", "iso"];
+    const validOptions = ["common", "brightness", "edge"];
     const unknownOptions = Object.keys(options).filter(option => !validOptions.includes(option));
 
     if (unknownOptions.length) {
@@ -128,7 +128,7 @@ p5.prototype.setAsciiOptions = function (options) {
         unknownOptions.forEach(option => delete options[option]);
     }
 
-    const { brightness: brightnessOptions, edge: edgeOptions, common: commonOptions, iso: isoOptions } = options;
+    const { brightness: brightnessOptions, edge: edgeOptions, common: commonOptions } = options;
 
     const colorOptions = [brightnessOptions, edgeOptions];
     colorOptions.forEach(opt => {
@@ -146,7 +146,7 @@ p5.prototype.setAsciiOptions = function (options) {
         delete edgeOptions.characters;
     }
 
-    P5Asciify.setDefaultOptions(brightnessOptions, edgeOptions, commonOptions, isoOptions);
+    P5Asciify.setDefaultOptions(brightnessOptions, edgeOptions, commonOptions);
 };
 
 
