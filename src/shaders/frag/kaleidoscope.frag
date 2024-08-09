@@ -18,8 +18,13 @@ void main() {
     vec2 centeredCoord = v_texCoord - 0.5f;
 
     // Rotate texture coordinates
-    float currentAngle = atan(centeredCoord.y, centeredCoord.x);
-    float radius = length(centeredCoord);
+    float currentAngle;
+    float radius;
+
+    // Swap x and y for vertical division
+    currentAngle = atan(centeredCoord.x, -centeredCoord.y);
+    radius = length(centeredCoord);
+
     currentAngle = mod(currentAngle, angle);
 
     // Mirror the segments
