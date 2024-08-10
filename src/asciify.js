@@ -17,6 +17,7 @@ class P5Asciify {
 
     static commonOptions = {
         fontSize: 16,
+        gridDimensions: [0, 0],
     };
 
     static brightnessOptions = {
@@ -86,7 +87,11 @@ class P5Asciify {
         this.brightnessCharacterSet.setup({ type: "brightness", font: this.font, characters: this.brightnessOptions.characters, fontSize: this.commonOptions.fontSize });
         this.edgeCharacterSet.setup({ type: "edge", font: this.font, characters: this.edgeOptions.characters, fontSize: this.commonOptions.fontSize });
 
-        this.grid.resizeCellDimensions(this.brightnessCharacterSet.maxGlyphDimensions.width, this.brightnessCharacterSet.maxGlyphDimensions.height);
+        this.grid.resizeCellPixelDimensions(this.brightnessCharacterSet.maxGlyphDimensions.width, this.brightnessCharacterSet.maxGlyphDimensions.height);
+
+        if (this.commonOptions.gridDimensions[0] != 0 && this.commonOptions.gridDimensions[1] != 0) {
+            this.grid.resizeCellDimensions(this.commonOptions.gridDimensions[0], this.commonOptions.gridDimensions[1]);
+        }
 
         this.colorPalette.setup();
 
@@ -122,8 +127,12 @@ class P5Asciify {
             this.asciiFramebufferDimensions.width = this.asciiBrightnessFramebuffer.width;
             this.asciiFramebufferDimensions.height = this.asciiBrightnessFramebuffer.height;
 
-            this.grid.reset();
-            this.sampleFramebuffer.resize(this.grid.cols, this.grid.rows);
+            if (this.commonOptions.gridDimensions[0] === 0 || this.commonOptions.gridDimensions[1] === 0) {
+                this.grid.reset();
+                this.sampleFramebuffer.resize(this.grid.cols, this.grid.rows);
+            } else {
+                this.grid._resizeGrid();
+            }
         }
     }
 
@@ -293,7 +302,16 @@ class P5Asciify {
         if (commonOptions?.fontSize) {
             this.brightnessCharacterSet.setFontSize(commonOptions.fontSize);
             this.edgeCharacterSet.setFontSize(commonOptions.fontSize);
-            this.grid.resizeCellDimensions(this.brightnessCharacterSet.maxGlyphDimensions.width, this.brightnessCharacterSet.maxGlyphDimensions.height);
+            this.grid.resizeCellPixelDimensions(this.brightnessCharacterSet.maxGlyphDimensions.width, this.brightnessCharacterSet.maxGlyphDimensions.height);
+            this.sampleFramebuffer.resize(this.grid.cols, this.grid.rows);
+        }
+
+        if (commonOptions?.gridDimensions) {
+            if (commonOptions.gridDimensions[0] === 0 || commonOptions.gridDimensions[1] === 0) {
+                this.grid.reset();
+            } else {
+                this.grid.resizeCellDimensions(commonOptions.gridDimensions[0], commonOptions.gridDimensions[1]);
+            }
             this.sampleFramebuffer.resize(this.grid.cols, this.grid.rows);
         }
     }

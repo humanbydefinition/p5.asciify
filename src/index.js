@@ -61,7 +61,7 @@ p5.prototype.loadAsciiFont = function (font) {
         if (this.frameCount > 0) {
             P5Asciify.brightnessCharacterSet.setFontObject(loadedFont);
             P5Asciify.edgeCharacterSet.setFontObject(loadedFont);
-            P5Asciify.grid.resizeCellDimensions(
+            P5Asciify.grid.resizeCellPixelDimensions(
                 P5Asciify.brightnessCharacterSet.maxGlyphDimensions.width,
                 P5Asciify.brightnessCharacterSet.maxGlyphDimensions.height
             );
@@ -108,6 +108,11 @@ p5.prototype.setupAsciifier = function () {
     P5Asciify.setup();
 }
 p5.prototype.registerMethod("afterSetup", p5.prototype.setupAsciifier);
+
+p5.prototype.resetAsciiGrid = function () {
+    P5Asciify.grid.reset();
+    P5Asciify.sampleFramebuffer.resize(P5Asciify.grid.cols, P5Asciify.grid.rows);
+};
 
 /**
  * Sets the default options for the P5Asciify library.
