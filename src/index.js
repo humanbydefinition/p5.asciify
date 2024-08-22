@@ -79,11 +79,11 @@ p5.prototype.loadAsciiFont = function (font) {
     if (typeof font === 'string') {
         p5asciify.p5Instance.loadFont(
             font,
-            (loadedFont) => { p5asciify.p5Instance.setFont(loadedFont); },
+            (loadedFont) => { setFont(loadedFont); },
             () => { throw new P5AsciifyError(`loadAsciiFont() | Failed to load font from path: '${font}'`); }
         );
     } else if (typeof font === 'object') {
-        p5asciify.p5Instance.setFont(font);
+        setFont(font);
     } else {
         throw new P5AsciifyError(`loadAsciiFont() | Invalid font parameter. Expected a string or an object.`);
     }
