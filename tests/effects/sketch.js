@@ -47,7 +47,7 @@ function setup() {
 
 function draw() {
 
-    const [maxGridCols, maxGridRows] = P5Asciify.grid._calculateGridCellDimensions();
+    const [maxGridCols, maxGridRows] = p5asciify.grid._calculateGridCellDimensions();
 
     // Increment the grid dimensions in a sinusoidal pattern until the maximum size is reached
     // If the grid dimensions havent reached the maximum size, the grid will oscillate between 1 and the maximum size
