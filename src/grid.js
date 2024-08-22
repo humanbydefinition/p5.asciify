@@ -16,6 +16,10 @@ class P5AsciifyGrid {
         this.cellHeight = cellHeight;
     }
 
+    setup(p5Instance) {
+        this.p5Instance = p5Instance;
+    }
+
     /**
      * Resets the grid dimensions based on the current cell width and height.
      * Calculates the number of columns and rows and resizes the grid accordingly.
@@ -37,8 +41,8 @@ class P5AsciifyGrid {
         this.width = this.cols * this.cellWidth;
         this.height = this.rows * this.cellHeight;
 
-        this.offsetX = Math.floor((width - this.width) / 2);
-        this.offsetY = Math.floor((height - this.height) / 2);
+        this.offsetX = Math.floor((this.p5Instance.width - this.width) / 2);
+        this.offsetY = Math.floor((this.p5Instance.height - this.height) / 2);
     }
 
     /**
@@ -47,8 +51,8 @@ class P5AsciifyGrid {
      * @private
      */
     _calculateGridCellDimensions() {
-        const cellsX = Math.floor(width / this.cellWidth);
-        const cellsY = Math.floor(height / this.cellHeight);
+        const cellsX = Math.floor(this.p5Instance.width / this.cellWidth);
+        const cellsY = Math.floor(this.p5Instance.height / this.cellHeight);
         return [cellsX, cellsY];
     }
 
@@ -72,10 +76,10 @@ class P5AsciifyGrid {
             this.reset();
             return;
         }
-    
+
         this.cols = numCols;
         this.rows = numRows;
-    
+
         // Resize the grid based on new dimensions
         this._resizeGrid();
     }

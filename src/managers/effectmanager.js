@@ -60,14 +60,15 @@ class P5AsciifyEffectManager {
         this._effects = [];
     }
 
-    setup() {
+    setup(p5Instance) {
+        this.p5Instance = p5Instance;
         this.setupShaders();
         this.setupEffectQueue();
     }
 
     setupShaders() {
         for (let effectName in this.effectShaders) {
-            this.effectShaders[effectName] = createShader(vertexShader, this.effectShaders[effectName]);
+            this.effectShaders[effectName] = this.p5Instance.createShader(vertexShader, this.effectShaders[effectName]);
         }
     }
 
