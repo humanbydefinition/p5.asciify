@@ -79,11 +79,11 @@ p5.prototype.loadAsciiFont = function (font) {
     if (typeof font === 'string') {
         p5asciify.p5Instance.loadFont(
             font,
-            (loadedFont) => { setFont(loadedFont); },
+            (loadedFont) => { p5asciify.p5Instance.setFont(loadedFont); },
             () => { throw new P5AsciifyError(`loadAsciiFont() | Failed to load font from path: '${font}'`); }
         );
     } else if (typeof font === 'object') {
-        setFont(font);
+        p5asciify.p5Instance.setFont(font);
     } else {
         throw new P5AsciifyError(`loadAsciiFont() | Invalid font parameter. Expected a string or an object.`);
     }
@@ -107,8 +107,6 @@ p5.prototype.registerPreloadMethod('loadAsciiFont', p5.prototype);
  * p5.prototype.setupAsciifier();
  */
 p5.prototype.setupAsciifier = function () {
-
-    console.log("p5asciify.p5Instance", p5asciify.p5Instance._setupDone);
 
     if (p5asciify.p5Instance._setupDone) { // instance mode necessitates this check
 

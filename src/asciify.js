@@ -84,12 +84,6 @@ class P5Asciify {
         this.p5Instance = p;
 
         this.instanceMode = true;
-
-        console.log("Setting up P5Asciify library with P5 instance: ", this.p5Instance);
-    }
-
-    load() {
-        console.log("Loading P5Asciify library...");
     }
 
     /**
@@ -99,8 +93,6 @@ class P5Asciify {
         this.p5Instance.pixelDensity(1);
 
         this.sketchFramebuffer = this.p5Instance.createFramebuffer({ format: this.p5Instance.FLOAT });
-
-        console.log("this.font: ", this.font);
 
         this.brightnessCharacterSet.setup({ p5Instance: this.p5Instance, type: "brightness", font: this.font, characters: this.brightnessOptions.characters, fontSize: this.commonOptions.fontSize });
         this.edgeCharacterSet.setup({ p5Instance: this.p5Instance, type: "edge", font: this.font, characters: this.edgeOptions.characters, fontSize: this.commonOptions.fontSize });
