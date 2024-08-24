@@ -646,7 +646,7 @@ class P5AsciifyEffectManager {
         effectInstance.shader = this.effectShaders[effectInstance.name];
         this._effects.splice(index, 0, effectInstance);
 
-        if (frameCount === 0) {
+        if (this.p5Instance.frameCount === 0) {
             this._setupQueue.push(effectInstance);
         }
     }
@@ -657,12 +657,12 @@ class P5AsciifyEffectManager {
 
     addEffect(effectName, userParams = {}) {
 
-        const shader = frameCount === 0 ? null : this.effectShaders[effectName];
+        const shader = this.p5Instance.frameCount === 0 ? null : this.effectShaders[effectName];
         const params = { ...this.effectParams[effectName], ...userParams };
         const effectInstance = this.effectConstructors[effectName]({ shader, params });
         this._effects.push(effectInstance);
 
-        if (frameCount === 0) {
+        if (this.p5Instance.frameCount === 0) {
             this._setupQueue.push(effectInstance);
         } else {
             effectInstance.setup();
