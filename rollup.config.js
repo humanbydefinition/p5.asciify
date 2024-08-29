@@ -8,7 +8,15 @@ export default [
         input: 'src/index.js',
         output: [
             { file: 'dist/p5.asciify.js', format: 'es' },
-            { file: 'dist/p5.asciify.min.js', format: 'es', plugins: [terser()] }
+            { 
+                file: 'dist/p5.asciify.min.js', 
+                format: 'es', 
+                plugins: [terser({
+                    mangle: {
+                        reserved: ['p5asciify'] // This will prevent 'p5asciify' from being renamed
+                    }
+                })] 
+            }
         ],
         plugins: [
             glslify(),
