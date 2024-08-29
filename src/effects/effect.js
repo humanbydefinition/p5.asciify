@@ -24,7 +24,7 @@ class P5AsciifyEffect {
      * Sets the shader uniforms for the effect.
      * @param {Object} framebuffer - The framebuffer to apply the effect to.
      */
-    setUniforms(framebuffer) {
+    setUniforms(framebuffer, frameCount) {
         this._shader.setUniform('u_image', framebuffer);
     }
 

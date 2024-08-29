@@ -15,7 +15,8 @@ class P5AsciifyCharacterSet {
      * @param {string} options.characters - The string of characters to include in the character set.
      * @param {number} options.fontSize - The font size to use.
      */
-    setup({ type, font, characters, fontSize }) {
+    setup({ p5Instance, type, font, characters, fontSize }) {
+        this.p5Instance = p5Instance;
         this.type = type;
         this.font = font;
         this.fontSize = fontSize;
@@ -130,7 +131,7 @@ class P5AsciifyCharacterSet {
         let dimensions = this.getMaxGlyphDimensions(fontSize);
 
         if (!this.texture) {
-            this.texture = createFramebuffer({ format: FLOAT, width: dimensions.width * this.charsetCols, height: dimensions.height * this.charsetRows });
+            this.texture = this.p5Instance.createFramebuffer({ format: this.p5Instance.FLOAT, width: dimensions.width * this.charsetCols, height: dimensions.height * this.charsetRows });
         } else {
             this.texture.resize(dimensions.width * this.charsetCols, dimensions.height * this.charsetRows);
         }
@@ -160,19 +161,19 @@ class P5AsciifyCharacterSet {
      * @param {*} dimensions - The maximum dimensions of the glyphs.
      */
     drawCharacters(fontSize, dimensions) {
-        clear();
-        textFont(this.font);
-        fill(255);
-        textSize(fontSize);
-        textAlign(LEFT, TOP);
-        noStroke();
+        this.p5Instance.clear();
+        this.p5Instance.textFont(this.font);
+        this.p5Instance.fill(255);
+        this.p5Instance.textSize(fontSize);
+        this.p5Instance.textAlign(this.p5Instance.LEFT, this.p5Instance.TOP);
+        this.p5Instance.noStroke();
 
         for (let i = 0; i < this.characters.length; i++) {
             const col = i % this.charsetCols;
             const row = Math.floor(i / this.charsetCols);
             const x = dimensions.width * col - ((dimensions.width * this.charsetCols) / 2);
             const y = dimensions.height * row - ((dimensions.height * this.charsetRows) / 2);
-            text(this.characters[i], x, y);
+            this.p5Instance.text(this.characters[i], x, y);
         }
     }
 
