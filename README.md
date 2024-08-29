@@ -116,6 +116,8 @@ let myp5 = new p5(theSketch);
 ```
 > [!NOTE]
 > All examples and explanations in the [`Wiki`](https://github.com/humanbydefinition/p5.asciify/wiki) are given in global mode. To use them in instance mode, you need to adjust the code accordingly, as shown in the example above.
+>
+> Essentially, you need to pass the p5 instance to the `p5asciify` library using the `p5asciify.instance(sketch)` function before the setup, as well as using the p5 instance to call the functions provided by the library.
 
 
 # Usage
