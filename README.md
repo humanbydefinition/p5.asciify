@@ -54,7 +54,7 @@ Alternatively, the library can be imported directly from a CDN like [**jsDelivr*
   <script src="https://cdn.jsdelivr.net/npm/p5@1.9.4/lib/p5.js"></script>
 
 <!-- Import p5.asciify after p5.js -->
-<script src="https://cdn.jsdelivr.net/npm/p5.asciify@0.1.5/dist/p5.asciify.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/p5.asciify@0.2.0/dist/p5.asciify.min.js"></script>
 ```
 
 > [!TIP]
@@ -65,13 +65,60 @@ Alternatively, the library can be imported directly from a CDN like [**jsDelivr*
 > <script src="https://cdn.jsdelivr.net/npm/p5@1.9.4/lib/p5.js"></script>
 >
 > <!-- Import p5.asciify after p5.js -->
-> <script src="https://cdn.jsdelivr.net/npm/p5.asciify@0.1.5/dist/p5.asciify.min.js"></script>
+> <script src="https://cdn.jsdelivr.net/npm/p5.asciify@0.2.0/dist/p5.asciify.min.js"></script>
 >
 > <!-- Import p5.capture after p5.asciify -->
 > <script src="https://cdn.jsdelivr.net/npm/p5.capture@1.4.1/dist/p5.capture.umd.min.js"></script>
 > ```
 
 At this point, when imported correctly, the [`p5.js`](https://p5js.org/) canvas in `WEBGL` mode should already be converted into a grid of ASCII characters with the default settings applied! (｡◕‿‿◕｡)
+
+### Instance mode
+
+Since v0.2.0, `p5.asciify` officially supports both global and instance mode. To use the library in instance mode, you need to load it in a specific way:
+
+```javascript
+const theSketch = (sketch) => {
+
+    p5asciify.instance(sketch); // Pass the p5 instance to the p5asciify library before setup
+
+    sketch.setup = () => {
+        sketch.createCanvas(800, 800, sketch.WEBGL);
+
+        sketch.setAsciiOptions({ // All functions provided by p5.asciify are now available through the p5 instance
+            common: {
+                fontSize: 16,
+            },
+            brightness: {
+                enabled: true,
+                invertMode: true,
+            },
+            edge: {
+                enabled: true,
+                invertMode: true
+            }
+        });
+    };
+
+    sketch.draw = () => {
+        sketch.push();
+        sketch.background(0);
+        sketch.fill(255);
+        sketch.rotateX(sketch.radians(sketch.frameCount * 3));
+        sketch.rotateZ(sketch.radians(sketch.frameCount));
+        sketch.directionalLight(255, 255, 255, 0, 0, -1);
+        sketch.box(800, 100, 100);
+        sketch.pop();
+    };
+};
+
+let myp5 = new p5(theSketch);
+```
+> [!NOTE]
+> All examples and explanations in the [`Wiki`](https://github.com/humanbydefinition/p5.asciify/wiki) are given in global mode. To use them in instance mode, you need to adjust the code accordingly, as shown in the example above.
+>
+> Essentially, you need to pass the p5 instance to the `p5asciify` library using the `p5asciify.instance(sketch)` function before setup, as well as using the p5 instance to call the functions provided by the library.
+
 
 # Usage
 

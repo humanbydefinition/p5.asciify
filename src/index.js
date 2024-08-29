@@ -4,11 +4,23 @@ import P5AsciifyUtils from './utils.js';
 
 import URSAFONT_BASE64 from './fonts/ursafont_base64.txt';
 
+const p5asciify = new P5Asciify();
 
 window.P5Asciify = P5Asciify; // Expose P5Asciify to the global scope
 
 window.preload = function () { }; // In case the user doesn't define a preload function, we need to define it here to avoid errors
-window.draw = function () { noLoop(); }; // In case the user doesn't define a draw function, we need to define it here to avoid errors
+
+p5.prototype.setupP5Instance = function () {
+    if (!p5asciify.p5Instance) {
+        p5asciify.p5Instance = this;
+    }
+
+    p5asciify.grid.addInstance(p5asciify.p5Instance);
+    p5asciify.colorPalette.addInstance(p5asciify.p5Instance);
+    p5asciify.preEffectManager.addInstance(p5asciify.p5Instance);
+    p5asciify.afterEffectManager.addInstance(p5asciify.p5Instance);
+}
+p5.prototype.registerMethod("init", p5.prototype.setupP5Instance);
 
 /**
  * Preloads the ASCII font for the P5Asciify library.
@@ -22,11 +34,11 @@ window.draw = function () { noLoop(); }; // In case the user doesn't define a dr
  * @throws {P5AsciifyError} Throws an error if the font fails to load.
  */
 p5.prototype.preloadAsciiFont = function () {
-    this._incrementPreload();
-    this.loadFont(
+    p5asciify.p5Instance._incrementPreload();
+    p5asciify.font = p5asciify.p5Instance.loadFont(
         URSAFONT_BASE64,
         (loadedFont) => {
-            P5Asciify.font = loadedFont;
+            p5asciify.font = loadedFont;
         },
         () => { throw new P5AsciifyError(`loadAsciiFont() | Failed to load font from path: '${font}'`); }
     );
@@ -56,20 +68,20 @@ p5.prototype.registerMethod("beforePreload", p5.prototype.preloadAsciiFont);
  */
 p5.prototype.loadAsciiFont = function (font) {
     const setFont = (loadedFont) => {
-        P5Asciify.font = loadedFont;
-        this._decrementPreload();
-        if (this.frameCount > 0) {
-            P5Asciify.brightnessCharacterSet.setFontObject(loadedFont);
-            P5Asciify.edgeCharacterSet.setFontObject(loadedFont);
-            P5Asciify.grid.resizeCellDimensions(
-                P5Asciify.brightnessCharacterSet.maxGlyphDimensions.width,
-                P5Asciify.brightnessCharacterSet.maxGlyphDimensions.height
+        p5asciify.font = loadedFont;
+        p5asciify.p5Instance._decrementPreload();
+        if (p5asciify.p5Instance.frameCount > 0) {
+            p5asciify.brightnessCharacterSet.setFontObject(loadedFont);
+            p5asciify.edgeCharacterSet.setFontObject(loadedFont);
+            p5asciify.grid.resizeCellPixelDimensions(
+                p5asciify.brightnessCharacterSet.maxGlyphDimensions.width,
+                p5asciify.brightnessCharacterSet.maxGlyphDimensions.height
             );
         }
     };
 
     if (typeof font === 'string') {
-        this.loadFont(
+        p5asciify.p5Instance.loadFont(
             font,
             (loadedFont) => { setFont(loadedFont); },
             () => { throw new P5AsciifyError(`loadAsciiFont() | Failed to load font from path: '${font}'`); }
@@ -81,6 +93,8 @@ p5.prototype.loadAsciiFont = function (font) {
     }
 };
 p5.prototype.registerPreloadMethod('loadAsciiFont', p5.prototype);
+
+
 
 /**
  * Sets up the P5Asciify library for use with p5.js.
@@ -97,17 +111,26 @@ p5.prototype.registerPreloadMethod('loadAsciiFont', p5.prototype);
  * p5.prototype.setupAsciifier();
  */
 p5.prototype.setupAsciifier = function () {
-    if (this._renderer.drawingContext instanceof CanvasRenderingContext2D) {
-        throw new P5AsciifyError("WebGL renderer is required for p5.asciify to work.");
-    }
 
-    if (P5AsciifyUtils.compareVersions(this.VERSION, "1.8.0") < 0) {
-        throw new P5AsciifyError("p5.asciify requires p5.js v1.8.0 or higher to work.");
-    }
+    if (p5asciify.p5Instance._setupDone) { // instance mode necessitates this check
 
-    P5Asciify.setup();
+        if (p5asciify.p5Instance._renderer.drawingContext instanceof CanvasRenderingContext2D) {
+            throw new P5AsciifyError("WebGL renderer is required for p5.asciify to work.");
+        }
+
+        if (P5AsciifyUtils.compareVersions(p5asciify.p5Instance.VERSION, "1.8.0") < 0) {
+            throw new P5AsciifyError("p5.asciify requires p5.js v1.8.0 or higher to work.");
+        }
+
+        p5asciify.setup();
+    }
 }
 p5.prototype.registerMethod("afterSetup", p5.prototype.setupAsciifier);
+
+p5.prototype.resetAsciiGrid = function () {
+    p5asciify.grid.reset();
+    p5asciify.sampleFramebuffer.resize(p5asciify.grid.cols, p5asciify.grid.rows);
+};
 
 /**
  * Sets the default options for the P5Asciify library.
@@ -146,7 +169,7 @@ p5.prototype.setAsciiOptions = function (options) {
         delete edgeOptions.characters;
     }
 
-    P5Asciify.setDefaultOptions(brightnessOptions, edgeOptions, commonOptions);
+    p5asciify.setDefaultOptions(brightnessOptions, edgeOptions, commonOptions);
 };
 
 
@@ -172,8 +195,8 @@ p5.prototype.setAsciiOptions = function (options) {
  */
 p5.prototype.addAsciiEffect = function (effectType, effectName, userParams = {}) {
     const managers = {
-        pre: P5Asciify.preEffectManager,
-        post: P5Asciify.afterEffectManager
+        pre: p5asciify.preEffectManager,
+        post: p5asciify.afterEffectManager
     };
 
     const manager = managers[effectType];
@@ -212,13 +235,13 @@ p5.prototype.addAsciiEffect = function (effectType, effectName, userParams = {})
 p5.prototype.removeAsciiEffect = function (effectInstance) {
     let removed = false;
 
-    if (P5Asciify.preEffectManager.hasEffect(effectInstance)) {
-        P5Asciify.preEffectManager.removeEffect(effectInstance);
+    if (p5asciify.preEffectManager.hasEffect(effectInstance)) {
+        p5asciify.preEffectManager.removeEffect(effectInstance);
         removed = true;
     }
 
-    if (P5Asciify.afterEffectManager.hasEffect(effectInstance)) {
-        P5Asciify.afterEffectManager.removeEffect(effectInstance);
+    if (p5asciify.afterEffectManager.hasEffect(effectInstance)) {
+        p5asciify.afterEffectManager.removeEffect(effectInstance);
         removed = true;
     }
 
@@ -252,22 +275,22 @@ p5.prototype.swapAsciiEffects = function (effectInstance1, effectInstance2) {
     let index2 = -1;
 
     // Determine the manager and index for effectInstance1
-    if (P5Asciify.preEffectManager.hasEffect(effectInstance1)) {
-        manager1 = P5Asciify.preEffectManager;
+    if (p5asciify.preEffectManager.hasEffect(effectInstance1)) {
+        manager1 = p5asciify.preEffectManager;
         index1 = manager1.getEffectIndex(effectInstance1);
-    } else if (P5Asciify.afterEffectManager.hasEffect(effectInstance1)) {
-        manager1 = P5Asciify.afterEffectManager;
+    } else if (p5asciify.afterEffectManager.hasEffect(effectInstance1)) {
+        manager1 = p5asciify.afterEffectManager;
         index1 = manager1.getEffectIndex(effectInstance1);
     } else {
         throw new P5AsciifyError(`Effect instance 1 not found in either pre or post effect managers.`);
     }
 
     // Determine the manager and index for effectInstance2
-    if (P5Asciify.preEffectManager.hasEffect(effectInstance2)) {
-        manager2 = P5Asciify.preEffectManager;
+    if (p5asciify.preEffectManager.hasEffect(effectInstance2)) {
+        manager2 = p5asciify.preEffectManager;
         index2 = manager2.getEffectIndex(effectInstance2);
-    } else if (P5Asciify.afterEffectManager.hasEffect(effectInstance2)) {
-        manager2 = P5Asciify.afterEffectManager;
+    } else if (p5asciify.afterEffectManager.hasEffect(effectInstance2)) {
+        manager2 = p5asciify.afterEffectManager;
         index2 = manager2.getEffectIndex(effectInstance2);
     } else {
         throw new P5AsciifyError(`Effect instance 2 not found in either pre or post effect managers.`);
@@ -303,8 +326,8 @@ p5.prototype.swapAsciiEffects = function (effectInstance1, effectInstance2) {
  * p5.prototype.preDrawAddPush();
  */
 p5.prototype.preDrawAddPush = function () {
-    P5Asciify.sketchFramebuffer.begin();
-    this.push();
+    p5asciify.sketchFramebuffer.begin();
+    p5asciify.p5Instance.push();
 };
 p5.prototype.registerMethod("pre", p5.prototype.preDrawAddPush);
 
@@ -317,8 +340,8 @@ p5.prototype.registerMethod("pre", p5.prototype.preDrawAddPush);
  * @memberof p5
  */
 p5.prototype.postDrawAddPop = function () {
-    this.pop();
-    P5Asciify.sketchFramebuffer.end();
+    p5asciify.p5Instance.pop();
+    p5asciify.sketchFramebuffer.end();
 };
 p5.prototype.registerMethod("post", p5.prototype.postDrawAddPop);
 
@@ -330,5 +353,5 @@ p5.prototype.registerMethod("post", p5.prototype.postDrawAddPop);
  * @function asciify
  * @memberof p5
  */
-p5.prototype.asciify = function () { P5Asciify.asciify(); };
+p5.prototype.asciify = function () { p5asciify.asciify(); };
 p5.prototype.registerMethod("post", p5.prototype.asciify);

@@ -25,7 +25,7 @@ class P5AsciifyDistortionEffect extends P5AsciifyEffect {
      * Sets the shader uniforms for the distortion effect.
      * @param {Object} framebuffer - The framebuffer to apply the effect to.
      */
-    setUniforms(framebuffer) {
+    setUniforms(framebuffer, frameCount) {
         super.setUniforms(framebuffer);
         this._shader.setUniform('u_frequency', this._frequency);
         this._shader.setUniform('u_amplitude', this._amplitude);

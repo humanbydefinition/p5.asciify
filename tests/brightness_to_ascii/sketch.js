@@ -22,7 +22,7 @@ function setup() {
         }
     });
 
-    grid = P5Asciify.grid; // Get the grid from the p5.asciify library for dimensions
+    grid = p5asciify.grid; // Get the grid from the p5.asciify library for dimensions
 }
 
 function draw() {
