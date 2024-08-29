@@ -5,9 +5,6 @@ const theSketch = (sketch) => {
     let kaleidoscopeEffect; 
     let distortionEffect;
 
-    sketch.preload = () => {
-    };
-
     sketch.setup = () => {
         sketch.createCanvas(800, 800, sketch.WEBGL);
 
