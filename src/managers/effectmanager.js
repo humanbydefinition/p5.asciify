@@ -60,8 +60,11 @@ class P5AsciifyEffectManager {
         this._effects = [];
     }
 
-    setup(p5Instance) {
+    addInstance(p5Instance) {
         this.p5Instance = p5Instance;
+    }
+
+    setup() {
         this.setupShaders();
         this.setupEffectQueue();
     }

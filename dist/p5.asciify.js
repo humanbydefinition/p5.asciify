@@ -24,7 +24,7 @@ class P5AsciifyEffect {
      * Sets the shader uniforms for the effect.
      * @param {Object} framebuffer - The framebuffer to apply the effect to.
      */
-    setUniforms(framebuffer) {
+    setUniforms(framebuffer, frameCount) {
         this._shader.setUniform('u_image', framebuffer);
     }
 
@@ -198,13 +198,16 @@ class P5AsciifyColorPalette {
      * Sets up the color palette with an initial texture.
      * This method should be called after the p5.js setup() function
      */
-    setup(p5Instance) {
-        this.p5Instance = p5Instance;
+    setup() {
         this.texture = this.p5Instance.createFramebuffer({ width: 1, height: 1 });
 
         if (Object.keys(this.palettes).length > 0) {
             this.updateTexture();
         }
+    }
+
+    addInstance(p5Instance) {
+        this.p5Instance = p5Instance;
     }
 
     /**
@@ -219,15 +222,15 @@ class P5AsciifyColorPalette {
 
         let rowIndex = 0;
         for (let id in this.palettes) {
-            let colors = this.palettes[id].map(c => color(c)); // Convert to p5.Color objects
+            let colors = this.palettes[id].map(c => this.p5Instance.color(c)); // Convert to p5.Color objects
             this.paletteRows[id] = rowIndex; // Update the row index for the current palette
             for (let x = 0; x < colors.length; x++) {
                 let index = (rowIndex * maxColors + x) * 4;
                 let col = colors[x];
-                this.texture.pixels[index] = red(col);
-                this.texture.pixels[index + 1] = green(col);
-                this.texture.pixels[index + 2] = blue(col);
-                this.texture.pixels[index + 3] = alpha(col);
+                this.texture.pixels[index] = this.p5Instance.red(col);
+                this.texture.pixels[index + 1] = this.p5Instance.green(col);
+                this.texture.pixels[index + 2] = this.p5Instance.blue(col);
+                this.texture.pixels[index + 3] = this.p5Instance.alpha(col);
             }
             // Fill the rest of the row with transparent pixels if the palette is shorter
             for (let x = colors.length; x < maxColors; x++) {
@@ -378,7 +381,7 @@ class P5AsciifyDistortionEffect extends P5AsciifyEffect {
      * Sets the shader uniforms for the distortion effect.
      * @param {Object} framebuffer - The framebuffer to apply the effect to.
      */
-    setUniforms(framebuffer) {
+    setUniforms(framebuffer, frameCount) {
         super.setUniforms(framebuffer);
         this._shader.setUniform('u_frequency', this._frequency);
         this._shader.setUniform('u_amplitude', this._amplitude);
@@ -623,8 +626,11 @@ class P5AsciifyEffectManager {
         this._effects = [];
     }
 
-    setup(p5Instance) {
+    addInstance(p5Instance) {
         this.p5Instance = p5Instance;
+    }
+
+    setup() {
         this.setupShaders();
         this.setupEffectQueue();
     }
@@ -940,7 +946,7 @@ class P5AsciifyGrid {
         this.cellHeight = cellHeight;
     }
 
-    setup(p5Instance) {
+    addInstance(p5Instance) {
         this.p5Instance = p5Instance;
     }
 
@@ -1089,8 +1095,9 @@ class P5Asciify {
 
     instance(p) {
         this.p5Instance = p;
-
         this.instanceMode = true;
+
+        this.p5Instance.preload = () => { }; // Define a default preload function if one isn't provided
     }
 
     /**
@@ -1104,18 +1111,16 @@ class P5Asciify {
         this.brightnessCharacterSet.setup({ p5Instance: this.p5Instance, type: "brightness", font: this.font, characters: this.brightnessOptions.characters, fontSize: this.commonOptions.fontSize });
         this.edgeCharacterSet.setup({ p5Instance: this.p5Instance, type: "edge", font: this.font, characters: this.edgeOptions.characters, fontSize: this.commonOptions.fontSize });
 
-        this.grid.setup(this.p5Instance);
-
         this.grid.resizeCellPixelDimensions(this.brightnessCharacterSet.maxGlyphDimensions.width, this.brightnessCharacterSet.maxGlyphDimensions.height);
 
         if (this.commonOptions.gridDimensions[0] != 0 && this.commonOptions.gridDimensions[1] != 0) {
             this.grid.resizeCellDimensions(this.commonOptions.gridDimensions[0], this.commonOptions.gridDimensions[1]);
         }
 
-        this.colorPalette.setup(this.p5Instance);
+        this.colorPalette.setup();
 
-        this.preEffectManager.setup(this.p5Instance);
-        this.afterEffectManager.setup(this.p5Instance);
+        this.preEffectManager.setup();
+        this.afterEffectManager.setup();
 
         this.preEffectPrevFramebuffer = this.p5Instance.createFramebuffer({ format: this.p5Instance.FLOAT });
         this.preEffectNextFramebuffer = this.p5Instance.createFramebuffer({ format: this.p5Instance.FLOAT });
@@ -1178,7 +1183,7 @@ class P5Asciify {
 
                 this.preEffectNextFramebuffer.begin();
                 this.p5Instance.shader(effect.shader);
-                effect.setUniforms(this.preEffectPrevFramebuffer);
+                effect.setUniforms(this.preEffectPrevFramebuffer, this.p5Instance.frameCount);
                 this.p5Instance.rect(0, 0, this.p5Instance.width, this.p5Instance.height);
                 this.preEffectNextFramebuffer.end();
             }
@@ -1275,7 +1280,7 @@ class P5Asciify {
                 [this.postEffectPrevFramebuffer, this.postEffectNextFramebuffer] = [this.postEffectNextFramebuffer, this.postEffectPrevFramebuffer];
                 this.postEffectNextFramebuffer.begin();
                 this.p5Instance.shader(effect.shader);
-                effect.setUniforms(this.postEffectPrevFramebuffer);
+                effect.setUniforms(this.postEffectPrevFramebuffer, this.p5Instance.frameCount);
                 this.p5Instance.rect(0, 0, this.p5Instance.width, this.p5Instance.height);
                 this.postEffectNextFramebuffer.end();
             }
@@ -1419,12 +1424,16 @@ const p5asciify = new P5Asciify();
 window.P5Asciify = P5Asciify; // Expose P5Asciify to the global scope
 
 window.preload = function () { }; // In case the user doesn't define a preload function, we need to define it here to avoid errors
-//window.draw = function () { noLoop(); }; // In case the user doesn't define a draw function, we need to define it here to avoid errors
 
 p5.prototype.setupP5Instance = function () {
     if (!p5asciify.p5Instance) {
         p5asciify.p5Instance = this;
     }
+
+    p5asciify.grid.addInstance(p5asciify.p5Instance);
+    p5asciify.colorPalette.addInstance(p5asciify.p5Instance);
+    p5asciify.preEffectManager.addInstance(p5asciify.p5Instance);
+    p5asciify.afterEffectManager.addInstance(p5asciify.p5Instance);
 };
 p5.prototype.registerMethod("init", p5.prototype.setupP5Instance);
 

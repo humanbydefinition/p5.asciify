@@ -82,8 +82,9 @@ class P5Asciify {
 
     instance(p) {
         this.p5Instance = p;
-
         this.instanceMode = true;
+
+        this.p5Instance.preload = () => { }; // Define a default preload function if one isn't provided
     }
 
     /**
@@ -97,18 +98,16 @@ class P5Asciify {
         this.brightnessCharacterSet.setup({ p5Instance: this.p5Instance, type: "brightness", font: this.font, characters: this.brightnessOptions.characters, fontSize: this.commonOptions.fontSize });
         this.edgeCharacterSet.setup({ p5Instance: this.p5Instance, type: "edge", font: this.font, characters: this.edgeOptions.characters, fontSize: this.commonOptions.fontSize });
 
-        this.grid.setup(this.p5Instance);
-
         this.grid.resizeCellPixelDimensions(this.brightnessCharacterSet.maxGlyphDimensions.width, this.brightnessCharacterSet.maxGlyphDimensions.height);
 
         if (this.commonOptions.gridDimensions[0] != 0 && this.commonOptions.gridDimensions[1] != 0) {
             this.grid.resizeCellDimensions(this.commonOptions.gridDimensions[0], this.commonOptions.gridDimensions[1]);
         }
 
-        this.colorPalette.setup(this.p5Instance);
+        this.colorPalette.setup();
 
-        this.preEffectManager.setup(this.p5Instance);
-        this.afterEffectManager.setup(this.p5Instance);
+        this.preEffectManager.setup();
+        this.afterEffectManager.setup();
 
         this.preEffectPrevFramebuffer = this.p5Instance.createFramebuffer({ format: this.p5Instance.FLOAT });
         this.preEffectNextFramebuffer = this.p5Instance.createFramebuffer({ format: this.p5Instance.FLOAT });
@@ -171,7 +170,7 @@ class P5Asciify {
 
                 this.preEffectNextFramebuffer.begin();
                 this.p5Instance.shader(effect.shader);
-                effect.setUniforms(this.preEffectPrevFramebuffer);
+                effect.setUniforms(this.preEffectPrevFramebuffer, this.p5Instance.frameCount);
                 this.p5Instance.rect(0, 0, this.p5Instance.width, this.p5Instance.height);
                 this.preEffectNextFramebuffer.end();
             }
@@ -268,7 +267,7 @@ class P5Asciify {
                 [this.postEffectPrevFramebuffer, this.postEffectNextFramebuffer] = [this.postEffectNextFramebuffer, this.postEffectPrevFramebuffer];
                 this.postEffectNextFramebuffer.begin();
                 this.p5Instance.shader(effect.shader);
-                effect.setUniforms(this.postEffectPrevFramebuffer);
+                effect.setUniforms(this.postEffectPrevFramebuffer, this.p5Instance.frameCount);
                 this.p5Instance.rect(0, 0, this.p5Instance.width, this.p5Instance.height);
                 this.postEffectNextFramebuffer.end();
             }

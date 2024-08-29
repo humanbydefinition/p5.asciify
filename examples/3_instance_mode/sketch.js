@@ -1,6 +1,9 @@
 const theSketch = (sketch) => {
 
-    p5asciify.instance(sketch); // Pass the p5 instance to the p5asciify library
+    p5asciify.instance(sketch); // Pass the p5 instance to the p5asciify library before setup
+
+    let kaleidoscopeEffect; 
+    let distortionEffect;
 
     sketch.preload = () => {
     };
@@ -8,11 +11,27 @@ const theSketch = (sketch) => {
     sketch.setup = () => {
         sketch.createCanvas(800, 800, sketch.WEBGL);
 
-        sketch.setAsciiOptions({ // Put "sketch." or whatever your p5 instance is called before the functions that p5.asciify provides
+        sketch.setAsciiOptions({ // All functions provided by p5.asciify are now available through the p5 instance
+            common: {
+                fontSize: 16,
+            },
             brightness: {
-                enabled: true
+                enabled: true,
+                characters: ' .:-=+*#%@',
+                characterColor: "#ff0000",
+                characterColorMode: 0,
+                backgroundColor: "#000000",
+                backgroundColorMode: 1,
+                invertMode: true,
+            },
+            edge: {
+                enabled: true,
+                invertMode: true
             }
-        })
+        });
+
+        kaleidoscopeEffect = sketch.addAsciiEffect("pre", "kaleidoscope", { segments: 6 });
+        distortionEffect = sketch.addAsciiEffect("pre", "distortion", { frequency: 0.1, amplitude: 0.1 });
     };
 
     sketch.draw = () => {
@@ -24,6 +43,10 @@ const theSketch = (sketch) => {
         sketch.directionalLight(255, 255, 255, 0, 0, -1);
         sketch.box(800, 100, 100);
         sketch.pop();
+
+        if (sketch.frameCount % 100 == 0) {
+            sketch.swapAsciiEffects(kaleidoscopeEffect, distortionEffect);
+        }
     };
 };
 

@@ -16,7 +16,7 @@ class P5AsciifyGrid {
         this.cellHeight = cellHeight;
     }
 
-    setup(p5Instance) {
+    addInstance(p5Instance) {
         this.p5Instance = p5Instance;
     }
 

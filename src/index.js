@@ -9,12 +9,16 @@ const p5asciify = new P5Asciify();
 window.P5Asciify = P5Asciify; // Expose P5Asciify to the global scope
 
 window.preload = function () { }; // In case the user doesn't define a preload function, we need to define it here to avoid errors
-//window.draw = function () { noLoop(); }; // In case the user doesn't define a draw function, we need to define it here to avoid errors
 
 p5.prototype.setupP5Instance = function () {
     if (!p5asciify.p5Instance) {
         p5asciify.p5Instance = this;
     }
+
+    p5asciify.grid.addInstance(p5asciify.p5Instance);
+    p5asciify.colorPalette.addInstance(p5asciify.p5Instance);
+    p5asciify.preEffectManager.addInstance(p5asciify.p5Instance);
+    p5asciify.afterEffectManager.addInstance(p5asciify.p5Instance);
 }
 p5.prototype.registerMethod("init", p5.prototype.setupP5Instance);
 

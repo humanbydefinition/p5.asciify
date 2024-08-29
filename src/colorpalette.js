@@ -18,13 +18,16 @@ class P5AsciifyColorPalette {
      * Sets up the color palette with an initial texture.
      * This method should be called after the p5.js setup() function
      */
-    setup(p5Instance) {
-        this.p5Instance = p5Instance;
+    setup() {
         this.texture = this.p5Instance.createFramebuffer({ width: 1, height: 1 });
 
         if (Object.keys(this.palettes).length > 0) {
             this.updateTexture();
         }
+    }
+
+    addInstance(p5Instance) {
+        this.p5Instance = p5Instance;
     }
 
     /**
@@ -39,15 +42,15 @@ class P5AsciifyColorPalette {
 
         let rowIndex = 0;
         for (let id in this.palettes) {
-            let colors = this.palettes[id].map(c => color(c)); // Convert to p5.Color objects
+            let colors = this.palettes[id].map(c => this.p5Instance.color(c)); // Convert to p5.Color objects
             this.paletteRows[id] = rowIndex; // Update the row index for the current palette
             for (let x = 0; x < colors.length; x++) {
                 let index = (rowIndex * maxColors + x) * 4;
                 let col = colors[x];
-                this.texture.pixels[index] = red(col);
-                this.texture.pixels[index + 1] = green(col);
-                this.texture.pixels[index + 2] = blue(col);
-                this.texture.pixels[index + 3] = alpha(col);
+                this.texture.pixels[index] = this.p5Instance.red(col);
+                this.texture.pixels[index + 1] = this.p5Instance.green(col);
+                this.texture.pixels[index + 2] = this.p5Instance.blue(col);
+                this.texture.pixels[index + 3] = this.p5Instance.alpha(col);
             }
             // Fill the rest of the row with transparent pixels if the palette is shorter
             for (let x = colors.length; x < maxColors; x++) {
