@@ -1,4 +1,5 @@
 import P5AsciifyEffectManager from './managers/effectmanager.js';
+import P5AsciifyGradientManager from './managers/gradientmanager.js';
 import P5AsciifyCharacterSet from './characterset.js';
 import P5AsciifyGrid from './grid.js';
 import P5AsciifyColorPalette from './colorpalette.js';
@@ -31,6 +32,10 @@ class P5Asciify {
         rotationAngle: 0,
     };
 
+    gradientOptions = {
+        enabled: true,
+    };
+
     edgeOptions = {
         enabled: false,
         characters: "-/|\\-/|\\",
@@ -46,39 +51,20 @@ class P5Asciify {
 
     colorPalette = new P5AsciifyColorPalette();
 
-    preEffectManager = new P5AsciifyEffectManager(this.colorPalette);
+    gradientManager = new P5AsciifyGradientManager(this.colorPalette);
 
+    preEffectManager = new P5AsciifyEffectManager(this.colorPalette);
     afterEffectManager = new P5AsciifyEffectManager(this.colorPalette);
 
-    sketchFramebuffer = null;
-
-    preEffectPrevFramebuffer = null;
-    preEffectNextFramebuffer = null;
-
-    postEffectPrevFramebuffer = null;
-    postEffectNextFramebuffer = null;
-
-    asciiShader = null;
-    asciiBrightnessFramebuffer = null;
-    asciiEdgeFramebuffer = null;
     asciiFramebufferDimensions = { width: 0, height: 0 };
 
-    sobelShader = null;
-    sobelFramebuffer = null;
-
-    sampleShader = null;
-    sampleFramebuffer = null;
-
-    font = null;
     brightnessCharacterSet = new P5AsciifyCharacterSet();
+    gradientCharacterSet = new P5AsciifyCharacterSet();
     edgeCharacterSet = new P5AsciifyCharacterSet();
+
     grid = new P5AsciifyGrid({ cellWidth: 0, cellHeight: 0 });
 
     instanceMode = false;
-
-    p5Canvas = null;
-
-    p5Instance = null;
 
     instance(p) {
         this.p5Instance = p;
@@ -93,9 +79,8 @@ class P5Asciify {
     setup() {
         this.p5Instance.pixelDensity(1);
 
-        this.sketchFramebuffer = this.p5Instance.createFramebuffer({ format: this.p5Instance.FLOAT });
-
         this.brightnessCharacterSet.setup({ p5Instance: this.p5Instance, type: "brightness", font: this.font, characters: this.brightnessOptions.characters, fontSize: this.commonOptions.fontSize });
+        this.gradientCharacterSet.setup({ p5Instance: this.p5Instance, type: "gradient", font: this.font, characters: "", fontSize: this.commonOptions.fontSize });
         this.edgeCharacterSet.setup({ p5Instance: this.p5Instance, type: "edge", font: this.font, characters: this.edgeOptions.characters, fontSize: this.commonOptions.fontSize });
 
         this.grid.resizeCellPixelDimensions(this.brightnessCharacterSet.maxGlyphDimensions.width, this.brightnessCharacterSet.maxGlyphDimensions.height);
@@ -106,8 +91,12 @@ class P5Asciify {
 
         this.colorPalette.setup();
 
+        this.gradientManager.setup(this.gradientCharacterSet, this.p5Instance);
+
         this.preEffectManager.setup();
         this.afterEffectManager.setup();
+
+        this.sketchFramebuffer = this.p5Instance.createFramebuffer({ format: this.p5Instance.FLOAT });
 
         this.preEffectPrevFramebuffer = this.p5Instance.createFramebuffer({ format: this.p5Instance.FLOAT });
         this.preEffectNextFramebuffer = this.p5Instance.createFramebuffer({ format: this.p5Instance.FLOAT });
@@ -115,9 +104,15 @@ class P5Asciify {
         this.postEffectPrevFramebuffer = this.p5Instance.createFramebuffer({ format: this.p5Instance.FLOAT });
         this.postEffectNextFramebuffer = this.p5Instance.createFramebuffer({ format: this.p5Instance.FLOAT });
 
+        this.gradientFramebuffer = this.p5Instance.createFramebuffer({ format: this.p5Instance.FLOAT, width: this.grid.cols, height: this.grid.rows });
+        this.gradientPassFramebuffer = this.p5Instance.createFramebuffer({ format: this.p5Instance.FLOAT, width: this.grid.cols, height: this.grid.rows });
+        this.gradientReferenceFramebuffer = this.p5Instance.createFramebuffer({ format: this.p5Instance.FLOAT, width: this.grid.cols, height: this.grid.rows });
+        this.grayscaleShader = this.preEffectManager.effectShaders["grayscale"];
+
         this.asciiShader = this.p5Instance.createShader(vertexShader, asciiShader);
         this.asciiBrightnessFramebuffer = this.p5Instance.createFramebuffer({ format: this.p5Instance.FLOAT });
         this.asciiEdgeFramebuffer = this.p5Instance.createFramebuffer({ format: this.p5Instance.FLOAT });
+        this.asciiGradientFramebuffer = this.p5Instance.createFramebuffer({ format: this.p5Instance.FLOAT });
 
         this.sobelShader = this.p5Instance.createShader(vertexShader, sobelShader);
         this.sobelFramebuffer = this.p5Instance.createFramebuffer({ format: this.p5Instance.FLOAT });
@@ -140,6 +135,9 @@ class P5Asciify {
 
             if (this.commonOptions.gridDimensions[0] === 0 || this.commonOptions.gridDimensions[1] === 0) {
                 this.grid.reset();
+                this.gradientFramebuffer.resize(this.grid.cols, this.grid.rows);
+                this.gradientReferenceFramebuffer.resize(this.grid.cols, this.grid.rows);
+                this.gradientPassFramebuffer.resize(this.grid.cols, this.grid.rows);
                 this.sampleFramebuffer.resize(this.grid.cols, this.grid.rows);
             } else {
                 this.grid._resizeGrid();
@@ -169,6 +167,7 @@ class P5Asciify {
                 [this.preEffectPrevFramebuffer, this.preEffectNextFramebuffer] = [this.preEffectNextFramebuffer, this.preEffectPrevFramebuffer];
 
                 this.preEffectNextFramebuffer.begin();
+                this.p5Instance.clear();
                 this.p5Instance.shader(effect.shader);
                 effect.setUniforms(this.preEffectPrevFramebuffer, this.p5Instance.frameCount);
                 this.p5Instance.rect(0, 0, this.p5Instance.width, this.p5Instance.height);
@@ -178,12 +177,14 @@ class P5Asciify {
 
         if (this.brightnessOptions.enabled) {
             this.asciiBrightnessFramebuffer.begin();
+            this.p5Instance.clear();
             this.p5Instance.shader(this.asciiShader);
             this.asciiShader.setUniform('u_characterTexture', this.brightnessCharacterSet.texture);
             this.asciiShader.setUniform('u_charsetCols', this.brightnessCharacterSet.charsetCols);
             this.asciiShader.setUniform('u_charsetRows', this.brightnessCharacterSet.charsetRows);
             this.asciiShader.setUniform('u_totalChars', this.brightnessCharacterSet.characters.length);
             this.asciiShader.setUniform('u_sketchTexture', this.preEffectNextFramebuffer);
+            this.asciiShader.setUniform('u_gradientTexture', this.gradientFramebuffer);
             this.asciiShader.setUniform('u_gridPixelDimensions', [this.grid.width, this.grid.height]);
             this.asciiShader.setUniform('u_gridOffsetDimensions', [this.grid.offsetX, this.grid.offsetY]);
             this.asciiShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
@@ -199,8 +200,67 @@ class P5Asciify {
             this.asciiBrightnessFramebuffer.end();
         }
 
+        if (this.gradientOptions.enabled) {
+            // Initial grayscale pass
+            this.gradientFramebuffer.begin();
+            this.p5Instance.clear();
+            this.p5Instance.shader(this.grayscaleShader);
+            this.grayscaleShader.setUniform('u_image', this.preEffectNextFramebuffer);
+            this.p5Instance.rect(0, 0, this.p5Instance.width, this.p5Instance.height);
+            this.gradientFramebuffer.end();
+
+            // Create grayscale reference
+            this.gradientReferenceFramebuffer.begin();
+            this.p5Instance.clear();
+            this.p5Instance.shader(this.grayscaleShader);
+            this.grayscaleShader.setUniform('u_image', this.preEffectNextFramebuffer);
+            this.p5Instance.rect(0, 0, this.p5Instance.width, this.p5Instance.height);
+            this.gradientReferenceFramebuffer.end();
+
+            for (let i = 0; i < this.gradientManager._gradients.length; i++) {
+                const gradient = this.gradientManager._gradients[i];
+
+                this.gradientPassFramebuffer.begin();
+                this.p5Instance.clear();
+                this.p5Instance.shader(gradient._shader);
+                gradient.setUniforms(this.gradientFramebuffer, this.gradientReferenceFramebuffer);
+                this.p5Instance.rect(0, 0, this.grid.cols, this.grid.rows);
+                this.gradientPassFramebuffer.end();
+
+                // Swap framebuffers for the next pass
+                [this.gradientFramebuffer, this.gradientPassFramebuffer] = [this.gradientPassFramebuffer, this.gradientFramebuffer];
+            }
+
+            // The final result is now in currentGradientFramebuffer, so we use it directly
+            this.asciiGradientFramebuffer.begin();
+            this.p5Instance.clear();
+            this.p5Instance.shader(this.asciiShader);
+            this.asciiShader.setUniform('u_characterTexture', this.gradientCharacterSet.texture);
+            this.asciiShader.setUniform('u_charsetCols', this.gradientCharacterSet.charsetCols);
+            this.asciiShader.setUniform('u_charsetRows', this.gradientCharacterSet.charsetRows);
+            this.asciiShader.setUniform('u_totalChars', this.gradientCharacterSet.characters.length);
+            this.asciiShader.setUniform('u_sketchTexture', this.preEffectNextFramebuffer);
+            this.asciiShader.setUniform('u_gradientTexture', this.gradientFramebuffer);
+            this.asciiShader.setUniform('u_gradientReferenceTexture', this.gradientReferenceFramebuffer);
+            this.asciiShader.setUniform('u_asciiBrightnessTexture', this.asciiBrightnessFramebuffer);
+            this.asciiShader.setUniform('u_gridPixelDimensions', [this.grid.width, this.grid.height]);
+            this.asciiShader.setUniform('u_gridOffsetDimensions', [this.grid.offsetX, this.grid.offsetY]);
+            this.asciiShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
+            this.asciiShader.setUniform('u_characterColor', this.brightnessOptions.characterColor);
+            this.asciiShader.setUniform('u_characterColorMode', this.brightnessOptions.characterColorMode);
+            this.asciiShader.setUniform('u_backgroundColor', this.brightnessOptions.backgroundColor);
+            this.asciiShader.setUniform('u_backgroundColorMode', this.brightnessOptions.backgroundColorMode);
+            this.asciiShader.setUniform('u_invertMode', this.brightnessOptions.invertMode);
+            this.asciiShader.setUniform('u_renderMode', 2);
+            this.asciiShader.setUniform('u_brightnessEnabled', this.brightnessOptions.enabled);
+            this.asciiShader.setUniform('u_rotationAngle', this.p5Instance.radians(this.brightnessOptions.rotationAngle));
+            this.p5Instance.rect(0, 0, this.p5Instance.width, this.p5Instance.height);
+            this.asciiGradientFramebuffer.end();
+        }
+
         if (this.edgeOptions.enabled) {
             this.sobelFramebuffer.begin();
+            this.p5Instance.clear();
             this.p5Instance.shader(this.sobelShader);
             this.sobelShader.setUniform('u_texture', this.preEffectNextFramebuffer);
             this.sobelShader.setUniform('u_textureSize', [this.p5Instance.width, this.p5Instance.height]);
@@ -209,6 +269,7 @@ class P5Asciify {
             this.sobelFramebuffer.end();
 
             this.sampleFramebuffer.begin();
+            this.p5Instance.clear();
             this.p5Instance.shader(this.sampleShader);
             this.sampleShader.setUniform('u_image', this.sobelFramebuffer);
             this.sampleShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
@@ -216,14 +277,17 @@ class P5Asciify {
             this.p5Instance.rect(0, 0, this.p5Instance.width, this.p5Instance.height);
             this.sampleFramebuffer.end();
 
+            const asciiBrightnessTexture = this.gradientOptions.enabled ? this.asciiGradientFramebuffer : this.asciiBrightnessFramebuffer;
+
             this.asciiEdgeFramebuffer.begin();
+            this.p5Instance.clear();
             this.p5Instance.shader(this.asciiShader);
             this.asciiShader.setUniform('u_characterTexture', this.edgeCharacterSet.texture);
             this.asciiShader.setUniform('u_charsetCols', this.edgeCharacterSet.charsetCols);
             this.asciiShader.setUniform('u_charsetRows', this.edgeCharacterSet.charsetRows);
             this.asciiShader.setUniform('u_totalChars', this.edgeCharacterSet.characters.length);
             this.asciiShader.setUniform('u_sketchTexture', this.preEffectNextFramebuffer);
-            this.asciiShader.setUniform('u_asciiBrightnessTexture', this.asciiBrightnessFramebuffer);
+            this.asciiShader.setUniform('u_asciiBrightnessTexture', asciiBrightnessTexture);
             this.asciiShader.setUniform('u_edgesTexture', this.sampleFramebuffer);
             this.asciiShader.setUniform('u_gridPixelDimensions', [this.grid.width, this.grid.height]);
             this.asciiShader.setUniform('u_gridOffsetDimensions', [this.grid.offsetX, this.grid.offsetY]);
@@ -244,6 +308,8 @@ class P5Asciify {
         this.p5Instance.clear(); // do not remove this, even though it's tempting
         if (this.edgeOptions.enabled) {
             this.p5Instance.image(this.asciiEdgeFramebuffer, -this.p5Instance.width / 2, -this.p5Instance.height / 2);
+        } else if (this.gradientOptions.enabled) {
+            this.p5Instance.image(this.asciiGradientFramebuffer, -this.p5Instance.width / 2, -this.p5Instance.height / 2);
         } else if (this.brightnessOptions.enabled) {
             this.p5Instance.image(this.asciiBrightnessFramebuffer, -this.p5Instance.width / 2, -this.p5Instance.height / 2);
         } else {
@@ -255,6 +321,8 @@ class P5Asciify {
         this.p5Instance.clear(); // do not remove this, even though it's tempting
         if (this.edgeOptions.enabled) {
             this.p5Instance.image(this.asciiEdgeFramebuffer, -this.p5Instance.width / 2, -this.p5Instance.height / 2);
+        } else if (this.gradientOptions.enabled) {
+            this.p5Instance.image(this.asciiGradientFramebuffer, -this.p5Instance.width / 2, -this.p5Instance.height / 2);
         } else if (this.brightnessOptions.enabled) {
             this.p5Instance.image(this.asciiBrightnessFramebuffer, -this.p5Instance.width / 2, -this.p5Instance.height / 2);
         } else {
@@ -263,11 +331,11 @@ class P5Asciify {
         this.postEffectPrevFramebuffer.end();
 
         for (const effect of this.afterEffectManager._effects) {
+            [this.postEffectPrevFramebuffer, this.postEffectNextFramebuffer] = [this.postEffectNextFramebuffer, this.postEffectPrevFramebuffer];
             if (effect.enabled) {
-                [this.postEffectPrevFramebuffer, this.postEffectNextFramebuffer] = [this.postEffectNextFramebuffer, this.postEffectPrevFramebuffer];
                 this.postEffectNextFramebuffer.begin();
                 this.p5Instance.shader(effect.shader);
-                effect.setUniforms(this.postEffectPrevFramebuffer, this.p5Instance.frameCount);
+                effect.setUniforms(this.postEffectPrevFramebuffer);
                 this.p5Instance.rect(0, 0, this.p5Instance.width, this.p5Instance.height);
                 this.postEffectNextFramebuffer.end();
             }
@@ -282,12 +350,16 @@ class P5Asciify {
      * Sets the default options for the P5Asciify library.
      * @param {object} options 
      */
-    setDefaultOptions(brightnessOptions, edgeOptions, commonOptions) {
+    setDefaultOptions(brightnessOptions, gradientOptions, edgeOptions, commonOptions) {
 
         // The parameters are pre-processed, so we can just spread them into the class variables
         this.brightnessOptions = {
             ...this.brightnessOptions,
             ...brightnessOptions
+        };
+        this.gradientOptions = {
+            ...this.gradientOptions,
+            ...gradientOptions
         };
         this.edgeOptions = {
             ...this.edgeOptions,
@@ -312,6 +384,7 @@ class P5Asciify {
 
         if (commonOptions?.fontSize) {
             this.brightnessCharacterSet.setFontSize(commonOptions.fontSize);
+            this.gradientCharacterSet.setFontSize(commonOptions.fontSize);
             this.edgeCharacterSet.setFontSize(commonOptions.fontSize);
             this.grid.resizeCellPixelDimensions(this.brightnessCharacterSet.maxGlyphDimensions.width, this.brightnessCharacterSet.maxGlyphDimensions.height);
             this.sampleFramebuffer.resize(this.grid.cols, this.grid.rows);

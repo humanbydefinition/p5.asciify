@@ -10,6 +10,8 @@ uniform sampler2D u_sketchTexture;
 uniform sampler2D u_rotationTexture;
 uniform sampler2D u_edgesTexture;
 uniform sampler2D u_asciiBrightnessTexture;
+uniform sampler2D u_gradientTexture;
+uniform sampler2D u_gradientReferenceTexture;
 
 uniform vec2 u_gridCellDimensions;
 uniform vec2 u_gridPixelDimensions;
@@ -51,11 +53,14 @@ void main() {
     vec2 baseCoord = centerCoord / u_gridCellDimensions;
 
     vec4 edgeColor; // edge color (only used in edges mode)
-    vec4 sketchColor; // Simulation color
+    vec4 sketchColor = texture(u_sketchTexture, baseCoord);
+    vec4 gradientColor;
+    vec4 gradientReferenceColor;
+
+    float brightness;
 
     if(u_renderMode == 1) { // edges mode
         edgeColor = texture(u_edgesTexture, baseCoord);
-        sketchColor = texture(u_sketchTexture, baseCoord);
 
         if(edgeColor.rgb == vec3(0.0f)) {
             if(u_brightnessEnabled) {
@@ -65,15 +70,29 @@ void main() {
             }
             return;
         }
-    } else { // Brightness mode
-        sketchColor = texture(u_sketchTexture, baseCoord);
+
+        brightness = edgeColor.r;
+
+    } else if(u_renderMode == 0) { // Brightness mode
+        brightness = dot(sketchColor.rgb, vec3(0.299f, 0.587f, 0.114f));
+    } else if(u_renderMode == 2) { // gradient mode
+        gradientColor = texture(u_gradientTexture, baseCoord);
+        gradientReferenceColor = texture(u_gradientReferenceTexture, baseCoord);
+
+        if(gradientColor.rgb == gradientReferenceColor.rgb) {
+            fragColor = texture(u_asciiBrightnessTexture, gl_FragCoord.xy / vec2(textureSize(u_asciiBrightnessTexture, 0)));
+            return;
+        }
     }
 
-    float brightness = u_renderMode == 1 ? edgeColor.r : dot(sketchColor.rgb, vec3(0.299f, 0.587f, 0.114f));
-
+    int charIndex;
     // Map the brightness to a character index
-    int charIndex = int(brightness * float(u_totalChars));
-    charIndex = min(charIndex, u_totalChars - 1);
+    if(u_renderMode != 2) {
+        charIndex = int(brightness * float(u_totalChars));
+        charIndex = min(charIndex, u_totalChars - 1);
+    } else {
+        charIndex = int(gradientColor.r * 255.0) + int(gradientColor.g * 255.0) * 256;
+    }
 
     // Calculate the column and row of the character in the charset texture
     int charCol = charIndex % int(u_charsetCols);
