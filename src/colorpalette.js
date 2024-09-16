@@ -87,7 +87,7 @@ class P5AsciifyColorPalette {
         if (this.palettes[id]) {
             delete this.palettes[id];
             delete this.paletteRows[id];
-            if (frameCount > 0) {
+            if (this.p5Instance.frameCount > 0) {
                 this.updateTexture();
             }
         } else {
@@ -103,7 +103,7 @@ class P5AsciifyColorPalette {
     setPaletteColors(id, colors) {
         if (this.palettes[id]) {
             this.palettes[id] = colors;
-            if (frameCount > 0) {
+            if (this.p5Instance.frameCount > 0) {
                 this.updateTexture();
             }
         } else {
