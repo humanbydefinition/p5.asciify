@@ -1,14 +1,18 @@
 import P5Asciify from './asciify.js';
 import P5AsciifyError from './errors.js';
 import P5AsciifyUtils from './utils.js';
-
+import p5 from 'p5';
 import URSAFONT_BASE64 from './fonts/ursafont_base64.txt';
 
 const p5asciify = new P5Asciify();
+export default p5asciify;
 
-window.P5Asciify = P5Asciify; // Expose P5Asciify to the global scope
-
-window.preload = function () { }; // In case the user doesn't define a preload function, we need to define it here to avoid errors
+// Expose P5Asciify to the global scope if not in a module environment
+if (typeof window !== 'undefined' && !window.P5Asciify) {
+    window.P5Asciify = P5Asciify;
+    window.p5asciify = p5asciify;  // Expose p5asciify instance
+    window.preload = function () { };
+}
 
 p5.prototype.setupP5Instance = function () {
     if (!p5asciify.p5Instance) {

@@ -5,6 +5,8 @@
   "type": "module",
   "main": "dist/p5.asciify.min.js",
   "dependencies": {
+    "@rollup/plugin-commonjs": "^28.0.1",
+    "@rollup/plugin-inject": "^5.0.5",
     "p5": ">=1.8.0"
   },
   "devDependencies": {
