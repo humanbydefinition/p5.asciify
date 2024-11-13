@@ -4,11 +4,9 @@ on:
   push:
     branches: 
       - main
-      - 11-contributing-to-the-library-while-using-a-different-version-of-nodejs-or-npm-could-make-unexpected-changes-to-the-published-packages
   pull_request:
     branches: 
       - main
-      - 11-contributing-to-the-library-while-using-a-different-version-of-nodejs-or-npm-could-make-unexpected-changes-to-the-published-packages
 
 jobs:
   build-and-test:
