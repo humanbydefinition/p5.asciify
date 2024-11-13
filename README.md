@@ -127,5 +127,7 @@ Check out the [`Usage`](https://github.com/humanbydefinition/p5.asciify/wiki/02_
 ## Contributing
 Contributions are welcome. Please [`open an issue`](https://github.com/humanbydefinition/p5.asciify/issues) or [`submit a pull request`](https://github.com/humanbydefinition/p5.asciify/pulls) on GitHub.
 
+(this section is under construction)
+
 ## License
 This project is licensed under the MIT License. See the [`LICENSE`](https://github.com/humanbydefinition/p5.asciify/blob/main/LICENSE) file for more details.
