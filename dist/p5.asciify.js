@@ -1112,6 +1112,8 @@
         setup() {
             this.p5Instance.pixelDensity(1);
 
+            console.log("test");
+
             this.sketchFramebuffer = this.p5Instance.createFramebuffer({ format: this.p5Instance.FLOAT });
 
             this.brightnessCharacterSet.setup({ p5Instance: this.p5Instance, type: "brightness", font: this.font, characters: this.brightnessOptions.characters, fontSize: this.commonOptions.fontSize });

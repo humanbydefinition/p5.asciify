@@ -1,0 +1,84 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches: 
+      - main
+      - 11-contributing-to-the-library-while-using-a-different-version-of-nodejs-or-npm-could-make-unexpected-changes-to-the-published-packages
+  pull_request:
+    branches: 
+      - main
+      - 11-contributing-to-the-library-while-using-a-different-version-of-nodejs-or-npm-could-make-unexpected-changes-to-the-published-packages
+
+jobs:
+  build-and-test:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [22.11.0]
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+
+    - name: Verify Node.js and NPM Versions
+      run: |
+        NODE_VERSION=$(node -v)
+        REQUIRED_NODE_VERSION="v22.11.0"
+        if [ "$NODE_VERSION" != "$REQUIRED_NODE_VERSION" ]; then
+          echo "Incorrect Node.js version. Expected $REQUIRED_NODE_VERSION but found $NODE_VERSION."
+          exit 1
+        fi
+
+        NPM_VERSION=$(npm -v)
+        REQUIRED_NPM_VERSION="10.9.0"
+        if [ "$NPM_VERSION" != "$REQUIRED_NPM_VERSION" ]; then
+          echo "Incorrect NPM version. Expected $REQUIRED_NPM_VERSION but found $NPM_VERSION."
+          exit 1
+        fi
+
+        echo "Node.js and NPM versions are correct."
+
+    - name: Install Dependencies
+      run: npm install
+
+    - name: Build the Library
+      run: npm run build
+
+    - name: Verify Build Output
+      run: |
+        # Check if the output files exist
+        if [ ! -f dist/p5.asciify.js ]; then
+          echo "dist/p5.asciify.js not found!"
+          exit 1
+        fi
+
+        if [ ! -f dist/p5.asciify.min.js ]; then
+          echo "dist/p5.asciify.min.js not found!"
+          exit 1
+        fi
+
+        # Check if the files are not empty
+        if [ ! -s dist/p5.asciify.js ]; then
+          echo "dist/p5.asciify.js is empty!"
+          exit 1
+        fi
+
+        if [ ! -s dist/p5.asciify.min.js ]; then
+          echo "dist/p5.asciify.min.js is empty!"
+          exit 1
+        fi
+
+        echo "Build outputs are present and non-empty."
+
+    # Optional: Add a step to run basic tests on the bundled files
+    # - name: Run Tests
+    #   run: npm test

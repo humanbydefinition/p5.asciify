@@ -121,11 +121,10 @@ let myp5 = new p5(theSketch);
 
 
 # Usage
-
 Check out the [`Usage`](https://github.com/humanbydefinition/p5.asciify/wiki/02_Usage) section in the [`Wiki`](https://github.com/humanbydefinition/p5.asciify/wiki) to learn how to customize the ASCII conversion and apply various effects to your sketches! You'll find step-by-step instructions and examples on how to effectively use `p5.asciify` in your projects.
 
 ## Contributing
-Contributions are welcome. Please [`open an issue`](https://github.com/humanbydefinition/p5.asciify/issues) or [`submit a pull request`](https://github.com/humanbydefinition/p5.asciify/pulls) on GitHub.
+Contributions are welcome! To ensure consistency and avoid unexpected changes, please follow our [Contributing Guidelines](https://github.com/humanbydefinition/p5.asciify/wiki/04_Contributing) before submitting issues or pull requests.
 
 ## License
 This project is licensed under the MIT License. See the [`LICENSE`](https://github.com/humanbydefinition/p5.asciify/blob/main/LICENSE) file for more details.
