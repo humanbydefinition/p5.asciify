@@ -32,6 +32,7 @@ class P5AsciifyColorPaletteEffect extends P5AsciifyEffect {
      */
     setUniforms(framebuffer) {
         super.setUniforms(framebuffer);
+        this._shader.setUniform('u_resolution', [framebuffer.width, framebuffer.height]);
         this._shader.setUniform('u_colorPalette', this.colorPalette.texture);
         this._shader.setUniform('u_colorPaletteRow', this.colorPalette.getPaletteRow(this._paletteId));
         this._shader.setUniform('u_colorPaletteDimensions', [this.colorPalette.texture.width, this.colorPalette.texture.height]);

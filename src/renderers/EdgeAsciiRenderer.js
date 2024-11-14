@@ -1,6 +1,6 @@
 // renderers/EdgeAsciiRenderer.js
 import AsciiRenderer from './AsciiRenderer.js';
-import vertexShader from '../shaders/vert/shader1.vert';
+import vertexShader from '../shaders/vert/shader.vert';
 import asciiEdgeShader from '../shaders/frag/asciiEdge.frag';
 
 import sobelShader from '../shaders/frag/sobel.frag';

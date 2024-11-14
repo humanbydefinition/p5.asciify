@@ -70,7 +70,10 @@ class P5AsciifyEffectManager {
     }
 
     setupShaders() {
+
         for (let effectName in this.effectShaders) {
+
+
             this.effectShaders[effectName] = this.p5Instance.createShader(vertexShader, this.effectShaders[effectName]);
         }
     }

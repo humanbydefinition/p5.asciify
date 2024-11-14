@@ -1,6 +1,6 @@
 // renderers/BrightnessAsciiRenderer.js
 import AsciiRenderer from './AsciiRenderer.js';
-import vertexShader from '../shaders/vert/shader1.vert';
+import vertexShader from '../shaders/vert/shader.vert';
 import asciiBrightnessShader from '../shaders/frag/asciiBrightness.frag';
 
 export default class BrightnessAsciiRenderer extends AsciiRenderer {
