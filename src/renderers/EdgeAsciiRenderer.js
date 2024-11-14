@@ -1,6 +1,7 @@
 // renderers/EdgeAsciiRenderer.js
 import AsciiRenderer from './AsciiRenderer.js';
-import vertexShader from '../shaders/vert/shader.vert';
+import vertex2Shader from '../shaders/vert/shader.vert';
+import vertex1Shader from '../shaders/vert/shader1.vert';
 import asciiEdgeShader from '../shaders/frag/asciiEdge.frag';
 
 import sobelShader from '../shaders/frag/sobel.frag';
@@ -13,9 +14,9 @@ export default class EdgeAsciiRenderer extends AsciiRenderer {
 
         this.brightnessRenderer = brightnessRenderer;
         
-        this.sobelShader = this.p5.createShader(vertexShader, sobelShader);
-        this.sampleShader = this.p5.createShader(vertexShader, sampleShader);
-        this.shader = this.p5.createShader(vertexShader, asciiEdgeShader);
+        this.sobelShader = this.p5.createShader(vertex1Shader, sobelShader);
+        this.sampleShader = this.p5.createShader(vertex2Shader, sampleShader);
+        this.shader = this.p5.createShader(vertex1Shader, asciiEdgeShader);
 
         this.sobelFramebuffer = this.p5.createFramebuffer({ format: this.p5.FLOAT });
         this.sampleFramebuffer = this.p5.createFramebuffer({ format: this.p5.FLOAT, width: this.grid.cols, height: this.grid.rows });
@@ -44,6 +45,7 @@ export default class EdgeAsciiRenderer extends AsciiRenderer {
         // Render ASCII using the edge shader
         this.outputFramebuffer.begin();
         this.p5.shader(this.shader);
+        this.shader.setUniform('u_resolution', [this.p5.width, this.p5.height]);
         this.shader.setUniform('u_characterTexture', this.characterSet.texture);
         this.shader.setUniform('u_charsetCols', this.characterSet.charsetCols);
         this.shader.setUniform('u_charsetRows', this.characterSet.charsetRows);
