@@ -1076,10 +1076,6 @@
             this.outputFramebuffer = this.p5.createFramebuffer({ format: this.p5.FLOAT });
         }
 
-        updateOptions(newOptions) {
-            super.updateOptions(newOptions);
-        }
-
         render(inputFramebuffer) {
             this.outputFramebuffer.begin();
             this.p5.shader(this.shader);
@@ -1124,10 +1120,6 @@
             this.sobelFramebuffer = this.p5.createFramebuffer({ format: this.p5.FLOAT });
             this.sampleFramebuffer = this.p5.createFramebuffer({ format: this.p5.FLOAT, width: this.grid.cols, height: this.grid.rows });
             this.outputFramebuffer = this.p5.createFramebuffer({ format: this.p5.FLOAT });
-        }
-
-        updateOptions(newOptions) {
-            super.updateOptions(newOptions);
         }
 
         render(inputFramebuffer) {

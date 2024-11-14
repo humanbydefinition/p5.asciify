@@ -22,10 +22,6 @@ export default class EdgeAsciiRenderer extends AsciiRenderer {
         this.outputFramebuffer = this.p5.createFramebuffer({ format: this.p5.FLOAT });
     }
 
-    updateOptions(newOptions) {
-        super.updateOptions(newOptions);
-    }
-
     render(inputFramebuffer) {
         // Apply Sobel shader for edge detection
         this.sobelFramebuffer.begin();
