@@ -1,7 +1,6 @@
 // renderers/EdgeAsciiRenderer.js
 import AsciiRenderer from './AsciiRenderer.js';
-import vertex2Shader from '../shaders/vert/shader.vert';
-import vertex1Shader from '../shaders/vert/shader1.vert';
+import vertexShader from '../shaders/vert/shader1.vert';
 import asciiEdgeShader from '../shaders/frag/asciiEdge.frag';
 
 import sobelShader from '../shaders/frag/sobel.frag';
@@ -14,9 +13,9 @@ export default class EdgeAsciiRenderer extends AsciiRenderer {
 
         this.brightnessRenderer = brightnessRenderer;
         
-        this.sobelShader = this.p5.createShader(vertex1Shader, sobelShader);
-        this.sampleShader = this.p5.createShader(vertex2Shader, sampleShader);
-        this.shader = this.p5.createShader(vertex1Shader, asciiEdgeShader);
+        this.sobelShader = this.p5.createShader(vertexShader, sobelShader);
+        this.sampleShader = this.p5.createShader(vertexShader, sampleShader);
+        this.shader = this.p5.createShader(vertexShader, asciiEdgeShader);
 
         this.sobelFramebuffer = this.p5.createFramebuffer({ format: this.p5.FLOAT });
         this.sampleFramebuffer = this.p5.createFramebuffer({ format: this.p5.FLOAT, width: this.grid.cols, height: this.grid.rows });
@@ -36,6 +35,7 @@ export default class EdgeAsciiRenderer extends AsciiRenderer {
         // Apply sample shader
         this.sampleFramebuffer.begin();
         this.p5.shader(this.sampleShader);
+        this.sampleShader.setUniform('u_imageSize', [this.p5.width, this.p5.height]);
         this.sampleShader.setUniform('u_image', this.sobelFramebuffer);
         this.sampleShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
         this.sampleShader.setUniform('u_threshold', this.options.sampleThreshold);
