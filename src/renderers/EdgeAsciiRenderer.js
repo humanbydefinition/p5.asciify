@@ -4,7 +4,8 @@ import vertexShader from '../shaders/vert/shader.vert';
 import asciiEdgeShader from '../shaders/frag/asciiEdge.frag';
 
 import sobelShader from '../shaders/frag/sobel.frag';
-import sampleShader from '../shaders/frag/sample.frag';
+
+import { generateSampleShader } from '../shaders/shaderGenerators.js';
 
 export default class EdgeAsciiRenderer extends AsciiRenderer {
     
@@ -14,12 +15,16 @@ export default class EdgeAsciiRenderer extends AsciiRenderer {
         this.brightnessRenderer = brightnessRenderer;
         
         this.sobelShader = this.p5.createShader(vertexShader, sobelShader);
-        this.sampleShader = this.p5.createShader(vertexShader, sampleShader);
+        this.sampleShader = this.p5.createShader(vertexShader, generateSampleShader(16, this.grid.cellHeight, this.grid.cellWidth));
         this.shader = this.p5.createShader(vertexShader, asciiEdgeShader);
 
         this.sobelFramebuffer = this.p5.createFramebuffer({ format: this.p5.FLOAT });
         this.sampleFramebuffer = this.p5.createFramebuffer({ format: this.p5.FLOAT, width: this.grid.cols, height: this.grid.rows });
         this.outputFramebuffer = this.p5.createFramebuffer({ format: this.p5.FLOAT });
+    }
+
+    resetSampleShader() {
+        this.sampleShader = this.p5.createShader(vertexShader, generateSampleShader(16, this.grid.cellHeight, this.grid.cellWidth));
     }
 
     render(inputFramebuffer) {

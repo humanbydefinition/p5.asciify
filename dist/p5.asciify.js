@@ -1106,7 +1106,109 @@
 
     var sobelShader = "precision highp float;\n#define GLSLIFY 1\nvarying vec2 v_texCoord;uniform sampler2D u_texture;uniform vec2 u_textureSize;uniform float u_threshold;void main(){vec2 texelSize=1.0/u_textureSize;float kernelX[9];float kernelY[9];kernelX[0]=-1.0;kernelX[1]=0.0;kernelX[2]=1.0;kernelX[3]=-2.0;kernelX[4]=0.0;kernelX[5]=2.0;kernelX[6]=-1.0;kernelX[7]=0.0;kernelX[8]=1.0;kernelY[0]=-1.0;kernelY[1]=-2.0;kernelY[2]=-1.0;kernelY[3]=0.0;kernelY[4]=0.0;kernelY[5]=0.0;kernelY[6]=1.0;kernelY[7]=2.0;kernelY[8]=1.0;vec3 texColor[9];for(int i=0;i<3;i++){for(int j=0;j<3;j++){texColor[i*3+j]=texture2D(u_texture,v_texCoord+vec2(float(i-1),float(j-1))*texelSize).rgb;}}vec3 sobelX=vec3(0.0);vec3 sobelY=vec3(0.0);for(int i=0;i<9;i++){sobelX+=kernelX[i]*texColor[i];sobelY+=kernelY[i]*texColor[i];}vec3 sobel=sqrt(sobelX*sobelX+sobelY*sobelY);float intensity=length(sobel)/sqrt(3.0);float angleDeg=degrees(atan(sobelY.r,sobelX.r));vec3 edgeColor=vec3(0.0);if(intensity>u_threshold){if(angleDeg>=-22.5&&angleDeg<22.5){edgeColor=vec3(0.1);}else if(angleDeg>=22.5&&angleDeg<67.5){edgeColor=vec3(0.2);}else if(angleDeg>=67.5&&angleDeg<112.5){edgeColor=vec3(0.3);}else if(angleDeg>=112.5&&angleDeg<157.5){edgeColor=vec3(0.4);}else if(angleDeg>=157.5||angleDeg<-157.5){edgeColor=vec3(0.6);}else if(angleDeg>=-157.5&&angleDeg<-112.5){edgeColor=vec3(0.7);}else if(angleDeg>=-112.5&&angleDeg<-67.5){edgeColor=vec3(0.8);}else if(angleDeg>=-67.5&&angleDeg<-22.5){edgeColor=vec3(0.9);}}gl_FragColor=vec4(edgeColor,1.0);}"; // eslint-disable-line
 
-    var sampleShader = "precision highp float;\n#define GLSLIFY 1\nuniform sampler2D u_image;uniform vec2 u_imageSize;uniform vec2 u_gridCellDimensions;uniform int u_threshold;const vec3 BLACK=vec3(0.0,0.0,0.0);const int MAX_HISTOGRAM_SIZE=16;const int SAMPLES_PER_ROW=32;const int SAMPLES_PER_COL=32;vec3 colorHistogram[MAX_HISTOGRAM_SIZE];int countHistogram[MAX_HISTOGRAM_SIZE];float round(float value){return floor(value+0.5);}void main(){vec2 bufferDimensions=u_gridCellDimensions;vec2 imageDimensions=u_imageSize;vec2 gridCellDimensions=vec2(imageDimensions.x/bufferDimensions.x,imageDimensions.y/bufferDimensions.y);ivec2 coords=ivec2(gl_FragCoord.xy);int gridX=coords.x;int gridY=coords.y;ivec2 cellOrigin=ivec2(round(float(gridX)*gridCellDimensions.x),round(float(gridY)*gridCellDimensions.y));int nonBlackCount=0;for(int i=0;i<MAX_HISTOGRAM_SIZE;i++){colorHistogram[i]=BLACK;countHistogram[i]=0;}for(int i=0;i<SAMPLES_PER_COL;i++){for(int j=0;j<SAMPLES_PER_ROW;j++){ivec2 pixelCoords=cellOrigin+ivec2(i,j);if(pixelCoords.x<0||pixelCoords.y<0||pixelCoords.x>=int(imageDimensions.x)||pixelCoords.y>=int(imageDimensions.y)){continue;}vec2 normalizedCoords=(vec2(pixelCoords)+0.5)/imageDimensions;vec3 color=texture2D(u_image,normalizedCoords).rgb;if(color==BLACK){continue;}nonBlackCount++;bool found=false;for(int k=0;k<MAX_HISTOGRAM_SIZE;k++){if(colorHistogram[k]==color){countHistogram[k]++;found=true;break;}}if(!found){for(int m=0;m<MAX_HISTOGRAM_SIZE;m++){if(countHistogram[m]==0){colorHistogram[m]=color;countHistogram[m]=1;break;}}}}}vec3 mostFrequentColor=BLACK;int highestCount=0;for(int k=0;k<MAX_HISTOGRAM_SIZE;k++){if(countHistogram[k]>highestCount){mostFrequentColor=colorHistogram[k];highestCount=countHistogram[k];}}if(nonBlackCount<u_threshold){gl_FragColor=vec4(BLACK,1.0);}else{gl_FragColor=vec4(mostFrequentColor,1.0);}}"; // eslint-disable-line
+    const generateSampleShader = (MAX_HISTOGRAM_SIZE, SAMPLES_PER_ROW, SAMPLES_PER_COL) => `
+precision highp float;
+
+uniform sampler2D u_image;
+uniform vec2 u_imageSize;
+uniform vec2 u_gridCellDimensions;
+uniform int u_threshold;
+
+const vec3 BLACK = vec3(0.0, 0.0, 0.0);
+const int MAX_HISTOGRAM_SIZE = ${MAX_HISTOGRAM_SIZE};
+const int SAMPLES_PER_ROW = ${SAMPLES_PER_ROW};
+const int SAMPLES_PER_COL = ${SAMPLES_PER_COL};
+
+vec3 colorHistogram[MAX_HISTOGRAM_SIZE];
+int countHistogram[MAX_HISTOGRAM_SIZE];
+
+float round(float value) {
+    return floor(value + 0.5);
+}
+
+void main() {
+    vec2 bufferDimensions = u_gridCellDimensions;
+    vec2 imageDimensions = u_imageSize;
+    vec2 gridCellDimensions = vec2(imageDimensions.x / bufferDimensions.x, imageDimensions.y / bufferDimensions.y);
+
+    ivec2 coords = ivec2(gl_FragCoord.xy);
+    int gridX = coords.x;
+    int gridY = coords.y;
+
+    // Calculate the origin of the cell in the image
+    ivec2 cellOrigin = ivec2(round(float(gridX) * gridCellDimensions.x), round(float(gridY) * gridCellDimensions.y));
+    int nonBlackCount = 0;
+
+    // Initialize histograms
+    for (int i = 0; i < MAX_HISTOGRAM_SIZE; i++) {
+        colorHistogram[i] = BLACK;
+        countHistogram[i] = 0;
+    }
+
+    // Iterate over the cell and populate the histograms
+    for (int i = 0; i < SAMPLES_PER_COL; i++) {
+        for (int j = 0; j < SAMPLES_PER_ROW; j++) {
+            ivec2 pixelCoords = cellOrigin + ivec2(i, j);
+            // Check bounds
+            if (pixelCoords.x < 0 || pixelCoords.y < 0 || pixelCoords.x >= int(imageDimensions.x) || pixelCoords.y >= int(imageDimensions.y)) {
+                continue;
+            }
+            
+            // Normalize pixel coordinates when sampling from the texture
+            vec2 normalizedCoords = (vec2(pixelCoords) + 0.5) / imageDimensions; // +0.5 for pixel center
+            vec3 color = texture2D(u_image, normalizedCoords).rgb;
+
+            // Ignore black pixels
+            if (color == BLACK) {
+                continue;
+            }
+
+            nonBlackCount++;
+
+            // Check if the color already exists in the histogram
+            bool found = false;
+            for (int k = 0; k < MAX_HISTOGRAM_SIZE; k++) {
+                // colorHistogram[k] can be checked directly
+                // However, floating-point comparison can be imprecise; consider comparing within a small epsilon if needed
+                if (colorHistogram[k] == color) {
+                    countHistogram[k]++;
+                    found = true;
+                    break;
+                }
+            }
+
+            // If the color was not found, add it to the histogram at the first available slot
+            if (!found) {
+                for (int m = 0; m < MAX_HISTOGRAM_SIZE; m++) {
+                    if (countHistogram[m] == 0) {
+                        colorHistogram[m] = color;
+                        countHistogram[m] = 1;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    vec3 mostFrequentColor = BLACK;
+    int highestCount = 0;
+
+    // Find the most frequent color
+    for (int k = 0; k < MAX_HISTOGRAM_SIZE; k++) {
+        if (countHistogram[k] > highestCount) {
+            mostFrequentColor = colorHistogram[k];
+            highestCount = countHistogram[k];
+        }
+    }
+
+    // If the number of non-black pixels is below the threshold, output black, otherwise output the most frequent color
+    if (nonBlackCount < u_threshold) {
+        gl_FragColor = vec4(BLACK, 1.0);
+    } else {
+        gl_FragColor = vec4(mostFrequentColor, 1.0);
+    }
+}
+`;
 
     // renderers/EdgeAsciiRenderer.js
 
@@ -1118,12 +1220,16 @@
             this.brightnessRenderer = brightnessRenderer;
             
             this.sobelShader = this.p5.createShader(vertexShader, sobelShader);
-            this.sampleShader = this.p5.createShader(vertexShader, sampleShader);
+            this.sampleShader = this.p5.createShader(vertexShader, generateSampleShader(16, this.grid.cellHeight, this.grid.cellWidth));
             this.shader = this.p5.createShader(vertexShader, asciiEdgeShader);
 
             this.sobelFramebuffer = this.p5.createFramebuffer({ format: this.p5.FLOAT });
             this.sampleFramebuffer = this.p5.createFramebuffer({ format: this.p5.FLOAT, width: this.grid.cols, height: this.grid.rows });
             this.outputFramebuffer = this.p5.createFramebuffer({ format: this.p5.FLOAT });
+        }
+
+        resetSampleShader() {
+            this.sampleShader = this.p5.createShader(vertexShader, generateSampleShader(16, this.grid.cellHeight, this.grid.cellWidth));
         }
 
         render(inputFramebuffer) {
@@ -1406,6 +1512,7 @@
                 this.edgeCharacterSet.setFontSize(commonOptions.fontSize);
                 this.grid.resizeCellPixelDimensions(this.brightnessCharacterSet.maxGlyphDimensions.width, this.brightnessCharacterSet.maxGlyphDimensions.height);
                 this.edgeRenderer.sampleFramebuffer.resize(this.grid.cols, this.grid.rows);
+                this.edgeRenderer.resetSampleShader();
             }
 
             if (commonOptions?.gridDimensions) {

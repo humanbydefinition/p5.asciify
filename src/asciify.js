@@ -240,6 +240,7 @@ class P5Asciify {
             this.edgeCharacterSet.setFontSize(commonOptions.fontSize);
             this.grid.resizeCellPixelDimensions(this.brightnessCharacterSet.maxGlyphDimensions.width, this.brightnessCharacterSet.maxGlyphDimensions.height);
             this.edgeRenderer.sampleFramebuffer.resize(this.grid.cols, this.grid.rows);
+            this.edgeRenderer.resetSampleShader();
         }
 
         if (commonOptions?.gridDimensions) {
