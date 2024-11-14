@@ -9,10 +9,10 @@ import { generateSampleShader } from '../shaders/shaderGenerators.js';
 
 export default class EdgeAsciiRenderer extends AsciiRenderer {
 
-    constructor(p5Instance, grid, characterSet, brightnessRenderer, options) {
+    constructor(p5Instance, grid, characterSet, asciiRenderer, options) {
         super(p5Instance, grid, characterSet, options);
 
-        this.brightnessRenderer = brightnessRenderer;
+        this.asciiRenderer = asciiRenderer;
 
         this.sobelShader = this.p5.createShader(vertexShader, sobelShader);
         this.sampleShader = this.p5.createShader(vertexShader, generateSampleShader(16, this.grid.cellHeight, this.grid.cellWidth));
@@ -25,6 +25,10 @@ export default class EdgeAsciiRenderer extends AsciiRenderer {
 
     resetSampleShader() {
         this.sampleShader = this.p5.createShader(vertexShader, generateSampleShader(16, this.grid.cellHeight, this.grid.cellWidth));
+    }
+
+    setAsciiRenderer(asciiRenderer) {
+        this.asciiRenderer = asciiRenderer;
     }
 
     render(inputFramebuffer) {
@@ -56,7 +60,7 @@ export default class EdgeAsciiRenderer extends AsciiRenderer {
         this.shader.setUniform('u_charsetRows', this.characterSet.charsetRows);
         this.shader.setUniform('u_totalChars', this.characterSet.characters.length);
         this.shader.setUniform('u_sketchTexture', inputFramebuffer);
-        this.shader.setUniform('u_asciiBrightnessTexture', this.brightnessRenderer.getOutputFramebuffer());
+        this.shader.setUniform('u_asciiBrightnessTexture', this.asciiRenderer.getOutputFramebuffer());
         this.shader.setUniform('u_edgesTexture', this.sampleFramebuffer);
         this.shader.setUniform('u_gridPixelDimensions', [this.grid.width, this.grid.height]);
         this.shader.setUniform('u_gridOffsetDimensions', [this.grid.offsetX, this.grid.offsetY]);
@@ -66,7 +70,7 @@ export default class EdgeAsciiRenderer extends AsciiRenderer {
         this.shader.setUniform('u_backgroundColor', this.options.backgroundColor);
         this.shader.setUniform('u_backgroundColorMode', this.options.backgroundColorMode);
         this.shader.setUniform('u_invertMode', this.options.invertMode);
-        this.shader.setUniform('u_brightnessEnabled', this.brightnessRenderer.options.enabled);
+        this.shader.setUniform('u_brightnessEnabled', this.asciiRenderer.options.enabled);
         this.shader.setUniform('u_rotationAngle', this.p5.radians(this.options.rotationAngle));
         this.p5.rect(0, 0, this.p5.width, this.p5.height);
         this.outputFramebuffer.end();

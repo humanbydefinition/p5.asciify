@@ -1211,14 +1211,259 @@ void main() {
 }
 `;
 
+    const generateCharacterSelectionShader = (sampleSize, totalChars) => `
+precision highp float;
+
+// Uniforms for character texture and its grid dimensions
+uniform sampler2D u_characterTexture;
+uniform float u_charsetCols;
+uniform float u_charsetRows;
+
+// Uniforms for the sketch texture and grid configurations
+uniform sampler2D u_sketchTexture;
+uniform vec2 u_gridPixelDimensions;      // Size of the grid in pixels
+uniform vec2 u_gridCellDimensions;       // Number of cells in the grid (columns, rows)
+
+const int sampleSize = ${sampleSize};
+const int totalChars = ${totalChars};
+
+void main() {
+    // Get the grid cell coordinate (integer)
+    vec2 cellCoord = floor(gl_FragCoord.xy);
+
+    // Compute the size of each cell in pixels
+    vec2 cellSizeInPixels = u_gridPixelDimensions / u_gridCellDimensions;
+
+    // Compute the range of the cell in texture coordinates (0 to 1)
+    vec2 cellStartTexCoord = (cellCoord * cellSizeInPixels) / u_gridPixelDimensions;
+    vec2 cellEndTexCoord = ((cellCoord + vec2(1.0)) * cellSizeInPixels) / u_gridPixelDimensions;
+
+    float minError = 1.0 / 0.0; // Infinity
+    int bestCharIndex = 0;
+
+    for (int charIndex = 0; charIndex < ${totalChars}; charIndex++) {
+        float error = 0.0;
+
+        int charRow = charIndex / int(u_charsetCols);
+        int charCol = charIndex - int(u_charsetCols) * charRow;
+        vec2 charBaseCoord = vec2(float(charCol) / u_charsetCols, float(charRow) / u_charsetRows);
+        vec2 charSize = vec2(1.0 / u_charsetCols, 1.0 / u_charsetRows);
+
+        for (int dy = 0; dy < ${sampleSize}; dy++) {
+            for (int dx = 0; dx < ${sampleSize}; dx++) {
+                vec2 sampleOffset = (vec2(float(dx) + 0.5, float(dy) + 0.5) / float(${sampleSize}));
+
+                // Sample in the sketch texture
+                vec2 sketchSampleCoord = cellStartTexCoord + sampleOffset * (cellEndTexCoord - cellStartTexCoord);
+                float sketchPixel = texture2D(u_sketchTexture, sketchSampleCoord).r;
+
+                // Sample in the character texture
+                vec2 charSampleCoord = charBaseCoord + sampleOffset * charSize;
+                float charPixel = texture2D(u_characterTexture, charSampleCoord).r;
+
+                error += pow(sketchPixel - charPixel, 2.0);
+            }
+        }
+
+        // Normalize the error
+        error /= float(${sampleSize} * ${sampleSize});
+
+        if (error < minError) {
+            minError = error;
+            bestCharIndex = charIndex;
+        }
+    }
+
+    // Encode the bestCharIndex into two channels: red and green
+    float lowerByte = float(bestCharIndex) - 256.0 * floor(float(bestCharIndex) / 256.0);
+    float upperByte = floor(float(bestCharIndex) / 256.0);
+
+    float encodedR = lowerByte / 255.0;
+    float encodedG = upperByte / 255.0;
+
+    gl_FragColor = vec4(encodedR, encodedG, 0.0, 1.0);
+}
+  `;
+
+    const generateBrightnessSampleShader = (samplesPerRow, samplesPerColumn) => `
+// Enhanced Fragment Shader for Average Brightness Calculation
+precision highp float; // Use high precision for better accuracy
+
+// Uniforms
+uniform sampler2D u_inputImage;
+uniform vec2 u_inputImageSize;
+uniform int u_gridCols;
+uniform int u_gridRows;
+
+// Constants
+const int SAMPLES_PER_ROW = ${samplesPerRow};
+const int SAMPLES_PER_COL = ${samplesPerColumn};
+
+void main() {
+    // Calculate the size of each grid cell in pixels
+    vec2 cellSize = u_inputImageSize / vec2(float(u_gridCols), float(u_gridRows));
+
+    // Determine the current fragment's grid position
+    // gl_FragCoord starts at (0.5, 0.5) for the first pixel
+    vec2 fragCoord = floor(gl_FragCoord.xy);
+    vec2 inputGridPos = fragCoord * cellSize;
+
+    // Initialize brightness accumulator
+    float brightnessSum = 0.0;
+
+    // Total number of samples
+    float totalSamples = float(SAMPLES_PER_ROW * SAMPLES_PER_COL);
+
+    // Iterate over sample points within the grid cell
+    for(int i = 0; i < SAMPLES_PER_ROW; i++) {
+        for(int j = 0; j < SAMPLES_PER_COL; j++) {
+            // Calculate normalized texture coordinates for the sample
+            vec2 offset = (vec2(float(i), float(j)) + 0.5) * (cellSize / vec2(float(SAMPLES_PER_ROW), float(SAMPLES_PER_COL)));
+            vec2 texCoord = (inputGridPos + offset) / u_inputImageSize;
+
+            // Clamp texture coordinates to [0, 1] to prevent sampling outside the image
+            texCoord = clamp(texCoord, 0.0, 1.0);
+
+            // Sample the color from the input image
+            vec4 sampledColor = texture2D(u_inputImage, texCoord);
+
+            // Calculate brightness using luminance formula
+            float brightness = 0.299 * sampledColor.r + 0.587 * sampledColor.g + 0.114 * sampledColor.b;
+
+            // Accumulate brightness
+            brightnessSum += brightness;
+        }
+    }
+
+    // Compute average brightness
+    float averageBrightness = brightnessSum / totalSamples;
+
+    // Output the average brightness as a grayscale color with full opacity
+    gl_FragColor = vec4(vec3(averageBrightness), 1.0);
+}
+`;
+
+    const generateColorSampleShader = (numSlots, samplesPerRow, samplesPerColumn) => `
+// Refactored Fragment Shader with Conditional Fallback for u_colorRank == 2
+precision mediump float;
+
+// Uniforms
+uniform sampler2D u_inputImage;
+uniform sampler2D u_inputImageBW; // Black and white image
+uniform vec2 u_inputImageSize;
+uniform int u_gridCols;
+uniform int u_gridRows;
+uniform int u_colorRank;
+
+// Constants
+const int NUM_SLOTS = ${numSlots};
+const int SAMPLES_PER_ROW = ${samplesPerRow};
+const int SAMPLES_PER_COL = ${samplesPerColumn};
+
+void main() {
+    // Calculate the size of each grid cell
+    vec2 cellSize = u_inputImageSize / vec2(float(u_gridCols), float(u_gridRows));
+
+    // Determine the current fragment's grid position
+    vec2 fragCoord = floor(gl_FragCoord.xy);
+    vec2 inputGridPos = fragCoord * cellSize;
+
+    // Calculate the center texture coordinate for saving the initial pixel color
+    vec2 centerOffset = cellSize * 0.5;
+    vec2 centerTexCoord = (inputGridPos + centerOffset) / u_inputImageSize;
+    vec4 savedColor = texture2D(u_inputImage, centerTexCoord);
+
+    // Initialize color slots and counts
+    vec4 colors[NUM_SLOTS];
+    float counts[NUM_SLOTS];
+    for(int i = 0; i < NUM_SLOTS; i++) {
+        colors[i] = vec4(0.0);
+        counts[i] = 0.0;
+    }
+
+    // Iterate over sample points within the grid cell
+    for(int i = 0; i < SAMPLES_PER_ROW; i++) {
+        for(int j = 0; j < SAMPLES_PER_COL; j++) {
+            // Calculate normalized texture coordinates for the sample
+            vec2 offset = (vec2(float(i), float(j)) + 0.5) * (cellSize / vec2(float(SAMPLES_PER_ROW), float(SAMPLES_PER_COL)));
+            vec2 texCoord = (inputGridPos + offset) / u_inputImageSize;
+
+            // Sample the color from the input image
+            vec4 sampledColor = texture2D(u_inputImage, texCoord);
+
+            // Sample the corresponding pixel from the black and white image
+            vec4 bwColor = texture2D(u_inputImageBW, texCoord);
+            float isWhite = step(0.5, bwColor.r); // Assuming grayscale, check if red channel is >= 0.5
+
+            // Determine if the current pixel should be considered based on u_colorRank
+            bool shouldConsider = false;
+            if(u_colorRank == 1 && isWhite > 0.5) {
+                shouldConsider = true;
+            }
+            else if(u_colorRank == 2 && isWhite <= 0.5) {
+                shouldConsider = true;
+            }
+
+            // Skip this pixel if it doesn't meet the criteria
+            if(!shouldConsider) {
+                continue;
+            }
+
+            // Find a matching color slot
+            bool matched = false;
+            for(int k = 0; k < NUM_SLOTS; k++) {
+                if(distance(sampledColor, colors[k]) < 0.001) {
+                    counts[k] += 1.0;
+                    matched = true;
+                    break;
+                }
+            }
+
+            // Assign to a new slot if no match is found
+            if(!matched) {
+                for(int k = 0; k < NUM_SLOTS; k++) {
+                    if(counts[k] == 0.0) {
+                        colors[k] = sampledColor;
+                        counts[k] = 1.0;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    // Track the top color based on counts
+    float topCount = 0.0;
+    vec4 topColor = vec4(0.0);
+
+    for(int k = 0; k < NUM_SLOTS; k++) {
+        float currentCount = counts[k];
+        vec4 currentColor = colors[k];
+
+        if(currentCount > topCount) {
+            topCount = currentCount;
+            topColor = currentColor;
+        }
+    }
+
+    // If u_colorRank is 2 and no pixels were considered, use the savedColor instead of black
+    if(u_colorRank == 2 && topCount == 0.0) {
+        topColor = savedColor;
+    }
+
+    // Output the color with full opacity
+    gl_FragColor = vec4(topColor.rgb, 1.0);
+}
+`;
+
     // renderers/EdgeAsciiRenderer.js
 
     class EdgeAsciiRenderer extends AsciiRenderer {
 
-        constructor(p5Instance, grid, characterSet, brightnessRenderer, options) {
+        constructor(p5Instance, grid, characterSet, asciiRenderer, options) {
             super(p5Instance, grid, characterSet, options);
 
-            this.brightnessRenderer = brightnessRenderer;
+            this.asciiRenderer = asciiRenderer;
 
             this.sobelShader = this.p5.createShader(vertexShader, sobelShader);
             this.sampleShader = this.p5.createShader(vertexShader, generateSampleShader(16, this.grid.cellHeight, this.grid.cellWidth));
@@ -1231,6 +1476,10 @@ void main() {
 
         resetSampleShader() {
             this.sampleShader = this.p5.createShader(vertexShader, generateSampleShader(16, this.grid.cellHeight, this.grid.cellWidth));
+        }
+
+        setAsciiRenderer(asciiRenderer) {
+            this.asciiRenderer = asciiRenderer;
         }
 
         render(inputFramebuffer) {
@@ -1262,7 +1511,7 @@ void main() {
             this.shader.setUniform('u_charsetRows', this.characterSet.charsetRows);
             this.shader.setUniform('u_totalChars', this.characterSet.characters.length);
             this.shader.setUniform('u_sketchTexture', inputFramebuffer);
-            this.shader.setUniform('u_asciiBrightnessTexture', this.brightnessRenderer.getOutputFramebuffer());
+            this.shader.setUniform('u_asciiBrightnessTexture', this.asciiRenderer.getOutputFramebuffer());
             this.shader.setUniform('u_edgesTexture', this.sampleFramebuffer);
             this.shader.setUniform('u_gridPixelDimensions', [this.grid.width, this.grid.height]);
             this.shader.setUniform('u_gridOffsetDimensions', [this.grid.offsetX, this.grid.offsetY]);
@@ -1272,8 +1521,109 @@ void main() {
             this.shader.setUniform('u_backgroundColor', this.options.backgroundColor);
             this.shader.setUniform('u_backgroundColorMode', this.options.backgroundColorMode);
             this.shader.setUniform('u_invertMode', this.options.invertMode);
-            this.shader.setUniform('u_brightnessEnabled', this.brightnessRenderer.options.enabled);
+            this.shader.setUniform('u_brightnessEnabled', this.asciiRenderer.options.enabled);
             this.shader.setUniform('u_rotationAngle', this.p5.radians(this.options.rotationAngle));
+            this.p5.rect(0, 0, this.p5.width, this.p5.height);
+            this.outputFramebuffer.end();
+        }
+    }
+
+    var asciiAccurateShader = "precision highp float;\n#define GLSLIFY 1\nuniform sampler2D u_characterTexture;uniform float u_charsetCols;uniform float u_charsetRows;uniform sampler2D u_primaryColorTexture;uniform sampler2D u_secondaryColorTexture;uniform sampler2D u_charIndexTexture;uniform vec2 u_gridOffsetDimensions;uniform vec2 u_gridPixelDimensions;uniform vec2 u_gridCellDimensions;uniform vec3 u_characterColor;uniform int u_characterColorMode;uniform vec3 u_backgroundColor;uniform int u_backgroundColorMode;uniform int u_invertMode;void main(){vec2 adjustedCoord=(gl_FragCoord.xy-u_gridOffsetDimensions)/u_gridPixelDimensions;if(adjustedCoord.x<0.0||adjustedCoord.x>1.0||adjustedCoord.y<0.0||adjustedCoord.y>1.0){gl_FragColor=vec4(u_backgroundColor,1.0);return;}vec2 gridCoord=adjustedCoord*u_gridCellDimensions;vec2 cellCoord=floor(gridCoord);vec2 charIndexTexCoord=(cellCoord+vec2(0.5))/u_gridCellDimensions;vec2 encodedIndexVec=texture2D(u_charIndexTexture,charIndexTexCoord).rg;int bestCharIndex=int(encodedIndexVec.r*255.0+0.5)+int(encodedIndexVec.g*255.0+0.5)*256;int bestCharRow=bestCharIndex/int(u_charsetCols);int bestCharCol=bestCharIndex-int(u_charsetCols)*bestCharRow;vec2 bestCharBaseCoord=vec2(float(bestCharCol)/u_charsetCols,float(bestCharRow)/u_charsetRows);vec2 bestCharSize=vec2(1.0/u_charsetCols,1.0/u_charsetRows);vec2 texCoord=bestCharBaseCoord+fract(gridCoord)*bestCharSize;vec4 charColor=texture2D(u_characterTexture,texCoord);if(u_invertMode==1){charColor.rgb=vec3(1.0)-charColor.rgb;charColor.a=1.0-charColor.a;}vec2 primaryTexCoord=(cellCoord+vec2(0.5))/u_gridCellDimensions;vec4 primaryColor=texture2D(u_primaryColorTexture,primaryTexCoord);vec4 secondaryColor=texture2D(u_secondaryColorTexture,primaryTexCoord);vec4 finalColor=(u_characterColorMode==0)? vec4(primaryColor.rgb*charColor.rgb,charColor.a): vec4(u_characterColor*charColor.rgb,charColor.a);vec4 backgroundColorFinal=(u_backgroundColorMode==0)? secondaryColor : vec4(u_backgroundColor,1.0);gl_FragColor=mix(backgroundColorFinal,finalColor,charColor.a);}"; // eslint-disable-line
+
+    var brightnessSplitShader = "precision mediump float;\n#define GLSLIFY 1\nuniform sampler2D u_inputImage;uniform sampler2D u_brightnessTexture;uniform vec2 u_inputImageSize;uniform int u_gridCols;uniform int u_gridRows;const float EPSILON=0.01;void main(){vec2 fragCoord=gl_FragCoord.xy;float cellWidth=u_inputImageSize.x/float(u_gridCols);float cellHeight=u_inputImageSize.y/float(u_gridRows);float gridX=floor(fragCoord.x/cellWidth);float gridY=floor(fragCoord.y/cellHeight);gridX=clamp(gridX,0.0,float(u_gridCols-1));gridY=clamp(gridY,0.0,float(u_gridRows-1));vec2 brightnessTexCoord=(vec2(gridX,gridY)+0.5)/vec2(float(u_gridCols),float(u_gridRows));float averageBrightness=texture2D(u_brightnessTexture,brightnessTexCoord).r;vec2 imageTexCoord=fragCoord/u_inputImageSize;vec4 originalColor=texture2D(u_inputImage,imageTexCoord);float fragmentBrightness=0.299*originalColor.r+0.587*originalColor.g+0.114*originalColor.b;float brightnessDifference=fragmentBrightness-averageBrightness;float finalColorValue;if(brightnessDifference<-EPSILON){finalColorValue=0.0;}else{finalColorValue=1.0;}gl_FragColor=vec4(vec3(finalColorValue),1.0);}"; // eslint-disable-line
+
+    class AccurateAsciiRenderer extends AsciiRenderer {
+
+        constructor(p5Instance, grid, characterSet, options) {
+            super(p5Instance, grid, characterSet, options);
+
+            this.characterSelectionShader = this.p5.createShader(vertexShader, generateCharacterSelectionShader(this.characterSet.fontSize, this.characterSet.characters.length));
+            this.brightnessSampleShader = this.p5.createShader(vertexShader, generateBrightnessSampleShader(this.grid.cellHeight, this.grid.cellWidth));
+            this.colorSampleShader = this.p5.createShader(vertexShader, generateColorSampleShader(16, this.grid.cellHeight, this.grid.cellWidth));
+            this.brightnessSplitShader = this.p5.createShader(vertexShader, brightnessSplitShader);
+            this.shader = this.p5.createShader(vertexShader, asciiAccurateShader);
+
+            this.brightnessSampleFramebuffer = this.p5.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, antialias: false, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
+            this.brightnessSplitFramebuffer = this.p5.createFramebuffer({ antialias: false, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
+            this.primaryColorSampleFramebuffer = this.p5.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, antialias: false, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
+            this.secondaryColorSampleFramebuffer = this.p5.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, antialias: false, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
+            this.asciiCharacterFramebuffer = this.p5.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, antialias: false, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
+
+            this.outputFramebuffer = this.p5.createFramebuffer({ antialias: false, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
+        }
+
+        render(inputFramebuffer) {
+
+            this.brightnessSampleFramebuffer.begin();
+            this.p5.shader(this.brightnessSampleShader);
+            this.brightnessSampleShader.setUniform('u_inputImage', inputFramebuffer);
+            this.brightnessSampleShader.setUniform('u_inputImageSize', [this.p5.width, this.p5.height]);
+            this.brightnessSampleShader.setUniform('u_gridCols', this.grid.cols);
+            this.brightnessSampleShader.setUniform('u_gridRows', this.grid.rows);
+            this.p5.rect(0, 0, this.p5.width, this.p5.height);
+            this.brightnessSampleFramebuffer.end();
+
+            this.brightnessSplitFramebuffer.begin();
+            this.p5.shader(this.brightnessSplitShader);
+            this.brightnessSplitShader.setUniform('u_inputImage', inputFramebuffer);
+            this.brightnessSplitShader.setUniform('u_brightnessTexture', this.brightnessSampleFramebuffer);
+            this.brightnessSplitShader.setUniform('u_inputImageSize', [this.p5.width, this.p5.height]);
+            this.brightnessSplitShader.setUniform('u_gridCols', this.grid.cols);
+            this.brightnessSplitShader.setUniform('u_gridRows', this.grid.rows);
+            this.p5.rect(0, 0, this.p5.width, this.p5.height);
+            this.brightnessSplitFramebuffer.end();
+
+            this.primaryColorSampleFramebuffer.begin();
+            this.p5.shader(this.colorSampleShader);
+            this.colorSampleShader.setUniform('u_inputImage', inputFramebuffer);
+            this.colorSampleShader.setUniform('u_inputImageBW', this.brightnessSplitFramebuffer);
+            this.colorSampleShader.setUniform('u_inputImageSize', [this.p5.width, this.p5.height]);
+            this.colorSampleShader.setUniform('u_gridCols', this.grid.cols);
+            this.colorSampleShader.setUniform('u_gridRows', this.grid.rows);
+            this.colorSampleShader.setUniform('u_colorRank', 1);
+            this.p5.rect(0, 0, this.p5.width, this.p5.height);
+            this.primaryColorSampleFramebuffer.end();
+
+            this.secondaryColorSampleFramebuffer.begin();
+            this.p5.shader(this.colorSampleShader);
+            this.colorSampleShader.setUniform('u_inputImage', inputFramebuffer);
+            this.colorSampleShader.setUniform('u_inputImageBW', this.brightnessSplitFramebuffer);
+            this.colorSampleShader.setUniform('u_inputImageSize', [this.p5.width, this.p5.height]);
+            this.colorSampleShader.setUniform('u_gridCols', this.grid.cols);
+            this.colorSampleShader.setUniform('u_gridRows', this.grid.rows);
+            this.colorSampleShader.setUniform('u_colorRank', 2);
+            this.p5.rect(0, 0, this.p5.width, this.p5.height);
+            this.secondaryColorSampleFramebuffer.end();
+
+            this.asciiCharacterFramebuffer.begin();
+            this.p5.shader(this.characterSelectionShader);
+            this.characterSelectionShader.setUniform('u_characterTexture', this.characterSet.texture);
+            this.characterSelectionShader.setUniform('u_charsetCols', this.characterSet.charsetCols);
+            this.characterSelectionShader.setUniform('u_charsetRows', this.characterSet.charsetRows);
+            this.characterSelectionShader.setUniform('u_sketchTexture', this.brightnessSplitFramebuffer);
+            this.characterSelectionShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
+            this.characterSelectionShader.setUniform('u_gridPixelDimensions', [this.grid.width, this.grid.height]);
+            this.p5.rect(0, 0, this.p5.width, this.p5.height);
+            this.asciiCharacterFramebuffer.end();
+
+            this.outputFramebuffer.begin();
+            this.p5.shader(this.shader);
+            this.shader.setUniform('u_charIndexTexture', this.asciiCharacterFramebuffer);
+            this.shader.setUniform('u_resolution', [this.p5.width, this.p5.height]);
+            this.shader.setUniform('u_characterTexture', this.characterSet.texture);
+            this.shader.setUniform('u_primaryColorTexture', this.primaryColorSampleFramebuffer);
+            this.shader.setUniform('u_secondaryColorTexture', this.secondaryColorSampleFramebuffer);
+            this.shader.setUniform('u_charsetCols', this.characterSet.charsetCols);
+            this.shader.setUniform('u_charsetRows', this.characterSet.charsetRows);
+            this.shader.setUniform('u_totalChars', this.characterSet.characters.length);
+            this.shader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
+            this.shader.setUniform('u_gridPixelDimensions', [this.grid.width, this.grid.height]);
+            this.shader.setUniform('u_gridOffsetDimensions', [this.grid.offsetX, this.grid.offsetY]);
+            this.shader.setUniform('u_characterColor', this.options.characterColor);
+            this.shader.setUniform('u_characterColorMode', this.options.characterColorMode);
+            this.shader.setUniform('u_backgroundColor', this.options.backgroundColor);
+            this.shader.setUniform('u_backgroundColorMode', this.options.backgroundColorMode);
+            this.shader.setUniform('u_invertMode', this.options.invertMode);
             this.p5.rect(0, 0, this.p5.width, this.p5.height);
             this.outputFramebuffer.end();
         }
@@ -1289,6 +1639,7 @@ void main() {
         commonOptions = {
             fontSize: 16,
             gridDimensions: [0, 0],
+            renderMode: 'brightness',
         };
 
         brightnessOptions = {
@@ -1321,29 +1672,13 @@ void main() {
 
         afterEffectManager = new P5AsciifyEffectManager(this.colorPalette);
 
-        sketchFramebuffer = null;
-
-        preEffectPrevFramebuffer = null;
-        preEffectNextFramebuffer = null;
-
-        postEffectPrevFramebuffer = null;
-        postEffectNextFramebuffer = null;
-
         asciiFramebufferDimensions = { width: 0, height: 0 };
 
-        font = null;
         brightnessCharacterSet = new P5AsciifyCharacterSet();
         edgeCharacterSet = new P5AsciifyCharacterSet();
         grid = new P5AsciifyGrid({ cellWidth: 0, cellHeight: 0 });
 
         instanceMode = false;
-
-        p5Canvas = null;
-
-        p5Instance = null;
-
-        brightnessRenderer = null;
-        edgeRenderer = null;
 
         instance(p) {
             this.p5Instance = p;
@@ -1381,8 +1716,10 @@ void main() {
             this.postEffectNextFramebuffer = this.p5Instance.createFramebuffer({ antialias: false, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
 
             this.brightnessRenderer = new BrightnessAsciiRenderer(this.p5Instance, this.grid, this.brightnessCharacterSet, this.brightnessOptions);
+            this.accurateRenderer = new AccurateAsciiRenderer(this.p5Instance, this.grid, this.brightnessCharacterSet, this.brightnessOptions);
 
-            this.edgeRenderer = new EdgeAsciiRenderer(this.p5Instance, this.grid, this.edgeCharacterSet, this.brightnessRenderer, this.edgeOptions);
+            let asciiRenderer = this.commonOptions.renderMode === 'brightness' ? this.brightnessRenderer : this.accurateRenderer;
+            this.edgeRenderer = new EdgeAsciiRenderer(this.p5Instance, this.grid, this.edgeCharacterSet, asciiRenderer, this.edgeOptions);
 
             this.asciiFramebufferDimensions = { width: this.p5Instance.width, height: this.p5Instance.height };
         }
@@ -1437,9 +1774,17 @@ void main() {
 
             let asciiOutput = this.preEffectNextFramebuffer;
 
-            if (this.brightnessOptions.enabled) {
-                this.brightnessRenderer.render(asciiOutput);
-                asciiOutput = this.brightnessRenderer.getOutputFramebuffer();
+            // Select renderer based on renderMode
+            if (this.commonOptions.renderMode === 'accurate') {
+                if (this.brightnessOptions.enabled) {
+                    this.accurateRenderer.render(asciiOutput);
+                    asciiOutput = this.accurateRenderer.getOutputFramebuffer();
+                }
+            } else { // Default to brightness
+                if (this.brightnessOptions.enabled) {
+                    this.brightnessRenderer.render(asciiOutput);
+                    asciiOutput = this.brightnessRenderer.getOutputFramebuffer();
+                }
             }
 
             if (this.edgeOptions.enabled) {
@@ -1499,6 +1844,7 @@ void main() {
 
             this.brightnessRenderer.updateOptions(brightnessOptions);
             this.edgeRenderer.updateOptions(edgeOptions);
+            this.accurateRenderer.updateOptions(brightnessOptions);
 
             if (brightnessOptions?.characters) {
                 this.brightnessCharacterSet.setCharacterSet(brightnessOptions.characters);
@@ -1514,6 +1860,10 @@ void main() {
                 this.grid.resizeCellPixelDimensions(this.brightnessCharacterSet.maxGlyphDimensions.width, this.brightnessCharacterSet.maxGlyphDimensions.height);
                 this.edgeRenderer.sampleFramebuffer = this.p5Instance.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, antialias: false, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
                 this.edgeRenderer.resetSampleShader();
+            }
+
+            if (commonOptions?.renderMode) {
+                this.edgeRenderer.setAsciiRenderer(commonOptions.renderMode === 'brightness' ? this.brightnessRenderer : this.accurateRenderer);
             }
 
             if (commonOptions?.gridDimensions) {
