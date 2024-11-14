@@ -8,19 +8,19 @@ import sobelShader from '../shaders/frag/sobel.frag';
 import { generateSampleShader } from '../shaders/shaderGenerators.js';
 
 export default class EdgeAsciiRenderer extends AsciiRenderer {
-    
+
     constructor(p5Instance, grid, characterSet, brightnessRenderer, options) {
         super(p5Instance, grid, characterSet, options);
 
         this.brightnessRenderer = brightnessRenderer;
-        
+
         this.sobelShader = this.p5.createShader(vertexShader, sobelShader);
         this.sampleShader = this.p5.createShader(vertexShader, generateSampleShader(16, this.grid.cellHeight, this.grid.cellWidth));
         this.shader = this.p5.createShader(vertexShader, asciiEdgeShader);
 
-        this.sobelFramebuffer = this.p5.createFramebuffer({ format: this.p5.FLOAT });
-        this.sampleFramebuffer = this.p5.createFramebuffer({ format: this.p5.FLOAT, width: this.grid.cols, height: this.grid.rows });
-        this.outputFramebuffer = this.p5.createFramebuffer({ format: this.p5.FLOAT });
+        this.sobelFramebuffer = this.p5.createFramebuffer({ antialias: false, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
+        this.sampleFramebuffer = this.p5.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, antialias: false, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
+        this.outputFramebuffer = this.p5.createFramebuffer({ antialias: false, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
     }
 
     resetSampleShader() {

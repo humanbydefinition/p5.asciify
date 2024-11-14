@@ -205,7 +205,7 @@
          * This method should be called after the p5.js setup() function
          */
         setup() {
-            this.texture = this.p5Instance.createFramebuffer({ width: 1, height: 1 });
+            this.texture = this.p5Instance.createFramebuffer({ width: 1, height: 1, antialias: false, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
 
             if (Object.keys(this.palettes).length > 0) {
                 this.updateTexture();
@@ -753,7 +753,7 @@
 
             this.maxGlyphDimensions = this.getMaxGlyphDimensions(this.fontSize);
 
-            this.createTexture(128);
+            this.createTexture(this.fontSize);
         }
 
         loadCharacterGlyphs() {
@@ -802,7 +802,7 @@
             this.fontGlyphs = Object.values(this.font.font.glyphs.glyphs).filter(glyph => glyph.unicode !== undefined);
             this.characterGlyphs = this.loadCharacterGlyphs();
             this.maxGlyphDimensions = this.getMaxGlyphDimensions(this.fontSize);
-            this.createTexture(128);
+            this.createTexture(this.fontSize);
         }
 
         /**
@@ -812,7 +812,7 @@
         setCharacterSet(characters) {
             this.characters = this.validateCharacters(characters);
             this.characterGlyphs = this.loadCharacterGlyphs();
-            this.createTexture(128);
+            this.createTexture(this.fontSize);
         }
 
         /**
@@ -824,7 +824,7 @@
         setCharacter({ character, index }) {
             this.characters[index] = character;
             this.characterGlyphs = this.loadCharacterGlyphs();
-            this.createTexture(128);
+            this.createTexture(this.fontSize);
         }
 
         /**
@@ -845,6 +845,7 @@
         setFontSize(fontSize) {
             this.fontSize = fontSize;
             this.maxGlyphDimensions = this.getMaxGlyphDimensions(this.fontSize);
+            this.createTexture(this.fontSize);
         }
 
         /**
@@ -857,7 +858,7 @@
             let dimensions = this.getMaxGlyphDimensions(fontSize);
 
             if (!this.texture) {
-                this.texture = this.p5Instance.createFramebuffer({ format: this.p5Instance.FLOAT, width: dimensions.width * this.charsetCols, height: dimensions.height * this.charsetRows });
+                this.texture = this.p5Instance.createFramebuffer({ width: dimensions.width * this.charsetCols, height: dimensions.height * this.charsetRows, antialias: false, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
             } else {
                 this.texture.resize(dimensions.width * this.charsetCols, dimensions.height * this.charsetRows);
             }
@@ -934,7 +935,7 @@
             this.characterGlyphs = this.loadCharacterGlyphs();
 
             // Recreate the texture with the updated characters list
-            this.createTexture(128);
+            this.createTexture(this.fontSize);
         }
     }
 
@@ -1077,7 +1078,7 @@
             super(p5Instance, grid, characterSet, options);
 
             this.shader = this.p5.createShader(vertexShader, asciiBrightnessShader);
-            this.outputFramebuffer = this.p5.createFramebuffer({ format: this.p5.FLOAT });
+            this.outputFramebuffer = this.p5.createFramebuffer({ antialias: false, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
         }
 
         render(inputFramebuffer) {
@@ -1213,19 +1214,19 @@ void main() {
     // renderers/EdgeAsciiRenderer.js
 
     class EdgeAsciiRenderer extends AsciiRenderer {
-        
+
         constructor(p5Instance, grid, characterSet, brightnessRenderer, options) {
             super(p5Instance, grid, characterSet, options);
 
             this.brightnessRenderer = brightnessRenderer;
-            
+
             this.sobelShader = this.p5.createShader(vertexShader, sobelShader);
             this.sampleShader = this.p5.createShader(vertexShader, generateSampleShader(16, this.grid.cellHeight, this.grid.cellWidth));
             this.shader = this.p5.createShader(vertexShader, asciiEdgeShader);
 
-            this.sobelFramebuffer = this.p5.createFramebuffer({ format: this.p5.FLOAT });
-            this.sampleFramebuffer = this.p5.createFramebuffer({ format: this.p5.FLOAT, width: this.grid.cols, height: this.grid.rows });
-            this.outputFramebuffer = this.p5.createFramebuffer({ format: this.p5.FLOAT });
+            this.sobelFramebuffer = this.p5.createFramebuffer({ antialias: false, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
+            this.sampleFramebuffer = this.p5.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, antialias: false, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
+            this.outputFramebuffer = this.p5.createFramebuffer({ antialias: false, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
         }
 
         resetSampleShader() {
@@ -1357,7 +1358,7 @@ void main() {
         setup() {
             this.p5Instance.pixelDensity(1);
 
-            this.sketchFramebuffer = this.p5Instance.createFramebuffer({ format: this.p5Instance.FLOAT });
+            this.sketchFramebuffer = this.p5Instance.createFramebuffer({ antialias: false, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
 
             this.brightnessCharacterSet.setup({ p5Instance: this.p5Instance, type: "brightness", font: this.font, characters: this.brightnessOptions.characters, fontSize: this.commonOptions.fontSize });
             this.edgeCharacterSet.setup({ p5Instance: this.p5Instance, type: "edge", font: this.font, characters: this.edgeOptions.characters, fontSize: this.commonOptions.fontSize });
@@ -1373,11 +1374,11 @@ void main() {
             this.preEffectManager.setup();
             this.afterEffectManager.setup();
 
-            this.preEffectPrevFramebuffer = this.p5Instance.createFramebuffer({ format: this.p5Instance.FLOAT });
-            this.preEffectNextFramebuffer = this.p5Instance.createFramebuffer({ format: this.p5Instance.FLOAT });
+            this.preEffectPrevFramebuffer = this.p5Instance.createFramebuffer({ antialias: false, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
+            this.preEffectNextFramebuffer = this.p5Instance.createFramebuffer({ antialias: false, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
 
-            this.postEffectPrevFramebuffer = this.p5Instance.createFramebuffer({ format: this.p5Instance.FLOAT });
-            this.postEffectNextFramebuffer = this.p5Instance.createFramebuffer({ format: this.p5Instance.FLOAT });
+            this.postEffectPrevFramebuffer = this.p5Instance.createFramebuffer({ antialias: false, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
+            this.postEffectNextFramebuffer = this.p5Instance.createFramebuffer({ antialias: false, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
 
             this.brightnessRenderer = new BrightnessAsciiRenderer(this.p5Instance, this.grid, this.brightnessCharacterSet, this.brightnessOptions);
 
@@ -1511,7 +1512,7 @@ void main() {
                 this.brightnessCharacterSet.setFontSize(commonOptions.fontSize);
                 this.edgeCharacterSet.setFontSize(commonOptions.fontSize);
                 this.grid.resizeCellPixelDimensions(this.brightnessCharacterSet.maxGlyphDimensions.width, this.brightnessCharacterSet.maxGlyphDimensions.height);
-                this.edgeRenderer.sampleFramebuffer.resize(this.grid.cols, this.grid.rows);
+                this.edgeRenderer.sampleFramebuffer = this.p5Instance.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, antialias: false, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
                 this.edgeRenderer.resetSampleShader();
             }
 
@@ -1521,7 +1522,7 @@ void main() {
                 } else {
                     this.grid.resizeCellDimensions(commonOptions.gridDimensions[0], commonOptions.gridDimensions[1]);
                 }
-                this.edgeRenderer.sampleFramebuffer.resize(this.grid.cols, this.grid.rows);
+                this.edgeRenderer.sampleFramebuffer = this.p5Instance.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, antialias: false, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
             }
         }
     }

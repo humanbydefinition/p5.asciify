@@ -85,7 +85,7 @@ class P5Asciify {
     setup() {
         this.p5Instance.pixelDensity(1);
 
-        this.sketchFramebuffer = this.p5Instance.createFramebuffer({ format: this.p5Instance.FLOAT });
+        this.sketchFramebuffer = this.p5Instance.createFramebuffer({ antialias: false, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
 
         this.brightnessCharacterSet.setup({ p5Instance: this.p5Instance, type: "brightness", font: this.font, characters: this.brightnessOptions.characters, fontSize: this.commonOptions.fontSize });
         this.edgeCharacterSet.setup({ p5Instance: this.p5Instance, type: "edge", font: this.font, characters: this.edgeOptions.characters, fontSize: this.commonOptions.fontSize });
@@ -101,11 +101,11 @@ class P5Asciify {
         this.preEffectManager.setup();
         this.afterEffectManager.setup();
 
-        this.preEffectPrevFramebuffer = this.p5Instance.createFramebuffer({ format: this.p5Instance.FLOAT });
-        this.preEffectNextFramebuffer = this.p5Instance.createFramebuffer({ format: this.p5Instance.FLOAT });
+        this.preEffectPrevFramebuffer = this.p5Instance.createFramebuffer({ antialias: false, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
+        this.preEffectNextFramebuffer = this.p5Instance.createFramebuffer({ antialias: false, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
 
-        this.postEffectPrevFramebuffer = this.p5Instance.createFramebuffer({ format: this.p5Instance.FLOAT });
-        this.postEffectNextFramebuffer = this.p5Instance.createFramebuffer({ format: this.p5Instance.FLOAT });
+        this.postEffectPrevFramebuffer = this.p5Instance.createFramebuffer({ antialias: false, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
+        this.postEffectNextFramebuffer = this.p5Instance.createFramebuffer({ antialias: false, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
 
         this.brightnessRenderer = new BrightnessAsciiRenderer(this.p5Instance, this.grid, this.brightnessCharacterSet, this.brightnessOptions);
 
@@ -239,7 +239,7 @@ class P5Asciify {
             this.brightnessCharacterSet.setFontSize(commonOptions.fontSize);
             this.edgeCharacterSet.setFontSize(commonOptions.fontSize);
             this.grid.resizeCellPixelDimensions(this.brightnessCharacterSet.maxGlyphDimensions.width, this.brightnessCharacterSet.maxGlyphDimensions.height);
-            this.edgeRenderer.sampleFramebuffer.resize(this.grid.cols, this.grid.rows);
+            this.edgeRenderer.sampleFramebuffer = this.p5Instance.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, antialias: false, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
             this.edgeRenderer.resetSampleShader();
         }
 
@@ -249,7 +249,7 @@ class P5Asciify {
             } else {
                 this.grid.resizeCellDimensions(commonOptions.gridDimensions[0], commonOptions.gridDimensions[1]);
             }
-            this.edgeRenderer.sampleFramebuffer.resize(this.grid.cols, this.grid.rows);
+            this.edgeRenderer.sampleFramebuffer = this.p5Instance.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, antialias: false, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
         }
     }
 }

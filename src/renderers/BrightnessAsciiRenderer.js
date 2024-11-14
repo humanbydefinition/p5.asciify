@@ -9,7 +9,7 @@ export default class BrightnessAsciiRenderer extends AsciiRenderer {
         super(p5Instance, grid, characterSet, options);
 
         this.shader = this.p5.createShader(vertexShader, asciiBrightnessShader);
-        this.outputFramebuffer = this.p5.createFramebuffer({ format: this.p5.FLOAT });
+        this.outputFramebuffer = this.p5.createFramebuffer({ antialias: false, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
     }
 
     render(inputFramebuffer) {

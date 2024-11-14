@@ -13,21 +13,16 @@ const int SAMPLES_PER_COL = 32;
 vec3 colorHistogram[MAX_HISTOGRAM_SIZE];
 int countHistogram[MAX_HISTOGRAM_SIZE];
 
-float round(float value) {
-    return floor(value + 0.5);
-}
-
 void main() {
-    vec2 bufferDimensions = u_gridCellDimensions;
     vec2 imageDimensions = u_imageSize;
-    vec2 gridCellDimensions = vec2(imageDimensions.x / bufferDimensions.x, imageDimensions.y / bufferDimensions.y);
+    vec2 gridCellDimensions = u_gridCellDimensions;
 
     ivec2 coords = ivec2(gl_FragCoord.xy);
     int gridX = coords.x;
     int gridY = coords.y;
 
     // Calculate the origin of the cell in the image
-    ivec2 cellOrigin = ivec2(round(float(gridX) * gridCellDimensions.x), round(float(gridY) * gridCellDimensions.y));
+    ivec2 cellOrigin = ivec2(float(gridX) * gridCellDimensions.x, float(gridY) * gridCellDimensions.y);
     int nonBlackCount = 0;
 
     // Initialize histograms
@@ -39,14 +34,14 @@ void main() {
     // Iterate over the cell and populate the histograms
     for (int i = 0; i < SAMPLES_PER_COL; i++) {
         for (int j = 0; j < SAMPLES_PER_ROW; j++) {
-            ivec2 pixelCoords = cellOrigin + ivec2(i, j);
+            ivec2 pixelCoords = cellOrigin + ivec2(j, i);
             // Check bounds
             if (pixelCoords.x < 0 || pixelCoords.y < 0 || pixelCoords.x >= int(imageDimensions.x) || pixelCoords.y >= int(imageDimensions.y)) {
                 continue;
             }
             
             // Normalize pixel coordinates when sampling from the texture
-            vec2 normalizedCoords = (vec2(pixelCoords) + 0.5) / imageDimensions; // +0.5 for pixel center
+            vec2 normalizedCoords = vec2(pixelCoords) / imageDimensions;
             vec3 color = texture2D(u_image, normalizedCoords).rgb;
 
             // Ignore black pixels
@@ -59,9 +54,7 @@ void main() {
             // Check if the color already exists in the histogram
             bool found = false;
             for (int k = 0; k < MAX_HISTOGRAM_SIZE; k++) {
-                // colorHistogram[k] can be checked directly
-                // However, floating-point comparison can be imprecise; consider comparing within a small epsilon if needed
-                if (colorHistogram[k] == color) {
+                if (distance(colorHistogram[k], color) < 0.001) {
                     countHistogram[k]++;
                     found = true;
                     break;
@@ -92,7 +85,7 @@ void main() {
         }
     }
 
-    // If the number of non-black pixels is below the threshold, output black, otherwise output the most frequent color
+    // Output the result based on the threshold
     if (nonBlackCount < u_threshold) {
         gl_FragColor = vec4(BLACK, 1.0);
     } else {
