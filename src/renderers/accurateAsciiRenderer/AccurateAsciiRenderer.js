@@ -1,11 +1,11 @@
-import AsciiRenderer from './AsciiRenderer.js';
+import AsciiRenderer from '../AsciiRenderer.js';
 
-import { generateCharacterSelectionShader, generateBrightnessSampleShader, generateColorSampleShader} from '../shaders/shaderGenerators.js';
+import { generateCharacterSelectionShader, generateBrightnessSampleShader, generateColorSampleShader} from './shaders/shaderGenerators.js';
 
-import asciiAccurateShader from '../shaders/frag/asciiAccurate.frag';
-import brightnessSplitShader from '../shaders/frag/brightnessSplit.frag';
+import asciiAccurateShader from './shaders/asciiAccurate.frag';
+import brightnessSplitShader from './shaders/brightnessSplit.frag';
 
-import vertexShader from '../shaders/vert/shader.vert';
+import vertexShader from '../../shaders/vert/shader.vert';
 
 export default class AccurateAsciiRenderer extends AsciiRenderer {
 

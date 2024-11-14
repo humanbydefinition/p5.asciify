@@ -3,9 +3,9 @@ import P5AsciifyCharacterSet from './characterset.js';
 import P5AsciifyGrid from './grid.js';
 import P5AsciifyColorPalette from './colorpalette.js';
 
-import BrightnessAsciiRenderer from './renderers/BrightnessAsciiRenderer.js';
-import EdgeAsciiRenderer from './renderers/EdgeAsciiRenderer.js';
-import AccurateAsciiRenderer from './renderers/AccurateAsciiRenderer.js';
+import BrightnessAsciiRenderer from './renderers/brightnessAsciiRenderer/BrightnessAsciiRenderer.js';
+import EdgeAsciiRenderer from './renderers/edgeAsciiRenderer/EdgeAsciiRenderer.js';
+import AccurateAsciiRenderer from './renderers/accurateAsciiRenderer/AccurateAsciiRenderer.js';
 
 /**
  * @class P5Asciify

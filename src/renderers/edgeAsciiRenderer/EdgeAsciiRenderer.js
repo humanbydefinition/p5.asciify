@@ -1,11 +1,11 @@
 // renderers/EdgeAsciiRenderer.js
-import AsciiRenderer from './AsciiRenderer.js';
-import vertexShader from '../shaders/vert/shader.vert';
-import asciiEdgeShader from '../shaders/frag/asciiEdge.frag';
+import AsciiRenderer from '../AsciiRenderer.js';
+import vertexShader from '../../shaders/vert/shader.vert';
+import asciiEdgeShader from './shaders/asciiEdge.frag';
 
-import sobelShader from '../shaders/frag/sobel.frag';
+import sobelShader from './shaders/sobel.frag';
 
-import { generateSampleShader } from '../shaders/shaderGenerators.js';
+import { generateSampleShader } from './shaders/shaderGenerators.js';
 
 export default class EdgeAsciiRenderer extends AsciiRenderer {
 
