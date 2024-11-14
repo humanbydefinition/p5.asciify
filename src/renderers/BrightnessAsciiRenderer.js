@@ -1,7 +1,7 @@
 // renderers/BrightnessAsciiRenderer.js
 import AsciiRenderer from './AsciiRenderer.js';
 import vertexShader from '../shaders/vert/shader.vert';
-import asciiBrightnessShader from '../shaders/frag/ascii.frag';
+import asciiBrightnessShader from '../shaders/frag/asciiBrightness.frag';
 
 export default class BrightnessAsciiRenderer extends AsciiRenderer {
     
@@ -28,8 +28,6 @@ export default class BrightnessAsciiRenderer extends AsciiRenderer {
         this.shader.setUniform('u_backgroundColor', this.options.backgroundColor);
         this.shader.setUniform('u_backgroundColorMode', this.options.backgroundColorMode);
         this.shader.setUniform('u_invertMode', this.options.invertMode);
-        this.shader.setUniform('u_renderMode', 0);
-        this.shader.setUniform('u_brightnessEnabled', this.options.enabled);
         this.shader.setUniform('u_rotationAngle', this.p5.radians(this.options.rotationAngle));
         this.p5.rect(0, 0, this.p5.width, this.p5.height);
         this.outputFramebuffer.end();

@@ -1,7 +1,7 @@
 // renderers/EdgeAsciiRenderer.js
 import AsciiRenderer from './AsciiRenderer.js';
 import vertexShader from '../shaders/vert/shader.vert';
-import asciiEdgeShader from '../shaders/frag/ascii.frag';
+import asciiEdgeShader from '../shaders/frag/asciiEdge.frag';
 
 import sobelShader from '../shaders/frag/sobel.frag';
 import sampleShader from '../shaders/frag/sample.frag';
@@ -59,7 +59,6 @@ export default class EdgeAsciiRenderer extends AsciiRenderer {
         this.shader.setUniform('u_backgroundColor', this.options.backgroundColor);
         this.shader.setUniform('u_backgroundColorMode', this.options.backgroundColorMode);
         this.shader.setUniform('u_invertMode', this.options.invertMode);
-        this.shader.setUniform('u_renderMode', 1);
         this.shader.setUniform('u_brightnessEnabled', this.brightnessRenderer.options.enabled);
         this.shader.setUniform('u_rotationAngle', this.p5.radians(this.options.rotationAngle));
         this.p5.rect(0, 0, this.p5.width, this.p5.height);
