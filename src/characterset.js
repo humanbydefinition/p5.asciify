@@ -27,7 +27,7 @@ class P5AsciifyCharacterSet {
 
         this.maxGlyphDimensions = this.getMaxGlyphDimensions(this.fontSize);
 
-        this.createTexture(128);
+        this.createTexture(this.fontSize);
     }
 
     loadCharacterGlyphs() {
@@ -76,7 +76,7 @@ class P5AsciifyCharacterSet {
         this.fontGlyphs = Object.values(this.font.font.glyphs.glyphs).filter(glyph => glyph.unicode !== undefined);
         this.characterGlyphs = this.loadCharacterGlyphs();
         this.maxGlyphDimensions = this.getMaxGlyphDimensions(this.fontSize);
-        this.createTexture(128);
+        this.createTexture(this.fontSize);
     }
 
     /**
@@ -86,7 +86,7 @@ class P5AsciifyCharacterSet {
     setCharacterSet(characters) {
         this.characters = this.validateCharacters(characters);
         this.characterGlyphs = this.loadCharacterGlyphs();
-        this.createTexture(128);
+        this.createTexture(this.fontSize);
     }
 
     /**
@@ -98,7 +98,7 @@ class P5AsciifyCharacterSet {
     setCharacter({ character, index }) {
         this.characters[index] = character;
         this.characterGlyphs = this.loadCharacterGlyphs();
-        this.createTexture(128);
+        this.createTexture(this.fontSize);
     }
 
     /**
@@ -119,6 +119,7 @@ class P5AsciifyCharacterSet {
     setFontSize(fontSize) {
         this.fontSize = fontSize;
         this.maxGlyphDimensions = this.getMaxGlyphDimensions(this.fontSize);
+        this.createTexture(this.fontSize);
     }
 
     /**
@@ -131,7 +132,7 @@ class P5AsciifyCharacterSet {
         let dimensions = this.getMaxGlyphDimensions(fontSize);
 
         if (!this.texture) {
-            this.texture = this.p5Instance.createFramebuffer({ format: this.p5Instance.FLOAT, width: dimensions.width * this.charsetCols, height: dimensions.height * this.charsetRows });
+            this.texture = this.p5Instance.createFramebuffer({ width: dimensions.width * this.charsetCols, height: dimensions.height * this.charsetRows, antialias: false, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
         } else {
             this.texture.resize(dimensions.width * this.charsetCols, dimensions.height * this.charsetRows);
         }
@@ -208,7 +209,7 @@ class P5AsciifyCharacterSet {
         this.characterGlyphs = this.loadCharacterGlyphs();
 
         // Recreate the texture with the updated characters list
-        this.createTexture(128);
+        this.createTexture(this.fontSize);
     }
 }
 

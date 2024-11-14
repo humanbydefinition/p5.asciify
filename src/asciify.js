@@ -3,10 +3,9 @@ import P5AsciifyCharacterSet from './characterset.js';
 import P5AsciifyGrid from './grid.js';
 import P5AsciifyColorPalette from './colorpalette.js';
 
-import vertexShader from './shaders/vert/shader.vert';
-import asciiShader from './shaders/frag/ascii.frag';
-import sobelShader from './shaders/frag/sobel.frag';
-import sampleShader from './shaders/frag/sample.frag';
+import BrightnessAsciiRenderer from './renderers/brightnessAsciiRenderer/BrightnessAsciiRenderer.js';
+import EdgeAsciiRenderer from './renderers/edgeAsciiRenderer/EdgeAsciiRenderer.js';
+import AccurateAsciiRenderer from './renderers/accurateAsciiRenderer/AccurateAsciiRenderer.js';
 
 /**
  * @class P5Asciify
@@ -18,6 +17,7 @@ class P5Asciify {
     commonOptions = {
         fontSize: 16,
         gridDimensions: [0, 0],
+        renderMode: 'brightness',
     };
 
     brightnessOptions = {
@@ -50,35 +50,13 @@ class P5Asciify {
 
     afterEffectManager = new P5AsciifyEffectManager(this.colorPalette);
 
-    sketchFramebuffer = null;
-
-    preEffectPrevFramebuffer = null;
-    preEffectNextFramebuffer = null;
-
-    postEffectPrevFramebuffer = null;
-    postEffectNextFramebuffer = null;
-
-    asciiShader = null;
-    asciiBrightnessFramebuffer = null;
-    asciiEdgeFramebuffer = null;
     asciiFramebufferDimensions = { width: 0, height: 0 };
 
-    sobelShader = null;
-    sobelFramebuffer = null;
-
-    sampleShader = null;
-    sampleFramebuffer = null;
-
-    font = null;
     brightnessCharacterSet = new P5AsciifyCharacterSet();
     edgeCharacterSet = new P5AsciifyCharacterSet();
     grid = new P5AsciifyGrid({ cellWidth: 0, cellHeight: 0 });
 
     instanceMode = false;
-
-    p5Canvas = null;
-
-    p5Instance = null;
 
     instance(p) {
         this.p5Instance = p;
@@ -93,7 +71,7 @@ class P5Asciify {
     setup() {
         this.p5Instance.pixelDensity(1);
 
-        this.sketchFramebuffer = this.p5Instance.createFramebuffer({ format: this.p5Instance.FLOAT });
+        this.sketchFramebuffer = this.p5Instance.createFramebuffer({ antialias: false, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
 
         this.brightnessCharacterSet.setup({ p5Instance: this.p5Instance, type: "brightness", font: this.font, characters: this.brightnessOptions.characters, fontSize: this.commonOptions.fontSize });
         this.edgeCharacterSet.setup({ p5Instance: this.p5Instance, type: "edge", font: this.font, characters: this.edgeOptions.characters, fontSize: this.commonOptions.fontSize });
@@ -109,23 +87,19 @@ class P5Asciify {
         this.preEffectManager.setup();
         this.afterEffectManager.setup();
 
-        this.preEffectPrevFramebuffer = this.p5Instance.createFramebuffer({ format: this.p5Instance.FLOAT });
-        this.preEffectNextFramebuffer = this.p5Instance.createFramebuffer({ format: this.p5Instance.FLOAT });
+        this.preEffectPrevFramebuffer = this.p5Instance.createFramebuffer({ antialias: false, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
+        this.preEffectNextFramebuffer = this.p5Instance.createFramebuffer({ antialias: false, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
 
-        this.postEffectPrevFramebuffer = this.p5Instance.createFramebuffer({ format: this.p5Instance.FLOAT });
-        this.postEffectNextFramebuffer = this.p5Instance.createFramebuffer({ format: this.p5Instance.FLOAT });
+        this.postEffectPrevFramebuffer = this.p5Instance.createFramebuffer({ antialias: false, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
+        this.postEffectNextFramebuffer = this.p5Instance.createFramebuffer({ antialias: false, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
 
-        this.asciiShader = this.p5Instance.createShader(vertexShader, asciiShader);
-        this.asciiBrightnessFramebuffer = this.p5Instance.createFramebuffer({ format: this.p5Instance.FLOAT });
-        this.asciiEdgeFramebuffer = this.p5Instance.createFramebuffer({ format: this.p5Instance.FLOAT });
+        this.brightnessRenderer = new BrightnessAsciiRenderer(this.p5Instance, this.grid, this.brightnessCharacterSet, this.brightnessOptions);
+        this.accurateRenderer = new AccurateAsciiRenderer(this.p5Instance, this.grid, this.brightnessCharacterSet, this.brightnessOptions);
 
-        this.sobelShader = this.p5Instance.createShader(vertexShader, sobelShader);
-        this.sobelFramebuffer = this.p5Instance.createFramebuffer({ format: this.p5Instance.FLOAT });
+        let asciiRenderer = this.commonOptions.renderMode === 'brightness' ? this.brightnessRenderer : this.accurateRenderer;
+        this.edgeRenderer = new EdgeAsciiRenderer(this.p5Instance, this.grid, this.edgeCharacterSet, asciiRenderer, this.edgeOptions);
 
-        this.sampleShader = this.p5Instance.createShader(vertexShader, sampleShader);
-        this.sampleFramebuffer = this.p5Instance.createFramebuffer({ format: this.p5Instance.FLOAT, width: this.grid.cols, height: this.grid.rows });
-
-        this.asciiFramebufferDimensions = { width: this.asciiBrightnessFramebuffer.width, height: this.asciiBrightnessFramebuffer.height };
+        this.asciiFramebufferDimensions = { width: this.p5Instance.width, height: this.p5Instance.height };
     }
 
     /**
@@ -134,13 +108,13 @@ class P5Asciify {
      * since I am not aware of a better way to do this since there is no hook for when the canvas is resized.
      */
     checkFramebufferDimensions() {
-        if (this.asciiFramebufferDimensions.width !== this.asciiBrightnessFramebuffer.width || this.asciiFramebufferDimensions.height !== this.asciiBrightnessFramebuffer.height) {
-            this.asciiFramebufferDimensions.width = this.asciiBrightnessFramebuffer.width;
-            this.asciiFramebufferDimensions.height = this.asciiBrightnessFramebuffer.height;
+        if (this.asciiFramebufferDimensions.width !== this.p5Instance.width || this.asciiFramebufferDimensions.height !== this.p5Instance.height) {
+            this.asciiFramebufferDimensions.width = this.p5Instance.width;
+            this.asciiFramebufferDimensions.height = this.p5Instance.height;
 
             if (this.commonOptions.gridDimensions[0] === 0 || this.commonOptions.gridDimensions[1] === 0) {
                 this.grid.reset();
-                this.sampleFramebuffer.resize(this.grid.cols, this.grid.rows);
+                this.edgeRenderer.sampleFramebuffer.resize(this.grid.cols, this.grid.rows);
             } else {
                 this.grid._resizeGrid();
             }
@@ -176,90 +150,34 @@ class P5Asciify {
             }
         }
 
-        if (this.brightnessOptions.enabled) {
-            this.asciiBrightnessFramebuffer.begin();
-            this.p5Instance.shader(this.asciiShader);
-            this.asciiShader.setUniform('u_characterTexture', this.brightnessCharacterSet.texture);
-            this.asciiShader.setUniform('u_charsetCols', this.brightnessCharacterSet.charsetCols);
-            this.asciiShader.setUniform('u_charsetRows', this.brightnessCharacterSet.charsetRows);
-            this.asciiShader.setUniform('u_totalChars', this.brightnessCharacterSet.characters.length);
-            this.asciiShader.setUniform('u_sketchTexture', this.preEffectNextFramebuffer);
-            this.asciiShader.setUniform('u_gridPixelDimensions', [this.grid.width, this.grid.height]);
-            this.asciiShader.setUniform('u_gridOffsetDimensions', [this.grid.offsetX, this.grid.offsetY]);
-            this.asciiShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
-            this.asciiShader.setUniform('u_characterColor', this.brightnessOptions.characterColor);
-            this.asciiShader.setUniform('u_characterColorMode', this.brightnessOptions.characterColorMode);
-            this.asciiShader.setUniform('u_backgroundColor', this.brightnessOptions.backgroundColor);
-            this.asciiShader.setUniform('u_backgroundColorMode', this.brightnessOptions.backgroundColorMode);
-            this.asciiShader.setUniform('u_invertMode', this.brightnessOptions.invertMode);
-            this.asciiShader.setUniform('u_renderMode', 0);
-            this.asciiShader.setUniform('u_brightnessEnabled', this.brightnessOptions.enabled);
-            this.asciiShader.setUniform('u_rotationAngle', this.p5Instance.radians(this.brightnessOptions.rotationAngle));
-            this.p5Instance.rect(0, 0, this.p5Instance.width, this.p5Instance.height);
-            this.asciiBrightnessFramebuffer.end();
+        let asciiOutput = this.preEffectNextFramebuffer;
+
+        // Select renderer based on renderMode
+        if (this.commonOptions.renderMode === 'accurate') {
+            if (this.brightnessOptions.enabled) {
+                this.accurateRenderer.render(asciiOutput);
+                asciiOutput = this.accurateRenderer.getOutputFramebuffer();
+            }
+        } else { // Default to brightness
+            if (this.brightnessOptions.enabled) {
+                this.brightnessRenderer.render(asciiOutput);
+                asciiOutput = this.brightnessRenderer.getOutputFramebuffer();
+            }
         }
 
         if (this.edgeOptions.enabled) {
-            this.sobelFramebuffer.begin();
-            this.p5Instance.shader(this.sobelShader);
-            this.sobelShader.setUniform('u_texture', this.preEffectNextFramebuffer);
-            this.sobelShader.setUniform('u_textureSize', [this.p5Instance.width, this.p5Instance.height]);
-            this.sobelShader.setUniform('u_threshold', this.edgeOptions.sobelThreshold);
-            this.p5Instance.rect(0, 0, this.p5Instance.width, this.p5Instance.height);
-            this.sobelFramebuffer.end();
-
-            this.sampleFramebuffer.begin();
-            this.p5Instance.shader(this.sampleShader);
-            this.sampleShader.setUniform('u_image', this.sobelFramebuffer);
-            this.sampleShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
-            this.sampleShader.setUniform('u_threshold', this.edgeOptions.sampleThreshold);
-            this.p5Instance.rect(0, 0, this.p5Instance.width, this.p5Instance.height);
-            this.sampleFramebuffer.end();
-
-            this.asciiEdgeFramebuffer.begin();
-            this.p5Instance.shader(this.asciiShader);
-            this.asciiShader.setUniform('u_characterTexture', this.edgeCharacterSet.texture);
-            this.asciiShader.setUniform('u_charsetCols', this.edgeCharacterSet.charsetCols);
-            this.asciiShader.setUniform('u_charsetRows', this.edgeCharacterSet.charsetRows);
-            this.asciiShader.setUniform('u_totalChars', this.edgeCharacterSet.characters.length);
-            this.asciiShader.setUniform('u_sketchTexture', this.preEffectNextFramebuffer);
-            this.asciiShader.setUniform('u_asciiBrightnessTexture', this.asciiBrightnessFramebuffer);
-            this.asciiShader.setUniform('u_edgesTexture', this.sampleFramebuffer);
-            this.asciiShader.setUniform('u_gridPixelDimensions', [this.grid.width, this.grid.height]);
-            this.asciiShader.setUniform('u_gridOffsetDimensions', [this.grid.offsetX, this.grid.offsetY]);
-            this.asciiShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
-            this.asciiShader.setUniform('u_characterColor', this.edgeOptions.characterColor);
-            this.asciiShader.setUniform('u_characterColorMode', this.edgeOptions.characterColorMode);
-            this.asciiShader.setUniform('u_backgroundColor', this.edgeOptions.backgroundColor);
-            this.asciiShader.setUniform('u_backgroundColorMode', this.edgeOptions.backgroundColorMode);
-            this.asciiShader.setUniform('u_invertMode', this.edgeOptions.invertMode);
-            this.asciiShader.setUniform('u_renderMode', 1);
-            this.asciiShader.setUniform('u_brightnessEnabled', this.brightnessOptions.enabled);
-            this.asciiShader.setUniform('u_rotationAngle', this.p5Instance.radians(this.edgeOptions.rotationAngle));
-            this.p5Instance.rect(0, 0, this.p5Instance.width, this.p5Instance.height);
-            this.asciiEdgeFramebuffer.end();
+            this.edgeRenderer.render(this.preEffectNextFramebuffer, this.brightnessOptions.enabled);
+            asciiOutput = this.edgeRenderer.getOutputFramebuffer();
         }
 
         this.postEffectNextFramebuffer.begin();
-        this.p5Instance.clear(); // do not remove this, even though it's tempting
-        if (this.edgeOptions.enabled) {
-            this.p5Instance.image(this.asciiEdgeFramebuffer, -this.p5Instance.width / 2, -this.p5Instance.height / 2);
-        } else if (this.brightnessOptions.enabled) {
-            this.p5Instance.image(this.asciiBrightnessFramebuffer, -this.p5Instance.width / 2, -this.p5Instance.height / 2);
-        } else {
-            this.p5Instance.image(this.preEffectNextFramebuffer, -this.p5Instance.width / 2, -this.p5Instance.height / 2);
-        }
+        this.p5Instance.clear();
+        this.p5Instance.image(asciiOutput, -this.p5Instance.width / 2, -this.p5Instance.height / 2);
         this.postEffectNextFramebuffer.end();
 
         this.postEffectPrevFramebuffer.begin();
-        this.p5Instance.clear(); // do not remove this, even though it's tempting
-        if (this.edgeOptions.enabled) {
-            this.p5Instance.image(this.asciiEdgeFramebuffer, -this.p5Instance.width / 2, -this.p5Instance.height / 2);
-        } else if (this.brightnessOptions.enabled) {
-            this.p5Instance.image(this.asciiBrightnessFramebuffer, -this.p5Instance.width / 2, -this.p5Instance.height / 2);
-        } else {
-            this.p5Instance.image(this.preEffectNextFramebuffer, -this.p5Instance.width / 2, -this.p5Instance.height / 2);
-        }
+        this.p5Instance.clear();
+        this.p5Instance.image(asciiOutput, -this.p5Instance.width / 2, -this.p5Instance.height / 2);
         this.postEffectPrevFramebuffer.end();
 
         for (const effect of this.afterEffectManager._effects) {
@@ -302,6 +220,10 @@ class P5Asciify {
             return;
         }
 
+        this.brightnessRenderer.updateOptions(brightnessOptions);
+        this.edgeRenderer.updateOptions(edgeOptions);
+        this.accurateRenderer.updateOptions(brightnessOptions);
+
         if (brightnessOptions?.characters) {
             this.brightnessCharacterSet.setCharacterSet(brightnessOptions.characters);
         }
@@ -314,7 +236,12 @@ class P5Asciify {
             this.brightnessCharacterSet.setFontSize(commonOptions.fontSize);
             this.edgeCharacterSet.setFontSize(commonOptions.fontSize);
             this.grid.resizeCellPixelDimensions(this.brightnessCharacterSet.maxGlyphDimensions.width, this.brightnessCharacterSet.maxGlyphDimensions.height);
-            this.sampleFramebuffer.resize(this.grid.cols, this.grid.rows);
+            this.edgeRenderer.sampleFramebuffer = this.p5Instance.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, antialias: false, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
+            this.edgeRenderer.resetSampleShader();
+        }
+
+        if (commonOptions?.renderMode) {
+            this.edgeRenderer.setAsciiRenderer(commonOptions.renderMode === 'brightness' ? this.brightnessRenderer : this.accurateRenderer);
         }
 
         if (commonOptions?.gridDimensions) {
@@ -323,7 +250,7 @@ class P5Asciify {
             } else {
                 this.grid.resizeCellDimensions(commonOptions.gridDimensions[0], commonOptions.gridDimensions[1]);
             }
-            this.sampleFramebuffer.resize(this.grid.cols, this.grid.rows);
+            this.edgeRenderer.sampleFramebuffer = this.p5Instance.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, antialias: false, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
         }
     }
 }
