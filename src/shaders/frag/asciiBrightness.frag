@@ -43,7 +43,6 @@ void main() {
     vec2 centerCoord = cellCoord + vec2(0.5f);
     vec2 baseCoord = centerCoord / u_gridCellDimensions;
 
-    vec4 edgeColor; // edge color (only used in edges mode)
     vec4 sketchColor; // Simulation color
 
     sketchColor = texture(u_sketchTexture, baseCoord);
