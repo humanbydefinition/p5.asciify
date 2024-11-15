@@ -147,7 +147,7 @@ p5.prototype.resetAsciiGrid = function () {
  * TODO: Add example
  */
 p5.prototype.setAsciiOptions = function (options) {
-    const validOptions = ["common", "brightness", "edge"];
+    const validOptions = ["common", "brightness", "edge", "ascii"];
     const unknownOptions = Object.keys(options).filter(option => !validOptions.includes(option));
 
     if (unknownOptions.length) {
@@ -155,9 +155,13 @@ p5.prototype.setAsciiOptions = function (options) {
         unknownOptions.forEach(option => delete options[option]);
     }
 
-    const { brightness: brightnessOptions, edge: edgeOptions, common: commonOptions } = options;
+    if (options.brightness) {
+        console.warn("P5Asciify: The 'brightness' option is deprecated and will be removed in future releases. Use 'ascii' instead, which works the same way.");
+    }
 
-    const colorOptions = [brightnessOptions, edgeOptions];
+    const { brightness: brightnessOptions, edge: edgeOptions, common: commonOptions, ascii: asciiOptions } = options;
+
+    const colorOptions = [brightnessOptions, edgeOptions, asciiOptions];
     colorOptions.forEach(opt => {
         if (opt?.characterColor) opt.characterColor = P5AsciifyUtils.hexToShaderColor(opt.characterColor);
         if (opt?.backgroundColor) opt.backgroundColor = P5AsciifyUtils.hexToShaderColor(opt.backgroundColor);
@@ -173,7 +177,7 @@ p5.prototype.setAsciiOptions = function (options) {
         delete edgeOptions.characters;
     }
 
-    p5asciify.setDefaultOptions(brightnessOptions, edgeOptions, commonOptions);
+    p5asciify.setDefaultOptions(asciiOptions, edgeOptions, commonOptions);
 };
 
 
