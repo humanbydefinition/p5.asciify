@@ -18,13 +18,13 @@ export default class EdgeAsciiRenderer extends AsciiRenderer {
         this.sampleShader = this.p5.createShader(vertexShader, generateSampleShader(16, this.grid.cellHeight, this.grid.cellWidth));
         this.shader = this.p5.createShader(vertexShader, asciiEdgeShader);
 
+        this.initializeFramebuffers();
+    }
+
+    initializeFramebuffers() {
         this.sobelFramebuffer = this.p5.createFramebuffer({ antialias: false, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
         this.sampleFramebuffer = this.p5.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, antialias: false, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
         this.outputFramebuffer = this.p5.createFramebuffer({ antialias: false, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
-    }
-
-    resetSampleShader() {
-        this.sampleShader = this.p5.createShader(vertexShader, generateSampleShader(16, this.grid.cellHeight, this.grid.cellWidth));
     }
 
     setAsciiRenderer(asciiRenderer) {

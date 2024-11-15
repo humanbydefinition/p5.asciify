@@ -18,6 +18,10 @@ export default class AccurateAsciiRenderer extends AsciiRenderer {
         this.brightnessSplitShader = this.p5.createShader(vertexShader, brightnessSplitShader);
         this.shader = this.p5.createShader(vertexShader, asciiAccurateShader);
 
+        this.initializeFramebuffers();
+    }
+
+    initializeFramebuffers() {
         this.brightnessSampleFramebuffer = this.p5.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, antialias: false, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
         this.brightnessSplitFramebuffer = this.p5.createFramebuffer({ antialias: false, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
         this.primaryColorSampleFramebuffer = this.p5.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, antialias: false, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
