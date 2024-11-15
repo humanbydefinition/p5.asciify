@@ -17,10 +17,11 @@ class P5Asciify {
     commonOptions = {
         fontSize: 16,
         gridDimensions: [0, 0],
-        renderMode: 'brightness',
     };
 
-    brightnessOptions = {
+    // brightness and accurate options are the same, since only one of them can be enabled at a time
+    asciiOptions = {
+        renderMode: 'brightness',
         enabled: true,
         characters: "0123456789",
         characterColor: [1.0, 1.0, 1.0],
@@ -47,12 +48,11 @@ class P5Asciify {
     colorPalette = new P5AsciifyColorPalette();
 
     preEffectManager = new P5AsciifyEffectManager(this.colorPalette);
-
     afterEffectManager = new P5AsciifyEffectManager(this.colorPalette);
 
     asciiFramebufferDimensions = { width: 0, height: 0 };
 
-    brightnessCharacterSet = new P5AsciifyCharacterSet();
+    asciiCharacterSet = new P5AsciifyCharacterSet();
     edgeCharacterSet = new P5AsciifyCharacterSet();
     grid = new P5AsciifyGrid({ cellWidth: 0, cellHeight: 0 });
 
@@ -71,10 +71,10 @@ class P5Asciify {
     setup() {
         this.p5Instance.pixelDensity(1);
 
-        this.brightnessCharacterSet.setup({ p5Instance: this.p5Instance, type: "brightness", font: this.font, characters: this.brightnessOptions.characters, fontSize: this.commonOptions.fontSize });
+        this.asciiCharacterSet.setup({ p5Instance: this.p5Instance, type: "ascii", font: this.font, characters: this.asciiOptions.characters, fontSize: this.commonOptions.fontSize });
         this.edgeCharacterSet.setup({ p5Instance: this.p5Instance, type: "edge", font: this.font, characters: this.edgeOptions.characters, fontSize: this.commonOptions.fontSize });
 
-        this.grid.resizeCellPixelDimensions(this.brightnessCharacterSet.maxGlyphDimensions.width, this.brightnessCharacterSet.maxGlyphDimensions.height);
+        this.grid.resizeCellPixelDimensions(this.asciiCharacterSet.maxGlyphDimensions.width, this.asciiCharacterSet.maxGlyphDimensions.height);
 
         if (this.commonOptions.gridDimensions[0] != 0 && this.commonOptions.gridDimensions[1] != 0) {
             this.grid.resizeCellDimensions(this.commonOptions.gridDimensions[0], this.commonOptions.gridDimensions[1]);
@@ -85,10 +85,10 @@ class P5Asciify {
         this.preEffectManager.setup();
         this.afterEffectManager.setup();
 
-        this.brightnessRenderer = new BrightnessAsciiRenderer(this.p5Instance, this.grid, this.brightnessCharacterSet, this.brightnessOptions);
-        this.accurateRenderer = new AccurateAsciiRenderer(this.p5Instance, this.grid, this.brightnessCharacterSet, this.brightnessOptions);
+        this.brightnessRenderer = new BrightnessAsciiRenderer(this.p5Instance, this.grid, this.asciiCharacterSet, this.asciiOptions);
+        this.accurateRenderer = new AccurateAsciiRenderer(this.p5Instance, this.grid, this.asciiCharacterSet, this.asciiOptions);
 
-        let asciiRenderer = this.commonOptions.renderMode === 'brightness' ? this.brightnessRenderer : this.accurateRenderer;
+        let asciiRenderer = this.asciiOptions.renderMode === 'brightness' ? this.brightnessRenderer : this.accurateRenderer;
         this.edgeRenderer = new EdgeAsciiRenderer(this.p5Instance, this.grid, this.edgeCharacterSet, asciiRenderer, this.edgeOptions);
 
         this.asciiFramebufferDimensions = { width: this.p5Instance.width, height: this.p5Instance.height };
@@ -159,8 +159,8 @@ class P5Asciify {
         let asciiOutput = this.preEffectNextFramebuffer;
 
         // Select renderer based on renderMode
-        if (this.brightnessOptions.enabled) {
-            if (this.commonOptions.renderMode === 'accurate') {
+        if (this.asciiOptions.enabled) {
+            if (this.asciiOptions.renderMode === 'accurate') {
                 this.accurateRenderer.render(asciiOutput);
                 asciiOutput = this.accurateRenderer.getOutputFramebuffer();
             } else { // Default to brightness
@@ -170,7 +170,7 @@ class P5Asciify {
         }
 
         if (this.edgeOptions.enabled) {
-            this.edgeRenderer.render(this.preEffectNextFramebuffer, this.brightnessOptions.enabled);
+            this.edgeRenderer.render(this.preEffectNextFramebuffer, this.asciiOptions.enabled);
             asciiOutput = this.edgeRenderer.getOutputFramebuffer();
         }
 
@@ -204,12 +204,12 @@ class P5Asciify {
      * Sets the default options for the P5Asciify library.
      * @param {object} options 
      */
-    setDefaultOptions(brightnessOptions, edgeOptions, commonOptions) {
+    setDefaultOptions(asciiOptions, edgeOptions, commonOptions) {
 
         // The parameters are pre-processed, so we can just spread them into the class variables
-        this.brightnessOptions = {
-            ...this.brightnessOptions,
-            ...brightnessOptions
+        this.asciiOptions = {
+            ...this.asciiOptions,
+            ...asciiOptions
         };
         this.edgeOptions = {
             ...this.edgeOptions,
@@ -224,12 +224,12 @@ class P5Asciify {
             return;
         }
 
-        this.brightnessRenderer.updateOptions(brightnessOptions);
+        this.brightnessRenderer.updateOptions(asciiOptions);
         this.edgeRenderer.updateOptions(edgeOptions);
-        this.accurateRenderer.updateOptions(brightnessOptions);
+        this.accurateRenderer.updateOptions(asciiOptions);
 
-        if (brightnessOptions?.characters) {
-            this.brightnessCharacterSet.setCharacterSet(brightnessOptions.characters);
+        if (asciiOptions?.characters) {
+            this.asciiCharacterSet.setCharacterSet(asciiOptions.characters);
         }
 
         if (edgeOptions?.characters) {
@@ -237,16 +237,16 @@ class P5Asciify {
         }
 
         if (commonOptions?.fontSize) {
-            this.brightnessCharacterSet.setFontSize(commonOptions.fontSize);
+            this.asciiCharacterSet.setFontSize(commonOptions.fontSize);
             this.edgeCharacterSet.setFontSize(commonOptions.fontSize);
-            this.grid.resizeCellPixelDimensions(this.brightnessCharacterSet.maxGlyphDimensions.width, this.brightnessCharacterSet.maxGlyphDimensions.height);
+            this.grid.resizeCellPixelDimensions(this.asciiCharacterSet.maxGlyphDimensions.width, this.asciiCharacterSet.maxGlyphDimensions.height);
 
             this.edgeRenderer.initializeFramebuffers();
             this.accurateRenderer.initializeFramebuffers();
         }
 
-        if (commonOptions?.renderMode) {
-            this.edgeRenderer.setAsciiRenderer(commonOptions.renderMode === 'brightness' ? this.brightnessRenderer : this.accurateRenderer);
+        if (asciiOptions?.renderMode) {
+            this.edgeRenderer.setAsciiRenderer(asciiOptions.renderMode === 'brightness' ? this.brightnessRenderer : this.accurateRenderer);
         }
 
         if (commonOptions?.gridDimensions) {
