@@ -14,7 +14,7 @@ export default class BrightnessAsciiRenderer extends AsciiRenderer {
     }
 
     initializeFramebuffers() {
-        this.outputFramebuffer = this.p5.createFramebuffer({ antialias: false, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
+        this.outputFramebuffer = this.p5.createFramebuffer({  depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
     }
 
     render(inputFramebuffer) {

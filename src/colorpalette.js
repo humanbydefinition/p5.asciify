@@ -19,7 +19,7 @@ class P5AsciifyColorPalette {
      * This method should be called after the p5.js setup() function
      */
     setup() {
-        this.texture = this.p5Instance.createFramebuffer({ width: 1, height: 1, antialias: false, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
+        this.texture = this.p5Instance.createFramebuffer({ width: 1, height: 1,  depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
 
         if (Object.keys(this.palettes).length > 0) {
             this.updateTexture();

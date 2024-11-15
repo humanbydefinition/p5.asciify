@@ -16,6 +16,7 @@ class P5Asciify {
 
     commonOptions = {
         fontSize: 16,
+        gridDimensions: [0, 0],
     };
 
     // brightness and accurate options are the same, since only one of them can be enabled at a time
@@ -75,6 +76,10 @@ class P5Asciify {
 
         this.grid.resizeCellPixelDimensions(this.asciiCharacterSet.maxGlyphDimensions.width, this.asciiCharacterSet.maxGlyphDimensions.height);
 
+        if (this.commonOptions.gridDimensions[0] != 0 && this.commonOptions.gridDimensions[1] != 0) {
+            this.grid.resizeCellDimensions(this.commonOptions.gridDimensions[0], this.commonOptions.gridDimensions[1]);
+        }
+
         this.colorPalette.setup();
 
         this.preEffectManager.setup();
@@ -92,11 +97,11 @@ class P5Asciify {
     }
 
     initializeFramebuffers() {
-        this.sketchFramebuffer = this.p5Instance.createFramebuffer({ antialias: false, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
-        this.preEffectPrevFramebuffer = this.p5Instance.createFramebuffer({ antialias: false, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
-        this.preEffectNextFramebuffer = this.p5Instance.createFramebuffer({ antialias: false, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
-        this.postEffectPrevFramebuffer = this.p5Instance.createFramebuffer({ antialias: false, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
-        this.postEffectNextFramebuffer = this.p5Instance.createFramebuffer({ antialias: false, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
+        this.sketchFramebuffer = this.p5Instance.createFramebuffer({ depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
+        this.preEffectPrevFramebuffer = this.p5Instance.createFramebuffer({ depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
+        this.preEffectNextFramebuffer = this.p5Instance.createFramebuffer({ depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
+        this.postEffectPrevFramebuffer = this.p5Instance.createFramebuffer({ depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
+        this.postEffectNextFramebuffer = this.p5Instance.createFramebuffer({ depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
     }
 
     /**
@@ -109,12 +114,14 @@ class P5Asciify {
             this.asciiFramebufferDimensions.width = this.p5Instance.width;
             this.asciiFramebufferDimensions.height = this.p5Instance.height;
 
-            this.grid.reset();
+            if (this.commonOptions.gridDimensions[0] === 0 || this.commonOptions.gridDimensions[1] === 0) {
+                this.grid.reset();
+            } else {
+                this.grid._resizeGrid();
+            }
 
-            this.initializeFramebuffers();
-            this.edgeRenderer.initializeFramebuffers();
-            this.accurateRenderer.initializeFramebuffers();
-            this.brightnessRenderer.initializeFramebuffers();
+            this.edgeRenderer.resizeFramebuffers();
+            this.accurateRenderer.resizeFramebuffers();
         }
     }
 
@@ -232,12 +239,22 @@ class P5Asciify {
             this.edgeCharacterSet.setFontSize(commonOptions.fontSize);
             this.grid.resizeCellPixelDimensions(this.asciiCharacterSet.maxGlyphDimensions.width, this.asciiCharacterSet.maxGlyphDimensions.height);
 
-            this.edgeRenderer.initializeFramebuffers();
-            this.accurateRenderer.initializeFramebuffers();
+            this.edgeRenderer.resizeFramebuffers();
+            this.accurateRenderer.resizeFramebuffers();
         }
 
         if (asciiOptions?.renderMode) {
             this.edgeRenderer.setAsciiRenderer(asciiOptions.renderMode === 'brightness' ? this.brightnessRenderer : this.accurateRenderer);
+        }
+
+        if (commonOptions?.gridDimensions) {
+            if (commonOptions.gridDimensions[0] === 0 || commonOptions.gridDimensions[1] === 0) {
+                this.grid.reset();
+            } else {
+                this.grid.resizeCellDimensions(commonOptions.gridDimensions[0], commonOptions.gridDimensions[1]);
+            }
+            this.edgeRenderer.resizeFramebuffers();
+            this.accurateRenderer.resizeFramebuffers();
         }
     }
 }
