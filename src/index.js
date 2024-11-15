@@ -159,6 +159,10 @@ p5.prototype.setAsciiOptions = function (options) {
         console.warn("P5Asciify: The 'brightness' option is deprecated and will be removed in future releases. Use 'ascii' instead, which works the same way.");
     }
 
+    if (options.brightness && !options.ascii) {
+        options.ascii = options.brightness;
+    }
+
     const { brightness: brightnessOptions, edge: edgeOptions, common: commonOptions, ascii: asciiOptions } = options;
 
     const colorOptions = [brightnessOptions, edgeOptions, asciiOptions];
