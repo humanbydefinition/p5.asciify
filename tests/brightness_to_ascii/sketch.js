@@ -12,7 +12,8 @@ function setup() {
     sketchFramebuffer = createFramebuffer({ format: FLOAT });
 
     setAsciiOptions({ // These are the default options, you can change them as needed in preload(), setup() or draw()
-        brightness: {
+        ascii: {
+            renderMode: 'brightness',
             enabled: true,
             characters: characterSet,
             characterColorMode: 1,

@@ -22,7 +22,8 @@ function setup() {
         common: {
             fontSize: 8,
         },
-        brightness: {
+        ascii: {
+            renderMode: 'brightness',
             characters: ' .:-=+*#%@',
         }
     });

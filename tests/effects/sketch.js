@@ -47,19 +47,6 @@ function setup() {
 
 function draw() {
 
-    const [maxGridCols, maxGridRows] = p5asciify.grid._calculateGridCellDimensions();
-
-    // Increment the grid dimensions in a sinusoidal pattern until the maximum size is reached
-    // If the grid dimensions havent reached the maximum size, the grid will oscillate between 1 and the maximum size
-    let cols = floor(map(sin(frameCount * 0.01), -1, 1, 1, maxGridCols));
-    let rows = floor(map(sin(frameCount * 0.02), -1, 1, 1, maxGridRows));
-
-    setAsciiOptions({
-        common: {
-            gridDimensions: [cols, rows],
-        },
-    });
-
     sketchFramebuffer.begin();
     background(0);
     fill(255);
@@ -73,7 +60,7 @@ function draw() {
 
     kaleidoscopeEffect.angle = frameCount; // Update some of the effect properties
     rotationEffect.angle = frameCount;
-    setAsciiOptions({ brightness: { rotationAngle: frameCount } }); // Update the rotation angle of the brightness ascii characters
+    setAsciiOptions({ ascii: { rotationAngle: frameCount } }); // Update the rotation angle of the brightness ascii characters
 }
 
 function windowResized() {

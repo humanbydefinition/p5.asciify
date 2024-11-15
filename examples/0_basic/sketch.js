@@ -19,7 +19,8 @@ function setup() {
 		common: {
 			fontSize: 16,
 		},
-		brightness: {
+		ascii: {
+			renderMode: 'brightness',
 			enabled: true,
 			characters: ' .:-=+*#%@',
 			characterColor: "#ff0000",
