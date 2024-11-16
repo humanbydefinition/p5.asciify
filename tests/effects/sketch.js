@@ -22,6 +22,7 @@ function setup() {
             fontSize: 16,
         },
         ascii: {
+            enabled: true,
             renderMode: 'brightness'
         },
         edge: {

@@ -1767,7 +1767,7 @@ void main() {
         asciify() {
             this.preEffectManager.render(this.sketchFramebuffer);
 
-            let asciiOutput;
+            let asciiOutput = this.preEffectManager.nextFramebuffer;
 
             if (this.asciiOptions.enabled) { // Select renderer based on renderMode
                 const renderer = this.asciiOptions.renderMode === 'accurate'
