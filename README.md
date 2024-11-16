@@ -8,8 +8,8 @@
 
 The main goal of `p5.asciify` is to provide an easy-to-use, customizable solution for converting the main [`p5.js`](https://p5js.org/) canvas into a grid of ASCII characters, offering a wide range of settings and effects to adjust the appearance of the ASCII grid to specific needs and artistic vision.
 
-To see `p5.asciify` in action, check out the example sketches in the provided collection on the [p5.js web editor](https://editor.p5js.org/): 
-[`p5.asciify examples`](https://editor.p5js.org/humanbydefinition/collections/DUa3pcJqn).
+To see `p5.asciify` in action, check out the example and tested sketches in the provided collections on the [p5.js web editor](https://editor.p5js.org/): 
+[`p5.asciify examples`](https://editor.p5js.org/humanbydefinition/collections/DUa3pcJqn), [`p5.asciify tests`](https://editor.p5js.org/humanbydefinition/collections/TBDjbneJv).
 
 `p5.asciify` is actively developed and maintained by [**@humanbydefinition**](https://github.com/humanbydefinition), with new features and improvements being added regularly. The library is open-source and available here, where you can contribute to its development, report issues, or suggest new features. I highly value your feedback and contributions, so feel free to reach out!
 
