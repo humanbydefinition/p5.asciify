@@ -15,7 +15,7 @@ class P5AsciifyCharacterSet {
      * @param {string} options.characters - The string of characters to include in the character set.
      * @param {number} options.fontSize - The font size to use.
      */
-    setup({ p5Instance, type, font, characters, fontSize }) {
+    constructor({ p5Instance, type, font, characters, fontSize }) {
         this.p5Instance = p5Instance;
         this.type = type;
         this.font = font;
@@ -132,7 +132,7 @@ class P5AsciifyCharacterSet {
         let dimensions = this.getMaxGlyphDimensions(fontSize);
 
         if (!this.texture) {
-            this.texture = this.p5Instance.createFramebuffer({ width: dimensions.width * this.charsetCols, height: dimensions.height * this.charsetRows, antialias: false, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
+            this.texture = this.p5Instance.createFramebuffer({ width: dimensions.width * this.charsetCols, height: dimensions.height * this.charsetRows,  depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
         } else {
             this.texture.resize(dimensions.width * this.charsetCols, dimensions.height * this.charsetRows);
         }

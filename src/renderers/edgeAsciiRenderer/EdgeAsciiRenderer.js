@@ -1,6 +1,6 @@
 // renderers/EdgeAsciiRenderer.js
 import AsciiRenderer from '../AsciiRenderer.js';
-import vertexShader from '../../shaders/vert/shader.vert';
+import vertexShader from '../../assets/shaders/vert/shader.vert';
 import asciiEdgeShader from './shaders/asciiEdge.frag';
 
 import sobelShader from './shaders/sobel.frag';
@@ -18,13 +18,13 @@ export default class EdgeAsciiRenderer extends AsciiRenderer {
         this.sampleShader = this.p5.createShader(vertexShader, generateSampleShader(16, this.grid.cellHeight, this.grid.cellWidth));
         this.shader = this.p5.createShader(vertexShader, asciiEdgeShader);
 
-        this.sobelFramebuffer = this.p5.createFramebuffer({ antialias: false, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
-        this.sampleFramebuffer = this.p5.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, antialias: false, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
-        this.outputFramebuffer = this.p5.createFramebuffer({ antialias: false, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
+        this.sobelFramebuffer = this.p5.createFramebuffer({ depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
+        this.sampleFramebuffer = this.p5.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
+        this.outputFramebuffer = this.p5.createFramebuffer({ depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
     }
 
-    resetSampleShader() {
-        this.sampleShader = this.p5.createShader(vertexShader, generateSampleShader(16, this.grid.cellHeight, this.grid.cellWidth));
+    resizeFramebuffers() {
+        this.sampleFramebuffer.resize(this.grid.cols, this.grid.rows);
     }
 
     setAsciiRenderer(asciiRenderer) {
@@ -32,6 +32,16 @@ export default class EdgeAsciiRenderer extends AsciiRenderer {
     }
 
     render(inputFramebuffer) {
+
+        if (!this.options.enabled) {
+            if (this.asciiRenderer.options.enabled) {
+                this.outputFramebuffer = this.asciiRenderer.getOutputFramebuffer();
+            } else {
+                this.outputFramebuffer = inputFramebuffer;
+            }
+            return;
+        }
+
         // Apply Sobel shader for edge detection
         this.sobelFramebuffer.begin();
         this.p5.shader(this.sobelShader);

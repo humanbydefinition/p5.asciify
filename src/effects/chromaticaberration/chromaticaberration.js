@@ -1,4 +1,4 @@
-import P5AsciifyEffect from './effect.js';
+import P5AsciifyEffect from '../effect.js';
 
 /**
  * @class P5AsciifyChromaticAberrationEffect

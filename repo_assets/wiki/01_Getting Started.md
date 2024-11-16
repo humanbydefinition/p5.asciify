@@ -23,7 +23,7 @@ Download the latest version of `p5.asciify` from the [**GitHub releases page**](
 
 ```html
 <!-- Import p5.js before p5.asciify -->
-  <script src="https://cdn.jsdelivr.net/npm/p5@1.9.4/lib/p5.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.11.1/lib/p5.js"></script>
 
 <!-- Import p5.asciify after p5.js -->
 <script src="path/to/library/p5.asciify.min.js"></script>
@@ -34,10 +34,10 @@ Alternatively, the library can be imported directly from a CDN like [**jsDelivr*
 
 ```html	
 <!-- Import p5.js before p5.asciify -->
-  <script src="https://cdn.jsdelivr.net/npm/p5@1.9.4/lib/p5.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.11.1/lib/p5.js"></script>
 
 <!-- Import p5.asciify after p5.js -->
-<script src="https://cdn.jsdelivr.net/npm/p5.asciify@0.2.1/dist/p5.asciify.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/p5.asciify@0.3.0/dist/p5.asciify.min.js"></script>
 ```
 
 > [!TIP]
@@ -45,15 +45,14 @@ Alternatively, the library can be imported directly from a CDN like [**jsDelivr*
 >
 > ```html
 > <!-- Import p5.js before p5.asciify -->
-> <script src="https://cdn.jsdelivr.net/npm/p5@1.9.4/lib/p5.js"></script>
+> <script src="https://cdn.jsdelivr.net/npm/p5@1.11.1/lib/p5.js"></script>
 >
 > <!-- Import p5.asciify after p5.js -->
-> <script src="https://cdn.jsdelivr.net/npm/p5.asciify@0.2.1/dist/p5.asciify.min.js"></script>
+> <script src="https://cdn.jsdelivr.net/npm/p5.asciify@0.3.0/dist/p5.asciify.min.js"></script>
 >
 > <!-- Import p5.capture after p5.asciify -->
 > <script src="https://cdn.jsdelivr.net/npm/p5.capture@1.4.1/dist/p5.capture.umd.min.js"></script>
 > ```
-
 
 At this point, when imported correctly, the [`p5.js`](https://p5js.org/) canvas in `WEBGL` mode should already be converted into a grid of ASCII characters with the default settings applied! (｡◕‿‿◕｡)
 

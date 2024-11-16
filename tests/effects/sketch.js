@@ -13,6 +13,8 @@ let colorPaletteEffect2;
 let grayscaleEffect;
 let rotationEffect;
 
+let crtEffect;
+
 function setup() {
     createCanvas(windowWidth, windowHeight, WEBGL);
     sketchFramebuffer = createFramebuffer({ format: FLOAT });
@@ -20,6 +22,10 @@ function setup() {
     setAsciiOptions({ 
         common: {
             fontSize: 16,
+        },
+        ascii: {
+            enabled: true,
+            renderMode: 'brightness'
         },
         edge: {
             enabled: true,
@@ -42,7 +48,11 @@ function setup() {
     colorPaletteEffect1 = addAsciiEffect('pre', 'colorpalette', { palette: ['#ff0000', '#00ff00', '#0000ff', '#ffffff'] });
     colorPaletteEffect2 = addAsciiEffect('pre', 'colorpalette', { palette: ['#ff00ff', '#00ffff', '#0000ff', '#ffffff'] });
 
+    addAsciiEffect('pre', 'invert', {});
+    
     rotationEffect = addAsciiEffect('pre', 'rotate', { angle: 0 });
+
+    crtEffect = addAsciiEffect('post', 'crt', {});
 }
 
 function draw() {
@@ -73,7 +83,7 @@ function draw() {
 
     kaleidoscopeEffect.angle = frameCount; // Update some of the effect properties
     rotationEffect.angle = frameCount;
-    setAsciiOptions({ brightness: { rotationAngle: frameCount } }); // Update the rotation angle of the brightness ascii characters
+    setAsciiOptions({ ascii: { rotationAngle: frameCount } }); // Update the rotation angle of the brightness ascii characters
 }
 
 function windowResized() {
