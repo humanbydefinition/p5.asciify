@@ -68,7 +68,7 @@ All ASCII conversion layers individually have the following settings:
 
 ### Layer 2: Gradient/pattern-based conversion settings
 
-No additional settings are available for this layer. This layer is populated by adding individual customizeable gradient/pattern objects to the sketch, which is described in the [`02_Usage`](https://github.com/humanbydefinition/p5.asciify/wiki/02_Usage) section of this Wiki.
+No additional settings are available for this layer. This layer is populated by adding individual customizeable gradient/pattern objects to the sketch, which is done using [`addAsciiGradient()`](https://github.com/humanbydefinition/p5.asciify/wiki/02_Usage#addasciigradient), which is described in this Wiki through the given link.
 
 ### Layer 3: Edge-based conversion settings
 
