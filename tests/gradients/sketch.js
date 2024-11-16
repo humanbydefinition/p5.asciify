@@ -97,6 +97,10 @@ function draw() {
         radialGradient.palette = "finally ";
     }
 
+    if (frameCount === 180) {
+        removeAsciiGradient(spiralGradient);
+    }
+
     if (frameCount > 5) {
 
         linearGradient.angle += 0.5;

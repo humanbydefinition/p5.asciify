@@ -351,6 +351,10 @@ p5.prototype.addAsciiGradient = function (gradientName, brightnessStart, brightn
     return p5asciify.gradientManager.addGradient(gradientName, brightnessStart, brightnessEnd, characters, userParams);
 }
 
+p5.prototype.removeAsciiGradient = function (gradientInstance) {
+    p5asciify.gradientManager.removeGradient(gradientInstance);
+}
+
 /**
  * Adds a push() call before the user's draw() function in p5.js.
  * This method ensures that the drawing state is saved before any drawing operations.

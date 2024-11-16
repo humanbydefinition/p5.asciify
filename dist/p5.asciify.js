@@ -1496,6 +1496,13 @@
             return gradient;
         }
 
+        removeGradient(gradient) {
+            const index = this._gradients.indexOf(gradient);
+            if (index > -1) {
+                this._gradients.splice(index, 1);
+            }
+        }
+
         handleGradientPaletteChange(gradient, characters) {
 
             if (frameCount === 0) {
@@ -2871,6 +2878,10 @@ void main() {
         }
 
         return p5asciify.gradientManager.addGradient(gradientName, brightnessStart, brightnessEnd, characters, userParams);
+    };
+
+    p5.prototype.removeAsciiGradient = function (gradientInstance) {
+        p5asciify.gradientManager.removeGradient(gradientInstance);
     };
 
     /**

@@ -89,6 +89,13 @@ class P5AsciifyGradientManager {
         return gradient;
     }
 
+    removeGradient(gradient) {
+        const index = this._gradients.indexOf(gradient);
+        if (index > -1) {
+            this._gradients.splice(index, 1);
+        }
+    }
+
     handleGradientPaletteChange(gradient, characters) {
 
         if (frameCount === 0) {
