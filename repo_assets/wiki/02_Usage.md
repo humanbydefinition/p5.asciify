@@ -222,7 +222,7 @@ Adds a gradient/pattern-based ASCII conversion layer to the rendering pipeline.
 
 #### Example
 
-work-in-progress! As of now, please refer to the following demo sketch from the p5.asciify examples folder: [`gradient_patterns`](#)
+work-in-progress! As of now, please refer to the following demo sketch in the p5.js web editor: [`p5.asciify | gradients test`](https://editor.p5js.org/humanbydefinition/sketches/_hg3L2cKk)
 
 <hr/>
 
@@ -246,7 +246,7 @@ Removes a gradient/pattern-based ASCII conversion layer from the rendering pipel
 
 #### Example
 
-work-in-progress! As of now, please refer to the following demo sketch from the p5.asciify examples folder: [`gradient_patterns`](#)
+work-in-progress! As of now, please refer to the following demo sketch in the p5.js web editor: [`p5.asciify | gradients test`](https://editor.p5js.org/humanbydefinition/sketches/_hg3L2cKk)
 
 <hr/>
 

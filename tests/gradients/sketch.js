@@ -20,8 +20,8 @@ let gridCols = 3;
 let fillColors = [
     [150, 160, 170],
     [180, 190, 200],
-    [210, 220, 230]
-]
+    [210, 220, 230],
+];
 
 function setup() {
     createCanvas(windowWidth, windowHeight, WEBGL);
@@ -35,7 +35,7 @@ function setup() {
             renderMode: "brightness",
             enabled: true,
             characterColorMode: 0,
-            characters: "-"
+            characters: ".",
         },
         edge: {
             enabled: true,
@@ -48,15 +48,35 @@ function setup() {
             characterColorMode: 1,
             characterColor: "#ff0000",
             invertMode: true,
-        }
+        },
     });
 
-    linearGradient = addAsciiGradient("linear", 150, 150, "gradients ", { direction: 1, angle: 0, speed: 0.1 });
-    spiralGradient = addAsciiGradient("spiral", 160, 160, "are  ", { direction: 1, speed: 0.01, density: 0.5 });
-    radialGradient = addAsciiGradient("radial", 170, 170, "now ", { direction: -1, radius: 1.0 });
-    zigzagGradient = addAsciiGradient("zigzag", 180, 180, "available ", { direction: 1, speed: 0.1 });
-    conicalGradient = addAsciiGradient("conical", 190, 190, "in ", { speed: 0.01 });
-    noiseGradient = addAsciiGradient("noise", 210, 240, "p5.asciify ", { noiseScale: 0.5, speed: 0.1, direction: 1 });
+    linearGradient = addAsciiGradient("linear", 150, 150, "gradients ", {
+        direction: 1,
+        angle: 0,
+        speed: 0.1,
+    });
+    spiralGradient = addAsciiGradient("spiral", 160, 160, "are  ", {
+        direction: 1,
+        speed: 0.01,
+        density: 0.5,
+    });
+    radialGradient = addAsciiGradient("radial", 170, 170, "now ", {
+        direction: -1,
+        radius: 1.0,
+    });
+    zigzagGradient = addAsciiGradient("zigzag", 180, 180, "available ", {
+        direction: 1,
+        speed: 0.1,
+    });
+    conicalGradient = addAsciiGradient("conical", 190, 190, "in ", {
+        speed: 0.01,
+    });
+    noiseGradient = addAsciiGradient("noise", 210, 240, "p5.asciify ", {
+        noiseScale: 0.5,
+        speed: 0.1,
+        direction: 1,
+    });
 }
 
 function getFillColor(row, col) {
@@ -76,7 +96,12 @@ function draw() {
         for (let col = 0; col < gridCols; col++) {
             let fillColor = getFillColor(row, col);
             fill(fillColor);
-            rect(-windowWidth / 2 + col * rectWidth, -windowHeight / 2 + row * rectHeight, rectWidth, rectHeight);
+            rect(
+                -windowWidth / 2 + col * rectWidth,
+                -windowHeight / 2 + row * rectHeight,
+                rectWidth,
+                rectHeight
+            );
         }
     }
 
