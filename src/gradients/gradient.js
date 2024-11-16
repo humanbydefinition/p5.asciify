@@ -1,10 +1,9 @@
 
 
 class P5AsciifyGradient {
-    constructor(type, shader, shaderActive, brightnessStart, brightnessEnd, colorPalette, palette) {
+    constructor(type, shader, brightnessStart, brightnessEnd, colorPalette, palette) {
         this._type = type;
         this._shader = shader;
-        this._shaderActive = shaderActive;
 
         // map brightness start from 0-255 to 0-1
         this._brightnessStart = Math.floor((brightnessStart / 255) * 100) / 100;

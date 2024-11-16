@@ -3,7 +3,7 @@ import P5AsciifyGradient from '../gradient.js';
 class P5AsciifyZigZagGradient extends P5AsciifyGradient {
 
     constructor({ type, shader, brightnessStart, brightnessEnd, colorPalette, palette, direction, angle, speed = 0.01 }) {
-        super(type, shader, true, brightnessStart, brightnessEnd, colorPalette, palette);
+        super(type, shader, brightnessStart, brightnessEnd, colorPalette, palette);
 
         this._direction = direction;
         this._angle = angle;

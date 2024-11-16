@@ -3,7 +3,7 @@ import P5AsciifyGradient from '../gradient.js';
 class P5AsciifyConicalGradient extends P5AsciifyGradient {
 
     constructor({ type, shader, brightnessStart, brightnessEnd, colorPalette, palette,  centerX, centerY, speed}) {
-        super(type, shader, true, brightnessStart, brightnessEnd, colorPalette, palette);
+        super(type, shader, brightnessStart, brightnessEnd, colorPalette, palette);
 
         this._centerX = centerX;
         this._centerY = centerY;

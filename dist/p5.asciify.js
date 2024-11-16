@@ -1054,10 +1054,9 @@
     }
 
     class P5AsciifyGradient {
-        constructor(type, shader, shaderActive, brightnessStart, brightnessEnd, colorPalette, palette) {
+        constructor(type, shader, brightnessStart, brightnessEnd, colorPalette, palette) {
             this._type = type;
             this._shader = shader;
-            this._shaderActive = shaderActive;
 
             // map brightness start from 0-255 to 0-1
             this._brightnessStart = Math.floor((brightnessStart / 255) * 100) / 100;
@@ -1115,7 +1114,7 @@
     class P5AsciifyLinearGradient extends P5AsciifyGradient {
 
         constructor({ type, shader, brightnessStart, brightnessEnd, colorPalette, palette, direction, angle, speed = 0.01}) {
-            super(type, shader, true, brightnessStart, brightnessEnd, colorPalette, palette);
+            super(type, shader, brightnessStart, brightnessEnd, colorPalette, palette);
 
             this._direction = direction;
             this._angle = angle;
@@ -1157,7 +1156,7 @@
     class P5AsciifyZigZagGradient extends P5AsciifyGradient {
 
         constructor({ type, shader, brightnessStart, brightnessEnd, colorPalette, palette, direction, angle, speed = 0.01 }) {
-            super(type, shader, true, brightnessStart, brightnessEnd, colorPalette, palette);
+            super(type, shader, brightnessStart, brightnessEnd, colorPalette, palette);
 
             this._direction = direction;
             this._angle = angle;
@@ -1199,7 +1198,7 @@
     class P5AsciifySpiralGradient extends P5AsciifyGradient {
 
         constructor({ type, shader, brightnessStart, brightnessEnd, colorPalette, palette, direction, centerX, centerY, speed, density}) {
-            super(type, shader, true, brightnessStart, brightnessEnd, colorPalette, palette);
+            super(type, shader, brightnessStart, brightnessEnd, colorPalette, palette);
 
             this._direction = direction;
             this._centerX = centerX;
@@ -1261,7 +1260,7 @@
     class P5AsciifyRadialGradient extends P5AsciifyGradient {
 
         constructor({ type, shader, brightnessStart, brightnessEnd, colorPalette, palette, direction, centerX, centerY, radius}) {
-            super(type, shader, true, brightnessStart, brightnessEnd, colorPalette, palette);
+            super(type, shader, brightnessStart, brightnessEnd, colorPalette, palette);
 
             this._direction = direction;
             this._centerX = centerX;
@@ -1313,7 +1312,7 @@
     class P5AsciifyConicalGradient extends P5AsciifyGradient {
 
         constructor({ type, shader, brightnessStart, brightnessEnd, colorPalette, palette,  centerX, centerY, speed}) {
-            super(type, shader, true, brightnessStart, brightnessEnd, colorPalette, palette);
+            super(type, shader, brightnessStart, brightnessEnd, colorPalette, palette);
 
             this._centerX = centerX;
             this._centerY = centerY;
@@ -1355,7 +1354,7 @@
     class P5AsciifyNoiseGradient extends P5AsciifyGradient {
 
         constructor({ type, shader, brightnessStart, brightnessEnd, colorPalette, palette, noiseScale, speed, direction }) {
-            super(type, shader, true, brightnessStart, brightnessEnd, colorPalette, palette);
+            super(type, shader, brightnessStart, brightnessEnd, colorPalette, palette);
 
             this._direction = direction;
             this._noiseScale = noiseScale;
