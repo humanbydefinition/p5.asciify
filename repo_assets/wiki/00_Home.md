@@ -66,7 +66,7 @@ All ASCII conversion layers individually have the following settings:
 | **`renderMode`**   | The method used for the ASCII conversion.                                                           |
 | **`characters`**   | The characters used for the ASCII conversion.                                                       |
 
-### Layer 3: Gradient/pattern-based conversion settings
+### Layer 2: Gradient/pattern-based conversion settings
 
 No additional settings are available for this layer. This layer is populated by adding individual customizeable gradient/pattern objects to the sketch, which is described in the [`02_Usage`](https://github.com/humanbydefinition/p5.asciify/wiki/02_Usage) section of this Wiki.
 
