@@ -1,6 +1,6 @@
 /**
  * This example demonstrates how to use the edge detection feature of p5.asciify.
- * 
+ *
  * The example creates a sketch that displays a number of rectangles that grow and shrink over time.
  * Each rectangle is displayed with a random color and angle.
  */
@@ -11,24 +11,28 @@ let rectangles = [];
 let maxRectangles = 30;
 
 function setup() {
-    createCanvas(windowWidth, windowHeight, WEBGL); 
+    createCanvas(windowWidth, windowHeight, WEBGL);
     sketchFramebuffer = createFramebuffer({ format: FLOAT });
 
-    setAsciiOptions({ // These are the default options, you can change them as needed in preload(), setup() or draw()
+    setAsciiOptions({
+        // These are the default options, you can change them as needed in preload(), setup() or draw()
         common: {
             fontSize: 8,
+        },
+        ascii: {
+            renderMode: 'brightness'
         },
         edge: {
             enabled: true, // false by default
             characters: "-/|\\-/|\\",
-            characterColor: '#ffffff',
+            characterColor: "#ffffff",
             characterColorMode: 1, // 0: sampled (default), 1: fixed
-            backgroundColor: '#000000',
+            backgroundColor: "#000000",
             backgroundColorMode: 1,
             invertMode: false,
             sobelThreshold: 0.01, // Tune the threshold values to adjust the edge detection
             sampleThreshold: 16,
-        }
+        },
     });
 
     for (let i = 0; i < maxRectangles; i++) rectangles.push(new Rectangle());
@@ -40,7 +44,7 @@ function draw() {
     background(0);
     noStroke();
 
-    rectangles = rectangles.filter(rect => {
+    rectangles = rectangles.filter((rect) => {
         rect.update();
         rect.display();
         return rect.size > 0;

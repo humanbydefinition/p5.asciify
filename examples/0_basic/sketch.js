@@ -15,29 +15,30 @@ function setup() {
 
 	sketchFramebuffer = createFramebuffer({ format: FLOAT });
 
-	setAsciiOptions({ // These are the default options, you can change them as needed in preload(), setup() or draw()
+	setAsciiOptions({
+		// These are the default options, you can change them as needed in preload(), setup() or draw()
 		common: {
 			fontSize: 16,
 		},
 		ascii: {
 			renderMode: 'brightness',
 			enabled: true,
-			characters: ' .:-=+*#%@',
+			characters: " .:-=+*#%@",
 			characterColor: "#ff0000",
 			characterColorMode: 0,
 			backgroundColor: "#000000",
 			backgroundColorMode: 1,
 			invertMode: true,
-		}
+		},
 	});
 }
 
 function draw() {
 	/**
-	Your creative code goes here to replace the following code, drawing to the graphic buffer.
-	Currently, the code draws a Tim Rodenbroeker-esque rotating 3D box to the graphic buffer.
-	Check out his courses on creative coding at https://timrodenbroeker.de/ (no affiliation, I just enjoyed his courses)
-	**/
+	  Your creative code goes here to replace the following code, drawing to the graphic buffer.
+	  Currently, the code draws a Tim Rodenbroeker-esque rotating 3D box to the graphic buffer.
+	  Check out his courses on creative coding at https://timrodenbroeker.de/ (no affiliation, I just enjoyed his courses)
+	  **/
 	sketchFramebuffer.begin();
 
 	background(0);
@@ -51,24 +52,22 @@ function draw() {
 
 	image(sketchFramebuffer, -windowWidth / 2, -windowHeight / 2);
 
-	if (frameCount == 200) { // Update the ascii rendering based on any conditions you like
-
+	if (frameCount == 200) {
+		// Update the ascii rendering based on any conditions you like
 		//loadAsciiFont('path/to/your/font.ttf'); // Optionally update the font after the sketch has run for a while
-
 		/**
-		setAsciiOptions({ // Optionally update any of the default options
-			common: {
-				fontSize: 16
-			},
-			edge: {
-				enabled: true // Edge detection anyone?
-			}
-		});
-		*/
+			setAsciiOptions({ // Optionally update any of the default options
+				common: {
+					fontSize: 16
+				},
+				edge: {
+					enabled: true // Edge detection anyone?
+				}
+			});
+			*/
 	}
 }
 
 function windowResized() {
 	resizeCanvas(windowWidth, windowHeight);
 }
-

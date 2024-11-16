@@ -2,7 +2,7 @@ const theSketch = (sketch) => {
 
     p5asciify.instance(sketch); // Pass the p5 instance to the p5asciify library before setup
 
-    let kaleidoscopeEffect; 
+    let kaleidoscopeEffect;
     let distortionEffect;
 
     sketch.setup = () => {
