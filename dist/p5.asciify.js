@@ -1051,6 +1051,414 @@
         }
     }
 
+    class P5AsciifyGradient {
+        constructor(type, shader, shaderActive, brightnessStart, brightnessEnd, colorPalette, palette) {
+            this._type = type;
+            this._shader = shader;
+            this._shaderActive = shaderActive;
+
+            // map brightness start from 0-255 to 0-1
+            this._brightnessStart = Math.floor((brightnessStart / 255) * 100) / 100;
+            this._brightnessEnd = Math.ceil((brightnessEnd / 255) * 100) / 100;
+            this._colorPalette = colorPalette;
+            this._palette = palette;
+
+            this._onPaletteChangeCallback = null;
+        }
+
+        registerPaletteChangeCallback(callback) {
+            this._onPaletteChangeCallback = callback;
+        }
+
+        setup(shader, palette) {
+            this._shader = shader;
+            this._palette = palette;
+            this.paletteId = this._colorPalette.addPalette(this._palette);
+        }
+
+        setUniforms(framebuffer, referenceFramebuffer) {
+            this._shader.setUniform("textureID", framebuffer);
+            this._shader.setUniform("originalTextureID", referenceFramebuffer);
+            this._shader.setUniform("gradientTexture", this._colorPalette.texture);
+            this._shader.setUniform("gradientTextureRow", this._colorPalette.getPaletteRow(this.paletteId));
+            this._shader.setUniform("gradientTextureDimensions", [this._colorPalette.texture.width, this._colorPalette.texture.height]);
+            this._shader.setUniform("gradientTextureLength", this._palette.length);
+            this._shader.setUniform("u_brightnessStart", this._brightnessStart);
+            this._shader.setUniform("u_brightnessEnd", this._brightnessEnd);
+            this._shader.setUniform("u_brightnessRange", [this._brightnessStart, this._brightnessEnd]);
+            this._shader.setUniform("frameCount", frameCount);
+        }
+
+        set palette(value) {
+            if (this._onPaletteChangeCallback) {
+                this._onPaletteChangeCallback(this, value);
+            }
+        }
+
+        get type() {
+            return this._type;
+        }
+    }
+
+    class P5AsciifyLinearGradient extends P5AsciifyGradient {
+
+        constructor({ type, shader, brightnessStart, brightnessEnd, colorPalette, palette, direction, angle, speed = 0.01}) {
+            super(type, shader, true, brightnessStart, brightnessEnd, colorPalette, palette);
+
+            this._direction = direction;
+            this._angle = angle;
+            this._speed = speed;
+        }
+
+        setUniforms(framebuffer, referenceFramebuffer) {
+            super.setUniforms(framebuffer, referenceFramebuffer);
+            this._shader.setUniform('u_gradientDirection', this._direction);
+            this._shader.setUniform('u_angle',  this._angle * Math.PI / 180);
+            this._shader.setUniform('u_speed', this._speed);
+        }
+
+        get direction() {
+            return this._direction;
+        }
+
+        set direction(value) {
+            this._direction = value;
+        }
+
+        get angle() {
+            return this._angle;
+        }
+
+        set angle(value) {
+            this._angle = value;
+        }
+
+        get speed() {
+            return this._speed;
+        }
+
+        set speed(value) {
+            this._speed = value;
+        }
+    }
+
+    class P5AsciifyZigZagGradient extends P5AsciifyGradient {
+
+        constructor({ type, shader, brightnessStart, brightnessEnd, colorPalette, palette, direction, angle, speed = 0.01 }) {
+            super(type, shader, true, brightnessStart, brightnessEnd, colorPalette, palette);
+
+            this._direction = direction;
+            this._angle = angle;
+            this._speed = speed;
+        }
+
+        setUniforms(framebuffer, referenceFramebuffer) {
+            super.setUniforms(framebuffer, referenceFramebuffer);
+            this._shader.setUniform('u_gradientDirection', this._direction);
+            this._shader.setUniform('u_angle',  this._angle * Math.PI / 180);
+            this._shader.setUniform('u_speed', this._speed);
+        }
+
+        get direction() {
+            return this._direction;
+        }
+
+        set direction(value) {
+            this._direction = value;
+        }
+
+        get angle() {
+            return this._angle;
+        }
+
+        set angle(value) {
+            this._angle = value;
+        }
+
+        get speed() {
+            return this._speed;
+        }
+
+        set speed(value) {
+            this._speed = value;
+        }
+    }
+
+    class P5AsciifySpiralGradient extends P5AsciifyGradient {
+
+        constructor({ type, shader, brightnessStart, brightnessEnd, colorPalette, palette, direction, centerX, centerY, speed, density}) {
+            super(type, shader, true, brightnessStart, brightnessEnd, colorPalette, palette);
+
+            this._direction = direction;
+            this._centerX = centerX;
+            this._centerY = centerY;
+            this._speed = speed;
+            this._density = density;
+        }
+
+        setUniforms(framebuffer, referenceFramebuffer) {
+            super.setUniforms(framebuffer, referenceFramebuffer);
+            this._shader.setUniform('u_gradientDirection', this._direction);
+            this._shader.setUniform('u_centerX', this._centerX);
+            this._shader.setUniform('u_centerY', this._centerY);
+            this._shader.setUniform('u_speed', this._speed);
+            this._shader.setUniform('u_density', this._density);
+        }
+
+        get direction() {
+            return this._direction;
+        }
+
+        set direction(value) {
+            this._direction = value;
+        }
+
+        get centerX() {
+            return this._centerX;
+        }
+
+        set centerX(value) {
+            this._centerX = value;
+        }
+
+        get centerY() {
+            return this._centerY;
+        }
+
+        set centerY(value) {
+            this._centerY = value;
+        }
+
+        get speed() {
+            return this._speed;
+        }
+
+        set speed(value) {
+            this._speed = value;
+        }
+
+        get density() {
+            return this._density;
+        }
+
+        set density(value) {
+            this._density = value;
+        }
+    }
+
+    class P5AsciifyRadialGradient extends P5AsciifyGradient {
+
+        constructor({ type, shader, brightnessStart, brightnessEnd, colorPalette, palette, direction, centerX, centerY, radius}) {
+            super(type, shader, true, brightnessStart, brightnessEnd, colorPalette, palette);
+
+            this._direction = direction;
+            this._centerX = centerX;
+            this._centerY = centerY;
+            this._radius = radius;
+        }
+
+        setUniforms(framebuffer, referenceFramebuffer) {
+            super.setUniforms(framebuffer, referenceFramebuffer);
+            this._shader.setUniform('u_gradientDirection', this._direction);
+            this._shader.setUniform('u_centerX', this._centerX);
+            this._shader.setUniform('u_centerY', this._centerY);
+            this._shader.setUniform('u_radius', this._radius);
+        }
+
+        get direction() {
+            return this._direction;
+        }
+
+        set direction(value) {
+            this._direction = value;
+        }
+
+        get centerX() {
+            return this._centerX;
+        }
+
+        set centerX(value) {
+            this._centerX = value;
+        }
+
+        get centerY() {
+            return this._centerY;
+        }
+
+        set centerY(value) {
+            this._centerY = value;
+        }
+
+        get radius() {
+            return this._radius;
+        }
+
+        set radius(value) {
+            this._radius = value;
+        }
+    }
+
+    class P5AsciifyConicalGradient extends P5AsciifyGradient {
+
+        constructor({ type, shader, brightnessStart, brightnessEnd, colorPalette, palette,  centerX, centerY, speed}) {
+            super(type, shader, true, brightnessStart, brightnessEnd, colorPalette, palette);
+
+            this._centerX = centerX;
+            this._centerY = centerY;
+            this._speed = speed;
+        }
+
+        setUniforms(framebuffer, referenceFramebuffer) {
+            super.setUniforms(framebuffer, referenceFramebuffer);
+            this._shader.setUniform('u_centerX', this._centerX);
+            this._shader.setUniform('u_centerY', this._centerY);
+            this._shader.setUniform('u_speed', this._speed);
+        }
+
+        get centerX() {
+            return this._centerX;
+        }
+
+        set centerX(value) {
+            this._centerX = value;
+        }
+
+        get centerY() {
+            return this._centerY;
+        }
+
+        set centerY(value) {
+            this._centerY = value;
+        }
+
+        get speed() {
+            return this._speed;
+        }
+
+        set speed(value) {
+            this._speed = value;
+        }
+    }
+
+    class P5AsciifyNoiseGradient extends P5AsciifyGradient {
+
+        constructor({ type, shader, brightnessStart, brightnessEnd, colorPalette, palette, noiseScale, speed, direction }) {
+            super(type, shader, true, brightnessStart, brightnessEnd, colorPalette, palette);
+
+            this._direction = direction;
+            this._noiseScale = noiseScale;
+            this._speed = speed;
+        }
+
+        setUniforms(framebuffer, referenceFramebuffer) {
+            super.setUniforms(framebuffer, referenceFramebuffer);
+            this._shader.setUniform('direction', this._direction);
+            this._shader.setUniform('noiseScale', this._noiseScale);
+            this._shader.setUniform('u_speed', this._speed);
+        }
+    }
+
+    var linearGradientShader = "precision highp float;\n#define GLSLIFY 1\nvarying vec2 v_texCoord;uniform sampler2D textureID;uniform sampler2D originalTextureID;uniform sampler2D gradientTexture;uniform int frameCount;uniform float gradientTextureLength;uniform float u_gradientDirection;uniform float u_speed;uniform float u_angle;uniform int gradientTextureRow;uniform vec2 gradientTextureDimensions;uniform vec2 u_brightnessRange;void main(){vec4 texColor=texture2D(textureID,v_texCoord);vec4 originalTexColor=texture2D(originalTextureID,v_texCoord);if(texColor.r>=u_brightnessRange[0]&&texColor.r<=u_brightnessRange[1]&&texColor==originalTexColor){float position=gl_FragCoord.x*cos(u_angle)+gl_FragCoord.y*sin(u_angle);float index=mod(position+float(frameCount)*u_gradientDirection*u_speed,gradientTextureLength);index=floor(index);float texelPosition=(index+0.5)/gradientTextureDimensions.x;float rowPosition=float(gradientTextureRow)+0.5;float rowTexCoord=rowPosition/gradientTextureDimensions.y;vec4 gradientColor=texture2D(gradientTexture,vec2(texelPosition,rowTexCoord));gl_FragColor=vec4(gradientColor.rgb,texColor.a);}else{gl_FragColor=texColor;}}"; // eslint-disable-line
+
+    var zigzagGradientShader = "precision highp float;\n#define GLSLIFY 1\nvarying vec2 v_texCoord;uniform sampler2D textureID;uniform sampler2D originalTextureID;uniform sampler2D gradientTexture;uniform int frameCount;uniform float gradientTextureLength;uniform float u_gradientDirection;uniform float u_speed;uniform float u_angle;uniform int gradientTextureRow;uniform vec2 gradientTextureDimensions;uniform vec2 u_brightnessRange;void main(){vec4 texColor=texture2D(textureID,v_texCoord);vec4 originalTexColor=texture2D(originalTextureID,v_texCoord);if(texColor.r>=u_brightnessRange[0]&&texColor.r<=u_brightnessRange[1]&&texColor==originalTexColor){float positionX=gl_FragCoord.x*cos(u_angle)-gl_FragCoord.y*sin(u_angle);float positionY=gl_FragCoord.x*sin(u_angle)+gl_FragCoord.y*cos(u_angle);float rowIndex=floor(positionY);float direction=mod(rowIndex,2.0)==0.0 ? 1.0 :-1.0;float rowPosition=positionX;float index=mod(rowPosition+float(frameCount)*u_speed*direction*u_gradientDirection,gradientTextureLength);index=floor(index);float texelPosition=(index+0.5)/gradientTextureDimensions.x;float gradientRowPosition=float(gradientTextureRow)+0.5;float rowTexCoord=gradientRowPosition/gradientTextureDimensions.y;vec4 gradientColor=texture2D(gradientTexture,vec2(texelPosition,rowTexCoord));gl_FragColor=vec4(gradientColor.rgb,texColor.a);}else{gl_FragColor=texColor;}}"; // eslint-disable-line
+
+    var spiralGradientShader = "precision highp float;\n#define GLSLIFY 1\nvarying vec2 v_texCoord;uniform sampler2D textureID;uniform sampler2D originalTextureID;uniform sampler2D gradientTexture;uniform int frameCount;uniform float gradientTextureLength;uniform float u_gradientDirection;uniform float u_centerX;uniform float u_centerY;uniform float u_speed;uniform float u_density;uniform int gradientTextureRow;uniform vec2 gradientTextureDimensions;uniform vec2 u_brightnessRange;void main(){vec4 texColor=texture2D(textureID,v_texCoord);vec4 originalTexColor=texture2D(originalTextureID,v_texCoord);if(texColor.r>=u_brightnessRange[0]&&texColor.r<=u_brightnessRange[1]&&texColor==originalTexColor){vec2 relativePosition=v_texCoord-vec2(u_centerX,u_centerY);float distance=length(relativePosition);float angle=atan(relativePosition.y,relativePosition.x);float adjustedAngle=angle+float(frameCount)*u_gradientDirection*u_speed;float index=mod((distance+adjustedAngle*u_density)*gradientTextureLength,gradientTextureLength);float normalizedIndex=(floor(index)+0.5)/gradientTextureDimensions.x;float rowPosition=float(gradientTextureRow)+0.5;float rowTexCoord=rowPosition/gradientTextureDimensions.y;vec4 gradientColor=texture2D(gradientTexture,vec2(normalizedIndex,rowTexCoord));gl_FragColor=vec4(gradientColor.rgb,texColor.a);}else{gl_FragColor=texColor;}}"; // eslint-disable-line
+
+    var radialGradientShader = "precision highp float;\n#define GLSLIFY 1\nvarying vec2 v_texCoord;uniform sampler2D textureID;uniform sampler2D originalTextureID;uniform sampler2D gradientTexture;uniform float u_centerX;uniform float u_centerY;uniform float gradientTextureLength;uniform float u_radius;uniform int frameCount;uniform int u_gradientDirection;uniform int gradientTextureRow;uniform vec2 gradientTextureDimensions;uniform vec2 u_brightnessRange;void main(){vec4 texColor=texture2D(textureID,v_texCoord);vec4 originalTexColor=texture2D(originalTextureID,v_texCoord);if(texColor.r>=u_brightnessRange[0]&&texColor.r<=u_brightnessRange[1]&&texColor==originalTexColor){vec2 relativePosition=v_texCoord-vec2(u_centerX,u_centerY);float distance=length(relativePosition);float normalizedDistance=clamp(distance/u_radius,0.0,1.0);float index=normalizedDistance*(gradientTextureLength-1.0);float animatedIndex=mod(index+float(frameCount)*0.1*float(-u_gradientDirection),gradientTextureLength);float normalizedIndex=(floor(animatedIndex)+0.5)/gradientTextureDimensions.x;float rowPosition=float(gradientTextureRow)+0.5;float rowTexCoord=rowPosition/gradientTextureDimensions.y;vec4 gradientColor=texture2D(gradientTexture,vec2(normalizedIndex,rowTexCoord));gl_FragColor=vec4(gradientColor.rgb,texColor.a);}else{gl_FragColor=texColor;}}"; // eslint-disable-line
+
+    var conicalGradientShader = "precision highp float;\n#define GLSLIFY 1\nvarying vec2 v_texCoord;uniform sampler2D textureID;uniform sampler2D originalTextureID;uniform sampler2D gradientTexture;uniform float u_centerX;uniform float u_centerY;uniform float gradientTextureLength;uniform int frameCount;uniform float u_speed;uniform int gradientTextureRow;uniform vec2 gradientTextureDimensions;uniform vec2 u_brightnessRange;void main(){vec2 flippedTexCoord=vec2(v_texCoord.x,v_texCoord.y);vec4 texColor=texture2D(textureID,flippedTexCoord);vec4 originalTexColor=texture2D(originalTextureID,flippedTexCoord);if(texColor.r>=u_brightnessRange[0]&&texColor.r<=u_brightnessRange[1]&&texColor==originalTexColor){vec2 relativePosition=flippedTexCoord-vec2(u_centerX,u_centerY);float angle=atan(relativePosition.y,relativePosition.x);float adjustedAngle=angle+float(frameCount)*u_speed;float normalizedAngle=mod(adjustedAngle+3.14159265,2.0*3.14159265)/(2.0*3.14159265);float index=normalizedAngle*gradientTextureLength;float normalizedIndex=mod(floor(index)+0.5,gradientTextureLength)/gradientTextureDimensions.x;float rowPosition=float(gradientTextureRow)+0.5;float rowTexCoord=rowPosition/gradientTextureDimensions.y;vec4 gradientColor=texture2D(gradientTexture,vec2(normalizedIndex,rowTexCoord));gl_FragColor=vec4(gradientColor.rgb,texColor.a);}else{gl_FragColor=texColor;}}"; // eslint-disable-line
+
+    var noiseGradientShader = "precision highp float;\n#define GLSLIFY 1\nvarying vec2 v_texCoord;uniform sampler2D textureID;uniform sampler2D originalTextureID;uniform sampler2D gradientTexture;uniform float gradientTextureLength;uniform int frameCount;uniform float noiseScale;uniform float u_speed;uniform float direction;uniform int gradientTextureRow;uniform vec2 gradientTextureDimensions;uniform vec2 u_brightnessRange;vec3 permute(vec3 x){return mod(((x*34.0)+1.0)*x,289.0);}float snoise(vec2 v){const vec4 C=vec4(0.211324865405187,0.366025403784439,-0.577350269189626,0.024390243902439);vec2 i=floor(v+dot(v,C.yy));vec2 x0=v-i+dot(i,C.xx);vec2 i1;i1=(x0.x>x0.y)? vec2(1.0,0.0): vec2(0.0,1.0);vec4 x12=x0.xyxy+C.xxzz;x12.xy-=i1;i=mod(i,289.0);vec3 p=permute(permute(i.y+vec3(0.0,i1.y,1.0))+i.x+vec3(0.0,i1.x,1.0));vec3 m=max(0.5-vec3(dot(x0,x0),dot(x12.xy,x12.xy),dot(x12.zw,x12.zw)),0.0);m=m*m;m=m*m;vec3 x=2.0*fract(p*C.www)-1.0;vec3 h=abs(x)-0.5;vec3 ox=floor(x+0.5);vec3 a0=x-ox;m*=1.79284291400159-0.85373472095314*(a0*a0+h*h);vec3 g;g.x=a0.x*x0.x+h.x*x0.y;g.yz=a0.yz*x12.xz+h.yz*x12.yw;return 130.0*dot(m,g);}void main(){vec4 texColor=texture2D(textureID,v_texCoord);vec4 originalTexColor=texture2D(originalTextureID,v_texCoord);if(texColor.r>=u_brightnessRange[0]&&texColor.r<=u_brightnessRange[1]&&texColor==originalTexColor){vec2 directionVec=vec2(cos(radians(direction)),sin(radians(direction)));vec2 uv=v_texCoord*noiseScale+directionVec*float(frameCount)*u_speed*0.01;float noiseValue=snoise(uv);float normalizedNoiseValue=(noiseValue+1.0)/2.0;float index=normalizedNoiseValue*(gradientTextureLength-1.0);float texelPosition=(floor(index)+0.5)/gradientTextureDimensions.x;float rowPosition=float(gradientTextureRow)+0.5;float rowTexCoord=rowPosition/gradientTextureDimensions.y;vec4 gradientColor=texture2D(gradientTexture,vec2(texelPosition,rowTexCoord));gl_FragColor=vec4(gradientColor.rgb,texColor.a);}else{gl_FragColor=texColor;}}"; // eslint-disable-line
+
+    class P5AsciifyGradientManager {
+
+        gradientParams = {
+            "linear": { direction: 1, angle: 0, speed: 0.01 },
+            "zigzag": { direction: 1, angle: 0, speed: 0.01 },
+            "spiral": { direction: 1, centerX: 0.5, centerY: 0.5, speed: 0.01, density: 0.01 },
+            "radial": { direction: 1, centerX: 0.5, centerY: 0.5, radius: 0.5 },
+            "conical": { centerX: 0.5, centerY: 0.5, speed: 0.01 },
+            "noise": { noiseScale: 0.1, speed: 0.01, direction: 1 },
+        }
+
+        gradientShaders = {
+            "linear": linearGradientShader,
+            "zigzag": zigzagGradientShader,
+            "spiral": spiralGradientShader,
+            "radial": radialGradientShader,
+            "conical": conicalGradientShader,
+            "noise": noiseGradientShader,
+        }
+
+        gradientConstructors = {
+            "linear": ({ type, shader, params }) => new P5AsciifyLinearGradient({ type, shader, ...params }),
+            "zigzag": ({ type, shader, params }) => new P5AsciifyZigZagGradient({ type, shader, ...params }),
+            "spiral": ({ type, shader, params }) => new P5AsciifySpiralGradient({ type, shader, ...params }),
+            "radial": ({ type, shader, params }) => new P5AsciifyRadialGradient({ type, shader, ...params }),
+            "conical": ({ type, shader, params }) => new P5AsciifyConicalGradient({ type, shader, ...params }),
+            "noise": ({ type, shader, params }) => new P5AsciifyNoiseGradient({ type, shader, ...params }),
+        }
+
+        _setupQueue = [];
+        _gradients = [];
+
+        constructor(colorPalette) {
+            this.colorPalette = colorPalette;
+        }
+
+        setup(p5Instance, gradientCharacterSet ) {
+            this.p5Instance = p5Instance;
+            this.gradientCharacterSet = gradientCharacterSet;
+            this.setupShaders();
+            this.setupGradientQueue();
+        }
+
+        setupGradientQueue() {
+            for (let gradientInstance of this._setupQueue) {
+                this.gradientCharacterSet.appendCharacterSet(gradientInstance._palette);
+                gradientInstance.setup(this.gradientShaders[gradientInstance.type], this.gradientCharacterSet.getCharsetColorArray(gradientInstance._palette));
+            }
+        }
+
+        getGradientParams(gradientName, params) {
+            return { ...this.gradientParams[gradientName], ...params };
+        }
+
+        addGradient(gradientName, brightnessStart, brightnessEnd, palette, params) {
+            const mergedParams = this.getGradientParams(gradientName, { brightnessStart, brightnessEnd, colorPalette: this.colorPalette, palette, ...params });
+            const gradient = this.gradientConstructors[gradientName]({ type: gradientName, shader: this.gradientShaders[gradientName], params: mergedParams });
+            gradient.registerPaletteChangeCallback(this.handleGradientPaletteChange.bind(this));
+            this._gradients.push(gradient);
+
+            if (frameCount === 0) {
+                this._setupQueue.push(gradient);
+            } else {
+                this.gradientCharacterSet.appendCharacterSet(palette);
+                gradient.setup(this.gradientShaders[gradientName], this.gradientCharacterSet.getCharsetColorArray(palette));
+            }
+
+            return gradient;
+        }
+
+        handleGradientPaletteChange(gradient, characters) {
+
+            if (frameCount === 0) {
+                gradient._palette = characters;
+            } else {
+                this.gradientCharacterSet.appendCharacterSet(characters);
+                gradient._palette = this.gradientCharacterSet.getCharsetColorArray(characters);
+                gradient._colorPalette.removePalette(gradient.paletteId);
+                gradient.paletteId = gradient._colorPalette.addPalette(gradient._palette);
+            }
+        }
+
+        setupShaders() {
+            for (let gradientName in this.gradientShaders) {
+                this.gradientShaders[gradientName] = this.p5Instance.createShader(vertexShader, this.gradientShaders[gradientName]);
+            }
+        }
+    }
+
     // renderers/AsciiRenderer.js
     class AsciiRenderer {
         /**
@@ -1107,6 +1515,12 @@
         }
 
         render(inputFramebuffer) {
+
+            if (!this.options.enabled) {
+                this.outputFramebuffer = inputFramebuffer;
+                return;
+            }
+
             this.outputFramebuffer.begin();
             this.p5.shader(this.shader);
             this.shader.setUniform('u_characterTexture', this.characterSet.texture);
@@ -1263,6 +1677,12 @@ void main() {
         }
 
         render(inputFramebuffer) {
+
+            if (!this.options.enabled) {
+                this.outputFramebuffer = inputFramebuffer;
+                return;
+            }
+
             // Apply Sobel shader for edge detection
             this.sobelFramebuffer.begin();
             this.p5.shader(this.sobelShader);
@@ -1586,6 +2006,11 @@ void main() {
 
         render(inputFramebuffer) {
 
+            if (!this.options.enabled) {
+                this.outputFramebuffer = inputFramebuffer;
+                return;
+            }
+
             this.brightnessSampleFramebuffer.begin();
             this.p5.shader(this.brightnessSampleShader);
             this.brightnessSampleShader.setUniform('u_inputImage', inputFramebuffer);
@@ -1661,6 +2086,96 @@ void main() {
         }
     }
 
+    var asciiShader = "precision highp float;\n#define GLSLIFY 1\nuniform vec2 u_resolution;uniform sampler2D u_characterTexture;uniform float u_charsetCols;uniform float u_charsetRows;uniform sampler2D u_sketchTexture;uniform sampler2D u_asciiBrightnessTexture;uniform sampler2D u_gradientTexture;uniform sampler2D u_gradientReferenceTexture;uniform vec2 u_gridCellDimensions;uniform vec2 u_gridPixelDimensions;uniform vec2 u_gridOffsetDimensions;uniform vec3 u_characterColor;uniform int u_characterColorMode;uniform vec3 u_backgroundColor;uniform int u_backgroundColorMode;uniform bool u_brightnessEnabled;uniform float u_rotationAngle;uniform int u_invertMode;mat2 rotate2D(float angle){float s=sin(angle);float c=cos(angle);return mat2(c,-s,s,c);}void main(){vec2 adjustedCoord=(gl_FragCoord.xy-u_gridOffsetDimensions)/u_gridPixelDimensions;if(adjustedCoord.x<0.0||adjustedCoord.x>1.0||adjustedCoord.y<0.0||adjustedCoord.y>1.0){gl_FragColor=vec4(u_backgroundColor,1.0);return;}vec2 gridCoord=adjustedCoord*u_gridCellDimensions;vec2 cellCoord=floor(gridCoord);vec2 centerCoord=cellCoord+vec2(0.5);vec2 baseCoord=centerCoord/u_gridCellDimensions;vec4 sketchColor=texture2D(u_sketchTexture,baseCoord);vec4 gradientColor=texture2D(u_gradientTexture,baseCoord);vec4 gradientReferenceColor=texture2D(u_gradientReferenceTexture,baseCoord);if(gradientColor.rgb==gradientReferenceColor.rgb){if(u_brightnessEnabled){gl_FragColor=texture2D(u_asciiBrightnessTexture,gl_FragCoord.xy/u_resolution);}else{gl_FragColor=vec4(u_backgroundColor,1.0);}return;}int charIndex=int(gradientColor.r*255.0)+int(gradientColor.g*255.0)*256;int charCol=charIndex-(charIndex/int(u_charsetCols))*int(u_charsetCols);int charRow=charIndex/int(u_charsetCols);vec2 charCoord=vec2(float(charCol)/u_charsetCols,float(charRow)/u_charsetRows);vec2 fractionalPart=fract(gridCoord)-0.5;fractionalPart=rotate2D(u_rotationAngle)*fractionalPart;fractionalPart+=0.5;vec2 cellMin=charCoord;vec2 cellMax=charCoord+vec2(1.0/u_charsetCols,1.0/u_charsetRows);vec2 texCoord=charCoord+fractionalPart*vec2(1.0/u_charsetCols,1.0/u_charsetRows);bool outsideBounds=any(lessThan(texCoord,cellMin))||any(greaterThan(texCoord,cellMax));vec4 charColor=outsideBounds ? vec4(u_backgroundColor,1.0): texture2D(u_characterTexture,texCoord);if(u_invertMode==1){charColor.a=1.0-charColor.a;charColor.rgb=vec3(1.0);}vec4 finalColor=(u_characterColorMode==0)? vec4(sketchColor.rgb*charColor.rgb,charColor.a): vec4(u_characterColor*charColor.rgb,charColor.a);if(u_backgroundColorMode==0){gl_FragColor=mix(vec4(sketchColor.rgb,1.0),finalColor,charColor.a);}else{gl_FragColor=mix(vec4(u_backgroundColor,1.0),finalColor,charColor.a);}if(outsideBounds){gl_FragColor=(u_backgroundColorMode==0)?(u_invertMode==1 ?(u_characterColorMode==0 ? vec4(sketchColor.rgb,1.0): vec4(u_characterColor,1.0)): vec4(sketchColor.rgb,1.0)):(u_invertMode==1 ?(u_characterColorMode==0 ? vec4(sketchColor.rgb,1.0): vec4(u_characterColor,1.0)): vec4(u_backgroundColor,1.0));}}"; // eslint-disable-line
+
+    class GradientAsciiRenderer extends AsciiRenderer {
+
+        constructor(p5Instance, grid, characterSet, asciiRenderer, gradientManager, options) {
+            super(p5Instance, grid, characterSet, options);
+
+            this.asciiRenderer = asciiRenderer;
+            this.gradientManager = gradientManager;
+
+            this.grayscaleShader = this.p5.createShader(vertexShader, grayscaleShader);
+            this.asciiShader = this.p5.createShader(vertexShader, asciiShader);
+
+            this.grayscaleFramebuffer = this.p5.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
+            this.prevGradientFramebuffer = this.p5.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
+            this.nextGradientFramebuffer = this.p5.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
+            
+            this.outputFramebuffer = this.p5.createFramebuffer({ depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
+        }
+
+        resizeFramebuffers() {
+            this.grayscaleFramebuffer.resize(this.grid.cols, this.grid.rows);
+            this.nextGradientFramebuffer.resize(this.grid.cols, this.grid.rows);
+            this.prevGradientFramebuffer.resize(this.grid.cols, this.grid.rows);
+        }
+
+        render(inputFramebuffer) {
+
+            this.grayscaleFramebuffer.begin();
+            this.p5.clear();
+            this.p5.shader(this.grayscaleShader);
+            this.grayscaleShader.setUniform('u_image', inputFramebuffer);
+            this.p5.rect(0, 0, this.p5.width, this.p5.height);
+            this.grayscaleFramebuffer.end();
+
+            this.nextGradientFramebuffer.begin();
+            this.p5.clear();
+            this.p5.image(this.grayscaleFramebuffer, -this.grid.cols / 2, -this.grid.rows / 2);
+            this.nextGradientFramebuffer.end();
+
+            this.prevGradientFramebuffer.begin();
+            this.p5.clear();
+            this.p5.image(this.grayscaleFramebuffer, -this.grid.cols / 2, -this.grid.rows / 2);
+            this.prevGradientFramebuffer.end();
+
+            for (let i = 0; i < this.gradientManager._gradients.length; i++) {
+                const gradient = this.gradientManager._gradients[i];
+
+                this.prevGradientFramebuffer.begin();
+                this.p5.clear();
+                this.p5.shader(gradient._shader);
+                gradient.setUniforms(this.nextGradientFramebuffer, this.grayscaleFramebuffer);
+                this.p5.rect(0, 0, this.grid.cols, this.grid.rows);
+                this.prevGradientFramebuffer.end();
+
+                // Swap framebuffers for the next pass
+                [this.nextGradientFramebuffer, this.prevGradientFramebuffer] = [this.prevGradientFramebuffer, this.nextGradientFramebuffer];
+            }
+
+            this.outputFramebuffer.begin();
+            this.p5.clear();
+            this.p5.shader(this.asciiShader);
+            this.asciiShader.setUniform('u_resolution', [this.p5.width, this.p5.height]);
+            this.asciiShader.setUniform('u_characterTexture', this.characterSet.texture);
+            this.asciiShader.setUniform('u_charsetCols', this.characterSet.charsetCols);
+            this.asciiShader.setUniform('u_charsetRows', this.characterSet.charsetRows);
+            this.asciiShader.setUniform('u_totalChars', this.characterSet.characters.length);
+            this.asciiShader.setUniform('u_sketchTexture', inputFramebuffer);
+            this.asciiShader.setUniform('u_gradientTexture', this.nextGradientFramebuffer);
+            this.asciiShader.setUniform('u_gradientReferenceTexture', this.grayscaleFramebuffer);
+            this.asciiShader.setUniform('u_asciiBrightnessTexture', this.asciiRenderer.getOutputFramebuffer());
+            this.asciiShader.setUniform('u_brightnessEnabled', this.asciiRenderer.options.enabled);
+            this.asciiShader.setUniform('u_gridPixelDimensions', [this.grid.width, this.grid.height]);
+            this.asciiShader.setUniform('u_gridOffsetDimensions', [this.grid.offsetX, this.grid.offsetY]);
+            this.asciiShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
+            this.asciiShader.setUniform('u_characterColor', this.options.characterColor);
+            this.asciiShader.setUniform('u_characterColorMode', this.options.characterColorMode);
+            this.asciiShader.setUniform('u_backgroundColor', this.options.backgroundColor);
+            this.asciiShader.setUniform('u_backgroundColorMode', this.options.backgroundColorMode);
+            this.asciiShader.setUniform('u_invertMode', this.options.invertMode);
+            this.asciiShader.setUniform('u_rotationAngle', this.p5.radians(this.options.rotationAngle));
+            this.p5.rect(0, 0, this.p5.width, this.p5.height);
+            this.outputFramebuffer.end();
+        }
+
+        getOutputFramebuffer() {
+            return this.outputFramebuffer;
+        }
+    }
+
     /**
      * @class P5Asciify
      * @description
@@ -1685,6 +2200,16 @@ void main() {
             rotationAngle: 0,
         };
 
+        gradientOptions = {
+            enabled: true,
+            characterColor: [1.0, 1.0, 1.0],
+            characterColorMode: 0,
+            backgroundColor: [0.0, 0.0, 0.0],
+            backgroundColorMode: 1,
+            invertMode: false,
+            rotationAngle: 0,
+        }
+
         edgeOptions = {
             enabled: false,
             characters: "-/|\\-/|\\",
@@ -1699,6 +2224,8 @@ void main() {
         };
 
         colorPalette = new P5AsciifyColorPalette();
+
+        gradientManager = new P5AsciifyGradientManager(this.colorPalette);
 
         preEffectManager = new P5AsciifyEffectManager(this.colorPalette);
         afterEffectManager = new P5AsciifyEffectManager(this.colorPalette);
@@ -1716,15 +2243,18 @@ void main() {
             this.p5Instance.pixelDensity(1);
 
             this.asciiCharacterSet = new P5AsciifyCharacterSet({ p5Instance: this.p5Instance, type: "ascii", font: this.font, characters: this.asciiOptions.characters, fontSize: this.commonOptions.fontSize });
+            this.gradientCharacterSet = new P5AsciifyCharacterSet({ p5Instance: this.p5Instance, type: "gradient", font: this.font, characters: "", fontSize: this.commonOptions.fontSize });
             this.edgeCharacterSet = new P5AsciifyCharacterSet({ p5Instance: this.p5Instance, type: "edge", font: this.font, characters: this.edgeOptions.characters, fontSize: this.commonOptions.fontSize });
 
             this.grid = new P5AsciifyGrid(this.p5Instance, this.asciiCharacterSet.maxGlyphDimensions.width, this.asciiCharacterSet.maxGlyphDimensions.height);
-        
+
             if (this.commonOptions.gridDimensions[0] != 0 && this.commonOptions.gridDimensions[1] != 0) {
                 this.grid.resizeCellDimensions(this.commonOptions.gridDimensions[0], this.commonOptions.gridDimensions[1]);
             }
 
             this.colorPalette.setup(this.p5Instance);
+
+            this.gradientManager.setup(this.p5Instance, this.gradientCharacterSet);
 
             this.preEffectManager.setup();
             this.afterEffectManager.setup();
@@ -1733,7 +2263,9 @@ void main() {
             this.accurateRenderer = new AccurateAsciiRenderer(this.p5Instance, this.grid, this.asciiCharacterSet, this.asciiOptions);
 
             let asciiRenderer = this.asciiOptions.renderMode === 'brightness' ? this.brightnessRenderer : this.accurateRenderer;
-            this.edgeRenderer = new EdgeAsciiRenderer(this.p5Instance, this.grid, this.edgeCharacterSet, asciiRenderer, this.edgeOptions);
+            this.gradientRenderer = new GradientAsciiRenderer(this.p5Instance, this.grid, this.gradientCharacterSet, asciiRenderer, this.gradientManager, this.gradientOptions);
+
+            this.edgeRenderer = new EdgeAsciiRenderer(this.p5Instance, this.grid, this.edgeCharacterSet, this.gradientRenderer, this.edgeOptions);
 
             this.asciiFramebufferDimensions = { width: this.p5Instance.width, height: this.p5Instance.height };
 
@@ -1758,6 +2290,7 @@ void main() {
 
                 this.edgeRenderer.resizeFramebuffers();
                 this.accurateRenderer.resizeFramebuffers();
+                this.gradientRenderer.resizeFramebuffers();
             }
         }
 
@@ -1769,18 +2302,17 @@ void main() {
 
             let asciiOutput = this.preEffectManager.nextFramebuffer;
 
-            if (this.asciiOptions.enabled) { // Select renderer based on renderMode
-                const renderer = this.asciiOptions.renderMode === 'accurate'
-                    ? this.accurateRenderer
-                    : this.brightnessRenderer;
-                renderer.render(this.preEffectManager.nextFramebuffer);
-                asciiOutput = renderer.getOutputFramebuffer();
-            }
+            const renderer = this.asciiOptions.renderMode === 'accurate'
+                ? this.accurateRenderer
+                : this.brightnessRenderer;
+            renderer.render(this.preEffectManager.nextFramebuffer);
+            asciiOutput = renderer.getOutputFramebuffer();
 
-            if (this.edgeOptions.enabled) {
-                this.edgeRenderer.render(this.preEffectManager.nextFramebuffer, this.asciiOptions.enabled);
-                asciiOutput = this.edgeRenderer.getOutputFramebuffer();
-            }
+            this.gradientRenderer.render(this.preEffectManager.nextFramebuffer);
+            asciiOutput = this.gradientRenderer.getOutputFramebuffer();
+
+            this.edgeRenderer.render(this.preEffectManager.nextFramebuffer, this.asciiOptions.enabled);
+            asciiOutput = this.edgeRenderer.getOutputFramebuffer();
 
             this.afterEffectManager.render(asciiOutput);
 
@@ -1793,7 +2325,7 @@ void main() {
          * Sets the default options for the P5Asciify library.
          * @param {object} options 
          */
-        setDefaultOptions(asciiOptions, edgeOptions, commonOptions) {
+        setDefaultOptions(asciiOptions, edgeOptions, commonOptions, gradientOptions) {
 
             // The parameters are pre-processed, so we can just spread them into the class variables
             this.asciiOptions = {
@@ -1809,8 +2341,13 @@ void main() {
                 ...commonOptions
             };
 
+            this.gradientOptions = {
+                ...this.gradientOptions,
+                ...gradientOptions
+            };
+
             // If we are still in the users setup(), the characterset and grid have not been initialized yet.
-            if (this.p5Instance.frameCount == 0) { 
+            if (this.p5Instance.frameCount == 0) {
                 return;
             }
 
@@ -1833,6 +2370,7 @@ void main() {
 
                 this.edgeRenderer.resizeFramebuffers();
                 this.accurateRenderer.resizeFramebuffers();
+                this.gradientRenderer.resizeFramebuffers();
             }
 
             if (asciiOptions?.renderMode) {
@@ -1847,6 +2385,7 @@ void main() {
                 }
                 this.edgeRenderer.resizeFramebuffers();
                 this.accurateRenderer.resizeFramebuffers();
+                this.gradientRenderer.resizeFramebuffers();
             }
         }
     }
@@ -2068,7 +2607,7 @@ void main() {
      * TODO: Add example
      */
     p5.prototype.setAsciiOptions = function (options) {
-        const validOptions = ["common", "brightness", "edge", "ascii"];
+        const validOptions = ["common", "brightness", "edge", "ascii", "gradient"];
         const unknownOptions = Object.keys(options).filter(option => !validOptions.includes(option));
 
         if (unknownOptions.length) {
@@ -2084,9 +2623,9 @@ void main() {
             options.ascii = options.brightness;
         }
 
-        const { ascii: asciiOptions, edge: edgeOptions, common: commonOptions } = options;
+        const { ascii: asciiOptions, edge: edgeOptions, common: commonOptions, gradient: gradientOptions } = options;
 
-        const colorOptions = [edgeOptions, asciiOptions];
+        const colorOptions = [edgeOptions, asciiOptions, gradientOptions];
         colorOptions.forEach(opt => {
             if (opt?.characterColor) opt.characterColor = P5AsciifyUtils.hexToShaderColor(opt.characterColor);
             if (opt?.backgroundColor) opt.backgroundColor = P5AsciifyUtils.hexToShaderColor(opt.backgroundColor);
@@ -2102,7 +2641,7 @@ void main() {
             delete edgeOptions.characters;
         }
 
-        p5asciify.setDefaultOptions(asciiOptions, edgeOptions, commonOptions);
+        p5asciify.setDefaultOptions(asciiOptions, edgeOptions, commonOptions, gradientOptions);
     };
 
 
@@ -2244,6 +2783,34 @@ void main() {
         } else {
             manager1.swapEffects(effectInstance1, effectInstance2);
         }
+    };
+
+    p5.prototype.addAsciiGradient = function (gradientName, brightnessStart, brightnessEnd, characters, userParams = {}) {
+
+        if (!p5asciify.gradientManager.gradientConstructors[gradientName]) {
+            throw new P5AsciifyError(`Gradient '${gradientName}' does not exist! Available gradients: ${Object.keys(P5Asciify.gradientManager.gradientConstructors).join(", ")}`);
+        }
+
+        if (typeof brightnessStart !== 'number' || brightnessStart < 0 || brightnessStart > 255) {
+            throw new P5AsciifyError(`Invalid brightness start value '${brightnessStart}'. Expected a number between 0 and 255.`);
+        }
+
+        if (typeof brightnessEnd !== 'number' || brightnessEnd < 0 || brightnessEnd > 255) {
+            throw new P5AsciifyError(`Invalid brightness end value '${brightnessEnd}'. Expected a number between 0 and 255.`);
+        }
+
+        if (typeof characters !== 'string') {
+            throw new P5AsciifyError(`Invalid characters value '${characters}'. Expected a string.`);
+        }
+
+        // Check if the userParams exist and are valid
+        const validParams = Object.keys(p5asciify.gradientManager.gradientParams[gradientName]);
+        const invalidKeys = Object.keys(userParams).filter(key => !validParams.includes(key));
+        if (invalidKeys.length > 0) {
+            throw new P5AsciifyError(`Invalid parameter(s) for gradient '${gradientName}': ${invalidKeys.join(", ")}\nValid parameters are: ${validParams.join(", ")}`);
+        }
+
+        return p5asciify.gradientManager.addGradient(gradientName, brightnessStart, brightnessEnd, characters, userParams);
     };
 
     /**

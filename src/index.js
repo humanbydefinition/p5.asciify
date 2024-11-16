@@ -144,7 +144,7 @@ p5.prototype.resetAsciiGrid = function () {
  * TODO: Add example
  */
 p5.prototype.setAsciiOptions = function (options) {
-    const validOptions = ["common", "brightness", "edge", "ascii"];
+    const validOptions = ["common", "brightness", "edge", "ascii", "gradient"];
     const unknownOptions = Object.keys(options).filter(option => !validOptions.includes(option));
 
     if (unknownOptions.length) {
@@ -160,9 +160,9 @@ p5.prototype.setAsciiOptions = function (options) {
         options.ascii = options.brightness;
     }
 
-    const { ascii: asciiOptions, edge: edgeOptions, common: commonOptions } = options;
+    const { ascii: asciiOptions, edge: edgeOptions, common: commonOptions, gradient: gradientOptions } = options;
 
-    const colorOptions = [edgeOptions, asciiOptions];
+    const colorOptions = [edgeOptions, asciiOptions, gradientOptions];
     colorOptions.forEach(opt => {
         if (opt?.characterColor) opt.characterColor = P5AsciifyUtils.hexToShaderColor(opt.characterColor);
         if (opt?.backgroundColor) opt.backgroundColor = P5AsciifyUtils.hexToShaderColor(opt.backgroundColor);
@@ -178,7 +178,7 @@ p5.prototype.setAsciiOptions = function (options) {
         delete edgeOptions.characters;
     }
 
-    p5asciify.setDefaultOptions(asciiOptions, edgeOptions, commonOptions);
+    p5asciify.setDefaultOptions(asciiOptions, edgeOptions, commonOptions, gradientOptions);
 };
 
 
@@ -321,6 +321,34 @@ p5.prototype.swapAsciiEffects = function (effectInstance1, effectInstance2) {
         manager1.swapEffects(effectInstance1, effectInstance2);
     }
 };
+
+p5.prototype.addAsciiGradient = function (gradientName, brightnessStart, brightnessEnd, characters, userParams = {}) {
+
+    if (!p5asciify.gradientManager.gradientConstructors[gradientName]) {
+        throw new P5AsciifyError(`Gradient '${gradientName}' does not exist! Available gradients: ${Object.keys(P5Asciify.gradientManager.gradientConstructors).join(", ")}`);
+    }
+
+    if (typeof brightnessStart !== 'number' || brightnessStart < 0 || brightnessStart > 255) {
+        throw new P5AsciifyError(`Invalid brightness start value '${brightnessStart}'. Expected a number between 0 and 255.`);
+    }
+
+    if (typeof brightnessEnd !== 'number' || brightnessEnd < 0 || brightnessEnd > 255) {
+        throw new P5AsciifyError(`Invalid brightness end value '${brightnessEnd}'. Expected a number between 0 and 255.`);
+    }
+
+    if (typeof characters !== 'string') {
+        throw new P5AsciifyError(`Invalid characters value '${characters}'. Expected a string.`);
+    }
+
+    // Check if the userParams exist and are valid
+    const validParams = Object.keys(p5asciify.gradientManager.gradientParams[gradientName]);
+    const invalidKeys = Object.keys(userParams).filter(key => !validParams.includes(key));
+    if (invalidKeys.length > 0) {
+        throw new P5AsciifyError(`Invalid parameter(s) for gradient '${gradientName}': ${invalidKeys.join(", ")}\nValid parameters are: ${validParams.join(", ")}`);
+    }
+
+    return p5asciify.gradientManager.addGradient(gradientName, brightnessStart, brightnessEnd, characters, userParams);
+}
 
 /**
  * Adds a push() call before the user's draw() function in p5.js.
