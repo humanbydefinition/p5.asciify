@@ -682,6 +682,8 @@
                 effectInstance.setup();
                 effectInstance.shader = this.effectShaders[effectInstance.name];
             }
+
+            this._setupQueue = [];
         }
 
         addExistingEffectAtIndex(effectInstance, index) {
@@ -1418,6 +1420,8 @@
                 this.gradientCharacterSet.appendCharacterSet(gradientInstance._palette);
                 gradientInstance.setup(this.gradientShaders[gradientInstance.type], this.gradientCharacterSet.getCharsetColorArray(gradientInstance._palette));
             }
+
+            this._setupQueue = [];
         }
 
         getGradientParams(gradientName, params) {

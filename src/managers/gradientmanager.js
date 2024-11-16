@@ -62,6 +62,8 @@ class P5AsciifyGradientManager {
             this.gradientCharacterSet.appendCharacterSet(gradientInstance._palette);
             gradientInstance.setup(this.gradientShaders[gradientInstance.type], this.gradientCharacterSet.getCharsetColorArray(gradientInstance._palette));
         }
+
+        this._setupQueue = [];
     }
 
     getGradientParams(gradientName, params) {

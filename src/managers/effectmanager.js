@@ -108,6 +108,8 @@ class P5AsciifyEffectManager {
             effectInstance.setup();
             effectInstance.shader = this.effectShaders[effectInstance.name];
         }
+
+        this._setupQueue = [];
     }
 
     addExistingEffectAtIndex(effectInstance, index) {
