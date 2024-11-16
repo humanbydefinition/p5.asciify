@@ -34,7 +34,11 @@ export default class EdgeAsciiRenderer extends AsciiRenderer {
     render(inputFramebuffer) {
 
         if (!this.options.enabled) {
-            this.outputFramebuffer = inputFramebuffer;
+            if (this.asciiRenderer.options.enabled) {
+                this.outputFramebuffer = this.asciiRenderer.getOutputFramebuffer();
+            } else {
+                this.outputFramebuffer = inputFramebuffer;
+            }
             return;
         }
 

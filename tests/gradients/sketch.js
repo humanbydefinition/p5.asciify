@@ -23,11 +23,6 @@ let fillColors = [
     [210, 220, 230]
 ]
 
-function preload() {
-    //kaleidoscopeEffect = addAsciiEffect("pre", "kaleidoscope", { segments: 2, angle: 145 })
-    //distortionEffect = addAsciiEffect("pre", "distortion", { frequency: 0.1, amplitude: 0.1 });
-}
-
 function setup() {
     createCanvas(windowWidth, windowHeight, WEBGL);
     framebuffer = createFramebuffer({ format: FLOAT });
