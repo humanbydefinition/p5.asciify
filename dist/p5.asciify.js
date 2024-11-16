@@ -2084,9 +2084,9 @@ void main() {
             options.ascii = options.brightness;
         }
 
-        const { brightness: brightnessOptions, edge: edgeOptions, common: commonOptions, ascii: asciiOptions } = options;
+        const { ascii: asciiOptions, edge: edgeOptions, common: commonOptions } = options;
 
-        const colorOptions = [brightnessOptions, edgeOptions, asciiOptions];
+        const colorOptions = [edgeOptions, asciiOptions];
         colorOptions.forEach(opt => {
             if (opt?.characterColor) opt.characterColor = P5AsciifyUtils.hexToShaderColor(opt.characterColor);
             if (opt?.backgroundColor) opt.backgroundColor = P5AsciifyUtils.hexToShaderColor(opt.backgroundColor);
