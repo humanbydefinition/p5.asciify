@@ -14,7 +14,7 @@ function setup() {
     setAsciiOptions({ // These are the default options, you can change them as needed in preload(), setup() or draw()
         ascii: {
             renderMode: 'brightness',
-            enabled: false,
+            enabled: true,
             characters: characterSet,
             characterColorMode: 1,
         },
