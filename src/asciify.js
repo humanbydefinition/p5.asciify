@@ -135,13 +135,11 @@ class P5Asciify {
 
         // Select renderer based on renderMode
         if (this.asciiOptions.enabled) {
-            if (this.asciiOptions.renderMode === 'accurate') {
-                this.accurateRenderer.render(asciiOutput);
-                asciiOutput = this.accurateRenderer.getOutputFramebuffer();
-            } else { // Default to brightness
-                this.brightnessRenderer.render(asciiOutput);
-                asciiOutput = this.brightnessRenderer.getOutputFramebuffer();
-            }
+            const renderer = this.asciiOptions.renderMode === 'accurate'
+                ? this.accurateRenderer
+                : this.brightnessRenderer;
+            renderer.render(asciiOutput);
+            asciiOutput = renderer.getOutputFramebuffer();
         }
 
         if (this.edgeOptions.enabled) {
