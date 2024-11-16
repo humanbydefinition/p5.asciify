@@ -191,6 +191,7 @@ class P5Asciify {
 
         if (asciiOptions?.characters) {
             this.asciiCharacterSet.setCharacterSet(asciiOptions.characters);
+            this.accurateRenderer.resetShaders();
         }
 
         if (edgeOptions?.characters) {
@@ -205,6 +206,9 @@ class P5Asciify {
             this.edgeRenderer.resizeFramebuffers();
             this.accurateRenderer.resizeFramebuffers();
             this.gradientRenderer.resizeFramebuffers();
+
+            this.edgeRenderer.resetShaders();
+            this.accurateRenderer.resetShaders();
         }
 
         if (asciiOptions?.renderMode) {

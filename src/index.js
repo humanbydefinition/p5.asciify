@@ -75,6 +75,7 @@ p5.prototype.loadAsciiFont = function (font) {
         if (p5asciify.p5Instance.frameCount > 0) {
             p5asciify.brightnessCharacterSet.setFontObject(loadedFont);
             p5asciify.edgeCharacterSet.setFontObject(loadedFont);
+            p5asciify.gradientCharacterSet.setFontObject(loadedFont);
             p5asciify.grid.resizeCellPixelDimensions(
                 p5asciify.brightnessCharacterSet.maxGlyphDimensions.width,
                 p5asciify.brightnessCharacterSet.maxGlyphDimensions.height

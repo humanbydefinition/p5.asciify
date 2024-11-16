@@ -27,6 +27,10 @@ export default class EdgeAsciiRenderer extends AsciiRenderer {
         this.sampleFramebuffer.resize(this.grid.cols, this.grid.rows);
     }
 
+    resetShaders() {
+        this.sampleShader = this.p5.createShader(vertexShader, generateSampleShader(16, this.grid.cellHeight, this.grid.cellWidth));
+    }
+
     setAsciiRenderer(asciiRenderer) {
         this.asciiRenderer = asciiRenderer;
     }

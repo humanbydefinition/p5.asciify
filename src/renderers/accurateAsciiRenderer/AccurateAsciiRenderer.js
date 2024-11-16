@@ -34,6 +34,12 @@ export default class AccurateAsciiRenderer extends AsciiRenderer {
         this.asciiCharacterFramebuffer.resize(this.grid.cols, this.grid.rows);
     }
 
+    resetShaders() {
+        this.characterSelectionShader = this.p5.createShader(vertexShader, generateCharacterSelectionShader(this.characterSet.fontSize, this.characterSet.characters.length));
+        this.brightnessSampleShader = this.p5.createShader(vertexShader, generateBrightnessSampleShader(this.grid.cellHeight, this.grid.cellWidth));
+        this.colorSampleShader = this.p5.createShader(vertexShader, generateColorSampleShader(16, this.grid.cellHeight, this.grid.cellWidth));
+    }
+
     render(inputFramebuffer) {
 
         if (!this.options.enabled) {

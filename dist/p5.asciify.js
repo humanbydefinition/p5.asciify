@@ -1767,6 +1767,10 @@ void main() {
             this.sampleFramebuffer.resize(this.grid.cols, this.grid.rows);
         }
 
+        resetShaders() {
+            this.sampleShader = this.p5.createShader(vertexShader, generateSampleShader(16, this.grid.cellHeight, this.grid.cellWidth));
+        }
+
         setAsciiRenderer(asciiRenderer) {
             this.asciiRenderer = asciiRenderer;
         }
@@ -2101,6 +2105,12 @@ void main() {
             this.primaryColorSampleFramebuffer.resize(this.grid.cols, this.grid.rows);
             this.secondaryColorSampleFramebuffer.resize(this.grid.cols, this.grid.rows);
             this.asciiCharacterFramebuffer.resize(this.grid.cols, this.grid.rows);
+        }
+
+        resetShaders() {
+            this.characterSelectionShader = this.p5.createShader(vertexShader, generateCharacterSelectionShader(this.characterSet.fontSize, this.characterSet.characters.length));
+            this.brightnessSampleShader = this.p5.createShader(vertexShader, generateBrightnessSampleShader(this.grid.cellHeight, this.grid.cellWidth));
+            this.colorSampleShader = this.p5.createShader(vertexShader, generateColorSampleShader(16, this.grid.cellHeight, this.grid.cellWidth));
         }
 
         render(inputFramebuffer) {
@@ -2468,6 +2478,7 @@ void main() {
 
             if (asciiOptions?.characters) {
                 this.asciiCharacterSet.setCharacterSet(asciiOptions.characters);
+                this.accurateRenderer.resetShaders();
             }
 
             if (edgeOptions?.characters) {
@@ -2482,6 +2493,9 @@ void main() {
                 this.edgeRenderer.resizeFramebuffers();
                 this.accurateRenderer.resizeFramebuffers();
                 this.gradientRenderer.resizeFramebuffers();
+
+                this.edgeRenderer.resetShaders();
+                this.accurateRenderer.resetShaders();
             }
 
             if (asciiOptions?.renderMode) {
@@ -2649,6 +2663,7 @@ void main() {
             if (p5asciify.p5Instance.frameCount > 0) {
                 p5asciify.brightnessCharacterSet.setFontObject(loadedFont);
                 p5asciify.edgeCharacterSet.setFontObject(loadedFont);
+                p5asciify.gradientCharacterSet.setFontObject(loadedFont);
                 p5asciify.grid.resizeCellPixelDimensions(
                     p5asciify.brightnessCharacterSet.maxGlyphDimensions.width,
                     p5asciify.brightnessCharacterSet.maxGlyphDimensions.height
