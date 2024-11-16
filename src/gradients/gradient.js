@@ -12,6 +12,8 @@ class P5AsciifyGradient {
         this._colorPalette = colorPalette;
         this._palette = palette;
 
+        this._enabled = true;
+
         this._onPaletteChangeCallback = null;
     }
 
@@ -46,6 +48,14 @@ class P5AsciifyGradient {
 
     get type() {
         return this._type;
+    }
+
+    get enabled() {
+        return this._enabled;
+    }
+
+    set enabled(value) {
+        this._enabled = value;
     }
 }
 

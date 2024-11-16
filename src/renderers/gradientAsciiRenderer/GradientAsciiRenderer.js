@@ -19,7 +19,7 @@ export default class GradientAsciiRenderer extends AsciiRenderer {
         this.grayscaleFramebuffer = this.p5.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
         this.prevGradientFramebuffer = this.p5.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
         this.nextGradientFramebuffer = this.p5.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
-        
+
         this.outputFramebuffer = this.p5.createFramebuffer({ depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
     }
 
@@ -51,15 +51,18 @@ export default class GradientAsciiRenderer extends AsciiRenderer {
         for (let i = 0; i < this.gradientManager._gradients.length; i++) {
             const gradient = this.gradientManager._gradients[i];
 
-            this.prevGradientFramebuffer.begin();
-            this.p5.clear();
-            this.p5.shader(gradient._shader);
-            gradient.setUniforms(this.nextGradientFramebuffer, this.grayscaleFramebuffer);
-            this.p5.rect(0, 0, this.grid.cols, this.grid.rows);
-            this.prevGradientFramebuffer.end();
+            if (gradient.enabled) {
 
-            // Swap framebuffers for the next pass
-            [this.nextGradientFramebuffer, this.prevGradientFramebuffer] = [this.prevGradientFramebuffer, this.nextGradientFramebuffer];
+                this.prevGradientFramebuffer.begin();
+                this.p5.clear();
+                this.p5.shader(gradient._shader);
+                gradient.setUniforms(this.nextGradientFramebuffer, this.grayscaleFramebuffer);
+                this.p5.rect(0, 0, this.grid.cols, this.grid.rows);
+                this.prevGradientFramebuffer.end();
+
+                // Swap framebuffers for the next pass
+                [this.nextGradientFramebuffer, this.prevGradientFramebuffer] = [this.prevGradientFramebuffer, this.nextGradientFramebuffer];
+            }
         }
 
         this.outputFramebuffer.begin();

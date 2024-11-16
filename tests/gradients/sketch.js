@@ -89,8 +89,8 @@ function draw() {
 
     image(framebuffer, -windowWidth / 2, -windowHeight / 2);
 
-    if (frameCount == 5) {
-
+    if (frameCount % 60 == 0) {
+        zigzagGradient.enabled = !zigzagGradient.enabled;
     }
 
     if (frameCount > 5) {
