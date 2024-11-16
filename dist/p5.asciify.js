@@ -1078,11 +1078,6 @@
             super(p5Instance, grid, characterSet, options);
 
             this.shader = this.p5.createShader(vertexShader, asciiBrightnessShader);
-            
-            this.initializeFramebuffers();
-        }
-
-        initializeFramebuffers() {
             this.outputFramebuffer = this.p5.createFramebuffer({  depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
         }
 
@@ -1229,10 +1224,6 @@ void main() {
             this.sampleShader = this.p5.createShader(vertexShader, generateSampleShader(16, this.grid.cellHeight, this.grid.cellWidth));
             this.shader = this.p5.createShader(vertexShader, asciiEdgeShader);
 
-            this.initializeFramebuffers();
-        }
-
-        initializeFramebuffers() {
             this.sobelFramebuffer = this.p5.createFramebuffer({ depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
             this.sampleFramebuffer = this.p5.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
             this.outputFramebuffer = this.p5.createFramebuffer({ depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
@@ -1552,10 +1543,6 @@ void main() {
             this.brightnessSplitShader = this.p5.createShader(vertexShader, brightnessSplitShader);
             this.shader = this.p5.createShader(vertexShader, asciiAccurateShader);
 
-            this.initializeFramebuffers();
-        }
-
-        initializeFramebuffers() {
             this.brightnessSampleFramebuffer = this.p5.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
             this.brightnessSplitFramebuffer = this.p5.createFramebuffer({ depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
             this.primaryColorSampleFramebuffer = this.p5.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
