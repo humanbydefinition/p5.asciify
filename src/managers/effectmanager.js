@@ -65,15 +65,41 @@ class P5AsciifyEffectManager {
     }
 
     setup() {
+        this.prevFramebuffer = this.p5Instance.createFramebuffer({ depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
+        this.nextFramebuffer = this.p5Instance.createFramebuffer({ depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
+
         this.setupShaders();
         this.setupEffectQueue();
     }
 
+    render(inputFramebuffer) {
+
+        this.prevFramebuffer.begin();
+        this.p5Instance.clear();
+        this.p5Instance.image(inputFramebuffer, -this.p5Instance.width / 2, -this.p5Instance.height / 2, this.p5Instance.width, this.p5Instance.height);
+        this.prevFramebuffer.end();
+
+        this.nextFramebuffer.begin();
+        this.p5Instance.clear();
+        this.p5Instance.image(inputFramebuffer, -this.p5Instance.width / 2, -this.p5Instance.height / 2, this.p5Instance.width, this.p5Instance.height);
+        this.nextFramebuffer.end();
+
+        for (const effect of this._effects) {
+            if (effect.enabled) {
+                // Swap framebuffers only if the effect is enabled
+                [this.prevFramebuffer, this.nextFramebuffer] = [this.nextFramebuffer, this.prevFramebuffer];
+
+                this.nextFramebuffer.begin();
+                this.p5Instance.shader(effect.shader);
+                effect.setUniforms(this.prevFramebuffer, this.p5Instance.frameCount);
+                this.p5Instance.rect(0, 0, this.p5Instance.width, this.p5Instance.height);
+                this.nextFramebuffer.end();
+            }
+        }
+    }
+
     setupShaders() {
-
         for (let effectName in this.effectShaders) {
-
-
             this.effectShaders[effectName] = this.p5Instance.createShader(vertexShader, this.effectShaders[effectName]);
         }
     }
@@ -99,7 +125,6 @@ class P5AsciifyEffectManager {
     }
 
     addEffect(effectName, userParams = {}) {
-
         const shader = this.p5Instance.frameCount === 0 ? null : this.effectShaders[effectName];
         const params = { ...this.effectParams[effectName], ...userParams };
         const effectInstance = this.effectConstructors[effectName]({ shader, params });

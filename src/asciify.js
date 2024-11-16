@@ -129,32 +129,9 @@ class P5Asciify {
      * Runs the rendering pipeline for the P5Asciify library.
      */
     asciify() {
-        // Initial rendering to preEffectNextFramebuffer
-        this.preEffectNextFramebuffer.begin();
-        this.p5Instance.clear(); // do not remove this, even though it's tempting
-        this.p5Instance.image(this.sketchFramebuffer, -this.p5Instance.width / 2, -this.p5Instance.height / 2);
-        this.preEffectNextFramebuffer.end();
+        this.preEffectManager.render(this.sketchFramebuffer);
 
-        // Copy preEffectNextFramebuffer to preEffectPrevFramebuffer
-        this.preEffectPrevFramebuffer.begin();
-        this.p5Instance.clear(); // do not remove this, even though it's tempting
-        this.p5Instance.image(this.sketchFramebuffer, -this.p5Instance.width / 2, -this.p5Instance.height / 2);
-        this.preEffectPrevFramebuffer.end();
-
-        for (const effect of this.preEffectManager._effects) {
-            if (effect.enabled) {
-                // Swap framebuffers only if the effect is enabled
-                [this.preEffectPrevFramebuffer, this.preEffectNextFramebuffer] = [this.preEffectNextFramebuffer, this.preEffectPrevFramebuffer];
-
-                this.preEffectNextFramebuffer.begin();
-                this.p5Instance.shader(effect.shader);
-                effect.setUniforms(this.preEffectPrevFramebuffer, this.p5Instance.frameCount);
-                this.p5Instance.rect(0, 0, this.p5Instance.width, this.p5Instance.height);
-                this.preEffectNextFramebuffer.end();
-            }
-        }
-
-        let asciiOutput = this.preEffectNextFramebuffer;
+        let asciiOutput = this.preEffectManager.nextFramebuffer;
 
         // Select renderer based on renderMode
         if (this.asciiOptions.enabled) {
@@ -168,33 +145,14 @@ class P5Asciify {
         }
 
         if (this.edgeOptions.enabled) {
-            this.edgeRenderer.render(this.preEffectNextFramebuffer, this.asciiOptions.enabled);
+            this.edgeRenderer.render(this.preEffectManager.nextFramebuffer, this.asciiOptions.enabled);
             asciiOutput = this.edgeRenderer.getOutputFramebuffer();
         }
 
-        this.postEffectNextFramebuffer.begin();
-        this.p5Instance.clear();
-        this.p5Instance.image(asciiOutput, -this.p5Instance.width / 2, -this.p5Instance.height / 2);
-        this.postEffectNextFramebuffer.end();
-
-        this.postEffectPrevFramebuffer.begin();
-        this.p5Instance.clear();
-        this.p5Instance.image(asciiOutput, -this.p5Instance.width / 2, -this.p5Instance.height / 2);
-        this.postEffectPrevFramebuffer.end();
-
-        for (const effect of this.afterEffectManager._effects) {
-            if (effect.enabled) {
-                [this.postEffectPrevFramebuffer, this.postEffectNextFramebuffer] = [this.postEffectNextFramebuffer, this.postEffectPrevFramebuffer];
-                this.postEffectNextFramebuffer.begin();
-                this.p5Instance.shader(effect.shader);
-                effect.setUniforms(this.postEffectPrevFramebuffer, this.p5Instance.frameCount);
-                this.p5Instance.rect(0, 0, this.p5Instance.width, this.p5Instance.height);
-                this.postEffectNextFramebuffer.end();
-            }
-        }
+        this.afterEffectManager.render(asciiOutput);
 
         this.p5Instance.clear(); // do not remove this, even though it's tempting
-        this.p5Instance.image(this.postEffectNextFramebuffer, -this.p5Instance.width / 2, -this.p5Instance.height / 2);
+        this.p5Instance.image(this.afterEffectManager.nextFramebuffer, -this.p5Instance.width / 2, -this.p5Instance.height / 2);
         this.checkFramebufferDimensions();
     }
 
