@@ -1,3 +1,6 @@
+// Credits:
+// MattiasCRT - https://www.shadertoy.com/view/Ms23DR
+
 precision mediump float;
 
 // Uniforms
