@@ -24,7 +24,7 @@ I would love to see your creations using `p5.asciify`! Feel free to tag me on so
 
 # Features
 
-`p5.asciify` features a customizable rendering pipeline which is being executed every time the user's `draw()` function is finished, currently consisting of optional effect shaders being applied before and after the ASCII conversion, as well as up to 3 different layers of ASCII conversion, each with its own set of parameters that can be adjusted at any time.
+`p5.asciify` features a customizable rendering pipeline which is being executed every time the user's `draw()` function is finished executing, currently consisting of optional effect shaders being applied before and after the ASCII conversion, as well as up to 3 different layers of ASCII conversion, each with its own set of parameters that can be adjusted at any time.
 
 ## ASCII Conversion
 
@@ -70,7 +70,7 @@ All ASCII conversion layers individually have the following settings:
 
 | Setting          | Description                                                                                          |
 |------------------|------------------------------------------------------------------------------------------------------|
-| **`characters`**   | The characters used for the ASCII conversion.                                                       |
+| **`characters`**   | The characters used for the ASCII conversion. Consists of 8 characters, each representing a different edge direction. |
 | **`sobelThreshold`** | The threshold used for the Sobel edge detection algorithm.                                           |
 | **`sampleThreshold`** | The threshold used for sampling the sobel filter output to a smaller size.
 
