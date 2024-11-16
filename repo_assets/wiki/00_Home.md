@@ -89,3 +89,4 @@ To apply effects before and after the ASCII conversion, `p5.asciify` provides a 
 | **`invert`**            | Inverts the colors of the image, creating a negative effect.                                            |
 | **`kaleidoscope`**      | Applies a kaleidoscope effect, creating symmetrical patterns by repeating segments of the image.        |
 | **`rotate`**            | Rotates the image by a specified angle, altering its orientation.                                        |
+| **`crt`**               | Applies a CRT effect, simulating the appearance of an old CRT monitor.                                  |
