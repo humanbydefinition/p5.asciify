@@ -56,6 +56,22 @@ class P5AsciifyGradient {
     set enabled(value) {
         this._enabled = value;
     }
+
+    get brightnessStart() {
+        return this._brightnessStart;
+    }
+
+    set brightnessStart(value) {
+        this._brightnessStart = value;
+    }
+
+    get brightnessEnd() {
+        return this._brightnessEnd;
+    }
+
+    set brightnessEnd(value) {
+        this._brightnessEnd = value;
+    }
 }
 
 export default P5AsciifyGradient;
