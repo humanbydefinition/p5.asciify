@@ -9,7 +9,6 @@ export default p5asciify;
 
 // Expose P5Asciify to the global scope if not in a module environment
 if (typeof window !== 'undefined' && !window.P5Asciify) {
-    window.P5Asciify = P5Asciify;
     window.p5asciify = p5asciify;  // Expose p5asciify instance
     window.preload = function () { };
 }
