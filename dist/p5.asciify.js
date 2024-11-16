@@ -1109,6 +1109,22 @@
         set enabled(value) {
             this._enabled = value;
         }
+
+        get brightnessStart() {
+            return this._brightnessStart;
+        }
+
+        set brightnessStart(value) {
+            this._brightnessStart = value;
+        }
+
+        get brightnessEnd() {
+            return this._brightnessEnd;
+        }
+
+        set brightnessEnd(value) {
+            this._brightnessEnd = value;
+        }
     }
 
     class P5AsciifyLinearGradient extends P5AsciifyGradient {
@@ -1366,6 +1382,30 @@
             this._shader.setUniform('direction', this._direction);
             this._shader.setUniform('noiseScale', this._noiseScale);
             this._shader.setUniform('u_speed', this._speed);
+        }
+
+        get direction() {
+            return this._direction;
+        }
+
+        set direction(value) {
+            this._direction = value;
+        }
+
+        get noiseScale() {
+            return this._noiseScale;
+        }
+
+        set noiseScale(value) {
+            this._noiseScale = value;
+        }
+
+        get speed() {
+            return this._speed;
+        }
+
+        set speed(value) {
+            this._speed = value;
         }
     }
 
