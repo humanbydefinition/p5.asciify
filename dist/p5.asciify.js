@@ -204,7 +204,8 @@
          * Sets up the color palette with an initial texture.
          * This method should be called after the p5.js setup() function
          */
-        setup() {
+        setup(p5Instance) {
+            this.p5Instance = p5Instance;
             this.texture = this.p5Instance.createFramebuffer({ width: 1, height: 1,  depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
 
             if (Object.keys(this.palettes).length > 0) {
@@ -765,7 +766,7 @@
          * @param {string} options.characters - The string of characters to include in the character set.
          * @param {number} options.fontSize - The font size to use.
          */
-        setup({ p5Instance, type, font, characters, fontSize }) {
+        constructor({ p5Instance, type, font, characters, fontSize }) {
             this.p5Instance = p5Instance;
             this.type = type;
             this.font = font;
@@ -976,13 +977,13 @@
          * @param {number} options.cellWidth - The width of each cell in the grid.
          * @param {number} options.cellHeight - The height of each cell in the grid.
          */
-        constructor({ cellWidth, cellHeight }) {
+
+        setup(p5Instance, cellWidth, cellHeight) {
+            this.p5Instance = p5Instance;
             this.cellWidth = cellWidth;
             this.cellHeight = cellHeight;
-        }
 
-        addInstance(p5Instance) {
-            this.p5Instance = p5Instance;
+            this.reset();
         }
 
         /**
@@ -1672,8 +1673,7 @@ void main() {
             gridDimensions: [0, 0],
         };
 
-        // brightness and accurate options are the same, since only one of them can be enabled at a time
-        asciiOptions = {
+        asciiOptions = { // brightness and accurate options are the same, since only one of them can be enabled at a time
             renderMode: 'brightness',
             enabled: true,
             characters: "0123456789",
@@ -1703,16 +1703,12 @@ void main() {
         preEffectManager = new P5AsciifyEffectManager(this.colorPalette);
         afterEffectManager = new P5AsciifyEffectManager(this.colorPalette);
 
-        asciiFramebufferDimensions = { width: 0, height: 0 };
-
-        asciiCharacterSet = new P5AsciifyCharacterSet();
-        edgeCharacterSet = new P5AsciifyCharacterSet();
-        grid = new P5AsciifyGrid({ cellWidth: 0, cellHeight: 0 });
+        grid = new P5AsciifyGrid();
 
         instance(p) {
             this.p5Instance = p;
 
-            this.p5Instance.preload = () => { }; // Define a default preload function if one isn't provided
+            this.p5Instance.preload = () => { }; // Define a default preload function in case the user doesn't provide one
         }
 
         /**
@@ -1721,16 +1717,16 @@ void main() {
         setup() {
             this.p5Instance.pixelDensity(1);
 
-            this.asciiCharacterSet.setup({ p5Instance: this.p5Instance, type: "ascii", font: this.font, characters: this.asciiOptions.characters, fontSize: this.commonOptions.fontSize });
-            this.edgeCharacterSet.setup({ p5Instance: this.p5Instance, type: "edge", font: this.font, characters: this.edgeOptions.characters, fontSize: this.commonOptions.fontSize });
+            this.asciiCharacterSet = new P5AsciifyCharacterSet({ p5Instance: this.p5Instance, type: "ascii", font: this.font, characters: this.asciiOptions.characters, fontSize: this.commonOptions.fontSize });
+            this.edgeCharacterSet = new P5AsciifyCharacterSet({ p5Instance: this.p5Instance, type: "edge", font: this.font, characters: this.edgeOptions.characters, fontSize: this.commonOptions.fontSize });
 
-            this.grid.resizeCellPixelDimensions(this.asciiCharacterSet.maxGlyphDimensions.width, this.asciiCharacterSet.maxGlyphDimensions.height);
+            this.grid.setup(this.p5Instance, this.asciiCharacterSet.maxGlyphDimensions.width, this.asciiCharacterSet.maxGlyphDimensions.height);
 
             if (this.commonOptions.gridDimensions[0] != 0 && this.commonOptions.gridDimensions[1] != 0) {
                 this.grid.resizeCellDimensions(this.commonOptions.gridDimensions[0], this.commonOptions.gridDimensions[1]);
             }
 
-            this.colorPalette.setup();
+            this.colorPalette.setup(this.p5Instance);
 
             this.preEffectManager.setup();
             this.afterEffectManager.setup();
@@ -1773,14 +1769,13 @@ void main() {
         asciify() {
             this.preEffectManager.render(this.sketchFramebuffer);
 
-            let asciiOutput = this.preEffectManager.nextFramebuffer;
+            let asciiOutput;
 
-            // Select renderer based on renderMode
-            if (this.asciiOptions.enabled) {
+            if (this.asciiOptions.enabled) { // Select renderer based on renderMode
                 const renderer = this.asciiOptions.renderMode === 'accurate'
                     ? this.accurateRenderer
                     : this.brightnessRenderer;
-                renderer.render(asciiOutput);
+                renderer.render(this.preEffectManager.nextFramebuffer);
                 asciiOutput = renderer.getOutputFramebuffer();
             }
 
@@ -1791,7 +1786,7 @@ void main() {
 
             this.afterEffectManager.render(asciiOutput);
 
-            this.p5Instance.clear(); // do not remove this, even though it's tempting
+            this.p5Instance.clear();
             this.p5Instance.image(this.afterEffectManager.nextFramebuffer, -this.p5Instance.width / 2, -this.p5Instance.height / 2);
             this.checkFramebufferDimensions();
         }
@@ -1816,7 +1811,8 @@ void main() {
                 ...commonOptions
             };
 
-            if (this.p5Instance.frameCount == 0) { // If we are still in the users setup(), the characterset and grid have not been initialized yet.
+            // If we are still in the users setup(), the characterset and grid have not been initialized yet.
+            if (this.p5Instance.frameCount == 0) { 
                 return;
             }
 
@@ -1949,8 +1945,6 @@ void main() {
             p5asciify.p5Instance = this;
         }
 
-        p5asciify.grid.addInstance(p5asciify.p5Instance);
-        p5asciify.colorPalette.addInstance(p5asciify.p5Instance);
         p5asciify.preEffectManager.addInstance(p5asciify.p5Instance);
         p5asciify.afterEffectManager.addInstance(p5asciify.p5Instance);
     };

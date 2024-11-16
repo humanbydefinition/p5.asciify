@@ -19,8 +19,6 @@ p5.prototype.setupP5Instance = function () {
         p5asciify.p5Instance = this;
     }
 
-    p5asciify.grid.addInstance(p5asciify.p5Instance);
-    p5asciify.colorPalette.addInstance(p5asciify.p5Instance);
     p5asciify.preEffectManager.addInstance(p5asciify.p5Instance);
     p5asciify.afterEffectManager.addInstance(p5asciify.p5Instance);
 }

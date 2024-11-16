@@ -15,7 +15,7 @@ class P5AsciifyCharacterSet {
      * @param {string} options.characters - The string of characters to include in the character set.
      * @param {number} options.fontSize - The font size to use.
      */
-    setup({ p5Instance, type, font, characters, fontSize }) {
+    constructor({ p5Instance, type, font, characters, fontSize }) {
         this.p5Instance = p5Instance;
         this.type = type;
         this.font = font;
