@@ -45,6 +45,8 @@ function setup() {
     colorPaletteEffect1 = addAsciiEffect('pre', 'colorpalette', { palette: ['#ff0000', '#00ff00', '#0000ff', '#ffffff'] });
     colorPaletteEffect2 = addAsciiEffect('pre', 'colorpalette', { palette: ['#ff00ff', '#00ffff', '#0000ff', '#ffffff'] });
 
+    addAsciiEffect('pre', 'invert', {});
+    
     rotationEffect = addAsciiEffect('pre', 'rotate', { angle: 0 });
 }
 

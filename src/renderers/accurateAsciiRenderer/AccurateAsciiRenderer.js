@@ -5,7 +5,7 @@ import { generateCharacterSelectionShader, generateBrightnessSampleShader, gener
 import asciiAccurateShader from './shaders/asciiAccurate.frag';
 import brightnessSplitShader from './shaders/brightnessSplit.frag';
 
-import vertexShader from '../../shaders/vert/shader.vert';
+import vertexShader from '../../assets/shaders/vert/shader.vert';
 
 export default class AccurateAsciiRenderer extends AsciiRenderer {
 

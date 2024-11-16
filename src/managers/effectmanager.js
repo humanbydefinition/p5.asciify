@@ -1,22 +1,22 @@
-import P5AsciifyBrightnessEffect from "../effects/brightness.js";
-import P5AsciifyChromaticAberrationEffect from "../effects/chromaticaberration.js";
-import P5AsciifyColorPaletteEffect from "../effects/colorpalette.js";
-import P5AsciifyDistortionEffect from "../effects/distortion.js";
-import P5AsciifyGrayscaleEffect from "../effects/grayscale.js";
-import P5AsciifyInvertEffect from "../effects/invert.js";
-import P5AsciifyKaleidoscopeEffect from "../effects/kaleidoscope.js";
-import P5AsciifyRotateEffect from "../effects/rotate.js";
+import P5AsciifyBrightnessEffect from "../effects/brightness/brightness.js";
+import P5AsciifyChromaticAberrationEffect from "../effects/chromaticaberration/chromaticaberration.js";
+import P5AsciifyColorPaletteEffect from "../effects/colorpalette/colorpalette.js";
+import P5AsciifyDistortionEffect from "../effects/distortion/distortion.js";
+import P5AsciifyGrayscaleEffect from "../effects/grayscale/grayscale.js";
+import P5AsciifyInvertEffect from "../effects/invert/invert.js";
+import P5AsciifyKaleidoscopeEffect from "../effects/kaleidoscope/kaleidoscope.js";
+import P5AsciifyRotateEffect from "../effects/rotate/rotate.js";
 
-import kaleidoscopeShader from "../shaders/frag/kaleidoscope.frag";
-import distortionShader from "../shaders/frag/distortion.frag";
-import grayscaleShader from "../shaders/frag/grayscale.frag";
-import invertShader from "../shaders/frag/invert.frag";
-import chromaticAberrationShader from "../shaders/frag/chromaticaberration.frag";
-import rotateShader from "../shaders/frag/rotate.frag";
-import brightnessShader from "../shaders/frag/brightness.frag";
-import colorPaletteShader from "../shaders/frag/colorpalette.frag";
+import kaleidoscopeShader from "../effects/kaleidoscope/kaleidoscope.frag";
+import distortionShader from "../effects/distortion/distortion.frag";
+import grayscaleShader from "../effects/grayscale/grayscale.frag";
+import invertShader from "../effects/invert/invert.frag";
+import chromaticAberrationShader from "../effects/chromaticaberration/chromaticaberration.frag";
+import rotateShader from "../effects/rotate/rotate.frag";
+import brightnessShader from "../effects/brightness/brightness.frag";
+import colorPaletteShader from "../effects/colorpalette/colorpalette.frag";
 
-import vertexShader from "../shaders/vert/shader.vert";
+import vertexShader from "../assets/shaders/vert/shader.vert";
 
 class P5AsciifyEffectManager {
 

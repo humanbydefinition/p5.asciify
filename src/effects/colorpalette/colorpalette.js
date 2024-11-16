@@ -1,5 +1,5 @@
-import P5AsciifyEffect from './effect.js';
-import P5AsciifyColorPalette from '../colorpalette.js';
+import P5AsciifyEffect from '../effect.js';
+import P5AsciifyColorPalette from '../../colorpalette.js';
 
 /**
  * @class P5AsciifyColorPaletteEffect

@@ -2,7 +2,7 @@ import P5Asciify from './asciify.js';
 import P5AsciifyError from './errors.js';
 import P5AsciifyUtils from './utils.js';
 import p5 from 'p5';
-import URSAFONT_BASE64 from './fonts/ursafont_base64.txt';
+import URSAFONT_BASE64 from './assets/fonts/ursafont_base64.txt';
 
 const p5asciify = new P5Asciify();
 export default p5asciify;
