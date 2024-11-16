@@ -6,6 +6,9 @@ let sketchFramebuffer;
 
 let img;
 
+let fontSizes = [8, 16]; // accurate renderer drops fps if the font size is too large currently
+let currentFontSize = 8;
+
 function preload() {
     img = loadImage('brutalist-high-rise-building.jpeg'); // forgot where it's from, but definitely CC0
 }
@@ -16,7 +19,7 @@ function setup() {
 
     setAsciiOptions({ 
         common: {
-            fontSize: 8,
+            fontSize: currentFontSize,
         },
         ascii: {
             enabled: true,
@@ -47,6 +50,13 @@ function draw() {
     sketchFramebuffer.end();
 
     image(sketchFramebuffer, -windowWidth / 2, -windowHeight / 2);
+
+    if (frameCount % 120 === 0) {
+        // Cycle to the next font size
+        currentFontSize = fontSizes[(fontSizes.indexOf(currentFontSize) + 1) % fontSizes.length];
+        setAsciiOptions({ common: { fontSize: currentFontSize } });
+        console.log("Changing font size to", currentFontSize);
+    }
 }
 
 function windowResized() {
