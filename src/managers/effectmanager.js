@@ -73,7 +73,6 @@ class P5AsciifyEffectManager {
     }
 
     render(inputFramebuffer) {
-
         this.prevFramebuffer.begin();
         this.p5Instance.clear();
         this.p5Instance.image(inputFramebuffer, -this.p5Instance.width / 2, -this.p5Instance.height / 2, this.p5Instance.width, this.p5Instance.height);
