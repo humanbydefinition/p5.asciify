@@ -21,6 +21,9 @@ function setup() {
         common: {
             fontSize: 16,
         },
+        ascii: {
+            renderMode: 'brightness'
+        },
         edge: {
             enabled: true,
             characterColorMode: 1,
