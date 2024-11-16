@@ -93,6 +93,10 @@ function draw() {
         zigzagGradient.enabled = !zigzagGradient.enabled;
     }
 
+    if (frameCount === 120) {
+        radialGradient.palette = "finally ";
+    }
+
     if (frameCount > 5) {
 
         linearGradient.angle += 0.5;
