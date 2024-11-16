@@ -628,10 +628,10 @@
         }
 
         _setupQueue = [];
+        _effects = [];
 
         constructor(colorPalette) {
             this.colorPalette = colorPalette;
-            this._effects = [];
         }
 
         addInstance(p5Instance) {
