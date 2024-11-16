@@ -1,6 +1,6 @@
 // renderers/BrightnessAsciiRenderer.js
 import AsciiRenderer from '../AsciiRenderer.js';
-import vertexShader from '../../shaders/vert/shader.vert';
+import vertexShader from '../../assets/shaders/vert/shader.vert';
 import asciiBrightnessShader from './shaders/asciiBrightness.frag';
 
 export default class BrightnessAsciiRenderer extends AsciiRenderer {
@@ -9,10 +9,16 @@ export default class BrightnessAsciiRenderer extends AsciiRenderer {
         super(p5Instance, grid, characterSet, options);
 
         this.shader = this.p5.createShader(vertexShader, asciiBrightnessShader);
-        this.outputFramebuffer = this.p5.createFramebuffer({ antialias: false, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
+        this.outputFramebuffer = this.p5.createFramebuffer({  depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
     }
 
     render(inputFramebuffer) {
+
+        if (!this.options.enabled) {
+            this.outputFramebuffer = inputFramebuffer;
+            return;
+        }
+
         this.outputFramebuffer.begin();
         this.p5.shader(this.shader);
         this.shader.setUniform('u_characterTexture', this.characterSet.texture);

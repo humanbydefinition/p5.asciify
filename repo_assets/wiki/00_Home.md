@@ -24,37 +24,35 @@ I would love to see your creations using `p5.asciify`! Feel free to tag me on so
 
 # Features
 
-`p5.asciify` features a customizable rendering pipeline which is being executed every time the user's `draw()` function is finished, currently consisting of optional effect shaders being applied before and after the ASCII conversion, as well as brightness- and edge-based ASCII conversion.
-
-
-<details>
-<summary>Rendering pipeline diagram</summary>
-
-```
-TODO!
-```
-</details>
-
+`p5.asciify` features a customizable rendering pipeline which is being executed every time the user's `draw()` function is finished executing, currently consisting of optional effect shaders being applied before and after the ASCII conversion, as well as up to 3 different layers of ASCII conversion, each with its own set of parameters that can be adjusted at any time.
 
 ## ASCII Conversion
 
-`p5.asciify` currently offers two different ASCII conversion methods, brightness-based and edge-based, each with its own set of parameters that can be adjusted to achieve the desired visual effect. The ASCII conversion is done using shaders, which allows for real-time conversion of the main [`WebGL`](https://en.wikipedia.org/wiki/WebGL) canvas into a grid of ASCII characters.
+`p5.asciify` currently offers up to 3 different layers of ASCII conversion, each with its own set of parameters that can be adjusted at any time. The ASCII conversion is done using shaders, which allows for real-time conversion of the main [`WebGL`](https://en.wikipedia.org/wiki/WebGL) canvas into a grid of ASCII characters.
+
+The first layer of ASCII conversion affects the entire canvas based on one of currently two methods. The brightness-based conversion uses the brightness of the pixels to determine the ASCII character, while the accurate ascii conversion attempts to recreate the image as accurately as possible using the given set of characters.
+
+The second layer is a gradient/pattern-based conversion, where a brightness range from 0-255 is mapped to a specific string of characters, and a customizeable gradient/pattern attached to it. Only the grid cells that fall within the specified brightness range will be converted to ASCII characters, which are drawn using the dynamic gradient/pattern.
+
+Lastly, the third layer is an edge-based conversion, which uses a Sobel filter to detect edges in the image and convert them into ASCII characters.
 
 ### Shared settings
+
+All ASCII conversion layers share the following settings:
 
 | Setting          | Description                                                                                          |
 |------------------|------------------------------------------------------------------------------------------------------|
 | **`font`**         | The font used for the ASCII conversion.                                                              |
 | **`fontSize`**     | The size of the font used for the ASCII conversion.                                                  |
+| **`gridDimensions`**     | The number of grid cells used for the ASCII conversion.                                              |
 
 ### Common settings
 
-Both edge-based and brightness-based ASCII conversions have these parameters. However, they are not shared and can be set individually for each ASCII conversion shader.
+All ASCII conversion layers individually have the following settings:
 
 | Setting          | Description                                                                                          |
 |------------------|------------------------------------------------------------------------------------------------------|
 | **`enabled`**      | Enables or disables the ASCII conversion.                                                           |
-| **`characters`**   | The characters used for the ASCII conversion.                                                       |
 | **`characterColorMode`** | The color mode used for the ASCII conversion.                                                       |
 | **`characterColor`** | The color used for the ASCII conversion.                                                            |
 | **`backgroundColorMode`** | The color mode used for the background of the ASCII conversion.                                     |
@@ -62,16 +60,23 @@ Both edge-based and brightness-based ASCII conversions have these parameters. Ho
 | **`invertMode`**   | A mode used for swapping the character and background colors.                                       |
 | **`rotationAngle`** | Rotate the ASCII characters by a specified angle.                                                   |
 
-### Edge-based conversion settings
+### Layer 1: Brightness/accurate-based ASCII conversion settings
+| Setting          | Description                                                                                          |
+|------------------|------------------------------------------------------------------------------------------------------|
+| **`renderMode`**   | The method used for the ASCII conversion.                                                           |
+| **`characters`**   | The characters used for the ASCII conversion.                                                       |
+
+### Layer 3: Edge-based conversion settings
 
 | Setting          | Description                                                                                          |
 |------------------|------------------------------------------------------------------------------------------------------|
+| **`characters`**   | The characters used for the ASCII conversion. Consists of 8 characters, each representing a different edge direction. |
 | **`sobelThreshold`** | The threshold used for the Sobel edge detection algorithm.                                           |
 | **`sampleThreshold`** | The threshold used for sampling the sobel filter output to a smaller size.
 
 ## Pre- and Post-Effect Shaders
 
-To apply effects before and after the ASCII conversion, `p5.asciify` provides a set of effect shaders that can be called anywhere inside the sketches `setup()` function and `draw()` loop. Each effect shader has its own set of parameters that can be adjusted freely, allowing for a wide range of visual effects to be applied before and after the ASCII conversion.
+To apply effects before and after the ASCII conversion, `p5.asciify` provides a set of effect shaders that can be called anywhere inside the sketches `preload()`, `setup()` and `draw()` functions. Each effect shader has its own set of parameters that can be adjusted freely, allowing for a wide range of visual effects to be applied before and after the ASCII conversion.
 
 ### Currently available effect shaders
 | Effect                | Description                                                                                          |
@@ -84,3 +89,4 @@ To apply effects before and after the ASCII conversion, `p5.asciify` provides a 
 | **`invert`**            | Inverts the colors of the image, creating a negative effect.                                            |
 | **`kaleidoscope`**      | Applies a kaleidoscope effect, creating symmetrical patterns by repeating segments of the image.        |
 | **`rotate`**            | Rotates the image by a specified angle, altering its orientation.                                        |
+| **`crt`**               | Applies a CRT effect, simulating the appearance of an old CRT monitor.                                  |

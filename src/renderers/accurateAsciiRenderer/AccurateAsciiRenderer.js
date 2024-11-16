@@ -1,11 +1,11 @@
 import AsciiRenderer from '../AsciiRenderer.js';
 
-import { generateCharacterSelectionShader, generateBrightnessSampleShader, generateColorSampleShader} from './shaders/shaderGenerators.js';
+import { generateCharacterSelectionShader, generateBrightnessSampleShader, generateColorSampleShader } from './shaders/shaderGenerators.js';
 
 import asciiAccurateShader from './shaders/asciiAccurate.frag';
 import brightnessSplitShader from './shaders/brightnessSplit.frag';
 
-import vertexShader from '../../shaders/vert/shader.vert';
+import vertexShader from '../../assets/shaders/vert/shader.vert';
 
 export default class AccurateAsciiRenderer extends AsciiRenderer {
 
@@ -18,16 +18,28 @@ export default class AccurateAsciiRenderer extends AsciiRenderer {
         this.brightnessSplitShader = this.p5.createShader(vertexShader, brightnessSplitShader);
         this.shader = this.p5.createShader(vertexShader, asciiAccurateShader);
 
-        this.brightnessSampleFramebuffer = this.p5.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, antialias: false, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
-        this.brightnessSplitFramebuffer = this.p5.createFramebuffer({ antialias: false, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
-        this.primaryColorSampleFramebuffer = this.p5.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, antialias: false, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
-        this.secondaryColorSampleFramebuffer = this.p5.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, antialias: false, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
-        this.asciiCharacterFramebuffer = this.p5.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, antialias: false, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
+        this.brightnessSampleFramebuffer = this.p5.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
+        this.brightnessSplitFramebuffer = this.p5.createFramebuffer({ depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
+        this.primaryColorSampleFramebuffer = this.p5.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
+        this.secondaryColorSampleFramebuffer = this.p5.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
+        this.asciiCharacterFramebuffer = this.p5.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
 
-        this.outputFramebuffer = this.p5.createFramebuffer({ antialias: false, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
+        this.outputFramebuffer = this.p5.createFramebuffer({ depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
+    }
+
+    resizeFramebuffers() {
+        this.brightnessSampleFramebuffer.resize(this.grid.cols, this.grid.rows);
+        this.primaryColorSampleFramebuffer.resize(this.grid.cols, this.grid.rows);
+        this.secondaryColorSampleFramebuffer.resize(this.grid.cols, this.grid.rows);
+        this.asciiCharacterFramebuffer.resize(this.grid.cols, this.grid.rows);
     }
 
     render(inputFramebuffer) {
+
+        if (!this.options.enabled) {
+            this.outputFramebuffer = inputFramebuffer;
+            return;
+        }
 
         this.brightnessSampleFramebuffer.begin();
         this.p5.shader(this.brightnessSampleShader);

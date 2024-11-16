@@ -67,8 +67,9 @@ Sets the global options for the ASCII conversion.
 
 - **options**: `Object` - An object containing the global options for the ASCII conversion. The object can contain the following properties:
 
-  - **`common`**: `Object` - Shared settings for both edge- and brightness-based ASCII conversion.
-  - **`brightness`**: `Object` - Settings for the brightness-based ASCII conversion.
+  - **`common`**: `Object` - Shared settings for all layers of the ASCII conversion.
+  - **`ascii`**: `Object` - Settings for the brightness/accurate-based ASCII conversion.
+  - **`gradient`**: `Object` - Settings for the gradient/pattern-based ASCII conversion.
   - **`edge`**: `Object` - Settings for the edge-based ASCII conversion.
 
 #### Usage Context
@@ -86,11 +87,12 @@ Shared settings for both edge- and brightness-based ASCII conversion.
 | Option                | Type    | Default | Description                                                                                                                                                                                                 |
 |-----------------------|---------|----------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `fontSize`            | `number`  | `16`       | The size of the font used for the ASCII conversion. Allowed values range from `1` *L(° O °L)* to `512`. It is recommended to use a font size that is a power of 2, such as 2, 4, 8, 16, 32, 64, etc. |
+| `gridDimensions`            | `list`  | `[0, 0]`       | The number of grid cells used for the ASCII conversion. The default value `[0, 0]` will automatically calculate the grid dimensions based on the canvas size and the font size. |
 
-#### **`brightness` options**
-
+#### **`ascii` options**
 | Option                | Type    | Default  | Description                                                                                                                                                                                                 |
 |-----------------------|---------|----------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `renderMode`          | `string`  | `brightness`        | The method used for the ASCII conversion. Allowed values are `brightness` and `accurate`. <br/> - `brightness`: The brightness-based conversion uses the brightness of the pixels to determine the ASCII character. <br/> - `accurate`: The accurate ASCII conversion attempts to recreate the image as accurately as possible using the given set of characters. |
 | `enabled`             | `boolean` | `true`     | A boolean value indicating whether the ASCII conversion should be enabled.                                                                                                      |
 | `characters`          | `string`  | `'0123456789'` | A string containing the characters to be used for the ASCII conversion. The characters are used in order of appearance, with the first character representing the darkest colors and the last character representing the brightest colors. |
 | `characterColorMode`  | `number`  | `0`        | The mode used for the color of the characters used for the ASCII conversion. Allowed values are `0` *(sampled)* and `1` *(fixed)*. <br/> - `0` *(sampled)*: The color of a character is determined by sampling the central pixel of the cell it occupies on the canvas. <br/> - `1` *(fixed)*: The color of a character is determined by the `characterColor` property. |
@@ -100,17 +102,30 @@ Shared settings for both edge- and brightness-based ASCII conversion.
 | `invertMode`          | `boolean` | `false`    | A boolean value indicating whether the background and character color should swap.                                                                                                    |
 | `rotationAngle`       | `number`  | `0`        | The angle of rotation in degrees, which is applied to all characters from the ASCII conversion.                                                                                                    |
 
+#### **`gradient` options**
+| Option                | Type    | Default  | Description                                                                                                                                                                                                 |
+|-----------------------|---------|----------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `enabled`             | `boolean` | `true`     | A boolean value indicating whether the ASCII conversion should be enabled.                                                                                                      |
+| `characterColorMode`  | `number`  | `0`        | The mode used for the color of the characters used for the ASCII conversion. Allowed values are `0` *(sampled)* and `1` *(fixed)*. <br/> - `0` *(sampled)*: The color of a character is determined by sampling the central pixel of the cell it occupies on the canvas. <br/> - `1` *(fixed)*: The color of a character is determined by the `characterColor` property. |
+| `characterColor`      | `string`  | `'#ffffff'` | The color of the characters used for the ASCII conversion. Only used if the `characterColorMode` is set to `1` *(fixed)*.                                                     |
+| `backgroundColorMode` | `number`  | `1`        | The mode used for the color of the background of a cell, not covered by the character. Allowed values are `0` *(sampled)* and `1` *(fixed)*. <br/> - `0` *(sampled)*: The color of a character is determined by sampling the central pixel of the cell it occupies on the canvas. <br/> - `1` *(fixed)*: The color of a character is determined by the `backgroundColor` property. |
+| `backgroundColor`     | `string`  | `'#000000'` | The color of the background of a cell, not covered by the character. Only used if the `backgroundColorMode` is set to `1` *(fixed)*.                                          |
+| `invertMode`          | `boolean` | `false`    | A boolean value indicating whether the background and character color should swap.                                                                                                    |
+| `rotationAngle`       | `number`  | `0`        | The angle of rotation in degrees, which is applied to all characters from the ASCII conversion.                                                                                                    |
+
 #### **`edge` options**  
-
-The edge-based ASCII conversion settings include all the brightness-based settings seen above indipendently, as well as the following additional options:
-
 | Option                | Type    | Default | Description                                                                                                                                                                                                 |
 |-----------------------|---------|----------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `enabled`             | `boolean` | `false`     | A boolean value indicating whether the ASCII conversion should be enabled.                                                                                                      |
+| `characters`          | `string`  | `'-/\|\-/\|\'` | A string containing exactly 8 characters to be used for the edge-based ASCII conversion. |
+| `characterColorMode`  | `number`  | `0`        | The mode used for the color of the characters used for the ASCII conversion. Allowed values are `0` *(sampled)* and `1` *(fixed)*. <br/> - `0` *(sampled)*: The color of a character is determined by sampling the central pixel of the cell it occupies on the canvas. <br/> - `1` *(fixed)*: The color of a character is determined by the `characterColor` property. |
+| `characterColor`      | `string`  | `'#ffffff'` | The color of the characters used for the ASCII conversion. Only used if the `characterColorMode` is set to `1` *(fixed)*.                                                     |
+| `backgroundColorMode` | `number`  | `1`        | The mode used for the color of the background of a cell, not covered by the character. Allowed values are `0` *(sampled)* and `1` *(fixed)*. <br/> - `0` *(sampled)*: The color of a character is determined by sampling the central pixel of the cell it occupies on the canvas. <br/> - `1` *(fixed)*: The color of a character is determined by the `backgroundColor` property. |
+| `backgroundColor`     | `string`  | `'#000000'` | The color of the background of a cell, not covered by the character. Only used if the `backgroundColorMode` is set to `1` *(fixed)*.                                          |
+| `invertMode`          | `boolean` | `false`    | A boolean value indicating whether the background and character color should swap.                                                                                                    |
+| `rotationAngle`       | `number`  | `0`        | The angle of rotation in degrees, which is applied to all characters from the ASCII conversion.                                                                                                    |
 | `sobelThreshold`      | `number`  | `0.5`      | The threshold value used for the Sobel edge detection algorithm.                                                                                                    |
 | `sampleThreshold`     | `number`  | `16`      | The threshold value used when downscaling the sobel framebuffer to the grid size.                                                                                                    |
-
-> [!NOTE]
-> The default values for the `brightness` and `edge` options are almost identical, with the exception being the `enabled` and `characters` properties. For edge-based ASCII conversion, `enabled` is set to `false` by default, and the default character set is `'-/|\\-/|\\'`. For the edge-based ASCII conversion, it is mandatory to provide exactly 8 characters.
 
 #### Example
 
@@ -123,7 +138,8 @@ function setup() {
     common: {
         fontSize: 8,
     },
-    brightness: {
+    ascii: {
+        renderMode: "brightness",
         enabled: true,
         characters: "0123456789",
         characterColor: "#ffffff",
@@ -158,6 +174,79 @@ function draw() {
 }
 ```
 [`run inside the p5.js web editor`](https://editor.p5js.org/humanbydefinition/sketches/N6N33RIZe)
+
+<hr/>
+
+### `addAsciiGradient()`
+
+`addAsciiGradient(gradientType, brightnessStart, brightnessEnd, characters, params): P5AsciifyGradient`
+
+Adds a gradient/pattern-based ASCII conversion layer to the rendering pipeline.
+
+#### Parameters
+
+- **gradientType**: `string` - The type of gradient to use. A list of available gradient types can be found below.
+- **brightnessStart**: `number` - The brightness value at which the gradient starts. Allowed values range from `0` to `255`.
+- **brightnessEnd**: `number` - The brightness value at which the gradient ends. Allowed values range from `0` to `255`.
+- **characters**: `string` - A string containing the characters to be used for the ASCII conversion, that will be mapped to the gradient.
+- **params**: `Object` - An object containing the parameters for the gradient/pattern. The parameters are specific to each gradient type. The available parameters can be found below.
+
+#### Returns
+
+- `P5AsciifyGradient` - The gradient object that was added to the rendering pipeline. The object can be used to adjust the gradient's parameters during runtime.
+
+#### Usage Context
+
+| Function  | Usable? |
+|-----------|-----------|
+| `preload()` | ✓       |
+| `setup()`   | ✓       |
+| `draw()`    | ✓       |
+
+#### Available gradients and parameters
+
+| gradientType                | params                                                                                          |
+|-----------------------|-------------------------------------------------------------------------------------------------|
+| **`'linear'`**        | `direction` (number): The direction of the gradient in degrees. The default value is `1`. <br/> `angle` (number): The angle of the gradient in degrees. The default value is `0`. <br/> `speed` (number): The speed of the gradient. The default value is `0.01`. |
+| **`'radial'`**        | `direction` (number): The direction of the gradient in degrees. The default value is `1`. <br/> `centerX` (number): The x-coordinate of the center of the gradient. The default value is `0.5`. <br/> `centerY` (number): The y-coordinate of the center of the gradient. The default value is `0.5`. <br/> `radius` (number): The radius of the gradient. The default value is `0.5`. |
+| **`'zigzag'`**       | `direction` (number): The direction of the gradient in degrees. The default value is `1`. <br/> `angle` (number): The angle of the gradient in degrees. The default value is `0`. <br/> `speed` (number): The speed of the gradient. The default value is `0.01`. |
+| **`'spiral'`**      | `direction` (number): The direction of the gradient in degrees. The default value is `1`. <br/> `centerX` (number): The x-coordinate of the center of the gradient. The default value is `0.5`. <br/> `centerY` (number): The y-coordinate of the center of the gradient. The default value is `0.5`. <br/> `speed` (number): The speed of the gradient. The default value is `0.01`. <br/> `density` (number): The density of the spiral. The default value is `0.01`. |
+| **`'conical'`**    | `centerX` (number): The x-coordinate of the center of the gradient. The default value is `0.5`. <br/> `centerY` (number): The y-coordinate of the center of the gradient. The default value is `0.5`. <br/> `speed` (number): The speed of the gradient. The default value is `0.01`. |
+| **`'noise'`**     | `noiseScale` (number): The scale of the noise. The default value is `0.1`. <br/> `speed` (number): The speed of the gradient. The default value is `0.01`. <br/> `direction` (number): The direction of the gradient in degrees. The default value is `1`. |
+
+> [!TIP]
+> All gradients/patterns can be added multiple times to the rendering pipeline with varying parameters, allowing for the creation of complex visual effects by combining multiple gradients. 
+
+> [!NOTE]
+> All gradients/patterns added have a common property called `enabled`, which is set to `true` by default. This property can be used to enable or disable the gradient/pattern while keeping it in the rendering pipeline. This feature is useful for creating interactive sketches where gradients/patterns are toggled on and off based on user input.
+
+#### Example
+
+work-in-progress! As of now, please refer to the following demo sketch from the p5.asciify examples folder: [`gradient_patterns`](#)
+
+<hr/>
+
+### `removeAsciiGradient()`
+
+`removeAsciiGradient(gradientInstance: P5AsciifyGradient): void`
+
+Removes a gradient/pattern-based ASCII conversion layer from the rendering pipeline.
+
+#### Parameters
+
+- **gradientInstance**: `P5AsciifyGradient` - The gradient object to remove from the rendering pipeline.
+
+#### Usage Context
+
+| Function  | Usable? |
+|-----------|-----------|
+| `preload()` | ✓       |
+| `setup()`   | ✓       |
+| `draw()`    | ✓       |
+
+#### Example
+
+work-in-progress! As of now, please refer to the following demo sketch from the p5.asciify examples folder: [`gradient_patterns`](#)
 
 <hr/>
 
@@ -197,6 +286,7 @@ Adds an effect shader to the pre- or post-ASCII rendering pipeline.
 | **`'invert'`**            | *no params*                                                                                     |
 | **`'kaleidoscope'`**      | `segments` (number): The number of segments in the kaleidoscope. The default value is `2`.<br/>`angle` (number): The angle of the kaleidoscope in degrees. The default value is `0.0`. |
 | **`'rotate'`**            | `angle` (number): The angle of rotation in degrees. The default value is `0.0`.                 |
+| **`'crt'`**               | `speedMultiplier` (number): The speed multiplier for the CRT effect. The default value is `1.0`. |
 
 > [!TIP]
 > All effect shaders can be added multiple times to the pre- or post-ASCII rendering pipeline, allowing for the creation of complex visual effects by combining multiple shaders. All effect shaders are applied in the order they are added to the rendering pipeline. The order of the effect shaders can be changed by swapping/removing, which is described below.
