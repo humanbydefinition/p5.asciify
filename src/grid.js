@@ -12,7 +12,7 @@ class P5AsciifyGrid {
      * @param {number} options.cellHeight - The height of each cell in the grid.
      */
 
-    setup(p5Instance, cellWidth, cellHeight) {
+    constructor(p5Instance, cellWidth, cellHeight) {
         this.p5Instance = p5Instance;
         this.cellWidth = cellWidth;
         this.cellHeight = cellHeight;
