@@ -101,17 +101,14 @@ function draw() {
         removeAsciiGradient(spiralGradient);
     }
 
-    if (frameCount > 5) {
-
-        linearGradient.angle += 0.5;
-        //zigzagGradient.angle += 0.5;
-        spiralGradient.centerX = map(mouseX, 0, windowWidth, 0, 1);
-        spiralGradient.centerY = map(mouseY, 0, windowHeight, 0, 1);
-        radialGradient.centerX = map(mouseX, 0, windowWidth, 0, 1);
-        radialGradient.centerY = map(mouseY, 0, windowHeight, 0, 1);
-        conicalGradient.centerX = map(mouseX, 0, windowWidth, 0, 1);
-        conicalGradient.centerY = map(mouseY, 0, windowHeight, 0, 1);
-    }
+    linearGradient.angle += 0.5;
+    //zigzagGradient.angle += 0.5;
+    spiralGradient.centerX = map(mouseX, 0, windowWidth, 0, 1);
+    spiralGradient.centerY = map(mouseY, 0, windowHeight, 0, 1);
+    radialGradient.centerX = map(mouseX, 0, windowWidth, 0, 1);
+    radialGradient.centerY = map(mouseY, 0, windowHeight, 0, 1);
+    conicalGradient.centerX = map(mouseX, 0, windowWidth, 0, 1);
+    conicalGradient.centerY = map(mouseY, 0, windowHeight, 0, 1);
 }
 
 function windowResized() {
