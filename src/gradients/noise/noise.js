@@ -16,6 +16,30 @@ class P5AsciifyNoiseGradient extends P5AsciifyGradient {
         this._shader.setUniform('noiseScale', this._noiseScale);
         this._shader.setUniform('u_speed', this._speed);
     }
+
+    get direction() {
+        return this._direction;
+    }
+
+    set direction(value) {
+        this._direction = value;
+    }
+
+    get noiseScale() {
+        return this._noiseScale;
+    }
+
+    set noiseScale(value) {
+        this._noiseScale = value;
+    }
+
+    get speed() {
+        return this._speed;
+    }
+
+    set speed(value) {
+        this._speed = value;
+    }
 }
 
 export default P5AsciifyNoiseGradient;
