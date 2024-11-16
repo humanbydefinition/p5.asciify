@@ -50,11 +50,14 @@ class P5AsciifyGradientManager {
         this.colorPalette = colorPalette;
     }
 
-    setup(p5Instance, gradientCharacterSet ) {
-        this.p5Instance = p5Instance;
+    setup(gradientCharacterSet ) {
         this.gradientCharacterSet = gradientCharacterSet;
         this.setupShaders();
         this.setupGradientQueue();
+    }
+
+    addInstance(p5Instance) {
+        this.p5Instance = p5Instance;
     }
 
     setupGradientQueue() {

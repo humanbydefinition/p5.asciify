@@ -1457,11 +1457,14 @@
             this.colorPalette = colorPalette;
         }
 
-        setup(p5Instance, gradientCharacterSet ) {
-            this.p5Instance = p5Instance;
+        setup(gradientCharacterSet ) {
             this.gradientCharacterSet = gradientCharacterSet;
             this.setupShaders();
             this.setupGradientQueue();
+        }
+
+        addInstance(p5Instance) {
+            this.p5Instance = p5Instance;
         }
 
         setupGradientQueue() {
@@ -2310,7 +2313,7 @@ void main() {
 
             this.colorPalette.setup(this.p5Instance);
 
-            this.gradientManager.setup(this.p5Instance, this.gradientCharacterSet);
+            this.gradientManager.setup(this.gradientCharacterSet);
 
             this.preEffectManager.setup();
             this.afterEffectManager.setup();
@@ -2539,6 +2542,7 @@ void main() {
 
         p5asciify.preEffectManager.addInstance(p5asciify.p5Instance);
         p5asciify.afterEffectManager.addInstance(p5asciify.p5Instance);
+        p5asciify.gradientManager.addInstance(p5asciify.p5Instance);
     };
     p5.prototype.registerMethod("init", p5.prototype.setupP5Instance);
 

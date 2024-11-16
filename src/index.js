@@ -20,6 +20,7 @@ p5.prototype.setupP5Instance = function () {
 
     p5asciify.preEffectManager.addInstance(p5asciify.p5Instance);
     p5asciify.afterEffectManager.addInstance(p5asciify.p5Instance);
+    p5asciify.gradientManager.addInstance(p5asciify.p5Instance);
 }
 p5.prototype.registerMethod("init", p5.prototype.setupP5Instance);
 

@@ -88,7 +88,7 @@ class P5Asciify {
 
         this.colorPalette.setup(this.p5Instance);
 
-        this.gradientManager.setup(this.p5Instance, this.gradientCharacterSet);
+        this.gradientManager.setup(this.gradientCharacterSet);
 
         this.preEffectManager.setup();
         this.afterEffectManager.setup();
