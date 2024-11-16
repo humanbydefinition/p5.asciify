@@ -13,6 +13,8 @@ let colorPaletteEffect2;
 let grayscaleEffect;
 let rotationEffect;
 
+let crtEffect;
+
 function setup() {
     createCanvas(windowWidth, windowHeight, WEBGL);
     sketchFramebuffer = createFramebuffer({ format: FLOAT });
@@ -49,6 +51,8 @@ function setup() {
     addAsciiEffect('pre', 'invert', {});
     
     rotationEffect = addAsciiEffect('pre', 'rotate', { angle: 0 });
+
+    crtEffect = addAsciiEffect('post', 'crt', {});
 }
 
 function draw() {

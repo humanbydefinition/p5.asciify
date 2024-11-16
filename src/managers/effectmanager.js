@@ -6,6 +6,7 @@ import P5AsciifyGrayscaleEffect from "../effects/grayscale/grayscale.js";
 import P5AsciifyInvertEffect from "../effects/invert/invert.js";
 import P5AsciifyKaleidoscopeEffect from "../effects/kaleidoscope/kaleidoscope.js";
 import P5AsciifyRotateEffect from "../effects/rotate/rotate.js";
+import P5AsciifyCrtEffect from "../effects/crt/crt.js";
 
 import kaleidoscopeShader from "../effects/kaleidoscope/kaleidoscope.frag";
 import distortionShader from "../effects/distortion/distortion.frag";
@@ -15,6 +16,7 @@ import chromaticAberrationShader from "../effects/chromaticaberration/chromatica
 import rotateShader from "../effects/rotate/rotate.frag";
 import brightnessShader from "../effects/brightness/brightness.frag";
 import colorPaletteShader from "../effects/colorpalette/colorpalette.frag";
+import crtShader from "../effects/crt/crt.frag";
 
 import vertexShader from "../assets/shaders/vert/shader.vert";
 
@@ -29,6 +31,7 @@ class P5AsciifyEffectManager {
         "rotate": { "angle": 0.0 },
         "brightness": { "brightness": 0.0 },
         "colorpalette": { "palette": ["#0f380f", "#306230", "#8bac0f", "#9bbc0f"] },
+        "crt": { "speedMultiplier": 1.0 }
     }
 
     effectShaders = {
@@ -40,6 +43,7 @@ class P5AsciifyEffectManager {
         "rotate": rotateShader,
         "brightness": brightnessShader,
         "colorpalette": colorPaletteShader,
+        "crt": crtShader
     }
 
     effectConstructors = {
@@ -51,6 +55,7 @@ class P5AsciifyEffectManager {
         "rotate": ({ shader, params }) => new P5AsciifyRotateEffect({ shader, ...params }),
         "brightness": ({ shader, params }) => new P5AsciifyBrightnessEffect({ shader, ...params }),
         "colorpalette": ({ shader, params }) => new P5AsciifyColorPaletteEffect({ shader, ...params, colorPalette: this.colorPalette }),
+        "crt": ({ shader, params }) => new P5AsciifyCrtEffect({ shader, ...params })
     }
 
     _setupQueue = [];

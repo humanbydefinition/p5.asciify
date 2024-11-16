@@ -286,6 +286,7 @@ Adds an effect shader to the pre- or post-ASCII rendering pipeline.
 | **`'invert'`**            | *no params*                                                                                     |
 | **`'kaleidoscope'`**      | `segments` (number): The number of segments in the kaleidoscope. The default value is `2`.<br/>`angle` (number): The angle of the kaleidoscope in degrees. The default value is `0.0`. |
 | **`'rotate'`**            | `angle` (number): The angle of rotation in degrees. The default value is `0.0`.                 |
+| **`'crt'`**               | `speedMultiplier` (number): The speed multiplier for the CRT effect. The default value is `1.0`. |
 
 > [!TIP]
 > All effect shaders can be added multiple times to the pre- or post-ASCII rendering pipeline, allowing for the creation of complex visual effects by combining multiple shaders. All effect shaders are applied in the order they are added to the rendering pipeline. The order of the effect shaders can be changed by swapping/removing, which is described below.
