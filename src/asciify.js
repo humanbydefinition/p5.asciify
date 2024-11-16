@@ -56,11 +56,8 @@ class P5Asciify {
     edgeCharacterSet = new P5AsciifyCharacterSet();
     grid = new P5AsciifyGrid({ cellWidth: 0, cellHeight: 0 });
 
-    instanceMode = false;
-
     instance(p) {
         this.p5Instance = p;
-        this.instanceMode = true;
 
         this.p5Instance.preload = () => { }; // Define a default preload function if one isn't provided
     }
