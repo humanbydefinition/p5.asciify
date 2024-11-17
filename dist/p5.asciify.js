@@ -2032,7 +2032,7 @@ void main() {
             // Find a matching color slot
             bool matched = false;
             for(int k = 0; k < NUM_SLOTS; k++) {
-                if(distance(sampledColor, colors[k]) < 0.001) {
+                if(sampledColor.rgb == colors[k].rgb) {
                     counts[k] += 1.0;
                     matched = true;
                     break;
