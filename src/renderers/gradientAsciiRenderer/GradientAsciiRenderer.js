@@ -29,6 +29,10 @@ export default class GradientAsciiRenderer extends AsciiRenderer {
         this.prevGradientFramebuffer.resize(this.grid.cols, this.grid.rows);
     }
 
+    setAsciiRenderer(asciiRenderer) {
+        this.asciiRenderer = asciiRenderer;
+    }
+
     render(inputFramebuffer) {
 
         if (!this.options.enabled || this.gradientManager._gradients.length === 0) {

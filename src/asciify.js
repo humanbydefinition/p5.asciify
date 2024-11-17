@@ -212,7 +212,7 @@ class P5Asciify {
         }
 
         if (asciiOptions?.renderMode) {
-            this.edgeRenderer.setAsciiRenderer(asciiOptions.renderMode === 'brightness' ? this.brightnessRenderer : this.accurateRenderer);
+            this.gradientRenderer.setAsciiRenderer(asciiOptions.renderMode === 'brightness' ? this.brightnessRenderer : this.accurateRenderer);
         }
 
         if (commonOptions?.gridDimensions) {
