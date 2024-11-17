@@ -2221,6 +2221,10 @@ void main() {
             this.prevGradientFramebuffer.resize(this.grid.cols, this.grid.rows);
         }
 
+        setAsciiRenderer(asciiRenderer) {
+            this.asciiRenderer = asciiRenderer;
+        }
+
         render(inputFramebuffer) {
 
             if (!this.options.enabled || this.gradientManager._gradients.length === 0) {
@@ -2499,7 +2503,7 @@ void main() {
             }
 
             if (asciiOptions?.renderMode) {
-                this.edgeRenderer.setAsciiRenderer(asciiOptions.renderMode === 'brightness' ? this.brightnessRenderer : this.accurateRenderer);
+                this.gradientRenderer.setAsciiRenderer(asciiOptions.renderMode === 'brightness' ? this.brightnessRenderer : this.accurateRenderer);
             }
 
             if (commonOptions?.gridDimensions) {
