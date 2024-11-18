@@ -222,7 +222,57 @@ Adds a gradient/pattern-based ASCII conversion layer to the rendering pipeline.
 
 #### Example
 
-work-in-progress! As of now, please refer to the following demo sketch in the p5.js web editor: [`p5.asciify | gradients test`](https://editor.p5js.org/humanbydefinition/sketches/_hg3L2cKk)
+```javascript
+let linearGradient;
+let zigzagGradient;
+
+function setup() {
+  createCanvas(windowWidth, windowHeight, WEBGL);
+
+  setAsciiOptions({
+    ascii: {
+      renderMode: "brightness",
+      characters: " .:-=+*#%@",
+    },
+    edge: {
+      enabled: true,
+      characterColorMode: 1,
+      sobelThreshold: 0.1,
+      sampleThreshold: 16,
+    },
+  });
+
+  linearGradient = addAsciiGradient("linear", 0, 127, "p5.asciify  ", {
+    direction: 1,
+    angle: 0,
+    speed: 0.1,
+  });
+  zigzagGradient = addAsciiGradient("zigzag", 128, 255, "humanbydefinition ", {
+    direction: 1,
+    speed: 0.1,
+  });
+}
+
+function draw() {
+  background(150, 0, 0);
+  noStroke();
+  rotateX(radians(frameCount * 3));
+  rotateY(radians(frameCount));
+  directionalLight(255, 255, 255, 0, 0, -1);
+  torus(200, 50);
+
+  linearGradient.angle += 0.5;
+
+  if (frameCount % 180 == 0) {
+    zigzagGradient.enabled = !zigzagGradient.enabled;
+  }
+}
+
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+}
+```
+[`run inside the p5.js web editor`](https://editor.p5js.org/humanbydefinition/sketches/5giwV1wuk)
 
 <hr/>
 
@@ -246,7 +296,47 @@ Removes a gradient/pattern-based ASCII conversion layer from the rendering pipel
 
 #### Example
 
-work-in-progress! As of now, please refer to the following demo sketch in the p5.js web editor: [`p5.asciify | gradients test`](https://editor.p5js.org/humanbydefinition/sketches/_hg3L2cKk)
+```javascript
+let linearGradient;
+let zigzagGradient;
+
+function setup() {
+  createCanvas(windowWidth, windowHeight, WEBGL);
+
+  setAsciiOptions({
+    ascii: {
+      renderMode: "brightness",
+      characters: " .:-=+*#%@",
+    },
+  });
+
+  linearGradient = addAsciiGradient("linear", 0, 255, "p5.asciify  ", {
+    direction: 1,
+    angle: 0,
+    speed: 0.1,
+  });
+}
+
+function draw() {
+  background(0);
+  noStroke();
+  rotateX(radians(frameCount * 3));
+  rotateY(radians(frameCount));
+  directionalLight(255, 255, 255, 0, 0, -1);
+  torus(200, 50);
+
+  linearGradient.angle += 0.5;
+
+  if (frameCount === 240) {
+    removeAsciiGradient(linearGradient);
+  }
+}
+
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+}
+```
+[`run inside the p5.js web editor`](https://editor.p5js.org/humanbydefinition/sketches/HH8PjXSTY)	
 
 <hr/>
 
