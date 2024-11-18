@@ -1,4 +1,4 @@
-precision lowp float;
+precision mediump float;
 
 uniform sampler2D u_image; // The image to apply the mirror effect
 uniform int u_segments; // Number of kaleidoscope segments

@@ -1,4 +1,4 @@
-precision highp float;
+precision mediump float;
 
 uniform sampler2D u_image; // The image, whose colors get inverted
 varying vec2 v_texCoord; // Texture coordinates from vertex shader

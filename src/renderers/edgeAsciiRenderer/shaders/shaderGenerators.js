@@ -1,5 +1,5 @@
 export const generateSampleShader = (MAX_HISTOGRAM_SIZE, SAMPLES_PER_ROW, SAMPLES_PER_COL) => `
-precision highp float;
+precision mediump float;
 
 uniform sampler2D u_image;
 uniform vec2 u_imageSize;

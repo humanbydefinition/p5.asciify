@@ -1,6 +1,6 @@
 // Rendering Shader
 
-precision highp float;
+precision mediump float;
 
 // Uniforms for character texture and its grid dimensions
 uniform sampler2D u_characterTexture;

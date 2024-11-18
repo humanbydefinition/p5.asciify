@@ -1,4 +1,4 @@
-precision highp float;
+precision mediump float;
 
 uniform sampler2D u_image; // The image to be brightness adjusted
 uniform float u_brightness; // Brightness adjustment factor

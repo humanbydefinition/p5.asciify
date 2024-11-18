@@ -1,4 +1,4 @@
-precision highp float;
+precision mediump float;
 
 uniform sampler2D u_image; // The image to apply the effect to
 uniform float u_aberrationAmount; // The amount of chromatic aberration

@@ -1,4 +1,4 @@
-precision highp float;
+precision mediump float;
 
 uniform sampler2D u_image; // The image to rotate
 uniform float u_angle; // The rotation angle

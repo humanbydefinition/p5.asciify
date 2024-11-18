@@ -16,7 +16,7 @@ function setup() {
 
     setAsciiOptions({
         common: {
-            fontSize: 8,
+            fontSize: 32,
         },
         ascii: {
             enabled: true,
@@ -33,7 +33,18 @@ function draw() {
     background(0);
     image(img, -windowWidth / 2, -windowHeight / 2);
 
+    push();
+    translate(100, 0, 0);
+    fill(255);
+    rotateX(radians(frameCount * 3));
+    rotateZ(radians(frameCount));
+    directionalLight(255, 255, 255, 0, 0, -1);
+    box(600, 80, 80);
+    pop();
 
+
+
+    /** 
     if (frameCount % 120 === 0) {
         currentModeIndex = (currentModeIndex + 1) % renderModes.length;
         renderMode = renderModes[currentModeIndex];
@@ -46,6 +57,9 @@ function draw() {
             setAsciiOptions({ ascii: { backgroundColorMode: 0 } });
         }
     }
+        **/
+
+    //console.log("FrameRate: ", frameRate());
 }
 
 function windowResized() {
