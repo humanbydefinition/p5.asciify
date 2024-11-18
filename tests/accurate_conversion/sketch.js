@@ -16,7 +16,8 @@ function setup() {
 
     setAsciiOptions({
         common: {
-            fontSize: 32,
+            // For accurate conversion, higher font sizes currently cause the renderer to be slower. I wouldn't recommend going above 16 if performance is a concern.
+            fontSize: 16,
         },
         ascii: {
             enabled: true,
@@ -41,10 +42,7 @@ function draw() {
     directionalLight(255, 255, 255, 0, 0, -1);
     box(600, 80, 80);
     pop();
-
-
-
-    /** 
+    
     if (frameCount % 120 === 0) {
         currentModeIndex = (currentModeIndex + 1) % renderModes.length;
         renderMode = renderModes[currentModeIndex];
@@ -57,9 +55,6 @@ function draw() {
             setAsciiOptions({ ascii: { backgroundColorMode: 0 } });
         }
     }
-        **/
-
-    //console.log("FrameRate: ", frameRate());
 }
 
 function windowResized() {
