@@ -170,8 +170,8 @@ p5.prototype.setAsciiOptions = function (options) {
 
     const colorOptions = [edgeOptions, asciiOptions, gradientOptions];
     colorOptions.forEach(opt => {
-        if (opt?.characterColor) opt.characterColor = P5AsciifyUtils.hexToShaderColor(opt.characterColor);
-        if (opt?.backgroundColor) opt.backgroundColor = P5AsciifyUtils.hexToShaderColor(opt.backgroundColor);
+        if (opt?.characterColor) opt.characterColor = this.color(opt.characterColor);
+        if (opt?.backgroundColor) opt.backgroundColor = this.color(opt.backgroundColor);
     });
 
     if (commonOptions?.fontSize && (commonOptions.fontSize < 1 || commonOptions.fontSize > 128)) {
