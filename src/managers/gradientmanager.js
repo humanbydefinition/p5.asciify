@@ -46,8 +46,8 @@ class P5AsciifyGradientManager {
     _setupQueue = [];
     _gradients = [];
 
-    constructor(colorPalette) {
-        this.colorPalette = colorPalette;
+    constructor(colorPaletteManager) {
+        this.colorPaletteManager = colorPaletteManager;
     }
 
     setup(gradientCharacterSet ) {
@@ -74,7 +74,7 @@ class P5AsciifyGradientManager {
     }
 
     addGradient(gradientName, brightnessStart, brightnessEnd, palette, params) {
-        const mergedParams = this.getGradientParams(gradientName, { brightnessStart, brightnessEnd, colorPalette: this.colorPalette, palette, ...params });
+        const mergedParams = this.getGradientParams(gradientName, { brightnessStart, brightnessEnd, colorPalette: this.colorPaletteManager, palette, ...params });
         const gradient = this.gradientConstructors[gradientName]({ type: gradientName, shader: this.gradientShaders[gradientName], params: mergedParams });
         gradient.registerPaletteChangeCallback(this.handleGradientPaletteChange.bind(this));
         this._gradients.push(gradient);
@@ -97,14 +97,13 @@ class P5AsciifyGradientManager {
     }
 
     handleGradientPaletteChange(gradient, characters) {
-
         if (frameCount === 0) {
             gradient._palette = characters;
         } else {
             this.gradientCharacterSet.appendCharacterSet(characters);
             gradient._palette = this.gradientCharacterSet.getCharsetColorArray(characters);
-            gradient._colorPalette.removePalette(gradient.paletteId);
-            gradient.paletteId = gradient._colorPalette.addPalette(gradient._palette);
+            gradient._colorPaletteManager.removePalette(gradient._colorPalette);
+            gradient._colorPalette = gradient._colorPaletteManager.addPalette(gradient._palette);
         }
     }
 

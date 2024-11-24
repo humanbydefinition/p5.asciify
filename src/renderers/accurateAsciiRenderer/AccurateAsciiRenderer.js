@@ -48,6 +48,7 @@ export default class AccurateAsciiRenderer extends AsciiRenderer {
         }
 
         this.brightnessSampleFramebuffer.begin();
+        this.p5.clear();
         this.p5.shader(this.brightnessSampleShader);
         this.brightnessSampleShader.setUniform('u_inputImage', inputFramebuffer);
         this.brightnessSampleShader.setUniform('u_inputImageSize', [this.p5.width, this.p5.height]);
@@ -57,6 +58,7 @@ export default class AccurateAsciiRenderer extends AsciiRenderer {
         this.brightnessSampleFramebuffer.end();
 
         this.brightnessSplitFramebuffer.begin();
+        this.p5.clear();
         this.p5.shader(this.brightnessSplitShader);
         this.brightnessSplitShader.setUniform('u_inputImage', inputFramebuffer);
         this.brightnessSplitShader.setUniform('u_brightnessTexture', this.brightnessSampleFramebuffer);
@@ -67,6 +69,7 @@ export default class AccurateAsciiRenderer extends AsciiRenderer {
         this.brightnessSplitFramebuffer.end();
 
         this.primaryColorSampleFramebuffer.begin();
+        this.p5.clear();
         this.p5.shader(this.colorSampleShader);
         this.colorSampleShader.setUniform('u_inputImage', inputFramebuffer);
         this.colorSampleShader.setUniform('u_inputImageBW', this.brightnessSplitFramebuffer);
@@ -78,6 +81,7 @@ export default class AccurateAsciiRenderer extends AsciiRenderer {
         this.primaryColorSampleFramebuffer.end();
 
         this.secondaryColorSampleFramebuffer.begin();
+        this.p5.clear();
         this.p5.shader(this.colorSampleShader);
         this.colorSampleShader.setUniform('u_inputImage', inputFramebuffer);
         this.colorSampleShader.setUniform('u_inputImageBW', this.brightnessSplitFramebuffer);
@@ -89,6 +93,7 @@ export default class AccurateAsciiRenderer extends AsciiRenderer {
         this.secondaryColorSampleFramebuffer.end();
 
         this.asciiCharacterFramebuffer.begin();
+        this.p5.clear();
         this.p5.shader(this.characterSelectionShader);
         this.characterSelectionShader.setUniform('u_characterTexture', this.characterSet.texture);
         this.characterSelectionShader.setUniform('u_charsetCols', this.characterSet.charsetCols);
@@ -100,6 +105,7 @@ export default class AccurateAsciiRenderer extends AsciiRenderer {
         this.asciiCharacterFramebuffer.end();
 
         this.outputFramebuffer.begin();
+        this.p5.clear();
         this.p5.shader(this.shader);
         this.shader.setUniform('u_charIndexTexture', this.asciiCharacterFramebuffer);
         this.shader.setUniform('u_resolution', [this.p5.width, this.p5.height]);

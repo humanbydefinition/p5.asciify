@@ -1,7 +1,7 @@
 import P5AsciifyEffectManager from './managers/effectmanager.js';
 import P5AsciifyCharacterSet from './characterset.js';
 import P5AsciifyGrid from './grid.js';
-import P5AsciifyColorPalette from './colorpalette.js';
+import P5AsciifyColorPaletteManager from './managers/colorpalettemanager.js';
 
 import P5AsciifyGradientManager from './managers/gradientmanager.js';
 
@@ -9,6 +9,7 @@ import BrightnessAsciiRenderer from './renderers/brightnessAsciiRenderer/Brightn
 import EdgeAsciiRenderer from './renderers/edgeAsciiRenderer/EdgeAsciiRenderer.js';
 import AccurateAsciiRenderer from './renderers/accurateAsciiRenderer/AccurateAsciiRenderer.js';
 import GradientAsciiRenderer from './renderers/gradientAsciiRenderer/GradientAsciiRenderer.js';
+import CustomAsciiRenderer from './renderers/customAsciiRenderer/CustomAsciiRenderer.js';
 
 /**
  * @class P5Asciify
@@ -57,12 +58,19 @@ class P5Asciify {
         rotationAngle: 0,
     };
 
-    colorPalette = new P5AsciifyColorPalette();
+    colorPaletteManager = new P5AsciifyColorPaletteManager();
+    customColorPaletteManager = new P5AsciifyColorPaletteManager();
 
-    gradientManager = new P5AsciifyGradientManager(this.colorPalette);
+    gradientManager = new P5AsciifyGradientManager(this.colorPaletteManager);
 
-    preEffectManager = new P5AsciifyEffectManager(this.colorPalette);
-    afterEffectManager = new P5AsciifyEffectManager(this.colorPalette);
+    preEffectManager = new P5AsciifyEffectManager(this.colorPaletteManager);
+    afterEffectManager = new P5AsciifyEffectManager(this.colorPaletteManager);
+
+    customPrimaryColorSampleFramebuffer = null;
+    customSecondaryColorSampleFramebuffer = null;
+    customAsciiCharacterFramebuffer = null;
+
+    postSetupFunction = null;
 
     instance(p) {
         this.p5Instance = p;
@@ -86,24 +94,44 @@ class P5Asciify {
             this.grid.resizeCellDimensions(this.commonOptions.gridDimensions[0], this.commonOptions.gridDimensions[1]);
         }
 
-        this.colorPalette.setup(this.p5Instance);
+        this.colorPaletteManager.setup(this.p5Instance);
+        this.customColorPaletteManager.setup(this.p5Instance);
 
         this.gradientManager.setup(this.gradientCharacterSet);
 
         this.preEffectManager.setup();
         this.afterEffectManager.setup();
 
+        this.customPrimaryColorSampleFramebuffer = this.p5Instance.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
+        this.customSecondaryColorSampleFramebuffer = this.p5Instance.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
+        this.customAsciiCharacterFramebuffer = this.p5Instance.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
+
+        console.log("customPrimaryColorSampleFramebuffer", this.customPrimaryColorSampleFramebuffer)
+
         this.brightnessRenderer = new BrightnessAsciiRenderer(this.p5Instance, this.grid, this.asciiCharacterSet, this.asciiOptions);
         this.accurateRenderer = new AccurateAsciiRenderer(this.p5Instance, this.grid, this.asciiCharacterSet, this.asciiOptions);
+        this.customAsciiRenderer = new CustomAsciiRenderer(this.p5Instance, this.grid, this.asciiCharacterSet, this.customPrimaryColorSampleFramebuffer, this.customSecondaryColorSampleFramebuffer, this.customAsciiCharacterFramebuffer, this.asciiOptions);
 
-        let asciiRenderer = this.asciiOptions.renderMode === 'brightness' ? this.brightnessRenderer : this.accurateRenderer;
+        let asciiRenderer; 
+
+        if (this.asciiOptions.renderMode === 'brightness') {
+            asciiRenderer = this.brightnessRenderer;
+        } else if (this.asciiOptions.renderMode === 'accurate') {
+            asciiRenderer = this.accurateRenderer;
+        } else if (this.asciiOptions.renderMode === 'custom') {
+            asciiRenderer = this.customAsciiRenderer;
+        }
         this.gradientRenderer = new GradientAsciiRenderer(this.p5Instance, this.grid, this.gradientCharacterSet, asciiRenderer, this.gradientManager, this.gradientOptions);
 
-        this.edgeRenderer = new EdgeAsciiRenderer(this.p5Instance, this.grid, this.edgeCharacterSet, this.gradientRenderer, this.edgeOptions);
+        this.edgeRenderer = new EdgeAsciiRenderer(this.p5Instance, this.grid, this.edgeCharacterSet, this.gradientRenderer, this.edgeOptions);;
 
         this.asciiFramebufferDimensions = { width: this.p5Instance.width, height: this.p5Instance.height };
 
         this.sketchFramebuffer = this.p5Instance.createFramebuffer({ depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
+
+        if (this.postSetupFunction) {
+            this.postSetupFunction();
+        }
     }
 
     /**
@@ -122,7 +150,9 @@ class P5Asciify {
                 this.grid._resizeGrid();
             }
 
+            this.brightnessRenderer.resizeFramebuffers();
             this.edgeRenderer.resizeFramebuffers();
+            this.customAsciiRenderer.resizeFramebuffers();
             this.accurateRenderer.resizeFramebuffers();
             this.gradientRenderer.resizeFramebuffers();
         }
@@ -136,9 +166,14 @@ class P5Asciify {
 
         let asciiOutput = this.preEffectManager.nextFramebuffer;
 
-        const renderer = this.asciiOptions.renderMode === 'accurate'
-            ? this.accurateRenderer
-            : this.brightnessRenderer;
+        let renderer;
+        if (this.asciiOptions.renderMode === 'brightness') {
+            renderer = this.brightnessRenderer;
+        } else if (this.asciiOptions.renderMode === 'accurate') {
+            renderer = this.accurateRenderer;
+        } else if (this.asciiOptions.renderMode === 'custom') {
+            renderer = this.customAsciiRenderer;
+        }
         renderer.render(this.preEffectManager.nextFramebuffer);
         asciiOutput = renderer.getOutputFramebuffer();
 
@@ -152,6 +187,34 @@ class P5Asciify {
 
         this.p5Instance.clear();
         this.p5Instance.image(this.afterEffectManager.nextFramebuffer, -this.p5Instance.width / 2, -this.p5Instance.height / 2);
+
+        // Draw the framerate in the bottom left corner
+        this.p5Instance.push();
+        const fpsText = `FPS:~${Math.ceil(Math.min(this.p5Instance.frameRate(), 60))}`;
+        const padding = 5;
+        const textX = -this.p5Instance.width / 2 + 10;
+        const textY = this.p5Instance.height / 2 - 20;
+
+        // Set text properties first to calculate width
+        this.p5Instance.textFont(this.font);
+        this.p5Instance.textSize(16);
+        const textW = this.p5Instance.textWidth(fpsText);
+        const textH = 16; // Approximate height based on textSize
+
+        // Draw background rectangle
+        this.p5Instance.fill(0);
+        this.p5Instance.noStroke();
+        this.p5Instance.rect(textX - padding,
+            textY - textH - padding,
+            textW + padding * 2,
+            textH + padding * 2);
+
+        // Draw text
+        this.p5Instance.fill(255, 255, 0);
+        this.p5Instance.textAlign(this.p5Instance.LEFT, this.p5Instance.BOTTOM);
+        this.p5Instance.text(fpsText, textX, textY);
+        this.p5Instance.pop();
+
         this.checkFramebufferDimensions();
     }
 
@@ -203,7 +266,9 @@ class P5Asciify {
             this.edgeCharacterSet.setFontSize(commonOptions.fontSize);
             this.grid.resizeCellPixelDimensions(this.asciiCharacterSet.maxGlyphDimensions.width, this.asciiCharacterSet.maxGlyphDimensions.height);
 
+            this.brightnessRenderer.resizeFramebuffers();
             this.edgeRenderer.resizeFramebuffers();
+            this.customAsciiRenderer.resizeFramebuffers();
             this.accurateRenderer.resizeFramebuffers();
             this.gradientRenderer.resizeFramebuffers();
 
@@ -221,7 +286,9 @@ class P5Asciify {
             } else {
                 this.grid.resizeCellDimensions(commonOptions.gridDimensions[0], commonOptions.gridDimensions[1]);
             }
+            this.brightnessRenderer.resizeFramebuffers();
             this.edgeRenderer.resizeFramebuffers();
+            this.customAsciiRenderer.resizeFramebuffers();
             this.accurateRenderer.resizeFramebuffers();
             this.gradientRenderer.resizeFramebuffers();
         }

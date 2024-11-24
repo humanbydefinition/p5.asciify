@@ -54,15 +54,15 @@ class P5AsciifyEffectManager {
         "chromaticaberration": ({ shader, params }) => new P5AsciifyChromaticAberrationEffect({ shader, ...params }),
         "rotate": ({ shader, params }) => new P5AsciifyRotateEffect({ shader, ...params }),
         "brightness": ({ shader, params }) => new P5AsciifyBrightnessEffect({ shader, ...params }),
-        "colorpalette": ({ shader, params }) => new P5AsciifyColorPaletteEffect({ shader, ...params, colorPalette: this.colorPalette }),
+        "colorpalette": ({ shader, params }) => new P5AsciifyColorPaletteEffect({ shader, ...params, colorPaletteManager: this.colorPaletteManager }),
         "crt": ({ shader, params }) => new P5AsciifyCrtEffect({ shader, ...params })
     }
 
     _setupQueue = [];
     _effects = [];
 
-    constructor(colorPalette) {
-        this.colorPalette = colorPalette;
+    constructor(colorPaletteManager) {
+        this.colorPaletteManager = colorPaletteManager;
     }
 
     addInstance(p5Instance) {

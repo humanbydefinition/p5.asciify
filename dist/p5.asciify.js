@@ -186,125 +186,20 @@
 
     /**
      * @class P5AsciifyColorPalette
-     * @description
-     * A class that represents a color palette for the P5Asciify library.
-     * It is responsible for maintaining a texture that contains all color palettes.
+     * @description Represents a single color palette
      */
     class P5AsciifyColorPalette {
-        /**
-         * Creates a new instance of the ColorPaletteTexture class.
-         */
-        constructor() {
-            this.palettes = {};
-            this.paletteRows = {};
-            this.nextId = 0;
+        constructor(colors) {
+            this.colors = colors;
+            this.rowIndex = -1; // Will be set by manager
         }
 
-        /**
-         * Sets up the color palette with an initial texture.
-         * This method should be called after the p5.js setup() function
-         */
-        setup(p5Instance) {
-            this.p5Instance = p5Instance;
-            this.texture = this.p5Instance.createFramebuffer({ width: 1, height: 1,  depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
-
-            if (Object.keys(this.palettes).length > 0) {
-                this.updateTexture();
-            }
+        getColors() {
+            return this.colors;
         }
 
-        addInstance(p5Instance) {
-            this.p5Instance = p5Instance;
-        }
-
-        /**
-         * Updates the texture with the current palettes.
-         */
-        updateTexture() {
-            let palettesArray = Object.values(this.palettes);
-            let maxColors = palettesArray.reduce((max, colors) => Math.max(max, colors.length), 1);
-            this.texture.resize(maxColors, palettesArray.length);
-
-            this.texture.loadPixels();
-
-            let rowIndex = 0;
-            for (let id in this.palettes) {
-                let colors = this.palettes[id].map(c => this.p5Instance.color(c)); // Convert to p5.Color objects
-                this.paletteRows[id] = rowIndex; // Update the row index for the current palette
-                for (let x = 0; x < colors.length; x++) {
-                    let index = (rowIndex * maxColors + x) * 4;
-                    let col = colors[x];
-                    this.texture.pixels[index] = this.p5Instance.red(col);
-                    this.texture.pixels[index + 1] = this.p5Instance.green(col);
-                    this.texture.pixels[index + 2] = this.p5Instance.blue(col);
-                    this.texture.pixels[index + 3] = this.p5Instance.alpha(col);
-                }
-                // Fill the rest of the row with transparent pixels if the palette is shorter
-                for (let x = colors.length; x < maxColors; x++) {
-                    let index = (rowIndex * maxColors + x) * 4;
-                    this.texture.pixels[index] = 0;
-                    this.texture.pixels[index + 1] = 0;
-                    this.texture.pixels[index + 2] = 0;
-                    this.texture.pixels[index + 3] = 0;
-                }
-                rowIndex++;
-            }
-            this.texture.updatePixels();
-        }
-
-        /**
-         * Adds a new color palette to the texture
-         * @param {Array} colors - The array of colors to add
-         * @returns The ID of the new palette
-         */
-        addPalette(colors) {
-            const id = `palette-${this.nextId++}`;
-            this.palettes[id] = colors;
-
-            this.updateTexture();
-
-            return id;
-        }
-
-        /**
-         * Removes a color palette from the texture
-         * @param {string} id - The ID of the palette to remove
-         */
-        removePalette(id) {
-            if (this.palettes[id]) {
-                delete this.palettes[id];
-                delete this.paletteRows[id];
-                if (frameCount > 0) {
-                    this.updateTexture();
-                }
-            } else {
-                console.warn(`Palette with ID ${id} does not exist`);
-            }
-        }
-
-        /**
-         * Sets the colors for a specific color palette
-         * @param {string} id - The ID of the palette to update
-         * @param {Array} colors - The new array of colors for the palette
-         */
-        setPaletteColors(id, colors) {
-            if (this.palettes[id]) {
-                this.palettes[id] = colors;
-                if (frameCount > 0) {
-                    this.updateTexture();
-                }
-            } else {
-                console.warn(`Palette with ID ${id} does not exist`);
-            }
-        }
-
-        /**
-         * Gets the row index of a specific color palette
-         * @param {string} id - The ID of the palette
-         * @returns The row index of the palette, or -1 if the palette does not exist
-         */
-        getPaletteRow(id) {
-            return this.paletteRows[id] !== undefined ? this.paletteRows[id] : -1;
+        getRowIndex() {
+            return this.rowIndex;
         }
     }
 
@@ -323,14 +218,14 @@
          * @param {Array} options.palette - The array of colors for the palette.
          * @param {P5AsciifyColorPalette} options.paletteBuffer - The buffer to store the color palette.
          */
-        constructor({ shader, palette, colorPalette }) {
+        constructor({ shader, palette, colorPaletteManager }) {
             super("colorpalette", shader);
             this._palette = palette;
-            this.colorPalette = colorPalette;
+            this._colorPaletteManager = colorPaletteManager;
         }
 
         setup() {
-            this._paletteId = this.colorPalette.addPalette(this._palette);
+            this._colorPalette = this._colorPaletteManager.addPalette(this._palette);
         }
 
         /**
@@ -340,9 +235,9 @@
         setUniforms(framebuffer) {
             super.setUniforms(framebuffer);
             this._shader.setUniform('u_resolution', [framebuffer.width, framebuffer.height]);
-            this._shader.setUniform('u_colorPalette', this.colorPalette.texture);
-            this._shader.setUniform('u_colorPaletteRow', this.colorPalette.getPaletteRow(this._paletteId));
-            this._shader.setUniform('u_colorPaletteDimensions', [this.colorPalette.texture.width, this.colorPalette.texture.height]);
+            this._shader.setUniform('u_colorPalette', this._colorPaletteManager.texture);
+            this._shader.setUniform('u_colorPaletteRow', this._colorPalette.rowIndex);
+            this._shader.setUniform('u_colorPaletteDimensions', [this._colorPaletteManager.texture.width, this._colorPaletteManager.texture.height]);
             this._shader.setUniform('u_colorPaletteLength', this._palette.length);
         }
 
@@ -352,7 +247,7 @@
          */
         set palette(palette) {
             this._palette = palette;
-            this.colorPalette.setPaletteColors(this._paletteId, this._palette);
+            this._colorPaletteManager.setPaletteColors(this._colorPalette, this._palette);
         }
 
         /**
@@ -655,15 +550,15 @@
             "chromaticaberration": ({ shader, params }) => new P5AsciifyChromaticAberrationEffect({ shader, ...params }),
             "rotate": ({ shader, params }) => new P5AsciifyRotateEffect({ shader, ...params }),
             "brightness": ({ shader, params }) => new P5AsciifyBrightnessEffect({ shader, ...params }),
-            "colorpalette": ({ shader, params }) => new P5AsciifyColorPaletteEffect({ shader, ...params, colorPalette: this.colorPalette }),
+            "colorpalette": ({ shader, params }) => new P5AsciifyColorPaletteEffect({ shader, ...params, colorPaletteManager: this.colorPaletteManager }),
             "crt": ({ shader, params }) => new P5AsciifyCrtEffect({ shader, ...params })
         }
 
         _setupQueue = [];
         _effects = [];
 
-        constructor(colorPalette) {
-            this.colorPalette = colorPalette;
+        constructor(colorPaletteManager) {
+            this.colorPaletteManager = colorPaletteManager;
         }
 
         addInstance(p5Instance) {
@@ -1085,15 +980,100 @@
         }
     }
 
+    /**
+     * @class P5AsciifyColorPaletteManager
+     * @description Manages multiple color palettes and their texture representation
+     */
+    class P5AsciifyColorPaletteManager {
+        constructor() {
+            this.palettes = [];
+            this.texture = null;
+        }
+
+        setup(p5Instance) {
+            this.p5Instance = p5Instance;
+            this.texture = this.p5Instance.createFramebuffer({ 
+                width: 1, 
+                height: 1,  
+                depthFormat: this.p5Instance.UNSIGNED_INT, 
+                textureFiltering: this.p5Instance.NEAREST 
+            });
+
+            if (this.palettes.length > 0) {
+                this.updateTexture();
+            }
+        }
+
+        addInstance(p5Instance) {
+            this.p5Instance = p5Instance;
+        }
+
+        updateTexture() {
+            const maxColors = Math.max(...this.palettes.map(p => p.colors.length), 1);
+            this.texture.resize(maxColors, this.palettes.length);
+            this.texture.loadPixels();
+
+            this.palettes.forEach((palette, rowIndex) => {
+                palette.rowIndex = rowIndex;
+                const colors = palette.colors.map(c => this.p5Instance.color(c));
+
+                // Fill colors
+                colors.forEach((col, x) => {
+                    const index = (rowIndex * maxColors + x) * 4;
+                    this.texture.pixels[index] = this.p5Instance.red(col);
+                    this.texture.pixels[index + 1] = this.p5Instance.green(col);
+                    this.texture.pixels[index + 2] = this.p5Instance.blue(col);
+                    this.texture.pixels[index + 3] = this.p5Instance.alpha(col);
+                });
+
+                // Fill remaining pixels with transparency
+                for (let x = colors.length; x < maxColors; x++) {
+                    const index = (rowIndex * maxColors + x) * 4;
+                    this.texture.pixels[index] = 0;
+                    this.texture.pixels[index + 1] = 0;
+                    this.texture.pixels[index + 2] = 0;
+                    this.texture.pixels[index + 3] = 0;
+                }
+            });
+
+            this.texture.updatePixels();
+        }
+
+        addPalette(colors) {
+            const palette = new P5AsciifyColorPalette(colors);
+            this.palettes.push(palette);
+            this.updateTexture();
+            return palette;
+        }
+
+        removePalette(palette) {
+            const index = this.palettes.indexOf(palette);
+            if (index !== -1) {
+                this.palettes.splice(index, 1);
+                if (typeof frameCount !== 'undefined' && frameCount > 0) {
+                    this.updateTexture();
+                }
+            }
+        }
+
+        getPaletteRow(palette) {
+            return palette.rowIndex;
+        }
+
+        getTexture() {
+            return this.texture;
+        }
+    }
+
     class P5AsciifyGradient {
-        constructor(type, shader, brightnessStart, brightnessEnd, colorPalette, palette) {
+        constructor(type, shader, brightnessStart, brightnessEnd, colorPaletteManager, palette) {
             this._type = type;
             this._shader = shader;
 
             // map brightness start from 0-255 to 0-1
             this._brightnessStart = Math.floor((brightnessStart / 255) * 100) / 100;
             this._brightnessEnd = Math.ceil((brightnessEnd / 255) * 100) / 100;
-            this._colorPalette = colorPalette;
+            this._colorPaletteManager = colorPaletteManager;
             this._palette = palette;
 
             this._enabled = true;
@@ -1108,15 +1088,15 @@
         setup(shader, palette) {
             this._shader = shader;
             this._palette = palette;
-            this.paletteId = this._colorPalette.addPalette(this._palette);
+            this._colorPalette = this._colorPaletteManager.addPalette(this._palette);
         }
 
         setUniforms(framebuffer, referenceFramebuffer) {
             this._shader.setUniform("textureID", framebuffer);
             this._shader.setUniform("originalTextureID", referenceFramebuffer);
-            this._shader.setUniform("gradientTexture", this._colorPalette.texture);
-            this._shader.setUniform("gradientTextureRow", this._colorPalette.getPaletteRow(this.paletteId));
-            this._shader.setUniform("gradientTextureDimensions", [this._colorPalette.texture.width, this._colorPalette.texture.height]);
+            this._shader.setUniform("gradientTexture", this._colorPaletteManager.texture);
+            this._shader.setUniform("gradientTextureRow", this._colorPalette.rowIndex);
+            this._shader.setUniform("gradientTextureDimensions", [this._colorPaletteManager.texture.width, this._colorPaletteManager.texture.height]);
             this._shader.setUniform("gradientTextureLength", this._palette.length);
             this._shader.setUniform("u_brightnessStart", this._brightnessStart);
             this._shader.setUniform("u_brightnessEnd", this._brightnessEnd);
@@ -1485,8 +1465,8 @@
         _setupQueue = [];
         _gradients = [];
 
-        constructor(colorPalette) {
-            this.colorPalette = colorPalette;
+        constructor(colorPaletteManager) {
+            this.colorPaletteManager = colorPaletteManager;
         }
 
         setup(gradientCharacterSet ) {
@@ -1513,7 +1493,7 @@
         }
 
         addGradient(gradientName, brightnessStart, brightnessEnd, palette, params) {
-            const mergedParams = this.getGradientParams(gradientName, { brightnessStart, brightnessEnd, colorPalette: this.colorPalette, palette, ...params });
+            const mergedParams = this.getGradientParams(gradientName, { brightnessStart, brightnessEnd, colorPalette: this.colorPaletteManager, palette, ...params });
             const gradient = this.gradientConstructors[gradientName]({ type: gradientName, shader: this.gradientShaders[gradientName], params: mergedParams });
             gradient.registerPaletteChangeCallback(this.handleGradientPaletteChange.bind(this));
             this._gradients.push(gradient);
@@ -1536,14 +1516,13 @@
         }
 
         handleGradientPaletteChange(gradient, characters) {
-
             if (frameCount === 0) {
                 gradient._palette = characters;
             } else {
                 this.gradientCharacterSet.appendCharacterSet(characters);
                 gradient._palette = this.gradientCharacterSet.getCharsetColorArray(characters);
-                gradient._colorPalette.removePalette(gradient.paletteId);
-                gradient.paletteId = gradient._colorPalette.addPalette(gradient._palette);
+                gradient._colorPaletteManager.removePalette(gradient._colorPalette);
+                gradient._colorPalette = gradient._colorPaletteManager.addPalette(gradient._palette);
             }
         }
 
@@ -1596,7 +1575,11 @@
         }
     }
 
-    var asciiBrightnessShader = "precision mediump float;\n#define GLSLIFY 1\nuniform sampler2D u_characterTexture;uniform float u_charsetCols;uniform float u_charsetRows;uniform int u_totalChars;uniform sampler2D u_sketchTexture;uniform vec2 u_gridCellDimensions;uniform vec2 u_gridPixelDimensions;uniform vec2 u_gridOffsetDimensions;uniform vec3 u_characterColor;uniform int u_characterColorMode;uniform vec3 u_backgroundColor;uniform int u_backgroundColorMode;uniform float u_rotationAngle;uniform int u_invertMode;mat2 rotate2D(float angle){float s=sin(angle);float c=cos(angle);return mat2(c,-s,s,c);}void main(){vec2 adjustedCoord=(gl_FragCoord.xy-u_gridOffsetDimensions)/u_gridPixelDimensions;if(adjustedCoord.x<0.0||adjustedCoord.x>1.0||adjustedCoord.y<0.0||adjustedCoord.y>1.0){gl_FragColor=vec4(u_backgroundColor,1.0);return;}vec2 gridCoord=adjustedCoord*u_gridCellDimensions;vec2 cellCoord=floor(gridCoord);vec2 centerCoord=cellCoord+vec2(0.5);vec2 baseCoord=centerCoord/u_gridCellDimensions;vec4 sketchColor;sketchColor=texture2D(u_sketchTexture,baseCoord);float brightness=dot(sketchColor.rgb,vec3(0.299,0.587,0.114));int charIndex=int(brightness*float(u_totalChars));if(charIndex>u_totalChars-1){charIndex=u_totalChars-1;}int charCol=charIndex-(charIndex/int(u_charsetCols))*int(u_charsetCols);int charRow=charIndex/int(u_charsetCols);vec2 charCoord=vec2(float(charCol)/u_charsetCols,float(charRow)/u_charsetRows);vec2 fractionalPart=fract(gridCoord)-0.5;fractionalPart=rotate2D(u_rotationAngle)*fractionalPart;fractionalPart+=0.5;vec2 cellMin=charCoord;vec2 cellMax=charCoord+vec2(1.0/u_charsetCols,1.0/u_charsetRows);vec2 texCoord=charCoord+fractionalPart*vec2(1.0/u_charsetCols,1.0/u_charsetRows);bool outsideBounds=any(lessThan(texCoord,cellMin))||any(greaterThan(texCoord,cellMax));vec4 charColor=outsideBounds ? vec4(u_backgroundColor,1.0): texture2D(u_characterTexture,texCoord);if(u_invertMode==1){charColor.a=1.0-charColor.a;charColor.rgb=vec3(1.0);}vec4 finalColor=(u_characterColorMode==0)? vec4(sketchColor.rgb*charColor.rgb,charColor.a): vec4(u_characterColor*charColor.rgb,charColor.a);if(u_backgroundColorMode==0){gl_FragColor=mix(vec4(sketchColor.rgb,1.0),finalColor,charColor.a);}else{gl_FragColor=mix(vec4(u_backgroundColor,1.0),finalColor,charColor.a);}if(outsideBounds){gl_FragColor=(u_backgroundColorMode==0)?(u_invertMode==1 ?(u_characterColorMode==0 ? vec4(sketchColor.rgb,1.0): vec4(u_characterColor,1.0)): vec4(sketchColor.rgb,1.0)):(u_invertMode==1 ?(u_characterColorMode==0 ? vec4(sketchColor.rgb,1.0): vec4(u_characterColor,1.0)): vec4(u_backgroundColor,1.0));}}"; // eslint-disable-line
+    var asciiBrightnessShader$1 = "precision mediump float;\n#define GLSLIFY 1\nuniform sampler2D u_characterTexture;uniform float u_charsetCols;uniform float u_charsetRows;uniform int u_totalChars;uniform sampler2D u_sketchTexture;uniform vec2 u_gridCellDimensions;uniform vec2 u_gridPixelDimensions;uniform vec2 u_gridOffsetDimensions;uniform vec3 u_characterColor;uniform int u_characterColorMode;uniform vec3 u_backgroundColor;uniform int u_backgroundColorMode;uniform float u_rotationAngle;uniform int u_invertMode;mat2 rotate2D(float angle){float s=sin(angle);float c=cos(angle);return mat2(c,-s,s,c);}void main(){vec2 adjustedCoord=(gl_FragCoord.xy-u_gridOffsetDimensions)/u_gridPixelDimensions;if(adjustedCoord.x<0.0||adjustedCoord.x>1.0||adjustedCoord.y<0.0||adjustedCoord.y>1.0){gl_FragColor=vec4(u_backgroundColor,1.0);return;}vec2 gridCoord=adjustedCoord*u_gridCellDimensions;vec2 cellCoord=floor(gridCoord);vec2 centerCoord=cellCoord+vec2(0.5);vec2 baseCoord=centerCoord/u_gridCellDimensions;vec4 sketchColor;sketchColor=texture2D(u_sketchTexture,baseCoord);float brightness=dot(sketchColor.rgb,vec3(0.299,0.587,0.114));int charIndex=int(brightness*float(u_totalChars));if(charIndex>u_totalChars-1){charIndex=u_totalChars-1;}int charCol=charIndex-(charIndex/int(u_charsetCols))*int(u_charsetCols);int charRow=charIndex/int(u_charsetCols);vec2 charCoord=vec2(float(charCol)/u_charsetCols,float(charRow)/u_charsetRows);vec2 fractionalPart=fract(gridCoord)-0.5;fractionalPart=rotate2D(u_rotationAngle)*fractionalPart;fractionalPart+=0.5;vec2 cellMin=charCoord;vec2 cellMax=charCoord+vec2(1.0/u_charsetCols,1.0/u_charsetRows);vec2 texCoord=charCoord+fractionalPart*vec2(1.0/u_charsetCols,1.0/u_charsetRows);bool outsideBounds=any(lessThan(texCoord,cellMin))||any(greaterThan(texCoord,cellMax));vec4 charColor=outsideBounds ? vec4(u_backgroundColor,1.0): texture2D(u_characterTexture,texCoord);if(u_invertMode==1){charColor.a=1.0-charColor.a;charColor.rgb=vec3(1.0);}vec4 finalColor=(u_characterColorMode==0)? vec4(sketchColor.rgb*charColor.rgb,charColor.a): vec4(u_characterColor*charColor.rgb,charColor.a);if(u_backgroundColorMode==0){gl_FragColor=mix(vec4(sketchColor.rgb,1.0),finalColor,charColor.a);}else{gl_FragColor=mix(vec4(u_backgroundColor,1.0),finalColor,charColor.a);}if(outsideBounds){gl_FragColor=(u_backgroundColorMode==0)?(u_invertMode==1 ?(u_characterColorMode==0 ? vec4(sketchColor.rgb,1.0): vec4(u_characterColor,1.0)): vec4(sketchColor.rgb,1.0)):(u_invertMode==1 ?(u_characterColorMode==0 ? vec4(sketchColor.rgb,1.0): vec4(u_characterColor,1.0)): vec4(u_backgroundColor,1.0));}}"; // eslint-disable-line
+
+    var colorSampleShader$1 = "precision mediump float;\n#define GLSLIFY 1\nuniform sampler2D u_sketchTexture;uniform vec2 u_gridCellDimensions;void main(){vec2 cellCoord=floor(gl_FragCoord.xy);vec2 cellSizeInTexCoords=vec2(1.0)/u_gridCellDimensions;vec2 cellCenterTexCoord=(cellCoord+vec2(0.5))*cellSizeInTexCoords;vec4 sampledColor=texture2D(u_sketchTexture,cellCenterTexCoord);gl_FragColor=sampledColor;}"; // eslint-disable-line
+
+    var asciiCharacterShader$1 = "precision mediump float;\n#define GLSLIFY 1\nuniform sampler2D u_sketchTexture;uniform vec2 u_gridCellDimensions;uniform int u_totalChars;void main(){vec2 cellCoord=floor(gl_FragCoord.xy);vec2 cellSizeInTexCoords=vec2(1.0)/u_gridCellDimensions;vec2 cellCenterTexCoord=(cellCoord+vec2(0.5))*cellSizeInTexCoords;if(texture2D(u_sketchTexture,cellCenterTexCoord).a==0.0){gl_FragColor=vec4(0.0);return;}vec4 sketchColor=texture2D(u_sketchTexture,cellCenterTexCoord);float brightness=dot(sketchColor.rgb,vec3(0.299,0.587,0.114));int charIndex=int(brightness*float(u_totalChars));if(charIndex>u_totalChars-1){charIndex=u_totalChars-1;}float lowerByte=mod(float(charIndex),256.0);float upperByte=floor(float(charIndex)/256.0);float encodedR=lowerByte/255.0;float encodedG=upperByte/255.0;gl_FragColor=vec4(encodedR,encodedG,0.0,1.0);}"; // eslint-disable-line
 
     // renderers/BrightnessAsciiRenderer.js
 
@@ -1605,16 +1588,49 @@
         constructor(p5Instance, grid, characterSet, options) {
             super(p5Instance, grid, characterSet, options);
 
-            this.shader = this.p5.createShader(vertexShader, asciiBrightnessShader);
+            this.colorSampleShader = this.p5.createShader(vertexShader, colorSampleShader$1);
+            this.asciiCharacterShader = this.p5.createShader(vertexShader, asciiCharacterShader$1);
+            this.shader = this.p5.createShader(vertexShader, asciiBrightnessShader$1);
+
+            this.primaryColorSampleFramebuffer = this.p5.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
+            this.secondaryColorSampleFramebuffer = this.p5.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
+            this.asciiCharacterFramebuffer = this.p5.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
+
             this.outputFramebuffer = this.p5.createFramebuffer({  depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
         }
 
-        render(inputFramebuffer) {
+        resizeFramebuffers() {
+            this.primaryColorSampleFramebuffer.resize(this.grid.cols, this.grid.rows);
+            this.secondaryColorSampleFramebuffer.resize(this.grid.cols, this.grid.rows);
+            this.asciiCharacterFramebuffer.resize(this.grid.cols, this.grid.rows);
+        }
 
+        render(inputFramebuffer) {
             if (!this.options.enabled) {
                 this.outputFramebuffer = inputFramebuffer;
                 return;
             }
+
+            this.primaryColorSampleFramebuffer.begin();
+            this.p5.clear();
+            this.p5.shader(this.colorSampleShader);
+            this.colorSampleShader.setUniform('u_sketchTexture', inputFramebuffer);
+            this.colorSampleShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
+            this.p5.rect(0, 0, this.p5.width, this.p5.height);
+            this.primaryColorSampleFramebuffer.end();
+
+            this.secondaryColorSampleFramebuffer.begin();
+            this.p5.background(0);
+            this.secondaryColorSampleFramebuffer.end();
+
+            this.asciiCharacterFramebuffer.begin();
+            this.p5.clear();
+            this.p5.shader(this.asciiCharacterShader);
+            this.asciiCharacterShader.setUniform('u_sketchTexture', inputFramebuffer);
+            this.asciiCharacterShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
+            this.asciiCharacterShader.setUniform('u_totalChars', this.characterSet.characters.length);
+            this.p5.rect(0, 0, this.p5.width, this.p5.height);
+            this.asciiCharacterFramebuffer.end();
 
             this.outputFramebuffer.begin();
             this.p5.shader(this.shader);
@@ -2142,6 +2158,7 @@ void main() {
             }
 
             this.brightnessSampleFramebuffer.begin();
+            this.p5.clear();
             this.p5.shader(this.brightnessSampleShader);
             this.brightnessSampleShader.setUniform('u_inputImage', inputFramebuffer);
             this.brightnessSampleShader.setUniform('u_inputImageSize', [this.p5.width, this.p5.height]);
@@ -2151,6 +2168,7 @@ void main() {
             this.brightnessSampleFramebuffer.end();
 
             this.brightnessSplitFramebuffer.begin();
+            this.p5.clear();
             this.p5.shader(this.brightnessSplitShader);
             this.brightnessSplitShader.setUniform('u_inputImage', inputFramebuffer);
             this.brightnessSplitShader.setUniform('u_brightnessTexture', this.brightnessSampleFramebuffer);
@@ -2161,6 +2179,7 @@ void main() {
             this.brightnessSplitFramebuffer.end();
 
             this.primaryColorSampleFramebuffer.begin();
+            this.p5.clear();
             this.p5.shader(this.colorSampleShader);
             this.colorSampleShader.setUniform('u_inputImage', inputFramebuffer);
             this.colorSampleShader.setUniform('u_inputImageBW', this.brightnessSplitFramebuffer);
@@ -2172,6 +2191,7 @@ void main() {
             this.primaryColorSampleFramebuffer.end();
 
             this.secondaryColorSampleFramebuffer.begin();
+            this.p5.clear();
             this.p5.shader(this.colorSampleShader);
             this.colorSampleShader.setUniform('u_inputImage', inputFramebuffer);
             this.colorSampleShader.setUniform('u_inputImageBW', this.brightnessSplitFramebuffer);
@@ -2183,6 +2203,7 @@ void main() {
             this.secondaryColorSampleFramebuffer.end();
 
             this.asciiCharacterFramebuffer.begin();
+            this.p5.clear();
             this.p5.shader(this.characterSelectionShader);
             this.characterSelectionShader.setUniform('u_characterTexture', this.characterSet.texture);
             this.characterSelectionShader.setUniform('u_charsetCols', this.characterSet.charsetCols);
@@ -2194,6 +2215,7 @@ void main() {
             this.asciiCharacterFramebuffer.end();
 
             this.outputFramebuffer.begin();
+            this.p5.clear();
             this.p5.shader(this.shader);
             this.shader.setUniform('u_charIndexTexture', this.asciiCharacterFramebuffer);
             this.shader.setUniform('u_resolution', [this.p5.width, this.p5.height]);
@@ -2322,6 +2344,66 @@ void main() {
         }
     }
 
+    var asciiBrightnessShader = "precision mediump float;\n#define GLSLIFY 1\nuniform sampler2D u_characterTexture;uniform float u_charsetCols;uniform float u_charsetRows;uniform int u_totalChars;uniform sampler2D u_primaryColorTexture;uniform sampler2D u_secondaryColorTexture;uniform sampler2D u_asciiCharacterTexture;uniform vec2 u_gridCellDimensions;uniform vec2 u_gridPixelDimensions;uniform vec2 u_gridOffsetDimensions;uniform vec3 u_characterColor;uniform int u_characterColorMode;uniform vec3 u_backgroundColor;uniform int u_backgroundColorMode;uniform float u_rotationAngle;uniform int u_invertMode;mat2 rotate2D(float angle){float s=sin(angle);float c=cos(angle);return mat2(c,-s,s,c);}void main(){vec2 adjustedCoord=(gl_FragCoord.xy-u_gridOffsetDimensions)/u_gridPixelDimensions;if(adjustedCoord.x<0.0||adjustedCoord.x>1.0||adjustedCoord.y<0.0||adjustedCoord.y>1.0){gl_FragColor=vec4(u_backgroundColor,1.0);return;}vec2 gridCoord=adjustedCoord*u_gridCellDimensions;vec2 cellCoord=floor(gridCoord);vec2 charIndexTexCoord=(cellCoord+vec2(0.5))/u_gridCellDimensions;vec4 primaryColor=texture2D(u_primaryColorTexture,charIndexTexCoord);vec4 secondaryColor=texture2D(u_secondaryColorTexture,charIndexTexCoord);vec4 encodedIndexVec=texture2D(u_asciiCharacterTexture,charIndexTexCoord);float brightness=dot(encodedIndexVec.rgb,vec3(0.299,0.587,0.114));int charIndex=int(brightness*float(u_totalChars));if(charIndex>u_totalChars-1){charIndex=u_totalChars-1;}int charCol=charIndex-(charIndex/int(u_charsetCols))*int(u_charsetCols);int charRow=charIndex/int(u_charsetCols);vec2 charCoord=vec2(float(charCol)/u_charsetCols,float(charRow)/u_charsetRows);vec2 fractionalPart=fract(gridCoord)-0.5;fractionalPart=rotate2D(u_rotationAngle)*fractionalPart;fractionalPart+=0.5;vec2 cellMin=charCoord;vec2 cellMax=charCoord+vec2(1.0/u_charsetCols,1.0/u_charsetRows);vec2 texCoord=charCoord+fractionalPart*vec2(1.0/u_charsetCols,1.0/u_charsetRows);bool outsideBounds=any(lessThan(texCoord,cellMin))||any(greaterThan(texCoord,cellMax));vec4 charColor=outsideBounds ? vec4(u_backgroundColor,1.0): texture2D(u_characterTexture,texCoord);if(u_invertMode==1){charColor.a=1.0-charColor.a;charColor.rgb=vec3(1.0);}vec4 finalColor=(u_characterColorMode==0)? vec4(primaryColor.rgb*charColor.rgb,charColor.a): vec4(u_characterColor*charColor.rgb,charColor.a);if(u_backgroundColorMode==0){gl_FragColor=mix(vec4(secondaryColor.rgb,1.0),finalColor,charColor.a);}else{gl_FragColor=mix(vec4(u_backgroundColor,1.0),finalColor,charColor.a);}if(outsideBounds){gl_FragColor=(u_backgroundColorMode==0)?(u_invertMode==1 ?(u_characterColorMode==0 ? vec4(secondaryColor.rgb,1.0): vec4(u_characterColor,1.0)): vec4(secondaryColor.rgb,1.0)):(u_invertMode==1 ?(u_characterColorMode==0 ? vec4(secondaryColor.rgb,1.0): vec4(u_characterColor,1.0)): vec4(u_backgroundColor,1.0));}}"; // eslint-disable-line
+
+    var colorSampleShader = "precision mediump float;\n#define GLSLIFY 1\nuniform sampler2D u_sketchTexture;uniform vec2 u_gridCellDimensions;void main(){vec2 cellCoord=floor(gl_FragCoord.xy);vec2 cellSizeInTexCoords=vec2(1.0)/u_gridCellDimensions;vec2 cellCenterTexCoord=(cellCoord+vec2(0.5))*cellSizeInTexCoords;vec4 sampledColor=texture2D(u_sketchTexture,cellCenterTexCoord);gl_FragColor=sampledColor;}"; // eslint-disable-line
+
+    var asciiCharacterShader = "precision mediump float;\n#define GLSLIFY 1\nuniform sampler2D u_sketchTexture;uniform vec2 u_gridCellDimensions;uniform int u_totalChars;void main(){vec2 cellCoord=floor(gl_FragCoord.xy);vec2 cellSizeInTexCoords=vec2(1.0)/u_gridCellDimensions;vec2 cellCenterTexCoord=(cellCoord+vec2(0.5))*cellSizeInTexCoords;if(texture2D(u_sketchTexture,cellCenterTexCoord).a==0.0){gl_FragColor=vec4(0.0);return;}vec4 sketchColor=texture2D(u_sketchTexture,cellCenterTexCoord);float brightness=dot(sketchColor.rgb,vec3(0.299,0.587,0.114));int charIndex=int(brightness*float(u_totalChars));if(charIndex>u_totalChars-1){charIndex=u_totalChars-1;}float lowerByte=mod(float(charIndex),256.0);float upperByte=floor(float(charIndex)/256.0);float encodedR=lowerByte/255.0;float encodedG=upperByte/255.0;gl_FragColor=vec4(encodedR,encodedG,0.0,1.0);}"; // eslint-disable-line
+
+    // renderers/BrightnessAsciiRenderer.js
+
+    class CustomAsciiRenderer extends AsciiRenderer {
+        
+        constructor(p5Instance, grid, characterSet, primaryColorSampleFramebuffer, secondaryColorFrameBuffer, asciiCharacterFramebuffer, options) {
+            super(p5Instance, grid, characterSet, options);
+
+            this.colorSampleShader = this.p5.createShader(vertexShader, colorSampleShader);
+            this.asciiCharacterShader = this.p5.createShader(vertexShader, asciiCharacterShader);
+            this.shader = this.p5.createShader(vertexShader, asciiBrightnessShader);
+
+            this.primaryColorSampleFramebuffer = primaryColorSampleFramebuffer;
+            this.secondaryColorSampleFramebuffer = secondaryColorFrameBuffer;
+            this.asciiCharacterFramebuffer = asciiCharacterFramebuffer;
+
+            this.outputFramebuffer = this.p5.createFramebuffer({  depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
+        }
+
+        resizeFramebuffers() {
+            this.primaryColorSampleFramebuffer.resize(this.grid.cols, this.grid.rows);
+            this.secondaryColorSampleFramebuffer.resize(this.grid.cols, this.grid.rows);
+            this.asciiCharacterFramebuffer.resize(this.grid.cols, this.grid.rows);
+        }
+
+        render(inputFramebuffer) {
+            if (!this.options.enabled) {
+                this.outputFramebuffer = inputFramebuffer;
+                return;
+            }
+
+            this.outputFramebuffer.begin();
+            this.p5.shader(this.shader);
+            this.shader.setUniform('u_characterTexture', this.characterSet.texture);
+            this.shader.setUniform('u_charsetCols', this.characterSet.charsetCols);
+            this.shader.setUniform('u_charsetRows', this.characterSet.charsetRows);
+            this.shader.setUniform('u_totalChars', this.characterSet.characters.length);
+            this.shader.setUniform('u_sketchTexture', inputFramebuffer);
+            this.shader.setUniform('u_primaryColorTexture', this.primaryColorSampleFramebuffer);
+            this.shader.setUniform('u_secondaryColorTexture', this.secondaryColorSampleFramebuffer);
+            this.shader.setUniform('u_asciiCharacterTexture', this.asciiCharacterFramebuffer);
+            this.shader.setUniform('u_gridPixelDimensions', [this.grid.width, this.grid.height]);
+            this.shader.setUniform('u_gridOffsetDimensions', [this.grid.offsetX, this.grid.offsetY]);
+            this.shader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
+            this.shader.setUniform('u_characterColor', this.options.characterColor);
+            this.shader.setUniform('u_characterColorMode', this.options.characterColorMode);
+            this.shader.setUniform('u_backgroundColor', this.options.backgroundColor);
+            this.shader.setUniform('u_backgroundColorMode', this.options.backgroundColorMode);
+            this.shader.setUniform('u_invertMode', this.options.invertMode);
+            this.shader.setUniform('u_rotationAngle', this.p5.radians(this.options.rotationAngle));
+            this.p5.rect(0, 0, this.p5.width, this.p5.height);
+            this.outputFramebuffer.end();
+        }
+    }
+
     /**
      * @class P5Asciify
      * @description
@@ -2369,12 +2451,19 @@ void main() {
             rotationAngle: 0,
         };
 
-        colorPalette = new P5AsciifyColorPalette();
+        colorPaletteManager = new P5AsciifyColorPaletteManager();
+        customColorPaletteManager = new P5AsciifyColorPaletteManager();
 
-        gradientManager = new P5AsciifyGradientManager(this.colorPalette);
+        gradientManager = new P5AsciifyGradientManager(this.colorPaletteManager);
 
-        preEffectManager = new P5AsciifyEffectManager(this.colorPalette);
-        afterEffectManager = new P5AsciifyEffectManager(this.colorPalette);
+        preEffectManager = new P5AsciifyEffectManager(this.colorPaletteManager);
+        afterEffectManager = new P5AsciifyEffectManager(this.colorPaletteManager);
+
+        customPrimaryColorSampleFramebuffer = null;
+        customSecondaryColorSampleFramebuffer = null;
+        customAsciiCharacterFramebuffer = null;
+
+        postSetupFunction = null;
 
         instance(p) {
             this.p5Instance = p;
@@ -2398,24 +2487,43 @@ void main() {
                 this.grid.resizeCellDimensions(this.commonOptions.gridDimensions[0], this.commonOptions.gridDimensions[1]);
             }
 
-            this.colorPalette.setup(this.p5Instance);
+            this.colorPaletteManager.setup(this.p5Instance);
+            this.customColorPaletteManager.setup(this.p5Instance);
 
             this.gradientManager.setup(this.gradientCharacterSet);
 
             this.preEffectManager.setup();
             this.afterEffectManager.setup();
 
+            this.customPrimaryColorSampleFramebuffer = this.p5Instance.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
+            this.customSecondaryColorSampleFramebuffer = this.p5Instance.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
+            this.customAsciiCharacterFramebuffer = this.p5Instance.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
+
+            console.log("customPrimaryColorSampleFramebuffer", this.customPrimaryColorSampleFramebuffer);
+
             this.brightnessRenderer = new BrightnessAsciiRenderer(this.p5Instance, this.grid, this.asciiCharacterSet, this.asciiOptions);
             this.accurateRenderer = new AccurateAsciiRenderer(this.p5Instance, this.grid, this.asciiCharacterSet, this.asciiOptions);
+            this.customAsciiRenderer = new CustomAsciiRenderer(this.p5Instance, this.grid, this.asciiCharacterSet, this.customPrimaryColorSampleFramebuffer, this.customSecondaryColorSampleFramebuffer, this.customAsciiCharacterFramebuffer, this.asciiOptions);
 
-            let asciiRenderer = this.asciiOptions.renderMode === 'brightness' ? this.brightnessRenderer : this.accurateRenderer;
+            let asciiRenderer; 
+
+            if (this.asciiOptions.renderMode === 'brightness') {
+                asciiRenderer = this.brightnessRenderer;
+            } else if (this.asciiOptions.renderMode === 'accurate') {
+                asciiRenderer = this.accurateRenderer;
+            } else if (this.asciiOptions.renderMode === 'custom') {
+                asciiRenderer = this.customAsciiRenderer;
+            }
             this.gradientRenderer = new GradientAsciiRenderer(this.p5Instance, this.grid, this.gradientCharacterSet, asciiRenderer, this.gradientManager, this.gradientOptions);
 
             this.edgeRenderer = new EdgeAsciiRenderer(this.p5Instance, this.grid, this.edgeCharacterSet, this.gradientRenderer, this.edgeOptions);
-
             this.asciiFramebufferDimensions = { width: this.p5Instance.width, height: this.p5Instance.height };
 
             this.sketchFramebuffer = this.p5Instance.createFramebuffer({ depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
+
+            if (this.postSetupFunction) {
+                this.postSetupFunction();
+            }
         }
 
         /**
@@ -2434,7 +2542,9 @@ void main() {
                     this.grid._resizeGrid();
                 }
 
+                this.brightnessRenderer.resizeFramebuffers();
                 this.edgeRenderer.resizeFramebuffers();
+                this.customAsciiRenderer.resizeFramebuffers();
                 this.accurateRenderer.resizeFramebuffers();
                 this.gradientRenderer.resizeFramebuffers();
             }
@@ -2448,9 +2558,14 @@ void main() {
 
             let asciiOutput = this.preEffectManager.nextFramebuffer;
 
-            const renderer = this.asciiOptions.renderMode === 'accurate'
-                ? this.accurateRenderer
-                : this.brightnessRenderer;
+            let renderer;
+            if (this.asciiOptions.renderMode === 'brightness') {
+                renderer = this.brightnessRenderer;
+            } else if (this.asciiOptions.renderMode === 'accurate') {
+                renderer = this.accurateRenderer;
+            } else if (this.asciiOptions.renderMode === 'custom') {
+                renderer = this.customAsciiRenderer;
+            }
             renderer.render(this.preEffectManager.nextFramebuffer);
             asciiOutput = renderer.getOutputFramebuffer();
 
@@ -2464,6 +2579,34 @@ void main() {
 
             this.p5Instance.clear();
             this.p5Instance.image(this.afterEffectManager.nextFramebuffer, -this.p5Instance.width / 2, -this.p5Instance.height / 2);
+
+            // Draw the framerate in the bottom left corner
+            this.p5Instance.push();
+            const fpsText = `FPS:~${Math.ceil(Math.min(this.p5Instance.frameRate(), 60))}`;
+            const padding = 5;
+            const textX = -this.p5Instance.width / 2 + 10;
+            const textY = this.p5Instance.height / 2 - 20;
+
+            // Set text properties first to calculate width
+            this.p5Instance.textFont(this.font);
+            this.p5Instance.textSize(16);
+            const textW = this.p5Instance.textWidth(fpsText);
+            const textH = 16; // Approximate height based on textSize
+
+            // Draw background rectangle
+            this.p5Instance.fill(0);
+            this.p5Instance.noStroke();
+            this.p5Instance.rect(textX - padding,
+                textY - textH - padding,
+                textW + padding * 2,
+                textH + padding * 2);
+
+            // Draw text
+            this.p5Instance.fill(255, 255, 0);
+            this.p5Instance.textAlign(this.p5Instance.LEFT, this.p5Instance.BOTTOM);
+            this.p5Instance.text(fpsText, textX, textY);
+            this.p5Instance.pop();
+
             this.checkFramebufferDimensions();
         }
 
@@ -2515,7 +2658,9 @@ void main() {
                 this.edgeCharacterSet.setFontSize(commonOptions.fontSize);
                 this.grid.resizeCellPixelDimensions(this.asciiCharacterSet.maxGlyphDimensions.width, this.asciiCharacterSet.maxGlyphDimensions.height);
 
+                this.brightnessRenderer.resizeFramebuffers();
                 this.edgeRenderer.resizeFramebuffers();
+                this.customAsciiRenderer.resizeFramebuffers();
                 this.accurateRenderer.resizeFramebuffers();
                 this.gradientRenderer.resizeFramebuffers();
 
@@ -2533,7 +2678,9 @@ void main() {
                 } else {
                     this.grid.resizeCellDimensions(commonOptions.gridDimensions[0], commonOptions.gridDimensions[1]);
                 }
+                this.brightnessRenderer.resizeFramebuffers();
                 this.edgeRenderer.resizeFramebuffers();
+                this.customAsciiRenderer.resizeFramebuffers();
                 this.accurateRenderer.resizeFramebuffers();
                 this.gradientRenderer.resizeFramebuffers();
             }
@@ -2746,6 +2893,10 @@ void main() {
     p5.prototype.resetAsciiGrid = function () {
         p5asciify.grid.reset();
         p5asciify.sampleFramebuffer.resize(p5asciify.grid.cols, p5asciify.grid.rows);
+    };
+
+    p5.prototype.setAsciifyPostSetupFunction = function (postSetupFunction) {
+        p5asciify.postSetupFunction = postSetupFunction;
     };
 
     /**

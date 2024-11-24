@@ -1,5 +1,5 @@
 import P5AsciifyEffect from '../effect.js';
-import P5AsciifyColorPalette from '../../colorpalette.js';
+import  P5AsciifyColorPalette  from '../../colorpalette.js';
 
 /**
  * @class P5AsciifyColorPaletteEffect
@@ -16,14 +16,14 @@ class P5AsciifyColorPaletteEffect extends P5AsciifyEffect {
      * @param {Array} options.palette - The array of colors for the palette.
      * @param {P5AsciifyColorPalette} options.paletteBuffer - The buffer to store the color palette.
      */
-    constructor({ shader, palette, colorPalette }) {
+    constructor({ shader, palette, colorPaletteManager }) {
         super("colorpalette", shader);
         this._palette = palette;
-        this.colorPalette = colorPalette;
+        this._colorPaletteManager = colorPaletteManager;
     }
 
     setup() {
-        this._paletteId = this.colorPalette.addPalette(this._palette);
+        this._colorPalette = this._colorPaletteManager.addPalette(this._palette);
     }
 
     /**
@@ -33,9 +33,9 @@ class P5AsciifyColorPaletteEffect extends P5AsciifyEffect {
     setUniforms(framebuffer) {
         super.setUniforms(framebuffer);
         this._shader.setUniform('u_resolution', [framebuffer.width, framebuffer.height]);
-        this._shader.setUniform('u_colorPalette', this.colorPalette.texture);
-        this._shader.setUniform('u_colorPaletteRow', this.colorPalette.getPaletteRow(this._paletteId));
-        this._shader.setUniform('u_colorPaletteDimensions', [this.colorPalette.texture.width, this.colorPalette.texture.height]);
+        this._shader.setUniform('u_colorPalette', this._colorPaletteManager.texture);
+        this._shader.setUniform('u_colorPaletteRow', this._colorPalette.rowIndex);
+        this._shader.setUniform('u_colorPaletteDimensions', [this._colorPaletteManager.texture.width, this._colorPaletteManager.texture.height]);
         this._shader.setUniform('u_colorPaletteLength', this._palette.length);
     }
 
@@ -45,7 +45,7 @@ class P5AsciifyColorPaletteEffect extends P5AsciifyEffect {
      */
     set palette(palette) {
         this._palette = palette;
-        this.colorPalette.setPaletteColors(this._paletteId, this._palette);
+        this._colorPaletteManager.setPaletteColors(this._colorPalette, this._palette);
     }
 
     /**

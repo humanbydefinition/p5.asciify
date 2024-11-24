@@ -135,6 +135,10 @@ p5.prototype.resetAsciiGrid = function () {
     p5asciify.sampleFramebuffer.resize(p5asciify.grid.cols, p5asciify.grid.rows);
 };
 
+p5.prototype.setAsciifyPostSetupFunction = function (postSetupFunction) {
+    p5asciify.postSetupFunction = postSetupFunction;
+};
+
 /**
  * Sets the default options for the P5Asciify library.
  *
