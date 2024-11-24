@@ -50,7 +50,10 @@ export default class BrightnessAsciiRenderer extends AsciiRenderer {
             this.p5.background(this.options.backgroundColor);
         } else {
             this.p5.clear();
-            this.p5.image(this.primaryColorSampleFramebuffer, -this.grid.cols / 2, -this.grid.rows / 2, this.grid.cols, this.grid.rows);
+            this.p5.shader(this.colorSampleShader);
+            this.colorSampleShader.setUniform('u_sketchTexture', inputFramebuffer);
+            this.colorSampleShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
+            this.p5.rect(0, 0, this.p5.width, this.p5.height);
         }
         this.secondaryColorSampleFramebuffer.end();
 
