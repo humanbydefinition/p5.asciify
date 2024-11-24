@@ -2,16 +2,12 @@
 import AsciiRenderer from '../AsciiRenderer.js';
 import vertexShader from '../../assets/shaders/vert/shader.vert';
 import asciiBrightnessShader from './shaders/asciiBrightness.frag';
-import colorSampleShader from './shaders/colorSample.frag';
-import asciiCharacterShader from './shaders/asciiCharacter.frag';
 
 export default class CustomAsciiRenderer extends AsciiRenderer {
     
     constructor(p5Instance, grid, characterSet, primaryColorSampleFramebuffer, secondaryColorFrameBuffer, asciiCharacterFramebuffer, options) {
         super(p5Instance, grid, characterSet, options);
 
-        this.colorSampleShader = this.p5.createShader(vertexShader, colorSampleShader);
-        this.asciiCharacterShader = this.p5.createShader(vertexShader, asciiCharacterShader);
         this.shader = this.p5.createShader(vertexShader, asciiBrightnessShader);
 
         this.primaryColorSampleFramebuffer = primaryColorSampleFramebuffer;
