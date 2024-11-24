@@ -29,6 +29,23 @@ export default class CustomAsciiRenderer extends AsciiRenderer {
             return;
         }
 
+        if(this.options.characterColorMode === 1) {
+            this.primaryColorSampleFramebuffer.begin();
+            this.p5.background(this.options.characterColor);
+            this.primaryColorSampleFramebuffer.end();
+        }
+
+        if(this.options.backgroundColorMode === 1) {
+            this.secondaryColorSampleFramebuffer.begin();
+            this.p5.background(this.options.backgroundColor);
+            this.secondaryColorSampleFramebuffer.end();
+        } else {
+            this.secondaryColorSampleFramebuffer.begin();
+            this.p5.clear();
+            this.p5.image(this.primaryColorSampleFramebuffer, -this.grid.cols / 2, -this.grid.rows / 2, this.grid.cols, this.grid.rows);
+            this.secondaryColorSampleFramebuffer.end();
+        }
+
         this.outputFramebuffer.begin();
         this.p5.shader(this.shader);
         this.shader.setUniform('u_characterTexture', this.characterSet.texture);
@@ -42,9 +59,7 @@ export default class CustomAsciiRenderer extends AsciiRenderer {
         this.shader.setUniform('u_gridPixelDimensions', [this.grid.width, this.grid.height]);
         this.shader.setUniform('u_gridOffsetDimensions', [this.grid.offsetX, this.grid.offsetY]);
         this.shader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
-        this.shader.setUniform('u_characterColor', this.options.characterColor);
         this.shader.setUniform('u_characterColorMode', this.options.characterColorMode);
-        this.shader.setUniform('u_backgroundColor', this.options.backgroundColor);
         this.shader.setUniform('u_backgroundColorMode', this.options.backgroundColorMode);
         this.shader.setUniform('u_invertMode', this.options.invertMode);
         this.shader.setUniform('u_rotationAngle', this.p5.radians(this.options.rotationAngle));

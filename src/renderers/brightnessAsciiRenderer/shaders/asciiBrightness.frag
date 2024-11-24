@@ -3,17 +3,16 @@ precision mediump float;
 uniform sampler2D u_characterTexture;
 uniform float u_charsetCols;
 uniform float u_charsetRows;
-uniform int u_totalChars;
 
-uniform sampler2D u_sketchTexture;
+uniform sampler2D u_primaryColorTexture;
+uniform sampler2D u_secondaryColorTexture;
+uniform sampler2D u_asciiCharacterTexture;
 
 uniform vec2 u_gridCellDimensions;
 uniform vec2 u_gridPixelDimensions;
 uniform vec2 u_gridOffsetDimensions;
 
-uniform vec3 u_characterColor;
 uniform int u_characterColorMode;
-uniform vec3 u_backgroundColor;
 uniform int u_backgroundColorMode;
 
 uniform float u_rotationAngle;
@@ -29,28 +28,24 @@ mat2 rotate2D(float angle) {
 void main() {
     vec2 adjustedCoord = (gl_FragCoord.xy - u_gridOffsetDimensions) / u_gridPixelDimensions;
 
-    if(adjustedCoord.x < 0.0 || adjustedCoord.x > 1.0 || adjustedCoord.y < 0.0 || adjustedCoord.y > 1.0) {
-        gl_FragColor = vec4(u_backgroundColor, 1.0);
-        return;
-    }
-
     // Calculate the grid coordinate
     vec2 gridCoord = adjustedCoord * u_gridCellDimensions;
     vec2 cellCoord = floor(gridCoord);
-    vec2 centerCoord = cellCoord + vec2(0.5);
-    vec2 baseCoord = centerCoord / u_gridCellDimensions;
 
-    vec4 sketchColor; // Simulation color
+    vec2 charIndexTexCoord = (cellCoord + vec2(0.5)) / u_gridCellDimensions;
 
-    sketchColor = texture2D(u_sketchTexture, baseCoord);
+    vec4 secondaryColor = texture2D(u_secondaryColorTexture, charIndexTexCoord);
 
-    float brightness = dot(sketchColor.rgb, vec3(0.299, 0.587, 0.114));
-
-    // Map the brightness to a character index
-    int charIndex = int(brightness * float(u_totalChars));
-    if(charIndex > u_totalChars - 1) {
-        charIndex = u_totalChars - 1;
+    if(adjustedCoord.x < 0.0 || adjustedCoord.x > 1.0 || adjustedCoord.y < 0.0 || adjustedCoord.y > 1.0) {
+        gl_FragColor = secondaryColor;
+        return;
     }
+
+    vec4 primaryColor = texture2D(u_primaryColorTexture, charIndexTexCoord);
+    vec4 encodedIndexVec = texture2D(u_asciiCharacterTexture, charIndexTexCoord);
+
+    // Decode the bestCharIndex from red and green channels
+    int charIndex = int(encodedIndexVec.r * 255.0 + 0.5) + int(encodedIndexVec.g * 255.0 + 0.5) * 256;
 
     // Calculate the column and row of the character in the charset texture
     int charCol = charIndex - (charIndex / int(u_charsetCols)) * int(u_charsetCols);
@@ -72,7 +67,7 @@ void main() {
     bool outsideBounds = any(lessThan(texCoord, cellMin)) || any(greaterThan(texCoord, cellMax));
 
     // Get the color of the character from the charset texture or use the background color if outside bounds
-    vec4 charColor = outsideBounds ? vec4(u_backgroundColor, 1.0) : texture2D(u_characterTexture, texCoord);
+    vec4 charColor = outsideBounds ? secondaryColor : texture2D(u_characterTexture, texCoord);
 
     // If the inversion mode is enabled, invert the character color
     if(u_invertMode == 1) {
@@ -81,18 +76,12 @@ void main() {
     }
 
     // Calculate the final color of the character
-    vec4 finalColor = (u_characterColorMode == 0) ? vec4(sketchColor.rgb * charColor.rgb, charColor.a) : vec4(u_characterColor * charColor.rgb, charColor.a);
+    vec4 finalColor = vec4(primaryColor.rgb * charColor.rgb, charColor.a);
 
-    // If the background color mode is 0, mix the sketch color and the final color based on the character's alpha value
-    // Otherwise, mix the background color and the final color based on the character's alpha value
-    if(u_backgroundColorMode == 0) {
-        gl_FragColor = mix(vec4(sketchColor.rgb, 1.0), finalColor, charColor.a);
-    } else {
-        gl_FragColor = mix(vec4(u_backgroundColor, 1.0), finalColor, charColor.a);
-    }
+    gl_FragColor = mix(secondaryColor, finalColor, charColor.a);
 
     // Override final color with background color for out-of-bounds areas due to rotation
     if(outsideBounds) {
-        gl_FragColor = (u_backgroundColorMode == 0) ? (u_invertMode == 1 ? (u_characterColorMode == 0 ? vec4(sketchColor.rgb, 1.0) : vec4(u_characterColor, 1.0)) : vec4(sketchColor.rgb, 1.0)) : (u_invertMode == 1 ? (u_characterColorMode == 0 ? vec4(sketchColor.rgb, 1.0) : vec4(u_characterColor, 1.0)) : vec4(u_backgroundColor, 1.0));
+        gl_FragColor = u_invertMode == 1 ? primaryColor : secondaryColor;
     }
 }

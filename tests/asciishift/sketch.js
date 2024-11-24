@@ -28,7 +28,6 @@ let shiftFramebuffer;
 let intermediateShiftFramebuffer;
 let previousPushFramebuffer;
 let nextPushFramebuffer;
-let gradientFramebuffer;
 
 function preload() {
 	// Load the shaders
@@ -50,7 +49,6 @@ function setup() {
 	colorPaletteFramebuffer = createFramebuffer({ width: colorPalette.length, height: 1, depthFormat: UNSIGNED_INT, textureFiltering: NEAREST });
 
 	colorPaletteFramebuffer.loadPixels();
-
 	for (let i = 0; i < colorPalette.length; i++) {
 		let c = color(colorPalette[i]);
 		colorPaletteFramebuffer.pixels[i * 4] = red(c);
@@ -58,12 +56,19 @@ function setup() {
 		colorPaletteFramebuffer.pixels[i * 4 + 2] = blue(c);
 		colorPaletteFramebuffer.pixels[i * 4 + 3] = alpha(c);
 	}
-
 	colorPaletteFramebuffer.updatePixels();
 
 	for (let i = 0; i < charset.length; i++) {
-		let brightness = i * (255 / charset.length) + (255 / (2 * charset.length));
-		charsetColorPalette.push(color(brightness));
+		// Split index into lower and upper bytes
+		let lowerByte = i % 256;
+		let upperByte = Math.floor(i / 256);
+
+		// Normalize to 0-1 range
+		let encodedR = lowerByte / 255;
+		let encodedG = upperByte / 255;
+
+		// Create color with R,G channels (B=0)
+		charsetColorPalette.push(color(encodedR * 255, encodedG * 255, 0));
 	}
 
 	setAsciiOptions({
@@ -78,8 +83,8 @@ function setup() {
 			characterColor: "#ff0000",
 			characterColorMode: 0,
 			backgroundColor: "#000000",
-			backgroundColorMode: 0,
-			invertMode: false,
+			backgroundColorMode: 1,
+			invertMode: true,
 		},
 	});
 
@@ -97,7 +102,6 @@ function setupAsciify() {
 	intermediateShiftFramebuffer = createFramebuffer({ width: p5asciify.grid.cols, height: p5asciify.grid.rows, depthFormat: UNSIGNED_INT, textureFiltering: NEAREST });
 	previousPushFramebuffer = createFramebuffer({ width: p5asciify.grid.cols, height: p5asciify.grid.rows, depthFormat: UNSIGNED_INT, textureFiltering: NEAREST });
 	nextPushFramebuffer = createFramebuffer({ width: p5asciify.grid.cols, height: p5asciify.grid.rows, depthFormat: UNSIGNED_INT, textureFiltering: NEAREST });
-	gradientFramebuffer = createFramebuffer({ width: p5asciify.grid.cols, height: p5asciify.grid.rows, depthFormat: UNSIGNED_INT, textureFiltering: NEAREST });
 
 	colorPaletteManager.addPalette(charsetColorPalette);
 
@@ -123,11 +127,11 @@ function draw() {
 	shader(shiftShader);
 	shiftShader.setUniform('u_resolution', [p5asciify.grid.cols, p5asciify.grid.rows]);
 	shiftShader.setUniform('u_frameCount', frameCount);
-	shiftShader.setUniform('u_rect0', [0, 0, p5asciify.grid.cols, p5asciify.grid.rows]);
 
 	rectangleManager.rectangles.forEach((rect, index) => {
 		shiftShader.setUniform(`u_rect${index}`, [rect.x, rect.y, rect.width, rect.height]);
 	});
+
 	rect(0, 0, width, height);
 	shiftFramebuffer.end();
 
@@ -152,7 +156,6 @@ function draw() {
 	rect(0, 0, width, height);
 	nextPushFramebuffer.end();
 
-	gradientFramebuffer.begin();
 	clear();
 	shader(gradientShader);
 	gradientShader.setUniform('u_textureSize', [p5asciify.grid.cols, p5asciify.grid.rows]);
@@ -160,21 +163,16 @@ function draw() {
 	gradientShader.setUniform('u_charPaletteTexture', colorPaletteManager.texture);
 	gradientShader.setUniform('u_charPaletteSize', [colorPaletteManager.texture.width, colorPaletteManager.texture.height]);
 	rect(0, 0, width, height);
-	gradientFramebuffer.end();
-
-	image(gradientFramebuffer, -p5asciify.grid.cols / 2, -p5asciify.grid.rows / 2);
 
 	asciiCharacterFramebuffer.end();
 
 	primaryColorSampleFramebuffer.begin();
-
 	shader(colorShader);
 	colorShader.setUniform('u_textureSize', [p5asciify.grid.cols, p5asciify.grid.rows]);
 	colorShader.setUniform('u_pushFramebuffer', nextPushFramebuffer);
 	colorShader.setUniform('u_colorPaletteTexture', colorPaletteFramebuffer);
 	colorShader.setUniform('u_paletteSize', colorPalette.length);
 	rect(0, 0, width, height);
-
 	primaryColorSampleFramebuffer.end();
 
 	clear();
@@ -204,7 +202,6 @@ function windowResized() {
 	intermediateShiftFramebuffer.resize(p5asciify.grid.cols, p5asciify.grid.rows);
 	previousPushFramebuffer.resize(p5asciify.grid.cols, p5asciify.grid.rows);
 	nextPushFramebuffer.resize(p5asciify.grid.cols, p5asciify.grid.rows);
-	gradientFramebuffer.resize(p5asciify.grid.cols, p5asciify.grid.rows);
 
 	randomManager.reset();
 
