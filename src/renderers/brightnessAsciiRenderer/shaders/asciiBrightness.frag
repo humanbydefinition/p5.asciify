@@ -12,9 +12,6 @@ uniform vec2 u_gridCellDimensions;
 uniform vec2 u_gridPixelDimensions;
 uniform vec2 u_gridOffsetDimensions;
 
-uniform int u_characterColorMode;
-uniform int u_backgroundColorMode;
-
 uniform float u_rotationAngle;
 
 uniform int u_invertMode;
