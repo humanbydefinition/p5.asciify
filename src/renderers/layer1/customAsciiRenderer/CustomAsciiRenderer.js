@@ -1,26 +1,18 @@
 // renderers/BrightnessAsciiRenderer.js
-import AsciiRenderer from '../AsciiRenderer.js';
-import vertexShader from '../../assets/shaders/vert/shader.vert';
-import asciiBrightnessShader from './shaders/asciiBrightness.frag';
+import AsciiRenderer from '../../AsciiRenderer.js';
+import vertexShader from '../../../assets/shaders/vert/shader.vert';
+import asciiConversionShader from '../_common_shaders/asciiConversion.frag';
 
 export default class CustomAsciiRenderer extends AsciiRenderer {
     
     constructor(p5Instance, grid, characterSet, primaryColorSampleFramebuffer, secondaryColorFrameBuffer, asciiCharacterFramebuffer, options) {
         super(p5Instance, grid, characterSet, options);
 
-        this.shader = this.p5.createShader(vertexShader, asciiBrightnessShader);
+        this.shader = this.p5.createShader(vertexShader, asciiConversionShader);
 
         this.primaryColorSampleFramebuffer = primaryColorSampleFramebuffer;
         this.secondaryColorSampleFramebuffer = secondaryColorFrameBuffer;
         this.asciiCharacterFramebuffer = asciiCharacterFramebuffer;
-
-        this.outputFramebuffer = this.p5.createFramebuffer({  depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
-    }
-
-    resizeFramebuffers() {
-        this.primaryColorSampleFramebuffer.resize(this.grid.cols, this.grid.rows);
-        this.secondaryColorSampleFramebuffer.resize(this.grid.cols, this.grid.rows);
-        this.asciiCharacterFramebuffer.resize(this.grid.cols, this.grid.rows);
     }
 
     render(inputFramebuffer) {

@@ -5,11 +5,13 @@ import P5AsciifyColorPaletteManager from './managers/colorpalettemanager.js';
 
 import P5AsciifyGradientManager from './managers/gradientmanager.js';
 
-import BrightnessAsciiRenderer from './renderers/brightnessAsciiRenderer/BrightnessAsciiRenderer.js';
-import EdgeAsciiRenderer from './renderers/edgeAsciiRenderer/EdgeAsciiRenderer.js';
-import AccurateAsciiRenderer from './renderers/accurateAsciiRenderer/AccurateAsciiRenderer.js';
-import GradientAsciiRenderer from './renderers/gradientAsciiRenderer/GradientAsciiRenderer.js';
-import CustomAsciiRenderer from './renderers/customAsciiRenderer/CustomAsciiRenderer.js';
+import BrightnessAsciiRenderer from './renderers/layer1/brightnessAsciiRenderer/BrightnessAsciiRenderer.js';
+import EdgeAsciiRenderer from './renderers/layer3/edgeAsciiRenderer/EdgeAsciiRenderer.js';
+import AccurateAsciiRenderer from './renderers/layer1/accurateAsciiRenderer/AccurateAsciiRenderer.js';
+import GradientAsciiRenderer from './renderers/layer2/gradientAsciiRenderer/GradientAsciiRenderer.js';
+import CustomAsciiRenderer from './renderers/layer1/customAsciiRenderer/CustomAsciiRenderer.js';
+
+import CubeAsciiRenderer3D from './renderers/layer4/cubeAsciiRenderer3D/CubeAsciiRenderer3D.js';
 
 /**
  * @class P5Asciify
@@ -84,6 +86,16 @@ class P5Asciify {
     setup() {
         this.p5Instance.pixelDensity(1);
 
+        // In case the user didn't update in p5.js setup() function, we need to convert the color strings to p5.Color objects
+        this.asciiOptions.characterColor = this.p5Instance.color(this.asciiOptions.characterColor);
+        this.asciiOptions.backgroundColor = this.p5Instance.color(this.asciiOptions.backgroundColor);
+
+        this.edgeOptions.characterColor = this.p5Instance.color(this.edgeOptions.characterColor);
+        this.edgeOptions.backgroundColor = this.p5Instance.color(this.edgeOptions.backgroundColor);
+
+        this.gradientOptions.characterColor = this.p5Instance.color(this.gradientOptions.characterColor);
+        this.gradientOptions.backgroundColor = this.p5Instance.color(this.gradientOptions.backgroundColor);
+
         this.asciiCharacterSet = new P5AsciifyCharacterSet({ p5Instance: this.p5Instance, type: "ascii", font: this.font, characters: this.asciiOptions.characters, fontSize: this.commonOptions.fontSize });
         this.gradientCharacterSet = new P5AsciifyCharacterSet({ p5Instance: this.p5Instance, type: "gradient", font: this.font, characters: "", fontSize: this.commonOptions.fontSize });
         this.edgeCharacterSet = new P5AsciifyCharacterSet({ p5Instance: this.p5Instance, type: "edge", font: this.font, characters: this.edgeOptions.characters, fontSize: this.commonOptions.fontSize });
@@ -106,24 +118,15 @@ class P5Asciify {
         this.customSecondaryColorSampleFramebuffer = this.p5Instance.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
         this.customAsciiCharacterFramebuffer = this.p5Instance.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
 
-        console.log("customPrimaryColorSampleFramebuffer", this.customPrimaryColorSampleFramebuffer)
-
         this.brightnessRenderer = new BrightnessAsciiRenderer(this.p5Instance, this.grid, this.asciiCharacterSet, this.asciiOptions);
         this.accurateRenderer = new AccurateAsciiRenderer(this.p5Instance, this.grid, this.asciiCharacterSet, this.asciiOptions);
         this.customAsciiRenderer = new CustomAsciiRenderer(this.p5Instance, this.grid, this.asciiCharacterSet, this.customPrimaryColorSampleFramebuffer, this.customSecondaryColorSampleFramebuffer, this.customAsciiCharacterFramebuffer, this.asciiOptions);
 
-        let asciiRenderer; 
+        this.gradientRenderer = new GradientAsciiRenderer(this.p5Instance, this.grid, this.gradientCharacterSet, this.gradientManager, this.gradientOptions);
 
-        if (this.asciiOptions.renderMode === 'brightness') {
-            asciiRenderer = this.brightnessRenderer;
-        } else if (this.asciiOptions.renderMode === 'accurate') {
-            asciiRenderer = this.accurateRenderer;
-        } else if (this.asciiOptions.renderMode === 'custom') {
-            asciiRenderer = this.customAsciiRenderer;
-        }
-        this.gradientRenderer = new GradientAsciiRenderer(this.p5Instance, this.grid, this.gradientCharacterSet, asciiRenderer, this.gradientManager, this.gradientOptions);
+        this.edgeRenderer = new EdgeAsciiRenderer(this.p5Instance, this.grid, this.edgeCharacterSet, this.edgeOptions);
 
-        this.edgeRenderer = new EdgeAsciiRenderer(this.p5Instance, this.grid, this.edgeCharacterSet, this.gradientRenderer, this.edgeOptions);;
+        this.cubeAsciiRenderer3D = new CubeAsciiRenderer3D(this.p5Instance, this.grid, this.asciiCharacterSet, this.edgeRenderer, this.asciiOptions);
 
         this.asciiFramebufferDimensions = { width: this.p5Instance.width, height: this.p5Instance.height };
 
@@ -177,11 +180,14 @@ class P5Asciify {
         renderer.render(this.preEffectManager.nextFramebuffer);
         asciiOutput = renderer.getOutputFramebuffer();
 
-        this.gradientRenderer.render(this.preEffectManager.nextFramebuffer);
+        this.gradientRenderer.render(this.preEffectManager.nextFramebuffer, renderer);
         asciiOutput = this.gradientRenderer.getOutputFramebuffer();
 
-        this.edgeRenderer.render(this.preEffectManager.nextFramebuffer, this.asciiOptions.enabled);
+        this.edgeRenderer.render(this.preEffectManager.nextFramebuffer, this.gradientRenderer);
         asciiOutput = this.edgeRenderer.getOutputFramebuffer();
+
+        //this.cubeAsciiRenderer3D.render();
+        //asciiOutput = this.cubeAsciiRenderer3D.getOutputFramebuffer();
 
         this.afterEffectManager.render(asciiOutput);
 

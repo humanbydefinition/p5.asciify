@@ -1,6 +1,7 @@
 precision mediump float;
 
 uniform sampler2D u_sketchTexture;
+uniform sampler2D u_previousAsciiCharacterTexture;
 uniform vec2 u_gridCellDimensions; // Number of cells (columns, rows)
 uniform int u_totalChars;
 
@@ -14,8 +15,8 @@ void main() {
     // Compute the center coordinate of the cell in texture coordinates
     vec2 cellCenterTexCoord = (cellCoord + vec2(0.5)) * cellSizeInTexCoords;
 
-    if(texture2D(u_sketchTexture, cellCenterTexCoord).a == 0.0) {
-        gl_FragColor = vec4(0.0);
+    if(texture2D(u_sketchTexture, cellCenterTexCoord) == vec4(vec3(0.0), 1.0)) {
+        gl_FragColor = texture2D(u_previousAsciiCharacterTexture, cellCenterTexCoord);
         return;
     }
 

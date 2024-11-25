@@ -14,6 +14,18 @@ export default class AsciiRenderer {
         this.grid = grid;
         this.characterSet = characterSet;
         this.options = options;
+
+        this.primaryColorSampleFramebuffer = this.p5.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
+        this.secondaryColorSampleFramebuffer = this.p5.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
+        this.asciiCharacterFramebuffer = this.p5.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
+
+        this.outputFramebuffer = this.p5.createFramebuffer({ depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
+    }
+
+    resizeFramebuffers() {
+        this.primaryColorSampleFramebuffer.resize(this.grid.cols, this.grid.rows);
+        this.secondaryColorSampleFramebuffer.resize(this.grid.cols, this.grid.rows);
+        this.asciiCharacterFramebuffer.resize(this.grid.cols, this.grid.rows);
     }
 
     updateOptions(newOptions) {

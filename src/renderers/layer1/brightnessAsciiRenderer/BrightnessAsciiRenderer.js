@@ -1,7 +1,7 @@
-// renderers/BrightnessAsciiRenderer.js
-import AsciiRenderer from '../AsciiRenderer.js';
-import vertexShader from '../../assets/shaders/vert/shader.vert';
-import asciiBrightnessShader from './shaders/asciiBrightness.frag';
+import AsciiRenderer from '../../AsciiRenderer.js';
+
+import vertexShader from '../../../assets/shaders/vert/shader.vert';
+import asciiConversionShader from '../_common_shaders/asciiConversion.frag';
 import colorSampleShader from './shaders/colorSample.frag';
 import asciiCharacterShader from './shaders/asciiCharacter.frag';
 
@@ -12,19 +12,7 @@ export default class BrightnessAsciiRenderer extends AsciiRenderer {
 
         this.colorSampleShader = this.p5.createShader(vertexShader, colorSampleShader);
         this.asciiCharacterShader = this.p5.createShader(vertexShader, asciiCharacterShader);
-        this.shader = this.p5.createShader(vertexShader, asciiBrightnessShader);
-
-        this.primaryColorSampleFramebuffer = this.p5.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
-        this.secondaryColorSampleFramebuffer = this.p5.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
-        this.asciiCharacterFramebuffer = this.p5.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
-
-        this.outputFramebuffer = this.p5.createFramebuffer({ depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
-    }
-
-    resizeFramebuffers() {
-        this.primaryColorSampleFramebuffer.resize(this.grid.cols, this.grid.rows);
-        this.secondaryColorSampleFramebuffer.resize(this.grid.cols, this.grid.rows);
-        this.asciiCharacterFramebuffer.resize(this.grid.cols, this.grid.rows);
+        this.shader = this.p5.createShader(vertexShader, asciiConversionShader);
     }
 
     render(inputFramebuffer) {
