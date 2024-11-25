@@ -282,10 +282,6 @@ class P5Asciify {
             this.accurateRenderer.resetShaders();
         }
 
-        if (asciiOptions?.renderMode) {
-            this.gradientRenderer.setAsciiRenderer(asciiOptions.renderMode === 'brightness' ? this.brightnessRenderer : this.accurateRenderer);
-        }
-
         if (commonOptions?.gridDimensions) {
             if (commonOptions.gridDimensions[0] === 0 || commonOptions.gridDimensions[1] === 0) {
                 this.grid.reset();
