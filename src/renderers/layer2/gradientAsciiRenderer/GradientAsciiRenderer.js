@@ -1,7 +1,7 @@
 import AsciiRenderer from '../../AsciiRenderer.js';
 
 import grayscaleShader from '../../../effects/grayscale/grayscale.frag';
-import asciiShader from './shaders/asciiGradient.frag'
+import asciiConversionShader from '../../_common_shaders/asciiConversion.frag';
 
 import colorSampleShader from './shaders/colorSample.frag';
 
@@ -18,20 +18,17 @@ export default class GradientAsciiRenderer extends AsciiRenderer {
 
         this.colorSampleShader = this.p5.createShader(vertexShader, colorSampleShader);
 
-        this.asciiShader = this.p5.createShader(vertexShader, asciiShader);
+        this.asciiShader = this.p5.createShader(vertexShader, asciiConversionShader);
 
         this.grayscaleFramebuffer = this.p5.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
-        this.prevGradientFramebuffer = this.p5.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
-        this.nextGradientFramebuffer = this.p5.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
-        
-        this.asciiCharacterFramebuffer = this.nextGradientFramebuffer;
+        this.prevAsciiCharacterFramebuffer = this.p5.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
+        this.asciiCharacterFramebuffer = this.p5.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
     }
 
     resizeFramebuffers() {
         super.resizeFramebuffers();
         this.grayscaleFramebuffer.resize(this.grid.cols, this.grid.rows);
-        this.prevGradientFramebuffer.resize(this.grid.cols, this.grid.rows);
-        this.nextGradientFramebuffer.resize(this.grid.cols, this.grid.rows);
+        this.prevAsciiCharacterFramebuffer.resize(this.grid.cols, this.grid.rows);
     }
 
     render(inputFramebuffer, previousAsciiRenderer) {
@@ -68,28 +65,28 @@ export default class GradientAsciiRenderer extends AsciiRenderer {
         this.p5.rect(0, 0, this.p5.width, this.p5.height);
         this.grayscaleFramebuffer.end();
 
-        this.prevGradientFramebuffer.begin();
+        this.prevAsciiCharacterFramebuffer.begin();
         this.p5.clear();
         this.p5.image(this.grayscaleFramebuffer, -this.grid.cols / 2, -this.grid.rows / 2);
-        this.prevGradientFramebuffer.end();
+        this.prevAsciiCharacterFramebuffer.end();
 
-        this.nextGradientFramebuffer.begin();
+        this.asciiCharacterFramebuffer.begin();
         this.p5.clear();
         this.p5.image(this.grayscaleFramebuffer, -this.grid.cols / 2, -this.grid.rows / 2);
-        this.nextGradientFramebuffer.end();
+        this.asciiCharacterFramebuffer.end();
 
         for (let i = 0; i < this.gradientManager._gradients.length; i++) {
             const gradient = this.gradientManager._gradients[i];
 
             if (gradient.enabled) {
-                [this.prevGradientFramebuffer, this.nextGradientFramebuffer] = [this.nextGradientFramebuffer, this.prevGradientFramebuffer];
+                [this.prevAsciiCharacterFramebuffer, this.asciiCharacterFramebuffer] = [this.asciiCharacterFramebuffer, this.prevAsciiCharacterFramebuffer];
 
-                this.nextGradientFramebuffer.begin();
+                this.asciiCharacterFramebuffer.begin();
                 this.p5.clear();
                 this.p5.shader(gradient._shader);
-                gradient.setUniforms(this.prevGradientFramebuffer, this.grayscaleFramebuffer);
+                gradient.setUniforms(this.prevAsciiCharacterFramebuffer, this.grayscaleFramebuffer);
                 this.p5.rect(0, 0, this.grid.cols, this.grid.rows);
-                this.nextGradientFramebuffer.end();
+                this.asciiCharacterFramebuffer.end();
             }
         }
 
@@ -99,7 +96,7 @@ export default class GradientAsciiRenderer extends AsciiRenderer {
         this.colorSampleShader.setUniform('u_sketchTexture', inputFramebuffer);
         this.colorSampleShader.setUniform('u_previousRendererEnabled', previousAsciiRenderer.options.enabled);
         this.colorSampleShader.setUniform('u_previousColorTexture', previousAsciiRenderer.primaryColorSampleFramebuffer);
-        this.colorSampleShader.setUniform('u_sampleTexture', this.nextGradientFramebuffer);
+        this.colorSampleShader.setUniform('u_sampleTexture', this.asciiCharacterFramebuffer);
         this.colorSampleShader.setUniform('u_sampleReferenceTexture', this.grayscaleFramebuffer);
         this.colorSampleShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
         this.colorSampleShader.setUniform('u_sampleMode', this.options.characterColorMode);
@@ -113,7 +110,7 @@ export default class GradientAsciiRenderer extends AsciiRenderer {
         this.colorSampleShader.setUniform('u_sketchTexture', inputFramebuffer);
         this.colorSampleShader.setUniform('u_previousRendererEnabled', previousAsciiRenderer.options.enabled);
         this.colorSampleShader.setUniform('u_previousColorTexture', previousAsciiRenderer.secondaryColorSampleFramebuffer);
-        this.colorSampleShader.setUniform('u_sampleTexture', this.nextGradientFramebuffer);
+        this.colorSampleShader.setUniform('u_sampleTexture', this.asciiCharacterFramebuffer);
         this.colorSampleShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
         this.colorSampleShader.setUniform('u_sampleMode', this.options.backgroundColorMode);
         this.colorSampleShader.setUniform('u_staticColor', this.options.backgroundColor._array);
@@ -123,14 +120,15 @@ export default class GradientAsciiRenderer extends AsciiRenderer {
         this.outputFramebuffer.begin();
         this.p5.clear();
         this.p5.shader(this.asciiShader);
+        this.asciiShader.setUniform('u_layer', 2);
         this.asciiShader.setUniform('u_resolution', [this.p5.width, this.p5.height]);
-        this.asciiShader.setUniform('u_characterTexture', this.characterSet.texture);
-        this.asciiShader.setUniform('u_charsetCols', this.characterSet.charsetCols);
-        this.asciiShader.setUniform('u_charsetRows', this.characterSet.charsetRows);
-        this.asciiShader.setUniform('u_gradientTexture', this.nextGradientFramebuffer);
+        this.asciiShader.setUniform('u_characterTexture', this.characterSet.asciiFontTextureAtlas.texture);
+        this.asciiShader.setUniform('u_charsetCols', this.characterSet.asciiFontTextureAtlas.charsetCols);
+        this.asciiShader.setUniform('u_charsetRows', this.characterSet.asciiFontTextureAtlas.charsetRows);
         this.asciiShader.setUniform('u_gradientReferenceTexture', this.grayscaleFramebuffer);
         this.asciiShader.setUniform('u_primaryColorTexture', this.primaryColorSampleFramebuffer);
         this.asciiShader.setUniform('u_secondaryColorTexture', this.secondaryColorSampleFramebuffer);
+        this.asciiShader.setUniform('u_asciiCharacterTexture', this.asciiCharacterFramebuffer);
         this.asciiShader.setUniform('u_asciiBrightnessTexture', previousAsciiRenderer.getOutputFramebuffer());
         this.asciiShader.setUniform('u_brightnessEnabled', previousAsciiRenderer.options.enabled);
         this.asciiShader.setUniform('u_gridPixelDimensions', [this.grid.width, this.grid.height]);

@@ -1,7 +1,7 @@
 // renderers/BrightnessAsciiRenderer.js
 import AsciiRenderer from '../../AsciiRenderer.js';
 import vertexShader from '../../../assets/shaders/vert/shader.vert';
-import asciiConversionShader from '../_common_shaders/asciiConversion.frag';
+import asciiConversionShader from '../../_common_shaders/asciiConversion.frag';
 
 export default class CustomAsciiRenderer extends AsciiRenderer {
     
@@ -40,10 +40,11 @@ export default class CustomAsciiRenderer extends AsciiRenderer {
 
         this.outputFramebuffer.begin();
         this.p5.shader(this.shader);
-        this.shader.setUniform('u_characterTexture', this.characterSet.texture);
-        this.shader.setUniform('u_charsetCols', this.characterSet.charsetCols);
-        this.shader.setUniform('u_charsetRows', this.characterSet.charsetRows);
-        this.shader.setUniform('u_totalChars', this.characterSet.characters.length);
+        this.shader.setUniform('u_layer', 1);
+        this.shader.setUniform('u_characterTexture', this.characterSet.asciiFontTextureAtlas.texture);
+        this.shader.setUniform('u_charsetCols', this.characterSet.asciiFontTextureAtlas.charsetCols);
+        this.shader.setUniform('u_charsetRows', this.characterSet.asciiFontTextureAtlas.charsetRows);
+        this.shader.setUniform('u_totalChars', this.characterSet.asciiFontTextureAtlas.characters.length);
         this.shader.setUniform('u_sketchTexture', inputFramebuffer);
         this.shader.setUniform('u_primaryColorTexture', this.primaryColorSampleFramebuffer);
         this.shader.setUniform('u_secondaryColorTexture', this.secondaryColorSampleFramebuffer);

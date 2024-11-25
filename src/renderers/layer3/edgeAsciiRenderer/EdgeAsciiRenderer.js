@@ -1,8 +1,8 @@
 import AsciiRenderer from '../../AsciiRenderer.js';
 import vertexShader from '../../../assets/shaders/vert/shader.vert';
-import asciiEdgeShader from './shaders/asciiEdge.frag';
 import colorSampleShader from './shaders/colorSample.frag';
 import asciiCharacterShader from './shaders/asciiCharacter.frag';
+import asciiConversionShader from '../../_common_shaders/asciiConversion.frag';
 
 import sobelShader from './shaders/sobel.frag';
 
@@ -17,7 +17,7 @@ export default class EdgeAsciiRenderer extends AsciiRenderer {
         this.sampleShader = this.p5.createShader(vertexShader, generateSampleShader(16, this.grid.cellHeight, this.grid.cellWidth));
         this.colorSampleShader = this.p5.createShader(vertexShader, colorSampleShader);
         this.asciiCharacterShader = this.p5.createShader(vertexShader, asciiCharacterShader);
-        this.shader = this.p5.createShader(vertexShader, asciiEdgeShader);
+        this.shader = this.p5.createShader(vertexShader, asciiConversionShader);
 
         this.sobelFramebuffer = this.p5.createFramebuffer({ depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
         this.sampleFramebuffer = this.p5.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
@@ -108,6 +108,7 @@ export default class EdgeAsciiRenderer extends AsciiRenderer {
         this.p5.clear();
         this.p5.shader(this.asciiCharacterShader);
         this.asciiCharacterShader.setUniform('u_sketchTexture', this.sampleFramebuffer);
+        this.asciiCharacterShader.setUniform('u_colorPaletteTexture', this.characterSet.characterColorPalette.framebuffer);
         this.asciiCharacterShader.setUniform('u_previousAsciiCharacterTexture', previousAsciiRenderer.asciiCharacterFramebuffer);
         this.asciiCharacterShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
         this.asciiCharacterShader.setUniform('u_totalChars', this.characterSet.characters.length);
@@ -117,10 +118,11 @@ export default class EdgeAsciiRenderer extends AsciiRenderer {
         // Render ASCII using the edge shader
         this.outputFramebuffer.begin();
         this.p5.shader(this.shader);
+        this.shader.setUniform('u_layer', 3);
         this.shader.setUniform('u_resolution', [this.p5.width, this.p5.height]);
-        this.shader.setUniform('u_characterTexture', this.characterSet.texture);
-        this.shader.setUniform('u_charsetCols', this.characterSet.charsetCols);
-        this.shader.setUniform('u_charsetRows', this.characterSet.charsetRows);
+        this.shader.setUniform('u_characterTexture', this.characterSet.asciiFontTextureAtlas.texture);
+        this.shader.setUniform('u_charsetCols', this.characterSet.asciiFontTextureAtlas.charsetCols);
+        this.shader.setUniform('u_charsetRows', this.characterSet.asciiFontTextureAtlas.charsetRows);
         this.shader.setUniform('u_asciiBrightnessTexture', previousAsciiRenderer.getOutputFramebuffer());
         this.shader.setUniform('u_primaryColorTexture', this.primaryColorSampleFramebuffer);
         this.shader.setUniform('u_secondaryColorTexture', this.secondaryColorSampleFramebuffer);

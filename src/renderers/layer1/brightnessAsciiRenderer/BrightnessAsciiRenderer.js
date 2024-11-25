@@ -1,7 +1,7 @@
 import AsciiRenderer from '../../AsciiRenderer.js';
 
 import vertexShader from '../../../assets/shaders/vert/shader.vert';
-import asciiConversionShader from '../_common_shaders/asciiConversion.frag';
+import asciiConversionShader from '../../_common_shaders/asciiConversion.frag';
 import colorSampleShader from './shaders/colorSample.frag';
 import asciiCharacterShader from './shaders/asciiCharacter.frag';
 
@@ -49,6 +49,7 @@ export default class BrightnessAsciiRenderer extends AsciiRenderer {
         this.p5.clear();
         this.p5.shader(this.asciiCharacterShader);
         this.asciiCharacterShader.setUniform('u_sketchTexture', inputFramebuffer);
+        this.asciiCharacterShader.setUniform('u_colorPaletteTexture', this.characterSet.characterColorPalette.framebuffer);
         this.asciiCharacterShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
         this.asciiCharacterShader.setUniform('u_totalChars', this.characterSet.characters.length);
         this.p5.rect(0, 0, this.p5.width, this.p5.height);
@@ -56,10 +57,11 @@ export default class BrightnessAsciiRenderer extends AsciiRenderer {
 
         this.outputFramebuffer.begin();
         this.p5.shader(this.shader);
-        this.shader.setUniform('u_characterTexture', this.characterSet.texture);
-        this.shader.setUniform('u_charsetCols', this.characterSet.charsetCols);
-        this.shader.setUniform('u_charsetRows', this.characterSet.charsetRows);
-        this.shader.setUniform('u_totalChars', this.characterSet.characters.length);
+        this.shader.setUniform('u_layer', 1);
+        this.shader.setUniform('u_characterTexture', this.characterSet.asciiFontTextureAtlas.texture);
+        this.shader.setUniform('u_charsetCols', this.characterSet.asciiFontTextureAtlas.charsetCols);
+        this.shader.setUniform('u_charsetRows', this.characterSet.asciiFontTextureAtlas.charsetRows);
+        this.shader.setUniform('u_totalChars', this.characterSet.asciiFontTextureAtlas.characters.length);
         this.shader.setUniform('u_sketchTexture', inputFramebuffer);
         this.shader.setUniform('u_primaryColorTexture', this.primaryColorSampleFramebuffer);
         this.shader.setUniform('u_secondaryColorTexture', this.secondaryColorSampleFramebuffer);

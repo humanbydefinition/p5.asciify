@@ -1,4 +1,5 @@
 import P5AsciifyError from './errors.js';
+import P5AsciifyColorPalette from './colorpalette.js';
 
 /**
  * @class P5AsciifyCharacterSet
@@ -8,13 +9,15 @@ import P5AsciifyError from './errors.js';
  */
 class P5AsciifyCharacterSet {
 
-    constructor({ p5Instance, asciiFontTextureAtlas, characters, colorPaletteManager }) {
+    constructor({ p5Instance, asciiFontTextureAtlas, characters }) {
         this.p5Instance = p5Instance;
         this.asciiFontTextureAtlas = asciiFontTextureAtlas;
-        this.colorPaletteManager = colorPaletteManager;
 
         this.characters = this.validateCharacters(characters);
         this.characterColors = this.getCharsetColorArray(this.characters);
+
+        this.characterColorPalette = new P5AsciifyColorPalette(this.characterColors);
+        this.characterColorPalette.setup(this.p5Instance);
     }
 
     /**
