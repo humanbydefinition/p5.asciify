@@ -1,4 +1,5 @@
 import P5AsciifyEffectManager from './managers/effectmanager.js';
+import P5AsciifyFontTextureAtlas from './fontTextureAtlas.js';
 import P5AsciifyCharacterSet from './characterset.js';
 import P5AsciifyGrid from './grid.js';
 import P5AsciifyColorPaletteManager from './managers/colorpalettemanager.js';
@@ -6,10 +7,12 @@ import P5AsciifyColorPaletteManager from './managers/colorpalettemanager.js';
 import P5AsciifyGradientManager from './managers/gradientmanager.js';
 
 import BrightnessAsciiRenderer from './renderers/layer1/brightnessAsciiRenderer/BrightnessAsciiRenderer.js';
-import EdgeAsciiRenderer from './renderers/layer3/edgeAsciiRenderer/EdgeAsciiRenderer.js';
 import AccurateAsciiRenderer from './renderers/layer1/accurateAsciiRenderer/AccurateAsciiRenderer.js';
-import GradientAsciiRenderer from './renderers/layer2/gradientAsciiRenderer/GradientAsciiRenderer.js';
 import CustomAsciiRenderer from './renderers/layer1/customAsciiRenderer/CustomAsciiRenderer.js';
+
+import GradientAsciiRenderer from './renderers/layer2/gradientAsciiRenderer/GradientAsciiRenderer.js';
+
+import EdgeAsciiRenderer from './renderers/layer3/edgeAsciiRenderer/EdgeAsciiRenderer.js';
 
 import CubeAsciiRenderer3D from './renderers/layer4/cubeAsciiRenderer3D/CubeAsciiRenderer3D.js';
 
@@ -96,11 +99,9 @@ class P5Asciify {
         this.gradientOptions.characterColor = this.p5Instance.color(this.gradientOptions.characterColor);
         this.gradientOptions.backgroundColor = this.p5Instance.color(this.gradientOptions.backgroundColor);
 
-        this.asciiCharacterSet = new P5AsciifyCharacterSet({ p5Instance: this.p5Instance, type: "ascii", font: this.font, characters: this.asciiOptions.characters, fontSize: this.commonOptions.fontSize });
-        this.gradientCharacterSet = new P5AsciifyCharacterSet({ p5Instance: this.p5Instance, type: "gradient", font: this.font, characters: "", fontSize: this.commonOptions.fontSize });
-        this.edgeCharacterSet = new P5AsciifyCharacterSet({ p5Instance: this.p5Instance, type: "edge", font: this.font, characters: this.edgeOptions.characters, fontSize: this.commonOptions.fontSize });
+        this.asciiFontTextureAtlas = new P5AsciifyFontTextureAtlas({ p5Instance: this.p5Instance, font: this.font, fontSize: this.commonOptions.fontSize });
 
-        this.grid = new P5AsciifyGrid(this.p5Instance, this.asciiCharacterSet.maxGlyphDimensions.width, this.asciiCharacterSet.maxGlyphDimensions.height);
+        this.grid = new P5AsciifyGrid(this.p5Instance, this.asciiFontTextureAtlas.maxGlyphDimensions.width, this.asciiFontTextureAtlas.maxGlyphDimensions.height);
 
         if (this.commonOptions.gridDimensions[0] != 0 && this.commonOptions.gridDimensions[1] != 0) {
             this.grid.resizeCellDimensions(this.commonOptions.gridDimensions[0], this.commonOptions.gridDimensions[1]);
@@ -108,6 +109,11 @@ class P5Asciify {
 
         this.colorPaletteManager.setup(this.p5Instance);
         this.customColorPaletteManager.setup(this.p5Instance);
+
+        this.asciiCharacterSet = new P5AsciifyCharacterSet({ p5Instance: this.p5Instance, asciiFontTextureAtlas: this.asciiFontTextureAtlas, characters: this.asciiOptions.characters });
+        this.gradientCharacterSet = new P5AsciifyCharacterSet({ p5Instance: this.p5Instance, asciiFontTextureAtlas: this.asciiFontTextureAtlas, characters: "" });
+        this.edgeCharacterSet = new P5AsciifyCharacterSet({ p5Instance: this.p5Instance, asciiFontTextureAtlas: this.asciiFontTextureAtlas, characters: this.edgeOptions.characters });
+
 
         this.gradientManager.setup(this.gradientCharacterSet);
 
@@ -118,15 +124,15 @@ class P5Asciify {
         this.customSecondaryColorSampleFramebuffer = this.p5Instance.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
         this.customAsciiCharacterFramebuffer = this.p5Instance.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
 
-        this.brightnessRenderer = new BrightnessAsciiRenderer(this.p5Instance, this.grid, this.asciiCharacterSet, this.asciiOptions);
-        this.accurateRenderer = new AccurateAsciiRenderer(this.p5Instance, this.grid, this.asciiCharacterSet, this.asciiOptions);
-        this.customAsciiRenderer = new CustomAsciiRenderer(this.p5Instance, this.grid, this.asciiCharacterSet, this.customPrimaryColorSampleFramebuffer, this.customSecondaryColorSampleFramebuffer, this.customAsciiCharacterFramebuffer, this.asciiOptions);
+        this.brightnessRenderer = new BrightnessAsciiRenderer(this.p5Instance, this.grid, this.asciiFontTextureAtlas, this.asciiOptions);
+        this.accurateRenderer = new AccurateAsciiRenderer(this.p5Instance, this.grid, this.asciiFontTextureAtlas, this.asciiOptions);
+        this.customAsciiRenderer = new CustomAsciiRenderer(this.p5Instance, this.grid, this.asciiFontTextureAtlas, this.customPrimaryColorSampleFramebuffer, this.customSecondaryColorSampleFramebuffer, this.customAsciiCharacterFramebuffer, this.asciiOptions);
 
-        this.gradientRenderer = new GradientAsciiRenderer(this.p5Instance, this.grid, this.gradientCharacterSet, this.gradientManager, this.gradientOptions);
+        this.gradientRenderer = new GradientAsciiRenderer(this.p5Instance, this.grid, this.asciiFontTextureAtlas, this.gradientManager, this.gradientOptions);
 
-        this.edgeRenderer = new EdgeAsciiRenderer(this.p5Instance, this.grid, this.edgeCharacterSet, this.edgeOptions);
+        this.edgeRenderer = new EdgeAsciiRenderer(this.p5Instance, this.grid, this.asciiFontTextureAtlas, this.edgeOptions);
 
-        this.cubeAsciiRenderer3D = new CubeAsciiRenderer3D(this.p5Instance, this.grid, this.asciiCharacterSet, this.edgeRenderer, this.asciiOptions);
+        this.cubeAsciiRenderer3D = new CubeAsciiRenderer3D(this.p5Instance, this.grid, this.asciiFontTextureAtlas, this.edgeRenderer, this.asciiOptions);
 
         this.asciiFramebufferDimensions = { width: this.p5Instance.width, height: this.p5Instance.height };
 
@@ -259,18 +265,17 @@ class P5Asciify {
         this.accurateRenderer.updateOptions(asciiOptions);
 
         if (asciiOptions?.characters) {
-            this.asciiCharacterSet.setCharacterSet(asciiOptions.characters);
+            this.asciiFontTextureAtlas.setCharacterSet(asciiOptions.characters);
             this.accurateRenderer.resetShaders();
         }
 
         if (edgeOptions?.characters) {
-            this.edgeCharacterSet.setCharacterSet(edgeOptions.characters);
+            console.warn("TODO: Implement edge character set change!");
         }
 
         if (commonOptions?.fontSize) {
-            this.asciiCharacterSet.setFontSize(commonOptions.fontSize);
-            this.edgeCharacterSet.setFontSize(commonOptions.fontSize);
-            this.grid.resizeCellPixelDimensions(this.asciiCharacterSet.maxGlyphDimensions.width, this.asciiCharacterSet.maxGlyphDimensions.height);
+            this.asciiFontTextureAtlas.setFontSize(commonOptions.fontSize);
+            this.grid.resizeCellPixelDimensions(this.asciiFontTextureAtlas.maxGlyphDimensions.width, this.asciiFontTextureAtlas.maxGlyphDimensions.height);
 
             this.brightnessRenderer.resizeFramebuffers();
             this.edgeRenderer.resizeFramebuffers();

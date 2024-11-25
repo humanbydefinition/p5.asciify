@@ -62,7 +62,6 @@ class P5AsciifyGradientManager {
 
     setupGradientQueue() {
         for (let gradientInstance of this._setupQueue) {
-            this.gradientCharacterSet.appendCharacterSet(gradientInstance._palette);
             gradientInstance.setup(this.gradientShaders[gradientInstance.type], this.gradientCharacterSet.getCharsetColorArray(gradientInstance._palette));
         }
 
@@ -82,7 +81,6 @@ class P5AsciifyGradientManager {
         if (frameCount === 0) {
             this._setupQueue.push(gradient);
         } else {
-            this.gradientCharacterSet.appendCharacterSet(palette);
             gradient.setup(this.gradientShaders[gradientName], this.gradientCharacterSet.getCharsetColorArray(palette));
         }
 
@@ -100,7 +98,6 @@ class P5AsciifyGradientManager {
         if (frameCount === 0) {
             gradient._palette = characters;
         } else {
-            this.gradientCharacterSet.appendCharacterSet(characters);
             gradient._palette = this.gradientCharacterSet.getCharsetColorArray(characters);
             gradient._colorPaletteManager.removePalette(gradient._colorPalette);
             gradient._colorPalette = gradient._colorPaletteManager.addPalette(gradient._palette);
