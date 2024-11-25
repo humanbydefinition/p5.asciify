@@ -75,10 +75,7 @@ void main() {
             }
             return;
         }
-    } else {
-        // Default case if u_layer does not match any expected value
-        gl_FragColor = secondaryColor;
-    }
+    } 
 
     vec4 encodedIndexVec = texture2D(u_asciiCharacterTexture, charIndexTexCoord);
 
