@@ -61,16 +61,12 @@ export default class BrightnessAsciiRenderer extends AsciiRenderer {
         this.shader.setUniform('u_characterTexture', this.characterSet.asciiFontTextureAtlas.texture);
         this.shader.setUniform('u_charsetCols', this.characterSet.asciiFontTextureAtlas.charsetCols);
         this.shader.setUniform('u_charsetRows', this.characterSet.asciiFontTextureAtlas.charsetRows);
-        this.shader.setUniform('u_totalChars', this.characterSet.asciiFontTextureAtlas.characters.length);
-        this.shader.setUniform('u_sketchTexture', inputFramebuffer);
         this.shader.setUniform('u_primaryColorTexture', this.primaryColorSampleFramebuffer);
         this.shader.setUniform('u_secondaryColorTexture', this.secondaryColorSampleFramebuffer);
         this.shader.setUniform('u_asciiCharacterTexture', this.asciiCharacterFramebuffer);
         this.shader.setUniform('u_gridPixelDimensions', [this.grid.width, this.grid.height]);
         this.shader.setUniform('u_gridOffsetDimensions', [this.grid.offsetX, this.grid.offsetY]);
         this.shader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
-        this.shader.setUniform('u_characterColorMode', this.options.characterColorMode);
-        this.shader.setUniform('u_backgroundColorMode', this.options.backgroundColorMode);
         this.shader.setUniform('u_invertMode', this.options.invertMode);
         this.shader.setUniform('u_rotationAngle', this.p5.radians(this.options.rotationAngle));
         this.p5.rect(0, 0, this.p5.width, this.p5.height);
