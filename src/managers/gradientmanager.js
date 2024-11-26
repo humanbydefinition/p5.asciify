@@ -73,9 +73,12 @@ class P5AsciifyGradientManager {
     }
 
     addGradient(gradientName, brightnessStart, brightnessEnd, palette, params) {
+        
         const mergedParams = this.getGradientParams(gradientName, { brightnessStart, brightnessEnd, colorPalette: this.colorPaletteManager, palette, ...params });
         const gradient = this.gradientConstructors[gradientName]({ type: gradientName, shader: this.gradientShaders[gradientName], params: mergedParams });
         gradient.registerPaletteChangeCallback(this.handleGradientPaletteChange.bind(this));
+
+        
         this._gradients.push(gradient);
 
         if (frameCount === 0) {

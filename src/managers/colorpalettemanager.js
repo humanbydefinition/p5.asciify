@@ -63,6 +63,8 @@ class P5AsciifyColorPaletteManager {
             const paletteFramebuffer = palette.getFramebuffer();
             if (!paletteFramebuffer) return;
 
+            palette.rowIndex = rowIndex;
+
             paletteFramebuffer.loadPixels();
 
             // Copy palette's pixels to the corresponding row in the manager's framebuffer
