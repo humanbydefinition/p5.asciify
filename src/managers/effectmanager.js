@@ -54,16 +54,12 @@ class P5AsciifyEffectManager {
         "chromaticaberration": ({ shader, params }) => new P5AsciifyChromaticAberrationEffect({ shader, ...params }),
         "rotate": ({ shader, params }) => new P5AsciifyRotateEffect({ shader, ...params }),
         "brightness": ({ shader, params }) => new P5AsciifyBrightnessEffect({ shader, ...params }),
-        "colorpalette": ({ shader, params }) => new P5AsciifyColorPaletteEffect({ shader, ...params, colorPaletteManager: this.colorPaletteManager }),
+        "colorpalette": ({ shader, params }) => new P5AsciifyColorPaletteEffect({ shader, ...params }),
         "crt": ({ shader, params }) => new P5AsciifyCrtEffect({ shader, ...params })
     }
 
     _setupQueue = [];
     _effects = [];
-
-    constructor(colorPaletteManager) {
-        this.colorPaletteManager = colorPaletteManager;
-    }
 
     addInstance(p5Instance) {
         this.p5Instance = p5Instance;
@@ -110,7 +106,7 @@ class P5AsciifyEffectManager {
 
     setupEffectQueue() {
         for (let effectInstance of this._setupQueue) {
-            effectInstance.setup();
+            effectInstance.setup(this.p5Instance);
             effectInstance.shader = this.effectShaders[effectInstance.name];
         }
 
@@ -139,7 +135,7 @@ class P5AsciifyEffectManager {
         if (this.p5Instance.frameCount === 0) {
             this._setupQueue.push(effectInstance);
         } else {
-            effectInstance.setup();
+            effectInstance.setup(this.p5Instance);
         }
 
         return effectInstance;

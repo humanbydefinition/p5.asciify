@@ -16,14 +16,14 @@ class P5AsciifyColorPaletteEffect extends P5AsciifyEffect {
      * @param {Array} options.palette - The array of colors for the palette.
      * @param {P5AsciifyColorPalette} options.paletteBuffer - The buffer to store the color palette.
      */
-    constructor({ shader, palette, colorPaletteManager }) {
+    constructor({ shader, palette }) {
         super("colorpalette", shader);
-        this._palette = palette;
-        this._colorPaletteManager = colorPaletteManager;
+        this._colors = palette;
     }
 
-    setup() {
-        this._colorPalette = this._colorPaletteManager.addPalette(this._palette);
+    setup(p5Instance) {
+        this._palette = new P5AsciifyColorPalette(this._colors);
+        this._palette.setup(p5Instance);
     }
 
     /**
@@ -33,9 +33,8 @@ class P5AsciifyColorPaletteEffect extends P5AsciifyEffect {
     setUniforms(framebuffer) {
         super.setUniforms(framebuffer);
         this._shader.setUniform('u_resolution', [framebuffer.width, framebuffer.height]);
-        this._shader.setUniform('u_colorPalette', this._colorPaletteManager.texture);
-        this._shader.setUniform('u_colorPaletteRow', this._colorPalette.rowIndex);
-        this._shader.setUniform('u_colorPaletteDimensions', [this._colorPaletteManager.texture.width, this._colorPaletteManager.texture.height]);
+        this._shader.setUniform('u_colorPalette', this._palette.framebuffer);
+        this._shader.setUniform('u_colorPaletteDimensions', [this._palette.framebuffer.width, 1]);
         this._shader.setUniform('u_colorPaletteLength', this._palette.length);
     }
 
@@ -44,8 +43,8 @@ class P5AsciifyColorPaletteEffect extends P5AsciifyEffect {
      * @param {Array} palette - The new array of colors for the palette.
      */
     set palette(palette) {
-        this._palette = palette;
-        this._colorPaletteManager.setPaletteColors(this._colorPalette, this._palette);
+        this._colors = palette;
+        this._palette.setColors(this._colors);
     }
 
     /**
