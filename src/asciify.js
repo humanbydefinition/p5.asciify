@@ -263,8 +263,11 @@ class P5Asciify {
         }
 
         this.brightnessRenderer.updateOptions(asciiOptions);
-        this.edgeRenderer.updateOptions(edgeOptions);
         this.accurateRenderer.updateOptions(asciiOptions);
+        this.customAsciiRenderer.updateOptions(asciiOptions);
+        this.gradientRenderer.updateOptions(gradientOptions);
+        this.edgeRenderer.updateOptions(edgeOptions);
+        
 
         if (asciiOptions?.renderMode) {
             if (asciiOptions.renderMode === 'accurate') {
