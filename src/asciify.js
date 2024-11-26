@@ -199,6 +199,8 @@ class P5Asciify {
         this.p5Instance.clear();
         this.p5Instance.image(this.afterEffectManager.nextFramebuffer, -this.p5Instance.width / 2, -this.p5Instance.height / 2);
 
+        /**
+
         // Draw the framerate in the bottom left corner
         this.p5Instance.push();
         const fpsText = `FPS:~${Math.ceil(Math.min(this.p5Instance.frameRate(), 60))}`;
@@ -225,6 +227,8 @@ class P5Asciify {
         this.p5Instance.textAlign(this.p5Instance.LEFT, this.p5Instance.BOTTOM);
         this.p5Instance.text(fpsText, textX, textY);
         this.p5Instance.pop();
+
+        **/
 
         this.checkFramebufferDimensions();
     }
