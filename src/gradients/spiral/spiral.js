@@ -2,8 +2,8 @@ import P5AsciifyGradient from '../gradient.js';
 
 class P5AsciifySpiralGradient extends P5AsciifyGradient {
 
-    constructor({ type, shader, brightnessStart, brightnessEnd, colorPalette, palette, direction, centerX, centerY, speed, density}) {
-        super(type, shader, brightnessStart, brightnessEnd, colorPalette, palette);
+    constructor({ type, shader, brightnessStart, brightnessEnd, characters, direction, centerX, centerY, speed, density}) {
+        super(type, shader, brightnessStart, brightnessEnd, characters);
 
         this._direction = direction;
         this._centerX = centerX;
