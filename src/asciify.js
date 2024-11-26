@@ -102,7 +102,6 @@ class P5Asciify {
         this.asciiFontTextureAtlas = new P5AsciifyFontTextureAtlas({ p5Instance: this.p5Instance, font: this.font, fontSize: this.commonOptions.fontSize });
 
         this.asciiCharacterSet = new P5AsciifyCharacterSet({ p5Instance: this.p5Instance, asciiFontTextureAtlas: this.asciiFontTextureAtlas, characters: this.asciiOptions.characters });
-        this.gradientCharacterSet = new P5AsciifyCharacterSet({ p5Instance: this.p5Instance, asciiFontTextureAtlas: this.asciiFontTextureAtlas, characters: "" });
         this.edgeCharacterSet = new P5AsciifyCharacterSet({ p5Instance: this.p5Instance, asciiFontTextureAtlas: this.asciiFontTextureAtlas, characters: this.edgeOptions.characters });
 
         this.grid = new P5AsciifyGrid(this.p5Instance, this.asciiFontTextureAtlas.maxGlyphDimensions.width, this.asciiFontTextureAtlas.maxGlyphDimensions.height);
@@ -114,7 +113,7 @@ class P5Asciify {
         this.colorPaletteManager.setup(this.p5Instance);
         this.customColorPaletteManager.setup(this.p5Instance);
 
-        this.gradientManager.setup(this.gradientCharacterSet);
+        this.gradientManager.setup(this.asciiCharacterSet);
 
         this.preEffectManager.setup();
         this.afterEffectManager.setup();
@@ -127,7 +126,7 @@ class P5Asciify {
         this.accurateRenderer = new AccurateAsciiRenderer(this.p5Instance, this.grid, this.asciiCharacterSet, this.asciiOptions);
         this.customAsciiRenderer = new CustomAsciiRenderer(this.p5Instance, this.grid, this.asciiCharacterSet, this.customPrimaryColorSampleFramebuffer, this.customSecondaryColorSampleFramebuffer, this.customAsciiCharacterFramebuffer, this.asciiOptions);
 
-        this.gradientRenderer = new GradientAsciiRenderer(this.p5Instance, this.grid, this.gradientCharacterSet, this.gradientManager, this.gradientOptions);
+        this.gradientRenderer = new GradientAsciiRenderer(this.p5Instance, this.grid, this.asciiCharacterSet, this.gradientManager, this.gradientOptions);
 
         this.edgeRenderer = new EdgeAsciiRenderer(this.p5Instance, this.grid, this.edgeCharacterSet, this.edgeOptions);
 
@@ -267,7 +266,7 @@ class P5Asciify {
         this.customAsciiRenderer.updateOptions(asciiOptions);
         this.gradientRenderer.updateOptions(gradientOptions);
         this.edgeRenderer.updateOptions(edgeOptions);
-        
+
 
         if (asciiOptions?.renderMode) {
             if (asciiOptions.renderMode === 'accurate') {

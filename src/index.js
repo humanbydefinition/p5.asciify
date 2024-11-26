@@ -80,7 +80,6 @@ p5.prototype.loadAsciiFont = function (font) {
             );
 
             p5asciify.asciiCharacterSet.setCharacterSet(p5asciify.asciiCharacterSet.characters);
-            p5asciify.gradientCharacterSet.setCharacterSet(p5asciify.gradientCharacterSet.characters);
             p5asciify.edgeCharacterSet.setCharacterSet(p5asciify.edgeCharacterSet.characters);
         }
     };
@@ -98,8 +97,6 @@ p5.prototype.loadAsciiFont = function (font) {
     }
 };
 p5.prototype.registerPreloadMethod('loadAsciiFont', p5.prototype);
-
-
 
 /**
  * Sets up the P5Asciify library for use with p5.js.
