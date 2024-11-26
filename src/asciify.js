@@ -133,6 +133,13 @@ class P5Asciify {
 
         this.cubeAsciiRenderer3D = new CubeAsciiRenderer3D(this.p5Instance, this.grid, this.edgeCharacterSet, this.edgeRenderer, this.asciiOptions);
 
+        this.asciiRenderer = this.brightnessRenderer;
+        if (this.asciiOptions.renderMode === 'accurate') {
+            this.asciiRenderer = this.accurateRenderer;
+        } else if (this.asciiOptions.renderMode === 'custom') {
+            this.asciiRenderer = this.customAsciiRenderer;
+        }
+
         this.asciiFramebufferDimensions = { width: this.p5Instance.width, height: this.p5Instance.height };
 
         this.sketchFramebuffer = this.p5Instance.createFramebuffer({ depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
@@ -174,18 +181,10 @@ class P5Asciify {
 
         let asciiOutput = this.preEffectManager.nextFramebuffer;
 
-        let renderer;
-        if (this.asciiOptions.renderMode === 'brightness') {
-            renderer = this.brightnessRenderer;
-        } else if (this.asciiOptions.renderMode === 'accurate') {
-            renderer = this.accurateRenderer;
-        } else if (this.asciiOptions.renderMode === 'custom') {
-            renderer = this.customAsciiRenderer;
-        }
-        renderer.render(this.preEffectManager.nextFramebuffer);
-        asciiOutput = renderer.getOutputFramebuffer();
+        this.asciiRenderer.render(this.preEffectManager.nextFramebuffer);
+        asciiOutput = this.asciiRenderer.getOutputFramebuffer();
 
-        this.gradientRenderer.render(this.preEffectManager.nextFramebuffer, renderer);
+        this.gradientRenderer.render(this.preEffectManager.nextFramebuffer, this.asciiRenderer);
         asciiOutput = this.gradientRenderer.getOutputFramebuffer();
 
         this.edgeRenderer.render(this.preEffectManager.nextFramebuffer, this.gradientRenderer);
@@ -266,6 +265,16 @@ class P5Asciify {
         this.brightnessRenderer.updateOptions(asciiOptions);
         this.edgeRenderer.updateOptions(edgeOptions);
         this.accurateRenderer.updateOptions(asciiOptions);
+
+        if (asciiOptions?.renderMode) {
+            if (asciiOptions.renderMode === 'accurate') {
+                this.asciiRenderer = this.accurateRenderer;
+            } else if (asciiOptions.renderMode === 'custom') {
+                this.asciiRenderer = this.customAsciiRenderer;
+            } else {
+                this.asciiRenderer = this.brightnessRenderer;
+            }
+        }
 
         if (asciiOptions?.characters) {
             this.asciiFontTextureAtlas.setCharacterSet(asciiOptions.characters);
