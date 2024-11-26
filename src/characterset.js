@@ -51,6 +51,8 @@ class P5AsciifyCharacterSet {
      */
     setCharacterSet(characters) {
         this.characters = this.validateCharacters(characters);
+        this.characterColors = this.getCharsetColorArray(this.characters);
+        this.characterColorPalette.setColors(this.characterColors);
     }
 
     /**
