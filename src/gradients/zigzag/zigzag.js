@@ -10,8 +10,8 @@ class P5AsciifyZigZagGradient extends P5AsciifyGradient {
         this._speed = speed;
     }
 
-    setUniforms(framebuffer, referenceFramebuffer) {
-        super.setUniforms(framebuffer, referenceFramebuffer);
+    setUniforms(frameCount,framebuffer, referenceFramebuffer) {
+        super.setUniforms(frameCount,framebuffer, referenceFramebuffer);
         this._shader.setUniform('u_gradientDirection', this._direction);
         this._shader.setUniform('u_angle',  this._angle * Math.PI / 180);
         this._shader.setUniform('u_speed', this._speed);

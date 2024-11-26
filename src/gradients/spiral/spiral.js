@@ -12,8 +12,8 @@ class P5AsciifySpiralGradient extends P5AsciifyGradient {
         this._density = density;
     }
 
-    setUniforms(framebuffer, referenceFramebuffer) {
-        super.setUniforms(framebuffer, referenceFramebuffer);
+    setUniforms(frameCount,framebuffer, referenceFramebuffer) {
+        super.setUniforms(frameCount,framebuffer, referenceFramebuffer);
         this._shader.setUniform('u_gradientDirection', this._direction);
         this._shader.setUniform('u_centerX', this._centerX);
         this._shader.setUniform('u_centerY', this._centerY);

@@ -84,7 +84,7 @@ export default class GradientAsciiRenderer extends AsciiRenderer {
                 this.asciiCharacterFramebuffer.begin();
                 this.p5.clear();
                 this.p5.shader(gradient._shader);
-                gradient.setUniforms(this.prevAsciiCharacterFramebuffer, this.grayscaleFramebuffer);
+                gradient.setUniforms(this.p5.frameCount, this.prevAsciiCharacterFramebuffer, this.grayscaleFramebuffer);
                 this.p5.rect(0, 0, this.grid.cols, this.grid.rows);
                 this.asciiCharacterFramebuffer.end();
             }

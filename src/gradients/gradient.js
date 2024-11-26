@@ -26,7 +26,7 @@ class P5AsciifyGradient {
         this._palette.setup(p5Instance);
     }
 
-    setUniforms(framebuffer, referenceFramebuffer) {
+    setUniforms(frameCount, framebuffer, referenceFramebuffer) {
         this._shader.setUniform("textureID", framebuffer);
         this._shader.setUniform("originalTextureID", referenceFramebuffer);
         this._shader.setUniform("gradientTexture", this._palette.framebuffer);

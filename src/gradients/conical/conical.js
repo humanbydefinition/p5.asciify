@@ -10,8 +10,8 @@ class P5AsciifyConicalGradient extends P5AsciifyGradient {
         this._speed = speed;
     }
 
-    setUniforms(framebuffer, referenceFramebuffer) {
-        super.setUniforms(framebuffer, referenceFramebuffer);
+    setUniforms(frameCount, framebuffer, referenceFramebuffer) {
+        super.setUniforms(frameCount,framebuffer, referenceFramebuffer);
         this._shader.setUniform('u_centerX', this._centerX);
         this._shader.setUniform('u_centerY', this._centerY);
         this._shader.setUniform('u_speed', this._speed);
