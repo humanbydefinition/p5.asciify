@@ -73,12 +73,10 @@ p5.prototype.loadAsciiFont = function (font) {
         p5asciify.font = loadedFont;
         p5asciify.p5Instance._decrementPreload();
         if (p5asciify.p5Instance.frameCount > 0) {
-            p5asciify.brightnessCharacterSet.setFontObject(loadedFont);
-            p5asciify.edgeCharacterSet.setFontObject(loadedFont);
-            p5asciify.gradientCharacterSet.setFontObject(loadedFont);
+            p5asciify.asciiFontTextureAtlas.setFontObject(loadedFont);
             p5asciify.grid.resizeCellPixelDimensions(
-                p5asciify.brightnessCharacterSet.maxGlyphDimensions.width,
-                p5asciify.brightnessCharacterSet.maxGlyphDimensions.height
+                p5asciify.asciiFontTextureAtlas.maxGlyphDimensions.width,
+                p5asciify.asciiFontTextureAtlas.maxGlyphDimensions.height
             );
         }
     };
