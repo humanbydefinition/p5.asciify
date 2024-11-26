@@ -280,12 +280,12 @@ class P5Asciify {
         }
 
         if (asciiOptions?.characters) {
-            this.asciiFontTextureAtlas.setCharacterSet(asciiOptions.characters);
+            this.asciiCharacterSet.setCharacterSet(asciiOptions.characters);
             this.accurateRenderer.resetShaders();
         }
 
         if (edgeOptions?.characters) {
-            console.warn("TODO: Implement edge character set change!");
+            this.edgeCharacterSet.setCharacterSet(edgeOptions.characters);
         }
 
         if (commonOptions?.fontSize) {
