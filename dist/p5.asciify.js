@@ -945,6 +945,8 @@
          */
         setCharacterSet(characters) {
             this.characters = this.validateCharacters(characters);
+            this.characterColors = this.getCharsetColorArray(this.characters);
+            this.characterColorPalette.setColors(this.characterColors);
         }
 
         /**
@@ -2885,6 +2887,13 @@ void main() {
 
             this.cubeAsciiRenderer3D = new CubeAsciiRenderer3D(this.p5Instance, this.grid, this.edgeCharacterSet, this.edgeRenderer, this.asciiOptions);
 
+            this.asciiRenderer = this.brightnessRenderer;
+            if (this.asciiOptions.renderMode === 'accurate') {
+                this.asciiRenderer = this.accurateRenderer;
+            } else if (this.asciiOptions.renderMode === 'custom') {
+                this.asciiRenderer = this.customAsciiRenderer;
+            }
+
             this.asciiFramebufferDimensions = { width: this.p5Instance.width, height: this.p5Instance.height };
 
             this.sketchFramebuffer = this.p5Instance.createFramebuffer({ depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
@@ -2926,18 +2935,10 @@ void main() {
 
             let asciiOutput = this.preEffectManager.nextFramebuffer;
 
-            let renderer;
-            if (this.asciiOptions.renderMode === 'brightness') {
-                renderer = this.brightnessRenderer;
-            } else if (this.asciiOptions.renderMode === 'accurate') {
-                renderer = this.accurateRenderer;
-            } else if (this.asciiOptions.renderMode === 'custom') {
-                renderer = this.customAsciiRenderer;
-            }
-            renderer.render(this.preEffectManager.nextFramebuffer);
-            asciiOutput = renderer.getOutputFramebuffer();
+            this.asciiRenderer.render(this.preEffectManager.nextFramebuffer);
+            asciiOutput = this.asciiRenderer.getOutputFramebuffer();
 
-            this.gradientRenderer.render(this.preEffectManager.nextFramebuffer, renderer);
+            this.gradientRenderer.render(this.preEffectManager.nextFramebuffer, this.asciiRenderer);
             asciiOutput = this.gradientRenderer.getOutputFramebuffer();
 
             this.edgeRenderer.render(this.preEffectManager.nextFramebuffer, this.gradientRenderer);
@@ -2950,6 +2951,8 @@ void main() {
 
             this.p5Instance.clear();
             this.p5Instance.image(this.afterEffectManager.nextFramebuffer, -this.p5Instance.width / 2, -this.p5Instance.height / 2);
+
+            /**
 
             // Draw the framerate in the bottom left corner
             this.p5Instance.push();
@@ -2977,6 +2980,8 @@ void main() {
             this.p5Instance.textAlign(this.p5Instance.LEFT, this.p5Instance.BOTTOM);
             this.p5Instance.text(fpsText, textX, textY);
             this.p5Instance.pop();
+
+            **/
 
             this.checkFramebufferDimensions();
         }
@@ -3012,16 +3017,29 @@ void main() {
             }
 
             this.brightnessRenderer.updateOptions(asciiOptions);
-            this.edgeRenderer.updateOptions(edgeOptions);
             this.accurateRenderer.updateOptions(asciiOptions);
+            this.customAsciiRenderer.updateOptions(asciiOptions);
+            this.gradientRenderer.updateOptions(gradientOptions);
+            this.edgeRenderer.updateOptions(edgeOptions);
+            
+
+            if (asciiOptions?.renderMode) {
+                if (asciiOptions.renderMode === 'accurate') {
+                    this.asciiRenderer = this.accurateRenderer;
+                } else if (asciiOptions.renderMode === 'custom') {
+                    this.asciiRenderer = this.customAsciiRenderer;
+                } else {
+                    this.asciiRenderer = this.brightnessRenderer;
+                }
+            }
 
             if (asciiOptions?.characters) {
-                this.asciiFontTextureAtlas.setCharacterSet(asciiOptions.characters);
+                this.asciiCharacterSet.setCharacterSet(asciiOptions.characters);
                 this.accurateRenderer.resetShaders();
             }
 
             if (edgeOptions?.characters) {
-                console.warn("TODO: Implement edge character set change!");
+                this.edgeCharacterSet.setCharacterSet(edgeOptions.characters);
             }
 
             if (commonOptions?.fontSize) {
@@ -3199,13 +3217,15 @@ void main() {
             p5asciify.font = loadedFont;
             p5asciify.p5Instance._decrementPreload();
             if (p5asciify.p5Instance.frameCount > 0) {
-                p5asciify.brightnessCharacterSet.setFontObject(loadedFont);
-                p5asciify.edgeCharacterSet.setFontObject(loadedFont);
-                p5asciify.gradientCharacterSet.setFontObject(loadedFont);
+                p5asciify.asciiFontTextureAtlas.setFontObject(loadedFont);
                 p5asciify.grid.resizeCellPixelDimensions(
-                    p5asciify.brightnessCharacterSet.maxGlyphDimensions.width,
-                    p5asciify.brightnessCharacterSet.maxGlyphDimensions.height
+                    p5asciify.asciiFontTextureAtlas.maxGlyphDimensions.width,
+                    p5asciify.asciiFontTextureAtlas.maxGlyphDimensions.height
                 );
+
+                p5asciify.asciiCharacterSet.setCharacterSet(p5asciify.asciiCharacterSet.characters);
+                p5asciify.gradientCharacterSet.setCharacterSet(p5asciify.gradientCharacterSet.characters);
+                p5asciify.edgeCharacterSet.setCharacterSet(p5asciify.edgeCharacterSet.characters);
             }
         };
 
@@ -3290,6 +3310,12 @@ void main() {
 
         if (options.brightness && !options.ascii) {
             options.ascii = options.brightness;
+        }
+
+        const VALID_RENDER_MODES = ['brightness', 'accurate', 'custom'];
+        if (options?.ascii?.renderMode && !VALID_RENDER_MODES.includes(options.ascii.renderMode)) {
+            console.warn(`P5Asciify: Invalid render mode '${options.ascii.renderMode}'. Defaulting to 'brightness'.`);
+            options.ascii.renderMode = 'brightness';
         }
 
         const { ascii: asciiOptions, edge: edgeOptions, common: commonOptions, gradient: gradientOptions } = options;
