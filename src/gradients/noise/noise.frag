@@ -5,12 +5,10 @@ varying vec2 v_texCoord;
 uniform sampler2D textureID; // Original texture
 uniform sampler2D originalTextureID; // Unmodified version of the original texture
 uniform sampler2D gradientTexture; // 2D texture for gradient colors
-uniform float gradientTextureLength; // Number of colors in the gradient row
 uniform int frameCount; // Uniform to animate the gradient based on frame count
 uniform float noiseScale; // Scale of the Perlin Noise
 uniform float u_speed; // Speed of the animation
 uniform float direction; // Direction of the animation in degrees
-uniform int gradientTextureRow; // Row index for the gradient texture
 uniform vec2 gradientTextureDimensions; // Dimensions of the gradient texture
 uniform vec2 u_brightnessRange; // Range of brightness values
 
@@ -64,15 +62,11 @@ void main() {
         float normalizedNoiseValue = (noiseValue + 1.0) / 2.0;
 
         // Compute normalized index for accurate color fetching
-        float index = normalizedNoiseValue * (gradientTextureLength - 1.0);
+        float index = normalizedNoiseValue * (gradientTextureDimensions.x - 1.0);
         float texelPosition = (floor(index) + 0.5) / gradientTextureDimensions.x;
 
-        // Calculate the correct row position for the gradient texture
-        float rowPosition = float(gradientTextureRow) + 0.5; // gradientTextureRow is an integer starting from 0
-        float rowTexCoord = rowPosition / gradientTextureDimensions.y;
-
         // Fetch the gradient color
-        vec4 gradientColor = texture2D(gradientTexture, vec2(texelPosition, rowTexCoord));
+        vec4 gradientColor = texture2D(gradientTexture, vec2(texelPosition, 0));
 
         // Combine gradient color with original alpha
         gl_FragColor = vec4(gradientColor.rgb, texColor.a);
