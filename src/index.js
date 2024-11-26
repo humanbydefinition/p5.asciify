@@ -166,6 +166,12 @@ p5.prototype.setAsciiOptions = function (options) {
         options.ascii = options.brightness;
     }
 
+    const VALID_RENDER_MODES = ['brightness', 'accurate', 'custom'];
+    if (!VALID_RENDER_MODES.includes(options.ascii.renderMode)) {
+        console.warn(`P5Asciify: Invalid render mode '${options.ascii.renderMode}'. Defaulting to 'brightness'.`);
+        options.ascii.renderMode = 'brightness';
+    }
+
     const { ascii: asciiOptions, edge: edgeOptions, common: commonOptions, gradient: gradientOptions } = options;
 
     const colorOptions = [edgeOptions, asciiOptions, gradientOptions];
