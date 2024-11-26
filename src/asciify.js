@@ -63,13 +63,12 @@ class P5Asciify {
         rotationAngle: 0,
     };
 
-    colorPaletteManager = new P5AsciifyColorPaletteManager();
     customColorPaletteManager = new P5AsciifyColorPaletteManager();
 
-    gradientManager = new P5AsciifyGradientManager(this.colorPaletteManager);
+    gradientManager = new P5AsciifyGradientManager();
 
-    preEffectManager = new P5AsciifyEffectManager(this.colorPaletteManager);
-    afterEffectManager = new P5AsciifyEffectManager(this.colorPaletteManager);
+    preEffectManager = new P5AsciifyEffectManager();
+    afterEffectManager = new P5AsciifyEffectManager();
 
     customPrimaryColorSampleFramebuffer = null;
     customSecondaryColorSampleFramebuffer = null;
@@ -110,7 +109,6 @@ class P5Asciify {
             this.grid.resizeCellDimensions(this.commonOptions.gridDimensions[0], this.commonOptions.gridDimensions[1]);
         }
 
-        this.colorPaletteManager.setup(this.p5Instance);
         this.customColorPaletteManager.setup(this.p5Instance);
 
         this.gradientManager.setup(this.asciiCharacterSet);
