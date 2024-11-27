@@ -299,14 +299,14 @@
          * @param {Array} options.palette - The array of colors for the palette.
          * @param {P5AsciifyColorPalette} options.paletteBuffer - The buffer to store the color palette.
          */
-        constructor({ shader, palette, colorPaletteManager }) {
+        constructor({ shader, palette }) {
             super("colorpalette", shader);
-            this._palette = palette;
-            this._colorPaletteManager = colorPaletteManager;
+            this._colors = palette;
         }
 
-        setup() {
-            this._colorPalette = this._colorPaletteManager.addPalette(this._palette);
+        setup(p5Instance) {
+            this._palette = new P5AsciifyColorPalette(this._colors);
+            this._palette.setup(p5Instance);
         }
 
         /**
@@ -316,9 +316,8 @@
         setUniforms(framebuffer) {
             super.setUniforms(framebuffer);
             this._shader.setUniform('u_resolution', [framebuffer.width, framebuffer.height]);
-            this._shader.setUniform('u_colorPalette', this._colorPaletteManager.texture);
-            this._shader.setUniform('u_colorPaletteRow', this._colorPalette.rowIndex);
-            this._shader.setUniform('u_colorPaletteDimensions', [this._colorPaletteManager.texture.width, this._colorPaletteManager.texture.height]);
+            this._shader.setUniform('u_colorPalette', this._palette.framebuffer);
+            this._shader.setUniform('u_colorPaletteDimensions', [this._palette.framebuffer.width, 1]);
             this._shader.setUniform('u_colorPaletteLength', this._palette.length);
         }
 
@@ -327,8 +326,8 @@
          * @param {Array} palette - The new array of colors for the palette.
          */
         set palette(palette) {
-            this._palette = palette;
-            this._colorPaletteManager.setPaletteColors(this._colorPalette, this._palette);
+            this._colors = palette;
+            this._palette.setColors(this._colors);
         }
 
         /**
@@ -591,7 +590,7 @@
 
     var brightnessShader = "precision mediump float;\n#define GLSLIFY 1\nuniform sampler2D u_image;uniform float u_brightness;varying vec2 v_texCoord;void main(){vec4 color=texture2D(u_image,v_texCoord);color.rgb+=u_brightness;color.rgb=clamp(color.rgb,0.0,1.0);gl_FragColor=color;}"; // eslint-disable-line
 
-    var colorPaletteShader = "precision mediump float;\n#define GLSLIFY 1\nuniform sampler2D u_image;uniform sampler2D u_colorPalette;uniform vec2 u_colorPaletteDimensions;uniform int u_colorPaletteRow;uniform float u_colorPaletteLength;uniform vec2 u_resolution;void main(){vec2 uv=gl_FragCoord.xy/u_resolution;vec4 texColor=texture2D(u_image,uv);float gray=(texColor.r+texColor.g+texColor.b)/3.0;float paletteX=gray*(u_colorPaletteLength-1.0);float paletteTexelPosition=(floor(paletteX)+0.5)/u_colorPaletteDimensions.x;float rowPosition=float(u_colorPaletteRow)+0.5;float rowTexCoord=rowPosition/u_colorPaletteDimensions.y;vec4 paletteColor=texture2D(u_colorPalette,vec2(paletteTexelPosition,rowTexCoord));gl_FragColor=paletteColor;}"; // eslint-disable-line
+    var colorPaletteShader = "precision mediump float;\n#define GLSLIFY 1\nuniform sampler2D u_image;uniform sampler2D u_colorPalette;uniform vec2 u_colorPaletteDimensions;uniform vec2 u_resolution;void main(){vec2 uv=gl_FragCoord.xy/u_resolution;vec4 texColor=texture2D(u_image,uv);float gray=(texColor.r+texColor.g+texColor.b)/3.0;float paletteX=gray*(u_colorPaletteDimensions.x-1.0);float paletteTexelPosition=(floor(paletteX)+0.5)/u_colorPaletteDimensions.x;vec4 paletteColor=texture2D(u_colorPalette,vec2(paletteTexelPosition,0));gl_FragColor=paletteColor;}"; // eslint-disable-line
 
     var crtShader = "precision mediump float;\n#define GLSLIFY 1\nuniform vec2 uResolution;uniform sampler2D u_image;uniform float uTime;vec2 curve(vec2 uv){uv=(uv-0.5)*2.0;uv*=1.1;uv.x*=1.0+pow((abs(uv.y)/5.0),2.0);uv.y*=1.0+pow((abs(uv.x)/4.0),2.0);uv=(uv/2.0)+0.5;uv=uv*0.92+0.04;return uv;}void main(){vec2 fragCoord=gl_FragCoord.xy;vec2 q=fragCoord.xy/uResolution;vec2 uv=q;uv=curve(uv);vec3 col;float x=sin(0.3*uTime+uv.y*21.0)*sin(0.7*uTime+uv.y*29.0)*sin(0.3+0.33*uTime+uv.y*31.0)*0.0017;col.r=texture2D(u_image,vec2(x+uv.x+0.001,uv.y+0.001)).x+0.05;col.g=texture2D(u_image,vec2(x+uv.x+0.000,uv.y-0.002)).y+0.05;col.b=texture2D(u_image,vec2(x+uv.x-0.002,uv.y+0.000)).z+0.05;col.r+=0.08*texture2D(u_image,0.75*vec2(x+0.025,-0.027)+vec2(uv.x+0.001,uv.y+0.001)).x;col.g+=0.05*texture2D(u_image,0.75*vec2(x-0.022,-0.02)+vec2(uv.x+0.000,uv.y-0.002)).y;col.b+=0.08*texture2D(u_image,0.75*vec2(x-0.02,-0.018)+vec2(uv.x-0.002,uv.y+0.000)).z;col=clamp(col*0.6+0.4*col*col*1.0,0.0,1.0);float vig=(0.0+1.0*16.0*uv.x*uv.y*(1.0-uv.x)*(1.0-uv.y));col*=vec3(pow(vig,0.3));col*=vec3(0.95,1.05,0.95);col*=2.8;float scans=clamp(0.35+0.35*sin(3.5*uTime+uv.y*uResolution.y*1.5),0.0,1.0);float s=pow(scans,1.7);col=col*vec3(0.4+0.7*s);col*=1.0+0.01*sin(110.0*uTime);if(uv.x<0.0||uv.x>1.0)col*=0.0;if(uv.y<0.0||uv.y>1.0)col*=0.0;col*=1.0-0.65*vec3(clamp((mod(fragCoord.x,2.0)-1.0)*2.0,0.0,1.0));gl_FragColor=vec4(col,1.0);}"; // eslint-disable-line
 
@@ -631,16 +630,12 @@
             "chromaticaberration": ({ shader, params }) => new P5AsciifyChromaticAberrationEffect({ shader, ...params }),
             "rotate": ({ shader, params }) => new P5AsciifyRotateEffect({ shader, ...params }),
             "brightness": ({ shader, params }) => new P5AsciifyBrightnessEffect({ shader, ...params }),
-            "colorpalette": ({ shader, params }) => new P5AsciifyColorPaletteEffect({ shader, ...params, colorPaletteManager: this.colorPaletteManager }),
+            "colorpalette": ({ shader, params }) => new P5AsciifyColorPaletteEffect({ shader, ...params }),
             "crt": ({ shader, params }) => new P5AsciifyCrtEffect({ shader, ...params })
         }
 
         _setupQueue = [];
         _effects = [];
-
-        constructor(colorPaletteManager) {
-            this.colorPaletteManager = colorPaletteManager;
-        }
 
         addInstance(p5Instance) {
             this.p5Instance = p5Instance;
@@ -687,7 +682,7 @@
 
         setupEffectQueue() {
             for (let effectInstance of this._setupQueue) {
-                effectInstance.setup();
+                effectInstance.setup(this.p5Instance);
                 effectInstance.shader = this.effectShaders[effectInstance.name];
             }
 
@@ -716,7 +711,7 @@
             if (this.p5Instance.frameCount === 0) {
                 this._setupQueue.push(effectInstance);
             } else {
-                effectInstance.setup();
+                effectInstance.setup(this.p5Instance);
             }
 
             return effectInstance;
@@ -1056,153 +1051,6 @@
 
             // Resize the grid based on new dimensions
             this._resizeGrid();
-        }
-    }
-
-    // colorpalettemanager.js
-
-
-    /**
-     * @class P5AsciifyColorPaletteManager
-     * @description Manages multiple color palettes and their consolidated framebuffer representation.
-     */
-    class P5AsciifyColorPaletteManager {
-        constructor() {
-            this.palettes = [];
-            this.texture = null;
-            this.p5Instance = null;
-        }
-
-        /**
-         * Initializes the manager and sets up the consolidated framebuffer.
-         * @param {Object} p5Instance - The p5.js instance.
-         */
-        setup(p5Instance) {
-            this.p5Instance = p5Instance;
-
-            // Initialize framebuffers for all existing palettes
-            this.palettes.forEach(palette => palette.setup(this.p5Instance));
-
-            // Determine the maximum number of colors across all palettes
-            const maxColors = this.getMaxColors();
-
-            // Create the manager's framebuffer with width = maxColors and height = number of palettes
-            this.texture = this.p5Instance.createFramebuffer({
-                width: maxColors,
-                height: Math.max(this.palettes.length, 1), // Ensure height is at least 1
-                depthFormat: this.p5Instance.UNSIGNED_INT,
-                textureFiltering: this.p5Instance.NEAREST
-            });
-
-            this.updateTexture();
-        }
-
-        /**
-         * Determines the maximum number of colors among all palettes.
-         * @returns {number} The maximum color count.
-         */
-        getMaxColors() {
-            return Math.max(...this.palettes.map(p => p.getColors().length), 1);
-        }
-
-        /**
-         * Updates the manager's framebuffer by stitching together all palettes' framebuffers.
-         */
-        updateTexture() {
-            if (!this.texture || !this.p5Instance) return;
-
-            const maxColors = this.getMaxColors();
-            const numPalettes = this.palettes.length;
-
-            // Resize the manager's framebuffer to accommodate all palettes
-            this.texture.resize(maxColors, Math.max(numPalettes, 1));
-            this.texture.loadPixels();
-
-            // Iterate through each palette and copy its framebuffer data into the manager's framebuffer
-            this.palettes.forEach((palette, rowIndex) => {
-                const paletteFramebuffer = palette.getFramebuffer();
-                if (!paletteFramebuffer) return;
-
-                palette.rowIndex = rowIndex;
-
-                paletteFramebuffer.loadPixels();
-
-                // Copy palette's pixels to the corresponding row in the manager's framebuffer
-                for (let x = 0; x < palette.getColors().length; x++) {
-                    const managerIndex = (rowIndex * maxColors + x) * 4;
-                    const paletteIndex = x * 4;
-
-                    this.texture.pixels[managerIndex] = paletteFramebuffer.pixels[paletteIndex];
-                    this.texture.pixels[managerIndex + 1] = paletteFramebuffer.pixels[paletteIndex + 1];
-                    this.texture.pixels[managerIndex + 2] = paletteFramebuffer.pixels[paletteIndex + 2];
-                    this.texture.pixels[managerIndex + 3] = paletteFramebuffer.pixels[paletteIndex + 3];
-                }
-
-                // Fill remaining pixels in the row with transparency if the palette has fewer colors than maxColors
-                for (let x = palette.getColors().length; x < maxColors; x++) {
-                    const managerIndex = (rowIndex * maxColors + x) * 4;
-                    this.texture.pixels[managerIndex] = 0;
-                    this.texture.pixels[managerIndex + 1] = 0;
-                    this.texture.pixels[managerIndex + 2] = 0;
-                    this.texture.pixels[managerIndex + 3] = 0;
-                }
-            });
-
-            // If there are no palettes, ensure the framebuffer has at least one transparent pixel
-            if (this.palettes.length === 0) {
-                this.texture.pixels[0] = 0;
-                this.texture.pixels[1] = 0;
-                this.texture.pixels[2] = 0;
-                this.texture.pixels[3] = 0;
-            }
-
-            this.texture.updatePixels();
-        }
-
-        /**
-         * Adds a new palette to the manager.
-         * @param {Array} colors - An array of color values for the new palette.
-         * @returns {P5AsciifyColorPalette} The newly added palette instance.
-         */
-        addPalette(colors) {
-            const palette = new P5AsciifyColorPalette(colors);
-            this.palettes.push(palette);
-
-            if (this.p5Instance) {
-                palette.setup(this.p5Instance);
-                this.updateTexture();
-            }
-
-            return palette;
-        }
-
-        /**
-         * Removes a palette from the manager.
-         * @param {P5AsciifyColorPalette} palette - The palette instance to remove.
-         */
-        removePalette(palette) {
-            const index = this.palettes.indexOf(palette);
-            if (index !== -1) {
-                this.palettes.splice(index, 1);
-                this.updateTexture();
-            }
-        }
-
-        /**
-         * Retrieves the row index of a specific palette within the manager's framebuffer.
-         * @param {P5AsciifyColorPalette} palette - The palette instance.
-         * @returns {number} The row index of the palette, or -1 if not found.
-         */
-        getPaletteRow(palette) {
-            return this.palettes.indexOf(palette);
-        }
-
-        /**
-         * Retrieves the consolidated framebuffer containing all palettes.
-         * @returns {Object} The manager's framebuffer.
-         */
-        getTexture() {
-            return this.texture;
         }
     }
 
@@ -2806,17 +2654,10 @@ void main() {
             rotationAngle: 0,
         };
 
-        colorPaletteManager = new P5AsciifyColorPaletteManager();
-        customColorPaletteManager = new P5AsciifyColorPaletteManager();
+        gradientManager = new P5AsciifyGradientManager();
 
-        gradientManager = new P5AsciifyGradientManager(this.colorPaletteManager);
-
-        preEffectManager = new P5AsciifyEffectManager(this.colorPaletteManager);
-        afterEffectManager = new P5AsciifyEffectManager(this.colorPaletteManager);
-
-        customPrimaryColorSampleFramebuffer = null;
-        customSecondaryColorSampleFramebuffer = null;
-        customAsciiCharacterFramebuffer = null;
+        preEffectManager = new P5AsciifyEffectManager();
+        afterEffectManager = new P5AsciifyEffectManager();
 
         postSetupFunction = null;
 
@@ -2852,9 +2693,6 @@ void main() {
             if (this.commonOptions.gridDimensions[0] != 0 && this.commonOptions.gridDimensions[1] != 0) {
                 this.grid.resizeCellDimensions(this.commonOptions.gridDimensions[0], this.commonOptions.gridDimensions[1]);
             }
-
-            this.colorPaletteManager.setup(this.p5Instance);
-            this.customColorPaletteManager.setup(this.p5Instance);
 
             this.gradientManager.setup(this.asciiCharacterSet);
 
@@ -2939,37 +2777,6 @@ void main() {
 
             this.p5Instance.clear();
             this.p5Instance.image(this.afterEffectManager.nextFramebuffer, -this.p5Instance.width / 2, -this.p5Instance.height / 2);
-
-            /**
-
-            // Draw the framerate in the bottom left corner
-            this.p5Instance.push();
-            const fpsText = `FPS:~${Math.ceil(Math.min(this.p5Instance.frameRate(), 60))}`;
-            const padding = 5;
-            const textX = -this.p5Instance.width / 2 + 10;
-            const textY = this.p5Instance.height / 2 - 20;
-
-            // Set text properties first to calculate width
-            this.p5Instance.textFont(this.font);
-            this.p5Instance.textSize(16);
-            const textW = this.p5Instance.textWidth(fpsText);
-            const textH = 16; // Approximate height based on textSize
-
-            // Draw background rectangle
-            this.p5Instance.fill(0);
-            this.p5Instance.noStroke();
-            this.p5Instance.rect(textX - padding,
-                textY - textH - padding,
-                textW + padding * 2,
-                textH + padding * 2);
-
-            // Draw text
-            this.p5Instance.fill(255, 255, 0);
-            this.p5Instance.textAlign(this.p5Instance.LEFT, this.p5Instance.BOTTOM);
-            this.p5Instance.text(fpsText, textX, textY);
-            this.p5Instance.pop();
-
-            **/
 
             this.checkFramebufferDimensions();
         }
@@ -3068,36 +2875,6 @@ void main() {
     class P5AsciifyUtils {
 
         /**
-         * Converts a hex color string to an RGB array.
-         * @param {string} hex - The hex color string (e.g., "#ff5733").
-         * @returns {number[]} An array containing the RGB values [r, g, b].
-         */
-        static hexToRgb(hex) {
-            let r = parseInt(hex.slice(1, 3), 16);
-            let g = parseInt(hex.slice(3, 5), 16);
-            let b = parseInt(hex.slice(5, 7), 16);
-            return [r, g, b];
-        }
-
-        /**
-         * Converts an RGB array to a shader color array.
-         * @param {number[]} color - The RGB array [r, g, b].
-         * @returns {number[]} An array containing the shader color values [r/255, g/255, b/255].
-         */
-        static rgbToShaderColor(color) {
-            return [color[0] / 255, color[1] / 255, color[2] / 255];
-        }
-
-        /**
-         * Converts a hex color string to a shader color array.
-         * @param {string} hex - The hex color string (e.g., "#ff5733").
-         * @returns {number[]} An array containing the shader color values [r/255, g/255, b/255].
-         */
-        static hexToShaderColor(hex) {
-            return this.rgbToShaderColor(this.hexToRgb(hex));
-        }
-
-        /**
          * Compares two version strings.
          * @param {string} v1 - The first version string (e.g., "1.2.3").
          * @param {string} v2 - The second version string (e.g., "1.2.4").
@@ -3112,26 +2889,6 @@ void main() {
             }
 
             return 0;
-        }
-
-        /**
-         * Deeply merges two objects into a new object.
-         * @param {Object} target - The target object to merge into.
-         * @param {Object} source - The source object to merge from.
-         * @returns {Object} The merged object.
-         */
-        static deepMerge(target, source) {
-            const result = { ...target };
-
-            for (const key of Object.keys(source)) {
-                if (source[key] !== null && typeof source[key] === 'object' && !Array.isArray(source[key]) && key in target && typeof target[key] === 'object' && !Array.isArray(target[key])) {
-                    result[key] = this.deepMerge(target[key], source[key]);
-                } else {
-                    result[key] = source[key];
-                }
-            }
-
-            return result;
         }
     }
 
