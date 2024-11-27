@@ -2,8 +2,8 @@ import P5AsciifyGradient from '../gradient.js';
 
 class P5AsciifyRadialGradient extends P5AsciifyGradient {
 
-    constructor({ type, shader, brightnessStart, brightnessEnd, colorPalette, palette, direction, centerX, centerY, radius}) {
-        super(type, shader, brightnessStart, brightnessEnd, colorPalette, palette);
+    constructor({ type, shader, brightnessStart, brightnessEnd, characters, direction, centerX, centerY, radius}) {
+        super(type, shader, brightnessStart, brightnessEnd, characters);
 
         this._direction = direction;
         this._centerX = centerX;
@@ -11,8 +11,8 @@ class P5AsciifyRadialGradient extends P5AsciifyGradient {
         this._radius = radius;
     }
 
-    setUniforms(framebuffer, referenceFramebuffer) {
-        super.setUniforms(framebuffer, referenceFramebuffer);
+    setUniforms(frameCount,framebuffer, referenceFramebuffer) {
+        super.setUniforms(frameCount,framebuffer, referenceFramebuffer);
         this._shader.setUniform('u_gradientDirection', this._direction);
         this._shader.setUniform('u_centerX', this._centerX);
         this._shader.setUniform('u_centerY', this._centerY);

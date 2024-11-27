@@ -7,11 +7,9 @@ uniform sampler2D originalTextureID; // Unmodified version of the original textu
 uniform sampler2D gradientTexture; // 2D texture for gradient colors
 uniform float u_centerX; // X coordinate of the gradient center
 uniform float u_centerY; // Y coordinate of the gradient center
-uniform float gradientTextureLength; // Number of colors in the gradient row
 uniform float u_radius; // Maximum radius of the radial gradient in texture coordinates
 uniform int frameCount; // Uniform to animate the gradient based on frame count
 uniform int u_gradientDirection; // Direction of the gradient movement (+1 for outward, -1 for inward)
-uniform int gradientTextureRow; // Row index for the gradient texture
 uniform vec2 gradientTextureDimensions; // Dimensions of the gradient texture
 uniform vec2 u_brightnessRange; // Range of brightness values
 
@@ -27,21 +25,17 @@ void main() {
 
         // Normalize the distance and map it to the gradient texture
         float normalizedDistance = clamp(distance / u_radius, 0.0, 1.0);
-        float index = normalizedDistance * (gradientTextureLength - 1.0);
+        float index = normalizedDistance * (gradientTextureDimensions.x - 1.0);
 
         // Adjust animation speed and direction
         // If gradientDirection is +1, index increases over time; if -1, it decreases
-        float animatedIndex = mod(index + float(frameCount) * 0.1 * float(-u_gradientDirection), gradientTextureLength);
+        float animatedIndex = mod(index + float(frameCount) * 0.1 * float(-u_gradientDirection), gradientTextureDimensions.x);
 
         // Directly calculate the normalized index with half-texel offset for accurate color fetching
         float normalizedIndex = (floor(animatedIndex) + 0.5) / gradientTextureDimensions.x;
 
-        // Calculate the correct row position for the gradient texture
-        float rowPosition = float(gradientTextureRow) + 0.5; // gradientTextureRow is an integer starting from 0
-        float rowTexCoord = rowPosition / gradientTextureDimensions.y;
-
         // Fetch the gradient color based on the calculated index
-        vec4 gradientColor = texture2D(gradientTexture, vec2(normalizedIndex, rowTexCoord));
+        vec4 gradientColor = texture2D(gradientTexture, vec2(normalizedIndex, 0));
 
         // Combine gradient color with the original alpha
         gl_FragColor = vec4(gradientColor.rgb, texColor.a);

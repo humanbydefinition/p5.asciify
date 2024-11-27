@@ -73,13 +73,14 @@ p5.prototype.loadAsciiFont = function (font) {
         p5asciify.font = loadedFont;
         p5asciify.p5Instance._decrementPreload();
         if (p5asciify.p5Instance.frameCount > 0) {
-            p5asciify.brightnessCharacterSet.setFontObject(loadedFont);
-            p5asciify.edgeCharacterSet.setFontObject(loadedFont);
-            p5asciify.gradientCharacterSet.setFontObject(loadedFont);
+            p5asciify.asciiFontTextureAtlas.setFontObject(loadedFont);
             p5asciify.grid.resizeCellPixelDimensions(
-                p5asciify.brightnessCharacterSet.maxGlyphDimensions.width,
-                p5asciify.brightnessCharacterSet.maxGlyphDimensions.height
+                p5asciify.asciiFontTextureAtlas.maxGlyphDimensions.width,
+                p5asciify.asciiFontTextureAtlas.maxGlyphDimensions.height
             );
+
+            p5asciify.asciiCharacterSet.setCharacterSet(p5asciify.asciiCharacterSet.characters);
+            p5asciify.edgeCharacterSet.setCharacterSet(p5asciify.edgeCharacterSet.characters);
         }
     };
 
@@ -96,8 +97,6 @@ p5.prototype.loadAsciiFont = function (font) {
     }
 };
 p5.prototype.registerPreloadMethod('loadAsciiFont', p5.prototype);
-
-
 
 /**
  * Sets up the P5Asciify library for use with p5.js.
@@ -135,6 +134,10 @@ p5.prototype.resetAsciiGrid = function () {
     p5asciify.sampleFramebuffer.resize(p5asciify.grid.cols, p5asciify.grid.rows);
 };
 
+p5.prototype.setAsciifyPostSetupFunction = function (postSetupFunction) {
+    p5asciify.postSetupFunction = postSetupFunction;
+};
+
 /**
  * Sets the default options for the P5Asciify library.
  *
@@ -162,12 +165,18 @@ p5.prototype.setAsciiOptions = function (options) {
         options.ascii = options.brightness;
     }
 
+    const VALID_RENDER_MODES = ['brightness', 'accurate', 'custom'];
+    if (options?.ascii?.renderMode && !VALID_RENDER_MODES.includes(options.ascii.renderMode)) {
+        console.warn(`P5Asciify: Invalid render mode '${options.ascii.renderMode}'. Defaulting to 'brightness'.`);
+        options.ascii.renderMode = 'brightness';
+    }
+
     const { ascii: asciiOptions, edge: edgeOptions, common: commonOptions, gradient: gradientOptions } = options;
 
     const colorOptions = [edgeOptions, asciiOptions, gradientOptions];
     colorOptions.forEach(opt => {
-        if (opt?.characterColor) opt.characterColor = P5AsciifyUtils.hexToShaderColor(opt.characterColor);
-        if (opt?.backgroundColor) opt.backgroundColor = P5AsciifyUtils.hexToShaderColor(opt.backgroundColor);
+        if (opt?.characterColor) opt.characterColor = this.color(opt.characterColor);
+        if (opt?.backgroundColor) opt.backgroundColor = this.color(opt.backgroundColor);
     });
 
     if (commonOptions?.fontSize && (commonOptions.fontSize < 1 || commonOptions.fontSize > 128)) {

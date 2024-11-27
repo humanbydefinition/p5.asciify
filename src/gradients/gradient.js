@@ -1,15 +1,15 @@
-
+import P5AsciifyColorPalette from "../colorpalette.js";
 
 class P5AsciifyGradient {
-    constructor(type, shader, brightnessStart, brightnessEnd, colorPalette, palette) {
+    constructor(type, shader, brightnessStart, brightnessEnd, characters) {
         this._type = type;
         this._shader = shader;
 
         // map brightness start from 0-255 to 0-1
         this._brightnessStart = Math.floor((brightnessStart / 255) * 100) / 100;
         this._brightnessEnd = Math.ceil((brightnessEnd / 255) * 100) / 100;
-        this._colorPalette = colorPalette;
-        this._palette = palette;
+
+        this._characters = characters;
 
         this._enabled = true;
 
@@ -20,21 +20,17 @@ class P5AsciifyGradient {
         this._onPaletteChangeCallback = callback;
     }
 
-    setup(shader, palette) {
+    setup(p5Instance, shader, colors) {
         this._shader = shader;
-        this._palette = palette;
-        this.paletteId = this._colorPalette.addPalette(this._palette);
+        this._palette = new P5AsciifyColorPalette(colors);
+        this._palette.setup(p5Instance);
     }
 
-    setUniforms(framebuffer, referenceFramebuffer) {
+    setUniforms(frameCount, framebuffer, referenceFramebuffer) {
         this._shader.setUniform("textureID", framebuffer);
         this._shader.setUniform("originalTextureID", referenceFramebuffer);
-        this._shader.setUniform("gradientTexture", this._colorPalette.texture);
-        this._shader.setUniform("gradientTextureRow", this._colorPalette.getPaletteRow(this.paletteId));
-        this._shader.setUniform("gradientTextureDimensions", [this._colorPalette.texture.width, this._colorPalette.texture.height]);
-        this._shader.setUniform("gradientTextureLength", this._palette.length);
-        this._shader.setUniform("u_brightnessStart", this._brightnessStart);
-        this._shader.setUniform("u_brightnessEnd", this._brightnessEnd);
+        this._shader.setUniform("gradientTexture", this._palette.framebuffer);
+        this._shader.setUniform("gradientTextureDimensions", [this._palette.framebuffer.width, 1]);
         this._shader.setUniform("u_brightnessRange", [this._brightnessStart, this._brightnessEnd]);
         this._shader.setUniform("frameCount", frameCount);
     }

@@ -2,16 +2,16 @@ import P5AsciifyGradient from '../gradient.js';
 
 class P5AsciifyZigZagGradient extends P5AsciifyGradient {
 
-    constructor({ type, shader, brightnessStart, brightnessEnd, colorPalette, palette, direction, angle, speed = 0.01 }) {
-        super(type, shader, brightnessStart, brightnessEnd, colorPalette, palette);
+    constructor({ type, shader, brightnessStart, brightnessEnd, characters, direction, angle, speed = 0.01 }) {
+        super(type, shader, brightnessStart, brightnessEnd, characters);
 
         this._direction = direction;
         this._angle = angle;
         this._speed = speed;
     }
 
-    setUniforms(framebuffer, referenceFramebuffer) {
-        super.setUniforms(framebuffer, referenceFramebuffer);
+    setUniforms(frameCount,framebuffer, referenceFramebuffer) {
+        super.setUniforms(frameCount,framebuffer, referenceFramebuffer);
         this._shader.setUniform('u_gradientDirection', this._direction);
         this._shader.setUniform('u_angle',  this._angle * Math.PI / 180);
         this._shader.setUniform('u_speed', this._speed);

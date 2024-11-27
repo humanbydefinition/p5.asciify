@@ -2,16 +2,16 @@ import P5AsciifyGradient from '../gradient.js';
 
 class P5AsciifyNoiseGradient extends P5AsciifyGradient {
 
-    constructor({ type, shader, brightnessStart, brightnessEnd, colorPalette, palette, noiseScale, speed, direction }) {
-        super(type, shader, brightnessStart, brightnessEnd, colorPalette, palette);
+    constructor({ type, shader, brightnessStart, brightnessEnd, characters, noiseScale, speed, direction }) {
+        super(type, shader, brightnessStart, brightnessEnd, characters);
 
         this._direction = direction;
         this._noiseScale = noiseScale;
         this._speed = speed;
     }
 
-    setUniforms(framebuffer, referenceFramebuffer) {
-        super.setUniforms(framebuffer, referenceFramebuffer);
+    setUniforms(frameCount,framebuffer, referenceFramebuffer) {
+        super.setUniforms(frameCount,framebuffer, referenceFramebuffer);
         this._shader.setUniform('direction', this._direction);
         this._shader.setUniform('noiseScale', this._noiseScale);
         this._shader.setUniform('u_speed', this._speed);
