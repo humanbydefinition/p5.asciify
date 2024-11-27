@@ -40,7 +40,7 @@ let shiftShader; // Generates a texture based on the given rectangles, defining 
 let pushShader; // Pushes it's own pixels based on the shiftShader's output. Initialized with noiseShader's output.
 
 let asciiCharacterShader; // Translates the pushShader's pixels into our ascii character colors, so p5.asciify can render them as ascii characters
-let colorShader; // Translates the pushShader's pixels into our color palette, so p5.asciify can render them as colors
+let asciiColorPaletteShader; // Translates the pushShader's pixels into our color palette, so p5.asciify can render them as colors
 
 let noiseFramebuffer; // Define framebuffers relevant to the sketch, independent of p5.asciify
 let shiftFramebuffer;
@@ -59,7 +59,7 @@ function preload() {
 
 	// Relevant to p5.asciify, translating the pushShader's pixels into ascii character colors and color palette colors
 	asciiCharacterShader = loadShader('shaders/shader.vert', 'shaders/asciiCharacter.frag');
-	colorShader = loadShader('shaders/shader.vert', 'shaders/color.frag');
+	asciiColorPaletteShader = loadShader('shaders/shader.vert', 'shaders/asciiColorPalette.frag');
 }
 
 /**
@@ -194,11 +194,11 @@ function draw() {
 	asciiCharacterFramebuffer.end();
 
 	primaryColorSampleFramebuffer.begin(); // Translate the pushShader's pixels into our color palette for p5.asciify to render
-	shader(colorShader);
-	colorShader.setUniform('u_textureSize', [p5asciify.grid.cols, p5asciify.grid.rows]);
-	colorShader.setUniform('u_pushFramebuffer', nextPushFramebuffer);
-	colorShader.setUniform('u_colorPaletteTexture', colorPaletteFramebuffer);
-	colorShader.setUniform('u_paletteSize', colorPalette.length);
+	shader(asciiColorPaletteShader);
+	asciiColorPaletteShader.setUniform('u_textureSize', [p5asciify.grid.cols, p5asciify.grid.rows]);
+	asciiColorPaletteShader.setUniform('u_pushFramebuffer', nextPushFramebuffer);
+	asciiColorPaletteShader.setUniform('u_colorPaletteTexture', colorPaletteFramebuffer);
+	asciiColorPaletteShader.setUniform('u_paletteSize', colorPalette.length);
 	rect(0, 0, width, height);
 	primaryColorSampleFramebuffer.end();
 
