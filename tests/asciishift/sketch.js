@@ -7,10 +7,8 @@ let randomManager;
 let rectangleManager;
 
 let charset = ".:-=+*#%";
-
 let charsetColorPalette = [];
-
-let colorPaletteManager;
+let charsetColorPaletteFramebuffer;
 
 let colorPalette = ["#2b0f54", "#ab1f65", "#ff4f69", "#fff7f8", "#ff8142", "#ffda45", "#3368dc", "#49e7ec"];
 let colorPaletteFramebuffer;
@@ -47,6 +45,7 @@ function setup() {
 	randomManager = new RandomManager("hash");
 
 	colorPaletteFramebuffer = createFramebuffer({ width: colorPalette.length, height: 1, depthFormat: UNSIGNED_INT, textureFiltering: NEAREST });
+	charsetColorPaletteFramebuffer = createFramebuffer({ width: charset.length, height: 1, depthFormat: UNSIGNED_INT, textureFiltering: NEAREST });
 
 	colorPaletteFramebuffer.loadPixels();
 	for (let i = 0; i < colorPalette.length; i++) {
@@ -70,6 +69,18 @@ function setup() {
 		// Create color with R,G channels (B=0)
 		charsetColorPalette.push(color(encodedR * 255, encodedG * 255, 0));
 	}
+
+	charsetColorPaletteFramebuffer.loadPixels();
+
+	for (let i = 0; i < charset.length; i++) {
+		let c = charsetColorPalette[i];
+		charsetColorPaletteFramebuffer.pixels[i * 4] = red(c);
+		charsetColorPaletteFramebuffer.pixels[i * 4 + 1] = green(c);
+		charsetColorPaletteFramebuffer.pixels[i * 4 + 2] = blue(c);
+		charsetColorPaletteFramebuffer.pixels[i * 4 + 3] = alpha(c);
+	}
+
+	charsetColorPaletteFramebuffer.updatePixels();
 
 	setAsciiOptions({
 		// These are the default options, you can change them as needed in preload(), setup() or draw()
@@ -95,15 +106,12 @@ function setupAsciify() {
 	primaryColorSampleFramebuffer = p5asciify.customPrimaryColorSampleFramebuffer;
 	secondaryColorSampleFramebuffer = p5asciify.customSecondaryColorSampleFramebuffer;
 	asciiCharacterFramebuffer = p5asciify.customAsciiCharacterFramebuffer;
-	colorPaletteManager = p5asciify.customColorPaletteManager;
 
 	noiseFramebuffer = createFramebuffer({ width: p5asciify.grid.cols, height: p5asciify.grid.rows, depthFormat: UNSIGNED_INT, textureFiltering: NEAREST });
 	shiftFramebuffer = createFramebuffer({ width: p5asciify.grid.cols, height: p5asciify.grid.rows, depthFormat: UNSIGNED_INT, textureFiltering: NEAREST });
 	intermediateShiftFramebuffer = createFramebuffer({ width: p5asciify.grid.cols, height: p5asciify.grid.rows, depthFormat: UNSIGNED_INT, textureFiltering: NEAREST });
 	previousPushFramebuffer = createFramebuffer({ width: p5asciify.grid.cols, height: p5asciify.grid.rows, depthFormat: UNSIGNED_INT, textureFiltering: NEAREST });
 	nextPushFramebuffer = createFramebuffer({ width: p5asciify.grid.cols, height: p5asciify.grid.rows, depthFormat: UNSIGNED_INT, textureFiltering: NEAREST });
-
-	colorPaletteManager.addPalette(charsetColorPalette);
 
 	rectangleManager = new RectangleManager(randomManager, p5asciify.grid.cols, p5asciify.grid.rows, 3, 0, 16);
 	rectangleManager.initializeRectangles();
@@ -160,8 +168,8 @@ function draw() {
 	shader(gradientShader);
 	gradientShader.setUniform('u_textureSize', [p5asciify.grid.cols, p5asciify.grid.rows]);
 	gradientShader.setUniform('u_pushFramebuffer', nextPushFramebuffer);
-	gradientShader.setUniform('u_charPaletteTexture', colorPaletteManager.texture);
-	gradientShader.setUniform('u_charPaletteSize', [colorPaletteManager.texture.width, colorPaletteManager.texture.height]);
+	gradientShader.setUniform('u_charPaletteTexture', charsetColorPaletteFramebuffer);
+	gradientShader.setUniform('u_charPaletteSize', [charsetColorPaletteFramebuffer.width, charsetColorPaletteFramebuffer.height]);
 	rect(0, 0, width, height);
 
 	asciiCharacterFramebuffer.end();
