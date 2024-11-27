@@ -13,7 +13,7 @@ import GradientAsciiRenderer from './renderers/layer2/gradientAsciiRenderer/Grad
 
 import EdgeAsciiRenderer from './renderers/layer3/edgeAsciiRenderer/EdgeAsciiRenderer.js';
 
-import CubeAsciiRenderer3D from './renderers/layer4/cubeAsciiRenderer3D/CubeAsciiRenderer3D.js';
+//import CubeAsciiRenderer3D from './renderers/layer4/cubeAsciiRenderer3D/CubeAsciiRenderer3D.js';
 
 /**
  * @class P5Asciify
@@ -119,7 +119,7 @@ class P5Asciify {
 
         this.edgeRenderer = new EdgeAsciiRenderer(this.p5Instance, this.grid, this.edgeCharacterSet, this.edgeOptions);
 
-        this.cubeAsciiRenderer3D = new CubeAsciiRenderer3D(this.p5Instance, this.grid, this.edgeCharacterSet, this.edgeRenderer, this.asciiOptions);
+        //this.cubeAsciiRenderer3D = new CubeAsciiRenderer3D(this.p5Instance, this.grid, this.edgeCharacterSet, this.edgeRenderer, this.asciiOptions);
 
         this.asciiRenderer = this.brightnessRenderer;
         if (this.asciiOptions.renderMode === 'accurate') {
