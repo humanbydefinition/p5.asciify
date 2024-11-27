@@ -2,7 +2,6 @@ import P5AsciifyEffectManager from './managers/effectmanager.js';
 import P5AsciifyFontTextureAtlas from './fontTextureAtlas.js';
 import P5AsciifyCharacterSet from './characterset.js';
 import P5AsciifyGrid from './grid.js';
-import P5AsciifyColorPaletteManager from './managers/colorpalettemanager.js';
 
 import P5AsciifyGradientManager from './managers/gradientmanager.js';
 
@@ -15,6 +14,8 @@ import GradientAsciiRenderer from './renderers/layer2/gradientAsciiRenderer/Grad
 import EdgeAsciiRenderer from './renderers/layer3/edgeAsciiRenderer/EdgeAsciiRenderer.js';
 
 import CubeAsciiRenderer3D from './renderers/layer4/cubeAsciiRenderer3D/CubeAsciiRenderer3D.js';
+
+import P5AsciifyUtils from './utils.js';
 
 /**
  * @class P5Asciify
@@ -63,8 +64,6 @@ class P5Asciify {
         rotationAngle: 0,
     };
 
-    customColorPaletteManager = new P5AsciifyColorPaletteManager();
-
     gradientManager = new P5AsciifyGradientManager();
 
     preEffectManager = new P5AsciifyEffectManager();
@@ -108,8 +107,6 @@ class P5Asciify {
         if (this.commonOptions.gridDimensions[0] != 0 && this.commonOptions.gridDimensions[1] != 0) {
             this.grid.resizeCellDimensions(this.commonOptions.gridDimensions[0], this.commonOptions.gridDimensions[1]);
         }
-
-        this.customColorPaletteManager.setup(this.p5Instance);
 
         this.gradientManager.setup(this.asciiCharacterSet);
 
@@ -312,6 +309,101 @@ class P5Asciify {
             this.gradientRenderer.resizeFramebuffers();
         }
     }
+
+    outputAsciiToHtml() {
+        // Load pixel data from the framebuffers
+        this.edgeRenderer.asciiCharacterFramebuffer.loadPixels();
+        this.edgeRenderer.primaryColorSampleFramebuffer.loadPixels();
+        this.edgeRenderer.secondaryColorSampleFramebuffer.loadPixels();
+
+        const w = this.grid.cols;
+        const h = this.grid.rows;
+        const asciiPixels = this.edgeRenderer.asciiCharacterFramebuffer.pixels;
+        const primaryPixels = this.edgeRenderer.primaryColorSampleFramebuffer.pixels;
+        const secondaryPixels = this.edgeRenderer.secondaryColorSampleFramebuffer.pixels;
+
+        const chars = this.asciiFontTextureAtlas.characters; // Array of characters
+
+        // Define the CSS styles
+        const styles = `
+            @font-face {
+                font-family: 'C64ProMono';
+                src: url('C64_Pro_Mono-STYLE.otf') format('opentype');
+            }
+    
+            body {
+                font-family: 'C64ProMono', monospace;
+                font-size: ${this.commonOptions.fontSize}px;
+                margin: 0;
+                padding: 0;
+                background-color: #000;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                text-align: center;
+            }
+        `;
+
+        // Initialize the HTML with the DOCTYPE, html tag, and head section
+        let html = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>ASCII Art</title>
+        <style>
+            ${styles}
+        </style>
+    </head>
+    <body>
+        <div>
+    `;
+
+        // Iterate through each row and column to build the ASCII art
+        for (let y = 0; y < h; y++) {
+            let row = '';
+            for (let x = 0; x < w; x++) {
+                const idx = 4 * (x + y * w);
+
+                // Get the character index from asciiCharacterFramebuffer
+                const r = asciiPixels[idx];
+                const g = asciiPixels[idx + 1];
+                let bestCharIndex = r + g * 256;
+                if (bestCharIndex >= chars.length) bestCharIndex = chars.length - 1;
+                const ch = chars[bestCharIndex];
+
+                // Get the primary color (character color)
+                const pr = primaryPixels[idx];
+                const pg = primaryPixels[idx + 1];
+                const pb = primaryPixels[idx + 2];
+
+                // Get the secondary color (background color)
+                const sr = secondaryPixels[idx];
+                const sg = secondaryPixels[idx + 1];
+                const sb = secondaryPixels[idx + 2];
+
+                // Convert colors to hex
+                const primaryColor = P5AsciifyUtils.rgbToHex(pr, pg, pb);
+                const secondaryColor = P5AsciifyUtils.rgbToHex(sr, sg, sb);
+
+                // Build the HTML span for the character
+                row += `<span style="color: ${primaryColor}; background-color: ${secondaryColor};">${ch}</span>`;
+            }
+            html += row + '\n';
+        }
+
+        // Close the div, body, and html tags
+        html += `
+        </div>
+    </body>
+    </html>
+    `;
+
+        // Output the complete HTML
+        console.log(html);
+    }
+
+
 }
 
 export default P5Asciify;
