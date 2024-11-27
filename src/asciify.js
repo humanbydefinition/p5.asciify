@@ -15,8 +15,6 @@ import EdgeAsciiRenderer from './renderers/layer3/edgeAsciiRenderer/EdgeAsciiRen
 
 import CubeAsciiRenderer3D from './renderers/layer4/cubeAsciiRenderer3D/CubeAsciiRenderer3D.js';
 
-import P5AsciifyUtils from './utils.js';
-
 /**
  * @class P5Asciify
  * @description
@@ -274,97 +272,6 @@ class P5Asciify {
             this.gradientRenderer.resizeFramebuffers();
         }
     }
-
-    outputAsciiToHtml() {
-        // Load pixel data from the framebuffers
-        this.edgeRenderer.asciiCharacterFramebuffer.loadPixels();
-        this.edgeRenderer.primaryColorSampleFramebuffer.loadPixels();
-        this.edgeRenderer.secondaryColorSampleFramebuffer.loadPixels();
-
-        const w = this.grid.cols;
-        const h = this.grid.rows;
-        const asciiPixels = this.edgeRenderer.asciiCharacterFramebuffer.pixels;
-        const primaryPixels = this.edgeRenderer.primaryColorSampleFramebuffer.pixels;
-        const secondaryPixels = this.edgeRenderer.secondaryColorSampleFramebuffer.pixels;
-
-        const chars = this.asciiFontTextureAtlas.characters; // Array of characters
-
-        // Define the CSS styles
-        const styles = `
-            @font-face {
-                font-family: 'C64ProMono';
-                src: url('C64_Pro_Mono-STYLE.otf') format('opentype');
-            }
-    
-            body {
-                font-family: 'C64ProMono', monospace;
-                font-size: ${this.commonOptions.fontSize}px;
-                margin: 0;
-                padding: 0;
-                background-color: #000;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                height: 100vh;
-                text-align: center;
-            }
-        `;
-
-        // Initialize the HTML with the DOCTYPE, html tag, and head section
-        let html = `
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <title>ASCII Art</title>
-        <style>
-            ${styles}
-        </style>
-    </head>
-    <body>
-        <div>
-    `;
-
-        // Iterate through each row and column to build the ASCII art
-        for (let y = 0; y < h; y++) {
-            let row = '';
-            for (let x = 0; x < w; x++) {
-                const idx = 4 * (x + y * w);
-
-                // Get the character index from asciiCharacterFramebuffer
-                const r = asciiPixels[idx];
-                const g = asciiPixels[idx + 1];
-                let bestCharIndex = r + g * 256;
-                if (bestCharIndex >= chars.length) bestCharIndex = chars.length - 1;
-                const ch = chars[bestCharIndex];
-
-                // Get the primary color (character color)
-                const pr = primaryPixels[idx];
-                const pg = primaryPixels[idx + 1];
-                const pb = primaryPixels[idx + 2];
-
-                // Get the secondary color (background color)
-                const sr = secondaryPixels[idx];
-                const sg = secondaryPixels[idx + 1];
-                const sb = secondaryPixels[idx + 2];
-
-                // Build the HTML span with direct RGB values
-                row += `<span style="color: rgb(${pr}, ${pg}, ${pb}); background-color: rgb(${sr}, ${sg}, ${sb});">${ch}</span>`;
-            }
-            html += row + '\n';
-        }
-
-        // Close the div, body, and html tags
-        html += `
-        </div>
-    </body>
-    </html>
-    `;
-
-        // Output the complete HTML
-        console.log(html);
-    }
-
-
 }
 
 export default P5Asciify;
