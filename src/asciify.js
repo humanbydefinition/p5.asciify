@@ -69,10 +69,6 @@ class P5Asciify {
     preEffectManager = new P5AsciifyEffectManager();
     afterEffectManager = new P5AsciifyEffectManager();
 
-    customPrimaryColorSampleFramebuffer = null;
-    customSecondaryColorSampleFramebuffer = null;
-    customAsciiCharacterFramebuffer = null;
-
     postSetupFunction = null;
 
     instance(p) {
@@ -191,37 +187,6 @@ class P5Asciify {
 
         this.p5Instance.clear();
         this.p5Instance.image(this.afterEffectManager.nextFramebuffer, -this.p5Instance.width / 2, -this.p5Instance.height / 2);
-
-        /**
-
-        // Draw the framerate in the bottom left corner
-        this.p5Instance.push();
-        const fpsText = `FPS:~${Math.ceil(Math.min(this.p5Instance.frameRate(), 60))}`;
-        const padding = 5;
-        const textX = -this.p5Instance.width / 2 + 10;
-        const textY = this.p5Instance.height / 2 - 20;
-
-        // Set text properties first to calculate width
-        this.p5Instance.textFont(this.font);
-        this.p5Instance.textSize(16);
-        const textW = this.p5Instance.textWidth(fpsText);
-        const textH = 16; // Approximate height based on textSize
-
-        // Draw background rectangle
-        this.p5Instance.fill(0);
-        this.p5Instance.noStroke();
-        this.p5Instance.rect(textX - padding,
-            textY - textH - padding,
-            textW + padding * 2,
-            textH + padding * 2);
-
-        // Draw text
-        this.p5Instance.fill(255, 255, 0);
-        this.p5Instance.textAlign(this.p5Instance.LEFT, this.p5Instance.BOTTOM);
-        this.p5Instance.text(fpsText, textX, textY);
-        this.p5Instance.pop();
-
-        **/
 
         this.checkFramebufferDimensions();
     }
