@@ -6,34 +6,11 @@
  */
 class P5AsciifyUtils {
 
-    /**
-     * Converts a hex color string to an RGB array.
-     * @param {string} hex - The hex color string (e.g., "#ff5733").
-     * @returns {number[]} An array containing the RGB values [r, g, b].
-     */
-    static hexToRgb(hex) {
-        let r = parseInt(hex.slice(1, 3), 16);
-        let g = parseInt(hex.slice(3, 5), 16);
-        let b = parseInt(hex.slice(5, 7), 16);
-        return [r, g, b];
-    }
-
-    /**
-     * Converts an RGB array to a shader color array.
-     * @param {number[]} color - The RGB array [r, g, b].
-     * @returns {number[]} An array containing the shader color values [r/255, g/255, b/255].
-     */
-    static rgbToShaderColor(color) {
-        return [color[0] / 255, color[1] / 255, color[2] / 255];
-    }
-
-    /**
-     * Converts a hex color string to a shader color array.
-     * @param {string} hex - The hex color string (e.g., "#ff5733").
-     * @returns {number[]} An array containing the shader color values [r/255, g/255, b/255].
-     */
-    static hexToShaderColor(hex) {
-        return this.rgbToShaderColor(this.hexToRgb(hex));
+    static rgbToHex(r, g, b) {
+        return '#' + [r, g, b].map(x => {
+            const hex = x.toString(16).padStart(2, '0');
+            return hex;
+        }).join('');
     }
 
     /**
@@ -51,26 +28,6 @@ class P5AsciifyUtils {
         }
 
         return 0;
-    }
-
-    /**
-     * Deeply merges two objects into a new object.
-     * @param {Object} target - The target object to merge into.
-     * @param {Object} source - The source object to merge from.
-     * @returns {Object} The merged object.
-     */
-    static deepMerge(target, source) {
-        const result = { ...target };
-
-        for (const key of Object.keys(source)) {
-            if (source[key] !== null && typeof source[key] === 'object' && !Array.isArray(source[key]) && key in target && typeof target[key] === 'object' && !Array.isArray(target[key])) {
-                result[key] = this.deepMerge(target[key], source[key]);
-            } else {
-                result[key] = source[key];
-            }
-        }
-
-        return result;
     }
 }
 
