@@ -1,7 +1,6 @@
 #version 100
 precision lowp float;
 
-// Existing uniforms remain the same
 uniform sampler2D u_pushFramebuffer;
 uniform vec2 u_textureSize;
 

@@ -1,3 +1,11 @@
+let charset = ".:-=+*#%"; // Define the charset to be used in the ascii renderer
+
+// Define a color palette to be used in the ascii renderer
+// If there is a mismatch between the charset length and the color palette length, the colors will be repeated or not used
+let colorPalette = ["#2b0f54", "#ab1f65", "#ff4f69", "#fff7f8", "#ff8142", "#ffda45", "#3368dc", "#49e7ec"];
+
+let seed = "p5.asciify"; // Seed for random number generation
+
 // The custom ascii renderer exposes the following framebuffers, whose instances will be assigned to those variables during setup.
 let primaryColorSampleFramebuffer;
 /* There is also a `secondaryColorSampleFramebuffer` for individual cell background colors, but it is not used in this sketch. */
@@ -5,41 +13,35 @@ let asciiCharacterFramebuffer;
 
 let rectangleManager; // This class is used to create a number of non-overlapping rectangles that cover the entire grid.
 
-let charset = ".:-=+*#%"; // Define the charset to be used in the ascii renderer
-
 // p5.asciify creates a texture containing all characters in the whole font, assigning each character a unique color.
 // We define an array of colors to represent each character in the charset.
 // Accompanying the charset, we also create a 1D framebuffer to store the colors of each character.
 let charsetColorPalette = [];
 let charsetColorPaletteFramebuffer;
 
-// We also define a color palette of equal length and order to the charset, so that each character can be assigned a unique color.
 // Like the charset, we create a 1D framebuffer to store the colors of each character in the palette.
-let colorPalette = ["#2b0f54", "#ab1f65", "#ff4f69", "#fff7f8", "#ff8142", "#ffda45", "#3368dc", "#49e7ec"];
 let colorPaletteFramebuffer;
 
 let noiseShader; // Generates noise, containing {charset.length} colors, that changes over time
 let shiftShader; // Generates a texture based on the given rectangles, defining the direction each pixel should move
-let intermediateShiftShader; // Generates a refined texture based on the shiftShader's output, attempting to reduce flickering
-let pushShader; // Pushes it's own pixels based on the intermediateShiftShader's output. Initialized with noiseShader's output.
+let pushShader; // Pushes it's own pixels based on the shiftShader's output. Initialized with noiseShader's output.
 
 let asciiCharacterShader; // Translates the pushShader's pixels into our ascii character colors, so p5.asciify can render them as ascii characters
 let colorShader; // Translates the pushShader's pixels into our color palette, so p5.asciify can render them as colors
 
 let noiseFramebuffer; // Define framebuffers relevant to the sketch, independent of p5.asciify
 let shiftFramebuffer;
-let intermediateShiftFramebuffer;
 let previousPushFramebuffer;
 let nextPushFramebuffer;
 
-let seed = "p5.asciify"; // Seed for random number generation
-
-function preload() { // Load the shaders
-
+/**
+ * The preload function for the sketch.
+ * Loads the shaders used in the sketch.
+ */
+function preload() {
 	// Relevant to the sketch, independent of p5.asciify
 	noiseShader = loadShader('shaders/shader.vert', 'shaders/noise.frag');
 	shiftShader = loadShader('shaders/shader.vert', 'shaders/shift.frag');
-	intermediateShiftShader = loadShader('shaders/shader.vert', 'shaders/intermediateShift.frag');
 	pushShader = loadShader('shaders/shader.vert', 'shaders/push.frag');
 
 	// Relevant to p5.asciify, translating the pushShader's pixels into ascii character colors and color palette colors
@@ -47,6 +49,9 @@ function preload() { // Load the shaders
 	colorShader = loadShader('shaders/shader.vert', 'shaders/color.frag');
 }
 
+/**
+ * The setup function for the sketch.
+ */
 function setup() {
 	randomSeed(seed); // For deterministic random numbers
 	noiseSeed(seed);
@@ -90,11 +95,10 @@ function setup() {
  * Post-initialization hook for p5.asciify setup.
  * After p5.asciify has been initialized, this function is called to set up stuff that depends on p5.asciify's state.
  */
-function setupAsciify() { 
+function setupAsciify() {
 
 	// Assign the custom ascii renderer's framebuffers to the variables
 	primaryColorSampleFramebuffer = p5asciify.customPrimaryColorSampleFramebuffer;
-	secondaryColorSampleFramebuffer = p5asciify.customSecondaryColorSampleFramebuffer;
 	asciiCharacterFramebuffer = p5asciify.customAsciiCharacterFramebuffer;
 
 	// Generate the charset color palette and apply it to the framebuffer
@@ -112,31 +116,39 @@ function setupAsciify() {
 	// Initialize the framebuffers relevant to the sketch, matching the grid dimensions provided by p5.asciify
 	noiseFramebuffer = createFramebuffer({ width: p5asciify.grid.cols, height: p5asciify.grid.rows, depthFormat: UNSIGNED_INT, textureFiltering: NEAREST });
 	shiftFramebuffer = createFramebuffer({ width: p5asciify.grid.cols, height: p5asciify.grid.rows, depthFormat: UNSIGNED_INT, textureFiltering: NEAREST });
-	intermediateShiftFramebuffer = createFramebuffer({ width: p5asciify.grid.cols, height: p5asciify.grid.rows, depthFormat: UNSIGNED_INT, textureFiltering: NEAREST });
 	previousPushFramebuffer = createFramebuffer({ width: p5asciify.grid.cols, height: p5asciify.grid.rows, depthFormat: UNSIGNED_INT, textureFiltering: NEAREST });
 	nextPushFramebuffer = createFramebuffer({ width: p5asciify.grid.cols, height: p5asciify.grid.rows, depthFormat: UNSIGNED_INT, textureFiltering: NEAREST });
 
 	// Initialize the rectangle manager, which will create a number of non-overlapping rectangles that cover the entire grid
-	rectangleManager = new RectangleManager(p5asciify.grid.cols, p5asciify.grid.rows, 3, 0, 16);
+	// The `1` in the constructor defines the spacing between rectangles. 
+	// `0` would mean no spacing, which creates more intricate patterns, but causes flickering under certain conditions.
+	// I'll leave the solution to pixel flickering at spacing=0 up to you at, as it's a bit more complex than the scope of this example.
+	// Hint: An intermediate shader refining the `next` shiftFramebuffer, also checking `previous` shiftFramebuffer and the push framebuffers, could help.
+	rectangleManager = new RectangleManager(p5asciify.grid.cols, p5asciify.grid.rows, 3, 1, 16);
 	rectangleManager.initializeRectangles();
 
 	runNoiseShader(0); // Run the noise shader to generate the initial noise texture with frame count 0
 }
 
+/**
+ * The main draw loop for the sketch.
+ */
 function draw() {
 
-	asciiCharacterFramebuffer.begin();
+	// Every time frameCount reaches a multiple of the maximum grid dimension, reinitialize the rectangles and run the noise shader
 	if (frameCount % (Math.max(p5asciify.grid.cols, p5asciify.grid.rows) * 2) === 0) {
 		rectangleManager.initializeRectangles();
-		runNoiseShader(frameCount);
+		runNoiseShader(frameCount); // Run the noise shader with the current frame count
 	}
 
-	shiftFramebuffer.begin();
+	shiftFramebuffer.begin(); // Create the texture based on the given rectangles, defining the direction each pixel should move
 	clear();
 	shader(shiftShader);
 	shiftShader.setUniform('u_resolution', [p5asciify.grid.cols, p5asciify.grid.rows]);
 	shiftShader.setUniform('u_frameCount', frameCount);
 
+	// 8 random rectangles have a position and size, the others are passed as [0, 0, 0, 0] to the shader
+	// Each rectangle defines a pattern of movement for the pixels in the given area
 	rectangleManager.rectangles.forEach((rect, index) => {
 		shiftShader.setUniform(`u_rect${index}`, [rect.x, rect.y, rect.width, rect.height]);
 	});
@@ -144,27 +156,20 @@ function draw() {
 	rect(0, 0, width, height);
 	shiftFramebuffer.end();
 
-	intermediateShiftFramebuffer.begin();
-	clear();
-	shader(intermediateShiftShader);
-	intermediateShiftShader.setUniform('u_resolution', [p5asciify.grid.cols, p5asciify.grid.rows]);
-	intermediateShiftShader.setUniform('u_shiftMapTexture', shiftFramebuffer);
-	intermediateShiftShader.setUniform('u_previousFrameTexture', previousPushFramebuffer);
-	rect(0, 0, width, height);
-	intermediateShiftFramebuffer.end();
-
+	// Swap the previous and next push framebuffers
 	[previousPushFramebuffer, nextPushFramebuffer] = [nextPushFramebuffer, previousPushFramebuffer];
-	nextPushFramebuffer.begin();
+
+	nextPushFramebuffer.begin(); // Push the pixels based on the shiftFramebuffer's output
 	clear();
 	shader(pushShader);
 	pushShader.setUniform('u_resolution', [p5asciify.grid.cols, p5asciify.grid.rows]);
-	pushShader.setUniform('u_frameCount', frameCount);
-	pushShader.setUniform('u_shiftMapTexture', intermediateShiftFramebuffer);
-	pushShader.setUniform('u_noiseTexture', noiseFramebuffer);
-	pushShader.setUniform('u_previousFrameTexture', previousPushFramebuffer);
+	pushShader.setUniform('u_shiftMapTexture', shiftFramebuffer); // Shift map texture is used to determine the direction of the push
+	pushShader.setUniform('u_noiseTexture', noiseFramebuffer); // Noise texture is used on the boundary
+	pushShader.setUniform('u_previousFrameTexture', previousPushFramebuffer); // Previous frame texture is used on the rest
 	rect(0, 0, width, height);
 	nextPushFramebuffer.end();
 
+	asciiCharacterFramebuffer.begin(); // Translate the pushShader's pixels into our ascii character colors for p5.asciify to render
 	clear();
 	shader(asciiCharacterShader);
 	asciiCharacterShader.setUniform('u_textureSize', [p5asciify.grid.cols, p5asciify.grid.rows]);
@@ -175,7 +180,7 @@ function draw() {
 
 	asciiCharacterFramebuffer.end();
 
-	primaryColorSampleFramebuffer.begin();
+	primaryColorSampleFramebuffer.begin(); // Translate the pushShader's pixels into our color palette for p5.asciify to render
 	shader(colorShader);
 	colorShader.setUniform('u_textureSize', [p5asciify.grid.cols, p5asciify.grid.rows]);
 	colorShader.setUniform('u_pushFramebuffer', nextPushFramebuffer);
@@ -184,38 +189,49 @@ function draw() {
 	rect(0, 0, width, height);
 	primaryColorSampleFramebuffer.end();
 
-	clear();
-	image(asciiCharacterFramebuffer, -width / 2, -height / 2);
+	/* Since we are using the custom renderer, we don't need to draw anything on the canvas. */
+
+	// If we disable the ascii renderer and uncomment the following lines, 
+	// you can display any of the framebuffers on the canvas for debugging purposes
+	//clear();
+	//image(nextShiftFramebuffer, -width / 2, -height / 2, width, height); // Display the shift texture
 }
 
+/**
+ * Runs the noise shader to generate a noise texture.
+ * @param {Number} frameCount 
+ */
 function runNoiseShader(frameCount) {
 	noiseFramebuffer.begin();
 	shader(noiseShader);
-	noiseShader.setUniform('u_scale', 10.0);
 	noiseShader.setUniform('u_bins', charset.length);
 	noiseShader.setUniform('u_dimensions', [p5asciify.grid.cols, p5asciify.grid.rows]);
 	noiseShader.setUniform('u_frameCount', frameCount);
-	noiseShader.setUniform('u_greenChannelEnabled', true);
-	noiseShader.setUniform('u_blueChannelEnabled', true);
 	noiseShader.setUniform('u_blockSize', 2.0);
 	rect(0, 0, width, height);
 	noiseFramebuffer.end();
 }
 
+/**
+ * Function provided by p5.js to handle window resizing.
+ */
 function windowResized() {
 	resizeCanvas(windowWidth, windowHeight);
 
+	// Resize our sketch-relevant framebuffers to match the grid dimensions provided by p5.asciify
+	// The other framebuffers that reference p5.asciify's framebuffers will be resized automatically
 	noiseFramebuffer.resize(p5asciify.grid.cols, p5asciify.grid.rows);
 	shiftFramebuffer.resize(p5asciify.grid.cols, p5asciify.grid.rows);
-	intermediateShiftFramebuffer.resize(p5asciify.grid.cols, p5asciify.grid.rows);
 	previousPushFramebuffer.resize(p5asciify.grid.cols, p5asciify.grid.rows);
 	nextPushFramebuffer.resize(p5asciify.grid.cols, p5asciify.grid.rows);
 
-	randomSeed(seed);
+	randomSeed(seed); // Reset the random seeds to ensure deterministic behavior, since the sketch is reset to the initial state
 	noiseSeed(seed);
 
+	// Update the rectangle manager with the new grid dimensions and reinitialize the rectangles
 	rectangleManager.updateGridDimensions(p5asciify.grid.cols, p5asciify.grid.rows);
 	rectangleManager.initializeRectangles();
 
+	// Re-run the noise shader to generate the initial noise texture with frame count 0
 	runNoiseShader(0);
 }

@@ -1,12 +1,11 @@
 #version 100
 
-precision highp float;
+precision lowp float;
 
-uniform sampler2D u_shiftMapTexture;
-uniform sampler2D u_noiseTexture;
-uniform sampler2D u_previousFrameTexture;
-uniform vec2 u_resolution;
-uniform int u_frameCount;
+uniform sampler2D u_shiftMapTexture; // Texture containing the shift values
+uniform sampler2D u_noiseTexture;   // Texture containing the noise values
+uniform sampler2D u_previousFrameTexture; // Texture containing the previous frame to apply the pixel shift/push on
+uniform vec2 u_resolution;         // Resolution of the texture
 
 varying vec2 v_texCoord;
 
@@ -32,14 +31,6 @@ void main() {
     vec2 shift = getShift(pixelCoord);
     ivec2 shiftInt = ivec2(shift);
     ivec2 shiftedCoord = pixelCoord + shiftInt;
-
-    /**
-    if (u_frameCount == 1) {
-        gl_FragColor = texture2D(u_noiseTexture, v_texCoord);
-        return;
-    }
-    */
-    
 
     // Bounds checking for shifted coordinates
     if(shiftedCoord.x < 0 || shiftedCoord.x >= int(u_resolution.x) ||
