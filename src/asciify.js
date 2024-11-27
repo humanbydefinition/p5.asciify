@@ -347,12 +347,8 @@ class P5Asciify {
                 const sg = secondaryPixels[idx + 1];
                 const sb = secondaryPixels[idx + 2];
 
-                // Convert colors to hex
-                const primaryColor = P5AsciifyUtils.rgbToHex(pr, pg, pb);
-                const secondaryColor = P5AsciifyUtils.rgbToHex(sr, sg, sb);
-
-                // Build the HTML span for the character
-                row += `<span style="color: ${primaryColor}; background-color: ${secondaryColor};">${ch}</span>`;
+                // Build the HTML span with direct RGB values
+                row += `<span style="color: rgb(${pr}, ${pg}, ${pb}); background-color: rgb(${sr}, ${sg}, ${sb});">${ch}</span>`;
             }
             html += row + '\n';
         }

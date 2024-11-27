@@ -6,13 +6,6 @@
  */
 class P5AsciifyUtils {
 
-    static rgbToHex(r, g, b) {
-        return '#' + [r, g, b].map(x => {
-            const hex = x.toString(16).padStart(2, '0');
-            return hex;
-        }).join('');
-    }
-
     /**
      * Compares two version strings.
      * @param {string} v1 - The first version string (e.g., "1.2.3").
