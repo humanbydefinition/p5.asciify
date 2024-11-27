@@ -1,3 +1,16 @@
+/**
+ * @author humanbydefinition <hello@humanbydefinition.dev>
+ * @version 1.0.0
+ * @date Nov 2024
+ * 
+ * This sketch demonstrates how to use p5.asciify with custom shaders 
+ * and the `custom` rendering mode to create fine-grained ascii art animations.
+ * 
+ * Simplified version of 
+ * - ASCIISHIFT8 (https://www.fxhash.xyz/generative/slug/asciishift8)
+ * - ASCIILꚘPS (https://objkt.com/collections/KT1FYXgQ4BZZfE7stqkWcRzMHxYkAU7pN97r)
+ */
+
 let charset = ".:-=+*#%"; // Define the charset to be used in the ascii renderer
 
 // Define a color palette to be used in the ascii renderer
