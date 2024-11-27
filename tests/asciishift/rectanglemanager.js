@@ -1,8 +1,7 @@
 // RectangleManager.js
 
 class RectangleManager {
-    constructor(randomManager, gridCols, gridRows, splitDepth = 3, spacing = 0, maxRectangleCount = 64) {
-        this.randomManager = randomManager;
+    constructor(gridCols, gridRows, splitDepth = 3, spacing = 0, maxRectangleCount = 64) {
         this.gridCols = gridCols;
         this.gridRows = gridRows;
         this.maxRectangleCount = maxRectangleCount;
@@ -43,7 +42,7 @@ class RectangleManager {
             this.rectangles.push({ x: 0, y: 0, width: 0, height: 0 });
         }
 
-        this.rectangles = this.randomManager.shuffleArray(this.rectangles);
+        this.rectangles = shuffle(this.rectangles);
     }
 
     splitSpace(container, depth) {
@@ -57,10 +56,10 @@ class RectangleManager {
             return;
         }
 
-        const splitHorizontal = this.randomManager.getRandom() > 0.5;
+        const splitHorizontal = random() > 0.5;
 
         if (splitHorizontal) {
-            const splitPoint = Math.floor(this.randomManager.getRandom() * container.height);
+            const splitPoint = Math.floor(random() * container.height);
             this.splitSpace(
                 { x: container.x, y: container.y, width: container.width, height: splitPoint },
                 depth + 1,
@@ -75,7 +74,7 @@ class RectangleManager {
                 depth + 1,
             );
         } else {
-            const splitPoint = Math.floor(this.randomManager.getRandom() * container.width);
+            const splitPoint = Math.floor(random() * container.width);
             this.splitSpace(
                 { x: container.x, y: container.y, width: splitPoint, height: container.height },
                 depth + 1,

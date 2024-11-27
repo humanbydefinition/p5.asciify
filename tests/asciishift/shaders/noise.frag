@@ -5,9 +5,7 @@ varying vec2 v_texCoord;
 // Uniforms
 uniform int u_bins;                   // Number of bins for quantization
 uniform vec2 u_dimensions;            // Dimensions of the texture (width, height)
-uniform float u_seed;                 // Random seed
 uniform float u_frameCount;           // Frame count for time-based movement
-uniform int u_format;                 // Output format: 0 = column-based, 1 = row-based, 2 = completely random
 uniform bool u_greenChannelEnabled;   // Enable or disable the green channel
 uniform bool u_blueChannelEnabled;    // Enable or disable the blue channel
 uniform int u_blockSize;              // Size of noise blocks (e.g., 2 for 2x2 blocks, 3 for 3x3 blocks)
@@ -31,9 +29,9 @@ void main() {
                       (ipixelCoord.y == 0) ||
                       (ipixelCoord.y == int(u_dimensions.y) - 1);
 
-    if (true) {
+    if (isBoundary) {
         // Generate a seed that changes over time
-        float timeSeed = u_seed + u_frameCount * 0.01;
+        float timeSeed = u_frameCount * 0.01;
 
         // Generate random values for each channel using block coordinates
         float redRandom   = rand(vec2(float(blockCoord.x), float(blockCoord.y)), timeSeed);
