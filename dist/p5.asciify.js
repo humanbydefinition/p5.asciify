@@ -2055,12 +2055,7 @@ void main() {
                 this.secondaryColorSampleFramebuffer.begin();
                 this.p5.background(this.options.backgroundColor);
                 this.secondaryColorSampleFramebuffer.end();
-            } else {
-                this.secondaryColorSampleFramebuffer.begin();
-                this.p5.clear();
-                this.p5.image(this.primaryColorSampleFramebuffer, -this.grid.cols / 2, -this.grid.rows / 2, this.grid.cols, this.grid.rows);
-                this.secondaryColorSampleFramebuffer.end();
-            }
+            } 
 
             this.outputFramebuffer.begin();
             this.p5.shader(this.shader);
