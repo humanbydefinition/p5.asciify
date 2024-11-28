@@ -1,6 +1,6 @@
 import AsciiRenderer from '../../AsciiRenderer.js';
 
-import grayscaleShader from '../../../effects/grayscale/grayscale.frag';
+import grayscaleShader from './shaders/grayscale.frag';
 import asciiConversionShader from '../../_common_shaders/asciiConversion.frag';
 
 import colorSampleShader from './shaders/colorSample.frag';
