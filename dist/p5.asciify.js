@@ -2512,6 +2512,7 @@ void main() {
         afterEffectManager = new P5AsciifyEffectManager();
 
         postSetupFunction = null;
+        postDrawFunction = null;
 
         instance(p) {
             this.p5Instance = p;
@@ -2629,6 +2630,10 @@ void main() {
 
             this.p5Instance.clear();
             this.p5Instance.image(this.afterEffectManager.nextFramebuffer, -this.p5Instance.width / 2, -this.p5Instance.height / 2);
+
+            if (this.postDrawFunction) {
+                this.postDrawFunction();
+            }
 
             this.checkFramebufferDimensions();
         }
@@ -2877,6 +2882,10 @@ void main() {
 
     p5.prototype.setAsciifyPostSetupFunction = function (postSetupFunction) {
         p5asciify.postSetupFunction = postSetupFunction;
+    };
+
+    p5.prototype.setAsciifyPostDrawFunction = function (postDrawFunction) {
+        p5asciify.postDrawFunction = postDrawFunction;
     };
 
     /**
