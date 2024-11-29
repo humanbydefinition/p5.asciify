@@ -82,7 +82,7 @@ class RectangleManager {
         }
 
         // Decide split direction randomly
-        const splitHorizontal = Math.random() > 0.5;
+        const splitHorizontal = random() > 0.5;
 
         if (splitHorizontal) {
             // Ensure there is enough height to split and apply spacing
@@ -98,7 +98,7 @@ class RectangleManager {
 
             // Choose a split point ensuring spacing is reserved between the two child containers
             const minSplit = Math.min(1, container.height - this.spacing - 1);
-            const splitPoint = Math.floor(Math.random() * (container.height - this.spacing)) + minSplit;
+            const splitPoint = Math.floor(random() * (container.height - this.spacing)) + minSplit;
 
             // Define first child container
             const firstChild = {
@@ -133,7 +133,7 @@ class RectangleManager {
 
             // Choose a split point ensuring spacing is reserved between the two child containers
             const minSplit = Math.min(1, container.width - this.spacing - 1);
-            const splitPoint = Math.floor(Math.random() * (container.width - this.spacing)) + minSplit;
+            const splitPoint = Math.floor(random() * (container.width - this.spacing)) + minSplit;
 
             // Define first child container
             const firstChild = {
