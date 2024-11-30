@@ -151,20 +151,12 @@ p5.prototype.setAsciifyPostDrawFunction = function (postDrawFunction) {
  * TODO: Add example
  */
 p5.prototype.setAsciiOptions = function (options) {
-    const validOptions = ["common", "brightness", "edge", "ascii", "gradient"];
+    const validOptions = ["common", "edge", "ascii", "gradient"];
     const unknownOptions = Object.keys(options).filter(option => !validOptions.includes(option));
 
     if (unknownOptions.length) {
         console.warn(`P5Asciify: Unknown options detected (${unknownOptions.join(', ')}). Refer to the documentation for valid options.`);
         unknownOptions.forEach(option => delete options[option]);
-    }
-
-    if (options.brightness) {
-        console.warn("P5Asciify: The 'brightness' option is deprecated and will be removed in future releases. Use 'ascii' instead, which works the same way.");
-    }
-
-    if (options.brightness && !options.ascii) {
-        options.ascii = options.brightness;
     }
 
     const VALID_RENDER_MODES = ['brightness', 'accurate', 'custom'];
