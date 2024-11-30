@@ -1,4 +1,3 @@
-import P5AsciifyEffectManager from './managers/effectmanager.js';
 import P5AsciifyFontTextureAtlas from './fontTextureAtlas.js';
 import P5AsciifyCharacterSet from './characterset.js';
 import P5AsciifyGrid from './grid.js';
@@ -64,9 +63,6 @@ class P5Asciify {
 
     gradientManager = new P5AsciifyGradientManager();
 
-    preEffectManager = new P5AsciifyEffectManager();
-    afterEffectManager = new P5AsciifyEffectManager();
-
     postSetupFunction = null;
     postDrawFunction = null;
 
@@ -104,9 +100,6 @@ class P5Asciify {
         }
 
         this.gradientManager.setup(this.asciiCharacterSet);
-
-        this.preEffectManager.setup();
-        this.afterEffectManager.setup();
 
         this.customPrimaryColorSampleFramebuffer = this.p5Instance.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
         this.customSecondaryColorSampleFramebuffer = this.p5Instance.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
@@ -166,26 +159,22 @@ class P5Asciify {
      * Runs the rendering pipeline for the P5Asciify library.
      */
     asciify() {
-        this.preEffectManager.render(this.sketchFramebuffer);
+        let asciiOutput = this.sketchFramebuffer;
 
-        let asciiOutput = this.preEffectManager.nextFramebuffer;
-
-        this.asciiRenderer.render(this.preEffectManager.nextFramebuffer);
+        this.asciiRenderer.render(this.sketchFramebuffer);
         asciiOutput = this.asciiRenderer.getOutputFramebuffer();
 
-        this.gradientRenderer.render(this.preEffectManager.nextFramebuffer, this.asciiRenderer);
+        this.gradientRenderer.render(this.sketchFramebuffer, this.asciiRenderer);
         asciiOutput = this.gradientRenderer.getOutputFramebuffer();
 
-        this.edgeRenderer.render(this.preEffectManager.nextFramebuffer, this.gradientRenderer);
+        this.edgeRenderer.render(this.sketchFramebuffer, this.gradientRenderer);
         asciiOutput = this.edgeRenderer.getOutputFramebuffer();
 
         //this.cubeAsciiRenderer3D.render();
         //asciiOutput = this.cubeAsciiRenderer3D.getOutputFramebuffer();
 
-        this.afterEffectManager.render(asciiOutput);
-
         this.p5Instance.clear();
-        this.p5Instance.image(this.afterEffectManager.nextFramebuffer, -this.p5Instance.width / 2, -this.p5Instance.height / 2);
+        this.p5Instance.image(asciiOutput, -this.p5Instance.width / 2, -this.p5Instance.height / 2);
 
         if (this.postDrawFunction) {
             this.postDrawFunction();
