@@ -75,7 +75,7 @@ function setup() {
 	noiseSeed(seed);
 
 	createCanvas(windowWidth, windowHeight, WEBGL);
-	pixelDensity(1);
+	//pixelDensity(1);
 
 	// Initialize and fill the framebuffers with the colors of the charset and color palette
 	colorPaletteFramebuffer = createFramebuffer({ width: colorPalette.length, height: 1, depthFormat: UNSIGNED_INT, textureFiltering: NEAREST });
@@ -97,7 +97,7 @@ function setup() {
 		},
 		ascii: {
 			renderMode: 'custom', // Use the custom renderer
-			enabled: true,
+			enabled: false,
 			characterColor: "#ff0000",
 			characterColorMode: 0,
 			backgroundColor: "#000000",
@@ -204,7 +204,7 @@ function draw() {
 	asciiColorPaletteShader.setUniform('u_textureSize', [p5asciify.grid.cols, p5asciify.grid.rows]);
 	asciiColorPaletteShader.setUniform('u_pushFramebuffer', nextPushFramebuffer);
 	asciiColorPaletteShader.setUniform('u_colorPaletteTexture', colorPaletteFramebuffer);
-	asciiColorPaletteShader.setUniform('u_paletteSize', colorPalette.length);
+	asciiColorPaletteShader.setUniform('u_paletteSize', [colorPalette.length, 1]);
 	rect(0, 0, width, height);
 	primaryColorSampleFramebuffer.end();
 
@@ -212,8 +212,8 @@ function draw() {
 
 	// If we disable the ascii renderer and uncomment the following lines, 
 	// you can display any of the framebuffers on the canvas for debugging purposes
-	//clear();
-	//image(nextShiftFramebuffer, -width / 2, -height / 2, width, height); // Display the shift texture
+	clear();
+	image(primaryColorSampleFramebuffer, -width / 2, -height / 2, width, height); // Display the shift texture
 }
 
 /**
