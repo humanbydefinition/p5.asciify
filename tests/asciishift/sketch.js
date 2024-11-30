@@ -11,11 +11,16 @@
  * - ASCIILꚘPS (https://objkt.com/collections/KT1FYXgQ4BZZfE7stqkWcRzMHxYkAU7pN97r)
  */
 
-let charset = ".:-=+*#%"; // Define the charset to be used in the ascii renderer
+let charset = "╧▓○⌐εæ▒╒╓¬└÷╨▀■≈"; // Define the charset to be used in the ascii renderer
 
 // Define a color palette to be used in the ascii renderer
 // If there is a mismatch between the charset length and the color palette length, the colors will be repeated or not used
-let colorPalette = ["#2b0f54", "#ab1f65", "#ff4f69", "#fff7f8", "#ff8142", "#ffda45", "#3368dc", "#49e7ec"];
+let colorPalette = [ // PICO-8 Palette
+	"#000000", "#1D2B53", "#7E2553", "#008751",
+	"#AB5236", "#5F574F", "#C2C3C7", "#FFF1E8",
+	"#FF004D", "#FFA300", "#FFEC27", "#00E436",
+	"#29ADFF", "#83769C", "#FF77A8", "#FFCCAA"
+];
 
 let seed = "p5.asciify"; // Seed for random number generation
 
@@ -53,13 +58,13 @@ let nextPushFramebuffer;
  */
 function preload() {
 	// Relevant to the sketch, independent of p5.asciify
-	noiseShader = loadShader('shaders/shader.vert', 'shaders/noise.frag');
-	shiftShader = loadShader('shaders/shader.vert', 'shaders/shift.frag');
-	pushShader = loadShader('shaders/shader.vert', 'shaders/push.frag');
+	noiseShader = loadShader('shaders/shader.vert', 'shaders/sketch/noise.frag');
+	shiftShader = loadShader('shaders/shader.vert', 'shaders/sketch/shift.frag');
+	pushShader = loadShader('shaders/shader.vert', 'shaders/sketch/push.frag');
 
 	// Relevant to p5.asciify, translating the pushShader's pixels into ascii character colors and color palette colors
-	asciiCharacterShader = loadShader('shaders/shader.vert', 'shaders/asciiCharacter.frag');
-	asciiColorPaletteShader = loadShader('shaders/shader.vert', 'shaders/asciiColorPalette.frag');
+	asciiCharacterShader = loadShader('shaders/shader.vert', 'shaders/asciifyTranslation/asciiCharacter.frag');
+	asciiColorPaletteShader = loadShader('shaders/shader.vert', 'shaders/asciifyTranslation/asciiColorPalette.frag');
 }
 
 /**
@@ -70,6 +75,7 @@ function setup() {
 	noiseSeed(seed);
 
 	createCanvas(windowWidth, windowHeight, WEBGL);
+	pixelDensity(1);
 
 	// Initialize and fill the framebuffers with the colors of the charset and color palette
 	colorPaletteFramebuffer = createFramebuffer({ width: colorPalette.length, height: 1, depthFormat: UNSIGNED_INT, textureFiltering: NEAREST });
@@ -149,7 +155,7 @@ function setupAsciify() {
 function draw() {
 
 	// Every time frameCount reaches a multiple of the maximum grid dimension, reinitialize the rectangles and run the noise shader
-	if (frameCount % (Math.max(p5asciify.grid.cols, p5asciify.grid.rows) * 2) === 0) {
+	if (frameCount % (Math.max(p5asciify.grid.cols, p5asciify.grid.rows)) === 0) {
 		rectangleManager.initializeRectangles();
 		runNoiseShader(frameCount); // Run the noise shader with the current frame count
 	}
@@ -227,6 +233,7 @@ function runNoiseShader(frameCount) {
 
 /**
  * Function provided by p5.js to handle window resizing.
+ * Also initializes the whole sketch to the initial state, resetting the random seeds to ensure deterministic behavior.
  */
 function windowResized() {
 	resizeCanvas(windowWidth, windowHeight);

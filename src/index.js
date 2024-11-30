@@ -136,6 +136,10 @@ p5.prototype.setAsciifyPostSetupFunction = function (postSetupFunction) {
     p5asciify.postSetupFunction = postSetupFunction;
 };
 
+p5.prototype.setAsciifyPostDrawFunction = function (postDrawFunction) {
+    p5asciify.postDrawFunction = postDrawFunction;
+}
+
 /**
  * Sets the default options for the P5Asciify library.
  *

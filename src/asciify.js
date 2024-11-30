@@ -64,6 +64,7 @@ class P5Asciify {
     gradientManager = new P5AsciifyGradientManager();
 
     postSetupFunction = null;
+    postDrawFunction = null;
 
     instance(p) {
         this.p5Instance = p;
@@ -169,8 +170,15 @@ class P5Asciify {
         this.edgeRenderer.render(this.sketchFramebuffer, this.gradientRenderer);
         asciiOutput = this.edgeRenderer.getOutputFramebuffer();
 
+        //this.cubeAsciiRenderer3D.render();
+        //asciiOutput = this.cubeAsciiRenderer3D.getOutputFramebuffer();
+
         this.p5Instance.clear();
         this.p5Instance.image(asciiOutput, -this.p5Instance.width / 2, -this.p5Instance.height / 2);
+
+        if (this.postDrawFunction) {
+            this.postDrawFunction();
+        }
 
         this.checkFramebufferDimensions();
     }
