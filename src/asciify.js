@@ -76,7 +76,7 @@ class P5Asciify {
      * Sets up the P5Asciify library with the specified options after the user's setup() function finished.
      */
     setup() {
-        this.p5Instance.pixelDensity(1);
+        //this.p5Instance.pixelDensity(1);
 
         // In case the user didn't update in p5.js setup() function, we need to convert the color strings to p5.Color objects
         this.asciiOptions.characterColor = this.p5Instance.color(this.asciiOptions.characterColor);
@@ -164,17 +164,17 @@ class P5Asciify {
         this.asciiRenderer.render(this.sketchFramebuffer);
         asciiOutput = this.asciiRenderer.getOutputFramebuffer();
 
-        this.gradientRenderer.render(this.sketchFramebuffer, this.asciiRenderer);
-        asciiOutput = this.gradientRenderer.getOutputFramebuffer();
+        //this.gradientRenderer.render(this.sketchFramebuffer, this.asciiRenderer);
+        //asciiOutput = this.gradientRenderer.getOutputFramebuffer();
 
-        this.edgeRenderer.render(this.sketchFramebuffer, this.gradientRenderer);
-        asciiOutput = this.edgeRenderer.getOutputFramebuffer();
+        //this.edgeRenderer.render(this.sketchFramebuffer, this.gradientRenderer);
+        //asciiOutput = this.edgeRenderer.getOutputFramebuffer();
 
         //this.cubeAsciiRenderer3D.render();
         //asciiOutput = this.cubeAsciiRenderer3D.getOutputFramebuffer();
 
         this.p5Instance.clear();
-        this.p5Instance.image(asciiOutput, -this.p5Instance.width / 2, -this.p5Instance.height / 2);
+        this.p5Instance.image(asciiOutput, -this.p5Instance.width / 2, -this.p5Instance.height / 2, this.p5Instance.width, this.p5Instance.height);
 
         if (this.postDrawFunction) {
             this.postDrawFunction();
