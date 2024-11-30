@@ -164,11 +164,11 @@ class P5Asciify {
         this.asciiRenderer.render(this.sketchFramebuffer);
         asciiOutput = this.asciiRenderer.getOutputFramebuffer();
 
-        //this.gradientRenderer.render(this.sketchFramebuffer, this.asciiRenderer);
-        //asciiOutput = this.gradientRenderer.getOutputFramebuffer();
+        this.gradientRenderer.render(this.sketchFramebuffer, this.asciiRenderer);
+        asciiOutput = this.gradientRenderer.getOutputFramebuffer();
 
-        //this.edgeRenderer.render(this.sketchFramebuffer, this.gradientRenderer);
-        //asciiOutput = this.edgeRenderer.getOutputFramebuffer();
+        this.edgeRenderer.render(this.sketchFramebuffer, this.gradientRenderer);
+        asciiOutput = this.edgeRenderer.getOutputFramebuffer();
 
         //this.cubeAsciiRenderer3D.render();
         //asciiOutput = this.cubeAsciiRenderer3D.getOutputFramebuffer();
