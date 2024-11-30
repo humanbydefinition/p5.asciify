@@ -76,7 +76,7 @@ class P5Asciify {
      * Sets up the P5Asciify library with the specified options after the user's setup() function finished.
      */
     setup() {
-        //this.p5Instance.pixelDensity(1);
+        //this.p5Instance.pixelDensity(2);
 
         // In case the user didn't update in p5.js setup() function, we need to convert the color strings to p5.Color objects
         this.asciiOptions.characterColor = this.p5Instance.color(this.asciiOptions.characterColor);
