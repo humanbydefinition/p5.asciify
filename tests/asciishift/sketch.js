@@ -97,7 +97,7 @@ function setup() {
 		},
 		ascii: {
 			renderMode: 'custom', // Use the custom renderer
-			enabled: true,
+			enabled: false,
 			characterColor: "#ff0000",
 			characterColorMode: 0,
 			backgroundColor: "#000000",
@@ -192,6 +192,7 @@ function draw() {
 	clear();
 	shader(asciiCharacterShader);
 	asciiCharacterShader.setUniform('u_textureSize', [p5asciify.grid.cols, p5asciify.grid.rows]);
+	asciiCharacterShader.setUniform('u_pixelRatio', pixelDensity());
 	asciiCharacterShader.setUniform('u_pushFramebuffer', nextPushFramebuffer);
 	asciiCharacterShader.setUniform('u_charPaletteTexture', charsetColorPaletteFramebuffer);
 	asciiCharacterShader.setUniform('u_charPaletteSize', [charsetColorPaletteFramebuffer.width, charsetColorPaletteFramebuffer.height]);
@@ -205,6 +206,7 @@ function draw() {
 	asciiColorPaletteShader.setUniform('u_pushFramebuffer', nextPushFramebuffer);
 	asciiColorPaletteShader.setUniform('u_colorPaletteTexture', colorPaletteFramebuffer);
 	asciiColorPaletteShader.setUniform('u_paletteSize', [colorPalette.length, 1]);
+	asciiColorPaletteShader.setUniform('u_pixelRatio', pixelDensity());
 	rect(0, 0, width, height);
 	primaryColorSampleFramebuffer.end();
 
@@ -212,8 +214,8 @@ function draw() {
 
 	// If we disable the ascii renderer and uncomment the following lines, 
 	// you can display any of the framebuffers on the canvas for debugging purposes
-	//clear();
-	//image(primaryColorSampleFramebuffer, -width / 2, -height / 2, width, height); // Display the shift texture
+	clear();
+	image(primaryColorSampleFramebuffer, -width / 2, -height / 2, width, height); // Display the shift texture
 }
 
 /**
