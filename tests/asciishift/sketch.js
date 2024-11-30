@@ -75,6 +75,7 @@ function setup() {
 	noiseSeed(seed);
 
 	createCanvas(windowWidth, windowHeight, WEBGL);
+	pixelDensity(1);
 
 	// Initialize and fill the framebuffers with the colors of the charset and color palette
 	colorPaletteFramebuffer = createFramebuffer({ width: colorPalette.length, height: 1, depthFormat: UNSIGNED_INT, textureFiltering: NEAREST });
@@ -142,7 +143,7 @@ function setupAsciify() {
 	// `0` would mean no spacing, which creates more intricate patterns, but causes flickering under certain conditions.
 	// I'll leave the solution to pixel flickering at spacing=0 up to you at, as it's a bit more complex than the scope of this example.
 	// Hint: An intermediate shader refining the `next` shiftFramebuffer, also checking `previous` shiftFramebuffer and the push framebuffers, could help.
-	rectangleManager = new RectangleManager(p5asciify.grid.cols, p5asciify.grid.rows, 3, 1, 16);
+	rectangleManager = new RectangleManager(p5asciify.grid.cols, p5asciify.grid.rows, 3, 0, 16);
 	rectangleManager.initializeRectangles();
 
 	runNoiseShader(0); // Run the noise shader to generate the initial noise texture with frame count 0
@@ -154,7 +155,7 @@ function setupAsciify() {
 function draw() {
 
 	// Every time frameCount reaches a multiple of the maximum grid dimension, reinitialize the rectangles and run the noise shader
-	if (frameCount % (Math.max(p5asciify.grid.cols, p5asciify.grid.rows) * 2) === 0) {
+	if (frameCount % (Math.max(p5asciify.grid.cols, p5asciify.grid.rows)) === 0) {
 		rectangleManager.initializeRectangles();
 		runNoiseShader(frameCount); // Run the noise shader with the current frame count
 	}
@@ -253,4 +254,12 @@ function windowResized() {
 
 	// Re-run the noise shader to generate the initial noise texture with frame count 0
 	runNoiseShader(0);
+}
+
+// keyPress function to handle user input
+function keyPressed() {
+	if (key === ' ') {
+		// Toggle the ascii renderer on and off
+		saveGif('mySketch', 10);
+	}
 }
