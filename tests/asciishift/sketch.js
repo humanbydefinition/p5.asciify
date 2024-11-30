@@ -97,7 +97,7 @@ function setup() {
 		},
 		ascii: {
 			renderMode: 'custom', // Use the custom renderer
-			enabled: false,
+			enabled: true,
 			characterColor: "#ff0000",
 			characterColorMode: 0,
 			backgroundColor: "#000000",
@@ -214,8 +214,8 @@ function draw() {
 
 	// If we disable the ascii renderer and uncomment the following lines, 
 	// you can display any of the framebuffers on the canvas for debugging purposes
-	clear();
-	image(primaryColorSampleFramebuffer, -width / 2, -height / 2, width, height); // Display the shift texture
+	//clear();
+	//image(primaryColorSampleFramebuffer, -width / 2, -height / 2, width, height); // Display the shift texture
 }
 
 /**
