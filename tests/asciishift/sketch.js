@@ -226,7 +226,6 @@ function runNoiseShader(frameCount) {
 	noiseShader.setUniform('u_bins', charset.length);
 	noiseShader.setUniform('u_dimensions', [p5asciify.grid.cols, p5asciify.grid.rows]);
 	noiseShader.setUniform('u_frameCount', frameCount);
-	noiseShader.setUniform('u_blockSize', 2.0);
 	rect(0, 0, width, height);
 	noiseFramebuffer.end();
 }
