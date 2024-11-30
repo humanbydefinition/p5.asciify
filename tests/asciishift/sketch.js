@@ -75,7 +75,6 @@ function setup() {
 	noiseSeed(seed);
 
 	createCanvas(windowWidth, windowHeight, WEBGL);
-	//pixelDensity(1);
 
 	// Initialize and fill the framebuffers with the colors of the charset and color palette
 	colorPaletteFramebuffer = createFramebuffer({ width: colorPalette.length, height: 1, depthFormat: UNSIGNED_INT, textureFiltering: NEAREST });
