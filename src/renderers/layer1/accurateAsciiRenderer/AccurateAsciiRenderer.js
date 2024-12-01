@@ -59,6 +59,7 @@ export default class AccurateAsciiRenderer extends AsciiRenderer {
         this.brightnessSplitShader.setUniform('u_inputImageSize', [this.p5.width, this.p5.height]);
         this.brightnessSplitShader.setUniform('u_gridCols', this.grid.cols);
         this.brightnessSplitShader.setUniform('u_gridRows', this.grid.rows);
+        this.brightnessSplitShader.setUniform('u_pixelRatio', this.p5.pixelDensity());
         this.p5.rect(0, 0, this.p5.width, this.p5.height);
         this.brightnessSplitFramebuffer.end();
 
