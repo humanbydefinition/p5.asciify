@@ -75,6 +75,7 @@ export default class EdgeAsciiRenderer extends AsciiRenderer {
         this.sampleShader.setUniform('u_image', this.sobelFramebuffer);
         this.sampleShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
         this.sampleShader.setUniform('u_threshold', this.options.sampleThreshold);
+        this.sampleShader.setUniform('u_pixelRatio', this.p5.pixelDensity());
         this.p5.rect(0, 0, this.p5.width, this.p5.height);
         this.sampleFramebuffer.end();
 
@@ -88,6 +89,7 @@ export default class EdgeAsciiRenderer extends AsciiRenderer {
         this.colorSampleShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
         this.colorSampleShader.setUniform('u_sampleMode', this.options.characterColorMode);
         this.colorSampleShader.setUniform('u_staticColor', this.options.characterColor._array);
+        this.colorSampleShader.setUniform('u_pixelRatio', this.p5.pixelDensity());
         this.p5.rect(0, 0, this.p5.width, this.p5.height);
         this.primaryColorSampleFramebuffer.end();
 
@@ -101,6 +103,7 @@ export default class EdgeAsciiRenderer extends AsciiRenderer {
         this.colorSampleShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
         this.colorSampleShader.setUniform('u_sampleMode', this.options.backgroundColorMode);
         this.colorSampleShader.setUniform('u_staticColor', this.options.backgroundColor._array);
+        this.colorSampleShader.setUniform('u_pixelRatio', this.p5.pixelDensity());
         this.p5.rect(0, 0, this.p5.width, this.p5.height);
         this.secondaryColorSampleFramebuffer.end();
 
@@ -112,6 +115,7 @@ export default class EdgeAsciiRenderer extends AsciiRenderer {
         this.asciiCharacterShader.setUniform('u_previousAsciiCharacterTexture', previousAsciiRenderer.asciiCharacterFramebuffer);
         this.asciiCharacterShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
         this.asciiCharacterShader.setUniform('u_totalChars', this.characterSet.characters.length);
+        this.asciiCharacterShader.setUniform('u_pixelRatio', this.p5.pixelDensity());
         this.p5.rect(0, 0, this.p5.width, this.p5.height);
         this.asciiCharacterFramebuffer.end();
 
@@ -119,7 +123,7 @@ export default class EdgeAsciiRenderer extends AsciiRenderer {
         this.outputFramebuffer.begin();
         this.p5.shader(this.shader);
         this.shader.setUniform('u_layer', 3);
-        this.shader.setUniform('u_resolution', [this.p5.width, this.p5.height]);
+        this.shader.setUniform('u_resolution', [this.p5.width * this.p5.pixelDensity(), this.p5.height * this.p5.pixelDensity()]);
         this.shader.setUniform('u_characterTexture', this.characterSet.asciiFontTextureAtlas.texture);
         this.shader.setUniform('u_charsetCols', this.characterSet.asciiFontTextureAtlas.charsetCols);
         this.shader.setUniform('u_charsetRows', this.characterSet.asciiFontTextureAtlas.charsetRows);
@@ -128,8 +132,8 @@ export default class EdgeAsciiRenderer extends AsciiRenderer {
         this.shader.setUniform('u_secondaryColorTexture', this.secondaryColorSampleFramebuffer);
         this.shader.setUniform('u_asciiCharacterTexture', this.asciiCharacterFramebuffer);
         this.shader.setUniform('u_edgesTexture', this.sampleFramebuffer);
-        this.shader.setUniform('u_gridPixelDimensions', [this.grid.width, this.grid.height]);
-        this.shader.setUniform('u_gridOffsetDimensions', [this.grid.offsetX, this.grid.offsetY]);
+        this.shader.setUniform('u_gridPixelDimensions', [this.grid.width * this.p5.pixelDensity(), this.grid.height * this.p5.pixelDensity()]);
+        this.shader.setUniform('u_gridOffsetDimensions', [this.grid.offsetX * this.p5.pixelDensity(), this.grid.offsetY * this.p5.pixelDensity()]);
         this.shader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
         this.shader.setUniform('u_invertMode', this.options.invertMode);
         this.shader.setUniform('u_brightnessEnabled', previousAsciiRenderer.options.enabled);
