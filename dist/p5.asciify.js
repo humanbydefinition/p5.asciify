@@ -889,15 +889,15 @@
             if (new.target === AsciiRenderer) {
                 throw new TypeError("Cannot construct AsciiRenderer instances directly");
             }
-            
+
             this.p5 = p5Instance;
             this.grid = grid;
             this.characterSet = characterSet;
             this.options = options;
 
-            this.primaryColorSampleFramebuffer = this.p5.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
-            this.secondaryColorSampleFramebuffer = this.p5.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
-            this.asciiCharacterFramebuffer = this.p5.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
+            this.primaryColorSampleFramebuffer = this.p5.createFramebuffer({ antialias: false, width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
+            this.secondaryColorSampleFramebuffer = this.p5.createFramebuffer({ antialias: false, width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
+            this.asciiCharacterFramebuffer = this.p5.createFramebuffer({ antialias: false, width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
 
             this.outputFramebuffer = this.p5.createFramebuffer({ depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
         }
@@ -1942,9 +1942,6 @@ void main() {
          * Sets up the P5Asciify library with the specified options after the user's setup() function finished.
          */
         setup() {
-
-            console.log("Pixel density: " + this.p5Instance.pixelDensity());
-
             // In case the user didn't update in p5.js setup() function, we need to convert the color strings to p5.Color objects
             this.asciiOptions.characterColor = this.p5Instance.color(this.asciiOptions.characterColor);
             this.asciiOptions.backgroundColor = this.p5Instance.color(this.asciiOptions.backgroundColor);
