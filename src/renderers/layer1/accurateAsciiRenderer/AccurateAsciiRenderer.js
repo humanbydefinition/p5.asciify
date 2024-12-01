@@ -114,8 +114,8 @@ export default class AccurateAsciiRenderer extends AsciiRenderer {
         this.shader.setUniform('u_primaryColorTexture', this.primaryColorSampleFramebuffer);
         this.shader.setUniform('u_secondaryColorTexture', this.secondaryColorSampleFramebuffer);
         this.shader.setUniform('u_asciiCharacterTexture', this.asciiCharacterFramebuffer);
-        this.shader.setUniform('u_gridPixelDimensions', [this.grid.width, this.grid.height]);
-        this.shader.setUniform('u_gridOffsetDimensions', [this.grid.offsetX, this.grid.offsetY]);
+        this.shader.setUniform('u_gridPixelDimensions', [this.grid.width * this.p5.pixelDensity(), this.grid.height * this.p5.pixelDensity()]);
+        this.shader.setUniform('u_gridOffsetDimensions', [this.grid.offsetX * this.p5.pixelDensity(), this.grid.offsetY * this.p5.pixelDensity()]);
         this.shader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
         this.shader.setUniform('u_invertMode', this.options.invertMode);
         this.shader.setUniform('u_rotationAngle', this.p5.radians(this.options.rotationAngle));
