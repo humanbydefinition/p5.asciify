@@ -26,13 +26,14 @@ class P5AsciifyGradient {
         this._palette.setup(p5Instance);
     }
 
-    setUniforms(frameCount, framebuffer, referenceFramebuffer) {
+    setUniforms(p5, framebuffer, referenceFramebuffer) {
         this._shader.setUniform("textureID", framebuffer);
         this._shader.setUniform("originalTextureID", referenceFramebuffer);
         this._shader.setUniform("gradientTexture", this._palette.framebuffer);
         this._shader.setUniform("gradientTextureDimensions", [this._palette.framebuffer.width, 1]);
         this._shader.setUniform("u_brightnessRange", [this._brightnessStart, this._brightnessEnd]);
-        this._shader.setUniform("frameCount", frameCount);
+        this._shader.setUniform("frameCount", p5.frameCount);
+        this._shader.setUniform("u_pixelRatio", p5.pixelDensity());
     }
 
     set palette(value) {
