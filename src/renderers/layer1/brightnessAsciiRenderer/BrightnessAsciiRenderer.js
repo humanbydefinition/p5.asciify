@@ -17,6 +17,11 @@ export default class BrightnessAsciiRenderer extends AsciiRenderer {
         this.colorSampleFramebuffer = this.p5.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
     }
 
+    resizeFramebuffers() {
+        super.resizeFramebuffers();
+        this.colorSampleFramebuffer.resize(this.grid.cols, this.grid.rows);
+    }
+
     render(inputFramebuffer) {
         if (!this.options.enabled) {
             this.outputFramebuffer = inputFramebuffer;
@@ -55,9 +60,9 @@ export default class BrightnessAsciiRenderer extends AsciiRenderer {
         this.p5.shader(this.asciiCharacterShader);
         this.asciiCharacterShader.setUniform('u_textureSize', [this.grid.cols, this.grid.rows]);
         this.asciiCharacterShader.setUniform('u_pixelRatio', this.p5.pixelDensity());
-        this.asciiCharacterShader.setUniform('u_pushFramebuffer', this.colorSampleFramebuffer);
+        this.asciiCharacterShader.setUniform('u_colorSampleFramebuffer', this.colorSampleFramebuffer);
         this.asciiCharacterShader.setUniform('u_charPaletteTexture', this.characterSet.characterColorPalette.framebuffer);
-        this.asciiCharacterShader.setUniform('u_charPaletteSize', [this.characterSet.characterColorPalette.framebuffer.width, this.characterSet.characterColorPalette.framebuffer.height]);
+        this.asciiCharacterShader.setUniform('u_charPaletteSize', [this.characterSet.characterColorPalette.framebuffer.width, 1]);
 
         this.p5.rect(0, 0, this.p5.width, this.p5.height);
         this.asciiCharacterFramebuffer.end();
