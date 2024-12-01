@@ -36,14 +36,15 @@ export default class CustomAsciiRenderer extends AsciiRenderer {
         this.outputFramebuffer.begin();
         this.p5.shader(this.shader);
         this.shader.setUniform('u_layer', 1);
+        this.shader.setUniform('u_pixelRatio', this.p5.pixelDensity());
         this.shader.setUniform('u_resolution', [this.p5.width* this.p5.pixelDensity(), this.p5.height* this.p5.pixelDensity()]);
         this.shader.setUniform('u_characterTexture', this.characterSet.asciiFontTextureAtlas.texture);
         this.shader.setUniform('u_charsetDimensions', [this.characterSet.asciiFontTextureAtlas.charsetCols, this.characterSet.asciiFontTextureAtlas.charsetRows]);
         this.shader.setUniform('u_primaryColorTexture', this.primaryColorSampleFramebuffer);
         this.shader.setUniform('u_secondaryColorTexture', this.secondaryColorSampleFramebuffer);
         this.shader.setUniform('u_asciiCharacterTexture', this.asciiCharacterFramebuffer);
-        this.shader.setUniform('u_gridPixelDimensions', [this.grid.width * this.p5.pixelDensity(), this.grid.height * this.p5.pixelDensity()]);
-        this.shader.setUniform('u_gridOffsetDimensions', [this.grid.offsetX * this.p5.pixelDensity(), this.grid.offsetY * this.p5.pixelDensity()]);
+        this.shader.setUniform('u_gridPixelDimensions', [this.grid.width, this.grid.height]);
+        this.shader.setUniform('u_gridOffsetDimensions', [this.grid.offsetX, this.grid.offsetY]);
         this.shader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
         this.shader.setUniform('u_invertMode', this.options.invertMode);
         this.shader.setUniform('u_rotationAngle', this.p5.radians(this.options.rotationAngle));

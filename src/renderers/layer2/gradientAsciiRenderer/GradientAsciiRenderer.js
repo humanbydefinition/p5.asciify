@@ -123,7 +123,8 @@ export default class GradientAsciiRenderer extends AsciiRenderer {
         this.p5.clear();
         this.p5.shader(this.asciiShader);
         this.asciiShader.setUniform('u_layer', 2);
-        this.asciiShader.setUniform('u_resolution', [this.p5.width* this.p5.pixelDensity(), this.p5.height* this.p5.pixelDensity()]);
+        this.asciiShader.setUniform('u_pixelRatio', this.p5.pixelDensity());
+        this.asciiShader.setUniform('u_resolution', [this.p5.width, this.p5.height]);
         this.asciiShader.setUniform('u_characterTexture', this.characterSet.asciiFontTextureAtlas.texture);
         this.asciiShader.setUniform('u_charsetDimensions', [this.characterSet.asciiFontTextureAtlas.charsetCols, this.characterSet.asciiFontTextureAtlas.charsetRows]);
         this.asciiShader.setUniform('u_gradientReferenceTexture', this.grayscaleFramebuffer);
@@ -132,8 +133,8 @@ export default class GradientAsciiRenderer extends AsciiRenderer {
         this.asciiShader.setUniform('u_asciiCharacterTexture', this.asciiCharacterFramebuffer);
         this.asciiShader.setUniform('u_asciiBrightnessTexture', previousAsciiRenderer.getOutputFramebuffer());
         this.asciiShader.setUniform('u_brightnessEnabled', previousAsciiRenderer.options.enabled);
-        this.asciiShader.setUniform('u_gridPixelDimensions', [this.grid.width * this.p5.pixelDensity(), this.grid.height * this.p5.pixelDensity()]);
-        this.asciiShader.setUniform('u_gridOffsetDimensions', [this.grid.offsetX * this.p5.pixelDensity(), this.grid.offsetY * this.p5.pixelDensity()]);
+        this.asciiShader.setUniform('u_gridPixelDimensions', [this.grid.width, this.grid.height]);
+        this.asciiShader.setUniform('u_gridOffsetDimensions', [this.grid.offsetX, this.grid.offsetY]);
         this.asciiShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
         this.asciiShader.setUniform('u_invertMode', this.options.invertMode);
         this.asciiShader.setUniform('u_rotationAngle', this.p5.radians(this.options.rotationAngle));
