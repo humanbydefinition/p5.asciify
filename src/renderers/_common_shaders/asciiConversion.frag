@@ -1,8 +1,8 @@
 precision mediump float;
 
 uniform sampler2D u_characterTexture;
-uniform float u_charsetCols;
-uniform float u_charsetRows;
+
+uniform vec2 u_charsetDimensions;
 
 uniform sampler2D u_primaryColorTexture;
 uniform sampler2D u_secondaryColorTexture;
@@ -83,11 +83,11 @@ void main() {
     int charIndex = int(encodedIndexVec.r * 255.0 + 0.5) + int(encodedIndexVec.g * 255.0 + 0.5) * 256;
 
         // Calculate the column and row of the character in the charset texture
-    int charCol = charIndex - (charIndex / int(u_charsetCols)) * int(u_charsetCols);
-    int charRow = charIndex / int(u_charsetCols);
+    int charCol = charIndex - (charIndex / int(u_charsetDimensions.x)) * int(u_charsetDimensions.x);
+    int charRow = charIndex / int(u_charsetDimensions.x);
 
         // Calculate the texture coordinate of the character in the charset texture
-    vec2 charCoord = vec2(float(charCol) / u_charsetCols, float(charRow) / u_charsetRows);
+    vec2 charCoord = vec2(float(charCol) / u_charsetDimensions.x, float(charRow) / u_charsetDimensions.y);
 
     vec2 fractionalPart = fract(gridCoord) - 0.5; // Center fractional part around (0,0) for rotation
     fractionalPart = rotate2D(u_rotationAngle) * fractionalPart; // Rotate fractional part
@@ -95,8 +95,8 @@ void main() {
 
         // Calculate the texture coordinates
     vec2 cellMin = charCoord;
-    vec2 cellMax = charCoord + vec2(1.0 / u_charsetCols, 1.0 / u_charsetRows);
-    vec2 texCoord = charCoord + fractionalPart * vec2(1.0 / u_charsetCols, 1.0 / u_charsetRows);
+    vec2 cellMax = charCoord + vec2(1.0 / u_charsetDimensions.x, 1.0 / u_charsetDimensions.y);
+    vec2 texCoord = charCoord + fractionalPart * vec2(1.0 / u_charsetDimensions.x, 1.0 / u_charsetDimensions.y);
 
         // Determine if the texture coordinate is within the cell boundaries
     bool outsideBounds = any(lessThan(texCoord, cellMin)) || any(greaterThan(texCoord, cellMax));

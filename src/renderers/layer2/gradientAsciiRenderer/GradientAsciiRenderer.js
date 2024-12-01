@@ -125,8 +125,7 @@ export default class GradientAsciiRenderer extends AsciiRenderer {
         this.asciiShader.setUniform('u_layer', 2);
         this.asciiShader.setUniform('u_resolution', [this.p5.width* this.p5.pixelDensity(), this.p5.height* this.p5.pixelDensity()]);
         this.asciiShader.setUniform('u_characterTexture', this.characterSet.asciiFontTextureAtlas.texture);
-        this.asciiShader.setUniform('u_charsetCols', this.characterSet.asciiFontTextureAtlas.charsetCols);
-        this.asciiShader.setUniform('u_charsetRows', this.characterSet.asciiFontTextureAtlas.charsetRows);
+        this.asciiShader.setUniform('u_charsetDimensions', [this.characterSet.asciiFontTextureAtlas.charsetCols, this.characterSet.asciiFontTextureAtlas.charsetRows]);
         this.asciiShader.setUniform('u_gradientReferenceTexture', this.grayscaleFramebuffer);
         this.asciiShader.setUniform('u_primaryColorTexture', this.primaryColorSampleFramebuffer);
         this.asciiShader.setUniform('u_secondaryColorTexture', this.secondaryColorSampleFramebuffer);
