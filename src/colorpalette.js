@@ -38,35 +38,33 @@ class P5AsciifyColorPalette {
         if (!this.framebuffer || !this.p5Instance) return;
 
         // Ensure minimum width of 1
-        const width = Math.max(this.colors.length, 1);
-        this.framebuffer.resize(width, 1);
+        const sw = Math.max(this.colors.length, 1);
+        const sh = 1;
+
+        const density = this.p5Instance.pixelDensity();
+        const dw = sw * density;
+        const dh = sh * density;
+
+        this.framebuffer.resize(sw, sh);
         this.framebuffer.loadPixels();
 
-        // Populate framebuffer pixels with color data
-        this.colors.forEach((c, x) => {
-            const color = this.p5Instance.color(c);
-            const index = x * 4;
-            this.framebuffer.pixels[index] = this.p5Instance.red(color);
-            this.framebuffer.pixels[index + 1] = this.p5Instance.green(color);
-            this.framebuffer.pixels[index + 2] = this.p5Instance.blue(color);
-            this.framebuffer.pixels[index + 3] = this.p5Instance.alpha(color);
-        });
-
-        // If there are fewer colors than the framebuffer width, fill the rest with transparency
-        for (let x = this.colors.length; x < width; x++) {
-            const index = x * 4;
-            this.framebuffer.pixels[index] = 0;
-            this.framebuffer.pixels[index + 1] = 0;
-            this.framebuffer.pixels[index + 2] = 0;
-            this.framebuffer.pixels[index + 3] = 0;
-        }
-
-        // If the palette has zero colors, ensure the single pixel is transparent
-        if (this.colors.length === 0) {
-            this.framebuffer.pixels[0] = 0;
-            this.framebuffer.pixels[1] = 0;
-            this.framebuffer.pixels[2] = 0;
-            this.framebuffer.pixels[3] = 0;
+        for (let lx = 0; lx < sw; lx++) {
+            let color;
+            if (lx < this.colors.length) {
+                color = this.p5Instance.color(this.colors[lx]);
+            } else {
+                color = this.p5Instance.color(0, 0, 0, 0);
+            }
+            for (let dx = 0; dx < density; dx++) {
+                const px = lx * density + dx;
+                for (let py = 0; py < dh; py++) {
+                    const index = 4 * (py * dw + px);
+                    this.framebuffer.pixels[index] = this.p5Instance.red(color);
+                    this.framebuffer.pixels[index + 1] = this.p5Instance.green(color);
+                    this.framebuffer.pixels[index + 2] = this.p5Instance.blue(color);
+                    this.framebuffer.pixels[index + 3] = this.p5Instance.alpha(color);
+                }
+            }
         }
 
         this.framebuffer.updatePixels();
