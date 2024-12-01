@@ -94,27 +94,29 @@ void main() {
 
 
 export const generateBrightnessSampleShader = (samplesPerRow, samplesPerColumn) => `
-// Enhanced Fragment Shader for Average Brightness Calculation
-precision mediump float; // Use high precision for better accuracy
+#version 100
+precision mediump float;
 
 // Uniforms
 uniform sampler2D u_inputImage;
 uniform vec2 u_inputImageSize;
 uniform int u_gridCols;
 uniform int u_gridRows;
+uniform float u_pixelRatio;
 
 // Constants
 const int SAMPLES_PER_ROW = ${samplesPerRow};
 const int SAMPLES_PER_COL = ${samplesPerColumn};
 
 void main() {
-    // Calculate the size of each grid cell in pixels
+    // Adjust fragment coordinates based on pixel ratio to get logical pixel position
+    vec2 logicalFragCoord = floor(gl_FragCoord.xy / u_pixelRatio);
+    
+    // Calculate the size of each grid cell in logical pixels
     vec2 cellSize = u_inputImageSize / vec2(float(u_gridCols), float(u_gridRows));
 
-    // Determine the current fragment's grid position
-    // gl_FragCoord starts at (0.5, 0.5) for the first pixel
-    vec2 fragCoord = floor(gl_FragCoord.xy);
-    vec2 inputGridPos = fragCoord * cellSize;
+    // Determine the current fragment's grid position in the input image
+    vec2 inputGridPos = logicalFragCoord * cellSize;
 
     // Initialize brightness accumulator
     float brightnessSum = 0.0;
@@ -149,6 +151,7 @@ void main() {
     // Output the average brightness as a grayscale color with full opacity
     gl_FragColor = vec4(vec3(averageBrightness), 1.0);
 }
+
 `;
 
 export const generateColorSampleShader = (numSlots, samplesPerRow, samplesPerColumn) => `

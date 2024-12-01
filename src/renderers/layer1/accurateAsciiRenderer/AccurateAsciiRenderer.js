@@ -47,6 +47,7 @@ export default class AccurateAsciiRenderer extends AsciiRenderer {
         this.brightnessSampleShader.setUniform('u_inputImageSize', [this.p5.width, this.p5.height]);
         this.brightnessSampleShader.setUniform('u_gridCols', this.grid.cols);
         this.brightnessSampleShader.setUniform('u_gridRows', this.grid.rows);
+        this.brightnessSampleShader.setUniform('u_pixelRatio', this.p5.pixelDensity());
         this.p5.rect(0, 0, this.p5.width, this.p5.height);
         this.brightnessSampleFramebuffer.end();
 
