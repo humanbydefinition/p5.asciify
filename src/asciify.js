@@ -77,8 +77,6 @@ class P5Asciify {
      */
     setup() {
 
-        this.p5Instance.pixelDensity(2);
-
         console.log("Pixel density: " + this.p5Instance.pixelDensity());
 
         // In case the user didn't update in p5.js setup() function, we need to convert the color strings to p5.Color objects
