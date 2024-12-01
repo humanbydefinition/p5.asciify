@@ -1,4 +1,5 @@
 export const generateCharacterSelectionShader = (sampleSize, totalChars) => `
+#version 100
 precision mediump float;
 
 // Uniforms for character texture and its grid dimensions
@@ -8,8 +9,11 @@ uniform float u_charsetRows;
 
 // Uniforms for the sketch texture and grid configurations
 uniform sampler2D u_sketchTexture;
-uniform vec2 u_gridPixelDimensions;      // Size of the grid in pixels
+uniform vec2 u_gridPixelDimensions;      // Size of the grid in logical pixels
 uniform vec2 u_gridCellDimensions;       // Number of cells in the grid (columns, rows)
+
+// New Uniform for Pixel Ratio
+uniform float u_pixelRatio;
 
 // Constants
 const float TOTAL_CHARS = ${totalChars}.0;
@@ -17,10 +21,13 @@ const float SAMPLE_SIZE = ${sampleSize}.0;
 const float SAMPLE_COUNT = ${sampleSize * sampleSize}.0;
 
 void main() {
-    // Get the grid cell coordinate (integer)
-    vec2 cellCoord = floor(gl_FragCoord.xy);
+    // Adjust fragment coordinates based on pixel ratio to get logical pixel position
+    vec2 logicalFragCoord = floor(gl_FragCoord.xy / u_pixelRatio);
 
-    // Compute the size of each cell in pixels
+    // Compute the grid cell coordinate (integer)
+    vec2 cellCoord = floor(logicalFragCoord.xy);
+
+    // Compute the size of each cell in logical pixels
     vec2 cellSizeInPixels = u_gridPixelDimensions / u_gridCellDimensions;
 
     // Compute the range of the cell in texture coordinates (0 to 1)
@@ -155,16 +162,17 @@ void main() {
 `;
 
 export const generateColorSampleShader = (numSlots, samplesPerRow, samplesPerColumn) => `
-// Refactored Fragment Shader with Conditional Fallback for u_colorRank == 2
+#version 100
 precision mediump float;
 
 // Uniforms
-uniform sampler2D u_inputImage;
-uniform sampler2D u_inputImageBW; // Black and white image
-uniform vec2 u_inputImageSize;
-uniform int u_gridCols;
-uniform int u_gridRows;
-uniform int u_colorRank;
+uniform sampler2D u_inputImage;        // Original input image
+uniform sampler2D u_inputImageBW;      // Black and white image
+uniform vec2 u_inputImageSize;         // Size of the input image (e.g., 800.0, 800.0)
+uniform int u_gridCols;                // Number of grid columns (e.g., 100)
+uniform int u_gridRows;                // Number of grid rows (e.g., 100)
+uniform int u_colorRank;               // Color rank (e.g., 1 or 2)
+uniform float u_pixelRatio;            // Device pixel ratio
 
 // Constants
 const int NUM_SLOTS = ${numSlots};
@@ -172,12 +180,14 @@ const int SAMPLES_PER_ROW = ${samplesPerRow};
 const int SAMPLES_PER_COL = ${samplesPerColumn};
 
 void main() {
-    // Calculate the size of each grid cell
+    // Adjust fragment coordinates based on pixel ratio to get logical pixel position
+    vec2 logicalFragCoord = floor(gl_FragCoord.xy / u_pixelRatio);
+
+    // Calculate the size of each grid cell in logical pixels
     vec2 cellSize = u_inputImageSize / vec2(float(u_gridCols), float(u_gridRows));
 
-    // Determine the current fragment's grid position
-    vec2 fragCoord = floor(gl_FragCoord.xy);
-    vec2 inputGridPos = fragCoord * cellSize;
+    // Determine the current fragment's grid position in the input image
+    vec2 inputGridPos = logicalFragCoord * cellSize;
 
     // Calculate the center texture coordinate for saving the initial pixel color
     vec2 centerOffset = cellSize * 0.5;
@@ -198,6 +208,9 @@ void main() {
             // Calculate normalized texture coordinates for the sample
             vec2 offset = (vec2(float(i), float(j)) + 0.5) * (cellSize / vec2(float(SAMPLES_PER_ROW), float(SAMPLES_PER_COL)));
             vec2 texCoord = (inputGridPos + offset) / u_inputImageSize;
+
+            // Clamp texture coordinates to [0, 1] to prevent sampling outside the image
+            texCoord = clamp(texCoord, 0.0, 1.0);
 
             // Sample the color from the input image
             vec4 sampledColor = texture2D(u_inputImage, texCoord);

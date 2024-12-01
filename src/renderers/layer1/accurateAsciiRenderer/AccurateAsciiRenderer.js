@@ -75,6 +75,7 @@ export default class AccurateAsciiRenderer extends AsciiRenderer {
             this.colorSampleShader.setUniform('u_gridCols', this.grid.cols);
             this.colorSampleShader.setUniform('u_gridRows', this.grid.rows);
             this.colorSampleShader.setUniform('u_colorRank', 1);
+            this.colorSampleShader.setUniform('u_pixelRatio', this.p5.pixelDensity());
             this.p5.rect(0, 0, this.p5.width, this.p5.height);
         }
         this.primaryColorSampleFramebuffer.end();
@@ -91,6 +92,7 @@ export default class AccurateAsciiRenderer extends AsciiRenderer {
             this.colorSampleShader.setUniform('u_gridCols', this.grid.cols);
             this.colorSampleShader.setUniform('u_gridRows', this.grid.rows);
             this.colorSampleShader.setUniform('u_colorRank', 2);
+            this.colorSampleShader.setUniform('u_pixelRatio', this.p5.pixelDensity());
             this.p5.rect(0, 0, this.p5.width, this.p5.height);
         }
         this.secondaryColorSampleFramebuffer.end();
@@ -104,6 +106,7 @@ export default class AccurateAsciiRenderer extends AsciiRenderer {
         this.characterSelectionShader.setUniform('u_sketchTexture', this.brightnessSplitFramebuffer);
         this.characterSelectionShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
         this.characterSelectionShader.setUniform('u_gridPixelDimensions', [this.grid.width, this.grid.height]);
+        this.characterSelectionShader.setUniform('u_pixelRatio', this.p5.pixelDensity());
         this.p5.rect(0, 0, this.p5.width, this.p5.height);
         this.asciiCharacterFramebuffer.end();
 
