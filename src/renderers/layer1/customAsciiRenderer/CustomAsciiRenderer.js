@@ -37,7 +37,7 @@ export default class CustomAsciiRenderer extends AsciiRenderer {
         this.p5.shader(this.shader);
         this.shader.setUniform('u_layer', 1);
         this.shader.setUniform('u_pixelRatio', this.p5.pixelDensity());
-        this.shader.setUniform('u_resolution', [this.p5.width* this.p5.pixelDensity(), this.p5.height* this.p5.pixelDensity()]);
+        this.shader.setUniform('u_resolution', [this.p5.width, this.p5.height]);
         this.shader.setUniform('u_characterTexture', this.characterSet.asciiFontTextureAtlas.texture);
         this.shader.setUniform('u_charsetDimensions', [this.characterSet.asciiFontTextureAtlas.charsetCols, this.characterSet.asciiFontTextureAtlas.charsetRows]);
         this.shader.setUniform('u_primaryColorTexture', this.primaryColorSampleFramebuffer);
