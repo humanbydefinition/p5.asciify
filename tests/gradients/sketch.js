@@ -67,7 +67,7 @@ function setup() {
     });
     zigzagGradient = addAsciiGradient("zigzag", 180, 180, "available ", {
         direction: 1,
-        speed: 0.1,
+        speed: 0.2,
     });
     conicalGradient = addAsciiGradient("conical", 190, 190, "in ", {
         speed: 0.01,
@@ -117,9 +117,11 @@ function draw() {
         radialGradient.palette = "finally ";
     }
 
+    /** 
     if (frameCount === 180) {
         removeAsciiGradient(spiralGradient);
     }
+    **/
 
     linearGradient.angle += 0.5;
     //zigzagGradient.angle += 0.5;

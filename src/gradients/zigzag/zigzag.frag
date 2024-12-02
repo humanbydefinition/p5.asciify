@@ -34,9 +34,11 @@ void main() {
         // Calculate the position within the row
         float rowPosition = positionX;
 
-        // Adjust index calculation to incorporate speed and zigzag pattern
-        float index = mod(rowPosition + float(frameCount) * u_speed * direction * u_gradientDirection, gradientTextureDimensions.x);
-        index = floor(index);
+        // Scale speed inversely with pixel ratio to maintain consistent visual speed
+        float adjustedSpeed = u_speed / u_pixelRatio;
+
+// Use adjusted speed in animation calculation
+        float index = mod(rowPosition + float(frameCount) * adjustedSpeed * direction * u_gradientDirection, gradientTextureDimensions.x);index = floor(index);
 
         float texelPosition = (index + 0.5) / gradientTextureDimensions.x;
 
