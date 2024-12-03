@@ -26,6 +26,7 @@ export default class TextAsciiRenderer {
         this.textAsciiRenderer.style('display', 'flex');
         this.textAsciiRenderer.style('justify-content', 'center');
         this.textAsciiRenderer.style('align-items', 'center');
+        this.textAsciiRenderer.style('white-space', 'pre');
         this.textAsciiRenderer.style('background-color', 'black');
         this.textAsciiRenderer.style('color', 'white');
 
@@ -47,23 +48,20 @@ export default class TextAsciiRenderer {
         // Clear the container's existing content
         asciiArtContainer.html('');
 
-        const w = this.grid.cols;
         const h = this.grid.rows;
 
         for (let y = 0; y < h; y++) {
             const lineDiv = document.createElement('div');
-            lineDiv.style.display = 'block';
             lineDiv.style.margin = '0';
             lineDiv.style.padding = '0';
             lineDiv.style.lineHeight = '1';
             lineDiv.style.fontFamily = 'inherit';
             lineDiv.style.fontSize = 'inherit';
 
-            for (let x = 0; x < w; x++) {
-                const textNode = document.createTextNode(' ');
-                lineDiv.appendChild(textNode);
-                this.textNodes.push(textNode);
-            }
+            const textNode = document.createTextNode('');
+            lineDiv.appendChild(textNode);
+            this.textNodes.push(textNode);
+
             asciiArtContainer.elt.appendChild(lineDiv);
         }
     }
@@ -77,23 +75,26 @@ export default class TextAsciiRenderer {
         const asciiPixels = this.asciiCharacterFramebuffer.pixels;
         const chars = this.asciiFontTextureAtlas.characters; // Array of characters
 
-        let textNodeIndex = 0;
+        let idx = 0; // Index into asciiPixels
 
         for (let y = 0; y < h; y++) {
+            let rowString = '';
             for (let x = 0; x < w; x++) {
-                const idx = 4 * (x + y * w);
+                const pixelIdx = idx * 4;
 
                 // Get the character index from asciiCharacterFramebuffer
-                const r = asciiPixels[idx];
-                const g = asciiPixels[idx + 1];
-                let bestCharIndex = r + g * 256;
+                const r = asciiPixels[pixelIdx];
+                const g = asciiPixels[pixelIdx + 1];
+                let bestCharIndex = r + (g << 8); // Equivalent to r + g * 256
                 if (bestCharIndex >= chars.length) bestCharIndex = chars.length - 1;
                 const ch = chars[bestCharIndex];
 
-                // Update the corresponding text node's data
-                this.textNodes[textNodeIndex].data = ch;
-                textNodeIndex++;
+                rowString += ch;
+                idx++;
             }
+
+            // Update the corresponding text node's data
+            this.textNodes[y].data = rowString;
         }
     }
 }
