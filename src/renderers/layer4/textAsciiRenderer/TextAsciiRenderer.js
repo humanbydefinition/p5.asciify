@@ -79,17 +79,22 @@ export default class TextAsciiRenderer {
     }
 
     outputAsciiToHtml() {
-        // Load pixel data from the framebuffers
+        // Load pixel data from the asciiCharacterFramebuffer
         this.asciiRenderer.asciiCharacterFramebuffer.loadPixels();
-        this.asciiRenderer.primaryColorSampleFramebuffer.loadPixels();
 
         const w = this.grid.cols;
         const h = this.grid.rows;
         const asciiPixels = this.asciiRenderer.asciiCharacterFramebuffer.pixels;
-        const primaryColorPixels = this.asciiRenderer.primaryColorSampleFramebuffer.pixels;
         const chars = this.asciiFontTextureAtlas.characters; // Array of characters
 
         let idx = 0; // Index into pixels
+
+        // Only load primaryColorPixels if per-character coloring is enabled
+        let primaryColorPixels = null;
+        if (this.options.characterColorMode === 0) {
+            this.asciiRenderer.primaryColorSampleFramebuffer.loadPixels();
+            primaryColorPixels = this.asciiRenderer.primaryColorSampleFramebuffer.pixels;
+        }
 
         for (let y = 0; y < h; y++) {
             const rowSpans = this.charSpans[y];
@@ -103,22 +108,25 @@ export default class TextAsciiRenderer {
                 if (bestCharIndex >= chars.length) bestCharIndex = chars.length - 1;
                 const ch = chars[bestCharIndex];
 
-                // Get the primary color from primaryColorPixels
-                const colorR = primaryColorPixels[pixelIdx];
-                const colorG = primaryColorPixels[pixelIdx + 1];
-                const colorB = primaryColorPixels[pixelIdx + 2];
-
                 const charSpan = rowSpans[x];
                 // Update character if changed
                 if (charSpan.textContent !== ch) {
                     charSpan.textContent = ch;
                 }
 
-                // Update color if changed
-                const newColor = `rgb(${colorR}, ${colorG}, ${colorB})`;
-                if (charSpan.style.color !== newColor) {
-                    charSpan.style.color = newColor;
-                }
+                if (this.options.characterColorMode === 0) {
+                    // Sample color for each character
+                    // Get the primary color from primaryColorPixels
+                    const colorR = primaryColorPixels[pixelIdx];
+                    const colorG = primaryColorPixels[pixelIdx + 1];
+                    const colorB = primaryColorPixels[pixelIdx + 2];
+
+                    // Update color if changed
+                    const newColor = `rgb(${colorR}, ${colorG}, ${colorB})`;
+                    if (charSpan.style.color !== newColor) {
+                        charSpan.style.color = newColor;
+                    }
+                } 
 
                 idx++;
             }
