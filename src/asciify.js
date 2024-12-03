@@ -62,6 +62,14 @@ class P5Asciify {
         rotationAngle: 0,
     };
 
+    textOptions = {
+        enabled: false,
+        characterColor: "#FFFFFF",
+        characterColorMode: 1,
+        backgroundColor: "#000000",
+        invertMode: false,
+    }
+
     gradientManager = new P5AsciifyGradientManager();
 
     postSetupFunction = null;
@@ -115,7 +123,7 @@ class P5Asciify {
         this.edgeRenderer = new EdgeAsciiRenderer(this.p5Instance, this.grid, this.edgeCharacterSet, this.edgeOptions);
 
         //this.cubeAsciiRenderer3D = new CubeAsciiRenderer3D(this.p5Instance, this.grid, this.edgeCharacterSet, this.edgeRenderer, this.asciiOptions);
-        this.textAsciiRenderer = new TextAsciiRenderer(this.p5Instance, this.asciiFontTextureAtlas, this.grid, this.edgeRenderer.asciiCharacterFramebuffer,  this.commonOptions, );
+        this.textAsciiRenderer = new TextAsciiRenderer(this.p5Instance, this.asciiFontTextureAtlas, this.grid, this.edgeRenderer, this.textOptions );
 
 
         this.asciiRenderer = this.brightnessRenderer;
@@ -156,7 +164,7 @@ class P5Asciify {
             this.accurateRenderer.resizeFramebuffers();
             this.gradientRenderer.resizeFramebuffers();
 
-            this.textAsciiRenderer.initializeTextNodes();
+            this.textAsciiRenderer.updateDimensions();
         }
     }
 
