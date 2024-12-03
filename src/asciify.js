@@ -123,8 +123,7 @@ class P5Asciify {
         this.edgeRenderer = new EdgeAsciiRenderer(this.p5Instance, this.grid, this.edgeCharacterSet, this.edgeOptions);
 
         //this.cubeAsciiRenderer3D = new CubeAsciiRenderer3D(this.p5Instance, this.grid, this.edgeCharacterSet, this.edgeRenderer, this.asciiOptions);
-        this.textAsciiRenderer = new TextAsciiRenderer(this.p5Instance, this.asciiFontTextureAtlas, this.grid, this.edgeRenderer, this.textOptions );
-
+        this.textAsciiRenderer = new TextAsciiRenderer(this.p5Instance, this.asciiFontTextureAtlas, this.grid, this.edgeRenderer, this.fontBase64, this.fontFileType, this.textOptions);
 
         this.asciiRenderer = this.brightnessRenderer;
         if (this.asciiOptions.renderMode === 'accurate') {
@@ -189,7 +188,9 @@ class P5Asciify {
         this.p5Instance.clear();
         this.p5Instance.image(asciiOutput, -this.p5Instance.width / 2, -this.p5Instance.height / 2, this.p5Instance.width, this.p5Instance.height);
 
-        this.textAsciiRenderer.outputAsciiToHtml();
+        if (this.textOptions.enabled) {
+            this.textAsciiRenderer.outputAsciiToHtml();
+        }
 
         if (this.postDrawFunction) {
             this.postDrawFunction();
@@ -241,7 +242,6 @@ class P5Asciify {
         this.edgeRenderer.updateOptions(edgeOptions);
         this.textAsciiRenderer.updateOptions(textOptions);
 
-
         if (asciiOptions?.renderMode) {
             if (asciiOptions.renderMode === 'accurate') {
                 this.asciiRenderer = this.accurateRenderer;
@@ -257,24 +257,28 @@ class P5Asciify {
             this.accurateRenderer.resetShaders();
         }
 
-        if (edgeOptions?.characters) {
+        if (edgeOptions?.hasOwnProperty('characters')) {
             this.edgeCharacterSet.setCharacterSet(edgeOptions.characters);
         }
 
-        if(textOptions?.characterColorMode) {
+        if (textOptions?.hasOwnProperty('characterColorMode')) {
             this.textAsciiRenderer.updateCharacterColorMode();
         }
 
-        if(textOptions?.characterColor) {
+        if (textOptions?.hasOwnProperty('characterColor')) {
             this.textAsciiRenderer.updateCharacterColor();
         }
 
-        if(textOptions?.backgroundColor) {
+        if (textOptions?.hasOwnProperty('backgroundColor')) {
             this.textAsciiRenderer.updateBackgroundColor();
         }
 
-        if (textOptions?.invertMode) {
+        if (textOptions?.hasOwnProperty('invertMode')) {
             this.textAsciiRenderer.updateInvertMode();
+        }
+
+        if (textOptions?.hasOwnProperty('enabled')) {
+            this.textAsciiRenderer.toggleVisibility();
         }
 
         if (commonOptions?.fontSize) {

@@ -20,6 +20,13 @@ function setup() {
 			backgroundColorMode: 1,
 			invertMode: true,
 		},
+		edge: {
+			enabled: true,
+			invertMode: true
+		},
+		text: {
+			enabled: true,
+		}
 	});
 }
 
@@ -37,16 +44,9 @@ function draw() {
 
 	image(sketchFramebuffer, -windowWidth / 2, -windowHeight / 2);
 
-	if (frameCount == 100) {
-		setAsciiOptions({
-			common: 
-			{
-				fontSize: 32,
-			}
-		})
-	}
+	
 
-	/**
+	
 
 	if (frameCount == 100) {
 		setAsciiOptions({
@@ -80,7 +80,16 @@ function draw() {
 		})
 	}
 
-	**/
+	if (frameCount == 500) {
+		setAsciiOptions({
+			common: 
+			{
+				fontSize: 32,
+			}
+		})
+	}
+
+	
 }
 
 function windowResized() {

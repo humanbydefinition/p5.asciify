@@ -1,26 +1,37 @@
 export default class TextAsciiRenderer {
-    constructor(p5Instance, asciiFontTextureAtlas, grid, asciiRenderer, options) {
+    constructor(p5Instance, asciiFontTextureAtlas, grid, asciiRenderer, fontBase64, fontFileType, options) {
         this.p5 = p5Instance;
         this.asciiFontTextureAtlas = asciiFontTextureAtlas;
         this.grid = grid;
         this.asciiRenderer = asciiRenderer;
         this.options = options;
+        this.fontBase64 = fontBase64;   // Base64 encoded font data (without data: prefix)
+        this.fontFileType = fontFileType; // 'truetype' or 'opentype'
 
-        // Initialize colors based on invertMode
         this.updateColors();
 
-        // Store references to line divs and character spans
-        this.lineDivs = [];
-        this.charSpans = []; // 2D array: [row][col] = span
+        // Create a style element for @font-face
+        const fontName = 'AsciiFont';
+        const styleEl = document.createElement('style');
+        styleEl.textContent = `
+            @font-face {
+                font-family: '${fontName}';
+                src: url(${this.fontBase64}) format('${this.fontFileType}');
+                font-weight: normal;
+                font-style: normal;
+            }
+        `;
+        document.head.appendChild(styleEl);
+        this.styleEl = styleEl;
 
-        // Create the main container for ASCII art
+        // Create main container
         this.textAsciiRenderer = this.p5.createDiv('');
         this.textAsciiRenderer.style('position', 'absolute');
         this.textAsciiRenderer.style('top', '0');
         this.textAsciiRenderer.style('left', '0');
         this.textAsciiRenderer.style('width', '100%');
         this.textAsciiRenderer.style('height', '100%');
-        this.textAsciiRenderer.style('font-family', 'UrsaFont, monospace');
+        this.textAsciiRenderer.style('font-family', `'${fontName}', monospace`);
         this.textAsciiRenderer.style('font-size', `${this.asciiFontTextureAtlas.fontSize}px`);
         this.textAsciiRenderer.style('line-height', '1');
         this.textAsciiRenderer.style('display', 'flex');
@@ -30,7 +41,10 @@ export default class TextAsciiRenderer {
         this.textAsciiRenderer.style('background-color', this.backgroundColor);
         this.textAsciiRenderer.style('color', this.foregroundColor);
 
-        // Create a container div for ASCII art
+        if (!this.options.enabled) {
+            this.textAsciiRenderer.hide();
+        }
+
         const asciiArtContainer = this.p5.createDiv('');
         asciiArtContainer.class('ascii-art-container');
         asciiArtContainer.parent(this.textAsciiRenderer);
@@ -40,6 +54,29 @@ export default class TextAsciiRenderer {
         this.initializeLineDivs();
         this.initializeCharSpans();
     }
+
+    updateFont(fontBase64, fontFileType) {
+        this.fontBase64 = fontBase64;
+        this.fontFileType = fontFileType;
+
+        // Update the @font-face rule in the stored style element
+        const fontName = 'AsciiFont';
+        this.styleEl.textContent = `
+            @font-face {
+                font-family: '${fontName}';
+                src: url(${this.fontBase64}) format('${this.fontFileType}');
+                font-weight: normal;
+                font-style: normal;
+            }
+        `;
+
+        // Update the font-family style to ensure the new font is applied
+        this.textAsciiRenderer.style('font-family', `'${fontName}', monospace`);
+
+        // Optionally, update font size if necessary
+        this.updateFontSize();
+    }
+
 
     updateColors() {
         // Compute background and foreground colors based on invertMode
@@ -65,8 +102,25 @@ export default class TextAsciiRenderer {
 
         for (let y = 0; y < h; y++) {
             const lineDiv = document.createElement('div');
+            lineDiv.style.margin = '0';
+            lineDiv.style.padding = '0';
+            lineDiv.style.lineHeight = '1';
+            lineDiv.style.fontFamily = 'inherit';
+            lineDiv.style.fontSize = 'inherit';
+
             this.lineDivs.push(lineDiv);
             asciiArtContainer.elt.appendChild(lineDiv);
+        }
+    }
+
+    toggleVisibility() {
+        if (this.options.enabled) {
+            this.textAsciiRenderer.style('display', 'flex');
+        } else {
+            this.textAsciiRenderer.hide();
+
+            console.log("Hiding textAsciiRenderer");
+
         }
     }
 
@@ -172,7 +226,7 @@ export default class TextAsciiRenderer {
 
         this.updateDimensions();
     }
-    
+
 
     updateInvertMode() {
         // Update colors based on new invertMode

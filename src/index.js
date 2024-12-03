@@ -39,6 +39,8 @@ p5.prototype.preloadAsciiFont = function () {
         URSAFONT_BASE64,
         (loadedFont) => {
             p5asciify.font = loadedFont;
+            p5asciify.fontBase64 = `${URSAFONT_BASE64}`;
+            p5asciify.fontFileType = 'truetype';
         },
         () => { throw new P5AsciifyError(`loadAsciiFont() | Failed to load font from path: '${font}'`); }
     );
@@ -67,9 +69,9 @@ p5.prototype.registerMethod("beforePreload", p5.prototype.preloadAsciiFont);
  * loadAsciiFont(fontObject);
  */
 p5.prototype.loadAsciiFont = function (font) {
-    const setFont = (loadedFont) => {
+    const setFont = async (loadedFont, fontPath) => {
         p5asciify.font = loadedFont;
-        p5asciify.p5Instance._decrementPreload();
+
         if (p5asciify.p5Instance.frameCount > 0) {
             p5asciify.asciiFontTextureAtlas.setFontObject(loadedFont);
             p5asciify.grid.resizeCellPixelDimensions(
@@ -80,18 +82,47 @@ p5.prototype.loadAsciiFont = function (font) {
             p5asciify.asciiCharacterSet.setCharacterSet(p5asciify.asciiCharacterSet.characters);
             p5asciify.edgeCharacterSet.setCharacterSet(p5asciify.edgeCharacterSet.characters);
         }
+
+        try {
+            const response = await fetch(fontPath);
+            const arrayBuffer = await response.arrayBuffer();
+            const base64String = btoa(
+                new Uint8Array(arrayBuffer)
+                    .reduce((data, byte) => data + String.fromCharCode(byte), '')
+            );
+
+            // Determine the font type based on the file extension
+            let mimeType = '';
+            if (fontPath.toLowerCase().endsWith('.ttf')) {
+                mimeType = 'truetype';
+            } else if (fontPath.toLowerCase().endsWith('.otf')) {
+                mimeType = 'opentype';
+            } else {
+                mimeType = 'truetype';
+            }
+
+            p5asciify.fontBase64 = `data:font/${mimeType};charset=utf-8;base64,${base64String}`;
+            p5asciify.fontFileType = mimeType;
+
+            console.log("Font loaded successfully:", fontPath);
+
+        } catch (error) {
+            console.error('Error converting font to Base64:', error);
+        }
+
+
+        p5asciify.p5Instance._decrementPreload();
     };
+
 
     if (typeof font === 'string') {
         p5asciify.p5Instance.loadFont(
             font,
-            (loadedFont) => { setFont(loadedFont); },
+            (loadedFont) => { setFont(loadedFont, font); },
             () => { throw new P5AsciifyError(`loadAsciiFont() | Failed to load font from path: '${font}'`); }
         );
-    } else if (typeof font === 'object') {
-        setFont(font);
     } else {
-        throw new P5AsciifyError(`loadAsciiFont() | Invalid font parameter. Expected a string or an object.`);
+        throw new P5AsciifyError(`loadAsciiFont() | Invalid font parameter. Expected a string/path.`);
     }
 };
 p5.prototype.registerPreloadMethod('loadAsciiFont', p5.prototype);

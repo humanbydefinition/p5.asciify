@@ -1879,102 +1879,345 @@ void main() {
     }
 
     class TextAsciiRenderer {
-
-        constructor(p5Instance, asciiFontTextureAtlas, grid, asciiCharacterFramebuffer, options) {
+        constructor(p5Instance, asciiFontTextureAtlas, grid, asciiRenderer, fontBase64, fontFileType, options) {
             this.p5 = p5Instance;
             this.asciiFontTextureAtlas = asciiFontTextureAtlas;
             this.grid = grid;
-            this.asciiCharacterFramebuffer = asciiCharacterFramebuffer;
+            this.asciiRenderer = asciiRenderer;
             this.options = options;
+            this.fontBase64 = fontBase64;   // Base64 encoded font data (without data: prefix)
+            this.fontFileType = fontFileType; // 'truetype' or 'opentype'
 
-            this.textNodes = [];
+            this.updateColors();
 
+            // Create a style element for @font-face
+            const fontName = 'AsciiFont';
+            const styleEl = document.createElement('style');
+            styleEl.textContent = `
+            @font-face {
+                font-family: '${fontName}';
+                src: url(${this.fontBase64}) format('${this.fontFileType}');
+                font-weight: normal;
+                font-style: normal;
+            }
+        `;
+            document.head.appendChild(styleEl);
+            this.styleEl = styleEl;
+
+            // Create main container
             this.textAsciiRenderer = this.p5.createDiv('');
             this.textAsciiRenderer.style('position', 'absolute');
             this.textAsciiRenderer.style('top', '0');
             this.textAsciiRenderer.style('left', '0');
             this.textAsciiRenderer.style('width', '100%');
             this.textAsciiRenderer.style('height', '100%');
-            this.textAsciiRenderer.style('font-family', 'monospace');
-            this.textAsciiRenderer.style('font-size', `${this.options.fontSize}px`);
+            this.textAsciiRenderer.style('font-family', `'${fontName}', monospace`);
+            this.textAsciiRenderer.style('font-size', `${this.asciiFontTextureAtlas.fontSize}px`);
             this.textAsciiRenderer.style('line-height', '1');
-            this.textAsciiRenderer.style('@font-face', `
-            font-family: 'UrsaFont';
-            src: url('UrsaFont.ttf') format('opentype');
-        `);
-            this.textAsciiRenderer.style('font-family', 'UrsaFont');
             this.textAsciiRenderer.style('display', 'flex');
             this.textAsciiRenderer.style('justify-content', 'center');
             this.textAsciiRenderer.style('align-items', 'center');
-            this.textAsciiRenderer.style('background-color', 'black');
-            this.textAsciiRenderer.style('color', 'white');
+            this.textAsciiRenderer.style('white-space', 'pre');
+            this.textAsciiRenderer.style('background-color', this.backgroundColor);
+            this.textAsciiRenderer.style('color', this.foregroundColor);
 
-            // Create a container div for ASCII art
+            if (!this.options.enabled) {
+                this.textAsciiRenderer.hide();
+            }
+
             const asciiArtContainer = this.p5.createDiv('');
             asciiArtContainer.class('ascii-art-container');
             asciiArtContainer.parent(this.textAsciiRenderer);
 
             this.asciiArtContainer = asciiArtContainer;
 
-            this.initializeTextNodes();
+            this.initializeLineDivs();
+            this.initializeCharSpans();
         }
 
-        initializeTextNodes() {
-            // Clear existing text nodes
-            this.textNodes = [];
+        updateFont(fontBase64, fontFileType) {
+            this.fontBase64 = fontBase64;
+            this.fontFileType = fontFileType;
+
+            // Update the @font-face rule in the stored style element
+            const fontName = 'AsciiFont';
+            this.styleEl.textContent = `
+            @font-face {
+                font-family: '${fontName}';
+                src: url(${this.fontBase64}) format('${this.fontFileType}');
+                font-weight: normal;
+                font-style: normal;
+            }
+        `;
+
+            // Update the font-family style to ensure the new font is applied
+            this.textAsciiRenderer.style('font-family', `'${fontName}', monospace`);
+
+            // Optionally, update font size if necessary
+            this.updateFontSize();
+        }
+
+
+        updateColors() {
+            // Compute background and foreground colors based on invertMode
+            this.backgroundColor = this.options.invertMode ? this.options.characterColor : this.options.backgroundColor;
+            this.foregroundColor = this.options.invertMode ? this.options.backgroundColor : this.options.characterColor;
+
+            if (this.textAsciiRenderer) {
+                // Update the main container's background and text colors
+                this.textAsciiRenderer.style('background-color', this.backgroundColor);
+                this.textAsciiRenderer.style('color', this.foregroundColor);
+            }
+        }
+
+        initializeLineDivs() {
+            // Clear existing lineDivs
+            this.lineDivs = [];
             const asciiArtContainer = this.asciiArtContainer;
 
             // Clear the container's existing content
             asciiArtContainer.html('');
 
-            const w = this.grid.cols;
             const h = this.grid.rows;
 
             for (let y = 0; y < h; y++) {
                 const lineDiv = document.createElement('div');
-                lineDiv.style.display = 'block';
                 lineDiv.style.margin = '0';
                 lineDiv.style.padding = '0';
                 lineDiv.style.lineHeight = '1';
                 lineDiv.style.fontFamily = 'inherit';
                 lineDiv.style.fontSize = 'inherit';
 
-                for (let x = 0; x < w; x++) {
-                    const textNode = document.createTextNode(' ');
-                    lineDiv.appendChild(textNode);
-                    this.textNodes.push(textNode);
-                }
+                this.lineDivs.push(lineDiv);
                 asciiArtContainer.elt.appendChild(lineDiv);
             }
         }
 
+        toggleVisibility() {
+            if (this.options.enabled) {
+                this.textAsciiRenderer.style('display', 'flex');
+            } else {
+                this.textAsciiRenderer.hide();
+
+                console.log("Hiding textAsciiRenderer");
+
+            }
+        }
+
+        initializeCharSpans() {
+            // Initialize the 2D array for character spans
+            this.charSpans = [];
+            const w = this.grid.cols;
+            const h = this.grid.rows;
+
+            for (let y = 0; y < h; y++) {
+                const rowSpans = [];
+                const lineDiv = this.lineDivs[y];
+                // Clear any existing spans
+                lineDiv.innerHTML = '';
+
+                for (let x = 0; x < w; x++) {
+                    const charSpan = document.createElement('span');
+                    charSpan.textContent = ' '; // Initialize with space
+                    lineDiv.appendChild(charSpan);
+                    rowSpans.push(charSpan);
+                }
+
+                this.charSpans.push(rowSpans);
+            }
+        }
+
         outputAsciiToHtml() {
-            // Load pixel data from the framebuffer
-            this.asciiCharacterFramebuffer.loadPixels();
+            // Load pixel data from the asciiCharacterFramebuffer
+            this.asciiRenderer.asciiCharacterFramebuffer.loadPixels();
 
             const w = this.grid.cols;
             const h = this.grid.rows;
-            const asciiPixels = this.asciiCharacterFramebuffer.pixels;
+            const asciiPixels = this.asciiRenderer.asciiCharacterFramebuffer.pixels;
             const chars = this.asciiFontTextureAtlas.characters; // Array of characters
 
-            let textNodeIndex = 0;
+            let idx = 0; // Index into pixels
+
+            // Only load primaryColorPixels if per-character coloring is enabled
+            let primaryColorPixels = null;
+            if (this.options.characterColorMode === 0) {
+                this.asciiRenderer.primaryColorSampleFramebuffer.loadPixels();
+                primaryColorPixels = this.asciiRenderer.primaryColorSampleFramebuffer.pixels;
+            }
 
             for (let y = 0; y < h; y++) {
+                const rowSpans = this.charSpans[y];
                 for (let x = 0; x < w; x++) {
-                    const idx = 4 * (x + y * w);
+                    const pixelIdx = idx * 4;
 
-                    // Get the character index from asciiCharacterFramebuffer
-                    const r = asciiPixels[idx];
-                    const g = asciiPixels[idx + 1];
-                    let bestCharIndex = r + g * 256;
+                    // Get the character index from asciiRenderer
+                    const r = asciiPixels[pixelIdx];
+                    const g = asciiPixels[pixelIdx + 1];
+                    let bestCharIndex = r + (g << 8); // Equivalent to r + g * 256
                     if (bestCharIndex >= chars.length) bestCharIndex = chars.length - 1;
                     const ch = chars[bestCharIndex];
 
-                    // Update the corresponding text node's data
-                    this.textNodes[textNodeIndex].data = ch;
-                    textNodeIndex++;
+                    const charSpan = rowSpans[x];
+                    // Update character if changed
+                    if (charSpan.textContent !== ch) {
+                        charSpan.textContent = ch;
+                    }
+
+                    if (this.options.characterColorMode === 0) {
+                        // Sample color for each character
+                        const colorR = primaryColorPixels[pixelIdx];
+                        const colorG = primaryColorPixels[pixelIdx + 1];
+                        const colorB = primaryColorPixels[pixelIdx + 2];
+
+                        const newColor = `rgb(${colorR}, ${colorG}, ${colorB})`;
+
+                        if (this.options.invertMode) {
+                            // In invert mode, set per-character background color
+                            if (charSpan.dataset.bgColor !== newColor) {
+                                charSpan.style.backgroundColor = newColor;
+                                charSpan.dataset.bgColor = newColor;
+                            }
+                            // Set text color to foregroundColor
+                            if (charSpan.style.color !== this.foregroundColor) {
+                                charSpan.style.color = this.foregroundColor;
+                            }
+                        } else {
+                            // In normal mode, set per-character text color
+                            if (charSpan.dataset.color !== newColor) {
+                                charSpan.style.color = newColor;
+                                charSpan.dataset.color = newColor;
+                            }
+                            // Clear per-character background color
+                            if (charSpan.style.backgroundColor) {
+                                charSpan.style.backgroundColor = '';
+                                delete charSpan.dataset.bgColor;
+                            }
+                        }
+                    }
+
+                    idx++;
                 }
             }
+        }
+
+        updateFontSize() {
+            // Update the font size style of the renderer
+            this.textAsciiRenderer.style('font-size', `${this.asciiFontTextureAtlas.fontSize}px`);
+
+            this.updateDimensions();
+        }
+
+
+        updateInvertMode() {
+            // Update colors based on new invertMode
+            this.updateColors();
+
+            // Update container styles
+            this.textAsciiRenderer.style('background-color', this.backgroundColor);
+            this.textAsciiRenderer.style('color', this.foregroundColor);
+
+            // If per-character coloring is enabled, we need to update per-character styles
+            if (this.options.characterColorMode === 0) {
+                const w = this.grid.cols;
+                const h = this.grid.rows;
+
+                for (let y = 0; y < h; y++) {
+                    const rowSpans = this.charSpans[y];
+                    for (let x = 0; x < w; x++) {
+                        const charSpan = rowSpans[x];
+                        // Swap per-character styles
+                        if (this.options.invertMode) {
+                            // Move color to backgroundColor
+                            if (charSpan.dataset.color) {
+                                charSpan.style.backgroundColor = charSpan.dataset.color;
+                                charSpan.dataset.bgColor = charSpan.dataset.color;
+                                charSpan.style.color = this.foregroundColor;
+                                delete charSpan.style.color;
+                                delete charSpan.dataset.color;
+                            }
+                        } else {
+                            // Move backgroundColor to color
+                            if (charSpan.dataset.bgColor) {
+                                charSpan.style.color = charSpan.dataset.bgColor;
+                                charSpan.dataset.color = charSpan.dataset.bgColor;
+                                charSpan.style.backgroundColor = '';
+                                delete charSpan.dataset.bgColor;
+                            }
+                        }
+                    }
+                }
+            } else {
+                // If per-character coloring is not enabled, ensure styles are cleared
+                this.clearPerCharacterStyles();
+            }
+        }
+
+        updateOptions(options) {
+            this.options = {
+                ...this.options,
+                ...options,
+            };
+        }
+
+        updateCharacterColor() {
+            // Update colors based on new characterColor
+            this.updateColors();
+
+            // Update container styles
+            this.textAsciiRenderer.style('background-color', this.backgroundColor);
+            this.textAsciiRenderer.style('color', this.foregroundColor);
+
+            // If per-character coloring is not enabled, ensure per-character styles are cleared
+            if (this.options.characterColorMode !== 0) {
+                this.clearPerCharacterStyles();
+            }
+        }
+
+        updateBackgroundColor() {
+            // Update colors based on new backgroundColor
+            this.updateColors();
+
+            // Update container styles
+            this.textAsciiRenderer.style('background-color', this.backgroundColor);
+            this.textAsciiRenderer.style('color', this.foregroundColor);
+
+            // If per-character coloring is not enabled, ensure per-character styles are cleared
+            if (this.options.characterColorMode !== 0) {
+                this.clearPerCharacterStyles();
+            }
+        }
+
+        updateCharacterColorMode() {
+            // If per-character coloring is disabled, clear per-character styles
+            if (this.options.characterColorMode !== 0) {
+                this.clearPerCharacterStyles();
+            }
+        }
+
+        clearPerCharacterStyles() {
+            // Clear per-character styles
+            const w = this.grid.cols;
+            const h = this.grid.rows;
+
+            for (let y = 0; y < h; y++) {
+                const rowSpans = this.charSpans[y];
+                for (let x = 0; x < w; x++) {
+                    const charSpan = rowSpans[x];
+                    if (charSpan.style.color) {
+                        charSpan.style.color = '';
+                        delete charSpan.dataset.color;
+                    }
+                    if (charSpan.style.backgroundColor) {
+                        charSpan.style.backgroundColor = '';
+                        delete charSpan.dataset.bgColor;
+                    }
+                }
+            }
+        }
+
+        updateDimensions() {
+            this.initializeLineDivs();
+            this.initializeCharSpans();
         }
     }
 
@@ -2024,6 +2267,14 @@ void main() {
             sampleThreshold: 16,
             rotationAngle: 0,
         };
+
+        textOptions = {
+            enabled: false,
+            characterColor: "#FFFFFF",
+            characterColorMode: 0,
+            backgroundColor: "#000000",
+            invertMode: false,
+        }
 
         gradientManager = new P5AsciifyGradientManager();
 
@@ -2078,8 +2329,7 @@ void main() {
             this.edgeRenderer = new EdgeAsciiRenderer(this.p5Instance, this.grid, this.edgeCharacterSet, this.edgeOptions);
 
             //this.cubeAsciiRenderer3D = new CubeAsciiRenderer3D(this.p5Instance, this.grid, this.edgeCharacterSet, this.edgeRenderer, this.asciiOptions);
-            this.textAsciiRenderer = new TextAsciiRenderer(this.p5Instance, this.asciiFontTextureAtlas, this.grid, this.edgeRenderer.asciiCharacterFramebuffer,  this.commonOptions, );
-
+            this.textAsciiRenderer = new TextAsciiRenderer(this.p5Instance, this.asciiFontTextureAtlas, this.grid, this.edgeRenderer, this.fontBase64, this.fontFileType, this.textOptions);
 
             this.asciiRenderer = this.brightnessRenderer;
             if (this.asciiOptions.renderMode === 'accurate') {
@@ -2119,7 +2369,7 @@ void main() {
                 this.accurateRenderer.resizeFramebuffers();
                 this.gradientRenderer.resizeFramebuffers();
 
-                this.textAsciiRenderer.initializeTextNodes();
+                this.textAsciiRenderer.updateDimensions();
             }
         }
 
@@ -2144,7 +2394,9 @@ void main() {
             this.p5Instance.clear();
             this.p5Instance.image(asciiOutput, -this.p5Instance.width / 2, -this.p5Instance.height / 2, this.p5Instance.width, this.p5Instance.height);
 
-            this.textAsciiRenderer.outputAsciiToHtml();
+            if (this.textOptions.enabled) {
+                this.textAsciiRenderer.outputAsciiToHtml();
+            }
 
             if (this.postDrawFunction) {
                 this.postDrawFunction();
@@ -2158,7 +2410,7 @@ void main() {
          * Sets the default options for the P5Asciify library.
          * @param {object} options 
          */
-        setDefaultOptions(asciiOptions, edgeOptions, commonOptions, gradientOptions) {
+        setDefaultOptions(asciiOptions, edgeOptions, commonOptions, gradientOptions, textOptions) {
 
             // The parameters are pre-processed, so we can just spread them into the class variables
             this.asciiOptions = {
@@ -2179,6 +2431,11 @@ void main() {
                 ...gradientOptions
             };
 
+            this.textOptions = {
+                ...this.textOptions,
+                ...textOptions
+            };
+
             // If we are still in the users setup(), the characterset and grid have not been initialized yet.
             if (this.p5Instance.frameCount == 0) {
                 return;
@@ -2189,7 +2446,7 @@ void main() {
             this.customAsciiRenderer.updateOptions(asciiOptions);
             this.gradientRenderer.updateOptions(gradientOptions);
             this.edgeRenderer.updateOptions(edgeOptions);
-
+            this.textAsciiRenderer.updateOptions(textOptions);
 
             if (asciiOptions?.renderMode) {
                 if (asciiOptions.renderMode === 'accurate') {
@@ -2206,8 +2463,28 @@ void main() {
                 this.accurateRenderer.resetShaders();
             }
 
-            if (edgeOptions?.characters) {
+            if (edgeOptions?.hasOwnProperty('characters')) {
                 this.edgeCharacterSet.setCharacterSet(edgeOptions.characters);
+            }
+
+            if (textOptions?.hasOwnProperty('characterColorMode')) {
+                this.textAsciiRenderer.updateCharacterColorMode();
+            }
+
+            if (textOptions?.hasOwnProperty('characterColor')) {
+                this.textAsciiRenderer.updateCharacterColor();
+            }
+
+            if (textOptions?.hasOwnProperty('backgroundColor')) {
+                this.textAsciiRenderer.updateBackgroundColor();
+            }
+
+            if (textOptions?.hasOwnProperty('invertMode')) {
+                this.textAsciiRenderer.updateInvertMode();
+            }
+
+            if (textOptions?.hasOwnProperty('enabled')) {
+                this.textAsciiRenderer.toggleVisibility();
             }
 
             if (commonOptions?.fontSize) {
@@ -2222,6 +2499,8 @@ void main() {
 
                 this.edgeRenderer.resetShaders();
                 this.accurateRenderer.resetShaders();
+
+                this.textAsciiRenderer.updateFontSize();
             }
 
             if (commonOptions?.gridDimensions) {
@@ -2301,6 +2580,8 @@ void main() {
             URSAFONT_BASE64,
             (loadedFont) => {
                 p5asciify.font = loadedFont;
+                p5asciify.fontBase64 = `${URSAFONT_BASE64}`;
+                p5asciify.fontFileType = 'truetype';
             },
             () => { throw new P5AsciifyError(`loadAsciiFont() | Failed to load font from path: '${font}'`); }
         );
@@ -2329,9 +2610,9 @@ void main() {
      * loadAsciiFont(fontObject);
      */
     p5.prototype.loadAsciiFont = function (font) {
-        const setFont = (loadedFont) => {
+        const setFont = async (loadedFont, fontPath) => {
             p5asciify.font = loadedFont;
-            p5asciify.p5Instance._decrementPreload();
+
             if (p5asciify.p5Instance.frameCount > 0) {
                 p5asciify.asciiFontTextureAtlas.setFontObject(loadedFont);
                 p5asciify.grid.resizeCellPixelDimensions(
@@ -2342,18 +2623,47 @@ void main() {
                 p5asciify.asciiCharacterSet.setCharacterSet(p5asciify.asciiCharacterSet.characters);
                 p5asciify.edgeCharacterSet.setCharacterSet(p5asciify.edgeCharacterSet.characters);
             }
+
+            try {
+                const response = await fetch(fontPath);
+                const arrayBuffer = await response.arrayBuffer();
+                const base64String = btoa(
+                    new Uint8Array(arrayBuffer)
+                        .reduce((data, byte) => data + String.fromCharCode(byte), '')
+                );
+
+                // Determine the font type based on the file extension
+                let mimeType = '';
+                if (fontPath.toLowerCase().endsWith('.ttf')) {
+                    mimeType = 'truetype';
+                } else if (fontPath.toLowerCase().endsWith('.otf')) {
+                    mimeType = 'opentype';
+                } else {
+                    mimeType = 'truetype';
+                }
+
+                p5asciify.fontBase64 = `data:font/${mimeType};charset=utf-8;base64,${base64String}`;
+                p5asciify.fontFileType = mimeType;
+
+                console.log("Font loaded successfully:", fontPath);
+
+            } catch (error) {
+                console.error('Error converting font to Base64:', error);
+            }
+
+
+            p5asciify.p5Instance._decrementPreload();
         };
+
 
         if (typeof font === 'string') {
             p5asciify.p5Instance.loadFont(
                 font,
-                (loadedFont) => { setFont(loadedFont); },
+                (loadedFont) => { setFont(loadedFont, font); },
                 () => { throw new P5AsciifyError(`loadAsciiFont() | Failed to load font from path: '${font}'`); }
             );
-        } else if (typeof font === 'object') {
-            setFont(font);
         } else {
-            throw new P5AsciifyError(`loadAsciiFont() | Invalid font parameter. Expected a string or an object.`);
+            throw new P5AsciifyError(`loadAsciiFont() | Invalid font parameter. Expected a string/path.`);
         }
     };
     p5.prototype.registerPreloadMethod('loadAsciiFont', p5.prototype);
@@ -2413,7 +2723,7 @@ void main() {
      * TODO: Add example
      */
     p5.prototype.setAsciiOptions = function (options) {
-        const validOptions = ["common", "edge", "ascii", "gradient"];
+        const validOptions = ["common", "edge", "ascii", "gradient", "text"];
         const unknownOptions = Object.keys(options).filter(option => !validOptions.includes(option));
 
         if (unknownOptions.length) {
@@ -2427,7 +2737,7 @@ void main() {
             options.ascii.renderMode = 'brightness';
         }
 
-        const { ascii: asciiOptions, edge: edgeOptions, common: commonOptions, gradient: gradientOptions } = options;
+        const { ascii: asciiOptions, edge: edgeOptions, common: commonOptions, gradient: gradientOptions, text: textOptions } = options;
 
         const colorOptions = [edgeOptions, asciiOptions, gradientOptions];
         colorOptions.forEach(opt => {
@@ -2445,7 +2755,7 @@ void main() {
             delete edgeOptions.characters;
         }
 
-        p5asciify.setDefaultOptions(asciiOptions, edgeOptions, commonOptions, gradientOptions);
+        p5asciify.setDefaultOptions(asciiOptions, edgeOptions, commonOptions, gradientOptions, textOptions);
     };
 
     p5.prototype.addAsciiGradient = function (gradientName, brightnessStart, brightnessEnd, characters, userParams = {}) {
