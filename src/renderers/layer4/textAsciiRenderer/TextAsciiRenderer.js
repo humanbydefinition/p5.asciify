@@ -1,34 +1,31 @@
 export default class TextAsciiRenderer {
-
-    constructor(p5Instance, asciiFontTextureAtlas, grid, asciiCharacterFramebuffer, options) {
+    constructor(p5Instance, asciiFontTextureAtlas, grid, asciiRenderer, options) {
         this.p5 = p5Instance;
         this.asciiFontTextureAtlas = asciiFontTextureAtlas;
         this.grid = grid;
-        this.asciiCharacterFramebuffer = asciiCharacterFramebuffer;
+        this.asciiRenderer = asciiRenderer;
         this.options = options;
 
-        this.textNodes = [];
+        // Store references to line divs and character spans
+        this.lineDivs = [];
+        this.charSpans = []; // 2D array: [row][col] = span
 
+        // Create the main container for ASCII art
         this.textAsciiRenderer = this.p5.createDiv('');
         this.textAsciiRenderer.style('position', 'absolute');
         this.textAsciiRenderer.style('top', '0');
         this.textAsciiRenderer.style('left', '0');
         this.textAsciiRenderer.style('width', '100%');
         this.textAsciiRenderer.style('height', '100%');
-        this.textAsciiRenderer.style('font-family', 'monospace');
-        this.textAsciiRenderer.style('font-size', `${this.options.fontSize}px`);
+        this.textAsciiRenderer.style('font-family', 'UrsaFont, monospace');
+        this.textAsciiRenderer.style('font-size', `${this.asciiFontTextureAtlas.fontSize}px`);
         this.textAsciiRenderer.style('line-height', '1');
-        this.textAsciiRenderer.style('@font-face', `
-            font-family: 'UrsaFont';
-            src: url('UrsaFont.ttf') format('opentype');
-        `);
-        this.textAsciiRenderer.style('font-family', 'UrsaFont');
         this.textAsciiRenderer.style('display', 'flex');
         this.textAsciiRenderer.style('justify-content', 'center');
         this.textAsciiRenderer.style('align-items', 'center');
         this.textAsciiRenderer.style('white-space', 'pre');
-        this.textAsciiRenderer.style('background-color', 'black');
-        this.textAsciiRenderer.style('color', 'white');
+        this.textAsciiRenderer.style('background-color', this.options.backgroundColor);
+        this.textAsciiRenderer.style('color', this.options.characterColor);
 
         // Create a container div for ASCII art
         const asciiArtContainer = this.p5.createDiv('');
@@ -37,12 +34,13 @@ export default class TextAsciiRenderer {
 
         this.asciiArtContainer = asciiArtContainer;
 
-        this.initializeTextNodes();
+        this.initializeLineDivs();
+        this.initializeCharSpans();
     }
 
-    initializeTextNodes() {
-        // Clear existing text nodes
-        this.textNodes = [];
+    initializeLineDivs() {
+        // Clear existing lineDivs
+        this.lineDivs = [];
         const asciiArtContainer = this.asciiArtContainer;
 
         // Clear the container's existing content
@@ -52,49 +50,83 @@ export default class TextAsciiRenderer {
 
         for (let y = 0; y < h; y++) {
             const lineDiv = document.createElement('div');
-            lineDiv.style.margin = '0';
-            lineDiv.style.padding = '0';
-            lineDiv.style.lineHeight = '1';
-            lineDiv.style.fontFamily = 'inherit';
-            lineDiv.style.fontSize = 'inherit';
-
-            const textNode = document.createTextNode('');
-            lineDiv.appendChild(textNode);
-            this.textNodes.push(textNode);
-
+            this.lineDivs.push(lineDiv);
             asciiArtContainer.elt.appendChild(lineDiv);
         }
     }
 
+    initializeCharSpans() {
+        // Initialize the 2D array for character spans
+        this.charSpans = [];
+        const w = this.grid.cols;
+        const h = this.grid.rows;
+
+        for (let y = 0; y < h; y++) {
+            const rowSpans = [];
+            const lineDiv = this.lineDivs[y];
+            // Clear any existing spans
+            lineDiv.innerHTML = '';
+
+            for (let x = 0; x < w; x++) {
+                const charSpan = document.createElement('span');
+                charSpan.textContent = ' '; // Initialize with space
+                lineDiv.appendChild(charSpan);
+                rowSpans.push(charSpan);
+            }
+
+            this.charSpans.push(rowSpans);
+        }
+    }
+
     outputAsciiToHtml() {
-        // Load pixel data from the framebuffer
-        this.asciiCharacterFramebuffer.loadPixels();
+        // Load pixel data from the framebuffers
+        this.asciiRenderer.asciiCharacterFramebuffer.loadPixels();
+        this.asciiRenderer.primaryColorSampleFramebuffer.loadPixels();
 
         const w = this.grid.cols;
         const h = this.grid.rows;
-        const asciiPixels = this.asciiCharacterFramebuffer.pixels;
+        const asciiPixels = this.asciiRenderer.asciiCharacterFramebuffer.pixels;
+        const primaryColorPixels = this.asciiRenderer.primaryColorSampleFramebuffer.pixels;
         const chars = this.asciiFontTextureAtlas.characters; // Array of characters
 
-        let idx = 0; // Index into asciiPixels
+        let idx = 0; // Index into pixels
 
         for (let y = 0; y < h; y++) {
-            let rowString = '';
+            const rowSpans = this.charSpans[y];
             for (let x = 0; x < w; x++) {
                 const pixelIdx = idx * 4;
 
-                // Get the character index from asciiCharacterFramebuffer
+                // Get the character index from asciiRenderer
                 const r = asciiPixels[pixelIdx];
                 const g = asciiPixels[pixelIdx + 1];
                 let bestCharIndex = r + (g << 8); // Equivalent to r + g * 256
                 if (bestCharIndex >= chars.length) bestCharIndex = chars.length - 1;
                 const ch = chars[bestCharIndex];
 
-                rowString += ch;
+                // Get the primary color from primaryColorPixels
+                const colorR = primaryColorPixels[pixelIdx];
+                const colorG = primaryColorPixels[pixelIdx + 1];
+                const colorB = primaryColorPixels[pixelIdx + 2];
+
+                const charSpan = rowSpans[x];
+                // Update character if changed
+                if (charSpan.textContent !== ch) {
+                    charSpan.textContent = ch;
+                }
+
+                // Update color if changed
+                const newColor = `rgb(${colorR}, ${colorG}, ${colorB})`;
+                if (charSpan.style.color !== newColor) {
+                    charSpan.style.color = newColor;
+                }
+
                 idx++;
             }
-
-            // Update the corresponding text node's data
-            this.textNodes[y].data = rowString;
         }
+    }
+
+    updateDimensions() {
+        this.initializeLineDivs();
+        this.initializeCharSpans();
     }
 }
