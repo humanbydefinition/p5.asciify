@@ -6,6 +6,9 @@ export default class TextAsciiRenderer {
         this.asciiRenderer = asciiRenderer;
         this.options = options;
 
+        // Initialize colors based on invertMode
+        this.updateColors();
+
         // Store references to line divs and character spans
         this.lineDivs = [];
         this.charSpans = []; // 2D array: [row][col] = span
@@ -24,8 +27,8 @@ export default class TextAsciiRenderer {
         this.textAsciiRenderer.style('justify-content', 'center');
         this.textAsciiRenderer.style('align-items', 'center');
         this.textAsciiRenderer.style('white-space', 'pre');
-        this.textAsciiRenderer.style('background-color', this.options.backgroundColor);
-        this.textAsciiRenderer.style('color', this.options.characterColor);
+        this.textAsciiRenderer.style('background-color', this.backgroundColor);
+        this.textAsciiRenderer.style('color', this.foregroundColor);
 
         // Create a container div for ASCII art
         const asciiArtContainer = this.p5.createDiv('');
@@ -36,6 +39,18 @@ export default class TextAsciiRenderer {
 
         this.initializeLineDivs();
         this.initializeCharSpans();
+    }
+
+    updateColors() {
+        // Compute background and foreground colors based on invertMode
+        this.backgroundColor = this.options.invertMode ? this.options.characterColor : this.options.backgroundColor;
+        this.foregroundColor = this.options.invertMode ? this.options.backgroundColor : this.options.characterColor;
+
+        if (this.textAsciiRenderer) {
+            // Update the main container's background and text colors
+            this.textAsciiRenderer.style('background-color', this.backgroundColor);
+            this.textAsciiRenderer.style('color', this.foregroundColor);
+        }
     }
 
     initializeLineDivs() {
@@ -116,19 +131,152 @@ export default class TextAsciiRenderer {
 
                 if (this.options.characterColorMode === 0) {
                     // Sample color for each character
-                    // Get the primary color from primaryColorPixels
                     const colorR = primaryColorPixels[pixelIdx];
                     const colorG = primaryColorPixels[pixelIdx + 1];
                     const colorB = primaryColorPixels[pixelIdx + 2];
 
-                    // Update color if changed
                     const newColor = `rgb(${colorR}, ${colorG}, ${colorB})`;
-                    if (charSpan.style.color !== newColor) {
-                        charSpan.style.color = newColor;
+
+                    if (this.options.invertMode) {
+                        // In invert mode, set per-character background color
+                        if (charSpan.dataset.bgColor !== newColor) {
+                            charSpan.style.backgroundColor = newColor;
+                            charSpan.dataset.bgColor = newColor;
+                        }
+                        // Set text color to foregroundColor
+                        if (charSpan.style.color !== this.foregroundColor) {
+                            charSpan.style.color = this.foregroundColor;
+                        }
+                    } else {
+                        // In normal mode, set per-character text color
+                        if (charSpan.dataset.color !== newColor) {
+                            charSpan.style.color = newColor;
+                            charSpan.dataset.color = newColor;
+                        }
+                        // Clear per-character background color
+                        if (charSpan.style.backgroundColor) {
+                            charSpan.style.backgroundColor = '';
+                            delete charSpan.dataset.bgColor;
+                        }
                     }
-                } 
+                }
 
                 idx++;
+            }
+        }
+    }
+
+    updateFontSize() {
+        // Update the font size style of the renderer
+        this.textAsciiRenderer.style('font-size', `${this.asciiFontTextureAtlas.fontSize}px`);
+
+        this.updateDimensions();
+    }
+    
+
+    updateInvertMode() {
+        // Update colors based on new invertMode
+        this.updateColors();
+
+        // Update container styles
+        this.textAsciiRenderer.style('background-color', this.backgroundColor);
+        this.textAsciiRenderer.style('color', this.foregroundColor);
+
+        // If per-character coloring is enabled, we need to update per-character styles
+        if (this.options.characterColorMode === 0) {
+            const w = this.grid.cols;
+            const h = this.grid.rows;
+
+            for (let y = 0; y < h; y++) {
+                const rowSpans = this.charSpans[y];
+                for (let x = 0; x < w; x++) {
+                    const charSpan = rowSpans[x];
+                    // Swap per-character styles
+                    if (this.options.invertMode) {
+                        // Move color to backgroundColor
+                        if (charSpan.dataset.color) {
+                            charSpan.style.backgroundColor = charSpan.dataset.color;
+                            charSpan.dataset.bgColor = charSpan.dataset.color;
+                            charSpan.style.color = this.foregroundColor;
+                            delete charSpan.style.color;
+                            delete charSpan.dataset.color;
+                        }
+                    } else {
+                        // Move backgroundColor to color
+                        if (charSpan.dataset.bgColor) {
+                            charSpan.style.color = charSpan.dataset.bgColor;
+                            charSpan.dataset.color = charSpan.dataset.bgColor;
+                            charSpan.style.backgroundColor = '';
+                            delete charSpan.dataset.bgColor;
+                        }
+                    }
+                }
+            }
+        } else {
+            // If per-character coloring is not enabled, ensure styles are cleared
+            this.clearPerCharacterStyles();
+        }
+    }
+
+    updateOptions(options) {
+        this.options = {
+            ...this.options,
+            ...options,
+        }
+    }
+
+    updateCharacterColor() {
+        // Update colors based on new characterColor
+        this.updateColors();
+
+        // Update container styles
+        this.textAsciiRenderer.style('background-color', this.backgroundColor);
+        this.textAsciiRenderer.style('color', this.foregroundColor);
+
+        // If per-character coloring is not enabled, ensure per-character styles are cleared
+        if (this.options.characterColorMode !== 0) {
+            this.clearPerCharacterStyles();
+        }
+    }
+
+    updateBackgroundColor() {
+        // Update colors based on new backgroundColor
+        this.updateColors();
+
+        // Update container styles
+        this.textAsciiRenderer.style('background-color', this.backgroundColor);
+        this.textAsciiRenderer.style('color', this.foregroundColor);
+
+        // If per-character coloring is not enabled, ensure per-character styles are cleared
+        if (this.options.characterColorMode !== 0) {
+            this.clearPerCharacterStyles();
+        }
+    }
+
+    updateCharacterColorMode() {
+        // If per-character coloring is disabled, clear per-character styles
+        if (this.options.characterColorMode !== 0) {
+            this.clearPerCharacterStyles();
+        }
+    }
+
+    clearPerCharacterStyles() {
+        // Clear per-character styles
+        const w = this.grid.cols;
+        const h = this.grid.rows;
+
+        for (let y = 0; y < h; y++) {
+            const rowSpans = this.charSpans[y];
+            for (let x = 0; x < w; x++) {
+                const charSpan = rowSpans[x];
+                if (charSpan.style.color) {
+                    charSpan.style.color = '';
+                    delete charSpan.dataset.color;
+                }
+                if (charSpan.style.backgroundColor) {
+                    charSpan.style.backgroundColor = '';
+                    delete charSpan.dataset.bgColor;
+                }
             }
         }
     }

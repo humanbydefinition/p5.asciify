@@ -151,7 +151,7 @@ p5.prototype.setAsciifyPostDrawFunction = function (postDrawFunction) {
  * TODO: Add example
  */
 p5.prototype.setAsciiOptions = function (options) {
-    const validOptions = ["common", "edge", "ascii", "gradient"];
+    const validOptions = ["common", "edge", "ascii", "gradient", "text"];
     const unknownOptions = Object.keys(options).filter(option => !validOptions.includes(option));
 
     if (unknownOptions.length) {
@@ -165,7 +165,7 @@ p5.prototype.setAsciiOptions = function (options) {
         options.ascii.renderMode = 'brightness';
     }
 
-    const { ascii: asciiOptions, edge: edgeOptions, common: commonOptions, gradient: gradientOptions } = options;
+    const { ascii: asciiOptions, edge: edgeOptions, common: commonOptions, gradient: gradientOptions, text: textOptions } = options;
 
     const colorOptions = [edgeOptions, asciiOptions, gradientOptions];
     colorOptions.forEach(opt => {
@@ -183,7 +183,7 @@ p5.prototype.setAsciiOptions = function (options) {
         delete edgeOptions.characters;
     }
 
-    p5asciify.setDefaultOptions(asciiOptions, edgeOptions, commonOptions, gradientOptions);
+    p5asciify.setDefaultOptions(asciiOptions, edgeOptions, commonOptions, gradientOptions, textOptions);
 };
 
 p5.prototype.addAsciiGradient = function (gradientName, brightnessStart, brightnessEnd, characters, userParams = {}) {

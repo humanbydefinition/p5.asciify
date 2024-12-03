@@ -65,7 +65,7 @@ class P5Asciify {
     textOptions = {
         enabled: false,
         characterColor: "#FFFFFF",
-        characterColorMode: 1,
+        characterColorMode: 0,
         backgroundColor: "#000000",
         invertMode: false,
     }
@@ -203,7 +203,7 @@ class P5Asciify {
      * Sets the default options for the P5Asciify library.
      * @param {object} options 
      */
-    setDefaultOptions(asciiOptions, edgeOptions, commonOptions, gradientOptions) {
+    setDefaultOptions(asciiOptions, edgeOptions, commonOptions, gradientOptions, textOptions) {
 
         // The parameters are pre-processed, so we can just spread them into the class variables
         this.asciiOptions = {
@@ -224,6 +224,11 @@ class P5Asciify {
             ...gradientOptions
         };
 
+        this.textOptions = {
+            ...this.textOptions,
+            ...textOptions
+        };
+
         // If we are still in the users setup(), the characterset and grid have not been initialized yet.
         if (this.p5Instance.frameCount == 0) {
             return;
@@ -234,6 +239,7 @@ class P5Asciify {
         this.customAsciiRenderer.updateOptions(asciiOptions);
         this.gradientRenderer.updateOptions(gradientOptions);
         this.edgeRenderer.updateOptions(edgeOptions);
+        this.textAsciiRenderer.updateOptions(textOptions);
 
 
         if (asciiOptions?.renderMode) {
@@ -255,6 +261,22 @@ class P5Asciify {
             this.edgeCharacterSet.setCharacterSet(edgeOptions.characters);
         }
 
+        if(textOptions?.characterColorMode) {
+            this.textAsciiRenderer.updateCharacterColorMode();
+        }
+
+        if(textOptions?.characterColor) {
+            this.textAsciiRenderer.updateCharacterColor();
+        }
+
+        if(textOptions?.backgroundColor) {
+            this.textAsciiRenderer.updateBackgroundColor();
+        }
+
+        if (textOptions?.invertMode) {
+            this.textAsciiRenderer.updateInvertMode();
+        }
+
         if (commonOptions?.fontSize) {
             this.asciiFontTextureAtlas.setFontSize(commonOptions.fontSize);
             this.grid.resizeCellPixelDimensions(this.asciiFontTextureAtlas.maxGlyphDimensions.width, this.asciiFontTextureAtlas.maxGlyphDimensions.height);
@@ -267,6 +289,8 @@ class P5Asciify {
 
             this.edgeRenderer.resetShaders();
             this.accurateRenderer.resetShaders();
+
+            this.textAsciiRenderer.updateFontSize();
         }
 
         if (commonOptions?.gridDimensions) {
