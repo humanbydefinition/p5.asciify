@@ -1933,6 +1933,32 @@ void main() {
 
             this.initializeLineDivs();
             this.initializeCharSpans();
+
+            // Initialize previous colors for tracking
+            this.initializePreviousColors();
+        }
+
+        // Initialize a 2D array to track previous text and color states
+        initializePreviousColors() {
+            const w = this.grid.cols;
+            const h = this.grid.rows;
+            this.previousTexts = [];
+            this.previousColors = [];
+            this.previousBgColors = [];
+
+            for (let y = 0; y < h; y++) {
+                const rowTexts = [];
+                const rowColors = [];
+                const rowBgColors = [];
+                for (let x = 0; x < w; x++) {
+                    rowTexts.push(null); // Initialize with null to ensure first update
+                    rowColors.push(null);
+                    rowBgColors.push(null);
+                }
+                this.previousTexts.push(rowTexts);
+                this.previousColors.push(rowColors);
+                this.previousBgColors.push(rowBgColors);
+            }
         }
 
         updateFont(fontBase64, fontFileType) {
@@ -2058,9 +2084,11 @@ void main() {
                     const ch = chars[bestCharIndex];
 
                     const charSpan = rowSpans[x];
+
                     // Update character if changed
-                    if (charSpan.textContent !== ch) {
+                    if (this.previousTexts[y][x] !== ch) {
                         charSpan.textContent = ch;
+                        this.previousTexts[y][x] = ch;
                     }
 
                     if (this.options.characterColorMode === 0) {
@@ -2073,24 +2101,27 @@ void main() {
 
                         if (this.options.invertMode) {
                             // In invert mode, set per-character background color
-                            if (charSpan.dataset.bgColor !== newColor) {
+                            if (this.previousBgColors[y][x] !== newColor) {
                                 charSpan.style.backgroundColor = newColor;
-                                charSpan.dataset.bgColor = newColor;
+                                this.previousBgColors[y][x] = newColor;
                             }
-                            // Set text color to foregroundColor
-                            if (charSpan.style.color !== this.foregroundColor) {
+
+                            // Set text color to foregroundColor if it has changed
+                            if (this.previousColors[y][x] !== this.foregroundColor) {
                                 charSpan.style.color = this.foregroundColor;
+                                this.previousColors[y][x] = this.foregroundColor;
                             }
                         } else {
                             // In normal mode, set per-character text color
-                            if (charSpan.dataset.color !== newColor) {
+                            if (this.previousColors[y][x] !== newColor) {
                                 charSpan.style.color = newColor;
-                                charSpan.dataset.color = newColor;
+                                this.previousColors[y][x] = newColor;
                             }
-                            // Clear per-character background color
-                            if (charSpan.style.backgroundColor) {
+
+                            // Clear per-character background color if it was previously set
+                            if (this.previousBgColors[y][x] !== null) {
                                 charSpan.style.backgroundColor = '';
-                                delete charSpan.dataset.bgColor;
+                                this.previousBgColors[y][x] = null;
                             }
                         }
                     }
@@ -2125,23 +2156,21 @@ void main() {
                     const rowSpans = this.charSpans[y];
                     for (let x = 0; x < w; x++) {
                         const charSpan = rowSpans[x];
-                        // Swap per-character styles
                         if (this.options.invertMode) {
                             // Move color to backgroundColor
-                            if (charSpan.dataset.color) {
-                                charSpan.style.backgroundColor = charSpan.dataset.color;
-                                charSpan.dataset.bgColor = charSpan.dataset.color;
+                            if (this.previousColors[y][x] !== this.foregroundColor && this.previousBgColors[y][x] !== null) {
+                                charSpan.style.backgroundColor = this.previousColors[y][x];
+                                this.previousBgColors[y][x] = this.previousColors[y][x];
                                 charSpan.style.color = this.foregroundColor;
-                                delete charSpan.style.color;
-                                delete charSpan.dataset.color;
+                                this.previousColors[y][x] = this.foregroundColor;
                             }
                         } else {
                             // Move backgroundColor to color
-                            if (charSpan.dataset.bgColor) {
-                                charSpan.style.color = charSpan.dataset.bgColor;
-                                charSpan.dataset.color = charSpan.dataset.bgColor;
+                            if (this.previousBgColors[y][x] !== null) {
+                                charSpan.style.color = this.previousBgColors[y][x];
+                                this.previousColors[y][x] = this.previousBgColors[y][x];
                                 charSpan.style.backgroundColor = '';
-                                delete charSpan.dataset.bgColor;
+                                this.previousBgColors[y][x] = null;
                             }
                         }
                     }
@@ -2203,13 +2232,13 @@ void main() {
                 const rowSpans = this.charSpans[y];
                 for (let x = 0; x < w; x++) {
                     const charSpan = rowSpans[x];
-                    if (charSpan.style.color) {
+                    if (this.previousColors[y][x] !== null) {
                         charSpan.style.color = '';
-                        delete charSpan.dataset.color;
+                        this.previousColors[y][x] = null;
                     }
-                    if (charSpan.style.backgroundColor) {
+                    if (this.previousBgColors[y][x] !== null) {
                         charSpan.style.backgroundColor = '';
-                        delete charSpan.dataset.bgColor;
+                        this.previousBgColors[y][x] = null;
                     }
                 }
             }
@@ -2218,6 +2247,7 @@ void main() {
         updateDimensions() {
             this.initializeLineDivs();
             this.initializeCharSpans();
+            this.initializePreviousColors();
         }
     }
 
