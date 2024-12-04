@@ -1625,7 +1625,6 @@ uniform sampler2D u_image;
 uniform vec2 u_imageSize;             // Size of the input image in logical pixels (width, height)
 uniform vec2 u_gridCellDimensions;    // Number of cells in the grid (columns, rows)
 uniform int u_threshold;              // Threshold for non-black pixel count
-uniform float u_pixelRatio;           // Device pixel ratio
 
 // Constants
 const vec3 BLACK = vec3(0.0, 0.0, 0.0);
@@ -1644,7 +1643,7 @@ float roundFloat(float value) {
 
 void main() {
     // Adjust fragment coordinates based on pixel ratio to get logical pixel position
-    vec2 logicalFragCoord = floor(gl_FragCoord.xy / u_pixelRatio);
+    vec2 logicalFragCoord = floor(gl_FragCoord.xy);
     
     // Retrieve grid cell indices
     ivec2 coords = ivec2(logicalFragCoord);
@@ -1742,7 +1741,7 @@ void main() {
             this.shader = this.p5.createShader(vertexShader, asciiConversionShader);
 
             this.sobelFramebuffer = this.p5.createFramebuffer({ depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
-            this.sampleFramebuffer = this.p5.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
+            this.sampleFramebuffer = this.p5.createFramebuffer({ density: 1,width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
         }
 
         resizeFramebuffers() {
@@ -1797,7 +1796,6 @@ void main() {
             this.sampleShader.setUniform('u_image', this.sobelFramebuffer);
             this.sampleShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
             this.sampleShader.setUniform('u_threshold', this.options.sampleThreshold);
-            this.sampleShader.setUniform('u_pixelRatio', this.p5.pixelDensity());
             this.p5.rect(0, 0, this.p5.width, this.p5.height);
             this.sampleFramebuffer.end();
 
@@ -1811,7 +1809,6 @@ void main() {
             this.colorSampleShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
             this.colorSampleShader.setUniform('u_sampleMode', this.options.characterColorMode);
             this.colorSampleShader.setUniform('u_staticColor', this.options.characterColor._array);
-            this.colorSampleShader.setUniform('u_pixelRatio', 1);
             this.p5.rect(0, 0, this.p5.width, this.p5.height);
             this.primaryColorSampleFramebuffer.end();
 
@@ -1825,7 +1822,6 @@ void main() {
             this.colorSampleShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
             this.colorSampleShader.setUniform('u_sampleMode', this.options.backgroundColorMode);
             this.colorSampleShader.setUniform('u_staticColor', this.options.backgroundColor._array);
-            this.colorSampleShader.setUniform('u_pixelRatio', 1);
             this.p5.rect(0, 0, this.p5.width, this.p5.height);
             this.secondaryColorSampleFramebuffer.end();
 
@@ -1837,7 +1833,6 @@ void main() {
             this.asciiCharacterShader.setUniform('u_previousAsciiCharacterTexture', previousAsciiRenderer.asciiCharacterFramebuffer);
             this.asciiCharacterShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
             this.asciiCharacterShader.setUniform('u_totalChars', this.characterSet.characters.length);
-            this.asciiCharacterShader.setUniform('u_pixelRatio', 1);
             this.p5.rect(0, 0, this.p5.width, this.p5.height);
             this.asciiCharacterFramebuffer.end();
 

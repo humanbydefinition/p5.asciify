@@ -191,7 +191,6 @@ function draw() {
 	clear();
 	shader(asciiCharacterShader);
 	asciiCharacterShader.setUniform('u_textureSize', [p5asciify.grid.cols, p5asciify.grid.rows]);
-	asciiCharacterShader.setUniform('u_pixelRatio', 1);
 	asciiCharacterShader.setUniform('u_pushFramebuffer', nextPushFramebuffer);
 	asciiCharacterShader.setUniform('u_charPaletteTexture', charsetColorPaletteFramebuffer);
 	asciiCharacterShader.setUniform('u_charPaletteSize', [charsetColorPaletteFramebuffer.width, charsetColorPaletteFramebuffer.height]);
@@ -205,7 +204,6 @@ function draw() {
 	asciiColorPaletteShader.setUniform('u_pushFramebuffer', nextPushFramebuffer);
 	asciiColorPaletteShader.setUniform('u_colorPaletteTexture', colorPaletteFramebuffer);
 	asciiColorPaletteShader.setUniform('u_paletteSize', [colorPalette.length, 1]);
-	asciiColorPaletteShader.setUniform('u_pixelRatio', 1);
 	rect(0, 0, width, height);
 	primaryColorSampleFramebuffer.end();
 

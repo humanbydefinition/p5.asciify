@@ -7,7 +7,6 @@ uniform sampler2D u_image;
 uniform vec2 u_imageSize;             // Size of the input image in logical pixels (width, height)
 uniform vec2 u_gridCellDimensions;    // Number of cells in the grid (columns, rows)
 uniform int u_threshold;              // Threshold for non-black pixel count
-uniform float u_pixelRatio;           // Device pixel ratio
 
 // Constants
 const vec3 BLACK = vec3(0.0, 0.0, 0.0);
@@ -26,7 +25,7 @@ float roundFloat(float value) {
 
 void main() {
     // Adjust fragment coordinates based on pixel ratio to get logical pixel position
-    vec2 logicalFragCoord = floor(gl_FragCoord.xy / u_pixelRatio);
+    vec2 logicalFragCoord = floor(gl_FragCoord.xy);
     
     // Retrieve grid cell indices
     ivec2 coords = ivec2(logicalFragCoord);

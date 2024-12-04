@@ -6,11 +6,10 @@ uniform vec2 u_textureSize;                  // Size of the pushFramebuffer text
 
 uniform sampler2D u_colorPaletteTexture;     // Texture containing the color palette
 uniform vec2 u_paletteSize;                  // Dimensions of the color palette (e.g., [64, 64])
-uniform float u_pixelRatio;                  // Device pixel ratio (e.g., 1.0 for standard DPI, 2.0 for Retina)
 
 void main() {
     // Adjust fragment coordinates based on pixel ratio and normalize
-    vec2 pos = (gl_FragCoord.xy / u_pixelRatio) / u_textureSize;
+    vec2 pos = (gl_FragCoord.xy) / u_textureSize;
 
     // Ensure pos is within [0, 1] to prevent out-of-bounds sampling
     pos = clamp(pos, 0.0, 1.0);
