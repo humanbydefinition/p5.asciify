@@ -15,8 +15,8 @@ let charset = "╧▓○⌐εæ▒╒╓¬└÷╨▀■≈"; // Define the char
 
 // Define a color palette to be used in the ascii renderer
 // If there is a mismatch between the charset length and the color palette length, the colors will be repeated or not used
-let colorPalette = [ // PICO-8 Palette
-	"#000000", "#1D2B53", "#7E2553", "#008751",
+let colorPalette = [ // PICO-8 Palette (without #000000)
+	"#1D2B53", "#7E2553", "#008751",
 	"#AB5236", "#5F574F", "#C2C3C7", "#FFF1E8",
 	"#FF004D", "#FFA300", "#FFEC27", "#00E436",
 	"#29ADFF", "#83769C", "#FF77A8", "#FFCCAA"
@@ -77,8 +77,8 @@ function setup() {
 	createCanvas(windowWidth, windowHeight, WEBGL);
 
 	// Initialize and fill the framebuffers with the colors of the charset and color palette
-	colorPaletteFramebuffer = createFramebuffer({ width: colorPalette.length, height: 1, depthFormat: UNSIGNED_INT, textureFiltering: NEAREST });
-	charsetColorPaletteFramebuffer = createFramebuffer({ width: charset.length, height: 1, depthFormat: UNSIGNED_INT, textureFiltering: NEAREST });
+	colorPaletteFramebuffer = createFramebuffer({ density: 1, width: colorPalette.length, height: 1, depthFormat: UNSIGNED_INT, textureFiltering: NEAREST });
+	charsetColorPaletteFramebuffer = createFramebuffer({ density: 1, width: charset.length, height: 1, depthFormat: UNSIGNED_INT, textureFiltering: NEAREST });
 
 	colorPaletteFramebuffer.loadPixels(); // Write the color palette to the framebuffer
 	for (let i = 0; i < colorPalette.length; i++) {
@@ -132,10 +132,10 @@ function setupAsciify() {
 	charsetColorPaletteFramebuffer.updatePixels();
 
 	// Initialize the framebuffers relevant to the sketch, matching the grid dimensions provided by p5.asciify
-	noiseFramebuffer = createFramebuffer({ width: p5asciify.grid.cols, height: p5asciify.grid.rows, depthFormat: UNSIGNED_INT, textureFiltering: NEAREST });
-	shiftFramebuffer = createFramebuffer({ width: p5asciify.grid.cols, height: p5asciify.grid.rows, depthFormat: UNSIGNED_INT, textureFiltering: NEAREST });
-	previousPushFramebuffer = createFramebuffer({ width: p5asciify.grid.cols, height: p5asciify.grid.rows, depthFormat: UNSIGNED_INT, textureFiltering: NEAREST });
-	nextPushFramebuffer = createFramebuffer({ width: p5asciify.grid.cols, height: p5asciify.grid.rows, depthFormat: UNSIGNED_INT, textureFiltering: NEAREST });
+	noiseFramebuffer = createFramebuffer({ density: 1, width: p5asciify.grid.cols, height: p5asciify.grid.rows, depthFormat: UNSIGNED_INT, textureFiltering: NEAREST });
+	shiftFramebuffer = createFramebuffer({ density: 1,width: p5asciify.grid.cols, height: p5asciify.grid.rows, depthFormat: UNSIGNED_INT, textureFiltering: NEAREST });
+	previousPushFramebuffer = createFramebuffer({ density: 1,width: p5asciify.grid.cols, height: p5asciify.grid.rows, depthFormat: UNSIGNED_INT, textureFiltering: NEAREST });
+	nextPushFramebuffer = createFramebuffer({ density: 1,width: p5asciify.grid.cols, height: p5asciify.grid.rows, depthFormat: UNSIGNED_INT, textureFiltering: NEAREST });
 
 	// Initialize the rectangle manager, which will create a number of non-overlapping rectangles that cover the entire grid
 	// The `1` in the constructor defines the spacing between rectangles. 
