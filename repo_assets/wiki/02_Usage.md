@@ -9,7 +9,7 @@ Similar to [`p5.js`](https://p5js.org/), `p5.asciify` provides global functions 
 
 ### `loadAsciiFont()`
 
-`loadAsciiFont(font | fontPath): void`
+`loadAsciiFont(fontPath): void`
 
 Loads a custom font for the ASCII conversion. The font can be either a [`p5.Font`](https://p5js.org/reference/#/p5.Font) object or a path to a font file.
 
@@ -20,9 +20,6 @@ Loads a custom font for the ASCII conversion. The font can be either a [`p5.Font
 > You can use any font you prefer, but be aware that not all fonts are fully compatible with `p5.asciify`. Some fonts may cause poor ASCII conversion due to overlapping characters in the generated texture that contains all the selected characters.
 
 #### Parameters
-
-- **font**: `p5.Font` - A p5.Font object.
-- or
 - **fontPath**: `string` - A path to a font file.
 
 #### Usage Context
