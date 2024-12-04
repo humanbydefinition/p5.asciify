@@ -77,20 +77,3 @@ No additional settings are available for this layer. This layer is populated by 
 | **`characters`**   | The characters used for the ASCII conversion. Consists of 8 characters, each representing a different edge direction. |
 | **`sobelThreshold`** | The threshold used for the Sobel edge detection algorithm.                                           |
 | **`sampleThreshold`** | The threshold used for sampling the sobel filter output to a smaller size.
-
-## Pre- and Post-Effect Shaders
-
-To apply effects before and after the ASCII conversion, `p5.asciify` provides a set of effect shaders that can be called anywhere inside the sketches `preload()`, `setup()` and `draw()` functions. Each effect shader has its own set of parameters that can be adjusted freely, allowing for a wide range of visual effects to be applied before and after the ASCII conversion.
-
-### Currently available effect shaders
-| Effect                | Description                                                                                          |
-|-----------------------|-------------------------------------------------------------------------------------------------|
-| **`brightness`**        | Adjusts the brightness of the image.                                                                 |
-| **`chromaticaberration`** | Creates a chromatic aberration effect, which shifts the colors of the image to simulate lens distortion. |
-| **`colorpalette`**     | Applies a specific color palette to the image, changing its colors to match the given palette.          |
-| **`distortion`**        | Introduces a distortion effect, altering the image's appearance based on frequency and amplitude.       |
-| **`grayscale`**         | Converts the image to grayscale, removing all color.                                                    |
-| **`invert`**            | Inverts the colors of the image, creating a negative effect.                                            |
-| **`kaleidoscope`**      | Applies a kaleidoscope effect, creating symmetrical patterns by repeating segments of the image.        |
-| **`rotate`**            | Rotates the image by a specified angle, altering its orientation.                                        |
-| **`crt`**               | Applies a CRT effect, simulating the appearance of an old CRT monitor.                                  |
