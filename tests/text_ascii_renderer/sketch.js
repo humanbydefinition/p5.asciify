@@ -46,7 +46,7 @@ function draw() {
 
 	
 
-	
+	/**
 
 	if (frameCount == 100) {
 		setAsciiOptions({
@@ -88,6 +88,8 @@ function draw() {
 			}
 		})
 	}
+
+	**/
 
 	
 }
