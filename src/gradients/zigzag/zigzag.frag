@@ -11,7 +11,6 @@ uniform float u_speed;                   // Control the speed of the gradient mo
 uniform float u_angle;                   // Angle in degrees for the gradient
 uniform vec2 gradientTextureDimensions;  // Dimensions of the gradient texture
 uniform vec2 u_brightnessRange;          // Range of brightness values
-uniform float u_pixelRatio;              // Device pixel ratio
 
 void main() {
     vec4 texColor = texture2D(textureID, v_texCoord);
@@ -21,7 +20,7 @@ void main() {
     if (texColor.r >= u_brightnessRange[0] && texColor.r <= u_brightnessRange[1] && texColor == originalTexColor) {
 
         // Adjust fragment coordinates based on pixel ratio to get logical pixel position
-        vec2 logicalFragCoord = gl_FragCoord.xy / u_pixelRatio;
+        vec2 logicalFragCoord = gl_FragCoord.xy;
 
         // Use the logical fragment coordinates in calculations
         float positionX = logicalFragCoord.x * cos(u_angle) - logicalFragCoord.y * sin(u_angle);
@@ -34,11 +33,8 @@ void main() {
         // Calculate the position within the row
         float rowPosition = positionX;
 
-        // Scale speed inversely with pixel ratio to maintain consistent visual speed
-        float adjustedSpeed = u_speed / u_pixelRatio;
-
-// Use adjusted speed in animation calculation
-        float index = mod(rowPosition + float(frameCount) * adjustedSpeed * direction * u_gradientDirection, gradientTextureDimensions.x);index = floor(index);
+        // Use adjusted speed in animation calculation
+        float index = mod(rowPosition + float(frameCount) * u_speed * direction * u_gradientDirection, gradientTextureDimensions.x);index = floor(index);
 
         float texelPosition = (index + 0.5) / gradientTextureDimensions.x;
 

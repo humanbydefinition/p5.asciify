@@ -451,7 +451,7 @@
             this._shader.setUniform("gradientTextureDimensions", [this._palette.framebuffer.width, 1]);
             this._shader.setUniform("u_brightnessRange", [this._brightnessStart, this._brightnessEnd]);
             this._shader.setUniform("frameCount", p5.frameCount);
-            this._shader.setUniform("u_pixelRatio", p5.pixelDensity());
+            this._shader.setUniform("u_pixelRatio", 1);
         }
 
         set palette(value) {
@@ -773,9 +773,9 @@
 
     var vertexShader = "precision mediump float;\n#define GLSLIFY 1\nattribute vec3 aPosition;attribute vec2 aTexCoord;varying vec2 v_texCoord;void main(){vec4 positionVec4=vec4(aPosition,1.0);positionVec4.xy=positionVec4.xy*2.0-1.0;gl_Position=positionVec4;v_texCoord=aTexCoord;}"; // eslint-disable-line
 
-    var linearGradientShader = "#version 100\nprecision mediump float;\n#define GLSLIFY 1\nvarying vec2 v_texCoord;uniform sampler2D textureID;uniform sampler2D originalTextureID;uniform sampler2D gradientTexture;uniform int frameCount;uniform float u_gradientDirection;uniform float u_speed;uniform float u_angle;uniform vec2 gradientTextureDimensions;uniform vec2 u_brightnessRange;uniform float u_pixelRatio;void main(){vec2 logicalFragCoord=floor(gl_FragCoord.xy/u_pixelRatio);vec4 texColor=texture2D(textureID,v_texCoord);vec4 originalTexColor=texture2D(originalTextureID,v_texCoord);if(texColor.r>=u_brightnessRange.x&&texColor.r<=u_brightnessRange.y&&texColor==originalTexColor){float position=logicalFragCoord.x*cos(u_angle)+logicalFragCoord.y*sin(u_angle);float index=mod(position+float(frameCount)*u_gradientDirection*u_speed,gradientTextureDimensions.x);index=floor(index);float texelPosition=(index+0.5)/gradientTextureDimensions.x;vec4 gradientColor=texture2D(gradientTexture,vec2(texelPosition,0.0));gl_FragColor=vec4(gradientColor.rgb,texColor.a);}else{gl_FragColor=texColor;}}"; // eslint-disable-line
+    var linearGradientShader = "#version 100\nprecision mediump float;\n#define GLSLIFY 1\nvarying vec2 v_texCoord;uniform sampler2D textureID;uniform sampler2D originalTextureID;uniform sampler2D gradientTexture;uniform int frameCount;uniform float u_gradientDirection;uniform float u_speed;uniform float u_angle;uniform vec2 gradientTextureDimensions;uniform vec2 u_brightnessRange;void main(){vec2 logicalFragCoord=floor(gl_FragCoord.xy);vec4 texColor=texture2D(textureID,v_texCoord);vec4 originalTexColor=texture2D(originalTextureID,v_texCoord);if(texColor.r>=u_brightnessRange.x&&texColor.r<=u_brightnessRange.y&&texColor==originalTexColor){float position=logicalFragCoord.x*cos(u_angle)+logicalFragCoord.y*sin(u_angle);float index=mod(position+float(frameCount)*u_gradientDirection*u_speed,gradientTextureDimensions.x);index=floor(index);float texelPosition=(index+0.5)/gradientTextureDimensions.x;vec4 gradientColor=texture2D(gradientTexture,vec2(texelPosition,0.0));gl_FragColor=vec4(gradientColor.rgb,texColor.a);}else{gl_FragColor=texColor;}}"; // eslint-disable-line
 
-    var zigzagGradientShader = "precision mediump float;\n#define GLSLIFY 1\nvarying vec2 v_texCoord;uniform sampler2D textureID;uniform sampler2D originalTextureID;uniform sampler2D gradientTexture;uniform int frameCount;uniform float u_gradientDirection;uniform float u_speed;uniform float u_angle;uniform vec2 gradientTextureDimensions;uniform vec2 u_brightnessRange;uniform float u_pixelRatio;void main(){vec4 texColor=texture2D(textureID,v_texCoord);vec4 originalTexColor=texture2D(originalTextureID,v_texCoord);if(texColor.r>=u_brightnessRange[0]&&texColor.r<=u_brightnessRange[1]&&texColor==originalTexColor){vec2 logicalFragCoord=gl_FragCoord.xy/u_pixelRatio;float positionX=logicalFragCoord.x*cos(u_angle)-logicalFragCoord.y*sin(u_angle);float positionY=logicalFragCoord.x*sin(u_angle)+logicalFragCoord.y*cos(u_angle);float rowIndex=floor(positionY);float direction=mod(rowIndex,2.0)==0.0 ? 1.0 :-1.0;float rowPosition=positionX;float adjustedSpeed=u_speed/u_pixelRatio;float index=mod(rowPosition+float(frameCount)*adjustedSpeed*direction*u_gradientDirection,gradientTextureDimensions.x);index=floor(index);float texelPosition=(index+0.5)/gradientTextureDimensions.x;vec4 gradientColor=texture2D(gradientTexture,vec2(texelPosition,0));gl_FragColor=vec4(gradientColor.rgb,texColor.a);}else{gl_FragColor=texColor;}}"; // eslint-disable-line
+    var zigzagGradientShader = "precision mediump float;\n#define GLSLIFY 1\nvarying vec2 v_texCoord;uniform sampler2D textureID;uniform sampler2D originalTextureID;uniform sampler2D gradientTexture;uniform int frameCount;uniform float u_gradientDirection;uniform float u_speed;uniform float u_angle;uniform vec2 gradientTextureDimensions;uniform vec2 u_brightnessRange;void main(){vec4 texColor=texture2D(textureID,v_texCoord);vec4 originalTexColor=texture2D(originalTextureID,v_texCoord);if(texColor.r>=u_brightnessRange[0]&&texColor.r<=u_brightnessRange[1]&&texColor==originalTexColor){vec2 logicalFragCoord=gl_FragCoord.xy;float positionX=logicalFragCoord.x*cos(u_angle)-logicalFragCoord.y*sin(u_angle);float positionY=logicalFragCoord.x*sin(u_angle)+logicalFragCoord.y*cos(u_angle);float rowIndex=floor(positionY);float direction=mod(rowIndex,2.0)==0.0 ? 1.0 :-1.0;float rowPosition=positionX;float index=mod(rowPosition+float(frameCount)*u_speed*direction*u_gradientDirection,gradientTextureDimensions.x);index=floor(index);float texelPosition=(index+0.5)/gradientTextureDimensions.x;vec4 gradientColor=texture2D(gradientTexture,vec2(texelPosition,0));gl_FragColor=vec4(gradientColor.rgb,texColor.a);}else{gl_FragColor=texColor;}}"; // eslint-disable-line
 
     var spiralGradientShader = "precision mediump float;\n#define GLSLIFY 1\nvarying vec2 v_texCoord;uniform sampler2D textureID;uniform sampler2D originalTextureID;uniform sampler2D gradientTexture;uniform int frameCount;uniform float u_gradientDirection;uniform float u_centerX;uniform float u_centerY;uniform float u_speed;uniform float u_density;uniform vec2 gradientTextureDimensions;uniform vec2 u_brightnessRange;void main(){vec4 texColor=texture2D(textureID,v_texCoord);vec4 originalTexColor=texture2D(originalTextureID,v_texCoord);if(texColor.r>=u_brightnessRange[0]&&texColor.r<=u_brightnessRange[1]&&texColor==originalTexColor){vec2 relativePosition=v_texCoord-vec2(u_centerX,u_centerY);float distance=length(relativePosition);float angle=atan(relativePosition.y,relativePosition.x);float adjustedAngle=angle+float(frameCount)*u_gradientDirection*u_speed;float index=mod((distance+adjustedAngle*u_density)*gradientTextureDimensions.x,gradientTextureDimensions.x);float normalizedIndex=(floor(index)+0.5)/gradientTextureDimensions.x;vec4 gradientColor=texture2D(gradientTexture,vec2(normalizedIndex,0));gl_FragColor=vec4(gradientColor.rgb,texColor.a);}else{gl_FragColor=texColor;}}"; // eslint-disable-line
 
@@ -895,9 +895,9 @@
             this.characterSet = characterSet;
             this.options = options;
 
-            this.primaryColorSampleFramebuffer = this.p5.createFramebuffer({ antialias: false, width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
-            this.secondaryColorSampleFramebuffer = this.p5.createFramebuffer({ antialias: false, width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
-            this.asciiCharacterFramebuffer = this.p5.createFramebuffer({ antialias: false, width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
+            this.primaryColorSampleFramebuffer = this.p5.createFramebuffer({ density: 1, antialias: false, width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
+            this.secondaryColorSampleFramebuffer = this.p5.createFramebuffer({ density: 1, antialias: false, width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
+            this.asciiCharacterFramebuffer = this.p5.createFramebuffer({ density: 1, antialias: false, width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
 
             this.outputFramebuffer = this.p5.createFramebuffer({ depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
         }
@@ -947,7 +947,7 @@
             this.asciiCharacterShader = this.p5.createShader(vertexShader, asciiCharacterShader$1);
             this.shader = this.p5.createShader(vertexShader, asciiConversionShader);
 
-            this.colorSampleFramebuffer = this.p5.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
+            this.colorSampleFramebuffer = this.p5.createFramebuffer({ density: 1, width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
         }
 
         resizeFramebuffers() {
@@ -966,7 +966,7 @@
             this.p5.shader(this.colorSampleShader);
             this.colorSampleShader.setUniform('u_sketchTexture', inputFramebuffer);
             this.colorSampleShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
-            this.colorSampleShader.setUniform('u_pixelRatio', this.p5.pixelDensity());
+            this.colorSampleShader.setUniform('u_pixelRatio', 1);
             this.p5.rect(0, 0, this.p5.width, this.p5.height);
             this.colorSampleFramebuffer.end();
 
@@ -992,7 +992,7 @@
             this.p5.clear();
             this.p5.shader(this.asciiCharacterShader);
             this.asciiCharacterShader.setUniform('u_textureSize', [this.grid.cols, this.grid.rows]);
-            this.asciiCharacterShader.setUniform('u_pixelRatio', this.p5.pixelDensity());
+            this.asciiCharacterShader.setUniform('u_pixelRatio', 1);
             this.asciiCharacterShader.setUniform('u_colorSampleFramebuffer', this.colorSampleFramebuffer);
             this.asciiCharacterShader.setUniform('u_charPaletteTexture', this.characterSet.characterColorPalette.framebuffer);
             this.asciiCharacterShader.setUniform('u_charPaletteSize', [this.characterSet.characterColorPalette.framebuffer.width, 1]);
@@ -1372,7 +1372,7 @@ void main() {
                 this.colorSampleShader.setUniform('u_gridCols', this.grid.cols);
                 this.colorSampleShader.setUniform('u_gridRows', this.grid.rows);
                 this.colorSampleShader.setUniform('u_colorRank', 1);
-                this.colorSampleShader.setUniform('u_pixelRatio', this.p5.pixelDensity());
+                this.colorSampleShader.setUniform('u_pixelRatio', 1);
                 this.p5.rect(0, 0, this.p5.width, this.p5.height);
             }
             this.primaryColorSampleFramebuffer.end();
@@ -1389,7 +1389,7 @@ void main() {
                 this.colorSampleShader.setUniform('u_gridCols', this.grid.cols);
                 this.colorSampleShader.setUniform('u_gridRows', this.grid.rows);
                 this.colorSampleShader.setUniform('u_colorRank', 2);
-                this.colorSampleShader.setUniform('u_pixelRatio', this.p5.pixelDensity());
+                this.colorSampleShader.setUniform('u_pixelRatio', 1);
                 this.p5.rect(0, 0, this.p5.width, this.p5.height);
             }
             this.secondaryColorSampleFramebuffer.end();
@@ -1403,7 +1403,7 @@ void main() {
             this.characterSelectionShader.setUniform('u_sketchTexture', this.brightnessSplitFramebuffer);
             this.characterSelectionShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
             this.characterSelectionShader.setUniform('u_gridPixelDimensions', [this.grid.width, this.grid.height]);
-            this.characterSelectionShader.setUniform('u_pixelRatio', this.p5.pixelDensity());
+            this.characterSelectionShader.setUniform('u_pixelRatio', 1);
             this.p5.rect(0, 0, this.p5.width, this.p5.height);
             this.asciiCharacterFramebuffer.end();
 
@@ -1496,9 +1496,8 @@ void main() {
 
             this.asciiShader = this.p5.createShader(vertexShader, asciiConversionShader);
 
-            this.grayscaleFramebuffer = this.p5.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
-            this.prevAsciiCharacterFramebuffer = this.p5.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
-            this.asciiCharacterFramebuffer = this.p5.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
+            this.grayscaleFramebuffer = this.p5.createFramebuffer({ density: 1, width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
+            this.prevAsciiCharacterFramebuffer = this.p5.createFramebuffer({ density: 1, width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
         }
 
         resizeFramebuffers() {
@@ -1577,7 +1576,7 @@ void main() {
             this.colorSampleShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
             this.colorSampleShader.setUniform('u_sampleMode', this.options.characterColorMode);
             this.colorSampleShader.setUniform('u_staticColor', this.options.characterColor._array);
-            this.colorSampleShader.setUniform('u_pixelRatio', this.p5.pixelDensity());
+            this.colorSampleShader.setUniform('u_pixelRatio', 1);
             this.p5.rect(0, 0, this.p5.width, this.p5.height);
             this.primaryColorSampleFramebuffer.end();
 
@@ -1591,7 +1590,7 @@ void main() {
             this.colorSampleShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
             this.colorSampleShader.setUniform('u_sampleMode', this.options.backgroundColorMode);
             this.colorSampleShader.setUniform('u_staticColor', this.options.backgroundColor._array);
-            this.colorSampleShader.setUniform('u_pixelRatio', this.p5.pixelDensity());
+            this.colorSampleShader.setUniform('u_pixelRatio', 1);
             this.p5.rect(0, 0, this.p5.width, this.p5.height);
             this.secondaryColorSampleFramebuffer.end();
 
@@ -1824,7 +1823,7 @@ void main() {
             this.colorSampleShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
             this.colorSampleShader.setUniform('u_sampleMode', this.options.characterColorMode);
             this.colorSampleShader.setUniform('u_staticColor', this.options.characterColor._array);
-            this.colorSampleShader.setUniform('u_pixelRatio', this.p5.pixelDensity());
+            this.colorSampleShader.setUniform('u_pixelRatio', 1);
             this.p5.rect(0, 0, this.p5.width, this.p5.height);
             this.primaryColorSampleFramebuffer.end();
 
@@ -1838,7 +1837,7 @@ void main() {
             this.colorSampleShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
             this.colorSampleShader.setUniform('u_sampleMode', this.options.backgroundColorMode);
             this.colorSampleShader.setUniform('u_staticColor', this.options.backgroundColor._array);
-            this.colorSampleShader.setUniform('u_pixelRatio', this.p5.pixelDensity());
+            this.colorSampleShader.setUniform('u_pixelRatio', 1);
             this.p5.rect(0, 0, this.p5.width, this.p5.height);
             this.secondaryColorSampleFramebuffer.end();
 
@@ -1850,7 +1849,7 @@ void main() {
             this.asciiCharacterShader.setUniform('u_previousAsciiCharacterTexture', previousAsciiRenderer.asciiCharacterFramebuffer);
             this.asciiCharacterShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
             this.asciiCharacterShader.setUniform('u_totalChars', this.characterSet.characters.length);
-            this.asciiCharacterShader.setUniform('u_pixelRatio', this.p5.pixelDensity());
+            this.asciiCharacterShader.setUniform('u_pixelRatio', 1);
             this.p5.rect(0, 0, this.p5.width, this.p5.height);
             this.asciiCharacterFramebuffer.end();
 
@@ -2346,9 +2345,9 @@ void main() {
 
             this.gradientManager.setup(this.asciiCharacterSet);
 
-            this.customPrimaryColorSampleFramebuffer = this.p5Instance.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
-            this.customSecondaryColorSampleFramebuffer = this.p5Instance.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
-            this.customAsciiCharacterFramebuffer = this.p5Instance.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
+            this.customPrimaryColorSampleFramebuffer = this.p5Instance.createFramebuffer({ density: 1, width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
+            this.customSecondaryColorSampleFramebuffer = this.p5Instance.createFramebuffer({ density: 1,width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
+            this.customAsciiCharacterFramebuffer = this.p5Instance.createFramebuffer({ density: 1,width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
 
             this.brightnessRenderer = new BrightnessAsciiRenderer(this.p5Instance, this.grid, this.asciiCharacterSet, this.asciiOptions);
             this.accurateRenderer = new AccurateAsciiRenderer(this.p5Instance, this.grid, this.asciiCharacterSet, this.asciiOptions);

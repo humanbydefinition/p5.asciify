@@ -20,9 +20,8 @@ export default class GradientAsciiRenderer extends AsciiRenderer {
 
         this.asciiShader = this.p5.createShader(vertexShader, asciiConversionShader);
 
-        this.grayscaleFramebuffer = this.p5.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
-        this.prevAsciiCharacterFramebuffer = this.p5.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
-        this.asciiCharacterFramebuffer = this.p5.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
+        this.grayscaleFramebuffer = this.p5.createFramebuffer({ density: 1, width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
+        this.prevAsciiCharacterFramebuffer = this.p5.createFramebuffer({ density: 1, width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
     }
 
     resizeFramebuffers() {
@@ -101,7 +100,7 @@ export default class GradientAsciiRenderer extends AsciiRenderer {
         this.colorSampleShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
         this.colorSampleShader.setUniform('u_sampleMode', this.options.characterColorMode);
         this.colorSampleShader.setUniform('u_staticColor', this.options.characterColor._array);
-        this.colorSampleShader.setUniform('u_pixelRatio', this.p5.pixelDensity());
+        this.colorSampleShader.setUniform('u_pixelRatio', 1);
         this.p5.rect(0, 0, this.p5.width, this.p5.height);
         this.primaryColorSampleFramebuffer.end();
 
@@ -115,7 +114,7 @@ export default class GradientAsciiRenderer extends AsciiRenderer {
         this.colorSampleShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
         this.colorSampleShader.setUniform('u_sampleMode', this.options.backgroundColorMode);
         this.colorSampleShader.setUniform('u_staticColor', this.options.backgroundColor._array);
-        this.colorSampleShader.setUniform('u_pixelRatio', this.p5.pixelDensity());
+        this.colorSampleShader.setUniform('u_pixelRatio', 1);
         this.p5.rect(0, 0, this.p5.width, this.p5.height);
         this.secondaryColorSampleFramebuffer.end();
 
