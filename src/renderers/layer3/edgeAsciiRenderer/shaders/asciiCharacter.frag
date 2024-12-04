@@ -8,15 +8,10 @@ uniform sampler2D u_previousAsciiCharacterTexture;
 uniform vec2 u_gridCellDimensions;
 uniform int u_totalChars;
 
-// New Uniform for Pixel Ratio
-uniform float u_pixelRatio;
-
 void main() {
-    // Adjust fragment coordinates based on pixel ratio to get logical pixel position
-    vec2 logicalFragCoord = floor(gl_FragCoord.xy / u_pixelRatio);
     
     // Get the cell coordinate (integer) using logical coordinates
-    vec2 cellCoord = floor(logicalFragCoord);
+    vec2 cellCoord = floor(gl_FragCoord.xy);
     
     // Compute the size of each cell in texture coordinates
     vec2 cellSizeInTexCoords = vec2(1.0) / u_gridCellDimensions;

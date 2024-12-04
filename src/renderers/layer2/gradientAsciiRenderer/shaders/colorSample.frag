@@ -11,12 +11,9 @@ uniform vec2 u_gridCellDimensions;
 uniform int u_sampleMode;
 uniform vec4 u_staticColor;
 
-// New Uniform for Pixel Ratio
-uniform float u_pixelRatio;
-
 void main() {
     // Adjust fragment coordinates based on pixel ratio to get logical pixel position
-    vec2 logicalFragCoord = floor(gl_FragCoord.xy / u_pixelRatio);
+    vec2 logicalFragCoord = floor(gl_FragCoord.xy);
     
     // Get the cell coordinate (integer) using logical coordinates
     vec2 cellCoord = floor(logicalFragCoord);

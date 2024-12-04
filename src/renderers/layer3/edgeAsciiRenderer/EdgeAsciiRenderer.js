@@ -19,8 +19,8 @@ export default class EdgeAsciiRenderer extends AsciiRenderer {
         this.asciiCharacterShader = this.p5.createShader(vertexShader, asciiCharacterShader);
         this.shader = this.p5.createShader(vertexShader, asciiConversionShader);
 
-        this.sobelFramebuffer = this.p5.createFramebuffer({ depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
-        this.sampleFramebuffer = this.p5.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
+        this.sobelFramebuffer = this.p5.createFramebuffer({ density: 1, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
+        this.sampleFramebuffer = this.p5.createFramebuffer({ density: 1, width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
     }
 
     resizeFramebuffers() {
@@ -75,7 +75,6 @@ export default class EdgeAsciiRenderer extends AsciiRenderer {
         this.sampleShader.setUniform('u_image', this.sobelFramebuffer);
         this.sampleShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
         this.sampleShader.setUniform('u_threshold', this.options.sampleThreshold);
-        this.sampleShader.setUniform('u_pixelRatio', this.p5.pixelDensity());
         this.p5.rect(0, 0, this.p5.width, this.p5.height);
         this.sampleFramebuffer.end();
 
@@ -89,7 +88,6 @@ export default class EdgeAsciiRenderer extends AsciiRenderer {
         this.colorSampleShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
         this.colorSampleShader.setUniform('u_sampleMode', this.options.characterColorMode);
         this.colorSampleShader.setUniform('u_staticColor', this.options.characterColor._array);
-        this.colorSampleShader.setUniform('u_pixelRatio', this.p5.pixelDensity());
         this.p5.rect(0, 0, this.p5.width, this.p5.height);
         this.primaryColorSampleFramebuffer.end();
 
@@ -103,7 +101,6 @@ export default class EdgeAsciiRenderer extends AsciiRenderer {
         this.colorSampleShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
         this.colorSampleShader.setUniform('u_sampleMode', this.options.backgroundColorMode);
         this.colorSampleShader.setUniform('u_staticColor', this.options.backgroundColor._array);
-        this.colorSampleShader.setUniform('u_pixelRatio', this.p5.pixelDensity());
         this.p5.rect(0, 0, this.p5.width, this.p5.height);
         this.secondaryColorSampleFramebuffer.end();
 
@@ -115,7 +112,6 @@ export default class EdgeAsciiRenderer extends AsciiRenderer {
         this.asciiCharacterShader.setUniform('u_previousAsciiCharacterTexture', previousAsciiRenderer.asciiCharacterFramebuffer);
         this.asciiCharacterShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
         this.asciiCharacterShader.setUniform('u_totalChars', this.characterSet.characters.length);
-        this.asciiCharacterShader.setUniform('u_pixelRatio', this.p5.pixelDensity());
         this.p5.rect(0, 0, this.p5.width, this.p5.height);
         this.asciiCharacterFramebuffer.end();
 
