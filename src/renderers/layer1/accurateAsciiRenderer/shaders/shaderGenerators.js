@@ -12,8 +12,6 @@ uniform sampler2D u_sketchTexture;
 uniform vec2 u_gridPixelDimensions;      // Size of the grid in logical pixels
 uniform vec2 u_gridCellDimensions;       // Number of cells in the grid (columns, rows)
 
-// New Uniform for Pixel Ratio
-
 // Constants
 const float TOTAL_CHARS = ${totalChars}.0;
 const float SAMPLE_SIZE = ${sampleSize}.0;

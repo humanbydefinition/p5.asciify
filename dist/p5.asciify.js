@@ -1031,8 +1031,6 @@ uniform sampler2D u_sketchTexture;
 uniform vec2 u_gridPixelDimensions;      // Size of the grid in logical pixels
 uniform vec2 u_gridCellDimensions;       // Number of cells in the grid (columns, rows)
 
-// New Uniform for Pixel Ratio
-
 // Constants
 const float TOTAL_CHARS = ${totalChars}.0;
 const float SAMPLE_SIZE = ${sampleSize}.0;
@@ -1367,7 +1365,6 @@ void main() {
                 this.colorSampleShader.setUniform('u_gridCols', this.grid.cols);
                 this.colorSampleShader.setUniform('u_gridRows', this.grid.rows);
                 this.colorSampleShader.setUniform('u_colorRank', 1);
-                this.colorSampleShader.setUniform('u_pixelRatio', 1);
                 this.p5.rect(0, 0, this.p5.width, this.p5.height);
             }
             this.primaryColorSampleFramebuffer.end();
@@ -1384,7 +1381,6 @@ void main() {
                 this.colorSampleShader.setUniform('u_gridCols', this.grid.cols);
                 this.colorSampleShader.setUniform('u_gridRows', this.grid.rows);
                 this.colorSampleShader.setUniform('u_colorRank', 2);
-                this.colorSampleShader.setUniform('u_pixelRatio', 1);
                 this.p5.rect(0, 0, this.p5.width, this.p5.height);
             }
             this.secondaryColorSampleFramebuffer.end();

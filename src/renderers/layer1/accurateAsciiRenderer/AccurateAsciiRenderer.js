@@ -75,7 +75,6 @@ export default class AccurateAsciiRenderer extends AsciiRenderer {
             this.colorSampleShader.setUniform('u_gridCols', this.grid.cols);
             this.colorSampleShader.setUniform('u_gridRows', this.grid.rows);
             this.colorSampleShader.setUniform('u_colorRank', 1);
-            this.colorSampleShader.setUniform('u_pixelRatio', 1);
             this.p5.rect(0, 0, this.p5.width, this.p5.height);
         }
         this.primaryColorSampleFramebuffer.end();
@@ -92,7 +91,6 @@ export default class AccurateAsciiRenderer extends AsciiRenderer {
             this.colorSampleShader.setUniform('u_gridCols', this.grid.cols);
             this.colorSampleShader.setUniform('u_gridRows', this.grid.rows);
             this.colorSampleShader.setUniform('u_colorRank', 2);
-            this.colorSampleShader.setUniform('u_pixelRatio', 1);
             this.p5.rect(0, 0, this.p5.width, this.p5.height);
         }
         this.secondaryColorSampleFramebuffer.end();

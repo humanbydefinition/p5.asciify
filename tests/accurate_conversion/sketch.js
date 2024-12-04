@@ -42,6 +42,8 @@ function draw() {
     directionalLight(255, 255, 255, 0, 0, -1);
     box(600, 80, 80);
     pop();
+
+    /**
     
     if (frameCount % 120 === 0) {
         currentModeIndex = (currentModeIndex + 1) % renderModes.length;
@@ -55,6 +57,8 @@ function draw() {
             setAsciiOptions({ ascii: { backgroundColorMode: 0 } });
         }
     }
+
+    **/
 }
 
 function windowResized() {
