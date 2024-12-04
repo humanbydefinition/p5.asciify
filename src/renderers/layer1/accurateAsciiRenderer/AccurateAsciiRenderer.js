@@ -106,7 +106,6 @@ export default class AccurateAsciiRenderer extends AsciiRenderer {
         this.characterSelectionShader.setUniform('u_sketchTexture', this.brightnessSplitFramebuffer);
         this.characterSelectionShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
         this.characterSelectionShader.setUniform('u_gridPixelDimensions', [this.grid.width, this.grid.height]);
-        this.characterSelectionShader.setUniform('u_pixelRatio', 1);
         this.p5.rect(0, 0, this.p5.width, this.p5.height);
         this.asciiCharacterFramebuffer.end();
 

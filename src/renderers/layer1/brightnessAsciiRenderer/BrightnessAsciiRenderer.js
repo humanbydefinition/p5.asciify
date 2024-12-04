@@ -33,7 +33,6 @@ export default class BrightnessAsciiRenderer extends AsciiRenderer {
         this.p5.shader(this.colorSampleShader);
         this.colorSampleShader.setUniform('u_sketchTexture', inputFramebuffer);
         this.colorSampleShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
-        this.colorSampleShader.setUniform('u_pixelRatio', 1);
         this.p5.rect(0, 0, this.p5.width, this.p5.height);
         this.colorSampleFramebuffer.end();
 
@@ -59,7 +58,6 @@ export default class BrightnessAsciiRenderer extends AsciiRenderer {
         this.p5.clear();
         this.p5.shader(this.asciiCharacterShader);
         this.asciiCharacterShader.setUniform('u_textureSize', [this.grid.cols, this.grid.rows]);
-        this.asciiCharacterShader.setUniform('u_pixelRatio', 1);
         this.asciiCharacterShader.setUniform('u_colorSampleFramebuffer', this.colorSampleFramebuffer);
         this.asciiCharacterShader.setUniform('u_charPaletteTexture', this.characterSet.characterColorPalette.framebuffer);
         this.asciiCharacterShader.setUniform('u_charPaletteSize', [this.characterSet.characterColorPalette.framebuffer.width, 1]);

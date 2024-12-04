@@ -13,7 +13,6 @@ uniform vec2 u_gridPixelDimensions;      // Size of the grid in logical pixels
 uniform vec2 u_gridCellDimensions;       // Number of cells in the grid (columns, rows)
 
 // New Uniform for Pixel Ratio
-uniform float u_pixelRatio;
 
 // Constants
 const float TOTAL_CHARS = ${totalChars}.0;
@@ -22,7 +21,7 @@ const float SAMPLE_COUNT = ${sampleSize * sampleSize}.0;
 
 void main() {
     // Adjust fragment coordinates based on pixel ratio to get logical pixel position
-    vec2 logicalFragCoord = floor(gl_FragCoord.xy / u_pixelRatio);
+    vec2 logicalFragCoord = floor(gl_FragCoord.xy);
 
     // Compute the grid cell coordinate (integer)
     vec2 cellCoord = floor(logicalFragCoord.xy);
@@ -172,7 +171,6 @@ uniform vec2 u_inputImageSize;         // Size of the input image (e.g., 800.0, 
 uniform int u_gridCols;                // Number of grid columns (e.g., 100)
 uniform int u_gridRows;                // Number of grid rows (e.g., 100)
 uniform int u_colorRank;               // Color rank (e.g., 1 or 2)
-uniform float u_pixelRatio;            // Device pixel ratio
 
 // Constants
 const int NUM_SLOTS = ${numSlots};
@@ -181,7 +179,7 @@ const int SAMPLES_PER_COL = ${samplesPerColumn};
 
 void main() {
     // Adjust fragment coordinates based on pixel ratio to get logical pixel position
-    vec2 logicalFragCoord = floor(gl_FragCoord.xy / u_pixelRatio);
+    vec2 logicalFragCoord = floor(gl_FragCoord.xy);
 
     // Calculate the size of each grid cell in logical pixels
     vec2 cellSize = u_inputImageSize / vec2(float(u_gridCols), float(u_gridRows));
