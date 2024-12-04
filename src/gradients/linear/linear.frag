@@ -14,10 +14,11 @@ uniform float u_speed;                   // Control the speed of the gradient mo
 uniform float u_angle;                   // Angle in degrees for the gradient
 uniform vec2 gradientTextureDimensions;  // Dimensions of the gradient texture
 uniform vec2 u_brightnessRange;          // Range of brightness values
+uniform float u_pixelRatio;              // Device pixel ratio
 
 void main() {
     // Adjust fragment coordinates based on pixel ratio to get logical pixel position
-    vec2 logicalFragCoord = floor(gl_FragCoord.xy);
+    vec2 logicalFragCoord = floor(gl_FragCoord.xy / u_pixelRatio);
 
     // Sample the original and unmodified textures using the provided texture coordinates
     vec4 texColor = texture2D(textureID, v_texCoord);

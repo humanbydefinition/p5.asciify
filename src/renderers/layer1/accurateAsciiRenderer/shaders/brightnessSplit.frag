@@ -7,13 +7,14 @@ uniform sampler2D u_brightnessTexture; // Average brightness texture
 uniform vec2 u_inputImageSize;         // Size of the input image (e.g., 800.0, 800.0)
 uniform int u_gridCols;                // Number of grid columns (e.g., 100)
 uniform int u_gridRows;                // Number of grid rows (e.g., 100)
+uniform float u_pixelRatio;            // Device pixel ratio
 
 // Constants
 const float EPSILON = 0.01;           // Epsilon threshold for floating-point comparison
 
 void main() {
     // Adjust fragment coordinates based on pixel ratio to get logical pixel position
-    vec2 logicalFragCoord = floor(gl_FragCoord.xy);
+    vec2 logicalFragCoord = floor(gl_FragCoord.xy / u_pixelRatio);
 
     // Calculate the size of each grid cell in logical pixels
     float cellWidth = u_inputImageSize.x / float(u_gridCols);

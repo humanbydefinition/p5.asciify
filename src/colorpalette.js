@@ -23,7 +23,6 @@ class P5AsciifyColorPalette {
         // Ensure minimum width of 1 to prevent zero-sized framebuffer
         const width = Math.max(this.colors.length, 1);
         this.framebuffer = this.p5Instance.createFramebuffer({
-            density: 1,
             width: width,
             height: 1,
             depthFormat: this.p5Instance.UNSIGNED_INT,

@@ -77,8 +77,8 @@ function setup() {
 	createCanvas(windowWidth, windowHeight, WEBGL);
 
 	// Initialize and fill the framebuffers with the colors of the charset and color palette
-	colorPaletteFramebuffer = createFramebuffer({ density: 1, width: colorPalette.length, height: 1, depthFormat: UNSIGNED_INT, textureFiltering: NEAREST });
-	charsetColorPaletteFramebuffer = createFramebuffer({ density: 1, width: charset.length, height: 1, depthFormat: UNSIGNED_INT, textureFiltering: NEAREST });
+	colorPaletteFramebuffer = createFramebuffer({ width: colorPalette.length, height: 1, depthFormat: UNSIGNED_INT, textureFiltering: NEAREST });
+	charsetColorPaletteFramebuffer = createFramebuffer({ width: charset.length, height: 1, depthFormat: UNSIGNED_INT, textureFiltering: NEAREST });
 
 	colorPaletteFramebuffer.loadPixels(); // Write the color palette to the framebuffer
 	for (let i = 0; i < colorPalette.length; i++) {
@@ -132,10 +132,10 @@ function setupAsciify() {
 	charsetColorPaletteFramebuffer.updatePixels();
 
 	// Initialize the framebuffers relevant to the sketch, matching the grid dimensions provided by p5.asciify
-	noiseFramebuffer = createFramebuffer({ density: 1, width: p5asciify.grid.cols, height: p5asciify.grid.rows, depthFormat: UNSIGNED_INT, textureFiltering: NEAREST });
-	shiftFramebuffer = createFramebuffer({ density: 1, width: p5asciify.grid.cols, height: p5asciify.grid.rows, depthFormat: UNSIGNED_INT, textureFiltering: NEAREST });
-	previousPushFramebuffer = createFramebuffer({ density: 1, width: p5asciify.grid.cols, height: p5asciify.grid.rows, depthFormat: UNSIGNED_INT, textureFiltering: NEAREST });
-	nextPushFramebuffer = createFramebuffer({ density: 1, width: p5asciify.grid.cols, height: p5asciify.grid.rows, depthFormat: UNSIGNED_INT, textureFiltering: NEAREST });
+	noiseFramebuffer = createFramebuffer({ width: p5asciify.grid.cols, height: p5asciify.grid.rows, depthFormat: UNSIGNED_INT, textureFiltering: NEAREST });
+	shiftFramebuffer = createFramebuffer({ width: p5asciify.grid.cols, height: p5asciify.grid.rows, depthFormat: UNSIGNED_INT, textureFiltering: NEAREST });
+	previousPushFramebuffer = createFramebuffer({ width: p5asciify.grid.cols, height: p5asciify.grid.rows, depthFormat: UNSIGNED_INT, textureFiltering: NEAREST });
+	nextPushFramebuffer = createFramebuffer({ width: p5asciify.grid.cols, height: p5asciify.grid.rows, depthFormat: UNSIGNED_INT, textureFiltering: NEAREST });
 
 	// Initialize the rectangle manager, which will create a number of non-overlapping rectangles that cover the entire grid
 	// The `1` in the constructor defines the spacing between rectangles. 
@@ -191,6 +191,7 @@ function draw() {
 	clear();
 	shader(asciiCharacterShader);
 	asciiCharacterShader.setUniform('u_textureSize', [p5asciify.grid.cols, p5asciify.grid.rows]);
+	asciiCharacterShader.setUniform('u_pixelRatio', pixelDensity());
 	asciiCharacterShader.setUniform('u_pushFramebuffer', nextPushFramebuffer);
 	asciiCharacterShader.setUniform('u_charPaletteTexture', charsetColorPaletteFramebuffer);
 	asciiCharacterShader.setUniform('u_charPaletteSize', [charsetColorPaletteFramebuffer.width, charsetColorPaletteFramebuffer.height]);
@@ -204,6 +205,7 @@ function draw() {
 	asciiColorPaletteShader.setUniform('u_pushFramebuffer', nextPushFramebuffer);
 	asciiColorPaletteShader.setUniform('u_colorPaletteTexture', colorPaletteFramebuffer);
 	asciiColorPaletteShader.setUniform('u_paletteSize', [colorPalette.length, 1]);
+	asciiColorPaletteShader.setUniform('u_pixelRatio', pixelDensity());
 	rect(0, 0, width, height);
 	primaryColorSampleFramebuffer.end();
 
