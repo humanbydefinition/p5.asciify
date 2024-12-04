@@ -1,5 +1,7 @@
+#version 100
 precision mediump float;
 
+// Uniforms
 uniform sampler2D u_sketchTexture;
 uniform bool u_previousRendererEnabled;
 uniform sampler2D u_previousColorTexture;
@@ -8,8 +10,8 @@ uniform vec2 u_gridCellDimensions;
 uniform int u_sampleMode;
 uniform vec4 u_staticColor;
 
-void main() {
-    // Get the cell coordinate (integer)
+void main() {    
+    // Get the cell coordinate (integer) using logical coordinates
     vec2 cellCoord = floor(gl_FragCoord.xy);
 
     // Compute the size of each cell in texture coordinates

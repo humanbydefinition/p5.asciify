@@ -47,6 +47,7 @@ export default class AccurateAsciiRenderer extends AsciiRenderer {
         this.brightnessSampleShader.setUniform('u_inputImageSize', [this.p5.width, this.p5.height]);
         this.brightnessSampleShader.setUniform('u_gridCols', this.grid.cols);
         this.brightnessSampleShader.setUniform('u_gridRows', this.grid.rows);
+        this.brightnessSampleShader.setUniform('u_pixelRatio', this.p5.pixelDensity());
         this.p5.rect(0, 0, this.p5.width, this.p5.height);
         this.brightnessSampleFramebuffer.end();
 
@@ -58,6 +59,7 @@ export default class AccurateAsciiRenderer extends AsciiRenderer {
         this.brightnessSplitShader.setUniform('u_inputImageSize', [this.p5.width, this.p5.height]);
         this.brightnessSplitShader.setUniform('u_gridCols', this.grid.cols);
         this.brightnessSplitShader.setUniform('u_gridRows', this.grid.rows);
+        this.brightnessSplitShader.setUniform('u_pixelRatio', this.p5.pixelDensity());
         this.p5.rect(0, 0, this.p5.width, this.p5.height);
         this.brightnessSplitFramebuffer.end();
 
@@ -108,9 +110,10 @@ export default class AccurateAsciiRenderer extends AsciiRenderer {
         this.outputFramebuffer.begin();
         this.p5.shader(this.shader);
         this.shader.setUniform('u_layer', 1);
+        this.shader.setUniform('u_pixelRatio', this.p5.pixelDensity());
+        this.shader.setUniform('u_resolution', [this.p5.width, this.p5.height]);
         this.shader.setUniform('u_characterTexture', this.characterSet.asciiFontTextureAtlas.texture);
-        this.shader.setUniform('u_charsetCols', this.characterSet.asciiFontTextureAtlas.charsetCols);
-        this.shader.setUniform('u_charsetRows', this.characterSet.asciiFontTextureAtlas.charsetRows);
+        this.shader.setUniform('u_charsetDimensions', [this.characterSet.asciiFontTextureAtlas.charsetCols, this.characterSet.asciiFontTextureAtlas.charsetRows]);
         this.shader.setUniform('u_primaryColorTexture', this.primaryColorSampleFramebuffer);
         this.shader.setUniform('u_secondaryColorTexture', this.secondaryColorSampleFramebuffer);
         this.shader.setUniform('u_asciiCharacterTexture', this.asciiCharacterFramebuffer);

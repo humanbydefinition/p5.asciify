@@ -9,15 +9,15 @@ export default class AsciiRenderer {
         if (new.target === AsciiRenderer) {
             throw new TypeError("Cannot construct AsciiRenderer instances directly");
         }
-        
+
         this.p5 = p5Instance;
         this.grid = grid;
         this.characterSet = characterSet;
         this.options = options;
 
-        this.primaryColorSampleFramebuffer = this.p5.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
-        this.secondaryColorSampleFramebuffer = this.p5.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
-        this.asciiCharacterFramebuffer = this.p5.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
+        this.primaryColorSampleFramebuffer = this.p5.createFramebuffer({ density: 1, antialias: false, width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
+        this.secondaryColorSampleFramebuffer = this.p5.createFramebuffer({ density: 1, antialias: false, width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
+        this.asciiCharacterFramebuffer = this.p5.createFramebuffer({ density: 1, antialias: false, width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
 
         this.outputFramebuffer = this.p5.createFramebuffer({ depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
     }

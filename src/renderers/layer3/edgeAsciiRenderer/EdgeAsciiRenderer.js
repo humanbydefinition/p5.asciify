@@ -20,7 +20,7 @@ export default class EdgeAsciiRenderer extends AsciiRenderer {
         this.shader = this.p5.createShader(vertexShader, asciiConversionShader);
 
         this.sobelFramebuffer = this.p5.createFramebuffer({ depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
-        this.sampleFramebuffer = this.p5.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
+        this.sampleFramebuffer = this.p5.createFramebuffer({ density: 1,width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
     }
 
     resizeFramebuffers() {
@@ -119,10 +119,10 @@ export default class EdgeAsciiRenderer extends AsciiRenderer {
         this.outputFramebuffer.begin();
         this.p5.shader(this.shader);
         this.shader.setUniform('u_layer', 3);
+        this.shader.setUniform('u_pixelRatio', this.p5.pixelDensity());
         this.shader.setUniform('u_resolution', [this.p5.width, this.p5.height]);
         this.shader.setUniform('u_characterTexture', this.characterSet.asciiFontTextureAtlas.texture);
-        this.shader.setUniform('u_charsetCols', this.characterSet.asciiFontTextureAtlas.charsetCols);
-        this.shader.setUniform('u_charsetRows', this.characterSet.asciiFontTextureAtlas.charsetRows);
+        this.shader.setUniform('u_charsetDimensions', [this.characterSet.asciiFontTextureAtlas.charsetCols, this.characterSet.asciiFontTextureAtlas.charsetRows]);
         this.shader.setUniform('u_asciiBrightnessTexture', previousAsciiRenderer.getOutputFramebuffer());
         this.shader.setUniform('u_primaryColorTexture', this.primaryColorSampleFramebuffer);
         this.shader.setUniform('u_secondaryColorTexture', this.secondaryColorSampleFramebuffer);

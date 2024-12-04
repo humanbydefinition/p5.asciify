@@ -1,4 +1,4 @@
-// Revised Merge Fragment Shader with Epsilon Threshold
+#version 100
 precision mediump float;
 
 // Uniforms
@@ -7,21 +7,22 @@ uniform sampler2D u_brightnessTexture; // Average brightness texture
 uniform vec2 u_inputImageSize;         // Size of the input image (e.g., 800.0, 800.0)
 uniform int u_gridCols;                // Number of grid columns (e.g., 100)
 uniform int u_gridRows;                // Number of grid rows (e.g., 100)
+uniform float u_pixelRatio;            // Device pixel ratio
 
 // Constants
 const float EPSILON = 0.01;           // Epsilon threshold for floating-point comparison
 
 void main() {
-    // Get the current fragment's coordinates in pixels
-    vec2 fragCoord = gl_FragCoord.xy;
+    // Adjust fragment coordinates based on pixel ratio to get logical pixel position
+    vec2 logicalFragCoord = floor(gl_FragCoord.xy / u_pixelRatio);
 
-    // Calculate the size of each grid cell in pixels
+    // Calculate the size of each grid cell in logical pixels
     float cellWidth = u_inputImageSize.x / float(u_gridCols);
     float cellHeight = u_inputImageSize.y / float(u_gridRows);
 
     // Determine the grid cell indices (gridX, gridY) for the current fragment
-    float gridX = floor(fragCoord.x / cellWidth);
-    float gridY = floor(fragCoord.y / cellHeight);
+    float gridX = floor(logicalFragCoord.x / cellWidth);
+    float gridY = floor(logicalFragCoord.y / cellHeight);
 
     // Prevent grid indices from exceeding texture bounds
     gridX = clamp(gridX, 0.0, float(u_gridCols - 1));
@@ -35,7 +36,7 @@ void main() {
     float averageBrightness = texture2D(u_brightnessTexture, brightnessTexCoord).r;
 
     // Normalize fragment coordinates to [0, 1] for sampling the original image
-    vec2 imageTexCoord = fragCoord / u_inputImageSize;
+    vec2 imageTexCoord = logicalFragCoord / u_inputImageSize;
 
     // Sample the original image color at the current fragment
     vec4 originalColor = texture2D(u_inputImage, imageTexCoord);

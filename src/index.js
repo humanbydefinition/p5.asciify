@@ -18,8 +18,6 @@ p5.prototype.setupP5Instance = function () {
         p5asciify.p5Instance = this;
     }
 
-    p5asciify.preEffectManager.addInstance(p5asciify.p5Instance);
-    p5asciify.afterEffectManager.addInstance(p5asciify.p5Instance);
     p5asciify.gradientManager.addInstance(p5asciify.p5Instance);
 }
 p5.prototype.registerMethod("init", p5.prototype.setupP5Instance);
@@ -41,6 +39,8 @@ p5.prototype.preloadAsciiFont = function () {
         URSAFONT_BASE64,
         (loadedFont) => {
             p5asciify.font = loadedFont;
+            p5asciify.fontBase64 = `${URSAFONT_BASE64}`;
+            p5asciify.fontFileType = 'truetype';
         },
         () => { throw new P5AsciifyError(`loadAsciiFont() | Failed to load font from path: '${font}'`); }
     );
@@ -69,9 +69,9 @@ p5.prototype.registerMethod("beforePreload", p5.prototype.preloadAsciiFont);
  * loadAsciiFont(fontObject);
  */
 p5.prototype.loadAsciiFont = function (font) {
-    const setFont = (loadedFont) => {
+    const setFont = async (loadedFont, fontPath) => {
         p5asciify.font = loadedFont;
-        p5asciify.p5Instance._decrementPreload();
+
         if (p5asciify.p5Instance.frameCount > 0) {
             p5asciify.asciiFontTextureAtlas.setFontObject(loadedFont);
             p5asciify.grid.resizeCellPixelDimensions(
@@ -82,18 +82,47 @@ p5.prototype.loadAsciiFont = function (font) {
             p5asciify.asciiCharacterSet.setCharacterSet(p5asciify.asciiCharacterSet.characters);
             p5asciify.edgeCharacterSet.setCharacterSet(p5asciify.edgeCharacterSet.characters);
         }
+
+        try {
+            const response = await fetch(fontPath);
+            const arrayBuffer = await response.arrayBuffer();
+            const base64String = btoa(
+                new Uint8Array(arrayBuffer)
+                    .reduce((data, byte) => data + String.fromCharCode(byte), '')
+            );
+
+            // Determine the font type based on the file extension
+            let mimeType = '';
+            if (fontPath.toLowerCase().endsWith('.ttf')) {
+                mimeType = 'truetype';
+            } else if (fontPath.toLowerCase().endsWith('.otf')) {
+                mimeType = 'opentype';
+            } else {
+                mimeType = 'truetype';
+            }
+
+            p5asciify.fontBase64 = `data:font/${mimeType};charset=utf-8;base64,${base64String}`;
+            p5asciify.fontFileType = mimeType;
+
+            console.log("Font loaded successfully:", fontPath);
+
+        } catch (error) {
+            console.error('Error converting font to Base64:', error);
+        }
+
+
+        p5asciify.p5Instance._decrementPreload();
     };
+
 
     if (typeof font === 'string') {
         p5asciify.p5Instance.loadFont(
             font,
-            (loadedFont) => { setFont(loadedFont); },
+            (loadedFont) => { setFont(loadedFont, font); },
             () => { throw new P5AsciifyError(`loadAsciiFont() | Failed to load font from path: '${font}'`); }
         );
-    } else if (typeof font === 'object') {
-        setFont(font);
     } else {
-        throw new P5AsciifyError(`loadAsciiFont() | Invalid font parameter. Expected a string or an object.`);
+        throw new P5AsciifyError(`loadAsciiFont() | Invalid font parameter. Expected a string/path.`);
     }
 };
 p5.prototype.registerPreloadMethod('loadAsciiFont', p5.prototype);
@@ -153,20 +182,12 @@ p5.prototype.setAsciifyPostDrawFunction = function (postDrawFunction) {
  * TODO: Add example
  */
 p5.prototype.setAsciiOptions = function (options) {
-    const validOptions = ["common", "brightness", "edge", "ascii", "gradient"];
+    const validOptions = ["common", "edge", "ascii", "gradient", "text"];
     const unknownOptions = Object.keys(options).filter(option => !validOptions.includes(option));
 
     if (unknownOptions.length) {
         console.warn(`P5Asciify: Unknown options detected (${unknownOptions.join(', ')}). Refer to the documentation for valid options.`);
         unknownOptions.forEach(option => delete options[option]);
-    }
-
-    if (options.brightness) {
-        console.warn("P5Asciify: The 'brightness' option is deprecated and will be removed in future releases. Use 'ascii' instead, which works the same way.");
-    }
-
-    if (options.brightness && !options.ascii) {
-        options.ascii = options.brightness;
     }
 
     const VALID_RENDER_MODES = ['brightness', 'accurate', 'custom'];
@@ -175,7 +196,7 @@ p5.prototype.setAsciiOptions = function (options) {
         options.ascii.renderMode = 'brightness';
     }
 
-    const { ascii: asciiOptions, edge: edgeOptions, common: commonOptions, gradient: gradientOptions } = options;
+    const { ascii: asciiOptions, edge: edgeOptions, common: commonOptions, gradient: gradientOptions, text: textOptions } = options;
 
     const colorOptions = [edgeOptions, asciiOptions, gradientOptions];
     colorOptions.forEach(opt => {
@@ -193,148 +214,7 @@ p5.prototype.setAsciiOptions = function (options) {
         delete edgeOptions.characters;
     }
 
-    p5asciify.setDefaultOptions(asciiOptions, edgeOptions, commonOptions, gradientOptions);
-};
-
-
-/**
- * Adds an ASCII effect to the P5Asciify library.
- * Depending on the effect type, it adds the effect to either the pre-effect or post-effect manager.
- *
- * @function addAsciiEffect
- * @memberof p5
- * @param {string} effectType - The type of effect to add. Valid types are 'pre' and 'post'.
- * @param {string} effectName - The name of the effect to add.
- * @param {Object} [userParams={}] - Optional parameters to pass to the effect.
- * @returns {Object} The added effect instance.
- * @throws {P5AsciifyError} Throws an error if the effect type is invalid.
- * 
- * @example
- * Adding a pre-effect
- * p5.prototype.addAsciiEffect('pre', 'kaleidoscope', { segments: 6, angle: 30 });
- *
- * @example
- * Adding a post-effect
- * p5.prototype.addAsciiEffect('post', 'invert', { });
- */
-p5.prototype.addAsciiEffect = function (effectType, effectName, userParams = {}) {
-    const managers = {
-        pre: p5asciify.preEffectManager,
-        post: p5asciify.afterEffectManager
-    };
-
-    const manager = managers[effectType];
-    if (!manager) {
-        throw new P5AsciifyError(`Invalid effect type '${effectType}'. Valid types are 'pre' and 'post'.`);
-    }
-
-    if (!manager.effectConstructors[effectName]) {
-        throw new P5AsciifyError(`Effect '${effectName}' does not exist! Available effects: ${Object.keys(manager.effectConstructors).join(", ")}`);
-    }
-
-    const validParams = Object.keys(manager.effectParams[effectName]);
-    const invalidKeys = Object.keys(userParams).filter(key => !validParams.includes(key));
-    if (invalidKeys.length > 0) {
-        throw new P5AsciifyError(`Invalid parameter(s) for effect '${effectName}': ${invalidKeys.join(", ")}\nValid parameters are: ${validParams.join(", ")}`);
-    }
-
-    return manager.addEffect(effectName, userParams);
-}
-
-/**
- * Removes an ASCII effect from the P5Asciify library.
- * This method checks both the pre-effect and post-effect managers and removes the effect if found.
- * If the effect is not found in either manager, it throws an error.
- *
- * @function removeAsciiEffect
- * @memberof p5
- * @param {Object} effectInstance - The instance of the effect to remove.
- * @throws {P5AsciifyError} Throws an error if the effect instance is not found in either pre or post effect managers.
- * 
- * @example
- * Removing an ASCII effect
- * const effectInstance = ...; // Assume this is a valid effect instance
- * removeAsciiEffect(effectInstance);
- */
-p5.prototype.removeAsciiEffect = function (effectInstance) {
-    let removed = false;
-
-    if (p5asciify.preEffectManager.hasEffect(effectInstance)) {
-        p5asciify.preEffectManager.removeEffect(effectInstance);
-        removed = true;
-    }
-
-    if (p5asciify.afterEffectManager.hasEffect(effectInstance)) {
-        p5asciify.afterEffectManager.removeEffect(effectInstance);
-        removed = true;
-    }
-
-    if (!removed) {
-        throw new P5AsciifyError(`Effect instance not found in either pre or post effect managers.`);
-    }
-};
-
-/**
- * Swaps the positions of two ASCII effects in the P5Asciify library.
- * This method determines the managers and indices of the provided effect instances and swaps their positions.
- * If the effect instances belong to different managers, it removes them from their respective managers and re-adds them at the specified indices.
- * If they belong to the same manager, it simply swaps their positions.
- *
- * @function swapAsciiEffects
- * @memberof p5
- * @param {Object} effectInstance1 - The first effect instance to swap.
- * @param {Object} effectInstance2 - The second effect instance to swap.
- * @throws {P5AsciifyError} Throws an error if either effect instance is not found in the pre or post effect managers.
- * 
- * @example
- * Swapping two ASCII effects
- * const effectInstance1 = ...; // Assume this is a valid effect instance
- * const effectInstance2 = ...; // Assume this is another valid effect instance
- * swapAsciiEffects(effectInstance1, effectInstance2);
- */
-p5.prototype.swapAsciiEffects = function (effectInstance1, effectInstance2) {
-    let manager1 = null;
-    let manager2 = null;
-    let index1 = -1;
-    let index2 = -1;
-
-    // Determine the manager and index for effectInstance1
-    if (p5asciify.preEffectManager.hasEffect(effectInstance1)) {
-        manager1 = p5asciify.preEffectManager;
-        index1 = manager1.getEffectIndex(effectInstance1);
-    } else if (p5asciify.afterEffectManager.hasEffect(effectInstance1)) {
-        manager1 = p5asciify.afterEffectManager;
-        index1 = manager1.getEffectIndex(effectInstance1);
-    } else {
-        throw new P5AsciifyError(`Effect instance 1 not found in either pre or post effect managers.`);
-    }
-
-    // Determine the manager and index for effectInstance2
-    if (p5asciify.preEffectManager.hasEffect(effectInstance2)) {
-        manager2 = p5asciify.preEffectManager;
-        index2 = manager2.getEffectIndex(effectInstance2);
-    } else if (p5asciify.afterEffectManager.hasEffect(effectInstance2)) {
-        manager2 = p5asciify.afterEffectManager;
-        index2 = manager2.getEffectIndex(effectInstance2);
-    } else {
-        throw new P5AsciifyError(`Effect instance 2 not found in either pre or post effect managers.`);
-    }
-
-    // Swap the effects
-    if (manager1 !== manager2) {
-
-        if (manager1.hasEffect(effectInstance2) || manager2.hasEffect(effectInstance1)) {
-            throw new P5AsciifyError(`Effects cannot be swapped because one effect instance is already present in the other's manager.`);
-        }
-
-        manager1.removeEffect(effectInstance1);
-        manager2.removeEffect(effectInstance2);
-
-        manager1.addExistingEffectAtIndex(effectInstance2, index1);
-        manager2.addExistingEffectAtIndex(effectInstance1, index2);
-    } else {
-        manager1.swapEffects(effectInstance1, effectInstance2);
-    }
+    p5asciify.setDefaultOptions(asciiOptions, edgeOptions, commonOptions, gradientOptions, textOptions);
 };
 
 p5.prototype.addAsciiGradient = function (gradientName, brightnessStart, brightnessEnd, characters, userParams = {}) {
