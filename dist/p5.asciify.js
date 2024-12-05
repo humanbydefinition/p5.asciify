@@ -2447,7 +2447,7 @@ void main() {
             };
 
             // If we are still in the users setup(), the characterset and grid have not been initialized yet.
-            if (this.p5Instance.frameCount == 0) {
+            if (!this.p5Instance._setupDone) {
                 return;
             }
 
