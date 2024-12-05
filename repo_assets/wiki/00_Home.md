@@ -24,7 +24,7 @@ I would love to see your creations using `p5.asciify`! Feel free to tag me on so
 
 # Features
 
-`p5.asciify` features a customizable rendering pipeline which is being executed every time the user's `draw()` function is finished executing, currently consisting of optional effect shaders being applied before and after the ASCII conversion, as well as up to 3 different layers of ASCII conversion, each with its own set of parameters that can be adjusted at any time.
+`p5.asciify` features a customizable rendering pipeline which is being executed every time the user's `draw()` function is finished executing, currently consisting of up to 4 different layers of ASCII conversion, each with its own set of parameters that can be adjusted at any time.
 
 ## ASCII Conversion
 
@@ -34,7 +34,9 @@ The first layer of ASCII conversion affects the entire canvas based on one of cu
 
 The second layer is a gradient/pattern-based conversion, where a brightness range from 0-255 is mapped to a specific string of characters, and a customizeable gradient/pattern attached to it. Only the grid cells that fall within the specified brightness range will be converted to ASCII characters, which are drawn using the dynamic gradient/pattern.
 
-Lastly, the third layer is an edge-based conversion, which uses a Sobel filter to detect edges in the image and convert them into ASCII characters.
+The third layer is an edge-based conversion, which uses a Sobel filter to detect edges in the image and convert them into ASCII characters.
+
+The currently last layer is a text-based conversion, which writes the result of the previous layers as copyable text onto a `<div>` element on top of the canvas. As all the other layers, fully responsive!
 
 ### Shared settings
 
@@ -77,3 +79,7 @@ No additional settings are available for this layer. This layer is populated by 
 | **`characters`**   | The characters used for the ASCII conversion. Consists of 8 characters, each representing a different edge direction. |
 | **`sobelThreshold`** | The threshold used for the Sobel edge detection algorithm.                                           |
 | **`sampleThreshold`** | The threshold used for sampling the sobel filter output to a smaller size.
+
+### Layer 4: Text-based conversion settings
+
+Contains all settings from the common settings minus the `backgroundColorMode` and `rotationAngle` settings.
