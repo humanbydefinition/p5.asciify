@@ -4,20 +4,27 @@ import P5AsciifyUtils from './utils.js';
 import p5 from 'p5';
 import URSAFONT_BASE64 from './assets/fonts/ursafont_base64.txt';
 
+// Initialize the P5Asciify library and export it as a default module
 const p5asciify = new P5Asciify();
 export default p5asciify;
 
 // Expose P5Asciify to the global scope if not in a module environment
 if (typeof window !== 'undefined' && !window.P5Asciify) {
     window.p5asciify = p5asciify;  // Expose p5asciify instance
-    window.preload = function () { };
+    window.preload = function () { }; // Define empty preload function in case user doesn't provide one
 }
 
+/**
+ * Executed on initialization. Passes the p5 instance to the P5Asciify library if not already set by the user.
+ * 
+ * @memberof p5
+ */
 p5.prototype.setupP5Instance = function () {
     if (!p5asciify.p5Instance) {
         p5asciify.p5Instance = this;
     }
 
+    // Pass the reference to other relevant objects of the p5.asciify library
     p5asciify.gradientManager.addInstance(p5asciify.p5Instance);
 }
 p5.prototype.registerMethod("init", p5.prototype.setupP5Instance);
@@ -29,7 +36,6 @@ p5.prototype.registerMethod("init", p5.prototype.setupP5Instance);
  * If the font fails to load, it throws a P5AsciifyError.
  * Not intended to be called directly by the user, as it is performed automatically before preload.
  *
- * @function preloadAsciiFont
  * @memberof p5
  * @throws {P5AsciifyError} Throws an error if the font fails to load.
  */
@@ -49,41 +55,35 @@ p5.prototype.registerMethod("beforePreload", p5.prototype.preloadAsciiFont);
 
 /**
  * Loads an ASCII font for the P5Asciify library.
- * This method sets the font for P5Asciify from a specified path or font object.
+ * This method sets the font for P5Asciify from a specified path.
  * If a string path is provided, it loads the font from that path.
- * If a font object is provided, it directly sets the font.
- * After loading, it decrements the preload count and updates the character sets and grid dimensions.
+ * After loading, it decrements the preload count and updates the font texture atlas and grid dimensions.
  *
- * @function loadAsciiFont
  * @memberof p5
- * @param {string|Object} font - The path to the font file or the font object.
+ * @param {string} font - The path to the font file. (.ttf or .otf)
  * @throws {P5AsciifyError} Throws an error if the font fails to load or if the font parameter is invalid.
  * 
  * @example
  * Loading a font from a path
  * loadAsciiFont('path/to/font.ttf');
- *
- * @example
- * Loading a font from an object
- * const fontObject = ...; // Assume this is a valid font object
- * loadAsciiFont(fontObject);
  */
 p5.prototype.loadAsciiFont = function (font) {
     const setFont = async (loadedFont, fontPath) => {
         p5asciify.font = loadedFont;
 
+        // If the sketch already runs, update the font texture atlas and grid dimensions, as well as the character sets
         if (p5asciify.p5Instance.frameCount > 0) {
             p5asciify.asciiFontTextureAtlas.setFontObject(loadedFont);
+            p5asciify.asciiCharacterSet.setCharacterSet(p5asciify.asciiCharacterSet.characters);
+            p5asciify.edgeCharacterSet.setCharacterSet(p5asciify.edgeCharacterSet.characters);
+
             p5asciify.grid.resizeCellPixelDimensions(
                 p5asciify.asciiFontTextureAtlas.maxGlyphDimensions.width,
                 p5asciify.asciiFontTextureAtlas.maxGlyphDimensions.height
             );
-
-            p5asciify.asciiCharacterSet.setCharacterSet(p5asciify.asciiCharacterSet.characters);
-            p5asciify.edgeCharacterSet.setCharacterSet(p5asciify.edgeCharacterSet.characters);
         }
 
-        try {
+        try { // Convert the font to Base64 for use in the text-based ASCII renderer
             const response = await fetch(fontPath);
             const arrayBuffer = await response.arrayBuffer();
             const base64String = btoa(
@@ -103,17 +103,12 @@ p5.prototype.loadAsciiFont = function (font) {
 
             p5asciify.fontBase64 = `data:font/${mimeType};charset=utf-8;base64,${base64String}`;
             p5asciify.fontFileType = mimeType;
-
-            console.log("Font loaded successfully:", fontPath);
-
         } catch (error) {
             console.error('Error converting font to Base64:', error);
         }
 
-
         p5asciify.p5Instance._decrementPreload();
     };
-
 
     if (typeof font === 'string') {
         p5asciify.p5Instance.loadFont(
@@ -133,13 +128,8 @@ p5.prototype.registerPreloadMethod('loadAsciiFont', p5.prototype);
  * If the requirements are met, it initializes the P5Asciify setup.
  * Not intended to be called directly by the user, as it is performed automatically after setup.
  *
- * @function setupAsciifier
  * @memberof p5
  * @throws {P5AsciifyError} Throws an error if the WebGL renderer is not used or if the p5.js version is below 1.8.0.
- * 
- * @example
- * Setting up the asciifier
- * p5.prototype.setupAsciifier();
  */
 p5.prototype.setupAsciifier = function () {
 
@@ -158,30 +148,35 @@ p5.prototype.setupAsciifier = function () {
 }
 p5.prototype.registerMethod("afterSetup", p5.prototype.setupAsciifier);
 
-p5.prototype.resetAsciiGrid = function () {
-    p5asciify.grid.reset();
-    p5asciify.sampleFramebuffer.resize(p5asciify.grid.cols, p5asciify.grid.rows);
-};
-
+/**
+ * Sets a post-setup function, which will be called after the P5Asciify setup is complete.
+ * 
+ * @memberof p5
+ * @param {function} postSetupFunction 
+ */
 p5.prototype.setAsciifyPostSetupFunction = function (postSetupFunction) {
     p5asciify.postSetupFunction = postSetupFunction;
 };
 
+/**
+ * Sets a post-draw function, which will be called every frame after the P5Asciify draw is complete.
+ * 
+ * @memberof p5
+ * @param {function} postDrawFunction
+ */
 p5.prototype.setAsciifyPostDrawFunction = function (postDrawFunction) {
     p5asciify.postDrawFunction = postDrawFunction;
 }
 
 /**
- * Sets the default options for the P5Asciify library.
+ * Sets the options for the P5Asciify library to customize the ASCII rendering.
  *
- * @function setAsciiOptions
  * @memberof p5
- * @param {Object} options - An object containing the options to set for ASCII rendering.
- * 
- * @example
- * TODO: Add example
+ * @param {Object} options - An object containing the options to set for the P5Asciify library.
  */
 p5.prototype.setAsciiOptions = function (options) {
+
+    // Check and remove any unknown options
     const validOptions = ["common", "edge", "ascii", "gradient", "text"];
     const unknownOptions = Object.keys(options).filter(option => !validOptions.includes(option));
 
@@ -190,6 +185,7 @@ p5.prototype.setAsciiOptions = function (options) {
         unknownOptions.forEach(option => delete options[option]);
     }
 
+    // Check for invalid render modes
     const VALID_RENDER_MODES = ['brightness', 'accurate', 'custom'];
     if (options?.ascii?.renderMode && !VALID_RENDER_MODES.includes(options.ascii.renderMode)) {
         console.warn(`P5Asciify: Invalid render mode '${options.ascii.renderMode}'. Defaulting to 'brightness'.`);
@@ -198,6 +194,7 @@ p5.prototype.setAsciiOptions = function (options) {
 
     const { ascii: asciiOptions, edge: edgeOptions, common: commonOptions, gradient: gradientOptions, text: textOptions } = options;
 
+    // Convert hex color strings to p5.Color objects and assign them to the options
     const colorOptions = [edgeOptions, asciiOptions, gradientOptions];
     colorOptions.forEach(opt => {
         if (opt?.characterColor) opt.characterColor = this.color(opt.characterColor);
@@ -217,6 +214,17 @@ p5.prototype.setAsciiOptions = function (options) {
     p5asciify.setDefaultOptions(asciiOptions, edgeOptions, commonOptions, gradientOptions, textOptions);
 };
 
+/**
+ * Adds a custom ASCII gradient to the P5Asciify library, which is used by the gradient ascii renderer on layer 2.
+ * 
+ * @memberof p5
+ * @param {string} gradientName - The name of the gradient to add.
+ * @param {number} brightnessStart - The starting brightness value for the gradient to be applied to.
+ * @param {number} brightnessEnd - The ending brightness value for the gradient to be applied to.
+ * @param {string} characters - The characters to use for the gradient.
+ * @param {object} userParams - Additional parameters for the gradient based on the gradient type.
+ * @returns {P5AsciifyGradient} The gradient instance that was added to the rendering loop to modify during runtime.
+ */
 p5.prototype.addAsciiGradient = function (gradientName, brightnessStart, brightnessEnd, characters, userParams = {}) {
 
     if (!p5asciify.gradientManager.gradientConstructors[gradientName]) {
@@ -245,21 +253,22 @@ p5.prototype.addAsciiGradient = function (gradientName, brightnessStart, brightn
     return p5asciify.gradientManager.addGradient(gradientName, brightnessStart, brightnessEnd, characters, userParams);
 }
 
+/**
+ * Removes a custom ASCII gradient from the P5Asciify library.
+ * 
+ * @memberof p5
+ * @param {P5AsciifyGradient} gradientInstance - The gradient instance to remove from the rendering loop.
+ */
 p5.prototype.removeAsciiGradient = function (gradientInstance) {
     p5asciify.gradientManager.removeGradient(gradientInstance);
 }
 
 /**
  * Adds a push() call before the user's draw() function in p5.js.
- * This method ensures that the drawing state is saved before any drawing operations.
+ * This method starts wrapping the user's draw function inside a framebuffer to capture the content drawn on the canvas.
  * Not intended to be called directly by the user, as it is performed automatically before draw.
  *
- * @function preDrawAddPush
  * @memberof p5
- * 
- * @example
- * Adding a push before draw
- * p5.prototype.preDrawAddPush();
  */
 p5.prototype.preDrawAddPush = function () {
     p5asciify.sketchFramebuffer.begin();
@@ -269,10 +278,9 @@ p5.prototype.registerMethod("pre", p5.prototype.preDrawAddPush);
 
 /**
  * Adds a pop() call after the user's draw() function in p5.js.
- * This method ensures that the drawing state is restored after all drawing operations.
+ * This method ends the wrapping of the user's draw function inside a framebuffer and pops the transformation matrix.
  * Not intended to be called directly by the user, as it is performed automatically after draw.
  *
- * @function postDrawAddPop
  * @memberof p5
  */
 p5.prototype.postDrawAddPop = function () {
@@ -286,7 +294,6 @@ p5.prototype.registerMethod("post", p5.prototype.postDrawAddPop);
  * This method calls the P5Asciify library to convert the canvas content into ASCII art after the user's draw() function is executed.
  * Not intended to be called directly by the user, as it is performed automatically after draw.
  *
- * @function asciify
  * @memberof p5
  */
 p5.prototype.asciify = function () { p5asciify.asciify(); };
