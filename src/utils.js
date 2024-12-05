@@ -1,16 +1,15 @@
 /**
- * @class P5AsciifyUtils
- * @description
- * A utility class for the P5Asciify library.
- * Provides static methods for various common tasks such as color conversion and version comparison.
+ * Utility class containing static helper methods for version comparison and other common tasks.
  */
 class P5AsciifyUtils {
 
     /**
-     * Compares two version strings.
-     * @param {string} v1 - The first version string (e.g., "1.2.3").
-     * @param {string} v2 - The second version string (e.g., "1.2.4").
-     * @returns {number} 1 if v1 > v2, -1 if v1 < v2, 0 if v1 === v2.
+     * @param {string} v1 - First version string (e.g., "1.2.3")
+     * @param {string} v2 - Second version string (e.g., "1.2.4")
+     * @returns {number} 1 if v1 > v2, -1 if v1 < v2, 0 if equal
+     * @example
+     * P5AsciifyUtils.compareVersions("1.2.3", "1.2.4") // Returns -1
+     * P5AsciifyUtils.compareVersions("2.0.0", "1.9.9") // Returns 1
      */
     static compareVersions(v1, v2) {
         const [v1Parts, v2Parts] = [v1, v2].map(v => v.split('.').map(Number));

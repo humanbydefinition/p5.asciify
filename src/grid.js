@@ -1,17 +1,13 @@
 /**
- * @class P5AsciifyGrid
- * @description
- * Represents a 2D grid for the P5Asciify library.
- * Handles the dimensions and resizing of the grid.
+ * Represents a 2D grid, handling the dimensions and resizing of the grid.
  */
 class P5AsciifyGrid {
     /**
      * Creates an instance of P5AsciifyGrid.
-     * @param {Object} options - The grid options.
-     * @param {number} options.cellWidth - The width of each cell in the grid.
-     * @param {number} options.cellHeight - The height of each cell in the grid.
+     * @param {p5} p5Instance - The p5 instance to get the width and height from.
+     * @param {number} cellWidth - The width of each cell in the grid.
+     * @param {number} cellHeight - The height of each cell in the grid.
      */
-
     constructor(p5Instance, cellWidth, cellHeight) {
         this.p5Instance = p5Instance;
         this.cellWidth = cellWidth;
@@ -34,8 +30,7 @@ class P5AsciifyGrid {
 
     /**
      * Resizes the grid dimensions based on the current number of columns and rows, as well as the cell width and height.
-     * Adjusts the grid's offset to center it within the given width and height in the ASCII shader.
-     * @private
+     * Adjusts the grid's offset to center it within the given canvas dimensions.
      */
     _resizeGrid() {
         this.width = this.cols * this.cellWidth;
@@ -46,14 +41,11 @@ class P5AsciifyGrid {
     }
 
     /**
-     * Calculates the number of columns and rows for the grid based on the current cell dimensions.
-     * @returns {number[]} An array containing the number of columns and rows.
-     * @private
+     * Calculates the number of columns and rows for the grid based on the current cell and sketch dimensions.
+     * @returns {number[]} An array containing the number of columns and rows for the grid.
      */
     _calculateGridCellDimensions() {
-        const cellsX = Math.floor(this.p5Instance.width / this.cellWidth);
-        const cellsY = Math.floor(this.p5Instance.height / this.cellHeight);
-        return [cellsX, cellsY];
+        return [Math.floor(this.p5Instance.width / this.cellWidth), Math.floor(this.p5Instance.height / this.cellHeight)];
     }
 
     /**
@@ -69,6 +61,12 @@ class P5AsciifyGrid {
         this.reset();
     }
 
+    /**
+     * Resizes the dimensions of the grid based on the number of given columns and rows.
+     * If the new dimensions exceed the maximum dimensions of the grid, the grid is reset to its default dimensions.
+     * @param {number} numCols - The new number of columns for the grid.
+     * @param {number} numRows - The new number of rows for the grid
+     */
     resizeCellDimensions(numCols, numRows) {
         const [maxCols, maxRows] = this._calculateGridCellDimensions();
         if (numCols > maxCols || numRows > maxRows) {
