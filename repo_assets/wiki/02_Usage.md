@@ -68,6 +68,7 @@ Sets the global options for the ASCII conversion.
   - **`ascii`**: `Object` - Settings for the brightness/accurate-based ASCII conversion.
   - **`gradient`**: `Object` - Settings for the gradient/pattern-based ASCII conversion.
   - **`edge`**: `Object` - Settings for the edge-based ASCII conversion.
+  - **`text`**: `Object` - Settings for the text-based ASCII conversion.
 
 #### Usage Context
 
@@ -89,7 +90,7 @@ Shared settings for both edge- and brightness-based ASCII conversion.
 #### **`ascii` options**
 | Option                | Type    | Default  | Description                                                                                                                                                                                                 |
 |-----------------------|---------|----------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `renderMode`          | `string`  | `brightness`        | The method used for the ASCII conversion. Allowed values are `brightness` and `accurate`. <br/> - `brightness`: The brightness-based conversion uses the brightness of the pixels to determine the ASCII character. <br/> - `accurate`: The accurate ASCII conversion attempts to recreate the image as accurately as possible using the given set of characters. |
+| `renderMode`          | `string`  | `brightness`        | The method used for the ASCII conversion. Allowed values are `brightness` and `accurate`. <br/> - `brightness`: The brightness-based conversion uses the brightness of the pixels to determine the ASCII character. <br/> - `accurate`: The accurate ASCII conversion attempts to recreate the image as accurately as possible using the given set of characters. <br/> - `custom`: The custom ASCII conversion requires advanced knowledge about `p5.asciify`, utilizing exposed framebuffers by the library to create custom ASCII conversion algorithms. **Not documented in detail yet!** |
 | `enabled`             | `boolean` | `true`     | A boolean value indicating whether the ASCII conversion should be enabled.                                                                                                      |
 | `characters`          | `string`  | `'0123456789'` | A string containing the characters to be used for the ASCII conversion. The characters are used in order of appearance, with the first character representing the darkest colors and the last character representing the brightest colors. |
 | `characterColorMode`  | `number`  | `0`        | The mode used for the color of the characters used for the ASCII conversion. Allowed values are `0` *(sampled)* and `1` *(fixed)*. <br/> - `0` *(sampled)*: The color of a character is determined by sampling the central pixel of the cell it occupies on the canvas. <br/> - `1` *(fixed)*: The color of a character is determined by the `characterColor` property. |
@@ -123,6 +124,15 @@ Shared settings for both edge- and brightness-based ASCII conversion.
 | `rotationAngle`       | `number`  | `0`        | The angle of rotation in degrees, which is applied to all characters from the ASCII conversion.                                                                                                    |
 | `sobelThreshold`      | `number`  | `0.5`      | The threshold value used for the Sobel edge detection algorithm.                                                                                                    |
 | `sampleThreshold`     | `number`  | `16`      | The threshold value used when downscaling the sobel framebuffer to the grid size.                                                                                                    |
+
+#### **`text` options**
+| Option                | Type    | Default | Description                                                                                                                                                                                                 |
+|-----------------------|---------|----------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `enabled`             | `boolean` | `false`     | A boolean value indicating whether the ASCII conversion should be enabled.                                                                                                      |
+| `characterColor`      | `string`  | `'#ffffff'` | The color of the characters used for the ASCII conversion.                                                     |
+| `characterColorMode` | `number`  | `0`        | The mode used for the color of the characters used for the ASCII conversion. Allowed values are `0` *(sampled)* and `1` *(fixed)*. <br/> - `0` *(sampled)*: Sampled from one of the previous conversion layers, based on the input texture colors. <br/> - `1` *(fixed)*: The color of a character is determined by the `characterColor` property. |
+| `backgroundColor`     | `string`  | `'#000000'` | The color of the background of a cell, not covered by the character.                                          |
+| `invertMode`          | `boolean` | `false`    | A boolean value indicating whether the background and character color should swap.                                                                                                    |
 
 #### Example
 
@@ -173,6 +183,50 @@ function draw() {
 [`run inside the p5.js web editor`](https://editor.p5js.org/humanbydefinition/sketches/N6N33RIZe)
 
 <hr/>
+
+### `setAsciifyPostSetupFunction()`
+
+`setAsciifyPostSetupFunction(postSetupFunction: Function): void`
+
+Sets a custom function to be executed once after `p5.asciify` has been set up.
+
+Can be useful in more advanced scenarios where you need to perform additional setup steps after the library has been set up, like fetching calculated grid dimensions or other internal data.
+
+#### Parameters
+
+- **postSetupFunction**: `Function` - A custom function to be executed
+
+#### Usage Context
+
+| Function  | Usable? |
+|-----------|-----------|
+| `preload()` | ✓       |
+| `setup()`   | ✓       |
+| `draw()`    | ✗       |
+
+
+
+<hr />
+
+### `setAsciifyPostDrawFunction()`
+
+`setAsciifyPostDrawFunction(postDrawFunction: Function): void`
+
+Sets a custom function to be executed every frame after the libraries `draw()` function has been executed, allowing for additional post-processing steps to be performed on top of the ASCII conversion.
+
+#### Parameters
+
+- **postDrawFunction**: `Function` - A custom function to be executed
+
+#### Usage Context
+
+| Function  | Usable? |
+|-----------|-----------|
+| `preload()` | ✓       |
+| `setup()`   | ✓       |
+| `draw()`    | ✓       |
+
+<hr />
 
 ### `addAsciiGradient()`
 
