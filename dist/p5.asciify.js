@@ -1123,7 +1123,6 @@ uniform sampler2D u_inputImage;
 uniform vec2 u_inputImageSize;
 uniform int u_gridCols;
 uniform int u_gridRows;
-uniform float u_pixelRatio;
 
 // Constants
 const int SAMPLES_PER_ROW = ${samplesPerRow};
@@ -1131,7 +1130,7 @@ const int SAMPLES_PER_COL = ${samplesPerColumn};
 
 void main() {
     // Adjust fragment coordinates based on pixel ratio to get logical pixel position
-    vec2 logicalFragCoord = floor(gl_FragCoord.xy / u_pixelRatio);
+    vec2 logicalFragCoord = floor(gl_FragCoord.xy);
     
     // Calculate the size of each grid cell in logical pixels
     vec2 cellSize = u_inputImageSize / vec2(float(u_gridCols), float(u_gridRows));
@@ -1306,7 +1305,7 @@ void main() {
             this.brightnessSplitShader = this.p5.createShader(vertexShader, brightnessSplitShader);
             this.shader = this.p5.createShader(vertexShader, asciiConversionShader);
 
-            this.brightnessSampleFramebuffer = this.p5.createFramebuffer({ width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
+            this.brightnessSampleFramebuffer = this.p5.createFramebuffer({density: 1, width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
             this.brightnessSplitFramebuffer = this.p5.createFramebuffer({ depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
         }
 
@@ -1335,7 +1334,6 @@ void main() {
             this.brightnessSampleShader.setUniform('u_inputImageSize', [this.p5.width, this.p5.height]);
             this.brightnessSampleShader.setUniform('u_gridCols', this.grid.cols);
             this.brightnessSampleShader.setUniform('u_gridRows', this.grid.rows);
-            this.brightnessSampleShader.setUniform('u_pixelRatio', this.p5.pixelDensity());
             this.p5.rect(0, 0, this.p5.width, this.p5.height);
             this.brightnessSampleFramebuffer.end();
 
