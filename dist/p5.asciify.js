@@ -844,7 +844,7 @@
             
             this._gradients.push(gradient);
 
-            if (frameCount === 0) {
+            if (!this.p5Instance._setupDone) {
                 this._setupQueue.push(gradient);
             } else {
                 gradient.setup(this.p5Instance, this.gradientShaders[gradientName], this.gradientCharacterSet.getCharsetColorArray(characters));
@@ -861,7 +861,7 @@
         }
 
         handleGradientPaletteChange(gradient, characters) {
-            if (frameCount === 0) {
+            if (!this.p5Instance._setupDone) {
                 gradient._characters = characters;
             } else {
                 gradient._palette.setColors(this.gradientCharacterSet.getCharsetColorArray(characters));
@@ -2336,7 +2336,6 @@ void main() {
 
             this.edgeRenderer = new EdgeAsciiRenderer(this.p5Instance, this.grid, this.edgeCharacterSet, this.edgeOptions);
 
-            //this.cubeAsciiRenderer3D = new CubeAsciiRenderer3D(this.p5Instance, this.grid, this.edgeCharacterSet, this.edgeRenderer, this.asciiOptions);
             this.textAsciiRenderer = new TextAsciiRenderer(this.p5Instance, this.asciiFontTextureAtlas, this.grid, this.edgeRenderer, this.fontBase64, this.fontFileType, this.textOptions);
 
             this.asciiRenderer = this.brightnessRenderer;
@@ -2395,9 +2394,6 @@ void main() {
 
             this.edgeRenderer.render(this.sketchFramebuffer, this.gradientRenderer);
             asciiOutput = this.edgeRenderer.getOutputFramebuffer();
-
-            //this.cubeAsciiRenderer3D.render();
-            //asciiOutput = this.cubeAsciiRenderer3D.getOutputFramebuffer();
 
             this.p5Instance.clear();
             this.p5Instance.image(asciiOutput, -this.p5Instance.width / 2, -this.p5Instance.height / 2, this.p5Instance.width, this.p5Instance.height);
