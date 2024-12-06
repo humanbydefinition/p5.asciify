@@ -12,7 +12,6 @@ import GradientAsciiRenderer from './renderers/layer2/gradientAsciiRenderer/Grad
 
 import EdgeAsciiRenderer from './renderers/layer3/edgeAsciiRenderer/EdgeAsciiRenderer.js';
 
-//import CubeAsciiRenderer3D from './renderers/layer4/cubeAsciiRenderer3D/CubeAsciiRenderer3D.js';
 import TextAsciiRenderer from './renderers/layer4/textAsciiRenderer/TextAsciiRenderer.js';
 
 /**
@@ -122,7 +121,6 @@ class P5Asciify {
 
         this.edgeRenderer = new EdgeAsciiRenderer(this.p5Instance, this.grid, this.edgeCharacterSet, this.edgeOptions);
 
-        //this.cubeAsciiRenderer3D = new CubeAsciiRenderer3D(this.p5Instance, this.grid, this.edgeCharacterSet, this.edgeRenderer, this.asciiOptions);
         this.textAsciiRenderer = new TextAsciiRenderer(this.p5Instance, this.asciiFontTextureAtlas, this.grid, this.edgeRenderer, this.fontBase64, this.fontFileType, this.textOptions);
 
         this.asciiRenderer = this.brightnessRenderer;
@@ -181,9 +179,6 @@ class P5Asciify {
 
         this.edgeRenderer.render(this.sketchFramebuffer, this.gradientRenderer);
         asciiOutput = this.edgeRenderer.getOutputFramebuffer();
-
-        //this.cubeAsciiRenderer3D.render();
-        //asciiOutput = this.cubeAsciiRenderer3D.getOutputFramebuffer();
 
         this.p5Instance.clear();
         this.p5Instance.image(asciiOutput, -this.p5Instance.width / 2, -this.p5Instance.height / 2, this.p5Instance.width, this.p5Instance.height);
