@@ -106,7 +106,6 @@ uniform sampler2D u_inputImage;
 uniform vec2 u_inputImageSize;
 uniform int u_gridCols;
 uniform int u_gridRows;
-uniform float u_pixelRatio;
 
 // Constants
 const int SAMPLES_PER_ROW = ${samplesPerRow};
@@ -114,7 +113,7 @@ const int SAMPLES_PER_COL = ${samplesPerColumn};
 
 void main() {
     // Adjust fragment coordinates based on pixel ratio to get logical pixel position
-    vec2 logicalFragCoord = floor(gl_FragCoord.xy / u_pixelRatio);
+    vec2 logicalFragCoord = floor(gl_FragCoord.xy);
     
     // Calculate the size of each grid cell in logical pixels
     vec2 cellSize = u_inputImageSize / vec2(float(u_gridCols), float(u_gridRows));
