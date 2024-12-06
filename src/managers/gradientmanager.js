@@ -76,7 +76,7 @@ class P5AsciifyGradientManager {
         
         this._gradients.push(gradient);
 
-        if (frameCount === 0) {
+        if (!this.p5Instance._setupDone) {
             this._setupQueue.push(gradient);
         } else {
             gradient.setup(this.p5Instance, this.gradientShaders[gradientName], this.gradientCharacterSet.getCharsetColorArray(characters));
@@ -93,7 +93,7 @@ class P5AsciifyGradientManager {
     }
 
     handleGradientPaletteChange(gradient, characters) {
-        if (frameCount === 0) {
+        if (!this.p5Instance._setupDone) {
             gradient._characters = characters;
         } else {
             gradient._palette.setColors(this.gradientCharacterSet.getCharsetColorArray(characters));
