@@ -1,4 +1,4 @@
-export const generateCharacterSelectionShader = (sampleSize, totalChars) => `
+export const generateCharacterSelectionShader = (sampleSize) => `
 #version 100
 precision mediump float;
 
@@ -12,82 +12,102 @@ uniform sampler2D u_sketchTexture;
 uniform vec2 u_gridPixelDimensions;      // Size of the grid in logical pixels
 uniform vec2 u_gridCellDimensions;       // Number of cells in the grid (columns, rows)
 
+uniform sampler2D u_charPaletteTexture;
+uniform vec2 u_charPaletteSize;          // Width = number of characters, Height = 1
+
 // Constants
-const float TOTAL_CHARS = ${totalChars}.0;
-const float SAMPLE_SIZE = ${sampleSize}.0;
-const float SAMPLE_COUNT = ${sampleSize * sampleSize}.0;
+const float SAMPLE_SIZE = float(${sampleSize});
+const float SAMPLE_COUNT = SAMPLE_SIZE * SAMPLE_SIZE;
 
 void main() {
-    // Adjust fragment coordinates based on pixel ratio to get logical pixel position
+    // Adjust fragment coordinates to get logical pixel position
     vec2 logicalFragCoord = floor(gl_FragCoord.xy);
 
-    // Compute the grid cell coordinate (integer)
+    // Compute the grid cell coordinate
     vec2 cellCoord = floor(logicalFragCoord.xy);
 
     // Compute the size of each cell in logical pixels
     vec2 cellSizeInPixels = u_gridPixelDimensions / u_gridCellDimensions;
 
-    // Compute the range of the cell in texture coordinates (0 to 1)
+    // Compute the cell range in texture coordinates (0 to 1)
     vec2 cellStartTexCoord = (cellCoord * cellSizeInPixels) / u_gridPixelDimensions;
     vec2 cellEndTexCoord = ((cellCoord + vec2(1.0)) * cellSizeInPixels) / u_gridPixelDimensions;
     vec2 cellSizeTexCoord = cellEndTexCoord - cellStartTexCoord;
 
-    float minError = 1.0e20; // Initialize to a large value
-    int bestCharIndex = 0;
+    float minError = 1.0e20; // Large initial value
+    float bestCharIndex = 0.0;
 
     // Precompute reciprocal of sample size
     float invSampleSize = 1.0 / SAMPLE_SIZE;
 
-    // Iterate over each character in the charset
-    for (int charIndex = 0; charIndex < ${totalChars}; charIndex++) {
-        // Early exit if charIndex exceeds TOTAL_CHARS
-        if (float(charIndex) >= TOTAL_CHARS) {
+    // Number of palette entries (characters considered)
+    float paletteCount = u_charPaletteSize.x;
+
+    // Iterate through all characters defined by the palette texture
+    for (int i = 0; i < 1024; i++) {
+        // Break out of the loop if we exceed the palette count
+        if (float(i) >= paletteCount) {
             break;
         }
 
-        float error = 0.0;
+        // Sample the character palette texture to get encoded indices
+        // Use a coordinate that reads the ith pixel from a 1D texture.
+        // The palette is assumed to be in a single row: height = 1.
+        // We sample at the center of the pixel: (i + 0.5) / paletteCount on the x-axis.
+        vec2 paletteUV = vec2((float(i) + 0.5) / paletteCount, 0.5 / u_charPaletteSize.y);
+        vec4 encoded = texture2D(u_charPaletteTexture, paletteUV);
 
-        // Compute character row and column
-        float charRow = floor(float(charIndex) / u_charsetCols);
-        float charCol = float(charIndex) - u_charsetCols * charRow;
+        // Decode character index from the encoded RGB channels
+        // Each channel is [0.0, 1.0], representing a byte [0, 255].
+        float R = encoded.r * 255.0;
+        float G = encoded.g * 255.0;
+        float B = encoded.b * 255.0;
 
-        // Base texture coordinates for the character
+        float decodedCharIndex = R + G * 256.0 + B * 65536.0;
+
+        // Compute character row and column in the character atlas
+        float charRow = floor(decodedCharIndex / u_charsetCols);
+        float charCol = decodedCharIndex - u_charsetCols * charRow;
+
+        // Base texture coordinates for this character
         vec2 charBaseCoord = vec2(charCol / u_charsetCols, charRow / u_charsetRows);
         vec2 charSize = vec2(1.0 / u_charsetCols, 1.0 / u_charsetRows);
 
-        // Iterate over each sample within the cell
+        float error = 0.0;
+
+        // Compare the cell against this character using a grid of samples
         for (int dy = 0; dy < ${sampleSize}; dy++) {
             for (int dx = 0; dx < ${sampleSize}; dx++) {
-                // Compute normalized sample offset
-                vec2 sampleOffset = (vec2(float(dx) + 0.5, float(dy) + 0.5)) * invSampleSize;
+                // Compute sample offset
+                vec2 sampleOffset = vec2(float(dx) + 0.5, float(dy) + 0.5) * invSampleSize;
 
-                // Sample coordinates in the sketch texture
+                // Sample from sketch texture
                 vec2 sketchSampleCoord = cellStartTexCoord + sampleOffset * cellSizeTexCoord;
                 float sketchPixel = texture2D(u_sketchTexture, sketchSampleCoord).r;
 
-                // Sample coordinates in the character texture
+                // Sample from character texture
                 vec2 charSampleCoord = charBaseCoord + sampleOffset * charSize;
                 float charPixel = texture2D(u_characterTexture, charSampleCoord).r;
 
-                // Accumulate squared error
+                // Accumulate squared difference
                 float diff = sketchPixel - charPixel;
                 error += diff * diff;
             }
         }
 
-        // Normalize the error
+        // Normalize the error by the number of samples
         error /= SAMPLE_COUNT;
 
-        // Update the best character index if a lower error is found
+        // Keep track of the best matching character
         if (error < minError) {
             minError = error;
-            bestCharIndex = charIndex;
+            bestCharIndex = decodedCharIndex;
         }
     }
 
-    // Encode the bestCharIndex into two channels: red and green
-    float lowerByte = mod(float(bestCharIndex), 256.0);
-    float upperByte = floor(float(bestCharIndex) / 256.0);
+    // Encode the bestCharIndex back into two channels (R and G) of the output
+    float lowerByte = mod(bestCharIndex, 256.0);
+    float upperByte = floor(bestCharIndex / 256.0);
 
     float encodedR = lowerByte / 255.0;
     float encodedG = upperByte / 255.0;
@@ -95,6 +115,7 @@ void main() {
     gl_FragColor = vec4(encodedR, encodedG, 0.0, 1.0);
 }
 `;
+
 
 
 export const generateBrightnessSampleShader = (samplesPerRow, samplesPerColumn) => `
