@@ -123,12 +123,12 @@ class P5AsciifyFontTextureAtlas {
         this.p5Instance.textAlign(this.p5Instance.LEFT, this.p5Instance.TOP);
         this.p5Instance.noStroke();
 
-        for (let i = 0; i < this.characters.length; i++) {
+        for (let i = 0; i < this.characterGlyphs.length; i++) {
             const col = i % this.charsetCols;
             const row = Math.floor(i / this.charsetCols);
             const x = dimensions.width * col - ((dimensions.width * this.charsetCols) / 2);
             const y = dimensions.height * row - ((dimensions.height * this.charsetRows) / 2);
-            this.p5Instance.text(this.characters[i], x, y);
+            this.p5Instance.text(String.fromCharCode(this.characterGlyphs[i].unicode), x, y);
         }
     }
 }
