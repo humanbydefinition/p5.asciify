@@ -1979,9 +1979,6 @@ void main() {
 
             // Update the font-family style to ensure the new font is applied
             this.textAsciiRenderer.style('font-family', `'${fontName}', monospace`);
-
-            // Optionally, update font size if necessary
-            this.updateFontSize();
         }
 
 
@@ -2638,29 +2635,6 @@ void main() {
         const setFont = async (loadedFont, fontPath) => {
             p5asciify.font = loadedFont;
 
-            // If the sketch already runs, update the font texture atlas and grid dimensions, as well as the character sets
-            if (p5asciify.p5Instance.frameCount > 0) {
-                p5asciify.asciiFontTextureAtlas.setFontObject(loadedFont);
-                p5asciify.asciiCharacterSet.setCharacterSet(p5asciify.asciiCharacterSet.characters);
-                p5asciify.edgeCharacterSet.setCharacterSet(p5asciify.edgeCharacterSet.characters);
-
-                p5asciify.grid.resizeCellPixelDimensions(
-                    p5asciify.asciiFontTextureAtlas.maxGlyphDimensions.width,
-                    p5asciify.asciiFontTextureAtlas.maxGlyphDimensions.height
-                );
-
-                p5asciify.brightnessRenderer.resizeFramebuffers();
-                p5asciify.edgeRenderer.resizeFramebuffers();
-                p5asciify.customAsciiRenderer.resizeFramebuffers();
-                p5asciify.accurateRenderer.resizeFramebuffers();
-                p5asciify.gradientRenderer.resizeFramebuffers();
-
-                p5asciify.edgeRenderer.resetShaders();
-                p5asciify.accurateRenderer.resetShaders();
-
-                p5asciify.textAsciiRenderer.updateFontSize();
-            }
-
             try { // Convert the font to Base64 for use in the text-based ASCII renderer
                 const response = await fetch(fontPath);
                 const arrayBuffer = await response.arrayBuffer();
@@ -2683,6 +2657,29 @@ void main() {
                 p5asciify.fontFileType = mimeType;
             } catch (error) {
                 console.error('Error converting font to Base64:', error);
+            }
+
+            // If the sketch already runs, update the font texture atlas and grid dimensions, as well as the character sets
+            if (p5asciify.p5Instance.frameCount > 0) {
+                p5asciify.asciiFontTextureAtlas.setFontObject(loadedFont);
+                p5asciify.asciiCharacterSet.setCharacterSet(p5asciify.asciiCharacterSet.characters);
+                p5asciify.edgeCharacterSet.setCharacterSet(p5asciify.edgeCharacterSet.characters);
+
+                p5asciify.grid.resizeCellPixelDimensions(
+                    p5asciify.asciiFontTextureAtlas.maxGlyphDimensions.width,
+                    p5asciify.asciiFontTextureAtlas.maxGlyphDimensions.height
+                );
+
+                p5asciify.brightnessRenderer.resizeFramebuffers();
+                p5asciify.edgeRenderer.resizeFramebuffers();
+                p5asciify.customAsciiRenderer.resizeFramebuffers();
+                p5asciify.accurateRenderer.resizeFramebuffers();
+                p5asciify.gradientRenderer.resizeFramebuffers();
+
+                p5asciify.edgeRenderer.resetShaders();
+                p5asciify.accurateRenderer.resetShaders();
+
+                p5asciify.textAsciiRenderer.updateFont(p5asciify.fontBase64, p5asciify.fontFileType);
             }
 
             p5asciify.p5Instance._decrementPreload();
