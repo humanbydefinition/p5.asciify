@@ -2648,6 +2648,17 @@ void main() {
                     p5asciify.asciiFontTextureAtlas.maxGlyphDimensions.width,
                     p5asciify.asciiFontTextureAtlas.maxGlyphDimensions.height
                 );
+
+                p5asciify.brightnessRenderer.resizeFramebuffers();
+                p5asciify.edgeRenderer.resizeFramebuffers();
+                p5asciify.customAsciiRenderer.resizeFramebuffers();
+                p5asciify.accurateRenderer.resizeFramebuffers();
+                p5asciify.gradientRenderer.resizeFramebuffers();
+
+                p5asciify.edgeRenderer.resetShaders();
+                p5asciify.accurateRenderer.resetShaders();
+
+                p5asciify.textAsciiRenderer.updateFontSize();
             }
 
             try { // Convert the font to Base64 for use in the text-based ASCII renderer
