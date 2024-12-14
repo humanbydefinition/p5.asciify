@@ -98,9 +98,6 @@ export default class TextAsciiRenderer {
 
         // Update the font-family style to ensure the new font is applied
         this.textAsciiRenderer.style('font-family', `'${fontName}', monospace`);
-
-        // Optionally, update font size if necessary
-        this.updateFontSize();
     }
 
 
