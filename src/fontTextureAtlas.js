@@ -26,22 +26,14 @@ class P5AsciifyFontTextureAtlas {
         // Load glyphs with unicode
         let glyphs = Object.values(this.font.font.glyphs.glyphs).filter(glyph => glyph.unicode !== undefined);
 
-        // Create a map for character positions
-        let charPositionMap = new Map(this.characters.map((char, index) => [char, index]));
-
-        // Filter and sort glyphs based on character positions
-        let filteredGlyphs = glyphs
-            .filter(glyph => glyph.unicodes.some(u => this.characters.includes(String.fromCharCode(u))))
-            .sort((a, b) => charPositionMap.get(String.fromCharCode(a.unicodes[0])) - charPositionMap.get(String.fromCharCode(b.unicodes[0])));
-
         // Assign colors to the sorted glyphs
-        filteredGlyphs.forEach((glyph, index) => {
+        glyphs.forEach((glyph, index) => {
             glyph.r = index % 256;
             glyph.g = Math.floor(index / 256) % 256;
             glyph.b = Math.floor(index / 65536);
         });
 
-        return filteredGlyphs;
+        return glyphs;
     }
 
     /**
