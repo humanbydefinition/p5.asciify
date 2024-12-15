@@ -18,12 +18,8 @@
             this.font = font;
             this.fontSize = fontSize;
 
-            // Filter and get all valid glyphs
-            this.fontGlyphs = Object.values(this.font.font.glyphs.glyphs)
-                .filter(glyph => glyph.unicode !== undefined);
-
-            // Convert glyphs to actual characters using their unicode values
-            this.characters = this.fontGlyphs
+            this.characters = Object.values(this.font.font.glyphs.glyphs)
+                .filter(glyph => glyph.unicode !== undefined)
                 .map(glyph => String.fromCharCode(glyph.unicode));
 
             this.characterGlyphs = this.loadCharacterGlyphs();
@@ -59,7 +55,7 @@
          * @returns {Object} An object containing the maximum width and height of the glyphs.
          */
         getMaxGlyphDimensions(fontSize) {
-            return this.fontGlyphs.reduce((maxDims, glyph) => {
+            return this.characterGlyphs.reduce((maxDims, glyph) => {
                 const bounds = glyph.getPath(0, 0, fontSize).getBoundingBox();
                 return {
                     width: Math.ceil(Math.max(maxDims.width, bounds.x2 - bounds.x1)),
@@ -74,10 +70,8 @@
          */
         setFontObject(font) {
             this.font = font;
-            this.fontGlyphs = Object.values(this.font.font.glyphs.glyphs).filter(glyph => glyph.unicode !== undefined);
-
-            // Convert glyphs to actual characters using their unicode values
-            this.characters = this.fontGlyphs
+            this.characters = Object.values(this.font.font.glyphs.glyphs)
+                .filter(glyph => glyph.unicode !== undefined)
                 .map(glyph => String.fromCharCode(glyph.unicode));
 
             this.characterGlyphs = this.loadCharacterGlyphs();
@@ -294,7 +288,7 @@
          */
         getUnsupportedCharacters(characters) {
             return Array.from(new Set(Array.from(characters).filter(char =>
-                !this.asciiFontTextureAtlas.fontGlyphs.some(glyph => glyph.unicodes.includes(char.codePointAt(0)))
+                !this.asciiFontTextureAtlas.characterGlyphs.some(glyph => glyph.unicodes.includes(char.codePointAt(0)))
             )));
         }
 
@@ -2022,9 +2016,6 @@ void main() {
                 this.textAsciiRenderer.style('display', 'flex');
             } else {
                 this.textAsciiRenderer.hide();
-
-                console.log("Hiding textAsciiRenderer");
-
             }
         }
 
