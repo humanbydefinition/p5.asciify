@@ -141,9 +141,6 @@ export default class TextAsciiRenderer {
             this.textAsciiRenderer.style('display', 'flex');
         } else {
             this.textAsciiRenderer.hide();
-
-            console.log("Hiding textAsciiRenderer");
-
         }
     }
 
