@@ -66,6 +66,7 @@ class P5Asciify {
         characterColor: "#FFFFFF",
         characterColorMode: 0,
         backgroundColor: "#000000",
+        backgroundColorMode: 1,
         invertMode: false,
     }
 
