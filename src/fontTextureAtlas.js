@@ -13,12 +13,8 @@ class P5AsciifyFontTextureAtlas {
         this.font = font;
         this.fontSize = fontSize;
 
-        // Filter and get all valid glyphs
-        this.fontGlyphs = Object.values(this.font.font.glyphs.glyphs)
-            .filter(glyph => glyph.unicode !== undefined);
-
-        // Convert glyphs to actual characters using their unicode values
-        this.characters = this.fontGlyphs
+        this.characters = Object.values(this.font.font.glyphs.glyphs)
+            .filter(glyph => glyph.unicode !== undefined)
             .map(glyph => String.fromCharCode(glyph.unicode));
 
         this.characterGlyphs = this.loadCharacterGlyphs();
@@ -54,7 +50,7 @@ class P5AsciifyFontTextureAtlas {
      * @returns {Object} An object containing the maximum width and height of the glyphs.
      */
     getMaxGlyphDimensions(fontSize) {
-        return this.fontGlyphs.reduce((maxDims, glyph) => {
+        return this.characterGlyphs.reduce((maxDims, glyph) => {
             const bounds = glyph.getPath(0, 0, fontSize).getBoundingBox();
             return {
                 width: Math.ceil(Math.max(maxDims.width, bounds.x2 - bounds.x1)),
@@ -69,10 +65,8 @@ class P5AsciifyFontTextureAtlas {
      */
     setFontObject(font) {
         this.font = font;
-        this.fontGlyphs = Object.values(this.font.font.glyphs.glyphs).filter(glyph => glyph.unicode !== undefined);
-
-        // Convert glyphs to actual characters using their unicode values
-        this.characters = this.fontGlyphs
+        this.characters = Object.values(this.font.font.glyphs.glyphs)
+            .filter(glyph => glyph.unicode !== undefined)
             .map(glyph => String.fromCharCode(glyph.unicode));
 
         this.characterGlyphs = this.loadCharacterGlyphs();

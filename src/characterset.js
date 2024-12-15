@@ -41,7 +41,7 @@ class P5AsciifyCharacterSet {
      */
     getUnsupportedCharacters(characters) {
         return Array.from(new Set(Array.from(characters).filter(char =>
-            !this.asciiFontTextureAtlas.fontGlyphs.some(glyph => glyph.unicodes.includes(char.codePointAt(0)))
+            !this.asciiFontTextureAtlas.characterGlyphs.some(glyph => glyph.unicodes.includes(char.codePointAt(0)))
         )));
     }
 
