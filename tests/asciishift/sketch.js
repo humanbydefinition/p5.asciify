@@ -199,6 +199,7 @@ function draw() {
 	asciiCharacterFramebuffer.end();
 
 	primaryColorSampleFramebuffer.begin(); // Translate the pushShader's pixels into our color palette for p5.asciify to render
+	clear();
 	shader(asciiColorPaletteShader);
 	asciiColorPaletteShader.setUniform('u_textureSize', [p5asciify.grid.cols, p5asciify.grid.rows]);
 	asciiColorPaletteShader.setUniform('u_pushFramebuffer', nextPushFramebuffer);
@@ -221,6 +222,7 @@ function draw() {
  */
 function runNoiseShader(frameCount) {
 	noiseFramebuffer.begin();
+	clear();
 	shader(noiseShader);
 	noiseShader.setUniform('u_bins', charset.length);
 	noiseShader.setUniform('u_dimensions', [p5asciify.grid.cols, p5asciify.grid.rows]);
