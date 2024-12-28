@@ -61,6 +61,7 @@ export default class EdgeAsciiRenderer extends AsciiRenderer {
 
         // Apply Sobel shader for edge detection
         this.sobelFramebuffer.begin();
+        this.p5.clear();
         this.p5.shader(this.sobelShader);
         this.sobelShader.setUniform('u_texture', inputFramebuffer);
         this.sobelShader.setUniform('u_textureSize', [this.p5.width, this.p5.height]);
@@ -70,6 +71,7 @@ export default class EdgeAsciiRenderer extends AsciiRenderer {
 
         // Apply sample shader
         this.sampleFramebuffer.begin();
+        this.p5.clear();
         this.p5.shader(this.sampleShader);
         this.sampleShader.setUniform('u_imageSize', [this.p5.width, this.p5.height]);
         this.sampleShader.setUniform('u_image', this.sobelFramebuffer);
@@ -117,6 +119,7 @@ export default class EdgeAsciiRenderer extends AsciiRenderer {
 
         // Render ASCII using the edge shader
         this.outputFramebuffer.begin();
+        this.p5.clear();
         this.p5.shader(this.shader);
         this.shader.setUniform('u_layer', 3);
         this.shader.setUniform('u_pixelRatio', this.p5.pixelDensity());

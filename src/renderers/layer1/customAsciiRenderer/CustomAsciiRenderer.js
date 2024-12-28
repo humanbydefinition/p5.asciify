@@ -4,7 +4,7 @@ import vertexShader from '../../../assets/shaders/vert/shader.vert';
 import asciiConversionShader from '../../_common_shaders/asciiConversion.frag';
 
 export default class CustomAsciiRenderer extends AsciiRenderer {
-    
+
     constructor(p5Instance, grid, characterSet, primaryColorSampleFramebuffer, secondaryColorFrameBuffer, asciiCharacterFramebuffer, options) {
         super(p5Instance, grid, characterSet, options);
 
@@ -21,19 +21,20 @@ export default class CustomAsciiRenderer extends AsciiRenderer {
             return;
         }
 
-        if(this.options.characterColorMode === 1) {
+        if (this.options.characterColorMode === 1) {
             this.primaryColorSampleFramebuffer.begin();
             this.p5.background(this.options.characterColor);
             this.primaryColorSampleFramebuffer.end();
         }
 
-        if(this.options.backgroundColorMode === 1) {
+        if (this.options.backgroundColorMode === 1) {
             this.secondaryColorSampleFramebuffer.begin();
             this.p5.background(this.options.backgroundColor);
             this.secondaryColorSampleFramebuffer.end();
-        } 
+        }
 
         this.outputFramebuffer.begin();
+        this.p5.clear();
         this.p5.shader(this.shader);
         this.shader.setUniform('u_layer', 1);
         this.shader.setUniform('u_pixelRatio', this.p5.pixelDensity());

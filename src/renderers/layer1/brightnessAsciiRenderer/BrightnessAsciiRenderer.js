@@ -66,6 +66,7 @@ export default class BrightnessAsciiRenderer extends AsciiRenderer {
         this.asciiCharacterFramebuffer.end();
 
         this.outputFramebuffer.begin();
+        this.p5.clear();
         this.p5.shader(this.shader);
         this.shader.setUniform('u_layer', 1);
         this.shader.setUniform('u_pixelRatio', this.p5.pixelDensity());

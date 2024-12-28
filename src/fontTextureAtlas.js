@@ -92,6 +92,7 @@ class P5AsciifyFontTextureAtlas {
         }
 
         this.texture.begin();
+        this.p5Instance.clear();
         this.drawCharacters(fontSize, dimensions);
         this.texture.end();
     }
