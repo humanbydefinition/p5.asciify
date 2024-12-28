@@ -40,7 +40,7 @@ function draw() {
 	  Check out his courses on creative coding at https://timrodenbroeker.de/ (no affiliation, I just enjoyed his courses)
 	  **/
 	sketchFramebuffer.begin();
-
+	clear();
 	background(0);
 	fill(255);
 	rotateX(radians(frameCount * 3));
