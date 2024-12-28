@@ -97,6 +97,7 @@
             }
 
             this.texture.begin();
+            this.p5Instance.clear();
             this.drawCharacters(fontSize, dimensions);
             this.texture.end();
         }
@@ -399,6 +400,30 @@
 
             // Resize the grid based on new dimensions
             this._resizeGrid();
+        }
+    }
+
+    class P5AsciifyEventEmitter {
+        constructor() {
+            this.eventListeners = new Map();
+        }
+
+        emit(eventName, data) {
+            const listeners = this.eventListeners.get(eventName) || [];
+            listeners.forEach(callback => callback(data));
+        }
+
+        on(eventName, callback) {
+            if (!this.eventListeners.has(eventName)) {
+                this.eventListeners.set(eventName, []);
+            }
+            this.eventListeners.get(eventName).push(callback);
+        }
+
+        off(eventName, callback) {
+            if (!this.eventListeners.has(eventName)) return;
+            const listeners = this.eventListeners.get(eventName);
+            this.eventListeners.set(eventName, listeners.filter(cb => cb !== callback));
         }
     }
 
@@ -982,6 +1007,7 @@
             this.asciiCharacterFramebuffer.end();
 
             this.outputFramebuffer.begin();
+            this.p5.clear();
             this.p5.shader(this.shader);
             this.shader.setUniform('u_layer', 1);
             this.shader.setUniform('u_pixelRatio', this.p5.pixelDensity());
@@ -1403,6 +1429,7 @@ void main() {
             this.asciiCharacterFramebuffer.end();
 
             this.outputFramebuffer.begin();
+            this.p5.clear();
             this.p5.shader(this.shader);
             this.shader.setUniform('u_layer', 1);
             this.shader.setUniform('u_pixelRatio', this.p5.pixelDensity());
@@ -1425,7 +1452,7 @@ void main() {
     // renderers/BrightnessAsciiRenderer.js
 
     class CustomAsciiRenderer extends AsciiRenderer {
-        
+
         constructor(p5Instance, grid, characterSet, primaryColorSampleFramebuffer, secondaryColorFrameBuffer, asciiCharacterFramebuffer, options) {
             super(p5Instance, grid, characterSet, options);
 
@@ -1442,19 +1469,20 @@ void main() {
                 return;
             }
 
-            if(this.options.characterColorMode === 1) {
+            if (this.options.characterColorMode === 1) {
                 this.primaryColorSampleFramebuffer.begin();
                 this.p5.background(this.options.characterColor);
                 this.primaryColorSampleFramebuffer.end();
             }
 
-            if(this.options.backgroundColorMode === 1) {
+            if (this.options.backgroundColorMode === 1) {
                 this.secondaryColorSampleFramebuffer.begin();
                 this.p5.background(this.options.backgroundColor);
                 this.secondaryColorSampleFramebuffer.end();
-            } 
+            }
 
             this.outputFramebuffer.begin();
+            this.p5.clear();
             this.p5.shader(this.shader);
             this.shader.setUniform('u_layer', 1);
             this.shader.setUniform('u_pixelRatio', this.p5.pixelDensity());
@@ -1787,6 +1815,7 @@ void main() {
 
             // Apply Sobel shader for edge detection
             this.sobelFramebuffer.begin();
+            this.p5.clear();
             this.p5.shader(this.sobelShader);
             this.sobelShader.setUniform('u_texture', inputFramebuffer);
             this.sobelShader.setUniform('u_textureSize', [this.p5.width, this.p5.height]);
@@ -1796,6 +1825,7 @@ void main() {
 
             // Apply sample shader
             this.sampleFramebuffer.begin();
+            this.p5.clear();
             this.p5.shader(this.sampleShader);
             this.sampleShader.setUniform('u_imageSize', [this.p5.width, this.p5.height]);
             this.sampleShader.setUniform('u_image', this.sobelFramebuffer);
@@ -1843,6 +1873,7 @@ void main() {
 
             // Render ASCII using the edge shader
             this.outputFramebuffer.begin();
+            this.p5.clear();
             this.p5.shader(this.shader);
             this.shader.setUniform('u_layer', 3);
             this.shader.setUniform('u_pixelRatio', this.p5.pixelDensity());
@@ -2236,7 +2267,7 @@ void main() {
             gridDimensions: [0, 0],
         };
 
-        asciiOptions = { // brightness and accurate options are the same, since only one of them can be enabled at a time
+        asciiOptions = {
             renderMode: 'brightness',
             enabled: true,
             characters: "0123456789",
@@ -2285,8 +2316,6 @@ void main() {
         postSetupFunction = null;
         postDrawFunction = null;
 
-        spanElements = [];
-
         instance(p) {
             this.p5Instance = p;
 
@@ -2307,6 +2336,8 @@ void main() {
             this.gradientOptions.characterColor = this.p5Instance.color(this.gradientOptions.characterColor);
             this.gradientOptions.backgroundColor = this.p5Instance.color(this.gradientOptions.backgroundColor);
 
+            this.p5Instance.drawingContext.getExtension('WEBGL_color_buffer_float');
+
             this.asciiFontTextureAtlas = new P5AsciifyFontTextureAtlas({ p5Instance: this.p5Instance, font: this.font, fontSize: this.commonOptions.fontSize });
 
             this.asciiCharacterSet = new P5AsciifyCharacterSet({ p5Instance: this.p5Instance, asciiFontTextureAtlas: this.asciiFontTextureAtlas, characters: this.asciiOptions.characters });
@@ -2321,8 +2352,8 @@ void main() {
             this.gradientManager.setup(this.asciiCharacterSet);
 
             this.customPrimaryColorSampleFramebuffer = this.p5Instance.createFramebuffer({ density: 1, width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
-            this.customSecondaryColorSampleFramebuffer = this.p5Instance.createFramebuffer({ density: 1,width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
-            this.customAsciiCharacterFramebuffer = this.p5Instance.createFramebuffer({ density: 1,width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
+            this.customSecondaryColorSampleFramebuffer = this.p5Instance.createFramebuffer({ density: 1, width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
+            this.customAsciiCharacterFramebuffer = this.p5Instance.createFramebuffer({ density: 1, width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
 
             this.brightnessRenderer = new BrightnessAsciiRenderer(this.p5Instance, this.grid, this.asciiCharacterSet, this.asciiOptions);
             this.accurateRenderer = new AccurateAsciiRenderer(this.p5Instance, this.grid, this.asciiCharacterSet, this.asciiOptions);
@@ -2343,11 +2374,25 @@ void main() {
 
             this.asciiFramebufferDimensions = { width: this.p5Instance.width, height: this.p5Instance.height };
 
+            this.events = new P5AsciifyEventEmitter();
+
             this.sketchFramebuffer = this.p5Instance.createFramebuffer({ depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
 
             if (this.postSetupFunction) {
                 this.postSetupFunction();
             }
+        }
+
+        emit(eventName, data) {
+            this.events.emit(eventName, data);
+        }
+
+        on(eventName, callback) {
+            this.events.on(eventName, callback);
+        }
+
+        off(eventName, callback) {
+            this.events.off(eventName, callback);
         }
 
         /**
@@ -2608,70 +2653,80 @@ void main() {
      * loadAsciiFont('path/to/font.ttf');
      */
     p5.prototype.loadAsciiFont = function (font) {
-        const setFont = async (loadedFont, fontPath) => {
+        return new Promise((resolve, reject) => {
+          const setFont = async (loadedFont, fontPath) => {
             p5asciify.font = loadedFont;
-
-            try { // Convert the font to Base64 for use in the text-based ASCII renderer
-                const response = await fetch(fontPath);
-                const arrayBuffer = await response.arrayBuffer();
-                const base64String = btoa(
-                    new Uint8Array(arrayBuffer)
-                        .reduce((data, byte) => data + String.fromCharCode(byte), '')
-                );
-
-                // Determine the font type based on the file extension
-                let mimeType = '';
-                if (fontPath.toLowerCase().endsWith('.ttf')) {
-                    mimeType = 'truetype';
-                } else if (fontPath.toLowerCase().endsWith('.otf')) {
-                    mimeType = 'opentype';
-                } else {
-                    mimeType = 'truetype';
-                }
-
-                p5asciify.fontBase64 = `data:font/${mimeType};charset=utf-8;base64,${base64String}`;
-                p5asciify.fontFileType = mimeType;
+      
+            try { 
+              const response = await fetch(fontPath);
+              const arrayBuffer = await response.arrayBuffer();
+              const base64String = btoa(
+                new Uint8Array(arrayBuffer)
+                  .reduce((data, byte) => data + String.fromCharCode(byte), '')
+              );
+      
+              let mimeType = '';
+              if (fontPath.toLowerCase().endsWith('.ttf')) {
+                mimeType = 'truetype';
+              } else if (fontPath.toLowerCase().endsWith('.otf')) {
+                mimeType = 'opentype';
+              } else {
+                mimeType = 'truetype';
+              }
+      
+              p5asciify.fontBase64 = `data:font/${mimeType};charset=utf-8;base64,${base64String}`;
+              p5asciify.fontFileType = mimeType;
             } catch (error) {
-                console.error('Error converting font to Base64:', error);
+              console.error('Error converting font to Base64:', error);
             }
-
-            // If the sketch already runs, update the font texture atlas and grid dimensions, as well as the character sets
+      
+            // If the sketch is running, update font related components
             if (p5asciify.p5Instance.frameCount > 0) {
+              try {
                 p5asciify.asciiFontTextureAtlas.setFontObject(loadedFont);
                 p5asciify.asciiCharacterSet.setCharacterSet(p5asciify.asciiCharacterSet.characters);
                 p5asciify.edgeCharacterSet.setCharacterSet(p5asciify.edgeCharacterSet.characters);
-
+      
                 p5asciify.grid.resizeCellPixelDimensions(
-                    p5asciify.asciiFontTextureAtlas.maxGlyphDimensions.width,
-                    p5asciify.asciiFontTextureAtlas.maxGlyphDimensions.height
+                  p5asciify.asciiFontTextureAtlas.maxGlyphDimensions.width,
+                  p5asciify.asciiFontTextureAtlas.maxGlyphDimensions.height
                 );
-
+      
                 p5asciify.brightnessRenderer.resizeFramebuffers();
                 p5asciify.edgeRenderer.resizeFramebuffers();
                 p5asciify.customAsciiRenderer.resizeFramebuffers();
                 p5asciify.accurateRenderer.resizeFramebuffers();
                 p5asciify.gradientRenderer.resizeFramebuffers();
-
+      
                 p5asciify.edgeRenderer.resetShaders();
                 p5asciify.accurateRenderer.resetShaders();
-
+      
                 p5asciify.textAsciiRenderer.updateFont(p5asciify.fontBase64, p5asciify.fontFileType);
+              } catch (e) {
+                return reject(e);
+              }
             }
-
+      
             p5asciify.p5Instance._decrementPreload();
-        };
-
-        if (typeof font === 'string') {
+            p5asciify.emit('fontUpdated', {
+              base64: p5asciify.fontBase64,
+              fileType: p5asciify.fontFileType
+            });
+            resolve();
+          };
+      
+          if (typeof font === 'string') {
             p5asciify.p5Instance.loadFont(
-                font,
-                (loadedFont) => { setFont(loadedFont, font); },
-                () => { throw new P5AsciifyError(`loadAsciiFont() | Failed to load font from path: '${font}'`); }
+              font,
+              (loadedFont) => { setFont(loadedFont, font); },
+              () => { reject(new P5AsciifyError(`loadAsciiFont() | Failed to load font from path: '${font}'`)); }
             );
-        } else {
-            throw new P5AsciifyError(`loadAsciiFont() | Invalid font parameter. Expected a string/path.`);
-        }
-    };
-    p5.prototype.registerPreloadMethod('loadAsciiFont', p5.prototype);
+          } else {
+            reject(new P5AsciifyError(`loadAsciiFont() | Invalid font parameter. Expected a string/path.`));
+          }
+        });
+      };
+      p5.prototype.registerPreloadMethod('loadAsciiFont', p5.prototype);
 
     /**
      * Sets up the P5Asciify library for use with p5.js.
@@ -2823,6 +2878,7 @@ void main() {
      */
     p5.prototype.preDrawAddPush = function () {
         p5asciify.sketchFramebuffer.begin();
+        p5asciify.p5Instance.clear();
         p5asciify.p5Instance.push();
     };
     p5.prototype.registerMethod("pre", p5.prototype.preDrawAddPush);
