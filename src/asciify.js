@@ -2,6 +2,8 @@ import P5AsciifyFontTextureAtlas from './fontTextureAtlas.js';
 import P5AsciifyCharacterSet from './characterset.js';
 import P5AsciifyGrid from './grid.js';
 
+import P5AsciifyEventEmitter from './eventemitter.js';
+
 import P5AsciifyGradientManager from './managers/gradientmanager.js';
 
 import BrightnessAsciiRenderer from './renderers/layer1/brightnessAsciiRenderer/BrightnessAsciiRenderer.js';
@@ -26,7 +28,7 @@ class P5Asciify {
         gridDimensions: [0, 0],
     };
 
-    asciiOptions = { // brightness and accurate options are the same, since only one of them can be enabled at a time
+    asciiOptions = {
         renderMode: 'brightness',
         enabled: true,
         characters: "0123456789",
@@ -75,8 +77,6 @@ class P5Asciify {
     postSetupFunction = null;
     postDrawFunction = null;
 
-    spanElements = [];
-
     instance(p) {
         this.p5Instance = p;
 
@@ -97,6 +97,8 @@ class P5Asciify {
         this.gradientOptions.characterColor = this.p5Instance.color(this.gradientOptions.characterColor);
         this.gradientOptions.backgroundColor = this.p5Instance.color(this.gradientOptions.backgroundColor);
 
+        this.p5Instance.drawingContext.getExtension('WEBGL_color_buffer_float');
+
         this.asciiFontTextureAtlas = new P5AsciifyFontTextureAtlas({ p5Instance: this.p5Instance, font: this.font, fontSize: this.commonOptions.fontSize });
 
         this.asciiCharacterSet = new P5AsciifyCharacterSet({ p5Instance: this.p5Instance, asciiFontTextureAtlas: this.asciiFontTextureAtlas, characters: this.asciiOptions.characters });
@@ -111,8 +113,8 @@ class P5Asciify {
         this.gradientManager.setup(this.asciiCharacterSet);
 
         this.customPrimaryColorSampleFramebuffer = this.p5Instance.createFramebuffer({ density: 1, width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
-        this.customSecondaryColorSampleFramebuffer = this.p5Instance.createFramebuffer({ density: 1,width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
-        this.customAsciiCharacterFramebuffer = this.p5Instance.createFramebuffer({ density: 1,width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
+        this.customSecondaryColorSampleFramebuffer = this.p5Instance.createFramebuffer({ density: 1, width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
+        this.customAsciiCharacterFramebuffer = this.p5Instance.createFramebuffer({ density: 1, width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
 
         this.brightnessRenderer = new BrightnessAsciiRenderer(this.p5Instance, this.grid, this.asciiCharacterSet, this.asciiOptions);
         this.accurateRenderer = new AccurateAsciiRenderer(this.p5Instance, this.grid, this.asciiCharacterSet, this.asciiOptions);
@@ -133,11 +135,25 @@ class P5Asciify {
 
         this.asciiFramebufferDimensions = { width: this.p5Instance.width, height: this.p5Instance.height };
 
+        this.events = new P5AsciifyEventEmitter();
+
         this.sketchFramebuffer = this.p5Instance.createFramebuffer({ depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
 
         if (this.postSetupFunction) {
             this.postSetupFunction();
         }
+    }
+
+    emit(eventName, data) {
+        this.events.emit(eventName, data);
+    }
+
+    on(eventName, callback) {
+        this.events.on(eventName, callback);
+    }
+
+    off(eventName, callback) {
+        this.events.off(eventName, callback);
     }
 
     /**
