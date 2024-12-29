@@ -199,7 +199,7 @@ class P5Asciify {
         this.edgeRenderer.render(this.sketchFramebuffer, this.gradientRenderer);
         asciiOutput = this.edgeRenderer.getOutputFramebuffer();
 
-        this.customAsciiRenderer.render(this.sketchFramebuffer, this.edgeRenderer);
+        this.customAsciiRenderer.render(this.edgeRenderer);
         asciiOutput = this.customAsciiRenderer.getOutputFramebuffer();
 
         this.p5Instance.clear();

@@ -15,28 +15,10 @@ export default class CustomAsciiRenderer extends AsciiRenderer {
         this.asciiCharacterFramebuffer = asciiCharacterFramebuffer;
     }
 
-    render(inputFramebuffer, previousAsciiRenderer) {
-
-        console.log("ENABLED: ", this.options.enabled);
+    render(previousAsciiRenderer) {
 
         if (!this.options.enabled) {
             this.outputFramebuffer = previousAsciiRenderer.getOutputFramebuffer();
-
-
-            this.asciiCharacterFramebuffer.begin();
-            this.p5.clear();
-            this.p5.image(previousAsciiRenderer.asciiCharacterFramebuffer, -this.grid.cols / 2, -this.grid.rows / 2);
-            this.asciiCharacterFramebuffer.end();
-
-            this.primaryColorSampleFramebuffer.begin();
-            this.p5.clear();
-            this.p5.image(previousAsciiRenderer.primaryColorSampleFramebuffer, -this.grid.cols / 2, -this.grid.rows / 2);
-            this.primaryColorSampleFramebuffer.end();
-
-            this.secondaryColorSampleFramebuffer.begin();
-            this.p5.clear();
-            this.p5.image(previousAsciiRenderer.secondaryColorSampleFramebuffer, -this.grid.cols / 2, -this.grid.rows / 2);
-            this.secondaryColorSampleFramebuffer.end();
 
             return;
         }
