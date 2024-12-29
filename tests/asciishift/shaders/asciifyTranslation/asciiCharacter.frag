@@ -2,24 +2,13 @@
 precision mediump float;
 
 uniform sampler2D u_pushFramebuffer;        // Texture containing the push values
-uniform sampler2D u_charPaletteTexture;     // Texture containing the character palette
-uniform vec2 u_charPaletteSize;             // Number of characters in the palette (e.g., [64, 64])
-uniform vec2 u_textureSize;                 // Size of the pushFramebuffer texture (e.g., [64, 64])
+uniform sampler2D u_charPaletteTexture;      // Texture containing the character palette
+uniform vec2 u_charPaletteSize;              // Number of characters in the palette (e.g., [64, 64])
+uniform vec2 u_textureSize;                  // Size of the pushFramebuffer texture (e.g., [64, 64])
 
 void main() {
-    // Normalize fragment coordinates
+    // Adjust fragment coordinates based on pixel ratio and normalize
     vec2 pos = (gl_FragCoord.xy) / u_textureSize;
-    
-    // Define rectangle bounds (25% to 75% of screen in both dimensions)
-    vec2 rectMin = vec2(0.25, 0.25);
-    vec2 rectMax = vec2(0.75, 0.75);
-    
-    // Early exit if pixel is within the central rectangle
-    if (pos.x >= rectMin.x && pos.x <= rectMax.x && 
-        pos.y >= rectMin.y && pos.y <= rectMax.y) {
-        gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0);
-        return;
-    }
 
     // Sample the pushFramebuffer texture at the calculated position
     vec4 pushColor = texture2D(u_pushFramebuffer, pos);
