@@ -940,7 +940,7 @@
         }
     }
 
-    var asciiConversionShader = "precision mediump float;\n#define GLSLIFY 1\nuniform sampler2D u_characterTexture;uniform vec2 u_charsetDimensions;uniform sampler2D u_primaryColorTexture;uniform sampler2D u_secondaryColorTexture;uniform sampler2D u_asciiCharacterTexture;uniform vec2 u_gridCellDimensions;uniform vec2 u_gridPixelDimensions;uniform vec2 u_gridOffsetDimensions;uniform float u_rotationAngle;uniform int u_invertMode;uniform vec2 u_resolution;uniform float u_pixelRatio;uniform sampler2D u_asciiBrightnessTexture;uniform sampler2D u_gradientReferenceTexture;uniform sampler2D u_edgesTexture;uniform bool u_brightnessEnabled;uniform int u_layer;mat2 rotate2D(float angle){float s=sin(angle);float c=cos(angle);return mat2(c,-s,s,c);}void main(){vec2 logicalFragCoord=gl_FragCoord.xy/u_pixelRatio;vec2 adjustedCoord=(logicalFragCoord-u_gridOffsetDimensions)/u_gridPixelDimensions;vec2 gridCoord=adjustedCoord*u_gridCellDimensions;vec2 cellCoord=floor(gridCoord);vec2 charIndexTexCoord=(cellCoord+vec2(0.5))/u_gridCellDimensions;vec4 secondaryColor=texture2D(u_secondaryColorTexture,charIndexTexCoord);if(adjustedCoord.x<0.0||adjustedCoord.x>1.0||adjustedCoord.y<0.0||adjustedCoord.y>1.0){gl_FragColor=secondaryColor;return;}vec4 primaryColor=texture2D(u_primaryColorTexture,charIndexTexCoord);if(u_layer==2){vec4 encodedIndexVec=texture2D(u_asciiCharacterTexture,charIndexTexCoord);vec4 gradientReferenceColor=texture2D(u_gradientReferenceTexture,charIndexTexCoord);if(encodedIndexVec.rgb==gradientReferenceColor.rgb){if(u_brightnessEnabled){gl_FragColor=texture2D(u_asciiBrightnessTexture,logicalFragCoord/u_resolution);}else{gl_FragColor=secondaryColor;}return;}}else if(u_layer==3){vec4 edgeColor=texture2D(u_edgesTexture,charIndexTexCoord);if(edgeColor.rgb==vec3(0.0)){if(u_brightnessEnabled){gl_FragColor=texture2D(u_asciiBrightnessTexture,logicalFragCoord/u_resolution);}else{gl_FragColor=secondaryColor;}return;}}vec4 encodedIndexVec=texture2D(u_asciiCharacterTexture,charIndexTexCoord);int charIndex=int(encodedIndexVec.r*255.0+0.5)+int(encodedIndexVec.g*255.0+0.5)*256;int charCol=charIndex-(charIndex/int(u_charsetDimensions.x))*int(u_charsetDimensions.x);int charRow=charIndex/int(u_charsetDimensions.x);vec2 charCoord=vec2(float(charCol)/u_charsetDimensions.x,float(charRow)/u_charsetDimensions.y);vec2 fractionalPart=fract(gridCoord)-0.5;fractionalPart=rotate2D(u_rotationAngle)*fractionalPart;fractionalPart+=0.5;vec2 cellMin=charCoord;vec2 cellMax=charCoord+vec2(1.0/u_charsetDimensions.x,1.0/u_charsetDimensions.y);vec2 texCoord=charCoord+fractionalPart*vec2(1.0/u_charsetDimensions.x,1.0/u_charsetDimensions.y);bool outsideBounds=any(lessThan(texCoord,cellMin))||any(greaterThan(texCoord,cellMax));vec4 charColor=outsideBounds ? secondaryColor : texture2D(u_characterTexture,texCoord);if(u_invertMode==1){charColor.a=1.0-charColor.a;charColor.rgb=vec3(1.0);}vec4 finalColor=vec4(primaryColor.rgb*charColor.rgb,charColor.a);gl_FragColor=mix(secondaryColor,finalColor,charColor.a);if(outsideBounds){gl_FragColor=u_invertMode==1 ? primaryColor : secondaryColor;}}"; // eslint-disable-line
+    var asciiConversionShader = "precision mediump float;\n#define GLSLIFY 1\nuniform sampler2D u_characterTexture;uniform vec2 u_charsetDimensions;uniform sampler2D u_primaryColorTexture;uniform sampler2D u_secondaryColorTexture;uniform sampler2D u_asciiCharacterTexture;uniform vec2 u_gridCellDimensions;uniform vec2 u_gridPixelDimensions;uniform vec2 u_gridOffsetDimensions;uniform float u_rotationAngle;uniform int u_invertMode;uniform vec2 u_resolution;uniform float u_pixelRatio;uniform sampler2D u_asciiBrightnessTexture;uniform sampler2D u_gradientReferenceTexture;uniform sampler2D u_edgesTexture;uniform int u_layer;mat2 rotate2D(float angle){float s=sin(angle);float c=cos(angle);return mat2(c,-s,s,c);}void main(){vec2 logicalFragCoord=gl_FragCoord.xy/u_pixelRatio;vec2 adjustedCoord=(logicalFragCoord-u_gridOffsetDimensions)/u_gridPixelDimensions;vec2 gridCoord=adjustedCoord*u_gridCellDimensions;vec2 cellCoord=floor(gridCoord);vec2 charIndexTexCoord=(cellCoord+vec2(0.5))/u_gridCellDimensions;vec4 secondaryColor=texture2D(u_secondaryColorTexture,charIndexTexCoord);if(adjustedCoord.x<0.0||adjustedCoord.x>1.0||adjustedCoord.y<0.0||adjustedCoord.y>1.0){gl_FragColor=secondaryColor;return;}vec4 primaryColor=texture2D(u_primaryColorTexture,charIndexTexCoord);if(u_layer==2){vec4 encodedIndexVec=texture2D(u_asciiCharacterTexture,charIndexTexCoord);vec4 gradientReferenceColor=texture2D(u_gradientReferenceTexture,charIndexTexCoord);if(encodedIndexVec.rgb==gradientReferenceColor.rgb){gl_FragColor=texture2D(u_asciiBrightnessTexture,logicalFragCoord/u_resolution);return;}}else if(u_layer==3){vec4 edgeColor=texture2D(u_edgesTexture,charIndexTexCoord);if(edgeColor.rgb==vec3(0.0)){gl_FragColor=texture2D(u_asciiBrightnessTexture,logicalFragCoord/u_resolution);return;}}else if(u_layer==4){vec4 encodedIndexVec=texture2D(u_asciiCharacterTexture,charIndexTexCoord);if(encodedIndexVec.rgba==vec4(0.0)){gl_FragColor=texture2D(u_asciiBrightnessTexture,logicalFragCoord/u_resolution);return;}}vec4 encodedIndexVec=texture2D(u_asciiCharacterTexture,charIndexTexCoord);int charIndex=int(encodedIndexVec.r*255.0+0.5)+int(encodedIndexVec.g*255.0+0.5)*256;int charCol=charIndex-(charIndex/int(u_charsetDimensions.x))*int(u_charsetDimensions.x);int charRow=charIndex/int(u_charsetDimensions.x);vec2 charCoord=vec2(float(charCol)/u_charsetDimensions.x,float(charRow)/u_charsetDimensions.y);vec2 fractionalPart=fract(gridCoord)-0.5;fractionalPart=rotate2D(u_rotationAngle)*fractionalPart;fractionalPart+=0.5;vec2 cellMin=charCoord;vec2 cellMax=charCoord+vec2(1.0/u_charsetDimensions.x,1.0/u_charsetDimensions.y);vec2 texCoord=charCoord+fractionalPart*vec2(1.0/u_charsetDimensions.x,1.0/u_charsetDimensions.y);bool outsideBounds=any(lessThan(texCoord,cellMin))||any(greaterThan(texCoord,cellMax));vec4 charColor=outsideBounds ? secondaryColor : texture2D(u_characterTexture,texCoord);if(u_invertMode==1){charColor.a=1.0-charColor.a;charColor.rgb=vec3(1.0);}vec4 finalColor=vec4(primaryColor.rgb*charColor.rgb,charColor.a);gl_FragColor=mix(secondaryColor,finalColor,charColor.a);if(outsideBounds){gl_FragColor=u_invertMode==1 ? primaryColor : secondaryColor;}}"; // eslint-disable-line
 
     var colorSampleShader$2 = "precision mediump float;\n#define GLSLIFY 1\nuniform sampler2D u_sketchTexture;uniform vec2 u_gridCellDimensions;void main(){vec2 logicalFragCoord=gl_FragCoord.xy;vec2 cellCoord=floor(logicalFragCoord);vec2 cellSizeInTexCoords=1.0/u_gridCellDimensions;vec2 cellCenterTexCoord=(cellCoord+vec2(0.5))*cellSizeInTexCoords;vec4 sampledColor=texture2D(u_sketchTexture,cellCenterTexCoord);gl_FragColor=sampledColor;}"; // eslint-disable-line
 
@@ -1463,40 +1463,49 @@ void main() {
             this.asciiCharacterFramebuffer = asciiCharacterFramebuffer;
         }
 
-        render(inputFramebuffer) {
+        render(inputFramebuffer, previousAsciiRenderer) {
+
+            console.log("ENABLED: ", this.options.enabled);
+
             if (!this.options.enabled) {
-                this.outputFramebuffer = inputFramebuffer;
-                return;
-            }
+                this.outputFramebuffer = previousAsciiRenderer.getOutputFramebuffer();
 
-            if (this.options.characterColorMode === 1) {
+
+                this.asciiCharacterFramebuffer.begin();
+                this.p5.clear();
+                this.p5.image(previousAsciiRenderer.asciiCharacterFramebuffer, -this.grid.cols / 2, -this.grid.rows / 2);
+                this.asciiCharacterFramebuffer.end();
+
                 this.primaryColorSampleFramebuffer.begin();
-                this.p5.background(this.options.characterColor);
+                this.p5.clear();
+                this.p5.image(previousAsciiRenderer.primaryColorSampleFramebuffer, -this.grid.cols / 2, -this.grid.rows / 2);
                 this.primaryColorSampleFramebuffer.end();
-            }
 
-            if (this.options.backgroundColorMode === 1) {
                 this.secondaryColorSampleFramebuffer.begin();
-                this.p5.background(this.options.backgroundColor);
+                this.p5.clear();
+                this.p5.image(previousAsciiRenderer.secondaryColorSampleFramebuffer, -this.grid.cols / 2, -this.grid.rows / 2);
                 this.secondaryColorSampleFramebuffer.end();
+
+                return;
             }
 
             this.outputFramebuffer.begin();
             this.p5.clear();
             this.p5.shader(this.shader);
-            this.shader.setUniform('u_layer', 1);
+            this.shader.setUniform('u_layer', 4);
             this.shader.setUniform('u_pixelRatio', this.p5.pixelDensity());
             this.shader.setUniform('u_resolution', [this.p5.width, this.p5.height]);
             this.shader.setUniform('u_characterTexture', this.characterSet.asciiFontTextureAtlas.texture);
             this.shader.setUniform('u_charsetDimensions', [this.characterSet.asciiFontTextureAtlas.charsetCols, this.characterSet.asciiFontTextureAtlas.charsetRows]);
             this.shader.setUniform('u_primaryColorTexture', this.primaryColorSampleFramebuffer);
+            this.shader.setUniform('u_asciiBrightnessTexture', previousAsciiRenderer.getOutputFramebuffer());
             this.shader.setUniform('u_secondaryColorTexture', this.secondaryColorSampleFramebuffer);
             this.shader.setUniform('u_asciiCharacterTexture', this.asciiCharacterFramebuffer);
             this.shader.setUniform('u_gridPixelDimensions', [this.grid.width, this.grid.height]);
             this.shader.setUniform('u_gridOffsetDimensions', [this.grid.offsetX, this.grid.offsetY]);
             this.shader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
-            this.shader.setUniform('u_invertMode', this.options.invertMode);
-            this.shader.setUniform('u_rotationAngle', this.p5.radians(this.options.rotationAngle));
+            this.shader.setUniform('u_invertMode', 0);
+            this.shader.setUniform('u_rotationAngle', 0);
             this.p5.rect(0, 0, this.p5.width, this.p5.height);
             this.outputFramebuffer.end();
         }
@@ -1532,11 +1541,8 @@ void main() {
         render(inputFramebuffer, previousAsciiRenderer) {
 
             if (!this.options.enabled || this.gradientManager._gradients.length === 0) {
-                if (previousAsciiRenderer.options.enabled) {
-                    this.outputFramebuffer = previousAsciiRenderer.getOutputFramebuffer();
-                } else {
-                    this.outputFramebuffer = inputFramebuffer;
-                }
+                this.outputFramebuffer = previousAsciiRenderer.getOutputFramebuffer();
+
 
                 this.asciiCharacterFramebuffer.begin();
                 this.p5.clear();
@@ -1628,7 +1634,6 @@ void main() {
             this.asciiShader.setUniform('u_secondaryColorTexture', this.secondaryColorSampleFramebuffer);
             this.asciiShader.setUniform('u_asciiCharacterTexture', this.asciiCharacterFramebuffer);
             this.asciiShader.setUniform('u_asciiBrightnessTexture', previousAsciiRenderer.getOutputFramebuffer());
-            this.asciiShader.setUniform('u_brightnessEnabled', previousAsciiRenderer.options.enabled);
             this.asciiShader.setUniform('u_gridPixelDimensions', [this.grid.width, this.grid.height]);
             this.asciiShader.setUniform('u_gridOffsetDimensions', [this.grid.offsetX, this.grid.offsetY]);
             this.asciiShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
@@ -1774,7 +1779,7 @@ void main() {
             this.shader = this.p5.createShader(vertexShader, asciiConversionShader);
 
             this.sobelFramebuffer = this.p5.createFramebuffer({ depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
-            this.sampleFramebuffer = this.p5.createFramebuffer({ density: 1,width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
+            this.sampleFramebuffer = this.p5.createFramebuffer({ density: 1, width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
         }
 
         resizeFramebuffers() {
@@ -1789,11 +1794,8 @@ void main() {
         render(inputFramebuffer, previousAsciiRenderer) {
 
             if (!this.options.enabled) {
-                if (previousAsciiRenderer.options.enabled) {
-                    this.outputFramebuffer = previousAsciiRenderer.getOutputFramebuffer();
-                } else {
-                    this.outputFramebuffer = inputFramebuffer;
-                }
+                this.outputFramebuffer = previousAsciiRenderer.getOutputFramebuffer();
+
 
                 this.asciiCharacterFramebuffer.begin();
                 this.p5.clear();
@@ -1889,7 +1891,6 @@ void main() {
             this.shader.setUniform('u_gridOffsetDimensions', [this.grid.offsetX, this.grid.offsetY]);
             this.shader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
             this.shader.setUniform('u_invertMode', this.options.invertMode);
-            this.shader.setUniform('u_brightnessEnabled', previousAsciiRenderer.options.enabled);
             this.shader.setUniform('u_rotationAngle', this.p5.radians(this.options.rotationAngle));
             this.p5.rect(0, 0, this.p5.width, this.p5.height);
             this.outputFramebuffer.end();
@@ -2302,6 +2303,10 @@ void main() {
             rotationAngle: 0,
         };
 
+        customOptions = {
+            enabled: false,
+        }
+
         textOptions = {
             enabled: false,
             characterColor: "#FFFFFF",
@@ -2357,7 +2362,7 @@ void main() {
 
             this.brightnessRenderer = new BrightnessAsciiRenderer(this.p5Instance, this.grid, this.asciiCharacterSet, this.asciiOptions);
             this.accurateRenderer = new AccurateAsciiRenderer(this.p5Instance, this.grid, this.asciiCharacterSet, this.asciiOptions);
-            this.customAsciiRenderer = new CustomAsciiRenderer(this.p5Instance, this.grid, this.asciiCharacterSet, this.customPrimaryColorSampleFramebuffer, this.customSecondaryColorSampleFramebuffer, this.customAsciiCharacterFramebuffer, this.asciiOptions);
+            this.customAsciiRenderer = new CustomAsciiRenderer(this.p5Instance, this.grid, this.asciiCharacterSet, this.customPrimaryColorSampleFramebuffer, this.customSecondaryColorSampleFramebuffer, this.customAsciiCharacterFramebuffer, this.customOptions);
 
             this.gradientRenderer = new GradientAsciiRenderer(this.p5Instance, this.grid, this.asciiCharacterSet, this.gradientManager, this.gradientOptions);
 
@@ -2368,9 +2373,7 @@ void main() {
             this.asciiRenderer = this.brightnessRenderer;
             if (this.asciiOptions.renderMode === 'accurate') {
                 this.asciiRenderer = this.accurateRenderer;
-            } else if (this.asciiOptions.renderMode === 'custom') {
-                this.asciiRenderer = this.customAsciiRenderer;
-            }
+            } 
 
             this.asciiFramebufferDimensions = { width: this.p5Instance.width, height: this.p5Instance.height };
 
@@ -2436,6 +2439,9 @@ void main() {
             this.edgeRenderer.render(this.sketchFramebuffer, this.gradientRenderer);
             asciiOutput = this.edgeRenderer.getOutputFramebuffer();
 
+            this.customAsciiRenderer.render(this.sketchFramebuffer, this.edgeRenderer);
+            asciiOutput = this.customAsciiRenderer.getOutputFramebuffer();
+
             this.p5Instance.clear();
             this.p5Instance.image(asciiOutput, -this.p5Instance.width / 2, -this.p5Instance.height / 2, this.p5Instance.width, this.p5Instance.height);
 
@@ -2455,8 +2461,7 @@ void main() {
          * Sets the default options for the P5Asciify library.
          * @param {object} options 
          */
-        setDefaultOptions(asciiOptions, edgeOptions, commonOptions, gradientOptions, textOptions) {
-
+        setDefaultOptions(asciiOptions, edgeOptions, commonOptions, gradientOptions, customOptions, textOptions) {
             // The parameters are pre-processed, so we can just spread them into the class variables
             this.asciiOptions = {
                 ...this.asciiOptions,
@@ -2474,6 +2479,11 @@ void main() {
             this.gradientOptions = {
                 ...this.gradientOptions,
                 ...gradientOptions
+            };
+
+            this.customOptions = {
+                ...this.customOptions,
+                ...customOptions
             };
 
             this.textOptions = {
@@ -2496,8 +2506,6 @@ void main() {
             if (asciiOptions?.renderMode) {
                 if (asciiOptions.renderMode === 'accurate') {
                     this.asciiRenderer = this.accurateRenderer;
-                } else if (asciiOptions.renderMode === 'custom') {
-                    this.asciiRenderer = this.customAsciiRenderer;
                 } else {
                     this.asciiRenderer = this.brightnessRenderer;
                 }
@@ -2783,7 +2791,7 @@ void main() {
     p5.prototype.setAsciiOptions = function (options) {
 
         // Check and remove any unknown options
-        const validOptions = ["common", "edge", "ascii", "gradient", "text"];
+        const validOptions = ["common", "edge", "ascii", "gradient", "custom", "text"];
         const unknownOptions = Object.keys(options).filter(option => !validOptions.includes(option));
 
         if (unknownOptions.length) {
@@ -2798,7 +2806,7 @@ void main() {
             options.ascii.renderMode = 'brightness';
         }
 
-        const { ascii: asciiOptions, edge: edgeOptions, common: commonOptions, gradient: gradientOptions, text: textOptions } = options;
+        const { ascii: asciiOptions, edge: edgeOptions, common: commonOptions, gradient: gradientOptions, custom: customOptions, text: textOptions } = options;
 
         // Convert hex color strings to p5.Color objects and assign them to the options
         const colorOptions = [edgeOptions, asciiOptions, gradientOptions];
@@ -2817,7 +2825,7 @@ void main() {
             delete edgeOptions.characters;
         }
 
-        p5asciify.setDefaultOptions(asciiOptions, edgeOptions, commonOptions, gradientOptions, textOptions);
+        p5asciify.setDefaultOptions(asciiOptions, edgeOptions, commonOptions, gradientOptions, customOptions, textOptions);
     };
 
     /**
