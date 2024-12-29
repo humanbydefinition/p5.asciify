@@ -1467,7 +1467,6 @@ void main() {
 
             if (!this.options.enabled) {
                 this.outputFramebuffer = previousAsciiRenderer.getOutputFramebuffer();
-
                 return;
             }
 
