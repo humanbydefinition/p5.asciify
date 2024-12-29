@@ -20,7 +20,7 @@ export default class EdgeAsciiRenderer extends AsciiRenderer {
         this.shader = this.p5.createShader(vertexShader, asciiConversionShader);
 
         this.sobelFramebuffer = this.p5.createFramebuffer({ depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
-        this.sampleFramebuffer = this.p5.createFramebuffer({ density: 1,width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
+        this.sampleFramebuffer = this.p5.createFramebuffer({ density: 1, width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
     }
 
     resizeFramebuffers() {
@@ -35,11 +35,8 @@ export default class EdgeAsciiRenderer extends AsciiRenderer {
     render(inputFramebuffer, previousAsciiRenderer) {
 
         if (!this.options.enabled) {
-            if (previousAsciiRenderer.options.enabled) {
-                this.outputFramebuffer = previousAsciiRenderer.getOutputFramebuffer();
-            } else {
-                this.outputFramebuffer = inputFramebuffer;
-            }
+            this.outputFramebuffer = previousAsciiRenderer.getOutputFramebuffer();
+
 
             this.asciiCharacterFramebuffer.begin();
             this.p5.clear();
@@ -135,7 +132,6 @@ export default class EdgeAsciiRenderer extends AsciiRenderer {
         this.shader.setUniform('u_gridOffsetDimensions', [this.grid.offsetX, this.grid.offsetY]);
         this.shader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
         this.shader.setUniform('u_invertMode', this.options.invertMode);
-        this.shader.setUniform('u_brightnessEnabled', previousAsciiRenderer.options.enabled);
         this.shader.setUniform('u_rotationAngle', this.p5.radians(this.options.rotationAngle));
         this.p5.rect(0, 0, this.p5.width, this.p5.height);
         this.outputFramebuffer.end();

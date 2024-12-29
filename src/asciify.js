@@ -8,13 +8,13 @@ import P5AsciifyGradientManager from './managers/gradientmanager.js';
 
 import BrightnessAsciiRenderer from './renderers/layer1/brightnessAsciiRenderer/BrightnessAsciiRenderer.js';
 import AccurateAsciiRenderer from './renderers/layer1/accurateAsciiRenderer/AccurateAsciiRenderer.js';
-import CustomAsciiRenderer from './renderers/layer1/customAsciiRenderer/CustomAsciiRenderer.js';
+import CustomAsciiRenderer from './renderers/layer4/customAsciiRenderer/CustomAsciiRenderer.js';
 
 import GradientAsciiRenderer from './renderers/layer2/gradientAsciiRenderer/GradientAsciiRenderer.js';
 
 import EdgeAsciiRenderer from './renderers/layer3/edgeAsciiRenderer/EdgeAsciiRenderer.js';
 
-import TextAsciiRenderer from './renderers/layer4/textAsciiRenderer/TextAsciiRenderer.js';
+import TextAsciiRenderer from './renderers/layer5/textAsciiRenderer/TextAsciiRenderer.js';
 
 /**
  * @class P5Asciify
@@ -62,6 +62,10 @@ class P5Asciify {
         sampleThreshold: 16,
         rotationAngle: 0,
     };
+
+    customOptions = {
+        enabled: false,
+    }
 
     textOptions = {
         enabled: false,
@@ -118,7 +122,7 @@ class P5Asciify {
 
         this.brightnessRenderer = new BrightnessAsciiRenderer(this.p5Instance, this.grid, this.asciiCharacterSet, this.asciiOptions);
         this.accurateRenderer = new AccurateAsciiRenderer(this.p5Instance, this.grid, this.asciiCharacterSet, this.asciiOptions);
-        this.customAsciiRenderer = new CustomAsciiRenderer(this.p5Instance, this.grid, this.asciiCharacterSet, this.customPrimaryColorSampleFramebuffer, this.customSecondaryColorSampleFramebuffer, this.customAsciiCharacterFramebuffer, this.asciiOptions);
+        this.customAsciiRenderer = new CustomAsciiRenderer(this.p5Instance, this.grid, this.asciiCharacterSet, this.customPrimaryColorSampleFramebuffer, this.customSecondaryColorSampleFramebuffer, this.customAsciiCharacterFramebuffer, this.customOptions);
 
         this.gradientRenderer = new GradientAsciiRenderer(this.p5Instance, this.grid, this.asciiCharacterSet, this.gradientManager, this.gradientOptions);
 
@@ -129,9 +133,7 @@ class P5Asciify {
         this.asciiRenderer = this.brightnessRenderer;
         if (this.asciiOptions.renderMode === 'accurate') {
             this.asciiRenderer = this.accurateRenderer;
-        } else if (this.asciiOptions.renderMode === 'custom') {
-            this.asciiRenderer = this.customAsciiRenderer;
-        }
+        } 
 
         this.asciiFramebufferDimensions = { width: this.p5Instance.width, height: this.p5Instance.height };
 
@@ -197,6 +199,9 @@ class P5Asciify {
         this.edgeRenderer.render(this.sketchFramebuffer, this.gradientRenderer);
         asciiOutput = this.edgeRenderer.getOutputFramebuffer();
 
+        this.customAsciiRenderer.render(this.sketchFramebuffer, this.edgeRenderer);
+        asciiOutput = this.customAsciiRenderer.getOutputFramebuffer();
+
         this.p5Instance.clear();
         this.p5Instance.image(asciiOutput, -this.p5Instance.width / 2, -this.p5Instance.height / 2, this.p5Instance.width, this.p5Instance.height);
 
@@ -216,7 +221,7 @@ class P5Asciify {
      * Sets the default options for the P5Asciify library.
      * @param {object} options 
      */
-    setDefaultOptions(asciiOptions, edgeOptions, commonOptions, gradientOptions, textOptions) {
+    setDefaultOptions(asciiOptions, edgeOptions, commonOptions, gradientOptions, customOptions, textOptions) {;
 
         // The parameters are pre-processed, so we can just spread them into the class variables
         this.asciiOptions = {
@@ -235,6 +240,11 @@ class P5Asciify {
         this.gradientOptions = {
             ...this.gradientOptions,
             ...gradientOptions
+        };
+
+        this.customOptions = {
+            ...this.customOptions,
+            ...customOptions
         };
 
         this.textOptions = {
@@ -257,8 +267,6 @@ class P5Asciify {
         if (asciiOptions?.renderMode) {
             if (asciiOptions.renderMode === 'accurate') {
                 this.asciiRenderer = this.accurateRenderer;
-            } else if (asciiOptions.renderMode === 'custom') {
-                this.asciiRenderer = this.customAsciiRenderer;
             } else {
                 this.asciiRenderer = this.brightnessRenderer;
             }

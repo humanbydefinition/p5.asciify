@@ -33,11 +33,8 @@ export default class GradientAsciiRenderer extends AsciiRenderer {
     render(inputFramebuffer, previousAsciiRenderer) {
 
         if (!this.options.enabled || this.gradientManager._gradients.length === 0) {
-            if (previousAsciiRenderer.options.enabled) {
-                this.outputFramebuffer = previousAsciiRenderer.getOutputFramebuffer();
-            } else {
-                this.outputFramebuffer = inputFramebuffer;
-            }
+            this.outputFramebuffer = previousAsciiRenderer.getOutputFramebuffer();
+
 
             this.asciiCharacterFramebuffer.begin();
             this.p5.clear();
@@ -129,7 +126,6 @@ export default class GradientAsciiRenderer extends AsciiRenderer {
         this.asciiShader.setUniform('u_secondaryColorTexture', this.secondaryColorSampleFramebuffer);
         this.asciiShader.setUniform('u_asciiCharacterTexture', this.asciiCharacterFramebuffer);
         this.asciiShader.setUniform('u_asciiBrightnessTexture', previousAsciiRenderer.getOutputFramebuffer());
-        this.asciiShader.setUniform('u_brightnessEnabled', previousAsciiRenderer.options.enabled);
         this.asciiShader.setUniform('u_gridPixelDimensions', [this.grid.width, this.grid.height]);
         this.asciiShader.setUniform('u_gridOffsetDimensions', [this.grid.offsetX, this.grid.offsetY]);
         this.asciiShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);

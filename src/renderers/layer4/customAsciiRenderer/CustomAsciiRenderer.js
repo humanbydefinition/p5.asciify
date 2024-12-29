@@ -15,40 +15,49 @@ export default class CustomAsciiRenderer extends AsciiRenderer {
         this.asciiCharacterFramebuffer = asciiCharacterFramebuffer;
     }
 
-    render(inputFramebuffer) {
+    render(inputFramebuffer, previousAsciiRenderer) {
+
+        console.log("ENABLED: ", this.options.enabled);
+
         if (!this.options.enabled) {
-            this.outputFramebuffer = inputFramebuffer;
-            return;
-        }
+            this.outputFramebuffer = previousAsciiRenderer.getOutputFramebuffer();
 
-        if (this.options.characterColorMode === 1) {
+
+            this.asciiCharacterFramebuffer.begin();
+            this.p5.clear();
+            this.p5.image(previousAsciiRenderer.asciiCharacterFramebuffer, -this.grid.cols / 2, -this.grid.rows / 2);
+            this.asciiCharacterFramebuffer.end();
+
             this.primaryColorSampleFramebuffer.begin();
-            this.p5.background(this.options.characterColor);
+            this.p5.clear();
+            this.p5.image(previousAsciiRenderer.primaryColorSampleFramebuffer, -this.grid.cols / 2, -this.grid.rows / 2);
             this.primaryColorSampleFramebuffer.end();
-        }
 
-        if (this.options.backgroundColorMode === 1) {
             this.secondaryColorSampleFramebuffer.begin();
-            this.p5.background(this.options.backgroundColor);
+            this.p5.clear();
+            this.p5.image(previousAsciiRenderer.secondaryColorSampleFramebuffer, -this.grid.cols / 2, -this.grid.rows / 2);
             this.secondaryColorSampleFramebuffer.end();
+
+            return;
         }
 
         this.outputFramebuffer.begin();
         this.p5.clear();
         this.p5.shader(this.shader);
-        this.shader.setUniform('u_layer', 1);
+        this.shader.setUniform('u_layer', 4);
         this.shader.setUniform('u_pixelRatio', this.p5.pixelDensity());
         this.shader.setUniform('u_resolution', [this.p5.width, this.p5.height]);
         this.shader.setUniform('u_characterTexture', this.characterSet.asciiFontTextureAtlas.texture);
         this.shader.setUniform('u_charsetDimensions', [this.characterSet.asciiFontTextureAtlas.charsetCols, this.characterSet.asciiFontTextureAtlas.charsetRows]);
         this.shader.setUniform('u_primaryColorTexture', this.primaryColorSampleFramebuffer);
+        this.shader.setUniform('u_asciiBrightnessTexture', previousAsciiRenderer.getOutputFramebuffer());
         this.shader.setUniform('u_secondaryColorTexture', this.secondaryColorSampleFramebuffer);
         this.shader.setUniform('u_asciiCharacterTexture', this.asciiCharacterFramebuffer);
         this.shader.setUniform('u_gridPixelDimensions', [this.grid.width, this.grid.height]);
         this.shader.setUniform('u_gridOffsetDimensions', [this.grid.offsetX, this.grid.offsetY]);
         this.shader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
-        this.shader.setUniform('u_invertMode', this.options.invertMode);
-        this.shader.setUniform('u_rotationAngle', this.p5.radians(this.options.rotationAngle));
+        this.shader.setUniform('u_invertMode', 0);
+        this.shader.setUniform('u_rotationAngle', 0);
         this.p5.rect(0, 0, this.p5.width, this.p5.height);
         this.outputFramebuffer.end();
     }

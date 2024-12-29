@@ -23,8 +23,6 @@ uniform sampler2D u_asciiBrightnessTexture;
 uniform sampler2D u_gradientReferenceTexture;
 uniform sampler2D u_edgesTexture;
 
-uniform bool u_brightnessEnabled;
-
 uniform int u_layer;
 
 // Function to rotate coordinates
@@ -52,7 +50,7 @@ void main() {
     vec4 secondaryColor = texture2D(u_secondaryColorTexture, charIndexTexCoord);
 
     // Check if the adjusted coordinate is outside the valid range
-    if (adjustedCoord.x < 0.0 || adjustedCoord.x > 1.0 || adjustedCoord.y < 0.0 || adjustedCoord.y > 1.0) {
+    if(adjustedCoord.x < 0.0 || adjustedCoord.x > 1.0 || adjustedCoord.y < 0.0 || adjustedCoord.y > 1.0) {
         gl_FragColor = secondaryColor;
         return;
     }
@@ -60,31 +58,29 @@ void main() {
     // Sample primary color (foreground color)
     vec4 primaryColor = texture2D(u_primaryColorTexture, charIndexTexCoord);
 
-    if (u_layer == 2) {
+    if(u_layer == 2) {
         // asciiGradient.frag logic
         vec4 encodedIndexVec = texture2D(u_asciiCharacterTexture, charIndexTexCoord);
         vec4 gradientReferenceColor = texture2D(u_gradientReferenceTexture, charIndexTexCoord);
 
-        if (encodedIndexVec.rgb == gradientReferenceColor.rgb) {
-            if (u_brightnessEnabled) {
-                // Adjust texture coordinate for brightness texture sampling
-                gl_FragColor = texture2D(u_asciiBrightnessTexture, logicalFragCoord / u_resolution);
-            } else {
-                gl_FragColor = secondaryColor;
-            }
+        if(encodedIndexVec.rgb == gradientReferenceColor.rgb) {
+            gl_FragColor = texture2D(u_asciiBrightnessTexture, logicalFragCoord / u_resolution);
             return;
         }
-    } else if (u_layer == 3) {
+    } else if(u_layer == 3) {
         // asciiEdge.frag logic
         vec4 edgeColor = texture2D(u_edgesTexture, charIndexTexCoord);
 
-        if (edgeColor.rgb == vec3(0.0)) {
-            if (u_brightnessEnabled) {
-                // Adjust texture coordinate for brightness texture sampling
-                gl_FragColor = texture2D(u_asciiBrightnessTexture, logicalFragCoord / u_resolution);
-            } else {
-                gl_FragColor = secondaryColor;
-            }
+        if(edgeColor.rgb == vec3(0.0)) {
+            gl_FragColor = texture2D(u_asciiBrightnessTexture, logicalFragCoord / u_resolution);
+            return;
+        }
+    } else if(u_layer == 4) {
+        // asciiCustom.frag logic
+        vec4 encodedIndexVec = texture2D(u_asciiCharacterTexture, charIndexTexCoord);
+
+        if(encodedIndexVec.rgba == vec4(0.0)) {
+            gl_FragColor = texture2D(u_asciiBrightnessTexture, logicalFragCoord / u_resolution);
             return;
         }
     }
@@ -119,7 +115,7 @@ void main() {
     vec4 charColor = outsideBounds ? secondaryColor : texture2D(u_characterTexture, texCoord);
 
     // If the inversion mode is enabled, invert the character color
-    if (u_invertMode == 1) {
+    if(u_invertMode == 1) {
         charColor.a = 1.0 - charColor.a;
         charColor.rgb = vec3(1.0);
     }
@@ -131,7 +127,7 @@ void main() {
     gl_FragColor = mix(secondaryColor, finalColor, charColor.a);
 
     // Override final color with background color for out-of-bounds areas due to rotation
-    if (outsideBounds) {
+    if(outsideBounds) {
         gl_FragColor = u_invertMode == 1 ? primaryColor : secondaryColor;
     }
 }

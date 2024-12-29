@@ -26,6 +26,7 @@ let seed = "p5.asciify"; // Seed for random number generation
 
 // The custom ascii renderer exposes the following framebuffers, whose instances will be assigned to those variables during setup.
 let primaryColorSampleFramebuffer;
+let secondaryColorSampleFramebuffer;
 /* There is also a `secondaryColorSampleFramebuffer` for individual cell background colors, but it is not used in this sketch. */
 let asciiCharacterFramebuffer;
 
@@ -95,7 +96,6 @@ function setup() {
 			fontSize: 16,
 		},
 		ascii: {
-			renderMode: 'custom', // Use the custom renderer
 			enabled: true,
 			characterColor: "#ff0000",
 			characterColorMode: 0,
@@ -103,6 +103,9 @@ function setup() {
 			backgroundColorMode: 1,
 			invertMode: false,
 		},
+		custom: {
+			enabled: true,
+		}
 	});
 
 	// This function is called after the p5.asciify library has been initialized, but before the sketch starts running
@@ -117,6 +120,7 @@ function setupAsciify() {
 
 	// Assign the custom ascii renderer's framebuffers to the variables
 	primaryColorSampleFramebuffer = p5asciify.customPrimaryColorSampleFramebuffer;
+	secondaryColorSampleFramebuffer = p5asciify.customSecondaryColorSampleFramebuffer;
 	asciiCharacterFramebuffer = p5asciify.customAsciiCharacterFramebuffer;
 
 	// Generate the charset color palette and apply it to the framebuffer
@@ -208,12 +212,17 @@ function draw() {
 	rect(0, 0, width, height);
 	primaryColorSampleFramebuffer.end();
 
+	secondaryColorSampleFramebuffer.begin(); // Not used in this sketch
+	clear();
+	background(0);
+	secondaryColorSampleFramebuffer.end();
+
 	/* Since we are using the custom renderer, we don't need to draw anything on the canvas. */
 
 	// If we disable the ascii renderer and uncomment the following lines, 
 	// you can display any of the framebuffers on the canvas for debugging purposes
-	//clear();
-	//image(primaryColorSampleFramebuffer, -width / 2, -height / 2, width, height); // Display the shift texture
+	clear();
+	image(primaryColorSampleFramebuffer, -width / 2, -height / 2, width, height); // Display the shift texture
 }
 
 /**

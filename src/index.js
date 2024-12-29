@@ -198,7 +198,7 @@ p5.prototype.setAsciifyPostDrawFunction = function (postDrawFunction) {
 p5.prototype.setAsciiOptions = function (options) {
 
     // Check and remove any unknown options
-    const validOptions = ["common", "edge", "ascii", "gradient", "text"];
+    const validOptions = ["common", "edge", "ascii", "gradient", "custom", "text"];
     const unknownOptions = Object.keys(options).filter(option => !validOptions.includes(option));
 
     if (unknownOptions.length) {
@@ -213,7 +213,7 @@ p5.prototype.setAsciiOptions = function (options) {
         options.ascii.renderMode = 'brightness';
     }
 
-    const { ascii: asciiOptions, edge: edgeOptions, common: commonOptions, gradient: gradientOptions, text: textOptions } = options;
+    const { ascii: asciiOptions, edge: edgeOptions, common: commonOptions, gradient: gradientOptions, custom: customOptions, text: textOptions } = options;
 
     // Convert hex color strings to p5.Color objects and assign them to the options
     const colorOptions = [edgeOptions, asciiOptions, gradientOptions];
@@ -232,7 +232,7 @@ p5.prototype.setAsciiOptions = function (options) {
         delete edgeOptions.characters;
     }
 
-    p5asciify.setDefaultOptions(asciiOptions, edgeOptions, commonOptions, gradientOptions, textOptions);
+    p5asciify.setDefaultOptions(asciiOptions, edgeOptions, commonOptions, gradientOptions, customOptions, textOptions);
 };
 
 /**
