@@ -940,7 +940,7 @@
         }
     }
 
-    var asciiConversionShader = "precision mediump float;\n#define GLSLIFY 1\nuniform sampler2D u_characterTexture;uniform vec2 u_charsetDimensions;uniform sampler2D u_primaryColorTexture;uniform sampler2D u_secondaryColorTexture;uniform sampler2D u_asciiCharacterTexture;uniform vec2 u_gridCellDimensions;uniform vec2 u_gridPixelDimensions;uniform vec2 u_gridOffsetDimensions;uniform float u_rotationAngle;uniform int u_invertMode;uniform vec2 u_resolution;uniform float u_pixelRatio;uniform sampler2D u_asciiBrightnessTexture;uniform sampler2D u_gradientReferenceTexture;uniform sampler2D u_edgesTexture;uniform int u_layer;mat2 rotate2D(float angle){float s=sin(angle);float c=cos(angle);return mat2(c,-s,s,c);}void main(){vec2 logicalFragCoord=gl_FragCoord.xy/u_pixelRatio;vec2 adjustedCoord=(logicalFragCoord-u_gridOffsetDimensions)/u_gridPixelDimensions;vec2 gridCoord=adjustedCoord*u_gridCellDimensions;vec2 cellCoord=floor(gridCoord);vec2 charIndexTexCoord=(cellCoord+vec2(0.5))/u_gridCellDimensions;vec4 secondaryColor=texture2D(u_secondaryColorTexture,charIndexTexCoord);if(adjustedCoord.x<0.0||adjustedCoord.x>1.0||adjustedCoord.y<0.0||adjustedCoord.y>1.0){gl_FragColor=secondaryColor;return;}vec4 primaryColor=texture2D(u_primaryColorTexture,charIndexTexCoord);if(u_layer==2){vec4 encodedIndexVec=texture2D(u_asciiCharacterTexture,charIndexTexCoord);vec4 gradientReferenceColor=texture2D(u_gradientReferenceTexture,charIndexTexCoord);if(encodedIndexVec.rgb==gradientReferenceColor.rgb){gl_FragColor=texture2D(u_asciiBrightnessTexture,logicalFragCoord/u_resolution);return;}}else if(u_layer==3){vec4 edgeColor=texture2D(u_edgesTexture,charIndexTexCoord);if(edgeColor.rgb==vec3(0.0)){gl_FragColor=texture2D(u_asciiBrightnessTexture,logicalFragCoord/u_resolution);return;}}else if(u_layer==4){vec4 encodedIndexVec=texture2D(u_asciiCharacterTexture,charIndexTexCoord);if(encodedIndexVec.rgba==vec4(0.0)){gl_FragColor=texture2D(u_asciiBrightnessTexture,logicalFragCoord/u_resolution);return;}}vec4 encodedIndexVec=texture2D(u_asciiCharacterTexture,charIndexTexCoord);int charIndex=int(encodedIndexVec.r*255.0+0.5)+int(encodedIndexVec.g*255.0+0.5)*256;int charCol=charIndex-(charIndex/int(u_charsetDimensions.x))*int(u_charsetDimensions.x);int charRow=charIndex/int(u_charsetDimensions.x);vec2 charCoord=vec2(float(charCol)/u_charsetDimensions.x,float(charRow)/u_charsetDimensions.y);vec2 fractionalPart=fract(gridCoord)-0.5;fractionalPart=rotate2D(u_rotationAngle)*fractionalPart;fractionalPart+=0.5;vec2 cellMin=charCoord;vec2 cellMax=charCoord+vec2(1.0/u_charsetDimensions.x,1.0/u_charsetDimensions.y);vec2 texCoord=charCoord+fractionalPart*vec2(1.0/u_charsetDimensions.x,1.0/u_charsetDimensions.y);bool outsideBounds=any(lessThan(texCoord,cellMin))||any(greaterThan(texCoord,cellMax));vec4 charColor=outsideBounds ? secondaryColor : texture2D(u_characterTexture,texCoord);if(u_invertMode==1){charColor.a=1.0-charColor.a;charColor.rgb=vec3(1.0);}vec4 finalColor=vec4(primaryColor.rgb*charColor.rgb,charColor.a);gl_FragColor=mix(secondaryColor,finalColor,charColor.a);if(outsideBounds){gl_FragColor=u_invertMode==1 ? primaryColor : secondaryColor;}}"; // eslint-disable-line
+    var asciiConversionShader = "precision mediump float;\n#define GLSLIFY 1\nuniform sampler2D u_characterTexture;uniform vec2 u_charsetDimensions;uniform sampler2D u_primaryColorTexture;uniform sampler2D u_secondaryColorTexture;uniform sampler2D u_asciiCharacterTexture;uniform vec2 u_gridCellDimensions;uniform vec2 u_gridPixelDimensions;uniform vec2 u_gridOffsetDimensions;uniform float u_rotationAngle;uniform int u_invertMode;uniform vec2 u_resolution;uniform float u_pixelRatio;uniform sampler2D u_asciiBrightnessTexture;uniform sampler2D u_gradientReferenceTexture;uniform sampler2D u_edgesTexture;uniform int u_layer;mat2 rotate2D(float angle){float s=sin(angle);float c=cos(angle);return mat2(c,-s,s,c);}void main(){vec2 logicalFragCoord=gl_FragCoord.xy/u_pixelRatio;vec2 adjustedCoord=(logicalFragCoord-u_gridOffsetDimensions)/u_gridPixelDimensions;vec2 gridCoord=adjustedCoord*u_gridCellDimensions;vec2 cellCoord=floor(gridCoord);vec2 charIndexTexCoord=(cellCoord+vec2(0.5))/u_gridCellDimensions;vec4 secondaryColor=texture2D(u_secondaryColorTexture,charIndexTexCoord);if(adjustedCoord.x<0.0||adjustedCoord.x>1.0||adjustedCoord.y<0.0||adjustedCoord.y>1.0){gl_FragColor=vec4(0);return;}vec4 primaryColor=texture2D(u_primaryColorTexture,charIndexTexCoord);if(u_layer==2){vec4 encodedIndexVec=texture2D(u_asciiCharacterTexture,charIndexTexCoord);vec4 gradientReferenceColor=texture2D(u_gradientReferenceTexture,charIndexTexCoord);if(encodedIndexVec.rgb==gradientReferenceColor.rgb){gl_FragColor=texture2D(u_asciiBrightnessTexture,logicalFragCoord/u_resolution);return;}}else if(u_layer==3){vec4 edgeColor=texture2D(u_edgesTexture,charIndexTexCoord);if(edgeColor.rgb==vec3(0.0)){gl_FragColor=texture2D(u_asciiBrightnessTexture,logicalFragCoord/u_resolution);return;}}else if(u_layer==4){vec4 encodedIndexVec=texture2D(u_asciiCharacterTexture,charIndexTexCoord);if(encodedIndexVec.rgba==vec4(0.0)){gl_FragColor=texture2D(u_asciiBrightnessTexture,logicalFragCoord/u_resolution);return;}}vec4 encodedIndexVec=texture2D(u_asciiCharacterTexture,charIndexTexCoord);int charIndex=int(encodedIndexVec.r*255.0+0.5)+int(encodedIndexVec.g*255.0+0.5)*256;int charCol=charIndex-(charIndex/int(u_charsetDimensions.x))*int(u_charsetDimensions.x);int charRow=charIndex/int(u_charsetDimensions.x);vec2 charCoord=vec2(float(charCol)/u_charsetDimensions.x,float(charRow)/u_charsetDimensions.y);vec2 fractionalPart=fract(gridCoord)-0.5;fractionalPart=rotate2D(u_rotationAngle)*fractionalPart;fractionalPart+=0.5;vec2 cellMin=charCoord;vec2 cellMax=charCoord+vec2(1.0/u_charsetDimensions.x,1.0/u_charsetDimensions.y);vec2 texCoord=charCoord+fractionalPart*vec2(1.0/u_charsetDimensions.x,1.0/u_charsetDimensions.y);bool outsideBounds=any(lessThan(texCoord,cellMin))||any(greaterThan(texCoord,cellMax));vec4 charColor=outsideBounds ? secondaryColor : texture2D(u_characterTexture,texCoord);if(u_invertMode==1){charColor.a=1.0-charColor.a;charColor.rgb=vec3(1.0);}vec4 finalColor=vec4(primaryColor.rgb*charColor.rgb,charColor.a);gl_FragColor=mix(secondaryColor,finalColor,charColor.a);if(outsideBounds){gl_FragColor=u_invertMode==1 ? primaryColor : secondaryColor;}}"; // eslint-disable-line
 
     var colorSampleShader$2 = "precision mediump float;\n#define GLSLIFY 1\nuniform sampler2D u_sketchTexture;uniform vec2 u_gridCellDimensions;void main(){vec2 logicalFragCoord=gl_FragCoord.xy;vec2 cellCoord=floor(logicalFragCoord);vec2 cellSizeInTexCoords=1.0/u_gridCellDimensions;vec2 cellCenterTexCoord=(cellCoord+vec2(0.5))*cellSizeInTexCoords;vec4 sampledColor=texture2D(u_sketchTexture,cellCenterTexCoord);gl_FragColor=sampledColor;}"; // eslint-disable-line
 
@@ -964,10 +964,6 @@
         }
 
         render(inputFramebuffer) {
-            if (!this.options.enabled) {
-                this.outputFramebuffer = inputFramebuffer;
-                return;
-            }
 
             this.colorSampleFramebuffer.begin();
             this.p5.clear();
@@ -1355,11 +1351,6 @@ void main() {
 
         render(inputFramebuffer) {
 
-            if (!this.options.enabled) {
-                this.outputFramebuffer = inputFramebuffer;
-                return;
-            }
-
             this.brightnessSampleFramebuffer.begin();
             this.p5.clear();
             this.p5.shader(this.brightnessSampleShader);
@@ -1453,22 +1444,13 @@ void main() {
 
     class CustomAsciiRenderer extends AsciiRenderer {
 
-        constructor(p5Instance, grid, characterSet, primaryColorSampleFramebuffer, secondaryColorFrameBuffer, asciiCharacterFramebuffer, options) {
+        constructor(p5Instance, grid, characterSet, options) {
             super(p5Instance, grid, characterSet, options);
 
             this.shader = this.p5.createShader(vertexShader, asciiConversionShader);
-
-            this.primaryColorSampleFramebuffer = primaryColorSampleFramebuffer;
-            this.secondaryColorSampleFramebuffer = secondaryColorFrameBuffer;
-            this.asciiCharacterFramebuffer = asciiCharacterFramebuffer;
         }
 
-        render(previousAsciiRenderer) {
-
-            if (!this.options.enabled) {
-                this.outputFramebuffer = previousAsciiRenderer.getOutputFramebuffer();
-                return;
-            }
+        render(inputFramebuffer, previousAsciiRenderer) {
 
             this.outputFramebuffer.begin();
             this.p5.clear();
@@ -1520,28 +1502,6 @@ void main() {
         }
 
         render(inputFramebuffer, previousAsciiRenderer) {
-
-            if (!this.options.enabled || this.gradientManager._gradients.length === 0) {
-                this.outputFramebuffer = previousAsciiRenderer.getOutputFramebuffer();
-
-
-                this.asciiCharacterFramebuffer.begin();
-                this.p5.clear();
-                this.p5.image(previousAsciiRenderer.asciiCharacterFramebuffer, -this.grid.cols / 2, -this.grid.rows / 2);
-                this.asciiCharacterFramebuffer.end();
-
-                this.primaryColorSampleFramebuffer.begin();
-                this.p5.clear();
-                this.p5.image(previousAsciiRenderer.primaryColorSampleFramebuffer, -this.grid.cols / 2, -this.grid.rows / 2);
-                this.primaryColorSampleFramebuffer.end();
-
-                this.secondaryColorSampleFramebuffer.begin();
-                this.p5.clear();
-                this.p5.image(previousAsciiRenderer.secondaryColorSampleFramebuffer, -this.grid.cols / 2, -this.grid.rows / 2);
-                this.secondaryColorSampleFramebuffer.end();
-
-                return;
-            }
 
             this.grayscaleFramebuffer.begin();
             this.p5.clear();
@@ -1774,28 +1734,6 @@ void main() {
 
         render(inputFramebuffer, previousAsciiRenderer) {
 
-            if (!this.options.enabled) {
-                this.outputFramebuffer = previousAsciiRenderer.getOutputFramebuffer();
-
-
-                this.asciiCharacterFramebuffer.begin();
-                this.p5.clear();
-                this.p5.image(previousAsciiRenderer.asciiCharacterFramebuffer, -this.grid.cols / 2, -this.grid.rows / 2);
-                this.asciiCharacterFramebuffer.end();
-
-                this.primaryColorSampleFramebuffer.begin();
-                this.p5.clear();
-                this.p5.image(previousAsciiRenderer.primaryColorSampleFramebuffer, -this.grid.cols / 2, -this.grid.rows / 2);
-                this.primaryColorSampleFramebuffer.end();
-
-                this.secondaryColorSampleFramebuffer.begin();
-                this.p5.clear();
-                this.p5.image(previousAsciiRenderer.secondaryColorSampleFramebuffer, -this.grid.cols / 2, -this.grid.rows / 2);
-                this.secondaryColorSampleFramebuffer.end();
-
-                return;
-            }
-
             // Apply Sobel shader for edge detection
             this.sobelFramebuffer.begin();
             this.p5.clear();
@@ -1879,11 +1817,10 @@ void main() {
     }
 
     class TextAsciiRenderer {
-        constructor(p5Instance, asciiFontTextureAtlas, grid, asciiRenderer, fontBase64, fontFileType, options) {
+        constructor(p5Instance, asciiFontTextureAtlas, grid, fontBase64, fontFileType, options) {
             this.p5 = p5Instance;
             this.asciiFontTextureAtlas = asciiFontTextureAtlas;
             this.grid = grid;
-            this.asciiRenderer = asciiRenderer;
             this.options = options;
             this.fontBase64 = fontBase64;
             this.fontFileType = fontFileType;
@@ -2061,12 +1998,12 @@ void main() {
 
         /* ---------------- Main Rendering Logic ---------------- */
 
-        outputAsciiToHtml() {
-            this.asciiRenderer.asciiCharacterFramebuffer.loadPixels();
-            const asciiPixels = this.asciiRenderer.asciiCharacterFramebuffer.pixels;
+        outputAsciiToHtml(asciiRenderer) {
+            asciiRenderer.asciiCharacterFramebuffer.loadPixels();
+            const asciiPixels = asciiRenderer.asciiCharacterFramebuffer.pixels;
 
-            const primaryColorPixels = this.getPixelsIfModeEnabled(this.options.characterColorMode, this.asciiRenderer.primaryColorSampleFramebuffer);
-            const secondaryColorPixels = this.getPixelsIfModeEnabled(this.options.backgroundColorMode, this.asciiRenderer.secondaryColorSampleFramebuffer);
+            const primaryColorPixels = this.getPixelsIfModeEnabled(this.options.characterColorMode, asciiRenderer.primaryColorSampleFramebuffer);
+            const secondaryColorPixels = this.getPixelsIfModeEnabled(this.options.backgroundColorMode, asciiRenderer.secondaryColorSampleFramebuffer);
 
             let idx = 0;
             for (let y = 0; y < this.grid.rows; y++) {
@@ -2237,6 +2174,146 @@ void main() {
         }
     }
 
+    var asciiCubeGrid3DShader = "precision lowp float;\n#define GLSLIFY 1\nconst float MIN_STEP=1.0;const float MAX_STEP=180.0;const int MAX_ITERATIONS=100;const float EPSILON=0.001;const vec3 CUBE_SIZE=vec3(1.0);const float SPACING=1.0;const float INV_SPACING=1.0/SPACING;const vec3 HALF_CUBE_SIZE=CUBE_SIZE*0.5;const float MAX_STEP_SQ=MAX_STEP*MAX_STEP;uniform vec2 u_resolution;uniform bool u_invert;uniform vec3 u_cameraPos;uniform vec3 u_cameraFront;uniform vec3 u_cameraUp;uniform sampler2D u_characterTexture;uniform sampler2D u_charIndexTexture;uniform sampler2D u_charColorTexture;uniform sampler2D u_bgColorTexture;uniform float u_charsetCols;uniform float u_charsetRows;uniform vec2 u_gridSize;struct Hit{float id;float dist;vec3 gridPos;};vec2 getGridTexCoord(float x,float z){return(vec2(x,z)+0.5)/u_gridSize;}float sdfCube(vec3 p,vec3 center){vec3 d=abs(p-center)-HALF_CUBE_SIZE;return min(max(max(d.x,d.y),d.z),0.0)+length(max(d,0.0));}void processSample(vec3 p,float gx,float gz,float dx,float dz,vec2 gridOffset,inout Hit hit){float ngx=clamp(gx+dx,0.0,u_gridSize.x-1.0);float ngz=clamp(gz+dz,0.0,u_gridSize.y-1.0);vec2 gridTexCoord=getGridTexCoord(ngx,ngz);float occupied=step(0.0,texture2D(u_charIndexTexture,gridTexCoord).a-0.001);vec3 center=vec3(ngx*SPACING-gridOffset.x,0.0,ngz*SPACING-gridOffset.y);float cubeDist=sdfCube(p,center);float updateHit=step(cubeDist,hit.dist)*occupied;hit.id=mix(hit.id,1.0,updateHit);hit.dist=mix(hit.dist,cubeDist,updateHit);hit.gridPos=mix(hit.gridPos,center,updateHit);}Hit getSceneSDF(vec3 p,vec2 gridOffset){Hit hit=Hit(-1.0,MAX_STEP,vec3(0.0));float gx=floor((p.x+gridOffset.x)*INV_SPACING+0.5);float gz=floor((p.z+gridOffset.y)*INV_SPACING+0.5);for(int dx=-1;dx<=1;dx++){for(int dz=-1;dz<=1;dz++){processSample(p,gx,gz,float(dx),float(dz),gridOffset,hit);}}if(hit.id>0.0){return hit;}else{return Hit(-1.0,MIN_STEP,vec3(0.0));}}vec3 calculateNormal(vec3 hitPoint,vec3 cubeCenter){vec3 diff=hitPoint-cubeCenter;vec3 absDiff=abs(diff);vec3 signs=sign(diff);vec3 normal=vec3(0.0);normal.x=float(absDiff.x>absDiff.y&&absDiff.x>absDiff.z)*signs.x;normal.y=float(absDiff.y>absDiff.z&&normal.x==0.0)*signs.y;normal.z=float(normal.x==0.0&&normal.y==0.0)*signs.z;return normal;}Hit rayMarch(vec3 origin,vec3 direction,vec2 gridOffset,float tFar){float t=0.0;Hit hit=Hit(-1.0,MAX_STEP,vec3(0.0));\n#pragma unroll 4\nfor(int i=0;i<MAX_ITERATIONS;i++){if(t>tFar)break;vec3 pos=origin+t*direction;Hit sdf=getSceneSDF(pos,gridOffset);float hitTest=step(sdf.dist,EPSILON)*step(0.0,sdf.id);hit.id=mix(hit.id,sdf.id,hitTest);hit.dist=mix(hit.dist,t,hitTest);hit.gridPos=mix(hit.gridPos,sdf.gridPos,hitTest);if(hitTest>0.0)break;t+=sdf.dist;}return hit;}vec2 getLocalTexCoord(vec3 p,vec3 gridPos,vec3 normal){vec3 localPos=p-gridPos;localPos.x=mod(localPos.x,CUBE_SIZE.x);vec2 texCoord;if(abs(normal.y)>0.99){texCoord=normal.y>0.0 ? vec2(localPos.x,localPos.z): vec2(localPos.x,-localPos.z);}else if(abs(normal.x)>0.99){texCoord=normal.x>0.0 ? vec2(-localPos.z,-localPos.y): vec2(localPos.z,-localPos.y);}else{texCoord=normal.z>0.0 ? vec2(localPos.x,-localPos.y): vec2(-localPos.x,-localPos.y);}return texCoord*(1.0/CUBE_SIZE.x)+0.5;}bool intersectBox(vec3 origin,vec3 dir,vec3 boxMin,vec3 boxMax,out float tNear,out float tFar){vec3 invDir=1.0/dir;vec3 t0s=(boxMin-origin)*invDir;vec3 t1s=(boxMax-origin)*invDir;vec3 tmin=min(t0s,t1s);vec3 tmax=max(t0s,t1s);tNear=max(max(tmin.x,tmin.y),tmin.z);tFar=min(min(tmax.x,tmax.y),tmax.z);return tFar>=max(tNear,0.0);}void main(){vec2 gridOffset=(u_gridSize-1.0)*0.5*SPACING;vec2 uv=(2.0*gl_FragCoord.xy-u_resolution)/min(u_resolution.x,u_resolution.y);vec3 right=normalize(cross(u_cameraFront,u_cameraUp));vec3 up=cross(right,u_cameraFront);vec3 rayDir=normalize(right*uv.x-up*uv.y+u_cameraFront);vec3 boxMin=vec3(-gridOffset.x-SPACING,-SPACING,-gridOffset.y-SPACING);vec3 boxMax=vec3(gridOffset.x+SPACING,CUBE_SIZE.y+SPACING,gridOffset.y+SPACING);float tNear,tFar;bool intersects=intersectBox(u_cameraPos,rayDir,boxMin,boxMax,tNear,tFar);vec3 color=vec3(0.0);vec3 gridNormal=vec3(0.0,1.0,0.0);bool canIntersect=abs(dot(rayDir,gridNormal))>0.01;if(intersects&&canIntersect){float effectiveFar=min(tFar,MAX_STEP);Hit hit=rayMarch(u_cameraPos,rayDir,gridOffset,effectiveFar);if(hit.id>0.0&&hit.dist<effectiveFar){vec3 hitPoint=u_cameraPos+hit.dist*rayDir;vec3 normal=calculateNormal(hitPoint,hit.gridPos);vec2 localTexCoord=getLocalTexCoord(hitPoint,hit.gridPos,normal);float gx=floor((hit.gridPos.x+gridOffset.x)*INV_SPACING+0.5);float gz=floor((hit.gridPos.z+gridOffset.y)*INV_SPACING+0.5);gx=clamp(gx,0.0,u_gridSize.x-1.0);gz=clamp(gz,0.0,u_gridSize.y-1.0);vec2 gridTexCoord=getGridTexCoord(gx,gz);vec4 encodedIndexVec=texture2D(u_charIndexTexture,gridTexCoord);int charIndex=int(encodedIndexVec.r*255.0+0.5)+int(encodedIndexVec.g*255.0+0.5)*256;int bestCharRow=charIndex/int(u_charsetCols);int bestCharCol=charIndex-int(u_charsetCols)*bestCharRow;vec2 bestCharBaseCoord=vec2(float(bestCharCol)/u_charsetCols,float(bestCharRow)/u_charsetRows);vec2 bestCharSize=vec2(1.0/u_charsetCols,1.0/u_charsetRows);vec2 charTexCoord=bestCharBaseCoord+fract(localTexCoord)*bestCharSize;vec4 charColor=texture2D(u_characterTexture,charTexCoord);vec4 fgColorSample=texture2D(u_charColorTexture,gridTexCoord);vec4 bgColorSample=texture2D(u_bgColorTexture,gridTexCoord);charColor.rgb=u_invert ? 1.0-charColor.rgb : charColor.rgb;color=mix(bgColorSample.rgb,fgColorSample.rgb,charColor.rgb);}}gl_FragColor=vec4(color,1.0);}"; // eslint-disable-line
+
+    class CubeAsciiRenderer3D extends AsciiRenderer {
+
+        constructor(p5Instance, grid, characterSet, options) {
+            super(p5Instance, grid, characterSet, options);
+
+            this.cameraPos = this.p5.createVector(0, 50, 0);
+
+            this.cameraUp = this.p5.createVector(0, 1, 0);
+            this.yaw = -90.0;
+            this.pitch = -89.0;
+
+            // Define spacing (must match the SPACING value in your fragment shader)
+            this.SPACING = 1.0;
+
+            // Calculate half dimensions based on grid size
+            this.halfGridCols = (this.grid.cols - 1) * this.SPACING * 0.5;
+            this.halfGridRows = (this.grid.rows - 1) * this.SPACING * 0.5;
+
+            this.minCameraX = -this.halfGridCols - 16;
+            this.maxCameraX = this.halfGridCols + 16;
+
+            this.minCameraZ = -this.halfGridRows - 16;
+            this.maxCameraZ = this.halfGridRows + 16;
+
+            this.minCameraY = -64.0;
+            this.maxCameraY = 64.0;
+
+            let front = this.p5.createVector();
+            front.x = this.p5.cos(this.p5.radians(this.yaw)) * this.p5.cos(this.p5.radians(this.pitch));
+            front.y = this.p5.sin(this.p5.radians(this.pitch));
+            front.z = this.p5.sin(this.p5.radians(this.yaw)) * this.p5.cos(this.p5.radians(this.pitch));
+            this.cameraFront = front.normalize();
+
+            this.firstMouse = true;
+            this.lastX = this.p5.width / 2;
+            this.lastY = this.p5.height / 2;
+            this.movementSpeed = 0.5;
+            this.mouseSensitivity = 0.5;
+            this.isMouseDragging = false;
+            this.initialMousePressed = false;
+
+            this.shader = this.p5.createShader(vertexShader, asciiCubeGrid3DShader);
+            this.outputFramebuffer = this.p5.createFramebuffer({ depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
+        }
+
+        render(inputFramebuffer, previousAsciiRenderer) {
+
+            let movementSpeed = this.movementSpeed;
+            if (this.p5.keyIsDown(this.p5.SHIFT)) {
+                movementSpeed *= 2;
+            }
+
+            if (this.p5.keyIsDown(87)) { // W
+                this.cameraPos.add(p5.Vector.mult(this.cameraFront, movementSpeed));
+            }
+
+            if (this.p5.keyIsDown(83)) { // S
+                this.cameraPos.sub(p5.Vector.mult(this.cameraFront, movementSpeed));
+            }
+
+            if (this.p5.keyIsDown(65)) { // A
+                // Calculate the right vector and normalize it
+                let right = this.cameraFront.cross(this.cameraUp).normalize();
+                // Move left by subtracting the right vector scaled by movementSpeed
+                this.cameraPos.sub(p5.Vector.mult(right, movementSpeed));
+            }
+
+            if (this.p5.keyIsDown(68)) { // D
+                // Calculate the right vector and normalize it
+                let right = this.cameraFront.cross(this.cameraUp).normalize();
+                // Move right by adding the right vector scaled by movementSpeed
+                this.cameraPos.add(p5.Vector.mult(right, movementSpeed));
+            }
+
+            this.cameraPos.x = this.p5.constrain(this.cameraPos.x, this.minCameraX, this.maxCameraX);
+            this.cameraPos.y = this.p5.constrain(this.cameraPos.y, this.minCameraY, this.maxCameraY);
+            this.cameraPos.z = this.p5.constrain(this.cameraPos.z, this.minCameraZ, this.maxCameraZ);
+
+
+            this.updateCamera();
+
+            this.outputFramebuffer.begin();
+            this.p5.clear();
+            this.p5.shader(this.shader);
+            this.shader.setUniform('u_resolution', [this.p5.width, this.p5.height]);
+            this.shader.setUniform('u_characterTexture', this.characterSet.asciiFontTextureAtlas.texture);
+            this.shader.setUniform('u_charIndexTexture', previousAsciiRenderer.asciiCharacterFramebuffer);
+            this.shader.setUniform('u_charsetCols', this.characterSet.asciiFontTextureAtlas.charsetCols);
+            this.shader.setUniform('u_charsetRows', this.characterSet.asciiFontTextureAtlas.charsetRows);
+            this.shader.setUniform('u_charColorTexture', previousAsciiRenderer.primaryColorSampleFramebuffer);
+            this.shader.setUniform('u_bgColorTexture', previousAsciiRenderer.secondaryColorSampleFramebuffer);
+            this.shader.setUniform('u_depthTexture', previousAsciiRenderer.primaryColorSampleFramebuffer);
+            this.shader.setUniform('u_invert', false);
+            this.shader.setUniform('u_gridSize', [this.grid.cols, this.grid.rows]);
+            this.shader.setUniform('u_invertDepth', false);
+            this.shader.setUniform('u_cameraPos', [this.cameraPos.x, this.cameraPos.y, this.cameraPos.z]);
+            this.shader.setUniform('u_cameraFront', [this.cameraFront.x, this.cameraFront.y, this.cameraFront.z]);
+            this.shader.setUniform('u_cameraUp', [this.cameraUp.x, this.cameraUp.y, this.cameraUp.z]);
+            this.p5.rect(0, 0, this.p5.width, this.p5.height);
+            this.outputFramebuffer.end();
+
+            
+        }
+
+        updateCamera() {
+            if (this.p5.mouseIsPressed) {
+                if (this.p5.mouseButton === this.p5.LEFT && !this.initialMousePressed) {
+                    this.isMouseDragging = true;
+                    this.lastX = this.p5.mouseX;
+                    this.lastY = this.p5.mouseY;
+                    this.initialMousePressed = true;
+                    return;
+                }
+
+                let xoffset = this.p5.mouseX - this.lastX;
+                let yoffset = this.lastY - this.p5.mouseY;
+                this.lastX = this.p5.mouseX;
+                this.lastY = this.p5.mouseY;
+
+                xoffset *= this.mouseSensitivity;
+                yoffset *= this.mouseSensitivity;
+
+                this.yaw += xoffset;
+                this.pitch += yoffset;
+
+                this.pitch = this.p5.constrain(this.pitch, -89, 89);
+
+                let front = this.p5.createVector();
+                front.x = this.p5.cos(this.p5.radians(this.yaw)) * this.p5.cos(this.p5.radians(this.pitch));
+                front.y = this.p5.sin(this.p5.radians(this.pitch));
+                front.z = this.p5.sin(this.p5.radians(this.yaw)) * this.p5.cos(this.p5.radians(this.pitch));
+                this.cameraFront = front.normalize();
+            } else {
+                this.initialMousePressed = false;
+            }
+        }
+    }
+
     /**
      * @class P5Asciify
      * @description
@@ -2247,6 +2324,7 @@ void main() {
         commonOptions = {
             fontSize: 16,
             gridDimensions: [0, 0],
+            borderColor: "#000000",
         };
 
         asciiOptions = {
@@ -2297,6 +2375,10 @@ void main() {
             invertMode: false,
         }
 
+        cubeOptions = {
+            enabled: false,
+        }
+
         gradientManager = new P5AsciifyGradientManager();
 
         postSetupFunction = null;
@@ -2322,7 +2404,7 @@ void main() {
             this.gradientOptions.characterColor = this.p5Instance.color(this.gradientOptions.characterColor);
             this.gradientOptions.backgroundColor = this.p5Instance.color(this.gradientOptions.backgroundColor);
 
-            this.p5Instance.drawingContext.getExtension('WEBGL_color_buffer_float');
+            this.commonOptions.borderColor = this.p5Instance.color(this.commonOptions.borderColor);
 
             this.asciiFontTextureAtlas = new P5AsciifyFontTextureAtlas({ p5Instance: this.p5Instance, font: this.font, fontSize: this.commonOptions.fontSize });
 
@@ -2337,24 +2419,45 @@ void main() {
 
             this.gradientManager.setup(this.asciiCharacterSet);
 
-            this.customPrimaryColorSampleFramebuffer = this.p5Instance.createFramebuffer({ density: 1, width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
-            this.customSecondaryColorSampleFramebuffer = this.p5Instance.createFramebuffer({ density: 1, width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
-            this.customAsciiCharacterFramebuffer = this.p5Instance.createFramebuffer({ density: 1, width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
-
             this.brightnessRenderer = new BrightnessAsciiRenderer(this.p5Instance, this.grid, this.asciiCharacterSet, this.asciiOptions);
             this.accurateRenderer = new AccurateAsciiRenderer(this.p5Instance, this.grid, this.asciiCharacterSet, this.asciiOptions);
-            this.customAsciiRenderer = new CustomAsciiRenderer(this.p5Instance, this.grid, this.asciiCharacterSet, this.customPrimaryColorSampleFramebuffer, this.customSecondaryColorSampleFramebuffer, this.customAsciiCharacterFramebuffer, this.customOptions);
+            this.customAsciiRenderer = new CustomAsciiRenderer(this.p5Instance, this.grid, this.asciiCharacterSet, this.customOptions);
 
             this.gradientRenderer = new GradientAsciiRenderer(this.p5Instance, this.grid, this.asciiCharacterSet, this.gradientManager, this.gradientOptions);
 
             this.edgeRenderer = new EdgeAsciiRenderer(this.p5Instance, this.grid, this.edgeCharacterSet, this.edgeOptions);
 
-            this.textAsciiRenderer = new TextAsciiRenderer(this.p5Instance, this.asciiFontTextureAtlas, this.grid, this.edgeRenderer, this.fontBase64, this.fontFileType, this.textOptions);
+            this.cubeAsciiRenderer3D = new CubeAsciiRenderer3D(this.p5Instance, this.grid, this.asciiCharacterSet, this.cubeOptions);
+
+            this.textAsciiRenderer = new TextAsciiRenderer(this.p5Instance, this.asciiFontTextureAtlas, this.grid, this.fontBase64, this.fontFileType, this.textOptions);
 
             this.asciiRenderer = this.brightnessRenderer;
             if (this.asciiOptions.renderMode === 'accurate') {
                 this.asciiRenderer = this.accurateRenderer;
-            } 
+            }
+
+            this.renderingSteps = [
+                {
+                    enabled: () => this.asciiOptions.enabled,
+                    renderer: () => this.asciiRenderer
+                },
+                {
+                    enabled: () => this.gradientOptions.enabled && this.gradientManager._gradients.length > 0,
+                    renderer: () => this.gradientRenderer
+                },
+                {
+                    enabled: () => this.edgeOptions.enabled,
+                    renderer: () => this.edgeRenderer
+                },
+                {
+                    enabled: () => this.customOptions.enabled,
+                    renderer: () => this.customAsciiRenderer
+                },
+                {
+                    enabled: () => this.cubeOptions.enabled,
+                    renderer: () => this.cubeAsciiRenderer3D
+                }
+            ];
 
             this.asciiFramebufferDimensions = { width: this.p5Instance.width, height: this.p5Instance.height };
 
@@ -2400,8 +2503,8 @@ void main() {
                 this.customAsciiRenderer.resizeFramebuffers();
                 this.accurateRenderer.resizeFramebuffers();
                 this.gradientRenderer.resizeFramebuffers();
-
                 this.textAsciiRenderer.updateDimensions();
+                this.cubeAsciiRenderer3D.resizeFramebuffers();
             }
         }
 
@@ -2409,25 +2512,28 @@ void main() {
          * Runs the rendering pipeline for the P5Asciify library.
          */
         asciify() {
+            // Initialize with base framebuffer
             let asciiOutput = this.sketchFramebuffer;
+            let currentRenderer = this.asciiRenderer;
 
-            this.asciiRenderer.render(this.sketchFramebuffer);
-            asciiOutput = this.asciiRenderer.getOutputFramebuffer();
+            // Execute each rendering step in sequence
+            for (const step of this.renderingSteps) {
+                if (step.enabled()) {
+                    const renderer = step.renderer();
+                    renderer.render(this.sketchFramebuffer, currentRenderer);
+                    asciiOutput = renderer.getOutputFramebuffer();
+                    currentRenderer = renderer;
+                }
+            }
 
-            this.gradientRenderer.render(this.sketchFramebuffer, this.asciiRenderer);
-            asciiOutput = this.gradientRenderer.getOutputFramebuffer();
-
-            this.edgeRenderer.render(this.sketchFramebuffer, this.gradientRenderer);
-            asciiOutput = this.edgeRenderer.getOutputFramebuffer();
-
-            this.customAsciiRenderer.render(this.edgeRenderer);
-            asciiOutput = this.customAsciiRenderer.getOutputFramebuffer();
-
+            // Draw the final output
             this.p5Instance.clear();
-            this.p5Instance.image(asciiOutput, -this.p5Instance.width / 2, -this.p5Instance.height / 2, this.p5Instance.width, this.p5Instance.height);
+            this.p5Instance.background(this.commonOptions.borderColor);
+            this.p5Instance.image(asciiOutput, -this.p5Instance.width / 2, -this.p5Instance.height / 2);
 
+            // Handle text rendering separately as it outputs to HTML
             if (this.textOptions.enabled) {
-                this.textAsciiRenderer.outputAsciiToHtml();
+                this.textAsciiRenderer.outputAsciiToHtml(currentRenderer);
             }
 
             if (this.postDrawFunction) {
@@ -2437,12 +2543,12 @@ void main() {
             this.checkFramebufferDimensions();
         }
 
-
         /**
          * Sets the default options for the P5Asciify library.
          * @param {object} options 
          */
-        setDefaultOptions(asciiOptions, edgeOptions, commonOptions, gradientOptions, customOptions, textOptions) {
+        setDefaultOptions(asciiOptions, edgeOptions, commonOptions, gradientOptions, customOptions, textOptions, cubeOptions) {
+
             // The parameters are pre-processed, so we can just spread them into the class variables
             this.asciiOptions = {
                 ...this.asciiOptions,
@@ -2472,6 +2578,11 @@ void main() {
                 ...textOptions
             };
 
+            this.cubeOptions = {
+                ...this.cubeOptions,
+                ...cubeOptions
+            };
+
             // If we are still in the users setup(), the characterset and grid have not been initialized yet.
             if (!this.p5Instance._setupDone) {
                 return;
@@ -2483,6 +2594,7 @@ void main() {
             this.gradientRenderer.updateOptions(gradientOptions);
             this.edgeRenderer.updateOptions(edgeOptions);
             this.textAsciiRenderer.updateOptions(textOptions);
+            this.cubeAsciiRenderer3D.updateOptions(cubeOptions);
 
             if (asciiOptions?.renderMode) {
                 if (asciiOptions.renderMode === 'accurate') {
@@ -2772,7 +2884,7 @@ void main() {
     p5.prototype.setAsciiOptions = function (options) {
 
         // Check and remove any unknown options
-        const validOptions = ["common", "edge", "ascii", "gradient", "custom", "text"];
+        const validOptions = ["common", "edge", "ascii", "gradient", "custom", "text", "cube"];
         const unknownOptions = Object.keys(options).filter(option => !validOptions.includes(option));
 
         if (unknownOptions.length) {
@@ -2787,7 +2899,7 @@ void main() {
             options.ascii.renderMode = 'brightness';
         }
 
-        const { ascii: asciiOptions, edge: edgeOptions, common: commonOptions, gradient: gradientOptions, custom: customOptions, text: textOptions } = options;
+        const { ascii: asciiOptions, edge: edgeOptions, common: commonOptions, gradient: gradientOptions, custom: customOptions, text: textOptions, cube: cubeOptions } = options;
 
         // Convert hex color strings to p5.Color objects and assign them to the options
         const colorOptions = [edgeOptions, asciiOptions, gradientOptions];
@@ -2795,6 +2907,10 @@ void main() {
             if (opt?.characterColor) opt.characterColor = this.color(opt.characterColor);
             if (opt?.backgroundColor) opt.backgroundColor = this.color(opt.backgroundColor);
         });
+
+        if (commonOptions?.borderColor) {
+            commonOptions.borderColor = this.color(commonOptions.borderColor);
+        }
 
         if (commonOptions?.fontSize && (commonOptions.fontSize < 1 || commonOptions.fontSize > 128)) {
             console.warn(`P5Asciify: Font size ${commonOptions.fontSize} is out of bounds. It should be between 1 and 128. Font size not updated.`);
@@ -2806,7 +2922,7 @@ void main() {
             delete edgeOptions.characters;
         }
 
-        p5asciify.setDefaultOptions(asciiOptions, edgeOptions, commonOptions, gradientOptions, customOptions, textOptions);
+        p5asciify.setDefaultOptions(asciiOptions, edgeOptions, commonOptions, gradientOptions, customOptions, textOptions, cubeOptions);
     };
 
     /**
