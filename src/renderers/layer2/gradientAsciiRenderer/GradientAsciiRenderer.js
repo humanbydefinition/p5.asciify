@@ -32,28 +32,6 @@ export default class GradientAsciiRenderer extends AsciiRenderer {
 
     render(inputFramebuffer, previousAsciiRenderer) {
 
-        if (!this.options.enabled || this.gradientManager._gradients.length === 0) {
-            this.outputFramebuffer = previousAsciiRenderer.getOutputFramebuffer();
-
-
-            this.asciiCharacterFramebuffer.begin();
-            this.p5.clear();
-            this.p5.image(previousAsciiRenderer.asciiCharacterFramebuffer, -this.grid.cols / 2, -this.grid.rows / 2);
-            this.asciiCharacterFramebuffer.end();
-
-            this.primaryColorSampleFramebuffer.begin();
-            this.p5.clear();
-            this.p5.image(previousAsciiRenderer.primaryColorSampleFramebuffer, -this.grid.cols / 2, -this.grid.rows / 2);
-            this.primaryColorSampleFramebuffer.end();
-
-            this.secondaryColorSampleFramebuffer.begin();
-            this.p5.clear();
-            this.p5.image(previousAsciiRenderer.secondaryColorSampleFramebuffer, -this.grid.cols / 2, -this.grid.rows / 2);
-            this.secondaryColorSampleFramebuffer.end();
-
-            return;
-        }
-
         this.grayscaleFramebuffer.begin();
         this.p5.clear();
         this.p5.shader(this.grayscaleShader);

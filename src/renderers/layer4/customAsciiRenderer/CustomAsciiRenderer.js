@@ -5,23 +5,13 @@ import asciiConversionShader from '../../_common_shaders/asciiConversion.frag';
 
 export default class CustomAsciiRenderer extends AsciiRenderer {
 
-    constructor(p5Instance, grid, characterSet, primaryColorSampleFramebuffer, secondaryColorFrameBuffer, asciiCharacterFramebuffer, options) {
+    constructor(p5Instance, grid, characterSet, options) {
         super(p5Instance, grid, characterSet, options);
 
         this.shader = this.p5.createShader(vertexShader, asciiConversionShader);
-
-        this.primaryColorSampleFramebuffer = primaryColorSampleFramebuffer;
-        this.secondaryColorSampleFramebuffer = secondaryColorFrameBuffer;
-        this.asciiCharacterFramebuffer = asciiCharacterFramebuffer;
     }
 
-    render(previousAsciiRenderer) {
-
-        if (!this.options.enabled) {
-            this.outputFramebuffer = previousAsciiRenderer.getOutputFramebuffer();
-
-            return;
-        }
+    render(inputFramebuffer, previousAsciiRenderer) {
 
         this.outputFramebuffer.begin();
         this.p5.clear();

@@ -213,7 +213,7 @@ p5.prototype.setAsciiOptions = function (options) {
         options.ascii.renderMode = 'brightness';
     }
 
-    const { ascii: asciiOptions, edge: edgeOptions, common: commonOptions, gradient: gradientOptions, custom: customOptions, text: textOptions } = options;
+    const { ascii: asciiOptions, edge: edgeOptions, common: commonOptions, gradient: gradientOptions, custom: customOptions, text: textOptions, cube: cubeOptions } = options;
 
     // Convert hex color strings to p5.Color objects and assign them to the options
     const colorOptions = [edgeOptions, asciiOptions, gradientOptions];
@@ -221,6 +221,10 @@ p5.prototype.setAsciiOptions = function (options) {
         if (opt?.characterColor) opt.characterColor = this.color(opt.characterColor);
         if (opt?.backgroundColor) opt.backgroundColor = this.color(opt.backgroundColor);
     });
+
+    if (commonOptions?.borderColor) {
+        commonOptions.borderColor = this.color(commonOptions.borderColor);
+    }
 
     if (commonOptions?.fontSize && (commonOptions.fontSize < 1 || commonOptions.fontSize > 128)) {
         console.warn(`P5Asciify: Font size ${commonOptions.fontSize} is out of bounds. It should be between 1 and 128. Font size not updated.`);

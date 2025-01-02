@@ -23,10 +23,6 @@ export default class BrightnessAsciiRenderer extends AsciiRenderer {
     }
 
     render(inputFramebuffer) {
-        if (!this.options.enabled) {
-            this.outputFramebuffer = inputFramebuffer;
-            return;
-        }
 
         this.colorSampleFramebuffer.begin();
         this.p5.clear();

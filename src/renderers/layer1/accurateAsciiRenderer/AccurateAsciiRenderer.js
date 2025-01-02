@@ -35,11 +35,6 @@ export default class AccurateAsciiRenderer extends AsciiRenderer {
 
     render(inputFramebuffer) {
 
-        if (!this.options.enabled) {
-            this.outputFramebuffer = inputFramebuffer;
-            return;
-        }
-
         this.brightnessSampleFramebuffer.begin();
         this.p5.clear();
         this.p5.shader(this.brightnessSampleShader);

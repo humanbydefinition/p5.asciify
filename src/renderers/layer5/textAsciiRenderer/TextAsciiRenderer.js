@@ -1,9 +1,8 @@
 export default class TextAsciiRenderer {
-    constructor(p5Instance, asciiFontTextureAtlas, grid, asciiRenderer, fontBase64, fontFileType, options) {
+    constructor(p5Instance, asciiFontTextureAtlas, grid, fontBase64, fontFileType, options) {
         this.p5 = p5Instance;
         this.asciiFontTextureAtlas = asciiFontTextureAtlas;
         this.grid = grid;
-        this.asciiRenderer = asciiRenderer;
         this.options = options;
         this.fontBase64 = fontBase64;
         this.fontFileType = fontFileType;
@@ -181,12 +180,12 @@ export default class TextAsciiRenderer {
 
     /* ---------------- Main Rendering Logic ---------------- */
 
-    outputAsciiToHtml() {
-        this.asciiRenderer.asciiCharacterFramebuffer.loadPixels();
-        const asciiPixels = this.asciiRenderer.asciiCharacterFramebuffer.pixels;
+    outputAsciiToHtml(asciiRenderer) {
+        asciiRenderer.asciiCharacterFramebuffer.loadPixels();
+        const asciiPixels = asciiRenderer.asciiCharacterFramebuffer.pixels;
 
-        const primaryColorPixels = this.getPixelsIfModeEnabled(this.options.characterColorMode, this.asciiRenderer.primaryColorSampleFramebuffer);
-        const secondaryColorPixels = this.getPixelsIfModeEnabled(this.options.backgroundColorMode, this.asciiRenderer.secondaryColorSampleFramebuffer);
+        const primaryColorPixels = this.getPixelsIfModeEnabled(this.options.characterColorMode, asciiRenderer.primaryColorSampleFramebuffer);
+        const secondaryColorPixels = this.getPixelsIfModeEnabled(this.options.backgroundColorMode, asciiRenderer.secondaryColorSampleFramebuffer);
 
         let idx = 0;
         for (let y = 0; y < this.grid.rows; y++) {

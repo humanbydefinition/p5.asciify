@@ -51,7 +51,7 @@ void main() {
 
     // Check if the adjusted coordinate is outside the valid range
     if(adjustedCoord.x < 0.0 || adjustedCoord.x > 1.0 || adjustedCoord.y < 0.0 || adjustedCoord.y > 1.0) {
-        gl_FragColor = secondaryColor;
+        gl_FragColor = vec4(0);
         return;
     }
 

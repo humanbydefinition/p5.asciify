@@ -26,6 +26,7 @@ class P5Asciify {
     commonOptions = {
         fontSize: 16,
         gridDimensions: [0, 0],
+        borderColor: "#000000",
     };
 
     asciiOptions = {
@@ -101,7 +102,7 @@ class P5Asciify {
         this.gradientOptions.characterColor = this.p5Instance.color(this.gradientOptions.characterColor);
         this.gradientOptions.backgroundColor = this.p5Instance.color(this.gradientOptions.backgroundColor);
 
-        this.p5Instance.drawingContext.getExtension('WEBGL_color_buffer_float');
+        this.commonOptions.borderColor = this.p5Instance.color(this.commonOptions.borderColor);
 
         this.asciiFontTextureAtlas = new P5AsciifyFontTextureAtlas({ p5Instance: this.p5Instance, font: this.font, fontSize: this.commonOptions.fontSize });
 
@@ -116,24 +117,39 @@ class P5Asciify {
 
         this.gradientManager.setup(this.asciiCharacterSet);
 
-        this.customPrimaryColorSampleFramebuffer = this.p5Instance.createFramebuffer({ density: 1, width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
-        this.customSecondaryColorSampleFramebuffer = this.p5Instance.createFramebuffer({ density: 1, width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
-        this.customAsciiCharacterFramebuffer = this.p5Instance.createFramebuffer({ density: 1, width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
-
         this.brightnessRenderer = new BrightnessAsciiRenderer(this.p5Instance, this.grid, this.asciiCharacterSet, this.asciiOptions);
         this.accurateRenderer = new AccurateAsciiRenderer(this.p5Instance, this.grid, this.asciiCharacterSet, this.asciiOptions);
-        this.customAsciiRenderer = new CustomAsciiRenderer(this.p5Instance, this.grid, this.asciiCharacterSet, this.customPrimaryColorSampleFramebuffer, this.customSecondaryColorSampleFramebuffer, this.customAsciiCharacterFramebuffer, this.customOptions);
+        this.customAsciiRenderer = new CustomAsciiRenderer(this.p5Instance, this.grid, this.asciiCharacterSet, this.customOptions);
 
         this.gradientRenderer = new GradientAsciiRenderer(this.p5Instance, this.grid, this.asciiCharacterSet, this.gradientManager, this.gradientOptions);
 
         this.edgeRenderer = new EdgeAsciiRenderer(this.p5Instance, this.grid, this.edgeCharacterSet, this.edgeOptions);
 
-        this.textAsciiRenderer = new TextAsciiRenderer(this.p5Instance, this.asciiFontTextureAtlas, this.grid, this.edgeRenderer, this.fontBase64, this.fontFileType, this.textOptions);
+        this.textAsciiRenderer = new TextAsciiRenderer(this.p5Instance, this.asciiFontTextureAtlas, this.grid, this.fontBase64, this.fontFileType, this.textOptions);
 
         this.asciiRenderer = this.brightnessRenderer;
         if (this.asciiOptions.renderMode === 'accurate') {
             this.asciiRenderer = this.accurateRenderer;
-        } 
+        }
+
+        this.renderingSteps = [
+            {
+                enabled: () => this.asciiOptions.enabled,
+                renderer: () => this.asciiRenderer
+            },
+            {
+                enabled: () => this.gradientOptions.enabled && this.gradientManager._gradients.length > 0,
+                renderer: () => this.gradientRenderer
+            },
+            {
+                enabled: () => this.edgeOptions.enabled,
+                renderer: () => this.edgeRenderer
+            },
+            {
+                enabled: () => this.customOptions.enabled,
+                renderer: () => this.customAsciiRenderer
+            }
+        ];
 
         this.asciiFramebufferDimensions = { width: this.p5Instance.width, height: this.p5Instance.height };
 
@@ -179,7 +195,6 @@ class P5Asciify {
             this.customAsciiRenderer.resizeFramebuffers();
             this.accurateRenderer.resizeFramebuffers();
             this.gradientRenderer.resizeFramebuffers();
-
             this.textAsciiRenderer.updateDimensions();
         }
     }
@@ -188,25 +203,28 @@ class P5Asciify {
      * Runs the rendering pipeline for the P5Asciify library.
      */
     asciify() {
+        // Initialize with base framebuffer
         let asciiOutput = this.sketchFramebuffer;
+        let currentRenderer = this.asciiRenderer;
 
-        this.asciiRenderer.render(this.sketchFramebuffer);
-        asciiOutput = this.asciiRenderer.getOutputFramebuffer();
+        // Execute each rendering step in sequence
+        for (const step of this.renderingSteps) {
+            if (step.enabled()) {
+                const renderer = step.renderer();
+                renderer.render(this.sketchFramebuffer, currentRenderer);
+                asciiOutput = renderer.getOutputFramebuffer();
+                currentRenderer = renderer;
+            }
+        }
 
-        this.gradientRenderer.render(this.sketchFramebuffer, this.asciiRenderer);
-        asciiOutput = this.gradientRenderer.getOutputFramebuffer();
-
-        this.edgeRenderer.render(this.sketchFramebuffer, this.gradientRenderer);
-        asciiOutput = this.edgeRenderer.getOutputFramebuffer();
-
-        this.customAsciiRenderer.render(this.edgeRenderer);
-        asciiOutput = this.customAsciiRenderer.getOutputFramebuffer();
-
+        // Draw the final output
         this.p5Instance.clear();
-        this.p5Instance.image(asciiOutput, -this.p5Instance.width / 2, -this.p5Instance.height / 2, this.p5Instance.width, this.p5Instance.height);
+        this.p5Instance.background(this.commonOptions.borderColor);
+        this.p5Instance.image(asciiOutput, -this.p5Instance.width / 2, -this.p5Instance.height / 2);
 
+        // Handle text rendering separately as it outputs to HTML
         if (this.textOptions.enabled) {
-            this.textAsciiRenderer.outputAsciiToHtml();
+            this.textAsciiRenderer.outputAsciiToHtml(currentRenderer);
         }
 
         if (this.postDrawFunction) {
@@ -215,7 +233,6 @@ class P5Asciify {
 
         this.checkFramebufferDimensions();
     }
-
 
     /**
      * Sets the default options for the P5Asciify library.
