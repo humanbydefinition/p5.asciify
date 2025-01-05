@@ -75,6 +75,7 @@ function setup() {
 	randomSeed(seed); // For deterministic random numbers
 	noiseSeed(seed);
 
+	setAttributes('antialias', false);
 	createCanvas(windowWidth, windowHeight, WEBGL);
 
 	// Initialize and fill the framebuffers with the colors of the charset and color palette
