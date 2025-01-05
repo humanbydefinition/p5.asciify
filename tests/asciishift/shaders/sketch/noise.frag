@@ -3,7 +3,7 @@ precision mediump float;
 varying vec2 v_texCoord;
 
 // Uniforms
-uniform int u_bins;                // Number of bins for quantization
+uniform int u_bins;                // Number of bins for quantization (e.g., 8)
 uniform vec2 u_dimensions;         // Dimensions of the texture (width, height)
 uniform float u_frameCount;        // Frame count for time-based movement
 
@@ -35,7 +35,9 @@ void main() {
 
         // Quantize the random value into discrete bins
         float redIndex = floor(redRandom * float(u_bins));
-        float redValue = redIndex / float(u_bins);
+
+        // Encode the index as a normalized value by dividing by 255.0
+        float redValue = redIndex / 255.0;
 
         // Assign the quantized red value with full opacity
         gl_FragColor = vec4(redValue, 0.0, 0.0, 1.0);
