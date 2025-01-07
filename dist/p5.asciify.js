@@ -1617,6 +1617,7 @@ void main() {
             // Ensure minimum width of 1 to prevent zero-sized framebuffer
             const width = Math.max(this.colors.length, 1);
             this.framebuffer = this.p5Instance.createFramebuffer({
+                density: 1,
                 width: width,
                 height: 1,
                 depthFormat: this.p5Instance.UNSIGNED_INT,
@@ -1631,36 +1632,22 @@ void main() {
         updateFramebuffer() {
             if (!this.framebuffer || !this.p5Instance) return;
 
-            // Ensure minimum width of 1
             const sw = Math.max(this.colors.length, 1);
             const sh = 1;
-
-            const density = this.p5Instance.pixelDensity();
-            const dw = sw * density;
-            const dh = sh * density;
 
             this.framebuffer.resize(sw, sh);
             this.framebuffer.loadPixels();
 
             for (let lx = 0; lx < sw; lx++) {
-                let color;
-                if (lx < this.colors.length) {
-                    color = this.p5Instance.color(this.colors[lx]);
-                } else {
-                    color = this.p5Instance.color(0, 0, 0, 0);
-                }
-                for (let dx = 0; dx < density; dx++) {
-                    const px = lx * density + dx;
-                    for (let py = 0; py < dh; py++) {
-                        const index = 4 * (py * dw + px);
-                        this.framebuffer.pixels[index] = this.p5Instance.red(color);
-                        this.framebuffer.pixels[index + 1] = this.p5Instance.green(color);
-                        this.framebuffer.pixels[index + 2] = this.p5Instance.blue(color);
-                        this.framebuffer.pixels[index + 3] = this.p5Instance.alpha(color);
-                    }
-                }
+                const color = lx < this.colors.length
+                    ? this.p5Instance.color(this.colors[lx])
+                    : this.p5Instance.color(0, 0, 0, 0);
+                const index = 4 * lx;
+                this.framebuffer.pixels[index] = this.p5Instance.red(color);
+                this.framebuffer.pixels[index + 1] = this.p5Instance.green(color);
+                this.framebuffer.pixels[index + 2] = this.p5Instance.blue(color);
+                this.framebuffer.pixels[index + 3] = this.p5Instance.alpha(color);
             }
-
             this.framebuffer.updatePixels();
         }
 
