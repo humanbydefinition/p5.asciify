@@ -1,24 +1,26 @@
 import P5AsciifyError from "../errors.js";
 import URSAFONT_BASE64 from '../assets/fonts/ursafont_base64.txt';
+import p5 from 'p5';
+import { Asciifier } from '../Asciifier';
 
-export function registerFontMethods(p5asciify) {
+export function registerFontMethods(p5asciify: Asciifier): void {
 
-    p5.prototype.preloadAsciiFont = function () {
+    p5.prototype.preloadAsciiFont = function (this: p5): void {
         this._incrementPreload();
         p5asciify.font = this.loadFont(
             URSAFONT_BASE64,
-            (loadedFont) => {
+            (loadedFont: p5.Font) => {
                 p5asciify.font = loadedFont;
                 p5asciify.rendererManager.fontBase64 = `${URSAFONT_BASE64}`;
                 p5asciify.rendererManager.fontFileType = 'truetype';
             },
-            () => { throw new P5AsciifyError(`loadAsciiFont() | Failed to load font from path: '${font}'`); }
+            () => { throw new P5AsciifyError(`loadAsciiFont() | Failed to load font from path: '${URSAFONT_BASE64}'`); }
         );
     }
 
-    p5.prototype.loadAsciiFont = function (font) {
+    p5.prototype.loadAsciiFont = function (this: p5, font: string): Promise<void> {
         return new Promise((resolve, reject) => {
-            const setFont = async (loadedFont, fontPath) => {
+            const setFont = async (loadedFont: p5.Font, fontPath: string) => {
                 p5asciify.font = loadedFont;
 
                 try {
@@ -29,7 +31,7 @@ export function registerFontMethods(p5asciify) {
                             .reduce((data, byte) => data + String.fromCharCode(byte), '')
                     );
 
-                    let mimeType = '';
+                    let mimeType: string = '';
                     if (fontPath.toLowerCase().endsWith('.ttf')) {
                         mimeType = 'truetype';
                     } else if (fontPath.toLowerCase().endsWith('.otf')) {
@@ -44,7 +46,6 @@ export function registerFontMethods(p5asciify) {
                     console.error('Error converting font to Base64:', error);
                 }
 
-                // If the sketch is running, update font related components
                 if (this._setupDone) {
                     try {
                         p5asciify.asciiFontTextureAtlas.setFontObject(loadedFont);
@@ -75,7 +76,7 @@ export function registerFontMethods(p5asciify) {
             if (typeof font === 'string') {
                 this.loadFont(
                     font,
-                    (loadedFont) => { setFont(loadedFont, font); },
+                    (loadedFont: p5.Font) => { setFont(loadedFont, font); },
                     () => { reject(new P5AsciifyError(`loadAsciiFont() | Failed to load font from path: '${font}'`)); }
                 );
             } else {
