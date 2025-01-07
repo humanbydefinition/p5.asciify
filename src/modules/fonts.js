@@ -4,8 +4,8 @@ import URSAFONT_BASE64 from '../assets/fonts/ursafont_base64.txt';
 export function registerFontMethods(p5asciify) {
 
     p5.prototype.preloadAsciiFont = function () {
-        p5asciify.p5Instance._incrementPreload();
-        p5asciify.font = p5asciify.p5Instance.loadFont(
+        this._incrementPreload();
+        p5asciify.font = this.loadFont(
             URSAFONT_BASE64,
             (loadedFont) => {
                 p5asciify.font = loadedFont;
@@ -45,7 +45,7 @@ export function registerFontMethods(p5asciify) {
                 }
 
                 // If the sketch is running, update font related components
-                if (p5asciify.p5Instance.frameCount > 0) {
+                if (this._setupDone) {
                     try {
                         p5asciify.asciiFontTextureAtlas.setFontObject(loadedFont);
 
@@ -58,13 +58,13 @@ export function registerFontMethods(p5asciify) {
                             p5asciify.asciiFontTextureAtlas.maxGlyphDimensions.height
                         );
 
-                        p5asciify.textAsciiRenderer.updateFont(p5asciify.rendererManager.fontBase64, p5asciify.rendererManager.fontFileType);
+                        p5asciify.rendererManager.textAsciiRenderer.updateFont(p5asciify.rendererManager.fontBase64, p5asciify.rendererManager.fontFileType);
                     } catch (e) {
                         return reject(e);
                     }
                 }
 
-                p5asciify.p5Instance._decrementPreload();
+                this._decrementPreload();
                 p5asciify.emit('fontUpdated', {
                     base64: p5asciify.rendererManager.fontBase64,
                     fileType: p5asciify.rendererManager.fontFileType
@@ -73,7 +73,7 @@ export function registerFontMethods(p5asciify) {
             };
 
             if (typeof font === 'string') {
-                p5asciify.p5Instance.loadFont(
+                this.loadFont(
                     font,
                     (loadedFont) => { setFont(loadedFont, font); },
                     () => { reject(new P5AsciifyError(`loadAsciiFont() | Failed to load font from path: '${font}'`)); }

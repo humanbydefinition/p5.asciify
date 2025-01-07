@@ -2393,24 +2393,24 @@ void main() {
          * @param p - The p5 instance
          */
         Asciifier.prototype.instance = function (p) {
-            this.p5Instance = p;
-            this.p5Instance.preload = function () { }; // Define a default preload function
+            this.p = p;
+            this.p.preload = function () { }; // Define a default preload function
         };
         /**
          * Sets up the P5Asciify library with the specified options
          */
         Asciifier.prototype.setup = function () {
             this.asciiFontTextureAtlas = new P5AsciifyFontTextureAtlas({
-                p5Instance: this.p5Instance,
+                p5Instance: this.p,
                 font: this.font,
                 fontSize: this.fontSize
             });
-            this.grid = new P5AsciifyGrid(this.p5Instance, this.asciiFontTextureAtlas.maxGlyphDimensions.width, this.asciiFontTextureAtlas.maxGlyphDimensions.height);
-            this.rendererManager.setup(this.p5Instance, this.grid, this.asciiFontTextureAtlas);
+            this.grid = new P5AsciifyGrid(this.p, this.asciiFontTextureAtlas.maxGlyphDimensions.width, this.asciiFontTextureAtlas.maxGlyphDimensions.height);
+            this.rendererManager.setup(this.p, this.grid, this.asciiFontTextureAtlas);
             this.events = new P5AsciifyEventEmitter();
-            this.sketchFramebuffer = this.p5Instance.createFramebuffer({
-                depthFormat: this.p5Instance.UNSIGNED_INT,
-                textureFiltering: this.p5Instance.NEAREST
+            this.sketchFramebuffer = this.p.createFramebuffer({
+                depthFormat: this.p.UNSIGNED_INT,
+                textureFiltering: this.p.NEAREST
             });
             if (this.postSetupFunction) {
                 this.postSetupFunction();
@@ -2503,14 +2503,14 @@ void main() {
     function registerSetupMethods(p5asciify) {
         
         p5.prototype.setupP5Instance = function () {
-            if (!p5asciify.p5Instance) {
-                p5asciify.p5Instance = this;
+            if (!p5asciify.p) {
+                p5asciify.p = this;
             }
-            p5asciify.rendererManager.gradientManager.addInstance(p5asciify.p5Instance);
+            p5asciify.rendererManager.gradientManager.addInstance(this);
         };
 
         p5.prototype.setupAsciifier = function () {
-            validateSetup(p5asciify.p5Instance);
+            validateSetup(this);
             p5asciify.setup();
         };
 
@@ -2523,8 +2523,8 @@ void main() {
     function registerFontMethods(p5asciify) {
 
         p5.prototype.preloadAsciiFont = function () {
-            p5asciify.p5Instance._incrementPreload();
-            p5asciify.font = p5asciify.p5Instance.loadFont(
+            this._incrementPreload();
+            p5asciify.font = this.loadFont(
                 URSAFONT_BASE64,
                 (loadedFont) => {
                     p5asciify.font = loadedFont;
@@ -2564,7 +2564,7 @@ void main() {
                     }
 
                     // If the sketch is running, update font related components
-                    if (p5asciify.p5Instance.frameCount > 0) {
+                    if (this._setupDone) {
                         try {
                             p5asciify.asciiFontTextureAtlas.setFontObject(loadedFont);
 
@@ -2577,13 +2577,13 @@ void main() {
                                 p5asciify.asciiFontTextureAtlas.maxGlyphDimensions.height
                             );
 
-                            p5asciify.textAsciiRenderer.updateFont(p5asciify.rendererManager.fontBase64, p5asciify.rendererManager.fontFileType);
+                            p5asciify.rendererManager.textAsciiRenderer.updateFont(p5asciify.rendererManager.fontBase64, p5asciify.rendererManager.fontFileType);
                         } catch (e) {
                             return reject(e);
                         }
                     }
 
-                    p5asciify.p5Instance._decrementPreload();
+                    this._decrementPreload();
                     p5asciify.emit('fontUpdated', {
                         base64: p5asciify.rendererManager.fontBase64,
                         fileType: p5asciify.rendererManager.fontFileType
@@ -2592,7 +2592,7 @@ void main() {
                 };
 
                 if (typeof font === 'string') {
-                    p5asciify.p5Instance.loadFont(
+                    this.loadFont(
                         font,
                         (loadedFont) => { setFont(loadedFont, font); },
                         () => { reject(new P5AsciifyError(`loadAsciiFont() | Failed to load font from path: '${font}'`)); }
@@ -2712,13 +2712,13 @@ void main() {
     function registerRenderingMethods(p5asciify) {
         p5.prototype.preDrawAddPush = function () {
             p5asciify.sketchFramebuffer.begin();
-            p5asciify.p5Instance.clear();
-            p5asciify.p5Instance.push();
+            this.clear();
+            this.push();
         };
         p5.prototype.registerMethod("pre", p5.prototype.preDrawAddPush);
 
         p5.prototype.postDrawAddPop = function () {
-            p5asciify.p5Instance.pop();
+            this.pop();
             p5asciify.sketchFramebuffer.end();
         };
         p5.prototype.registerMethod("post", p5.prototype.postDrawAddPop);

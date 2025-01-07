@@ -1,13 +1,13 @@
 export function registerRenderingMethods(p5asciify) {
     p5.prototype.preDrawAddPush = function () {
         p5asciify.sketchFramebuffer.begin();
-        p5asciify.p5Instance.clear();
-        p5asciify.p5Instance.push();
+        this.clear();
+        this.push();
     };
     p5.prototype.registerMethod("pre", p5.prototype.preDrawAddPush);
 
     p5.prototype.postDrawAddPop = function () {
-        p5asciify.p5Instance.pop();
+        this.pop();
         p5asciify.sketchFramebuffer.end();
     };
     p5.prototype.registerMethod("post", p5.prototype.postDrawAddPop);

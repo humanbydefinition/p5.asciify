@@ -11,7 +11,7 @@ export class Asciifier {
     private font: p5.Font | null;
     private postSetupFunction: (() => void) | null;
     private postDrawFunction: (() => void) | null;
-    private p5Instance: p5;
+    private p: p5;
     private asciiFontTextureAtlas: P5AsciifyFontTextureAtlas;
     private grid: P5AsciifyGrid;
     private events: P5AsciifyEventEmitter;
@@ -31,8 +31,8 @@ export class Asciifier {
      * @param p - The p5 instance
      */
     public instance(p: p5): void {
-        this.p5Instance = p;
-        this.p5Instance.preload = () => {}; // Define a default preload function
+        this.p = p;
+        this.p.preload = () => {}; // Define a default preload function
     }
 
     /**
@@ -41,23 +41,23 @@ export class Asciifier {
     public setup(): void {
 
         this.asciiFontTextureAtlas = new P5AsciifyFontTextureAtlas({
-            p5Instance: this.p5Instance,
+            p5Instance: this.p,
             font: this.font,
             fontSize: this.fontSize
         });
 
         this.grid = new P5AsciifyGrid(
-            this.p5Instance,
+            this.p,
             this.asciiFontTextureAtlas.maxGlyphDimensions.width,
             this.asciiFontTextureAtlas.maxGlyphDimensions.height
         );
 
-        this.rendererManager.setup(this.p5Instance, this.grid, this.asciiFontTextureAtlas);
+        this.rendererManager.setup(this.p, this.grid, this.asciiFontTextureAtlas);
         this.events = new P5AsciifyEventEmitter();
 
-        this.sketchFramebuffer = this.p5Instance.createFramebuffer({
-            depthFormat: this.p5Instance.UNSIGNED_INT,
-            textureFiltering: this.p5Instance.NEAREST
+        this.sketchFramebuffer = this.p.createFramebuffer({
+            depthFormat: this.p.UNSIGNED_INT,
+            textureFiltering: this.p.NEAREST
         });
 
         if (this.postSetupFunction) {

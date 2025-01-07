@@ -3,14 +3,14 @@ import { validateSetup } from '../validators/SetupValidator.js';
 export function registerSetupMethods(p5asciify) {
     
     p5.prototype.setupP5Instance = function () {
-        if (!p5asciify.p5Instance) {
-            p5asciify.p5Instance = this;
+        if (!p5asciify.p) {
+            p5asciify.p = this;
         }
-        p5asciify.rendererManager.gradientManager.addInstance(p5asciify.p5Instance);
+        p5asciify.rendererManager.gradientManager.addInstance(this);
     };
 
     p5.prototype.setupAsciifier = function () {
-        validateSetup(p5asciify.p5Instance);
+        validateSetup(this);
         p5asciify.setup();
     };
 
