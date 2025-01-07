@@ -170,27 +170,31 @@
      * Represents a 2D grid, handling the dimensions and resizing of the grid.
      */
     class P5AsciifyGrid {
-
-        constructor(p5Instance, cellWidth, cellHeight) {
-            this.p5Instance = p5Instance;
+        p;
+        cellWidth;
+        cellHeight;
+        cols = 0;
+        rows = 0;
+        width = 0;
+        height = 0;
+        offsetX = 0;
+        offsetY = 0;
+        constructor(p, cellWidth, cellHeight) {
+            this.p = p;
             this.cellWidth = cellWidth;
             this.cellHeight = cellHeight;
-
             this.reset();
         }
-
         /**
          * Resets the grid dimensions based on the current cell width and height.
          * Calculates the number of columns and rows and resizes the grid accordingly.
          */
         reset() {
-            let [cols, rows] = this._calculateGridCellDimensions();
+            const [cols, rows] = this._calculateGridCellDimensions();
             this.cols = cols;
             this.rows = rows;
-
             this._resizeGrid();
         }
-
         /**
          * Resizes the grid dimensions based on the current number of columns and rows, as well as the cell width and height.
          * Adjusts the grid's offset to center it within the given canvas dimensions.
@@ -198,37 +202,34 @@
         _resizeGrid() {
             this.width = this.cols * this.cellWidth;
             this.height = this.rows * this.cellHeight;
-
-            this.offsetX = Math.floor((this.p5Instance.width - this.width) / 2);
-            this.offsetY = Math.floor((this.p5Instance.height - this.height) / 2);
+            this.offsetX = Math.floor((this.p.width - this.width) / 2);
+            this.offsetY = Math.floor((this.p.height - this.height) / 2);
         }
-
         /**
          * Calculates the number of columns and rows for the grid based on the current cell and sketch dimensions.
-         * @returns {number[]} An array containing the number of columns and rows for the grid.
+         * @returns An array containing the number of columns and rows for the grid.
          */
         _calculateGridCellDimensions() {
-            return [Math.floor(this.p5Instance.width / this.cellWidth), Math.floor(this.p5Instance.height / this.cellHeight)];
+            const cols = Math.floor(this.p.width / this.cellWidth);
+            const rows = Math.floor(this.p.height / this.cellHeight);
+            return [cols, rows];
         }
-
         /**
          * Resizes the dimensions of a grid cell in pixels.
          * Recalculates the number of columns and rows and resizes the grid accordingly.
-         * @param {number} newCellWidth - The new width of each cell in the grid.
-         * @param {number} newCellHeight - The new height of each cell in the grid.
+         * @param newCellWidth - The new width of each cell in the grid.
+         * @param newCellHeight - The new height of each cell in the grid.
          */
         resizeCellPixelDimensions(newCellWidth, newCellHeight) {
             this.cellWidth = newCellWidth;
             this.cellHeight = newCellHeight;
-
             this.reset();
         }
-
         /**
          * Resizes the dimensions of the grid based on the number of given columns and rows.
          * If the new dimensions exceed the maximum dimensions of the grid, the grid is reset to its default dimensions.
-         * @param {number} numCols - The new number of columns for the grid.
-         * @param {number} numRows - The new number of rows for the grid
+         * @param numCols - The new number of columns for the grid.
+         * @param numRows - The new number of rows for the grid.
          */
         resizeCellDimensions(numCols, numRows) {
             const [maxCols, maxRows] = this._calculateGridCellDimensions();
@@ -237,36 +238,35 @@
                 this.reset();
                 return;
             }
-
             this.cols = numCols;
             this.rows = numRows;
-
             // Resize the grid based on new dimensions
             this._resizeGrid();
         }
     }
 
     class P5AsciifyEventEmitter {
+        eventListeners;
         constructor() {
             this.eventListeners = new Map();
         }
-
         emit(eventName, data) {
             const listeners = this.eventListeners.get(eventName) || [];
             listeners.forEach(callback => callback(data));
         }
-
         on(eventName, callback) {
             if (!this.eventListeners.has(eventName)) {
                 this.eventListeners.set(eventName, []);
             }
-            this.eventListeners.get(eventName).push(callback);
+            this.eventListeners.get(eventName)?.push(callback);
         }
-
         off(eventName, callback) {
-            if (!this.eventListeners.has(eventName)) return;
+            if (!this.eventListeners.has(eventName))
+                return;
             const listeners = this.eventListeners.get(eventName);
-            this.eventListeners.set(eventName, listeners.filter(cb => cb !== callback));
+            if (listeners) {
+                this.eventListeners.set(eventName, listeners.filter(cb => cb !== callback));
+            }
         }
     }
 
@@ -279,23 +279,20 @@
      * Validates the options for p5.asciify.
      *
      * @param {p5} p - The p5.js instance.
-     * @param {Object} options - The options to validate.
+     * @param {AsciifyOptions} options - The options to validate.
      * @throws {P5AsciifyError} If any validation fails.
      */
     function validateOptions(p, options) {
         if (options?.characterColor) {
             options.characterColor = p.color(options.characterColor);
         }
-
         if (options?.backgroundColor) {
             options.backgroundColor = p.color(options.backgroundColor);
         }
-
         // Validate fontSize
         if (options?.fontSize && (options.fontSize < FONT_SIZE_LIMITS.MIN || options.fontSize > FONT_SIZE_LIMITS.MAX)) {
             throw new P5AsciifyError(`Font size ${options.fontSize} is out of bounds. It should be between ${FONT_SIZE_LIMITS.MIN} and ${FONT_SIZE_LIMITS.MAX}.`);
         }
-
         // Validate edge.characters length (NEEDS TO BE FIXED)
         /**
         if (options?.characters && options.characters.length !== EDGE_CHARACTER_LENGTH) {
@@ -1592,26 +1589,15 @@ void main() {
         invertMode: false,
     };
 
-    // colorpalette.js
-
-    /**
-     * @class P5AsciifyColorPalette
-     * @description Represents a single color palette with its own framebuffer
-     */
     class P5AsciifyColorPalette {
-        /**
-         * @param {Array} colors - An array of color values.
-         */
+        colors;
+        framebuffer;
+        p5Instance;
         constructor(colors) {
             this.colors = colors;
             this.framebuffer = null;
             this.p5Instance = null;
         }
-
-        /**
-         * Initializes the palette's framebuffer using the provided p5 instance.
-         * @param {Object} p5Instance - The p5.js instance.
-         */
         setup(p5Instance) {
             this.p5Instance = p5Instance;
             // Ensure minimum width of 1 to prevent zero-sized framebuffer
@@ -1625,19 +1611,13 @@ void main() {
             });
             this.updateFramebuffer();
         }
-
-        /**
-         * Updates the framebuffer with the current colors.
-         */
         updateFramebuffer() {
-            if (!this.framebuffer || !this.p5Instance) return;
-
+            if (!this.framebuffer || !this.p5Instance)
+                return;
             const sw = Math.max(this.colors.length, 1);
             const sh = 1;
-
             this.framebuffer.resize(sw, sh);
             this.framebuffer.loadPixels();
-
             for (let lx = 0; lx < sw; lx++) {
                 const color = lx < this.colors.length
                     ? this.p5Instance.color(this.colors[lx])
@@ -1650,28 +1630,13 @@ void main() {
             }
             this.framebuffer.updatePixels();
         }
-
-        /**
-         * Updates the palette's colors and refreshes the framebuffer.
-         * @param {Array} newColors - The new array of colors.
-         */
         setColors(newColors) {
             this.colors = newColors;
             this.updateFramebuffer();
         }
-
-        /**
-         * Retrieves the palette's framebuffer.
-         * @returns {Object} The framebuffer associated with this palette.
-         */
         getFramebuffer() {
             return this.framebuffer;
         }
-
-        /**
-         * Retrieves the palette's colors.
-         * @returns {Array} The array of color values.
-         */
         getColors() {
             return this.colors;
         }
@@ -1684,35 +1649,35 @@ void main() {
      * It is responsible for maintaining a texture that contains all the characters in the character set.
      */
     class P5AsciifyCharacterSet {
-
+        p5Instance;
+        asciiFontTextureAtlas;
+        characters;
+        characterColors;
+        characterColorPalette;
         constructor({ p5Instance, asciiFontTextureAtlas, characters }) {
             this.p5Instance = p5Instance;
             this.asciiFontTextureAtlas = asciiFontTextureAtlas;
-
             this.characters = this.validateCharacters(characters);
             this.characterColors = this.asciiFontTextureAtlas.getCharsetColorArray(this.characters);
-
             this.characterColorPalette = new P5AsciifyColorPalette(this.characterColors);
             this.characterColorPalette.setup(this.p5Instance);
         }
-
         /**
          * Validates a string of characters to ensure they are supported by the current font.
-         * @param {string} characters 
-         * @param {string} defaultCharacters 
-         * @returns {string[]} The validated characters. If any characters are unsupported, the default characters are returned.
+         * @param characters - The string of characters to validate.
+         * @returns The validated characters as an array of strings.
+         * @throws P5AsciifyError if unsupported characters are found.
          */
         validateCharacters(characters) {
-            let unsupportedChars = this.asciiFontTextureAtlas.getUnsupportedCharacters(characters);
+            const unsupportedChars = this.asciiFontTextureAtlas.getUnsupportedCharacters(characters);
             if (unsupportedChars.length > 0) {
                 throw new P5AsciifyError(`The following characters are not supported by the current font: [${unsupportedChars.join(', ')}].`);
             }
             return Array.from(characters);
         }
-
         /**
-         * Sets the characters to be used in the character set and creates a new texture.
-         * @param {string} characters - The string of characters to set.
+         * Sets the characters to be used in the character set and updates the texture.
+         * @param characters - The string of characters to set.
          */
         setCharacterSet(characters) {
             this.characters = this.validateCharacters(characters);
@@ -2381,6 +2346,7 @@ void main() {
             this.borderColor = "#000000";
             this.fontSize = 16;
             this.rendererManager = new RendererManager();
+            this.events = new P5AsciifyEventEmitter();
             this.font = null;
             this.postSetupFunction = null;
             this.postDrawFunction = null;
@@ -2408,7 +2374,6 @@ void main() {
             });
             this.grid = new P5AsciifyGrid(this.p, this.asciiFontTextureAtlas.maxGlyphDimensions.width, this.asciiFontTextureAtlas.maxGlyphDimensions.height);
             this.rendererManager.setup(this.p, this.grid, this.asciiFontTextureAtlas);
-            this.events = new P5AsciifyEventEmitter();
             this.sketchFramebuffer = this.p.createFramebuffer({
                 depthFormat: this.p.UNSIGNED_INT,
                 textureFiltering: this.p.NEAREST
@@ -2453,47 +2418,32 @@ void main() {
     }
 
     /**
-     * Utility class containing static helper methods for version comparison and other common tasks.
-     */
-    class P5AsciifyUtils {
-
-        /**
-         * @param {string} v1 - First version string (e.g., "1.2.3")
-         * @param {string} v2 - Second version string (e.g., "1.2.4")
-         * @returns {number} 1 if v1 > v2, -1 if v1 < v2, 0 if equal
-         * @example
-         * P5AsciifyUtils.compareVersions("1.2.3", "1.2.4") // Returns -1
-         * P5AsciifyUtils.compareVersions("2.0.0", "1.9.9") // Returns 1
-         */
-        static compareVersions(v1, v2) {
-            const [v1Parts, v2Parts] = [v1, v2].map(v => v.split('.').map(Number));
-
-            for (let i = 0; i < Math.max(v1Parts.length, v2Parts.length); i++) {
-                const [v1Part, v2Part] = [v1Parts[i] ?? 0, v2Parts[i] ?? 0];
-                if (v1Part !== v2Part) return v1Part > v2Part ? 1 : -1;
-            }
-
-            return 0;
-        }
-    }
-
-    /**
      * Validates the p5 instance for p5.asciify setup.
      *
-     * @param {Object} p5Instance - The p5.js instance.
+     * @param {Object} p - The p5.js instance.
      * @throws {P5AsciifyError} If any validation fails.
      */
-    function validateSetup(p5Instance) {
+    function validateSetup(p) {
         // Check if setup has already been done
-        if (p5Instance._setupDone) {
+        if (p._setupDone) {
             return;
         }
         // Ensure WebGL renderer is used
-        if (p5Instance._renderer.drawingContext instanceof CanvasRenderingContext2D) {
+        if (p._renderer.drawingContext instanceof CanvasRenderingContext2D) {
             throw new P5AsciifyError("WebGL renderer is required for p5.asciify to work.");
         }
         // Check p5.js version
-        if (P5AsciifyUtils.compareVersions(p5Instance.VERSION, "1.8.0") < 0) {
+        function compareVersions(v1, v2) {
+            const [v1Parts, v2Parts] = [v1, v2].map(v => v.split('.').map(Number));
+            for (let i = 0; i < Math.max(v1Parts.length, v2Parts.length); i++) {
+                const v1Part = v1Parts[i] ?? 0;
+                const v2Part = v2Parts[i] ?? 0;
+                if (v1Part !== v2Part)
+                    return v1Part > v2Part ? 1 : -1;
+            }
+            return 0;
+        }
+        if (compareVersions(p.VERSION, "1.8.0") < 0) {
             throw new P5AsciifyError("p5.asciify requires p5.js v1.8.0 or higher to work.");
         }
     }

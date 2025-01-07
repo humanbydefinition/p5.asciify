@@ -1,4 +1,4 @@
-import P5AsciifyColorPalette from "../colorpalette.js";
+import { P5AsciifyColorPalette } from "../ColorPalette";
 
 class P5AsciifyGradient {
     constructor(type, shader, brightnessStart, brightnessEnd, characters) {

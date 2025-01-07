@@ -1,24 +1,17 @@
-// colorpalette.js
+import p5 from 'p5';
 
-/**
- * @class P5AsciifyColorPalette
- * @description Represents a single color palette with its own framebuffer
- */
-class P5AsciifyColorPalette {
-    /**
-     * @param {Array} colors - An array of color values.
-     */
-    constructor(colors) {
+export class P5AsciifyColorPalette {
+    colors: [number, number, number][];
+    framebuffer: p5.Graphics | null;
+    p5Instance: p5 | null;
+
+    constructor(colors: [number, number, number][]) {
         this.colors = colors;
         this.framebuffer = null;
         this.p5Instance = null;
     }
 
-    /**
-     * Initializes the palette's framebuffer using the provided p5 instance.
-     * @param {Object} p5Instance - The p5.js instance.
-     */
-    setup(p5Instance) {
+    setup(p5Instance: p5): void {
         this.p5Instance = p5Instance;
         // Ensure minimum width of 1 to prevent zero-sized framebuffer
         const width = Math.max(this.colors.length, 1);
@@ -32,10 +25,7 @@ class P5AsciifyColorPalette {
         this.updateFramebuffer();
     }
 
-    /**
-     * Updates the framebuffer with the current colors.
-     */
-    updateFramebuffer() {
+    updateFramebuffer(): void {
         if (!this.framebuffer || !this.p5Instance) return;
 
         const sw = Math.max(this.colors.length, 1);
@@ -57,30 +47,16 @@ class P5AsciifyColorPalette {
         this.framebuffer.updatePixels();
     }
 
-    /**
-     * Updates the palette's colors and refreshes the framebuffer.
-     * @param {Array} newColors - The new array of colors.
-     */
-    setColors(newColors) {
+    setColors(newColors: [number, number, number][]): void {
         this.colors = newColors;
         this.updateFramebuffer();
     }
 
-    /**
-     * Retrieves the palette's framebuffer.
-     * @returns {Object} The framebuffer associated with this palette.
-     */
-    getFramebuffer() {
+    getFramebuffer(): p5.Graphics | null {
         return this.framebuffer;
     }
 
-    /**
-     * Retrieves the palette's colors.
-     * @returns {Array} The array of color values.
-     */
-    getColors() {
+    getColors(): [number, number, number][] {
         return this.colors;
     }
 }
-
-export default P5AsciifyColorPalette;

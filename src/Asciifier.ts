@@ -1,6 +1,6 @@
 import P5AsciifyFontTextureAtlas from './fontTextureAtlas';
-import P5AsciifyGrid from './grid';
-import P5AsciifyEventEmitter from './eventemitter';
+import { P5AsciifyGrid } from './Grid';
+import { P5AsciifyEventEmitter } from './EventEmitter';
 import { RendererManager } from './managers/RendererManager';
 import p5 from 'p5';
 
@@ -21,6 +21,7 @@ export class Asciifier {
         this.borderColor = "#000000";
         this.fontSize = 16;
         this.rendererManager = new RendererManager();
+        this.events = new P5AsciifyEventEmitter();
         this.font = null;
         this.postSetupFunction = null;
         this.postDrawFunction = null;
@@ -32,7 +33,7 @@ export class Asciifier {
      */
     public instance(p: p5): void {
         this.p = p;
-        this.p.preload = () => {}; // Define a default preload function
+        this.p.preload = () => { }; // Define a default preload function
     }
 
     public addP5Instance(p: p5): void {
@@ -44,7 +45,6 @@ export class Asciifier {
      * Sets up the P5Asciify library with the specified options
      */
     public setup(): void {
-
         this.asciiFontTextureAtlas = new P5AsciifyFontTextureAtlas({
             p5Instance: this.p,
             font: this.font,
@@ -58,7 +58,6 @@ export class Asciifier {
         );
 
         this.rendererManager.setup(this.p, this.grid, this.asciiFontTextureAtlas);
-        this.events = new P5AsciifyEventEmitter();
 
         this.sketchFramebuffer = this.p.createFramebuffer({
             depthFormat: this.p.UNSIGNED_INT,

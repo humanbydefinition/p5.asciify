@@ -1,5 +1,16 @@
 import { P5AsciifyError } from './AsciifyError';
-import P5AsciifyColorPalette from './colorpalette.js';
+import { P5AsciifyColorPalette } from './ColorPalette';
+import p5 from 'p5';
+import { P5AsciifyTextureAtlas } from './fontTextureAtlas';
+
+/**
+ * Interface for constructor parameters
+ */
+interface P5AsciifyCharacterSetOptions {
+    p5Instance: p5;
+    asciiFontTextureAtlas: P5AsciifyTextureAtlas; 
+    characters: string;
+}
 
 /**
  * @class P5AsciifyCharacterSet
@@ -8,8 +19,13 @@ import P5AsciifyColorPalette from './colorpalette.js';
  * It is responsible for maintaining a texture that contains all the characters in the character set.
  */
 class P5AsciifyCharacterSet {
+    private p5Instance: p5; 
+    private asciiFontTextureAtlas: P5AsciifyTextureAtlas;
+    private characters: string[];
+    private characterColors: [number, number, number][];
+    private characterColorPalette: P5AsciifyColorPalette;
 
-    constructor({ p5Instance, asciiFontTextureAtlas, characters }) {
+    constructor({ p5Instance, asciiFontTextureAtlas, characters }: P5AsciifyCharacterSetOptions) {
         this.p5Instance = p5Instance;
         this.asciiFontTextureAtlas = asciiFontTextureAtlas;
 
@@ -22,12 +38,12 @@ class P5AsciifyCharacterSet {
 
     /**
      * Validates a string of characters to ensure they are supported by the current font.
-     * @param {string} characters 
-     * @param {string} defaultCharacters 
-     * @returns {string[]} The validated characters. If any characters are unsupported, the default characters are returned.
+     * @param characters - The string of characters to validate.
+     * @returns The validated characters as an array of strings.
+     * @throws P5AsciifyError if unsupported characters are found.
      */
-    validateCharacters(characters) {
-        let unsupportedChars = this.asciiFontTextureAtlas.getUnsupportedCharacters(characters);
+    private validateCharacters(characters: string): string[] {
+        const unsupportedChars: string[] = this.asciiFontTextureAtlas.getUnsupportedCharacters(characters);
         if (unsupportedChars.length > 0) {
             throw new P5AsciifyError(`The following characters are not supported by the current font: [${unsupportedChars.join(', ')}].`);
         }
@@ -35,10 +51,10 @@ class P5AsciifyCharacterSet {
     }
 
     /**
-     * Sets the characters to be used in the character set and creates a new texture.
-     * @param {string} characters - The string of characters to set.
+     * Sets the characters to be used in the character set and updates the texture.
+     * @param characters - The string of characters to set.
      */
-    setCharacterSet(characters) {
+    public setCharacterSet(characters: string): void {
         this.characters = this.validateCharacters(characters);
         this.characterColors = this.asciiFontTextureAtlas.getCharsetColorArray(this.characters);
         this.characterColorPalette.setColors(this.characterColors);

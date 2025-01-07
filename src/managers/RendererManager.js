@@ -4,8 +4,6 @@ import CustomAsciiRenderer from '../renderers/customAsciiRenderer/CustomAsciiRen
 import EdgeAsciiRenderer from '../renderers/edgeAsciiRenderer/EdgeAsciiRenderer.js';
 import TextAsciiRenderer from '../renderers/textAsciiRenderer/TextAsciiRenderer.js';
 
-import P5AsciifyGrid from '../grid.js';
-
 import {
     BRIGHTNESS_OPTIONS,
     ACCURATE_OPTIONS,
@@ -15,7 +13,7 @@ import {
     TEXT_OPTIONS
 } from '../constants/defaults.js';
 
-import P5AsciifyCharacterSet from '../characterset.js';
+import P5AsciifyCharacterSet from '../CharacterSet';
 import P5AsciifyGradientManager from './gradientmanager.js';
 import GradientAsciiRenderer from '../renderers/gradientAsciiRenderer/GradientAsciiRenderer.js';
 
