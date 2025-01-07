@@ -31,6 +31,10 @@ export default class AsciiRenderer {
         this.asciiCharacterFramebuffer.resize(this.grid.cols, this.grid.rows);
     }
 
+    resetShaders() {
+        
+    }
+
     updateOptions(newOptions) {
 
         validateOptions(this.p, newOptions);
@@ -39,6 +43,40 @@ export default class AsciiRenderer {
             ...this.options,
             ...newOptions
         };
+
+        // If we are still in the users setup(), the characterset and grid have not been initialized yet.
+        if (!this.p._setupDone) {
+            return;
+        }
+
+        if (newOptions?.characters) {
+            this.characterSet.setCharacterSet(newOptions.characters);
+            this.resetShaders();
+        }
+
+        /**
+
+        if (newOptions?.hasOwnProperty('characterColorMode')) {
+            this.textAsciiRenderer.updateCharacterColorMode();
+        }
+
+        if (newOptions?.hasOwnProperty('characterColor')) {
+            this.textAsciiRenderer.updateCharacterColor();
+        }
+
+        if (newOptions?.hasOwnProperty('backgroundColor')) {
+            this.textAsciiRenderer.updateBackgroundColor();
+        }
+
+        if (newOptions?.hasOwnProperty('invertMode')) {
+            this.textAsciiRenderer.updateInvertMode();
+        }
+
+        if (newOptions?.hasOwnProperty('enabled')) {
+            this.textAsciiRenderer.toggleVisibility();
+        }
+
+        **/
     }
 
     /**

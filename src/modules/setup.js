@@ -6,7 +6,7 @@ export function registerSetupMethods(p5asciify) {
         if (!p5asciify.p5Instance) {
             p5asciify.p5Instance = this;
         }
-        p5asciify.gradientManager.addInstance(p5asciify.p5Instance);
+        p5asciify.rendererManager.gradientManager.addInstance(p5asciify.p5Instance);
     };
 
     p5.prototype.setupAsciifier = function () {

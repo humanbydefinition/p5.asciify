@@ -1,5 +1,4 @@
 import P5AsciifyError from "../errors.js";
-import P5AsciifyUtils from "../utils.js";
 import URSAFONT_BASE64 from '../assets/fonts/ursafont_base64.txt';
 
 export function registerFontMethods(p5asciify) {
@@ -10,8 +9,8 @@ export function registerFontMethods(p5asciify) {
             URSAFONT_BASE64,
             (loadedFont) => {
                 p5asciify.font = loadedFont;
-                p5asciify.fontBase64 = `${URSAFONT_BASE64}`;
-                p5asciify.fontFileType = 'truetype';
+                p5asciify.rendererManager.fontBase64 = `${URSAFONT_BASE64}`;
+                p5asciify.rendererManager.fontFileType = 'truetype';
             },
             () => { throw new P5AsciifyError(`loadAsciiFont() | Failed to load font from path: '${font}'`); }
         );
@@ -39,8 +38,8 @@ export function registerFontMethods(p5asciify) {
                         mimeType = 'truetype';
                     }
 
-                    p5asciify.fontBase64 = `data:font/${mimeType};charset=utf-8;base64,${base64String}`;
-                    p5asciify.fontFileType = mimeType;
+                    p5asciify.rendererManager.fontBase64 = `data:font/${mimeType};charset=utf-8;base64,${base64String}`;
+                    p5asciify.rendererManager.fontFileType = mimeType;
                 } catch (error) {
                     console.error('Error converting font to Base64:', error);
                 }
@@ -49,24 +48,17 @@ export function registerFontMethods(p5asciify) {
                 if (p5asciify.p5Instance.frameCount > 0) {
                     try {
                         p5asciify.asciiFontTextureAtlas.setFontObject(loadedFont);
-                        p5asciify.asciiCharacterSet.setCharacterSet(p5asciify.asciiCharacterSet.characters);
-                        p5asciify.edgeCharacterSet.setCharacterSet(p5asciify.edgeCharacterSet.characters);
 
-                        p5asciify.grid.resizeCellPixelDimensions(
+                        p5asciify.rendererManager.renderers.forEach(renderer => {
+                            renderer.characterSet.setCharacterSet(renderer.characterSet.characters);
+                        });
+
+                        p5asciify.rendererManager.grid.resizeCellPixelDimensions(
                             p5asciify.asciiFontTextureAtlas.maxGlyphDimensions.width,
                             p5asciify.asciiFontTextureAtlas.maxGlyphDimensions.height
                         );
 
-                        p5asciify.brightnessRenderer.resizeFramebuffers();
-                        p5asciify.edgeRenderer.resizeFramebuffers();
-                        p5asciify.customAsciiRenderer.resizeFramebuffers();
-                        p5asciify.accurateRenderer.resizeFramebuffers();
-                        p5asciify.gradientRenderer.resizeFramebuffers();
-
-                        p5asciify.edgeRenderer.resetShaders();
-                        p5asciify.accurateRenderer.resetShaders();
-
-                        p5asciify.textAsciiRenderer.updateFont(p5asciify.fontBase64, p5asciify.fontFileType);
+                        p5asciify.textAsciiRenderer.updateFont(p5asciify.rendererManager.fontBase64, p5asciify.rendererManager.fontFileType);
                     } catch (e) {
                         return reject(e);
                     }
@@ -74,8 +66,8 @@ export function registerFontMethods(p5asciify) {
 
                 p5asciify.p5Instance._decrementPreload();
                 p5asciify.emit('fontUpdated', {
-                    base64: p5asciify.fontBase64,
-                    fileType: p5asciify.fontFileType
+                    base64: p5asciify.rendererManager.fontBase64,
+                    fileType: p5asciify.rendererManager.fontFileType
                 });
                 resolve();
             };

@@ -28,6 +28,11 @@ function setup() {
 			enabled: true,
 		}
 	});
+
+	setAsciifyPostSetupFunction(() => {
+		p5asciify.rendererManager.textAsciiRenderer.options.enabled = true;
+		p5asciify.rendererManager.textAsciiRenderer.toggleVisibility();
+	});
 }
 
 function draw() {
