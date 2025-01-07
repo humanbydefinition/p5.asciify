@@ -11,16 +11,14 @@ function setup() {
     createCanvas(windowWidth, windowHeight, WEBGL);
     sketchFramebuffer = createFramebuffer({ format: FLOAT });
 
-    setAsciiOptions({ // These are the default options, you can change them as needed in preload(), setup() or draw()
-        ascii: {
-            renderMode: 'brightness',
+    setAsciifyFontSize(32);
+
+    setAsciifyPostSetupFunction(() => {
+        p5asciify.rendererManager.renderers[0].updateOptions({
             enabled: true,
             characters: characterSet,
             characterColorMode: 1,
-        },
-        common: {
-            fontSize: 32,
-        }
+        });
     });
 }
 

@@ -13,6 +13,9 @@ export default class EdgeAsciiRenderer extends AsciiRenderer {
     constructor(p5Instance, grid, characterSet, options) {
         super(p5Instance, grid, characterSet, options);
 
+        this.options.characterColor = this.p.color(this.options.characterColor);
+        this.options.backgroundColor = this.p.color(this.options.backgroundColor);
+
         this.sobelShader = this.p.createShader(vertexShader, sobelShader);
         this.sampleShader = this.p.createShader(vertexShader, generateSampleShader(16, this.grid.cellHeight, this.grid.cellWidth));
         this.colorSampleShader = this.p.createShader(vertexShader, colorSampleShader);

@@ -14,19 +14,18 @@ function setup() {
     createCanvas(windowWidth, windowHeight, WEBGL);
     sketchFramebuffer = createFramebuffer({ format: FLOAT });
 
-    setAsciiOptions({
-        common: {
-            // For accurate conversion, higher font sizes currently cause the renderer to be slower. I wouldn't recommend going above 16 if performance is a concern.
-            fontSize: 16,
-        },
-        ascii: {
+    setAsciifyPostSetupFunction(() => {
+        p5asciify.rendererManager.renderers[0].updateOptions({
+            enabled: false,
+        });
+
+        p5asciify.rendererManager.renderers[1].updateOptions({
             enabled: true,
-            // All characters available in the default font `UrsaFont` provided by the library
             characters: ` .‼╨\`',-_ú:░+;╘╙╤╥!"/=\^i~±âñ◘─├┬┴()*<>l|ÖÜèë←↑→↓♪?fr{}°²¶ÄÅÆÉíüƒΘΦφⁿ₧∙∞┌┘╒╓╪╫■□♀LT[]cjptvxzÑ∟7qyä│┤║╕╖╡╢╣Feo«»½απ↨≤≥╗☼1au•↔4CIYZks┼╔╚╞╟╩▄█▌▐$3gn£à▬◙%2EJSmw¡ª¼↕≈╜╝▲►◄♂59hå♠♦PVXbd¥6@GKç♣8ADOUÇáéó▀▒♫ê⌂#0HR§ºBQ═╠╦╬¢¬µ¿ï÷⌐&MNW♥ìîτ└▼ε∩╧▓☺☻ÿùûòöæô≡ßΓΣσ⌠⌡┐╛○·Ωδ√`,
             renderMode: renderMode,
             characterColorMode: 0,
             backgroundColorMode: 0,
-        },
+        });
     });
 }
 

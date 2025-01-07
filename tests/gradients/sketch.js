@@ -27,32 +27,6 @@ function setup() {
     createCanvas(windowWidth, windowHeight, WEBGL);
     framebuffer = createFramebuffer({ format: FLOAT });
 
-    /**
-    setAsciiOptions({
-        common: {
-            fontSize: 16,
-        },
-        ascii: {
-            renderMode: "brightness",
-            enabled: true,
-            characterColorMode: 0,
-            characters: ".",
-        },
-        edge: {
-            enabled: true,
-            characterColorMode: 1,
-            sobelThreshold: 0.1,
-            sampleThreshold: 16,
-        },
-        gradient: {
-            enabled: true,
-            characterColorMode: 1,
-            characterColor: "#ff0000",
-            invertMode: true,
-        },
-    });
-    **/
-
     linearGradient = addAsciiGradient("linear", 150, 150, "gradients ", {
         direction: 1,
         angle: 0,
@@ -81,7 +55,26 @@ function setup() {
     });
 
     setAsciifyPostSetupFunction(() => {
-        p5asciify.rendererManager.renderers[2].options.enabled = true;
+        p5asciify.rendererManager.renderers[2].updateOptions({
+            enabled: true,
+            characterColorMode: 1,
+            characterColor: "#ff0000",
+            invertMode: true,
+        });
+            
+
+        p5asciify.rendererManager.renderers[0].updateOptions({
+            enabled: true,
+            characterColorMode: 0,
+            characters: ".",
+        })
+
+        p5asciify.rendererManager.renderers[3].updateOptions({
+            enabled: true,
+            characterColorMode: 1,
+            sobelThreshold: 0.1,
+            sampleThreshold: 16,
+        });
     });
 }
 

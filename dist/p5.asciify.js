@@ -278,8 +278,6 @@
         MAX: 128,
     };
 
-    const EDGE_CHARACTER_LENGTH = 8;
-
     /**
      * Validates the options for p5.asciify.
      *
@@ -301,10 +299,12 @@
             throw new P5AsciifyError(`Font size ${options.fontSize} is out of bounds. It should be between ${FONT_SIZE_LIMITS.MIN} and ${FONT_SIZE_LIMITS.MAX}.`);
         }
 
-        // Validate edge.characters length
+        // Validate edge.characters length (NEEDS TO BE FIXED)
+        /**
         if (options?.characters && options.characters.length !== EDGE_CHARACTER_LENGTH) {
             throw new P5AsciifyError(`edge.characters must be exactly ${EDGE_CHARACTER_LENGTH} characters long.`);
         }
+        */
     }
 
     // renderers/AsciiRenderer.js
@@ -340,7 +340,7 @@
         }
 
         resetShaders() {
-            
+
         }
 
         updateOptions(newOptions) {
@@ -1070,6 +1070,9 @@ void main() {
 
         constructor(p5Instance, grid, characterSet, options) {
             super(p5Instance, grid, characterSet, options);
+
+            this.options.characterColor = this.p.color(this.options.characterColor);
+            this.options.backgroundColor = this.p.color(this.options.backgroundColor);
 
             this.sobelShader = this.p.createShader(vertexShader, sobelShader);
             this.sampleShader = this.p.createShader(vertexShader, generateSampleShader(16, this.grid.cellHeight, this.grid.cellWidth));

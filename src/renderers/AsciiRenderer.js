@@ -32,7 +32,7 @@ export default class AsciiRenderer {
     }
 
     resetShaders() {
-        
+
     }
 
     updateOptions(newOptions) {

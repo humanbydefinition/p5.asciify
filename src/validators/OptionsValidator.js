@@ -22,8 +22,10 @@ export function validateOptions(p, options) {
         throw new P5AsciifyError(`Font size ${options.fontSize} is out of bounds. It should be between ${FONT_SIZE_LIMITS.MIN} and ${FONT_SIZE_LIMITS.MAX}.`);
     }
 
-    // Validate edge.characters length
+    // Validate edge.characters length (NEEDS TO BE FIXED)
+    /**
     if (options?.characters && options.characters.length !== EDGE_CHARACTER_LENGTH) {
         throw new P5AsciifyError(`edge.characters must be exactly ${EDGE_CHARACTER_LENGTH} characters long.`);
     }
+    */
 }
