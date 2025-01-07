@@ -5,6 +5,7 @@ import P5AsciifyGrid from './grid.js';
 import P5AsciifyEventEmitter from './eventemitter.js';
 
 import P5AsciifyGradientManager from './managers/gradientmanager.js';
+import { RendererManager } from './managers/RendererManager';
 
 import BrightnessAsciiRenderer from './renderers/brightnessAsciiRenderer/BrightnessAsciiRenderer.js';
 import AccurateAsciiRenderer from './renderers/accurateAsciiRenderer/AccurateAsciiRenderer.js';
@@ -66,9 +67,7 @@ class Asciifier {
 
         this.grid = new P5AsciifyGrid(this.p5Instance, this.asciiFontTextureAtlas.maxGlyphDimensions.width, this.asciiFontTextureAtlas.maxGlyphDimensions.height);
 
-        if (this.commonOptions.gridDimensions[0] != 0 && this.commonOptions.gridDimensions[1] != 0) {
-            this.grid.resizeCellDimensions(this.commonOptions.gridDimensions[0], this.commonOptions.gridDimensions[1]);
-        }
+        this.rendererManager = new RendererManager(this.p5Instance, this.grid, this.asciiFontTextureAtlas);
 
         this.gradientManager.setup(this.asciiCharacterSet);
 
@@ -81,30 +80,6 @@ class Asciifier {
         this.edgeRenderer = new EdgeAsciiRenderer(this.p5Instance, this.grid, this.edgeCharacterSet, this.edgeOptions);
 
         this.textAsciiRenderer = new TextAsciiRenderer(this.p5Instance, this.asciiFontTextureAtlas, this.grid, this.fontBase64, this.fontFileType, this.textOptions);
-
-        this.asciiRenderer = this.brightnessRenderer;
-        if (this.asciiOptions.renderMode === 'accurate') {
-            this.asciiRenderer = this.accurateRenderer;
-        }
-
-        this.renderingSteps = [
-            {
-                enabled: () => this.asciiOptions.enabled,
-                renderer: () => this.asciiRenderer
-            },
-            {
-                enabled: () => this.gradientOptions.enabled && this.gradientManager._gradients.length > 0,
-                renderer: () => this.gradientRenderer
-            },
-            {
-                enabled: () => this.edgeOptions.enabled,
-                renderer: () => this.edgeRenderer
-            },
-            {
-                enabled: () => this.customOptions.enabled,
-                renderer: () => this.customAsciiRenderer
-            }
-        ];
 
         this.asciiFramebufferDimensions = { width: this.p5Instance.width, height: this.p5Instance.height };
 
@@ -139,17 +114,8 @@ class Asciifier {
             this.asciiFramebufferDimensions.width = this.p5Instance.width;
             this.asciiFramebufferDimensions.height = this.p5Instance.height;
 
-            if (this.commonOptions.gridDimensions[0] === 0 || this.commonOptions.gridDimensions[1] === 0) {
-                this.grid.reset();
-            } else {
-                this.grid._resizeGrid();
-            }
+            this.grid.reset();
 
-            this.brightnessRenderer.resizeFramebuffers();
-            this.edgeRenderer.resizeFramebuffers();
-            this.customAsciiRenderer.resizeFramebuffers();
-            this.accurateRenderer.resizeFramebuffers();
-            this.gradientRenderer.resizeFramebuffers();
             this.textAsciiRenderer.updateDimensions();
         }
     }
@@ -158,28 +124,11 @@ class Asciifier {
      * Runs the rendering pipeline for the P5Asciify library.
      */
     asciify() {
-        // Initialize with base framebuffer
-        let asciiOutput = this.sketchFramebuffer;
-        let currentRenderer = this.asciiRenderer;
-
-        // Execute each rendering step in sequence
-        for (const step of this.renderingSteps) {
-            if (step.enabled()) {
-                const renderer = step.renderer();
-                renderer.render(this.sketchFramebuffer, currentRenderer);
-                asciiOutput = renderer.getOutputFramebuffer();
-                currentRenderer = renderer;
-            }
-        }
-
-        // Draw the final output
-        this.p5Instance.clear();
-        this.p5Instance.background(this.commonOptions.borderColor);
-        this.p5Instance.image(asciiOutput, -this.p5Instance.width / 2, -this.p5Instance.height / 2);
+        this.rendererManager.render(this.sketchFramebuffer);
 
         // Handle text rendering separately as it outputs to HTML
         if (this.textOptions.enabled) {
-            this.textAsciiRenderer.outputAsciiToHtml(currentRenderer);
+            this.textAsciiRenderer.outputAsciiToHtml(this.rendererManager.lastRenderer);
         }
 
         if (this.postDrawFunction) {
@@ -193,36 +142,8 @@ class Asciifier {
      * Sets the default options for the P5Asciify library.
      * @param {object} options 
      */
-    setDefaultOptions(asciiOptions, edgeOptions, commonOptions, gradientOptions, customOptions, textOptions) {;
-
-        // The parameters are pre-processed, so we can just spread them into the class variables
-        this.asciiOptions = {
-            ...this.asciiOptions,
-            ...asciiOptions
-        };
-        this.edgeOptions = {
-            ...this.edgeOptions,
-            ...edgeOptions
-        };
-        this.commonOptions = {
-            ...this.commonOptions,
-            ...commonOptions
-        };
-
-        this.gradientOptions = {
-            ...this.gradientOptions,
-            ...gradientOptions
-        };
-
-        this.customOptions = {
-            ...this.customOptions,
-            ...customOptions
-        };
-
-        this.textOptions = {
-            ...this.textOptions,
-            ...textOptions
-        };
+    setDefaultOptions(asciiOptions, edgeOptions, commonOptions, gradientOptions, customOptions, textOptions) {
+        
 
         // If we are still in the users setup(), the characterset and grid have not been initialized yet.
         if (!this.p5Instance._setupDone) {
@@ -235,14 +156,6 @@ class Asciifier {
         this.gradientRenderer.updateOptions(gradientOptions);
         this.edgeRenderer.updateOptions(edgeOptions);
         this.textAsciiRenderer.updateOptions(textOptions);
-
-        if (asciiOptions?.renderMode) {
-            if (asciiOptions.renderMode === 'accurate') {
-                this.asciiRenderer = this.accurateRenderer;
-            } else {
-                this.asciiRenderer = this.brightnessRenderer;
-            }
-        }
 
         if (asciiOptions?.characters) {
             this.asciiCharacterSet.setCharacterSet(asciiOptions.characters);
@@ -287,19 +200,6 @@ class Asciifier {
             this.accurateRenderer.resetShaders();
 
             this.textAsciiRenderer.updateFontSize();
-        }
-
-        if (commonOptions?.gridDimensions) {
-            if (commonOptions.gridDimensions[0] === 0 || commonOptions.gridDimensions[1] === 0) {
-                this.grid.reset();
-            } else {
-                this.grid.resizeCellDimensions(commonOptions.gridDimensions[0], commonOptions.gridDimensions[1]);
-            }
-            this.brightnessRenderer.resizeFramebuffers();
-            this.edgeRenderer.resizeFramebuffers();
-            this.customAsciiRenderer.resizeFramebuffers();
-            this.accurateRenderer.resizeFramebuffers();
-            this.gradientRenderer.resizeFramebuffers();
         }
     }
 }

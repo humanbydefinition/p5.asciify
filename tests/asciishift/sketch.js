@@ -96,17 +96,6 @@ function setup() {
 		common: {
 			fontSize: 16,
 		},
-		ascii: {
-			enabled: true,
-			characterColor: "#ff0000",
-			characterColorMode: 0,
-			backgroundColor: "#000000",
-			backgroundColorMode: 1,
-			invertMode: false,
-		},
-		custom: {
-			enabled: true,
-		}
 	});
 
 	// This function is called after the p5.asciify library has been initialized, but before the sketch starts running
@@ -120,9 +109,11 @@ function setup() {
 function setupAsciify() {
 
 	// Assign the custom ascii renderer's framebuffers to the variables
-	primaryColorSampleFramebuffer = p5asciify.customAsciiRenderer.primaryColorSampleFramebuffer;
-	secondaryColorSampleFramebuffer = p5asciify.customAsciiRenderer.secondaryColorSampleFramebuffer;
-	asciiCharacterFramebuffer = p5asciify.customAsciiRenderer.asciiCharacterFramebuffer;
+	primaryColorSampleFramebuffer = p5asciify.rendererManager.renderers[2].primaryColorSampleFramebuffer;
+	secondaryColorSampleFramebuffer = p5asciify.rendererManager.renderers[2].secondaryColorSampleFramebuffer;
+	asciiCharacterFramebuffer = p5asciify.rendererManager.renderers[2].asciiCharacterFramebuffer;
+
+	p5asciify.rendererManager.renderers[2].updateOptions({ enabled: true }); // Enable the custom renderer
 
 	// Generate the charset color palette and apply it to the framebuffer
 	charsetColorPalette = p5asciify.asciiCharacterSet.getCharsetColorArray(charset);

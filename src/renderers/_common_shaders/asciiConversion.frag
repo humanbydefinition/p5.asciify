@@ -19,7 +19,7 @@ uniform int u_invertMode;
 uniform vec2 u_resolution;
 uniform float u_pixelRatio; // Added uniform for pixel ratio
 
-uniform sampler2D u_asciiBrightnessTexture;
+uniform sampler2D u_prevAsciiTexture;
 uniform sampler2D u_gradientReferenceTexture;
 uniform sampler2D u_edgesTexture;
 
@@ -64,7 +64,7 @@ void main() {
         vec4 gradientReferenceColor = texture2D(u_gradientReferenceTexture, charIndexTexCoord);
 
         if(encodedIndexVec.rgb == gradientReferenceColor.rgb) {
-            gl_FragColor = texture2D(u_asciiBrightnessTexture, logicalFragCoord / u_resolution);
+            gl_FragColor = texture2D(u_prevAsciiTexture, logicalFragCoord / u_resolution);
             return;
         }
     } else if(u_layer == 3) {
@@ -72,7 +72,7 @@ void main() {
         vec4 edgeColor = texture2D(u_edgesTexture, charIndexTexCoord);
 
         if(edgeColor.rgb == vec3(0.0)) {
-            gl_FragColor = texture2D(u_asciiBrightnessTexture, logicalFragCoord / u_resolution);
+            gl_FragColor = texture2D(u_prevAsciiTexture, logicalFragCoord / u_resolution);
             return;
         }
     } else if(u_layer == 4) {
@@ -80,7 +80,7 @@ void main() {
         vec4 encodedIndexVec = texture2D(u_asciiCharacterTexture, charIndexTexCoord);
 
         if(encodedIndexVec.rgba == vec4(0.0)) {
-            gl_FragColor = texture2D(u_asciiBrightnessTexture, logicalFragCoord / u_resolution);
+            gl_FragColor = texture2D(u_prevAsciiTexture, logicalFragCoord / u_resolution);
             return;
         }
     }

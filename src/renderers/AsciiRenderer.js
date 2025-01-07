@@ -1,4 +1,7 @@
 // renderers/AsciiRenderer.js
+
+import { validateOptions } from "../validators/OptionsValidator";
+
 export default class AsciiRenderer {
     /**
      * Constructor for AsciiRenderer.
@@ -10,16 +13,16 @@ export default class AsciiRenderer {
             throw new TypeError("Cannot construct AsciiRenderer instances directly");
         }
 
-        this.p5 = p5Instance;
+        this.p = p5Instance;
         this.grid = grid;
         this.characterSet = characterSet;
         this.options = options;
 
-        this.primaryColorSampleFramebuffer = this.p5.createFramebuffer({ density: 1, antialias: false, width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
-        this.secondaryColorSampleFramebuffer = this.p5.createFramebuffer({ density: 1, antialias: false, width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
-        this.asciiCharacterFramebuffer = this.p5.createFramebuffer({ density: 1, antialias: false, width: this.grid.cols, height: this.grid.rows, depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
+        this.primaryColorSampleFramebuffer = this.p.createFramebuffer({ density: 1, antialias: false, width: this.grid.cols, height: this.grid.rows, depthFormat: this.p.UNSIGNED_INT, textureFiltering: this.p.NEAREST });
+        this.secondaryColorSampleFramebuffer = this.p.createFramebuffer({ density: 1, antialias: false, width: this.grid.cols, height: this.grid.rows, depthFormat: this.p.UNSIGNED_INT, textureFiltering: this.p.NEAREST });
+        this.asciiCharacterFramebuffer = this.p.createFramebuffer({ density: 1, antialias: false, width: this.grid.cols, height: this.grid.rows, depthFormat: this.p.UNSIGNED_INT, textureFiltering: this.p.NEAREST });
 
-        this.outputFramebuffer = this.p5.createFramebuffer({ depthFormat: this.p5.UNSIGNED_INT, textureFiltering: this.p5.NEAREST });
+        this.outputFramebuffer = this.p.createFramebuffer({ depthFormat: this.p.UNSIGNED_INT, textureFiltering: this.p.NEAREST });
     }
 
     resizeFramebuffers() {
@@ -29,6 +32,9 @@ export default class AsciiRenderer {
     }
 
     updateOptions(newOptions) {
+
+        validateOptions(this.p, newOptions);
+
         this.options = {
             ...this.options,
             ...newOptions
