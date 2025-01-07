@@ -46,8 +46,8 @@ class P5AsciifyGradientManager {
     _setupQueue = [];
     _gradients = [];
 
-    setup(gradientCharacterSet) {
-        this.gradientCharacterSet = gradientCharacterSet;
+    setup(fontTextureAtlas) {
+        this.fontTextureAtlas = fontTextureAtlas;
         this.setupShaders();
         this.setupGradientQueue();
     }
@@ -58,7 +58,7 @@ class P5AsciifyGradientManager {
 
     setupGradientQueue() {
         for (let gradientInstance of this._setupQueue) {
-            gradientInstance.setup(this.p5Instance, this.gradientShaders[gradientInstance.type], this.gradientCharacterSet.getCharsetColorArray(gradientInstance._characters));
+            gradientInstance.setup(this.p5Instance, this.gradientShaders[gradientInstance.type], this.fontTextureAtlas.getCharsetColorArray(gradientInstance._characters));
         }
 
         this._setupQueue = [];
@@ -79,7 +79,7 @@ class P5AsciifyGradientManager {
         if (!this.p5Instance._setupDone) {
             this._setupQueue.push(gradient);
         } else {
-            gradient.setup(this.p5Instance, this.gradientShaders[gradientName], this.gradientCharacterSet.getCharsetColorArray(characters));
+            gradient.setup(this.p5Instance, this.gradientShaders[gradientName], this.fontTextureAtlas.getCharsetColorArray(characters));
         }
 
         return gradient;
@@ -96,7 +96,7 @@ class P5AsciifyGradientManager {
         if (!this.p5Instance._setupDone) {
             gradient._characters = characters;
         } else {
-            gradient._palette.setColors(this.gradientCharacterSet.getCharsetColorArray(characters));
+            gradient._palette.setColors(this.fontTextureAtlas.getCharsetColorArray(characters));
         }
     }
 

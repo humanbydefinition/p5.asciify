@@ -1,4 +1,4 @@
-
+import P5AsciifyError from './errors';
 class P5AsciifyFontTextureAtlas {
     
     constructor({ p5Instance, font, fontSize }) {
@@ -110,6 +110,39 @@ class P5AsciifyFontTextureAtlas {
             const y = dimensions.height * row - ((dimensions.height * this.charsetRows) / 2);
             this.p5Instance.text(String.fromCharCode(this.characterGlyphs[i].unicode), x, y);
         }
+    }
+
+    /**
+     * Gets an array of RGB colors for given characters or string
+     * @param {string|string[]} input - Either a string or array of characters
+     * @returns {Array<[number,number,number]>} Array of RGB color values
+     * @throws {Error} If character is not found in the texture atlas
+     */
+    getCharsetColorArray(input) {
+        const chars = Array.isArray(input) ? input : Array.from(input);
+        
+        return chars.map(char => {
+            const glyph = this.characterGlyphs.find(
+                glyph => glyph.unicodes.includes(char.codePointAt(0))
+            );
+    
+            if (!glyph) {
+                throw new P5AsciifyError(`Could not find character in character set: ${char}`);
+            }
+    
+            return [glyph.r, glyph.g, glyph.b];
+        });
+    }
+
+    /**
+     * Returns an array of characters that are not supported by the current font.
+     * @param {string} characters - The string of characters to check.
+     * @returns {string[]} An array of unsupported characters.
+     */
+    getUnsupportedCharacters(characters) {
+        return Array.from(new Set(Array.from(characters).filter(char =>
+            !this.characterGlyphs.some(glyph => glyph.unicodes.includes(char.codePointAt(0)))
+        )));
     }
 }
 

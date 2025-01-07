@@ -4,6 +4,24 @@
     (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.P5Asciify = factory(global.p5));
 })(this, (function (p5) { 'use strict';
 
+    /**
+     * @class P5AsciifyError
+     * @extends {Error}
+     * @description
+     * Custom error class for the P5Asciify library.
+     * Represents errors specific to the P5Asciify library.
+     */
+    class P5AsciifyError extends Error {
+        /**
+         * Creates an instance of P5AsciifyError.
+         * @param {string} message - The error message.
+         */
+        constructor(message) {
+            super(message);
+            this.name = "P5AsciifyError";
+        }
+    }
+
     class P5AsciifyFontTextureAtlas {
         
         constructor({ p5Instance, font, fontSize }) {
@@ -115,6 +133,39 @@
                 const y = dimensions.height * row - ((dimensions.height * this.charsetRows) / 2);
                 this.p5Instance.text(String.fromCharCode(this.characterGlyphs[i].unicode), x, y);
             }
+        }
+
+        /**
+         * Gets an array of RGB colors for given characters or string
+         * @param {string|string[]} input - Either a string or array of characters
+         * @returns {Array<[number,number,number]>} Array of RGB color values
+         * @throws {Error} If character is not found in the texture atlas
+         */
+        getCharsetColorArray(input) {
+            const chars = Array.isArray(input) ? input : Array.from(input);
+            
+            return chars.map(char => {
+                const glyph = this.characterGlyphs.find(
+                    glyph => glyph.unicodes.includes(char.codePointAt(0))
+                );
+        
+                if (!glyph) {
+                    throw new P5AsciifyError(`Could not find character in character set: ${char}`);
+                }
+        
+                return [glyph.r, glyph.g, glyph.b];
+            });
+        }
+
+        /**
+         * Returns an array of characters that are not supported by the current font.
+         * @param {string} characters - The string of characters to check.
+         * @returns {string[]} An array of unsupported characters.
+         */
+        getUnsupportedCharacters(characters) {
+            return Array.from(new Set(Array.from(characters).filter(char =>
+                !this.characterGlyphs.some(glyph => glyph.unicodes.includes(char.codePointAt(0)))
+            )));
         }
     }
 
@@ -228,24 +279,6 @@
     };
 
     const EDGE_CHARACTER_LENGTH = 8;
-
-    /**
-     * @class P5AsciifyError
-     * @extends {Error}
-     * @description
-     * Custom error class for the P5Asciify library.
-     * Represents errors specific to the P5Asciify library.
-     */
-    class P5AsciifyError extends Error {
-        /**
-         * Creates an instance of P5AsciifyError.
-         * @param {string} message - The error message.
-         */
-        constructor(message) {
-            super(message);
-            this.name = "P5AsciifyError";
-        }
-    }
 
     /**
      * Validates the options for p5.asciify.
@@ -1670,7 +1703,7 @@ void main() {
             this.asciiFontTextureAtlas = asciiFontTextureAtlas;
 
             this.characters = this.validateCharacters(characters);
-            this.characterColors = this.getCharsetColorArray(this.characters);
+            this.characterColors = this.asciiFontTextureAtlas.getCharsetColorArray(this.characters);
 
             this.characterColorPalette = new P5AsciifyColorPalette(this.characterColors);
             this.characterColorPalette.setup(this.p5Instance);
@@ -1683,22 +1716,11 @@ void main() {
          * @returns {string[]} The validated characters. If any characters are unsupported, the default characters are returned.
          */
         validateCharacters(characters) {
-            let unsupportedChars = this.getUnsupportedCharacters(characters);
+            let unsupportedChars = this.asciiFontTextureAtlas.getUnsupportedCharacters(characters);
             if (unsupportedChars.length > 0) {
                 throw new P5AsciifyError(`The following characters are not supported by the current font: [${unsupportedChars.join(', ')}].`);
             }
             return Array.from(characters);
-        }
-
-        /**
-         * Returns an array of characters that are not supported by the current font.
-         * @param {string} characters - The string of characters to check.
-         * @returns {string[]} An array of unsupported characters.
-         */
-        getUnsupportedCharacters(characters) {
-            return Array.from(new Set(Array.from(characters).filter(char =>
-                !this.asciiFontTextureAtlas.characterGlyphs.some(glyph => glyph.unicodes.includes(char.codePointAt(0)))
-            )));
         }
 
         /**
@@ -1707,30 +1729,8 @@ void main() {
          */
         setCharacterSet(characters) {
             this.characters = this.validateCharacters(characters);
-            this.characterColors = this.getCharsetColorArray(this.characters);
+            this.characterColors = this.asciiFontTextureAtlas.getCharsetColorArray(this.characters);
             this.characterColorPalette.setColors(this.characterColors);
-        }
-
-        /**
-         * Gets an array of RGB colors for given characters or string
-         * @param {string|string[]} input - Either a string or array of characters
-         * @returns {Array<[number,number,number]>} Array of RGB color values
-         * @throws {Error} If character is not found in the texture atlas
-         */
-        getCharsetColorArray(input) {
-            const chars = Array.isArray(input) ? input : Array.from(input);
-            
-            return chars.map(char => {
-                const glyph = this.asciiFontTextureAtlas.characterGlyphs.find(
-                    glyph => glyph.unicodes.includes(char.codePointAt(0))
-                );
-        
-                if (!glyph) {
-                    throw new Error(`Could not find character in character set: ${char}`);
-                }
-        
-                return [glyph.r, glyph.g, glyph.b];
-            });
         }
     }
 
@@ -2130,8 +2130,8 @@ void main() {
         _setupQueue = [];
         _gradients = [];
 
-        setup(gradientCharacterSet) {
-            this.gradientCharacterSet = gradientCharacterSet;
+        setup(fontTextureAtlas) {
+            this.fontTextureAtlas = fontTextureAtlas;
             this.setupShaders();
             this.setupGradientQueue();
         }
@@ -2142,7 +2142,7 @@ void main() {
 
         setupGradientQueue() {
             for (let gradientInstance of this._setupQueue) {
-                gradientInstance.setup(this.p5Instance, this.gradientShaders[gradientInstance.type], this.gradientCharacterSet.getCharsetColorArray(gradientInstance._characters));
+                gradientInstance.setup(this.p5Instance, this.gradientShaders[gradientInstance.type], this.fontTextureAtlas.getCharsetColorArray(gradientInstance._characters));
             }
 
             this._setupQueue = [];
@@ -2163,7 +2163,7 @@ void main() {
             if (!this.p5Instance._setupDone) {
                 this._setupQueue.push(gradient);
             } else {
-                gradient.setup(this.p5Instance, this.gradientShaders[gradientName], this.gradientCharacterSet.getCharsetColorArray(characters));
+                gradient.setup(this.p5Instance, this.gradientShaders[gradientName], this.fontTextureAtlas.getCharsetColorArray(characters));
             }
 
             return gradient;
@@ -2180,7 +2180,7 @@ void main() {
             if (!this.p5Instance._setupDone) {
                 gradient._characters = characters;
             } else {
-                gradient._palette.setColors(this.gradientCharacterSet.getCharsetColorArray(characters));
+                gradient._palette.setColors(this.fontTextureAtlas.getCharsetColorArray(characters));
             }
         }
 
@@ -2324,7 +2324,7 @@ void main() {
             };
 
             this.gradientCharacterSet = new P5AsciifyCharacterSet({ p5Instance: this.p, asciiFontTextureAtlas: fontTextureAtlas, characters: BRIGHTNESS_OPTIONS.characters });
-            this.gradientManager.setup(this.gradientCharacterSet);
+            this.gradientManager.setup(this.fontTextureAtlas);
             
             this.renderers = [
                 new BrightnessAsciiRenderer(this.p, this.grid, new P5AsciifyCharacterSet({ p5Instance: this.p, asciiFontTextureAtlas: fontTextureAtlas, characters: BRIGHTNESS_OPTIONS.characters }), { ...BRIGHTNESS_OPTIONS }),

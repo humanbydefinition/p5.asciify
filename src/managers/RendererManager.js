@@ -36,7 +36,7 @@ export class RendererManager {
         }
 
         this.gradientCharacterSet = new P5AsciifyCharacterSet({ p5Instance: this.p, asciiFontTextureAtlas: fontTextureAtlas, characters: BRIGHTNESS_OPTIONS.characters });
-        this.gradientManager.setup(this.gradientCharacterSet);
+        this.gradientManager.setup(this.fontTextureAtlas);
         
         this.renderers = [
             new BrightnessAsciiRenderer(this.p, this.grid, new P5AsciifyCharacterSet({ p5Instance: this.p, asciiFontTextureAtlas: fontTextureAtlas, characters: BRIGHTNESS_OPTIONS.characters }), { ...BRIGHTNESS_OPTIONS }),

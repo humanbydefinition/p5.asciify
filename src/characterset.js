@@ -14,7 +14,7 @@ class P5AsciifyCharacterSet {
         this.asciiFontTextureAtlas = asciiFontTextureAtlas;
 
         this.characters = this.validateCharacters(characters);
-        this.characterColors = this.getCharsetColorArray(this.characters);
+        this.characterColors = this.asciiFontTextureAtlas.getCharsetColorArray(this.characters);
 
         this.characterColorPalette = new P5AsciifyColorPalette(this.characterColors);
         this.characterColorPalette.setup(this.p5Instance);
@@ -27,22 +27,11 @@ class P5AsciifyCharacterSet {
      * @returns {string[]} The validated characters. If any characters are unsupported, the default characters are returned.
      */
     validateCharacters(characters) {
-        let unsupportedChars = this.getUnsupportedCharacters(characters);
+        let unsupportedChars = this.asciiFontTextureAtlas.getUnsupportedCharacters(characters);
         if (unsupportedChars.length > 0) {
             throw new P5AsciifyError(`The following characters are not supported by the current font: [${unsupportedChars.join(', ')}].`);
         }
         return Array.from(characters);
-    }
-
-    /**
-     * Returns an array of characters that are not supported by the current font.
-     * @param {string} characters - The string of characters to check.
-     * @returns {string[]} An array of unsupported characters.
-     */
-    getUnsupportedCharacters(characters) {
-        return Array.from(new Set(Array.from(characters).filter(char =>
-            !this.asciiFontTextureAtlas.characterGlyphs.some(glyph => glyph.unicodes.includes(char.codePointAt(0)))
-        )));
     }
 
     /**
@@ -51,30 +40,8 @@ class P5AsciifyCharacterSet {
      */
     setCharacterSet(characters) {
         this.characters = this.validateCharacters(characters);
-        this.characterColors = this.getCharsetColorArray(this.characters);
+        this.characterColors = this.asciiFontTextureAtlas.getCharsetColorArray(this.characters);
         this.characterColorPalette.setColors(this.characterColors);
-    }
-
-    /**
-     * Gets an array of RGB colors for given characters or string
-     * @param {string|string[]} input - Either a string or array of characters
-     * @returns {Array<[number,number,number]>} Array of RGB color values
-     * @throws {Error} If character is not found in the texture atlas
-     */
-    getCharsetColorArray(input) {
-        const chars = Array.isArray(input) ? input : Array.from(input);
-        
-        return chars.map(char => {
-            const glyph = this.asciiFontTextureAtlas.characterGlyphs.find(
-                glyph => glyph.unicodes.includes(char.codePointAt(0))
-            );
-    
-            if (!glyph) {
-                throw new Error(`Could not find character in character set: ${char}`);
-            }
-    
-            return [glyph.r, glyph.g, glyph.b];
-        });
     }
 }
 
