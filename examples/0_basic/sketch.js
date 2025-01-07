@@ -15,13 +15,8 @@ function setup() {
 
 	sketchFramebuffer = createFramebuffer({ format: FLOAT });
 
-	setAsciiOptions({
-		// These are the default options, you can change them as needed in preload(), setup() or draw()
-		common: {
-			fontSize: 16,
-		},
-		ascii: {
-			renderMode: 'brightness',
+	setAsciifyPostSetupFunction(() => {
+		p5asciify.rendererManager.renderers[0].updateOptions({
 			enabled: true,
 			characters: " .:-=+*#%@",
 			characterColor: "#ff0000",
@@ -29,7 +24,7 @@ function setup() {
 			backgroundColor: "#000000",
 			backgroundColorMode: 1,
 			invertMode: true,
-		},
+		});
 	});
 }
 

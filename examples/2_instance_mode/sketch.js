@@ -5,12 +5,8 @@ const theSketch = (sketch) => {
     sketch.setup = () => {
         sketch.createCanvas(800, 800, sketch.WEBGL);
 
-        sketch.setAsciiOptions({ // All functions provided by p5.asciify are now available through the p5 instance
-            common: {
-                fontSize: 16,
-            },
-            ascii: {
-                renderMode: 'brightness',
+        sketch.setAsciifyPostSetupFunction(() => {
+            p5asciify.rendererManager.renderers[0].updateOptions({
                 enabled: true,
                 characters: ' .:-=+*#%@',
                 characterColor: "#ff0000",
@@ -18,11 +14,12 @@ const theSketch = (sketch) => {
                 backgroundColor: "#000000",
                 backgroundColorMode: 1,
                 invertMode: true,
-            },
-            edge: {
+            });
+
+            p5asciify.rendererManager.renderers[3].updateOptions({
                 enabled: true,
                 invertMode: true
-            }
+            });
         });
     };
 

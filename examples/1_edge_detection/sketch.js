@@ -14,28 +14,23 @@ function setup() {
     createCanvas(windowWidth, windowHeight, WEBGL);
     sketchFramebuffer = createFramebuffer({ format: FLOAT });
 
-    setAsciiOptions({
-        // These are the default options, you can change them as needed in preload(), setup() or draw()
-        common: {
-            fontSize: 8,
-        },
-        ascii: {
-            renderMode: 'brightness'
-        },
-        edge: {
-            enabled: true, // false by default
+    setAsciifyFontSize(8);
+
+    for (let i = 0; i < maxRectangles; i++) rectangles.push(new Rectangle());
+
+    setAsciifyPostSetupFunction(() => {
+        p5asciify.rendererManager.renderers[3].updateOptions({
+            enabled: true,
             characters: "-/|\\-/|\\",
             characterColor: "#ffffff",
-            characterColorMode: 1, // 0: sampled (default), 1: fixed
+            characterColorMode: 1,
             backgroundColor: "#000000",
             backgroundColorMode: 1,
             invertMode: false,
-            sobelThreshold: 0.01, // Tune the threshold values to adjust the edge detection
+            sobelThreshold: 0.01,
             sampleThreshold: 16,
-        },
+        });
     });
-
-    for (let i = 0; i < maxRectangles; i++) rectangles.push(new Rectangle());
 }
 
 function draw() {
