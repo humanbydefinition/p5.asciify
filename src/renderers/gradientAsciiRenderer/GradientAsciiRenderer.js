@@ -12,6 +12,9 @@ export default class GradientAsciiRenderer extends AsciiRenderer {
     constructor(p5Instance, grid, characterSet, gradientManager, options) {
         super(p5Instance, grid, characterSet, options);
 
+        this.options.characterColor = this.p.color(this.options.characterColor);
+        this.options.backgroundColor = this.p.color(this.options.backgroundColor);
+
         this.gradientManager = gradientManager;
 
         this.grayscaleShader = this.p.createShader(vertexShader, grayscaleShader);
@@ -104,7 +107,7 @@ export default class GradientAsciiRenderer extends AsciiRenderer {
         this.asciiShader.setUniform('u_secondaryColorTexture', this.secondaryColorSampleFramebuffer);
         this.asciiShader.setUniform('u_asciiCharacterTexture', this.asciiCharacterFramebuffer);
         if (!isFirstRenderer) {
-            this.shader.setUniform('u_prevAsciiTexture', previousAsciiRenderer.getOutputFramebuffer());
+            this.asciiShader.setUniform('u_prevAsciiTexture', previousAsciiRenderer.outputFramebuffer);
         }
         this.asciiShader.setUniform('u_gridPixelDimensions', [this.grid.width, this.grid.height]);
         this.asciiShader.setUniform('u_gridOffsetDimensions', [this.grid.offsetX, this.grid.offsetY]);

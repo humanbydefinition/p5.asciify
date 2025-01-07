@@ -1,13 +1,6 @@
 
 class P5AsciifyFontTextureAtlas {
-    /**
-     * Sets up the character set with a specified font, characters, and font size.
-     * @param {Object} options - The setup options.
-     * @param {string} options.type - The type of character set to set up. (e.g. "brightness", "edge")
-     * @param {Object} options.font - The font object to use.
-     * @param {string} options.characters - The string of characters to include in the character set.
-     * @param {number} options.fontSize - The font size to use.
-     */
+    
     constructor({ p5Instance, font, fontSize }) {
         this.p5Instance = p5Instance;
         this.font = font;

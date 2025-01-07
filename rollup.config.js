@@ -4,6 +4,7 @@ import inject from '@rollup/plugin-inject';
 import terser from '@rollup/plugin-terser';
 import glslify from 'rollup-plugin-glslify';
 import { string } from "rollup-plugin-string";
+import typescript from '@rollup/plugin-typescript';
 
 export default [
     {
@@ -24,6 +25,7 @@ export default [
             }
         ],
         plugins: [
+            typescript(),
             glslify(),
             string({
                 include: "**/*.txt"

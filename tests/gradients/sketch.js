@@ -27,6 +27,7 @@ function setup() {
     createCanvas(windowWidth, windowHeight, WEBGL);
     framebuffer = createFramebuffer({ format: FLOAT });
 
+    /**
     setAsciiOptions({
         common: {
             fontSize: 16,
@@ -50,6 +51,7 @@ function setup() {
             invertMode: true,
         },
     });
+    **/
 
     linearGradient = addAsciiGradient("linear", 150, 150, "gradients ", {
         direction: 1,
@@ -76,6 +78,10 @@ function setup() {
         noiseScale: 0.5,
         speed: 0.1,
         direction: 1,
+    });
+
+    setAsciifyPostSetupFunction(() => {
+        p5asciify.rendererManager.renderers[2].options.enabled = true;
     });
 }
 

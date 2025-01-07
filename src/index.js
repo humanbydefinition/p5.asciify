@@ -1,4 +1,4 @@
-import Asciifier from './Asciifier.js';
+import { Asciifier } from './Asciifier.ts';
 
 import { registerSetupMethods } from './modules/setup.js';
 import { registerFontMethods } from './modules/fonts.js';

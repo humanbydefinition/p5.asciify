@@ -21,7 +21,7 @@ export const ACCURATE_OPTIONS = {
 }
 
 export const GRADIENT_OPTIONS = {
-    enabled: true,
+    enabled: false,
     characterColor: "#FFFFFF",
     characterColorMode: 0,
     backgroundColor: "#000000",

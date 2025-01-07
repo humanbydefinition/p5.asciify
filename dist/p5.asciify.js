@@ -5,14 +5,7 @@
 })(this, (function (p5) { 'use strict';
 
     class P5AsciifyFontTextureAtlas {
-        /**
-         * Sets up the character set with a specified font, characters, and font size.
-         * @param {Object} options - The setup options.
-         * @param {string} options.type - The type of character set to set up. (e.g. "brightness", "edge")
-         * @param {Object} options.font - The font object to use.
-         * @param {string} options.characters - The string of characters to include in the character set.
-         * @param {number} options.fontSize - The font size to use.
-         */
+        
         constructor({ p5Instance, font, fontSize }) {
             this.p5Instance = p5Instance;
             this.font = font;
@@ -129,12 +122,7 @@
      * Represents a 2D grid, handling the dimensions and resizing of the grid.
      */
     class P5AsciifyGrid {
-        /**
-         * Creates an instance of P5AsciifyGrid.
-         * @param {p5} p5Instance - The p5 instance to get the width and height from.
-         * @param {number} cellWidth - The width of each cell in the grid.
-         * @param {number} cellHeight - The height of each cell in the grid.
-         */
+
         constructor(p5Instance, cellWidth, cellHeight) {
             this.p5Instance = p5Instance;
             this.cellWidth = cellWidth;
@@ -1536,7 +1524,7 @@ void main() {
     };
 
     const GRADIENT_OPTIONS = {
-        enabled: true,
+        enabled: false,
         characterColor: "#FFFFFF",
         characterColorMode: 0,
         backgroundColor: "#000000",
@@ -2212,6 +2200,9 @@ void main() {
         constructor(p5Instance, grid, characterSet, gradientManager, options) {
             super(p5Instance, grid, characterSet, options);
 
+            this.options.characterColor = this.p.color(this.options.characterColor);
+            this.options.backgroundColor = this.p.color(this.options.backgroundColor);
+
             this.gradientManager = gradientManager;
 
             this.grayscaleShader = this.p.createShader(vertexShader, grayscaleShader);
@@ -2304,7 +2295,7 @@ void main() {
             this.asciiShader.setUniform('u_secondaryColorTexture', this.secondaryColorSampleFramebuffer);
             this.asciiShader.setUniform('u_asciiCharacterTexture', this.asciiCharacterFramebuffer);
             if (!isFirstRenderer) {
-                this.shader.setUniform('u_prevAsciiTexture', previousAsciiRenderer.getOutputFramebuffer());
+                this.asciiShader.setUniform('u_prevAsciiTexture', previousAsciiRenderer.outputFramebuffer);
             }
             this.asciiShader.setUniform('u_gridPixelDimensions', [this.grid.width, this.grid.height]);
             this.asciiShader.setUniform('u_gridOffsetDimensions', [this.grid.offsetX, this.grid.offsetY]);
@@ -2334,11 +2325,11 @@ void main() {
 
             this.gradientCharacterSet = new P5AsciifyCharacterSet({ p5Instance: this.p, asciiFontTextureAtlas: fontTextureAtlas, characters: BRIGHTNESS_OPTIONS.characters });
             this.gradientManager.setup(this.gradientCharacterSet);
-            this.gradientRenderer = new GradientAsciiRenderer(this.p, this.grid, this.gradientCharacterSet, this.gradientManager, { ...GRADIENT_OPTIONS });
-
+            
             this.renderers = [
                 new BrightnessAsciiRenderer(this.p, this.grid, new P5AsciifyCharacterSet({ p5Instance: this.p, asciiFontTextureAtlas: fontTextureAtlas, characters: BRIGHTNESS_OPTIONS.characters }), { ...BRIGHTNESS_OPTIONS }),
                 new AccurateAsciiRenderer(this.p, this.grid, new P5AsciifyCharacterSet({ p5Instance: this.p, asciiFontTextureAtlas: fontTextureAtlas, characters: ACCURATE_OPTIONS.characters }), { ...ACCURATE_OPTIONS }),
+                new GradientAsciiRenderer(this.p, this.grid, this.gradientCharacterSet, this.gradientManager, { ...GRADIENT_OPTIONS }),
                 new EdgeAsciiRenderer(this.p, this.grid, new P5AsciifyCharacterSet({ p5Instance: this.p, asciiFontTextureAtlas: fontTextureAtlas, characters: EDGE_OPTIONS.characters }), { ...EDGE_OPTIONS }),
                 new CustomAsciiRenderer(this.p, this.grid, new P5AsciifyCharacterSet({ p5Instance: this.p, asciiFontTextureAtlas: fontTextureAtlas, characters: BRIGHTNESS_OPTIONS.characters }), { ...CUSTOM_OPTIONS }),
             ];
@@ -2388,67 +2379,78 @@ void main() {
         }
     }
 
-    class Asciifier {
-
-        borderColor = "#000000";
-        fontSize = 16;
-
-        rendererManager = new RendererManager();
-
-        font = null;
-
-        postSetupFunction = null;
-        postDrawFunction = null;
-
-        instance(p) {
-            this.p5Instance = p;
-
-            this.p5Instance.preload = () => { }; // Define a default preload function in case the user doesn't provide one
+    var Asciifier = /** @class */ (function () {
+        function Asciifier() {
+            this.borderColor = "#000000";
+            this.fontSize = 16;
+            this.rendererManager = new RendererManager();
+            this.font = null;
+            this.postSetupFunction = null;
+            this.postDrawFunction = null;
         }
-
         /**
-         * Sets up the P5Asciify library with the specified options after the user's setup() function finished.
+         * Initialize the p5 instance for the Asciifier
+         * @param p - The p5 instance
          */
-        setup() {
-            this.borderColor = this.p5Instance.color(this.borderColor);
-
-            this.asciiFontTextureAtlas = new P5AsciifyFontTextureAtlas({ p5Instance: this.p5Instance, font: this.font, fontSize: this.fontSize });
+        Asciifier.prototype.instance = function (p) {
+            this.p5Instance = p;
+            this.p5Instance.preload = function () { }; // Define a default preload function
+        };
+        /**
+         * Sets up the P5Asciify library with the specified options
+         */
+        Asciifier.prototype.setup = function () {
+            this.asciiFontTextureAtlas = new P5AsciifyFontTextureAtlas({
+                p5Instance: this.p5Instance,
+                font: this.font,
+                fontSize: this.fontSize
+            });
             this.grid = new P5AsciifyGrid(this.p5Instance, this.asciiFontTextureAtlas.maxGlyphDimensions.width, this.asciiFontTextureAtlas.maxGlyphDimensions.height);
-
             this.rendererManager.setup(this.p5Instance, this.grid, this.asciiFontTextureAtlas);
-
             this.events = new P5AsciifyEventEmitter();
-
-            this.sketchFramebuffer = this.p5Instance.createFramebuffer({ depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
-
+            this.sketchFramebuffer = this.p5Instance.createFramebuffer({
+                depthFormat: this.p5Instance.UNSIGNED_INT,
+                textureFiltering: this.p5Instance.NEAREST
+            });
             if (this.postSetupFunction) {
                 this.postSetupFunction();
             }
-        }
-
-        emit(eventName, data) {
-            this.events.emit(eventName, data);
-        }
-
-        on(eventName, callback) {
-            this.events.on(eventName, callback);
-        }
-
-        off(eventName, callback) {
-            this.events.off(eventName, callback);
-        }
-
+        };
         /**
-         * Runs the rendering pipeline for the P5Asciify library.
+         * Emit an event with data
+         * @param eventName - Name of the event to emit
+         * @param data - Data to pass with the event
          */
-        asciify() {
+        Asciifier.prototype.emit = function (eventName, data) {
+            this.events.emit(eventName, data);
+        };
+        /**
+         * Register an event listener
+         * @param eventName - Name of the event to listen for
+         * @param callback - Callback function to execute
+         */
+        Asciifier.prototype.on = function (eventName, callback) {
+            this.events.on(eventName, callback);
+        };
+        /**
+         * Remove an event listener
+         * @param eventName - Name of the event to remove
+         * @param callback - Callback function to remove
+         */
+        Asciifier.prototype.off = function (eventName, callback) {
+            this.events.off(eventName, callback);
+        };
+        /**
+         * Runs the rendering pipeline for the P5Asciify library
+         */
+        Asciifier.prototype.asciify = function () {
             this.rendererManager.render(this.sketchFramebuffer, this.borderColor);
-
             if (this.postDrawFunction) {
                 this.postDrawFunction();
             }
-        }
-    }
+        };
+        return Asciifier;
+    }());
 
     /**
      * Utility class containing static helper methods for version comparison and other common tasks.
@@ -2691,7 +2693,7 @@ void main() {
 
         p5.prototype.addAsciiGradient = function (gradientName, brightnessStart, brightnessEnd, characters, userParams = {}) {
             validateGradientParams(
-                p5asciify.gradientManager,
+                p5asciify.rendererManager.gradientManager,
                 gradientName,
                 brightnessStart,
                 brightnessEnd,
@@ -2699,11 +2701,11 @@ void main() {
                 userParams
             );
 
-            return p5asciify.gradientManager.addGradient(gradientName, brightnessStart, brightnessEnd, characters, userParams);
+            return p5asciify.rendererManager.gradientManager.addGradient(gradientName, brightnessStart, brightnessEnd, characters, userParams);
         };
 
         p5.prototype.removeAsciiGradient = function (gradientInstance) {
-            p5asciify.gradientManager.removeGradient(gradientInstance);
+            p5asciify.rendererManager.gradientManager.removeGradient(gradientInstance);
         };
     }
 
@@ -2715,13 +2717,11 @@ void main() {
         };
         p5.prototype.registerMethod("pre", p5.prototype.preDrawAddPush);
 
-
         p5.prototype.postDrawAddPop = function () {
             p5asciify.p5Instance.pop();
             p5asciify.sketchFramebuffer.end();
         };
         p5.prototype.registerMethod("post", p5.prototype.postDrawAddPop);
-
 
         p5.prototype.asciify = function () { p5asciify.asciify(); };
         p5.prototype.registerMethod("post", p5.prototype.asciify);

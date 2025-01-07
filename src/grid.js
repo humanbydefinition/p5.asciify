@@ -2,12 +2,7 @@
  * Represents a 2D grid, handling the dimensions and resizing of the grid.
  */
 class P5AsciifyGrid {
-    /**
-     * Creates an instance of P5AsciifyGrid.
-     * @param {p5} p5Instance - The p5 instance to get the width and height from.
-     * @param {number} cellWidth - The width of each cell in the grid.
-     * @param {number} cellHeight - The height of each cell in the grid.
-     */
+
     constructor(p5Instance, cellWidth, cellHeight) {
         this.p5Instance = p5Instance;
         this.cellWidth = cellWidth;

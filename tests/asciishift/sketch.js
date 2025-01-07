@@ -105,13 +105,13 @@ function setup() {
 function setupAsciify() {
 
 	// Assign the custom ascii renderer's framebuffers to the variables
-	primaryColorSampleFramebuffer = p5asciify.rendererManager.renderers[3].primaryColorSampleFramebuffer;
-	secondaryColorSampleFramebuffer = p5asciify.rendererManager.renderers[3].secondaryColorSampleFramebuffer;
-	asciiCharacterFramebuffer = p5asciify.rendererManager.renderers[3].asciiCharacterFramebuffer;
+	primaryColorSampleFramebuffer = p5asciify.rendererManager.renderers[4].primaryColorSampleFramebuffer;
+	secondaryColorSampleFramebuffer = p5asciify.rendererManager.renderers[4].secondaryColorSampleFramebuffer;
+	asciiCharacterFramebuffer = p5asciify.rendererManager.renderers[4].asciiCharacterFramebuffer;
 
 	setAsciifyBorderColor(color(0)); // Set the border color of the ascii renderer
 
-	p5asciify.rendererManager.renderers[3].updateOptions({ enabled: true }); // Enable the custom renderer
+	p5asciify.rendererManager.renderers[4].updateOptions({ enabled: true }); // Enable the custom renderer
 
 	// Generate the charset color palette and apply it to the framebuffer
 	charsetColorPalette = p5asciify.rendererManager.renderers[0].characterSet.getCharsetColorArray(charset);

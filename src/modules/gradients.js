@@ -4,7 +4,7 @@ export function registerGradientMethods(p5asciify) {
 
     p5.prototype.addAsciiGradient = function (gradientName, brightnessStart, brightnessEnd, characters, userParams = {}) {
         validateGradientParams(
-            p5asciify.gradientManager,
+            p5asciify.rendererManager.gradientManager,
             gradientName,
             brightnessStart,
             brightnessEnd,
@@ -12,10 +12,10 @@ export function registerGradientMethods(p5asciify) {
             userParams
         );
 
-        return p5asciify.gradientManager.addGradient(gradientName, brightnessStart, brightnessEnd, characters, userParams);
+        return p5asciify.rendererManager.gradientManager.addGradient(gradientName, brightnessStart, brightnessEnd, characters, userParams);
     };
 
     p5.prototype.removeAsciiGradient = function (gradientInstance) {
-        p5asciify.gradientManager.removeGradient(gradientInstance);
+        p5asciify.rendererManager.gradientManager.removeGradient(gradientInstance);
     };
 }
