@@ -1,15 +1,24 @@
+import p5 from 'p5';
+
 import { AsciiRenderer } from '../AsciiRenderer';
+import { P5AsciifyGrid } from '../../Grid';
+import { P5AsciifyCharacterSet } from '../../CharacterSet';
 
-import { generateCharacterSelectionShader, generateBrightnessSampleShader, generateColorSampleShader } from './shaders/shaderGenerators.js';
-
+import { generateCharacterSelectionShader, generateBrightnessSampleShader, generateColorSampleShader } from './shaders/shaderGenerators';
 import asciiConversionShader from '../_common_shaders/asciiConversion.frag';
 import brightnessSplitShader from './shaders/brightnessSplit.frag';
-
 import vertexShader from '../../assets/shaders/vert/shader.vert';
 
 export default class AccurateAsciiRenderer extends AsciiRenderer {
+    private characterSelectionShader: p5.Shader;
+    private brightnessSampleShader: p5.Shader;
+    private colorSampleShader: p5.Shader;
+    private brightnessSplitShader: p5.Shader;
+    private shader: p5.Shader;
+    private brightnessSampleFramebuffer: p5.Framebuffer;
+    private brightnessSplitFramebuffer: p5.Framebuffer;
 
-    constructor(p5Instance, grid, characterSet, options) {
+    constructor(p5Instance: p5, grid: P5AsciifyGrid, characterSet: P5AsciifyCharacterSet, options: AsciiRendererOptions) {
         super(p5Instance, grid, characterSet, options);
 
         this.characterSelectionShader = this.p.createShader(vertexShader, generateCharacterSelectionShader(this.characterSet.asciiFontTextureAtlas.fontSize, this.characterSet.characters.length));
@@ -18,23 +27,32 @@ export default class AccurateAsciiRenderer extends AsciiRenderer {
         this.brightnessSplitShader = this.p.createShader(vertexShader, brightnessSplitShader);
         this.shader = this.p.createShader(vertexShader, asciiConversionShader);
 
-        this.brightnessSampleFramebuffer = this.p.createFramebuffer({ density: 1, width: this.grid.cols, height: this.grid.rows, depthFormat: this.p.UNSIGNED_INT, textureFiltering: this.p.NEAREST });
-        this.brightnessSplitFramebuffer = this.p.createFramebuffer({ depthFormat: this.p.UNSIGNED_INT, textureFiltering: this.p.NEAREST });
+        this.brightnessSampleFramebuffer = this.p.createFramebuffer({ 
+            density: 1, 
+            width: this.grid.cols, 
+            height: this.grid.rows, 
+            depthFormat: this.p.UNSIGNED_INT, 
+            textureFiltering: this.p.NEAREST 
+        });
+        this.brightnessSplitFramebuffer = this.p.createFramebuffer({ 
+            depthFormat: this.p.UNSIGNED_INT, 
+            textureFiltering: this.p.NEAREST 
+        });
     }
 
-    resizeFramebuffers() {
+    resizeFramebuffers(): void {
         super.resizeFramebuffers();
         this.brightnessSampleFramebuffer.resize(this.grid.cols, this.grid.rows);
     }
 
-    resetShaders() {
+    resetShaders(): void {
         this.characterSelectionShader = this.p.createShader(vertexShader, generateCharacterSelectionShader(this.characterSet.asciiFontTextureAtlas.fontSize, this.characterSet.characters.length));
         this.brightnessSampleShader = this.p.createShader(vertexShader, generateBrightnessSampleShader(this.grid.cellHeight, this.grid.cellWidth));
         this.colorSampleShader = this.p.createShader(vertexShader, generateColorSampleShader(16, this.grid.cellHeight, this.grid.cellWidth));
     }
 
-    render(inputFramebuffer, previousAsciiRenderer, isFirstRenderer) {
-
+    render(inputFramebuffer: p5.Framebuffer, previousAsciiRenderer: AsciiRenderer, isFirstRenderer: boolean): void {
+        // Brightness sample pass
         this.brightnessSampleFramebuffer.begin();
         this.p.clear();
         this.p.shader(this.brightnessSampleShader);
@@ -45,6 +63,7 @@ export default class AccurateAsciiRenderer extends AsciiRenderer {
         this.p.rect(0, 0, this.p.width, this.p.height);
         this.brightnessSampleFramebuffer.end();
 
+        // Brightness split pass
         this.brightnessSplitFramebuffer.begin();
         this.p.clear();
         this.p.shader(this.brightnessSplitShader);
@@ -57,6 +76,7 @@ export default class AccurateAsciiRenderer extends AsciiRenderer {
         this.p.rect(0, 0, this.p.width, this.p.height);
         this.brightnessSplitFramebuffer.end();
 
+        // Primary color sample pass
         this.primaryColorSampleFramebuffer.begin();
         if (this.options.characterColorMode === 1) {
             this.p.background(this.options.characterColor);
@@ -73,6 +93,7 @@ export default class AccurateAsciiRenderer extends AsciiRenderer {
         }
         this.primaryColorSampleFramebuffer.end();
 
+        // Secondary color sample pass
         this.secondaryColorSampleFramebuffer.begin();
         if (this.options.backgroundColorMode === 1) {
             this.p.background(this.options.backgroundColor);
@@ -89,6 +110,7 @@ export default class AccurateAsciiRenderer extends AsciiRenderer {
         }
         this.secondaryColorSampleFramebuffer.end();
 
+        // ASCII character pass
         this.asciiCharacterFramebuffer.begin();
         this.p.clear();
         this.p.shader(this.characterSelectionShader);
@@ -103,6 +125,7 @@ export default class AccurateAsciiRenderer extends AsciiRenderer {
         this.p.rect(0, 0, this.p.width, this.p.height);
         this.asciiCharacterFramebuffer.end();
 
+        // Final output pass
         this.outputFramebuffer.begin();
         this.p.clear();
         this.p.shader(this.shader);
@@ -125,4 +148,4 @@ export default class AccurateAsciiRenderer extends AsciiRenderer {
         this.p.rect(0, 0, this.p.width, this.p.height);
         this.outputFramebuffer.end();
     }
-};
+}

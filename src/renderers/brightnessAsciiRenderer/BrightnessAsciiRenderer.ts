@@ -1,4 +1,8 @@
+import p5 from 'p5';
+
 import { AsciiRenderer } from '../AsciiRenderer';
+import { P5AsciifyGrid } from '../../Grid';
+import { CharacterSet } from '../../CharacterSet';
 
 import vertexShader from '../../assets/shaders/vert/shader.vert';
 import asciiConversionShader from '../_common_shaders/asciiConversion.frag';
@@ -6,8 +10,12 @@ import colorSampleShader from './shaders/colorSample.frag';
 import asciiCharacterShader from './shaders/asciiCharacter.frag';
 
 export default class BrightnessAsciiRenderer extends AsciiRenderer {
+    private colorSampleShader: p5.Shader;
+    private asciiCharacterShader: p5.Shader;
+    private shader: p5.Shader;
+    private colorSampleFramebuffer: p5.Framebuffer;
 
-    constructor(p5Instance, grid, characterSet, options) {
+    constructor(p5Instance: p5, grid: P5AsciifyGrid, characterSet: CharacterSet, options: AsciiRendererOptions) {
         super(p5Instance, grid, characterSet, options);
 
         this.colorSampleShader = this.p.createShader(vertexShader, colorSampleShader);
@@ -17,12 +25,12 @@ export default class BrightnessAsciiRenderer extends AsciiRenderer {
         this.colorSampleFramebuffer = this.p.createFramebuffer({ density: 1, width: this.grid.cols, height: this.grid.rows, depthFormat: this.p.UNSIGNED_INT, textureFiltering: this.p.NEAREST });
     }
 
-    resizeFramebuffers() {
+    resizeFramebuffers(): void {
         super.resizeFramebuffers();
         this.colorSampleFramebuffer.resize(this.grid.cols, this.grid.rows);
     }
 
-    render(inputFramebuffer, previousAsciiRenderer, isFirstRenderer) {
+    render(inputFramebuffer: p5.Framebuffer, previousAsciiRenderer: AsciiRenderer, isFirstRenderer: boolean): void {
 
         this.colorSampleFramebuffer.begin();
         this.p.clear();

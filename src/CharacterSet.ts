@@ -18,7 +18,7 @@ interface P5AsciifyCharacterSetOptions {
  * A class that represents a character set for the P5Asciify library.
  * It is responsible for maintaining a texture that contains all the characters in the character set.
  */
-class P5AsciifyCharacterSet {
+export class P5AsciifyCharacterSet {
     private p5Instance: p5; 
     private asciiFontTextureAtlas: P5AsciifyTextureAtlas;
     private characters: string[];
@@ -60,5 +60,3 @@ class P5AsciifyCharacterSet {
         this.characterColorPalette.setColors(this.characterColors);
     }
 }
-
-export default P5AsciifyCharacterSet;

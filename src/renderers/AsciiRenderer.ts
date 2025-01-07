@@ -1,7 +1,7 @@
 import p5 from 'p5';
 import { validateOptions } from "../validators/OptionsValidator";
 import { P5AsciifyGrid } from '../Grid';
-import P5AsciifyCharacterSet from '../CharacterSet';
+import { P5AsciifyCharacterSet } from '../CharacterSet';
 
 /**
  * Abstract class for ASCII Renderers.
@@ -46,7 +46,7 @@ export abstract class AsciiRenderer {
             height: this.grid.rows,
             depthFormat: this.p.UNSIGNED_INT,
             textureFiltering: this.p.NEAREST
-        }) as p5.RendererGL;
+        });
 
         this.secondaryColorSampleFramebuffer = this.p.createFramebuffer({
             density: 1,
@@ -55,7 +55,7 @@ export abstract class AsciiRenderer {
             height: this.grid.rows,
             depthFormat: this.p.UNSIGNED_INT,
             textureFiltering: this.p.NEAREST
-        }) as p5.RendererGL;
+        });
 
         this.asciiCharacterFramebuffer = this.p.createFramebuffer({
             density: 1,
@@ -64,12 +64,12 @@ export abstract class AsciiRenderer {
             height: this.grid.rows,
             depthFormat: this.p.UNSIGNED_INT,
             textureFiltering: this.p.NEAREST
-        }) as p5.RendererGL;
+        });
 
         this.outputFramebuffer = this.p.createFramebuffer({
             depthFormat: this.p.UNSIGNED_INT,
             textureFiltering: this.p.NEAREST
-        }) as p5.RendererGL;
+        });
     }
 
     /**
@@ -84,7 +84,9 @@ export abstract class AsciiRenderer {
     /**
      * Resets shaders. To be implemented by subclasses.
      */
-    protected abstract resetShaders(): void;
+    protected resetShaders(): void {
+
+    }
 
     /**
      * Updates renderer options.
@@ -98,8 +100,7 @@ export abstract class AsciiRenderer {
             ...newOptions
         };
 
-        // If we are still in the user's setup(), the characterSet and grid have not been initialized yet.
-        if (!(this.p as any)._setupDone) { // Adjust based on actual p5 instance properties
+        if (!this.p._setupDone) {
             return;
         }
 
@@ -137,13 +138,13 @@ export abstract class AsciiRenderer {
      * Render ASCII based on the input framebuffer.
      * @param inputFramebuffer - The input framebuffer to base ASCII rendering on.
      */
-    public abstract render(inputFramebuffer: p5.RendererGL): void;
+    public abstract render(inputFramebuffer: p5.Framebuffer, previousAsciiRenderer: AsciiRenderer, isFirstRenderer: boolean): void;
 
     /**
      * Get the framebuffer containing the ASCII-rendered output.
      * @returns The output framebuffer.
      */
-    public getOutputFramebuffer(): p5.RendererGL {
+    public getOutputFramebuffer(): p5.Framebuffer {
         return this.outputFramebuffer;
     }
 }

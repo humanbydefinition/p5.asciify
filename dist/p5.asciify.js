@@ -166,10 +166,10 @@
         cellHeight;
         _cols = 0;
         _rows = 0;
-        width = 0;
-        height = 0;
-        offsetX = 0;
-        offsetY = 0;
+        _width = 0;
+        _height = 0;
+        _offsetX = 0;
+        _offsetY = 0;
         constructor(p, cellWidth, cellHeight) {
             this.p = p;
             this.cellWidth = cellWidth;
@@ -191,10 +191,10 @@
          * Adjusts the grid's offset to center it within the given canvas dimensions.
          */
         _resizeGrid() {
-            this.width = this._cols * this.cellWidth;
-            this.height = this._rows * this.cellHeight;
-            this.offsetX = Math.floor((this.p.width - this.width) / 2);
-            this.offsetY = Math.floor((this.p.height - this.height) / 2);
+            this._width = this._cols * this.cellWidth;
+            this._height = this._rows * this.cellHeight;
+            this._offsetX = Math.floor((this.p.width - this._width) / 2);
+            this._offsetY = Math.floor((this.p.height - this._height) / 2);
         }
         /**
          * Calculates the number of columns and rows for the grid based on the current cell and sketch dimensions.
@@ -239,6 +239,18 @@
         }
         get rows() {
             return this._rows;
+        }
+        get width() {
+            return this._width;
+        }
+        get height() {
+            return this._height;
+        }
+        get offsetX() {
+            return this._offsetX;
+        }
+        get offsetY() {
+            return this._offsetY;
         }
     }
 
@@ -363,6 +375,11 @@
             this.asciiCharacterFramebuffer.resize(this.grid.cols, this.grid.rows);
         }
         /**
+         * Resets shaders. To be implemented by subclasses.
+         */
+        resetShaders() {
+        }
+        /**
          * Updates renderer options.
          * @param newOptions - The new options to update.
          */
@@ -372,8 +389,7 @@
                 ...this.options,
                 ...newOptions
             };
-            // If we are still in the user's setup(), the characterSet and grid have not been initialized yet.
-            if (!this.p._setupDone) { // Adjust based on actual p5 instance properties
+            if (!this.p._setupDone) {
                 return;
             }
             if (newOptions?.characters) {
@@ -422,24 +438,22 @@
     var asciiCharacterShader$1 = "#version 100\nprecision mediump float;\n#define GLSLIFY 1\nuniform sampler2D u_colorSampleFramebuffer;uniform sampler2D u_charPaletteTexture;uniform vec2 u_charPaletteSize;uniform vec2 u_textureSize;void main(){vec2 pos=(floor(gl_FragCoord.xy)+0.5)/u_textureSize;float brightness=dot(texture2D(u_colorSampleFramebuffer,pos).rgb,vec3(0.299,0.587,0.114));float index=clamp(floor(brightness*u_charPaletteSize.x),0.0,u_charPaletteSize.x-1.0);gl_FragColor=vec4(texture2D(u_charPaletteTexture,vec2((index+0.5)/u_charPaletteSize.x,0.0)).rgb,1.0);}"; // eslint-disable-line
 
     class BrightnessAsciiRenderer extends AsciiRenderer {
-
+        colorSampleShader;
+        asciiCharacterShader;
+        shader;
+        colorSampleFramebuffer;
         constructor(p5Instance, grid, characterSet, options) {
             super(p5Instance, grid, characterSet, options);
-
             this.colorSampleShader = this.p.createShader(vertexShader, colorSampleShader$2);
             this.asciiCharacterShader = this.p.createShader(vertexShader, asciiCharacterShader$1);
             this.shader = this.p.createShader(vertexShader, asciiConversionShader);
-
             this.colorSampleFramebuffer = this.p.createFramebuffer({ density: 1, width: this.grid.cols, height: this.grid.rows, depthFormat: this.p.UNSIGNED_INT, textureFiltering: this.p.NEAREST });
         }
-
         resizeFramebuffers() {
             super.resizeFramebuffers();
             this.colorSampleFramebuffer.resize(this.grid.cols, this.grid.rows);
         }
-
         render(inputFramebuffer, previousAsciiRenderer, isFirstRenderer) {
-
             this.colorSampleFramebuffer.begin();
             this.p.clear();
             this.p.shader(this.colorSampleShader);
@@ -447,25 +461,24 @@
             this.colorSampleShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
             this.p.rect(0, 0, this.p.width, this.p.height);
             this.colorSampleFramebuffer.end();
-
             this.primaryColorSampleFramebuffer.begin();
             if (this.options.characterColorMode === 1) {
                 this.p.background(this.options.characterColor);
-            } else {
+            }
+            else {
                 this.p.clear();
                 this.p.image(this.colorSampleFramebuffer, -this.grid.cols / 2, -this.grid.rows / 2, this.grid.cols, this.grid.rows);
             }
             this.primaryColorSampleFramebuffer.end();
-
             this.secondaryColorSampleFramebuffer.begin();
             if (this.options.backgroundColorMode === 1) {
                 this.p.background(this.options.backgroundColor);
-            } else {
+            }
+            else {
                 this.p.clear();
                 this.p.image(this.colorSampleFramebuffer, -this.grid.cols / 2, -this.grid.rows / 2, this.grid.cols, this.grid.rows);
             }
             this.secondaryColorSampleFramebuffer.end();
-
             this.asciiCharacterFramebuffer.begin();
             this.p.clear();
             this.p.shader(this.asciiCharacterShader);
@@ -473,10 +486,8 @@
             this.asciiCharacterShader.setUniform('u_colorSampleFramebuffer', this.colorSampleFramebuffer);
             this.asciiCharacterShader.setUniform('u_charPaletteTexture', this.characterSet.characterColorPalette.framebuffer);
             this.asciiCharacterShader.setUniform('u_charPaletteSize', [this.characterSet.characterColorPalette.framebuffer.width, 1]);
-
             this.p.rect(0, 0, this.p.width, this.p.height);
             this.asciiCharacterFramebuffer.end();
-
             this.outputFramebuffer.begin();
             this.p.clear();
             this.p.shader(this.shader);
@@ -802,33 +813,43 @@ void main() {
     var brightnessSplitShader = "#version 100\nprecision mediump float;\n#define GLSLIFY 1\nuniform sampler2D u_inputImage;uniform sampler2D u_brightnessTexture;uniform vec2 u_inputImageSize;uniform int u_gridCols;uniform int u_gridRows;uniform float u_pixelRatio;const float EPSILON=0.01;void main(){vec2 logicalFragCoord=floor(gl_FragCoord.xy/u_pixelRatio);float cellWidth=u_inputImageSize.x/float(u_gridCols);float cellHeight=u_inputImageSize.y/float(u_gridRows);float gridX=floor(logicalFragCoord.x/cellWidth);float gridY=floor(logicalFragCoord.y/cellHeight);gridX=clamp(gridX,0.0,float(u_gridCols-1));gridY=clamp(gridY,0.0,float(u_gridRows-1));vec2 brightnessTexCoord=(vec2(gridX,gridY)+0.5)/vec2(float(u_gridCols),float(u_gridRows));float averageBrightness=texture2D(u_brightnessTexture,brightnessTexCoord).r;vec2 imageTexCoord=logicalFragCoord/u_inputImageSize;vec4 originalColor=texture2D(u_inputImage,imageTexCoord);float fragmentBrightness=0.299*originalColor.r+0.587*originalColor.g+0.114*originalColor.b;float brightnessDifference=fragmentBrightness-averageBrightness;float finalColorValue;if(brightnessDifference<-EPSILON){finalColorValue=0.0;}else{finalColorValue=1.0;}gl_FragColor=vec4(vec3(finalColorValue),1.0);}"; // eslint-disable-line
 
     class AccurateAsciiRenderer extends AsciiRenderer {
-
+        characterSelectionShader;
+        brightnessSampleShader;
+        colorSampleShader;
+        brightnessSplitShader;
+        shader;
+        brightnessSampleFramebuffer;
+        brightnessSplitFramebuffer;
         constructor(p5Instance, grid, characterSet, options) {
             super(p5Instance, grid, characterSet, options);
-
             this.characterSelectionShader = this.p.createShader(vertexShader, generateCharacterSelectionShader(this.characterSet.asciiFontTextureAtlas.fontSize, this.characterSet.characters.length));
             this.brightnessSampleShader = this.p.createShader(vertexShader, generateBrightnessSampleShader(this.grid.cellHeight, this.grid.cellWidth));
             this.colorSampleShader = this.p.createShader(vertexShader, generateColorSampleShader(16, this.grid.cellHeight, this.grid.cellWidth));
             this.brightnessSplitShader = this.p.createShader(vertexShader, brightnessSplitShader);
             this.shader = this.p.createShader(vertexShader, asciiConversionShader);
-
-            this.brightnessSampleFramebuffer = this.p.createFramebuffer({ density: 1, width: this.grid.cols, height: this.grid.rows, depthFormat: this.p.UNSIGNED_INT, textureFiltering: this.p.NEAREST });
-            this.brightnessSplitFramebuffer = this.p.createFramebuffer({ depthFormat: this.p.UNSIGNED_INT, textureFiltering: this.p.NEAREST });
+            this.brightnessSampleFramebuffer = this.p.createFramebuffer({
+                density: 1,
+                width: this.grid.cols,
+                height: this.grid.rows,
+                depthFormat: this.p.UNSIGNED_INT,
+                textureFiltering: this.p.NEAREST
+            });
+            this.brightnessSplitFramebuffer = this.p.createFramebuffer({
+                depthFormat: this.p.UNSIGNED_INT,
+                textureFiltering: this.p.NEAREST
+            });
         }
-
         resizeFramebuffers() {
             super.resizeFramebuffers();
             this.brightnessSampleFramebuffer.resize(this.grid.cols, this.grid.rows);
         }
-
         resetShaders() {
             this.characterSelectionShader = this.p.createShader(vertexShader, generateCharacterSelectionShader(this.characterSet.asciiFontTextureAtlas.fontSize, this.characterSet.characters.length));
             this.brightnessSampleShader = this.p.createShader(vertexShader, generateBrightnessSampleShader(this.grid.cellHeight, this.grid.cellWidth));
             this.colorSampleShader = this.p.createShader(vertexShader, generateColorSampleShader(16, this.grid.cellHeight, this.grid.cellWidth));
         }
-
         render(inputFramebuffer, previousAsciiRenderer, isFirstRenderer) {
-
+            // Brightness sample pass
             this.brightnessSampleFramebuffer.begin();
             this.p.clear();
             this.p.shader(this.brightnessSampleShader);
@@ -838,7 +859,7 @@ void main() {
             this.brightnessSampleShader.setUniform('u_gridRows', this.grid.rows);
             this.p.rect(0, 0, this.p.width, this.p.height);
             this.brightnessSampleFramebuffer.end();
-
+            // Brightness split pass
             this.brightnessSplitFramebuffer.begin();
             this.p.clear();
             this.p.shader(this.brightnessSplitShader);
@@ -850,11 +871,12 @@ void main() {
             this.brightnessSplitShader.setUniform('u_pixelRatio', this.p.pixelDensity());
             this.p.rect(0, 0, this.p.width, this.p.height);
             this.brightnessSplitFramebuffer.end();
-
+            // Primary color sample pass
             this.primaryColorSampleFramebuffer.begin();
             if (this.options.characterColorMode === 1) {
                 this.p.background(this.options.characterColor);
-            } else {
+            }
+            else {
                 this.p.clear();
                 this.p.shader(this.colorSampleShader);
                 this.colorSampleShader.setUniform('u_inputImage', inputFramebuffer);
@@ -866,11 +888,12 @@ void main() {
                 this.p.rect(0, 0, this.p.width, this.p.height);
             }
             this.primaryColorSampleFramebuffer.end();
-
+            // Secondary color sample pass
             this.secondaryColorSampleFramebuffer.begin();
             if (this.options.backgroundColorMode === 1) {
                 this.p.background(this.options.backgroundColor);
-            } else {
+            }
+            else {
                 this.p.clear();
                 this.p.shader(this.colorSampleShader);
                 this.colorSampleShader.setUniform('u_inputImage', inputFramebuffer);
@@ -882,7 +905,7 @@ void main() {
                 this.p.rect(0, 0, this.p.width, this.p.height);
             }
             this.secondaryColorSampleFramebuffer.end();
-
+            // ASCII character pass
             this.asciiCharacterFramebuffer.begin();
             this.p.clear();
             this.p.shader(this.characterSelectionShader);
@@ -896,7 +919,7 @@ void main() {
             this.characterSelectionShader.setUniform('u_gridPixelDimensions', [this.grid.width, this.grid.height]);
             this.p.rect(0, 0, this.p.width, this.p.height);
             this.asciiCharacterFramebuffer.end();
-
+            // Final output pass
             this.outputFramebuffer.begin();
             this.p.clear();
             this.p.shader(this.shader);
@@ -920,8 +943,6 @@ void main() {
             this.outputFramebuffer.end();
         }
     }
-
-    // renderers/BrightnessAsciiRenderer.js
 
     class CustomAsciiRenderer extends AsciiRenderer {
 
@@ -2291,7 +2312,7 @@ void main() {
 
             this.gradientCharacterSet = new P5AsciifyCharacterSet({ p5Instance: this.p, asciiFontTextureAtlas: fontTextureAtlas, characters: BRIGHTNESS_OPTIONS.characters });
             this.gradientManager.setup(this.fontTextureAtlas);
-            
+
             this.renderers = [
                 new BrightnessAsciiRenderer(this.p, this.grid, new P5AsciifyCharacterSet({ p5Instance: this.p, asciiFontTextureAtlas: fontTextureAtlas, characters: BRIGHTNESS_OPTIONS.characters }), { ...BRIGHTNESS_OPTIONS }),
                 new AccurateAsciiRenderer(this.p, this.grid, new P5AsciifyCharacterSet({ p5Instance: this.p, asciiFontTextureAtlas: fontTextureAtlas, characters: ACCURATE_OPTIONS.characters }), { ...ACCURATE_OPTIONS }),

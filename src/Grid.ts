@@ -9,10 +9,10 @@ export class P5AsciifyGrid {
     private cellHeight: number;
     private _cols: number = 0;
     private _rows: number = 0;
-    private width: number = 0;
-    private height: number = 0;
-    private offsetX: number = 0;
-    private offsetY: number = 0;
+    private _width: number = 0;
+    private _height: number = 0;
+    private _offsetX: number = 0;
+    private _offsetY: number = 0;
 
     constructor(p: p5, cellWidth: number, cellHeight: number) {
         this.p = p;
@@ -39,11 +39,11 @@ export class P5AsciifyGrid {
      * Adjusts the grid's offset to center it within the given canvas dimensions.
      */
     private _resizeGrid(): void {
-        this.width = this._cols * this.cellWidth;
-        this.height = this._rows * this.cellHeight;
+        this._width = this._cols * this.cellWidth;
+        this._height = this._rows * this.cellHeight;
 
-        this.offsetX = Math.floor((this.p.width - this.width) / 2);
-        this.offsetY = Math.floor((this.p.height - this.height) / 2);
+        this._offsetX = Math.floor((this.p.width - this._width) / 2);
+        this._offsetY = Math.floor((this.p.height - this._height) / 2);
     }
 
     /**
@@ -96,5 +96,21 @@ export class P5AsciifyGrid {
     
     public get rows(): number {
         return this._rows;
+    }
+
+    public get width(): number {
+        return this._width;
+    }
+
+    public get height(): number {
+        return this._height;
+    }
+
+    public get offsetX(): number {
+        return this._offsetX;
+    }
+
+    public get offsetY(): number {
+        return this._offsetY;
     }
 }

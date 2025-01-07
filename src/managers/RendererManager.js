@@ -1,5 +1,5 @@
-import BrightnessAsciiRenderer from '../renderers/brightnessAsciiRenderer/BrightnessAsciiRenderer.js';
-import AccurateAsciiRenderer from '../renderers/accurateAsciiRenderer/AccurateAsciiRenderer.js';
+import BrightnessAsciiRenderer from '../renderers/brightnessAsciiRenderer/BrightnessAsciiRenderer';
+import AccurateAsciiRenderer from '../renderers/accurateAsciiRenderer/AccurateAsciiRenderer';
 import CustomAsciiRenderer from '../renderers/customAsciiRenderer/CustomAsciiRenderer.js';
 import EdgeAsciiRenderer from '../renderers/edgeAsciiRenderer/EdgeAsciiRenderer.js';
 import TextAsciiRenderer from '../renderers/textAsciiRenderer/TextAsciiRenderer.js';
@@ -13,7 +13,7 @@ import {
     TEXT_OPTIONS
 } from '../constants/defaults.js';
 
-import P5AsciifyCharacterSet from '../CharacterSet';
+import { P5AsciifyCharacterSet } from '../CharacterSet';
 import P5AsciifyGradientManager from './gradientmanager.js';
 import GradientAsciiRenderer from '../renderers/gradientAsciiRenderer/GradientAsciiRenderer.js';
 
@@ -35,7 +35,7 @@ export class RendererManager {
 
         this.gradientCharacterSet = new P5AsciifyCharacterSet({ p5Instance: this.p, asciiFontTextureAtlas: fontTextureAtlas, characters: BRIGHTNESS_OPTIONS.characters });
         this.gradientManager.setup(this.fontTextureAtlas);
-        
+
         this.renderers = [
             new BrightnessAsciiRenderer(this.p, this.grid, new P5AsciifyCharacterSet({ p5Instance: this.p, asciiFontTextureAtlas: fontTextureAtlas, characters: BRIGHTNESS_OPTIONS.characters }), { ...BRIGHTNESS_OPTIONS }),
             new AccurateAsciiRenderer(this.p, this.grid, new P5AsciifyCharacterSet({ p5Instance: this.p, asciiFontTextureAtlas: fontTextureAtlas, characters: ACCURATE_OPTIONS.characters }), { ...ACCURATE_OPTIONS }),
