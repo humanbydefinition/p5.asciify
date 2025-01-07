@@ -1,8 +1,8 @@
-import AsciiRenderer from '../../AsciiRenderer.js';
-import vertexShader from '../../../assets/shaders/vert/shader.vert';
+import AsciiRenderer from '../AsciiRenderer.js';
+import vertexShader from '../../assets/shaders/vert/shader.vert';
 import colorSampleShader from './shaders/colorSample.frag';
 import asciiCharacterShader from './shaders/asciiCharacter.frag';
-import asciiConversionShader from '../../_common_shaders/asciiConversion.frag';
+import asciiConversionShader from '../_common_shaders/asciiConversion.frag';
 
 import sobelShader from './shaders/sobel.frag';
 

@@ -6,76 +6,31 @@ import P5AsciifyEventEmitter from './eventemitter.js';
 
 import P5AsciifyGradientManager from './managers/gradientmanager.js';
 
-import BrightnessAsciiRenderer from './renderers/layer1/brightnessAsciiRenderer/BrightnessAsciiRenderer.js';
-import AccurateAsciiRenderer from './renderers/layer1/accurateAsciiRenderer/AccurateAsciiRenderer.js';
-import CustomAsciiRenderer from './renderers/layer4/customAsciiRenderer/CustomAsciiRenderer.js';
+import BrightnessAsciiRenderer from './renderers/brightnessAsciiRenderer/BrightnessAsciiRenderer.js';
+import AccurateAsciiRenderer from './renderers/accurateAsciiRenderer/AccurateAsciiRenderer.js';
+import CustomAsciiRenderer from './renderers/customAsciiRenderer/CustomAsciiRenderer.js';
+import GradientAsciiRenderer from './renderers/gradientAsciiRenderer/GradientAsciiRenderer.js';
+import EdgeAsciiRenderer from './renderers/edgeAsciiRenderer/EdgeAsciiRenderer.js';
+import TextAsciiRenderer from './renderers/textAsciiRenderer/TextAsciiRenderer.js';
 
-import GradientAsciiRenderer from './renderers/layer2/gradientAsciiRenderer/GradientAsciiRenderer.js';
+import {
+    COMMON_OPTIONS,
+    ASCII_OPTIONS,
+    GRADIENT_OPTIONS,
+    EDGE_OPTIONS,
+    CUSTOM_OPTIONS,
+    TEXT_OPTIONS
+} from './constants/defaults.js';
 
-import EdgeAsciiRenderer from './renderers/layer3/edgeAsciiRenderer/EdgeAsciiRenderer.js';
 
-import TextAsciiRenderer from './renderers/layer5/textAsciiRenderer/TextAsciiRenderer.js';
+class Asciifier {
 
-/**
- * @class P5Asciify
- * @description
- * The main class for the P5Asciify library, responsible for setting up and running the rendering pipeline.
- */
-class P5Asciify {
-
-    commonOptions = {
-        fontSize: 16,
-        gridDimensions: [0, 0],
-        borderColor: "#000000",
-    };
-
-    asciiOptions = {
-        renderMode: 'brightness',
-        enabled: true,
-        characters: "0123456789",
-        characterColor: "#FFFFFF",
-        characterColorMode: 0,
-        backgroundColor: "#000000",
-        backgroundColorMode: 1,
-        invertMode: false,
-        rotationAngle: 0,
-    };
-
-    gradientOptions = {
-        enabled: true,
-        characterColor: "#FFFFFF",
-        characterColorMode: 0,
-        backgroundColor: "#000000",
-        backgroundColorMode: 1,
-        invertMode: false,
-        rotationAngle: 0,
-    }
-
-    edgeOptions = {
-        enabled: false,
-        characters: "-/|\\-/|\\",
-        characterColor: "#FFFFFF",
-        characterColorMode: 0,
-        backgroundColor: "#000000",
-        backgroundColorMode: 1,
-        invertMode: false,
-        sobelThreshold: 0.5,
-        sampleThreshold: 16,
-        rotationAngle: 0,
-    };
-
-    customOptions = {
-        enabled: false,
-    }
-
-    textOptions = {
-        enabled: false,
-        characterColor: "#FFFFFF",
-        characterColorMode: 0,
-        backgroundColor: "#000000",
-        backgroundColorMode: 1,
-        invertMode: false,
-    }
+    commonOptions = { ...COMMON_OPTIONS };
+    asciiOptions = { ...ASCII_OPTIONS };
+    gradientOptions = { ...GRADIENT_OPTIONS };
+    edgeOptions = { ...EDGE_OPTIONS };
+    customOptions = { ...CUSTOM_OPTIONS };
+    textOptions = { ...TEXT_OPTIONS };
 
     gradientManager = new P5AsciifyGradientManager();
 
@@ -349,4 +304,4 @@ class P5Asciify {
     }
 }
 
-export default P5Asciify;
+export default Asciifier;
