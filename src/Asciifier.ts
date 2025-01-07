@@ -35,6 +35,11 @@ export class Asciifier {
         this.p.preload = () => {}; // Define a default preload function
     }
 
+    public addP5Instance(p: p5): void {
+        this.p = p;
+        this.rendererManager.gradientManager.addInstance(this.p);
+    }
+
     /**
      * Sets up the P5Asciify library with the specified options
      */

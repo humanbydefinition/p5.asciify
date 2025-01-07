@@ -1,5 +1,7 @@
-import P5AsciifyError from '../errors.js';
+import { P5AsciifyError } from '../AsciifyError.js';
 import P5AsciifyUtils from '../utils.js';
+import p5 from 'p5';
+
 
 /**
  * Validates the p5 instance for p5.asciify setup.
@@ -7,7 +9,7 @@ import P5AsciifyUtils from '../utils.js';
  * @param {Object} p5Instance - The p5.js instance.
  * @throws {P5AsciifyError} If any validation fails.
  */
-export function validateSetup(p5Instance) {
+export function validateSetup(p5Instance: p5) {
     // Check if setup has already been done
     if (p5Instance._setupDone) {
         return;

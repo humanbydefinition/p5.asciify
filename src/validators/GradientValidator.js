@@ -1,4 +1,4 @@
-import P5AsciifyError from '../errors.js';
+import { P5AsciifyError } from '../AsciifyError';
 
 /**
  * Validates the parameters for adding an ASCII gradient.

@@ -5,16 +5,13 @@
 })(this, (function (p5) { 'use strict';
 
     /**
-     * @class P5AsciifyError
-     * @extends {Error}
-     * @description
      * Custom error class for the P5Asciify library.
      * Represents errors specific to the P5Asciify library.
      */
     class P5AsciifyError extends Error {
         /**
          * Creates an instance of P5AsciifyError.
-         * @param {string} message - The error message.
+         * @param message - The error message.
          */
         constructor(message) {
             super(message);
@@ -23,7 +20,7 @@
     }
 
     class P5AsciifyFontTextureAtlas {
-        
+
         constructor({ p5Instance, font, fontSize }) {
             this.p5Instance = p5Instance;
             this.font = font;
@@ -143,16 +140,16 @@
          */
         getCharsetColorArray(input) {
             const chars = Array.isArray(input) ? input : Array.from(input);
-            
+
             return chars.map(char => {
                 const glyph = this.characterGlyphs.find(
                     glyph => glyph.unicodes.includes(char.codePointAt(0))
                 );
-        
+
                 if (!glyph) {
                     throw new P5AsciifyError(`Could not find character in character set: ${char}`);
                 }
-        
+
                 return [glyph.r, glyph.g, glyph.b];
             });
         }
@@ -2160,7 +2157,6 @@ void main() {
             const gradient = this.gradientConstructors[gradientName]({ type: gradientName, shader: this.gradientShaders[gradientName], params: mergedParams });
             gradient.registerPaletteChangeCallback(this.handleGradientPaletteChange.bind(this));
 
-            
             this._gradients.push(gradient);
 
             if (!this.p5Instance._setupDone) {
@@ -2410,6 +2406,10 @@ void main() {
             this.p = p;
             this.p.preload = () => { }; // Define a default preload function
         }
+        addP5Instance(p) {
+            this.p = p;
+            this.rendererManager.gradientManager.addInstance(this.p);
+        }
         /**
          * Sets up the P5Asciify library with the specified options
          */
@@ -2501,12 +2501,10 @@ void main() {
         if (p5Instance._setupDone) {
             return;
         }
-
         // Ensure WebGL renderer is used
         if (p5Instance._renderer.drawingContext instanceof CanvasRenderingContext2D) {
             throw new P5AsciifyError("WebGL renderer is required for p5.asciify to work.");
         }
-
         // Check p5.js version
         if (P5AsciifyUtils.compareVersions(p5Instance.VERSION, "1.8.0") < 0) {
             throw new P5AsciifyError("p5.asciify requires p5.js v1.8.0 or higher to work.");
@@ -2515,10 +2513,7 @@ void main() {
 
     function registerSetupMethods(p5asciify) {
         p5.prototype.setupP5Instance = function () {
-            if (!p5asciify.p) {
-                p5asciify.p = this;
-            }
-            p5asciify.rendererManager.gradientManager.addInstance(this);
+            p5asciify.addP5Instance(this);
         };
         p5.prototype.setupAsciifier = function () {
             validateSetup(this);

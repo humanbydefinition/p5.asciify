@@ -1,6 +1,7 @@
-import P5AsciifyError from './errors';
+import { P5AsciifyError } from './AsciifyError';
+
 class P5AsciifyFontTextureAtlas {
-    
+
     constructor({ p5Instance, font, fontSize }) {
         this.p5Instance = p5Instance;
         this.font = font;
@@ -120,16 +121,16 @@ class P5AsciifyFontTextureAtlas {
      */
     getCharsetColorArray(input) {
         const chars = Array.isArray(input) ? input : Array.from(input);
-        
+
         return chars.map(char => {
             const glyph = this.characterGlyphs.find(
                 glyph => glyph.unicodes.includes(char.codePointAt(0))
             );
-    
+
             if (!glyph) {
                 throw new P5AsciifyError(`Could not find character in character set: ${char}`);
             }
-    
+
             return [glyph.r, glyph.g, glyph.b];
         });
     }

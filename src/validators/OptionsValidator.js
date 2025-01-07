@@ -1,5 +1,5 @@
 import { VALID_OPTIONS, VALID_RENDER_MODES, FONT_SIZE_LIMITS, EDGE_CHARACTER_LENGTH } from '../constants/validOptions.js';
-import P5AsciifyError from '../errors.js';
+import { P5AsciifyError } from '../AsciifyError';
 
 /**
  * Validates the options for p5.asciify.

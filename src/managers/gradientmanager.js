@@ -73,7 +73,6 @@ class P5AsciifyGradientManager {
         const gradient = this.gradientConstructors[gradientName]({ type: gradientName, shader: this.gradientShaders[gradientName], params: mergedParams });
         gradient.registerPaletteChangeCallback(this.handleGradientPaletteChange.bind(this));
 
-        
         this._gradients.push(gradient);
 
         if (!this.p5Instance._setupDone) {
