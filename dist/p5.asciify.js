@@ -20,149 +20,140 @@
     }
 
     class P5AsciifyFontTextureAtlas {
-
+        p;
+        font; // Replace 'any' with the actual font type
+        fontSize;
+        characters;
+        characterGlyphs;
+        maxGlyphDimensions;
+        texture;
+        charsetCols = 0;
+        charsetRows = 0;
         constructor({ p5Instance, font, fontSize }) {
-            this.p5Instance = p5Instance;
+            this.p = p5Instance;
             this.font = font;
             this.fontSize = fontSize;
-
             this.characters = Object.values(this.font.font.glyphs.glyphs)
-                .filter(glyph => glyph.unicode !== undefined)
-                .map(glyph => String.fromCharCode(glyph.unicode));
-
+                .filter((glyph) => glyph.unicode !== undefined)
+                .map((glyph) => String.fromCharCode(glyph.unicode));
             this.characterGlyphs = this.loadCharacterGlyphs();
             this.maxGlyphDimensions = this.getMaxGlyphDimensions(this.fontSize);
             this.createTexture(this.fontSize);
         }
-
         loadCharacterGlyphs() {
             // Load glyphs with unicode
-            let glyphs = Object.values(this.font.font.glyphs.glyphs).filter(glyph => glyph.unicode !== undefined);
-
+            const glyphs = Object.values(this.font.font.glyphs.glyphs).filter((glyph) => glyph.unicode !== undefined);
             // Assign colors to the sorted glyphs
             glyphs.forEach((glyph, index) => {
                 glyph.r = index % 256;
                 glyph.g = Math.floor(index / 256) % 256;
                 glyph.b = Math.floor(index / 65536);
             });
-
             return glyphs;
         }
-
         /**
          * Calculates the maximum dimensions of glyphs in the whole font for a given font size.
-         * @param {number} fontSize - The font size to use for calculations.
-         * @returns {Object} An object containing the maximum width and height of the glyphs.
+         * @param fontSize - The font size to use for calculations.
+         * @returns An object containing the maximum width and height of the glyphs.
          */
         getMaxGlyphDimensions(fontSize) {
             return this.characterGlyphs.reduce((maxDims, glyph) => {
                 const bounds = glyph.getPath(0, 0, fontSize).getBoundingBox();
                 return {
                     width: Math.ceil(Math.max(maxDims.width, bounds.x2 - bounds.x1)),
-                    height: Math.ceil(Math.max(maxDims.height, bounds.y2 - bounds.y1))
+                    height: Math.ceil(Math.max(maxDims.height, bounds.y2 - bounds.y1)),
                 };
             }, { width: 0, height: 0 });
         }
-
         /**
          * Sets the font object and resets the character set.
-         * @param {Object} font - The new font object.
+         * @param font - The new font object.
          */
         setFontObject(font) {
             this.font = font;
             this.characters = Object.values(this.font.font.glyphs.glyphs)
-                .filter(glyph => glyph.unicode !== undefined)
-                .map(glyph => String.fromCharCode(glyph.unicode));
-
+                .filter((glyph) => glyph.unicode !== undefined)
+                .map((glyph) => String.fromCharCode(glyph.unicode));
             this.characterGlyphs = this.loadCharacterGlyphs();
             this.maxGlyphDimensions = this.getMaxGlyphDimensions(this.fontSize);
             this.createTexture(this.fontSize);
         }
-
         /**
          * Sets the font size and updates the maximum glyph dimensions.
-         * @param {number} fontSize - The new font size.
+         * @param fontSize - The new font size.
          */
         setFontSize(fontSize) {
             this.fontSize = fontSize;
             this.maxGlyphDimensions = this.getMaxGlyphDimensions(this.fontSize);
             this.createTexture(this.fontSize);
         }
-
         /**
          * Creates a texture containing all characters in the character set, arranged in a 2d grid.
-         * @param {number} fontSize - The font size to use for rendering the texture.
+         * @param fontSize - The font size to use for rendering the texture.
          */
         createTexture(fontSize) {
             this.charsetCols = Math.ceil(Math.sqrt(this.characters.length));
             this.charsetRows = Math.ceil(this.characters.length / this.charsetCols);
-            let dimensions = this.getMaxGlyphDimensions(fontSize);
-
+            const dimensions = this.getMaxGlyphDimensions(fontSize);
             if (!this.texture) {
-                this.texture = this.p5Instance.createFramebuffer({ width: dimensions.width * this.charsetCols, height: dimensions.height * this.charsetRows, depthFormat: this.p5Instance.UNSIGNED_INT, textureFiltering: this.p5Instance.NEAREST });
-            } else {
+                this.texture = this.p.createFramebuffer({
+                    width: dimensions.width * this.charsetCols,
+                    height: dimensions.height * this.charsetRows,
+                    depthFormat: this.p.UNSIGNED_INT,
+                    textureFiltering: this.p.NEAREST,
+                });
+            }
+            else {
                 this.texture.resize(dimensions.width * this.charsetCols, dimensions.height * this.charsetRows);
             }
-
             this.texture.begin();
-            this.p5Instance.clear();
+            this.p.clear();
             this.drawCharacters(fontSize, dimensions);
             this.texture.end();
         }
-
         /**
-         * 
-         * @param {number} fontSize - The font size to use for drawing the characters on the texture.
-         * @param {*} dimensions - The maximum dimensions of the glyphs.
+         * Draws characters onto the texture.
+         * @param fontSize - The font size to use for drawing the characters on the texture.
+         * @param dimensions - The maximum dimensions of the glyphs.
          */
         drawCharacters(fontSize, dimensions) {
-            this.p5Instance.clear();
-            this.p5Instance.textFont(this.font);
-            this.p5Instance.fill(255);
-            this.p5Instance.textSize(fontSize);
-            this.p5Instance.textAlign(this.p5Instance.LEFT, this.p5Instance.TOP);
-            this.p5Instance.noStroke();
-
+            this.p.clear();
+            this.p.textFont(this.font);
+            this.p.fill(255);
+            this.p.textSize(fontSize);
+            this.p.textAlign(this.p.LEFT, this.p.TOP);
+            this.p.noStroke();
             for (let i = 0; i < this.characterGlyphs.length; i++) {
                 const col = i % this.charsetCols;
                 const row = Math.floor(i / this.charsetCols);
-                const x = dimensions.width * col - ((dimensions.width * this.charsetCols) / 2);
-                const y = dimensions.height * row - ((dimensions.height * this.charsetRows) / 2);
-                this.p5Instance.text(String.fromCharCode(this.characterGlyphs[i].unicode), x, y);
+                const x = dimensions.width * col - (dimensions.width * this.charsetCols) / 2;
+                const y = dimensions.height * row - (dimensions.height * this.charsetRows) / 2;
+                this.p.text(String.fromCharCode(this.characterGlyphs[i].unicode), x, y);
             }
         }
-
         /**
          * Gets an array of RGB colors for given characters or string
-         * @param {string|string[]} input - Either a string or array of characters
-         * @returns {Array<[number,number,number]>} Array of RGB color values
-         * @throws {Error} If character is not found in the texture atlas
+         * @param input - Either a string or array of characters
+         * @returns Array of RGB color values
+         * @throws P5AsciifyError If character is not found in the texture atlas
          */
         getCharsetColorArray(input) {
             const chars = Array.isArray(input) ? input : Array.from(input);
-
-            return chars.map(char => {
-                const glyph = this.characterGlyphs.find(
-                    glyph => glyph.unicodes.includes(char.codePointAt(0))
-                );
-
+            return chars.map((char) => {
+                const glyph = this.characterGlyphs.find((glyph) => glyph.unicodes.includes(char.codePointAt(0)));
                 if (!glyph) {
                     throw new P5AsciifyError(`Could not find character in character set: ${char}`);
                 }
-
                 return [glyph.r, glyph.g, glyph.b];
             });
         }
-
         /**
          * Returns an array of characters that are not supported by the current font.
-         * @param {string} characters - The string of characters to check.
-         * @returns {string[]} An array of unsupported characters.
+         * @param characters - The string of characters to check.
+         * @returns An array of unsupported characters.
          */
         getUnsupportedCharacters(characters) {
-            return Array.from(new Set(Array.from(characters).filter(char =>
-                !this.characterGlyphs.some(glyph => glyph.unicodes.includes(char.codePointAt(0)))
-            )));
+            return Array.from(new Set(Array.from(characters).filter((char) => !this.characterGlyphs.some((glyph) => glyph.unicodes.includes(char.codePointAt(0))))));
         }
     }
 
@@ -173,8 +164,8 @@
         p;
         cellWidth;
         cellHeight;
-        cols = 0;
-        rows = 0;
+        _cols = 0;
+        _rows = 0;
         width = 0;
         height = 0;
         offsetX = 0;
@@ -191,8 +182,8 @@
          */
         reset() {
             const [cols, rows] = this._calculateGridCellDimensions();
-            this.cols = cols;
-            this.rows = rows;
+            this._cols = cols;
+            this._rows = rows;
             this._resizeGrid();
         }
         /**
@@ -200,8 +191,8 @@
          * Adjusts the grid's offset to center it within the given canvas dimensions.
          */
         _resizeGrid() {
-            this.width = this.cols * this.cellWidth;
-            this.height = this.rows * this.cellHeight;
+            this.width = this._cols * this.cellWidth;
+            this.height = this._rows * this.cellHeight;
             this.offsetX = Math.floor((this.p.width - this.width) / 2);
             this.offsetY = Math.floor((this.p.height - this.height) / 2);
         }
@@ -238,10 +229,16 @@
                 this.reset();
                 return;
             }
-            this.cols = numCols;
-            this.rows = numRows;
+            this._cols = numCols;
+            this._rows = numRows;
             // Resize the grid based on new dimensions
             this._resizeGrid();
+        }
+        get cols() {
+            return this._cols;
+        }
+        get rows() {
+            return this._rows;
         }
     }
 
@@ -301,97 +298,115 @@
         */
     }
 
-    // renderers/AsciiRenderer.js
-
-
+    /**
+     * Abstract class for ASCII Renderers.
+     */
     class AsciiRenderer {
+        p;
+        grid;
+        characterSet;
+        options;
+        primaryColorSampleFramebuffer;
+        secondaryColorSampleFramebuffer;
+        asciiCharacterFramebuffer;
+        outputFramebuffer;
         /**
          * Constructor for AsciiRenderer.
-         * @param {Object} options - Renderer-specific options.
-         * @param {P5} p5Instance - The p5.js instance.
+         * @param p5Instance - The p5.js instance.
+         * @param grid - The grid instance.
+         * @param characterSet - The character set instance.
+         * @param options - Renderer-specific options.
          */
         constructor(p5Instance, grid, characterSet, options) {
             if (new.target === AsciiRenderer) {
                 throw new TypeError("Cannot construct AsciiRenderer instances directly");
             }
-
             this.p = p5Instance;
             this.grid = grid;
             this.characterSet = characterSet;
             this.options = options;
-
-            this.primaryColorSampleFramebuffer = this.p.createFramebuffer({ density: 1, antialias: false, width: this.grid.cols, height: this.grid.rows, depthFormat: this.p.UNSIGNED_INT, textureFiltering: this.p.NEAREST });
-            this.secondaryColorSampleFramebuffer = this.p.createFramebuffer({ density: 1, antialias: false, width: this.grid.cols, height: this.grid.rows, depthFormat: this.p.UNSIGNED_INT, textureFiltering: this.p.NEAREST });
-            this.asciiCharacterFramebuffer = this.p.createFramebuffer({ density: 1, antialias: false, width: this.grid.cols, height: this.grid.rows, depthFormat: this.p.UNSIGNED_INT, textureFiltering: this.p.NEAREST });
-
-            this.outputFramebuffer = this.p.createFramebuffer({ depthFormat: this.p.UNSIGNED_INT, textureFiltering: this.p.NEAREST });
+            this.primaryColorSampleFramebuffer = this.p.createFramebuffer({
+                density: 1,
+                antialias: false,
+                width: this.grid.cols,
+                height: this.grid.rows,
+                depthFormat: this.p.UNSIGNED_INT,
+                textureFiltering: this.p.NEAREST
+            });
+            this.secondaryColorSampleFramebuffer = this.p.createFramebuffer({
+                density: 1,
+                antialias: false,
+                width: this.grid.cols,
+                height: this.grid.rows,
+                depthFormat: this.p.UNSIGNED_INT,
+                textureFiltering: this.p.NEAREST
+            });
+            this.asciiCharacterFramebuffer = this.p.createFramebuffer({
+                density: 1,
+                antialias: false,
+                width: this.grid.cols,
+                height: this.grid.rows,
+                depthFormat: this.p.UNSIGNED_INT,
+                textureFiltering: this.p.NEAREST
+            });
+            this.outputFramebuffer = this.p.createFramebuffer({
+                depthFormat: this.p.UNSIGNED_INT,
+                textureFiltering: this.p.NEAREST
+            });
         }
-
+        /**
+         * Resizes all framebuffers based on the grid dimensions.
+         */
         resizeFramebuffers() {
             this.primaryColorSampleFramebuffer.resize(this.grid.cols, this.grid.rows);
             this.secondaryColorSampleFramebuffer.resize(this.grid.cols, this.grid.rows);
             this.asciiCharacterFramebuffer.resize(this.grid.cols, this.grid.rows);
         }
-
-        resetShaders() {
-
-        }
-
+        /**
+         * Updates renderer options.
+         * @param newOptions - The new options to update.
+         */
         updateOptions(newOptions) {
-
             validateOptions(this.p, newOptions);
-
             this.options = {
                 ...this.options,
                 ...newOptions
             };
-
-            // If we are still in the users setup(), the characterset and grid have not been initialized yet.
-            if (!this.p._setupDone) {
+            // If we are still in the user's setup(), the characterSet and grid have not been initialized yet.
+            if (!this.p._setupDone) { // Adjust based on actual p5 instance properties
                 return;
             }
-
             if (newOptions?.characters) {
                 this.characterSet.setCharacterSet(newOptions.characters);
                 this.resetShaders();
             }
-
             /**
-
-            if (newOptions?.hasOwnProperty('characterColorMode')) {
-                this.textAsciiRenderer.updateCharacterColorMode();
-            }
-
-            if (newOptions?.hasOwnProperty('characterColor')) {
-                this.textAsciiRenderer.updateCharacterColor();
-            }
-
-            if (newOptions?.hasOwnProperty('backgroundColor')) {
-                this.textAsciiRenderer.updateBackgroundColor();
-            }
-
-            if (newOptions?.hasOwnProperty('invertMode')) {
-                this.textAsciiRenderer.updateInvertMode();
-            }
-
-            if (newOptions?.hasOwnProperty('enabled')) {
-                this.textAsciiRenderer.toggleVisibility();
-            }
-
-            **/
+             * Uncomment and implement additional option handlers as needed.
+             *
+             * if (newOptions?.characterColorMode !== undefined) {
+             *     this.textAsciiRenderer.updateCharacterColorMode();
+             * }
+             *
+             * if (newOptions?.characterColor !== undefined) {
+             *     this.textAsciiRenderer.updateCharacterColor();
+             * }
+             *
+             * if (newOptions?.backgroundColor !== undefined) {
+             *     this.textAsciiRenderer.updateBackgroundColor();
+             * }
+             *
+             * if (newOptions?.invertMode !== undefined) {
+             *     this.textAsciiRenderer.updateInvertMode();
+             * }
+             *
+             * if (newOptions?.enabled !== undefined) {
+             *     this.textAsciiRenderer.toggleVisibility();
+             * }
+             */
         }
-
-        /**
-         * Render ASCII based on the input framebuffer.
-         * @param {Framebuffer} inputFramebuffer - The input framebuffer to base ASCII rendering on.
-         */
-        render(inputFramebuffer) {
-            throw new Error("Must implement render method");
-        }
-
         /**
          * Get the framebuffer containing the ASCII-rendered output.
-         * @returns {Framebuffer} The output framebuffer.
+         * @returns The output framebuffer.
          */
         getOutputFramebuffer() {
             return this.outputFramebuffer;

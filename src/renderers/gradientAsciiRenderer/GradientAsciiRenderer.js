@@ -1,4 +1,4 @@
-import AsciiRenderer from '../AsciiRenderer.js';
+import { AsciiRenderer } from '../AsciiRenderer';
 
 import grayscaleShader from './shaders/grayscale.frag';
 import asciiConversionShader from '../_common_shaders/asciiConversion.frag';

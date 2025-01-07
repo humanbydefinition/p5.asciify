@@ -7,8 +7,8 @@ export class P5AsciifyGrid {
     private p: p5;
     private cellWidth: number;
     private cellHeight: number;
-    private cols: number = 0;
-    private rows: number = 0;
+    private _cols: number = 0;
+    private _rows: number = 0;
     private width: number = 0;
     private height: number = 0;
     private offsetX: number = 0;
@@ -28,8 +28,8 @@ export class P5AsciifyGrid {
      */
     public reset(): void {
         const [cols, rows] = this._calculateGridCellDimensions();
-        this.cols = cols;
-        this.rows = rows;
+        this._cols = cols;
+        this._rows = rows;
 
         this._resizeGrid();
     }
@@ -39,8 +39,8 @@ export class P5AsciifyGrid {
      * Adjusts the grid's offset to center it within the given canvas dimensions.
      */
     private _resizeGrid(): void {
-        this.width = this.cols * this.cellWidth;
-        this.height = this.rows * this.cellHeight;
+        this.width = this._cols * this.cellWidth;
+        this.height = this._rows * this.cellHeight;
 
         this.offsetX = Math.floor((this.p.width - this.width) / 2);
         this.offsetY = Math.floor((this.p.height - this.height) / 2);
@@ -83,10 +83,18 @@ export class P5AsciifyGrid {
             return;
         }
 
-        this.cols = numCols;
-        this.rows = numRows;
+        this._cols = numCols;
+        this._rows = numRows;
 
         // Resize the grid based on new dimensions
         this._resizeGrid();
+    }
+
+    public get cols(): number {
+        return this._cols;
+    }
+    
+    public get rows(): number {
+        return this._rows;
     }
 }

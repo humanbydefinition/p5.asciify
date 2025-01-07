@@ -1,4 +1,4 @@
-import AsciiRenderer from '../AsciiRenderer.js';
+import { AsciiRenderer } from '../AsciiRenderer';
 
 import vertexShader from '../../assets/shaders/vert/shader.vert';
 import asciiConversionShader from '../_common_shaders/asciiConversion.frag';

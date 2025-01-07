@@ -1,4 +1,4 @@
-import AsciiRenderer from '../AsciiRenderer.js';
+import { AsciiRenderer } from '../AsciiRenderer';
 
 import { generateCharacterSelectionShader, generateBrightnessSampleShader, generateColorSampleShader } from './shaders/shaderGenerators.js';
 

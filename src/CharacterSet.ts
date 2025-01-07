@@ -1,7 +1,7 @@
 import { P5AsciifyError } from './AsciifyError';
 import { P5AsciifyColorPalette } from './ColorPalette';
 import p5 from 'p5';
-import { P5AsciifyTextureAtlas } from './fontTextureAtlas';
+import { P5AsciifyTextureAtlas } from './FontTextureAtlas';
 
 /**
  * Interface for constructor parameters
