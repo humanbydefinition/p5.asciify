@@ -1,8 +1,8 @@
 import BrightnessAsciiRenderer from '../renderers/brightnessAsciiRenderer/BrightnessAsciiRenderer';
 import AccurateAsciiRenderer from '../renderers/accurateAsciiRenderer/AccurateAsciiRenderer';
-import CustomAsciiRenderer from '../renderers/customAsciiRenderer/CustomAsciiRenderer.js';
-import EdgeAsciiRenderer from '../renderers/edgeAsciiRenderer/EdgeAsciiRenderer.js';
-import TextAsciiRenderer from '../renderers/textAsciiRenderer/TextAsciiRenderer.js';
+import CustomAsciiRenderer from '../renderers/customAsciiRenderer/CustomAsciiRenderer';
+import EdgeAsciiRenderer from '../renderers/edgeAsciiRenderer/EdgeAsciiRenderer';
+import TextAsciiRenderer from '../renderers/textAsciiRenderer/TextAsciiRenderer';
 
 import {
     BRIGHTNESS_OPTIONS,

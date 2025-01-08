@@ -1,9 +1,9 @@
-import P5AsciifyLinearGradient from "../gradients/linear/linear.js";
-import P5AsciifyZigZagGradient from "../gradients/zigzag/zigzag.js";
-import P5AsciifySpiralGradient from "../gradients/spiral/spiral.js";
-import P5AsciifyRadialGradient from "../gradients/radial/radial.js";
-import P5AsciifyConicalGradient from "../gradients/conical/conical.js";
-import P5AsciifyNoiseGradient from "../gradients/noise/noise.js";
+import P5AsciifyLinearGradient from "../gradients/linear/Linear";
+import P5AsciifyZigZagGradient from "../gradients/zigzag/ZigZag";
+import P5AsciifySpiralGradient from "../gradients/spiral/Spiral";
+import P5AsciifyRadialGradient from "../gradients/radial/Radial";
+import P5AsciifyConicalGradient from "../gradients/conical/Conical";
+import P5AsciifyNoiseGradient from "../gradients/noise/Noise";
 
 import vertexShader from '../assets/shaders/vert/shader.vert';
 

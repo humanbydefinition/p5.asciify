@@ -1,16 +1,26 @@
+import p5 from 'p5';
 import { AsciiRenderer } from '../AsciiRenderer';
+import { P5AsciifyGrid } from '../../Grid';
+import { P5AsciifyCharacterSet } from '../../CharacterSet';
+
 import vertexShader from '../../assets/shaders/vert/shader.vert';
 import colorSampleShader from './shaders/colorSample.frag';
 import asciiCharacterShader from './shaders/asciiCharacter.frag';
 import asciiConversionShader from '../_common_shaders/asciiConversion.frag';
-
 import sobelShader from './shaders/sobel.frag';
 
-import { generateSampleShader } from './shaders/shaderGenerators.js';
+import { generateSampleShader } from './shaders/shaderGenerators';
 
 export default class EdgeAsciiRenderer extends AsciiRenderer {
+    private sobelShader: p5.Shader;
+    private sampleShader: p5.Shader;
+    private colorSampleShader: p5.Shader;
+    private asciiCharacterShader: p5.Shader;
+    private shader: p5.Shader;
+    private sobelFramebuffer: p5.Framebuffer;
+    private sampleFramebuffer: p5.Framebuffer;
 
-    constructor(p5Instance, grid, characterSet, options) {
+    constructor(p5Instance: p5, grid: P5AsciifyGrid, characterSet: P5AsciifyCharacterSet, options: AsciiRendererOptions) {
         super(p5Instance, grid, characterSet, options);
 
         this.options.characterColor = this.p.color(this.options.characterColor);
@@ -22,22 +32,30 @@ export default class EdgeAsciiRenderer extends AsciiRenderer {
         this.asciiCharacterShader = this.p.createShader(vertexShader, asciiCharacterShader);
         this.shader = this.p.createShader(vertexShader, asciiConversionShader);
 
-        this.sobelFramebuffer = this.p.createFramebuffer({ depthFormat: this.p.UNSIGNED_INT, textureFiltering: this.p.NEAREST });
-        this.sampleFramebuffer = this.p.createFramebuffer({ density: 1, width: this.grid.cols, height: this.grid.rows, depthFormat: this.p.UNSIGNED_INT, textureFiltering: this.p.NEAREST });
+        this.sobelFramebuffer = this.p.createFramebuffer({ 
+            depthFormat: this.p.UNSIGNED_INT, 
+            textureFiltering: this.p.NEAREST 
+        });
+        this.sampleFramebuffer = this.p.createFramebuffer({ 
+            density: 1, 
+            width: this.grid.cols, 
+            height: this.grid.rows, 
+            depthFormat: this.p.UNSIGNED_INT, 
+            textureFiltering: this.p.NEAREST 
+        });
     }
 
-    resizeFramebuffers() {
+    resizeFramebuffers(): void {
         super.resizeFramebuffers();
         this.sampleFramebuffer.resize(this.grid.cols, this.grid.rows);
     }
 
-    resetShaders() {
+    resetShaders(): void {
         this.sampleShader = this.p.createShader(vertexShader, generateSampleShader(16, this.grid.cellHeight, this.grid.cellWidth));
     }
 
-    render(inputFramebuffer, previousAsciiRenderer, isFirstRenderer) {
-
-        // Apply Sobel shader for edge detection
+    render(inputFramebuffer: p5.Framebuffer, previousAsciiRenderer: AsciiRenderer, isFirstRenderer: boolean): void {
+        // Sobel pass
         this.sobelFramebuffer.begin();
         this.p.clear();
         this.p.shader(this.sobelShader);
@@ -47,7 +65,7 @@ export default class EdgeAsciiRenderer extends AsciiRenderer {
         this.p.rect(0, 0, this.p.width, this.p.height);
         this.sobelFramebuffer.end();
 
-        // Apply sample shader
+        // Sample pass
         this.sampleFramebuffer.begin();
         this.p.clear();
         this.p.shader(this.sampleShader);
@@ -58,6 +76,7 @@ export default class EdgeAsciiRenderer extends AsciiRenderer {
         this.p.rect(0, 0, this.p.width, this.p.height);
         this.sampleFramebuffer.end();
 
+        // Primary color pass
         this.primaryColorSampleFramebuffer.begin();
         this.p.clear();
         this.p.shader(this.colorSampleShader);
@@ -71,6 +90,7 @@ export default class EdgeAsciiRenderer extends AsciiRenderer {
         this.p.rect(0, 0, this.p.width, this.p.height);
         this.primaryColorSampleFramebuffer.end();
 
+        // Secondary color pass
         this.secondaryColorSampleFramebuffer.begin();
         this.p.clear();
         this.p.shader(this.colorSampleShader);
@@ -84,6 +104,7 @@ export default class EdgeAsciiRenderer extends AsciiRenderer {
         this.p.rect(0, 0, this.p.width, this.p.height);
         this.secondaryColorSampleFramebuffer.end();
 
+        // ASCII character pass
         this.asciiCharacterFramebuffer.begin();
         this.p.clear();
         this.p.shader(this.asciiCharacterShader);
@@ -95,7 +116,7 @@ export default class EdgeAsciiRenderer extends AsciiRenderer {
         this.p.rect(0, 0, this.p.width, this.p.height);
         this.asciiCharacterFramebuffer.end();
 
-        // Render ASCII using the edge shader
+        // Final output pass
         this.outputFramebuffer.begin();
         this.p.clear();
         this.p.shader(this.shader);

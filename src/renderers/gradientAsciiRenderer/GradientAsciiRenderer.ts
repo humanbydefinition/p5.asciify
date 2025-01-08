@@ -1,15 +1,30 @@
+import p5 from 'p5';
 import { AsciiRenderer } from '../AsciiRenderer';
+import { P5AsciifyGrid } from '../../Grid';
+import { P5AsciifyCharacterSet } from '../../CharacterSet';
 
 import grayscaleShader from './shaders/grayscale.frag';
 import asciiConversionShader from '../_common_shaders/asciiConversion.frag';
-
 import colorSampleShader from './shaders/colorSample.frag';
-
 import vertexShader from '../../assets/shaders/vert/shader.vert';
 
-export default class GradientAsciiRenderer extends AsciiRenderer {
+import P5AsciifyGradientManager from '../../managers/gradientmanager.js';
 
-    constructor(p5Instance, grid, characterSet, gradientManager, options) {
+export default class GradientAsciiRenderer extends AsciiRenderer {
+    private grayscaleShader: p5.Shader;
+    private colorSampleShader: p5.Shader;
+    private asciiShader: p5.Shader;
+    private grayscaleFramebuffer: p5.Framebuffer;
+    private prevAsciiCharacterFramebuffer: p5.Framebuffer;
+    private gradientManager: P5AsciifyGradientManager;
+
+    constructor(
+        p5Instance: p5, 
+        grid: P5AsciifyGrid, 
+        characterSet: P5AsciifyCharacterSet, 
+        gradientManager: P5AsciifyGradientManager, 
+        options: AsciiRendererOptions
+    ) {
         super(p5Instance, grid, characterSet, options);
 
         this.options.characterColor = this.p.color(this.options.characterColor);
@@ -18,23 +33,34 @@ export default class GradientAsciiRenderer extends AsciiRenderer {
         this.gradientManager = gradientManager;
 
         this.grayscaleShader = this.p.createShader(vertexShader, grayscaleShader);
-
         this.colorSampleShader = this.p.createShader(vertexShader, colorSampleShader);
-
         this.asciiShader = this.p.createShader(vertexShader, asciiConversionShader);
 
-        this.grayscaleFramebuffer = this.p.createFramebuffer({ density: 1, width: this.grid.cols, height: this.grid.rows, depthFormat: this.p.UNSIGNED_INT, textureFiltering: this.p.NEAREST });
-        this.prevAsciiCharacterFramebuffer = this.p.createFramebuffer({ density: 1, width: this.grid.cols, height: this.grid.rows, depthFormat: this.p.UNSIGNED_INT, textureFiltering: this.p.NEAREST });
+        this.grayscaleFramebuffer = this.p.createFramebuffer({ 
+            density: 1, 
+            width: this.grid.cols, 
+            height: this.grid.rows, 
+            depthFormat: this.p.UNSIGNED_INT, 
+            textureFiltering: this.p.NEAREST 
+        });
+        
+        this.prevAsciiCharacterFramebuffer = this.p.createFramebuffer({ 
+            density: 1, 
+            width: this.grid.cols, 
+            height: this.grid.rows, 
+            depthFormat: this.p.UNSIGNED_INT, 
+            textureFiltering: this.p.NEAREST 
+        });
     }
 
-    resizeFramebuffers() {
+    resizeFramebuffers(): void {
         super.resizeFramebuffers();
         this.grayscaleFramebuffer.resize(this.grid.cols, this.grid.rows);
         this.prevAsciiCharacterFramebuffer.resize(this.grid.cols, this.grid.rows);
     }
 
-    render(inputFramebuffer, previousAsciiRenderer, isFirstRenderer) {
-
+    render(inputFramebuffer: p5.Framebuffer, previousAsciiRenderer: AsciiRenderer, isFirstRenderer: boolean): void {
+        // Grayscale pass
         this.grayscaleFramebuffer.begin();
         this.p.clear();
         this.p.shader(this.grayscaleShader);
@@ -42,6 +68,7 @@ export default class GradientAsciiRenderer extends AsciiRenderer {
         this.p.rect(0, 0, this.p.width, this.p.height);
         this.grayscaleFramebuffer.end();
 
+        // Initial ASCII character setup
         this.prevAsciiCharacterFramebuffer.begin();
         this.p.clear();
         this.p.image(this.grayscaleFramebuffer, -this.grid.cols / 2, -this.grid.rows / 2);
@@ -52,11 +79,11 @@ export default class GradientAsciiRenderer extends AsciiRenderer {
         this.p.image(this.grayscaleFramebuffer, -this.grid.cols / 2, -this.grid.rows / 2);
         this.asciiCharacterFramebuffer.end();
 
-        for (let i = 0; i < this.gradientManager._gradients.length; i++) {
-            const gradient = this.gradientManager._gradients[i];
-
+        // Gradient passes
+        for (const gradient of this.gradientManager._gradients) {
             if (gradient.enabled) {
-                [this.prevAsciiCharacterFramebuffer, this.asciiCharacterFramebuffer] = [this.asciiCharacterFramebuffer, this.prevAsciiCharacterFramebuffer];
+                [this.prevAsciiCharacterFramebuffer, this.asciiCharacterFramebuffer] = 
+                    [this.asciiCharacterFramebuffer, this.prevAsciiCharacterFramebuffer];
 
                 this.asciiCharacterFramebuffer.begin();
                 this.p.clear();
@@ -67,6 +94,7 @@ export default class GradientAsciiRenderer extends AsciiRenderer {
             }
         }
 
+        // Color sample passes
         this.primaryColorSampleFramebuffer.begin();
         this.p.clear();
         this.p.shader(this.colorSampleShader);
@@ -94,6 +122,7 @@ export default class GradientAsciiRenderer extends AsciiRenderer {
         this.p.rect(0, 0, this.p.width, this.p.height);
         this.secondaryColorSampleFramebuffer.end();
 
+        // Final output pass
         this.outputFramebuffer.begin();
         this.p.clear();
         this.p.shader(this.asciiShader);

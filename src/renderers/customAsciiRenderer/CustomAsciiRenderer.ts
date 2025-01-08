@@ -1,16 +1,19 @@
+import p5 from 'p5';
 import { AsciiRenderer } from '../AsciiRenderer';
+import { P5AsciifyGrid } from '../../Grid';
+import { P5AsciifyCharacterSet } from '../../CharacterSet';
 import vertexShader from '../../assets/shaders/vert/shader.vert';
 import asciiConversionShader from '../_common_shaders/asciiConversion.frag';
 
 export default class CustomAsciiRenderer extends AsciiRenderer {
+    private shader: p5.Shader;
 
-    constructor(p5Instance, grid, characterSet, options) {
+    constructor(p5Instance: p5, grid: P5AsciifyGrid, characterSet: P5AsciifyCharacterSet, options: AsciiRendererOptions) {
         super(p5Instance, grid, characterSet, options);
-
         this.shader = this.p.createShader(vertexShader, asciiConversionShader);
     }
 
-    render(inputFramebuffer, previousAsciiRenderer, isFirstRenderer) {
+    render(inputFramebuffer: p5.Framebuffer, previousAsciiRenderer: AsciiRenderer, isFirstRenderer: boolean): void {
         this.outputFramebuffer.begin();
         this.p.clear();
         this.p.shader(this.shader);

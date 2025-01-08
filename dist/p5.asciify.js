@@ -945,13 +945,11 @@ void main() {
     }
 
     class CustomAsciiRenderer extends AsciiRenderer {
-
+        shader;
         constructor(p5Instance, grid, characterSet, options) {
             super(p5Instance, grid, characterSet, options);
-
             this.shader = this.p.createShader(vertexShader, asciiConversionShader);
         }
-
         render(inputFramebuffer, previousAsciiRenderer, isFirstRenderer) {
             this.outputFramebuffer.begin();
             this.p.clear();
@@ -1097,35 +1095,43 @@ void main() {
 `;
 
     class EdgeAsciiRenderer extends AsciiRenderer {
-
+        sobelShader;
+        sampleShader;
+        colorSampleShader;
+        asciiCharacterShader;
+        shader;
+        sobelFramebuffer;
+        sampleFramebuffer;
         constructor(p5Instance, grid, characterSet, options) {
             super(p5Instance, grid, characterSet, options);
-
             this.options.characterColor = this.p.color(this.options.characterColor);
             this.options.backgroundColor = this.p.color(this.options.backgroundColor);
-
             this.sobelShader = this.p.createShader(vertexShader, sobelShader);
             this.sampleShader = this.p.createShader(vertexShader, generateSampleShader(16, this.grid.cellHeight, this.grid.cellWidth));
             this.colorSampleShader = this.p.createShader(vertexShader, colorSampleShader$1);
             this.asciiCharacterShader = this.p.createShader(vertexShader, asciiCharacterShader);
             this.shader = this.p.createShader(vertexShader, asciiConversionShader);
-
-            this.sobelFramebuffer = this.p.createFramebuffer({ depthFormat: this.p.UNSIGNED_INT, textureFiltering: this.p.NEAREST });
-            this.sampleFramebuffer = this.p.createFramebuffer({ density: 1, width: this.grid.cols, height: this.grid.rows, depthFormat: this.p.UNSIGNED_INT, textureFiltering: this.p.NEAREST });
+            this.sobelFramebuffer = this.p.createFramebuffer({
+                depthFormat: this.p.UNSIGNED_INT,
+                textureFiltering: this.p.NEAREST
+            });
+            this.sampleFramebuffer = this.p.createFramebuffer({
+                density: 1,
+                width: this.grid.cols,
+                height: this.grid.rows,
+                depthFormat: this.p.UNSIGNED_INT,
+                textureFiltering: this.p.NEAREST
+            });
         }
-
         resizeFramebuffers() {
             super.resizeFramebuffers();
             this.sampleFramebuffer.resize(this.grid.cols, this.grid.rows);
         }
-
         resetShaders() {
             this.sampleShader = this.p.createShader(vertexShader, generateSampleShader(16, this.grid.cellHeight, this.grid.cellWidth));
         }
-
         render(inputFramebuffer, previousAsciiRenderer, isFirstRenderer) {
-
-            // Apply Sobel shader for edge detection
+            // Sobel pass
             this.sobelFramebuffer.begin();
             this.p.clear();
             this.p.shader(this.sobelShader);
@@ -1134,8 +1140,7 @@ void main() {
             this.sobelShader.setUniform('u_threshold', this.options.sobelThreshold);
             this.p.rect(0, 0, this.p.width, this.p.height);
             this.sobelFramebuffer.end();
-
-            // Apply sample shader
+            // Sample pass
             this.sampleFramebuffer.begin();
             this.p.clear();
             this.p.shader(this.sampleShader);
@@ -1145,7 +1150,7 @@ void main() {
             this.sampleShader.setUniform('u_threshold', this.options.sampleThreshold);
             this.p.rect(0, 0, this.p.width, this.p.height);
             this.sampleFramebuffer.end();
-
+            // Primary color pass
             this.primaryColorSampleFramebuffer.begin();
             this.p.clear();
             this.p.shader(this.colorSampleShader);
@@ -1158,7 +1163,7 @@ void main() {
             this.colorSampleShader.setUniform('u_staticColor', this.options.characterColor._array);
             this.p.rect(0, 0, this.p.width, this.p.height);
             this.primaryColorSampleFramebuffer.end();
-
+            // Secondary color pass
             this.secondaryColorSampleFramebuffer.begin();
             this.p.clear();
             this.p.shader(this.colorSampleShader);
@@ -1171,7 +1176,7 @@ void main() {
             this.colorSampleShader.setUniform('u_staticColor', this.options.backgroundColor._array);
             this.p.rect(0, 0, this.p.width, this.p.height);
             this.secondaryColorSampleFramebuffer.end();
-
+            // ASCII character pass
             this.asciiCharacterFramebuffer.begin();
             this.p.clear();
             this.p.shader(this.asciiCharacterShader);
@@ -1182,8 +1187,7 @@ void main() {
             this.asciiCharacterShader.setUniform('u_totalChars', this.characterSet.characters.length);
             this.p.rect(0, 0, this.p.width, this.p.height);
             this.asciiCharacterFramebuffer.end();
-
-            // Render ASCII using the edge shader
+            // Final output pass
             this.outputFramebuffer.begin();
             this.p.clear();
             this.p.shader(this.shader);
@@ -1723,32 +1727,34 @@ void main() {
     }
 
     class P5AsciifyGradient {
+        _type;
+        _shader;
+        _brightnessStart;
+        _brightnessEnd;
+        _characters;
+        _enabled;
+        _onPaletteChangeCallback;
+        _palette;
         constructor(type, shader, brightnessStart, brightnessEnd, characters) {
             this._type = type;
             this._shader = shader;
-
-            // map brightness start from 0-255 to 0-1
+            // Normalize brightness values to [0, 1]
             this._brightnessStart = Math.floor((brightnessStart / 255) * 100) / 100;
             this._brightnessEnd = Math.ceil((brightnessEnd / 255) * 100) / 100;
-
             this._characters = characters;
-
             this._enabled = true;
-
-            this._onPaletteChangeCallback = null;
         }
-
         registerPaletteChangeCallback(callback) {
             this._onPaletteChangeCallback = callback;
         }
-
         setup(p5Instance, shader, colors) {
             this._shader = shader;
             this._palette = new P5AsciifyColorPalette(colors);
             this._palette.setup(p5Instance);
         }
-
         setUniforms(p5, framebuffer, referenceFramebuffer) {
+            if (!this._palette)
+                throw new Error('Palette must be set up before setting uniforms.');
             this._shader.setUniform("textureID", framebuffer);
             this._shader.setUniform("originalTextureID", referenceFramebuffer);
             this._shader.setUniform("gradientTexture", this._palette.framebuffer);
@@ -1756,319 +1762,272 @@ void main() {
             this._shader.setUniform("u_brightnessRange", [this._brightnessStart, this._brightnessEnd]);
             this._shader.setUniform("frameCount", p5.frameCount);
         }
-
         set palette(value) {
             if (this._onPaletteChangeCallback) {
                 this._onPaletteChangeCallback(this, value);
             }
         }
-
         get type() {
             return this._type;
         }
-
         get enabled() {
             return this._enabled;
         }
-
         set enabled(value) {
             this._enabled = value;
         }
-
         get brightnessStart() {
             return this._brightnessStart;
         }
-
         set brightnessStart(value) {
             this._brightnessStart = value;
         }
-
         get brightnessEnd() {
             return this._brightnessEnd;
         }
-
         set brightnessEnd(value) {
             this._brightnessEnd = value;
         }
     }
 
     class P5AsciifyLinearGradient extends P5AsciifyGradient {
-
-        constructor({ type, shader, brightnessStart, brightnessEnd, characters, direction, angle, speed = 0.01}) {
+        _direction;
+        _angle;
+        _speed;
+        constructor({ type, shader, brightnessStart, brightnessEnd, characters, direction, angle, speed = 0.01, }) {
             super(type, shader, brightnessStart, brightnessEnd, characters);
-
             this._direction = direction;
             this._angle = angle;
             this._speed = speed;
         }
-
-        setUniforms(frameCount,framebuffer, referenceFramebuffer) {
-            super.setUniforms(frameCount,framebuffer, referenceFramebuffer);
+        setUniforms(p, framebuffer, referenceFramebuffer) {
+            super.setUniforms(p, framebuffer, referenceFramebuffer);
             this._shader.setUniform('u_gradientDirection', this._direction);
-            this._shader.setUniform('u_angle',  this._angle * Math.PI / 180);
+            this._shader.setUniform('u_angle', (this._angle * Math.PI) / 180);
             this._shader.setUniform('u_speed', this._speed);
         }
-
         get direction() {
             return this._direction;
         }
-
         set direction(value) {
             this._direction = value;
         }
-
         get angle() {
             return this._angle;
         }
-
         set angle(value) {
             this._angle = value;
         }
-
         get speed() {
             return this._speed;
         }
-
         set speed(value) {
             this._speed = value;
         }
     }
 
     class P5AsciifyZigZagGradient extends P5AsciifyGradient {
-
-        constructor({ type, shader, brightnessStart, brightnessEnd, characters, direction, angle, speed = 0.01 }) {
-            super(type, shader, brightnessStart, brightnessEnd, characters);
-
-            this._direction = direction;
-            this._angle = angle;
-            this._speed = speed;
+        _direction;
+        _angle;
+        _speed;
+        constructor(params) {
+            super(params.type, params.shader, params.brightnessStart, params.brightnessEnd, params.characters);
+            this._direction = params.direction;
+            this._angle = params.angle;
+            this._speed = params.speed ?? 0.01;
         }
-
-        setUniforms(frameCount,framebuffer, referenceFramebuffer) {
-            super.setUniforms(frameCount,framebuffer, referenceFramebuffer);
+        setUniforms(p, framebuffer, referenceFramebuffer) {
+            super.setUniforms(p, framebuffer, referenceFramebuffer);
             this._shader.setUniform('u_gradientDirection', this._direction);
-            this._shader.setUniform('u_angle',  this._angle * Math.PI / 180);
+            this._shader.setUniform('u_angle', (this._angle * Math.PI) / 180);
             this._shader.setUniform('u_speed', this._speed);
         }
-
         get direction() {
             return this._direction;
         }
-
         set direction(value) {
             this._direction = value;
         }
-
         get angle() {
             return this._angle;
         }
-
         set angle(value) {
             this._angle = value;
         }
-
         get speed() {
             return this._speed;
         }
-
         set speed(value) {
             this._speed = value;
         }
     }
 
     class P5AsciifySpiralGradient extends P5AsciifyGradient {
-
-        constructor({ type, shader, brightnessStart, brightnessEnd, characters, direction, centerX, centerY, speed, density}) {
+        _direction;
+        _centerX;
+        _centerY;
+        _speed;
+        _density;
+        constructor({ type, shader, brightnessStart, brightnessEnd, characters, direction, centerX, centerY, speed = 0.01, density = 0.01 }) {
             super(type, shader, brightnessStart, brightnessEnd, characters);
-
             this._direction = direction;
             this._centerX = centerX;
             this._centerY = centerY;
             this._speed = speed;
             this._density = density;
         }
-
-        setUniforms(frameCount,framebuffer, referenceFramebuffer) {
-            super.setUniforms(frameCount,framebuffer, referenceFramebuffer);
+        setUniforms(p, framebuffer, referenceFramebuffer) {
+            super.setUniforms(p, framebuffer, referenceFramebuffer);
             this._shader.setUniform('u_gradientDirection', this._direction);
             this._shader.setUniform('u_centerX', this._centerX);
             this._shader.setUniform('u_centerY', this._centerY);
             this._shader.setUniform('u_speed', this._speed);
             this._shader.setUniform('u_density', this._density);
         }
-
         get direction() {
             return this._direction;
         }
-
         set direction(value) {
             this._direction = value;
         }
-
         get centerX() {
             return this._centerX;
         }
-
         set centerX(value) {
             this._centerX = value;
         }
-
         get centerY() {
             return this._centerY;
         }
-
         set centerY(value) {
             this._centerY = value;
         }
-
         get speed() {
             return this._speed;
         }
-
         set speed(value) {
             this._speed = value;
         }
-
         get density() {
             return this._density;
         }
-
         set density(value) {
             this._density = value;
         }
     }
 
     class P5AsciifyRadialGradient extends P5AsciifyGradient {
-
-        constructor({ type, shader, brightnessStart, brightnessEnd, characters, direction, centerX, centerY, radius}) {
+        _direction;
+        _centerX;
+        _centerY;
+        _radius;
+        constructor({ type, shader, brightnessStart, brightnessEnd, characters, direction, centerX, centerY, radius }) {
             super(type, shader, brightnessStart, brightnessEnd, characters);
-
             this._direction = direction;
             this._centerX = centerX;
             this._centerY = centerY;
             this._radius = radius;
         }
-
-        setUniforms(frameCount,framebuffer, referenceFramebuffer) {
-            super.setUniforms(frameCount,framebuffer, referenceFramebuffer);
+        setUniforms(p, framebuffer, referenceFramebuffer) {
+            super.setUniforms(p, framebuffer, referenceFramebuffer);
             this._shader.setUniform('u_gradientDirection', this._direction);
             this._shader.setUniform('u_centerX', this._centerX);
             this._shader.setUniform('u_centerY', this._centerY);
             this._shader.setUniform('u_radius', this._radius);
         }
-
         get direction() {
             return this._direction;
         }
-
         set direction(value) {
             this._direction = value;
         }
-
         get centerX() {
             return this._centerX;
         }
-
         set centerX(value) {
             this._centerX = value;
         }
-
         get centerY() {
             return this._centerY;
         }
-
         set centerY(value) {
             this._centerY = value;
         }
-
         get radius() {
             return this._radius;
         }
-
         set radius(value) {
             this._radius = value;
         }
     }
 
     class P5AsciifyConicalGradient extends P5AsciifyGradient {
-
-        constructor({ type, shader, brightnessStart, brightnessEnd, characters, centerX, centerY, speed}) {
+        _centerX;
+        _centerY;
+        _speed;
+        constructor({ type, shader, brightnessStart, brightnessEnd, characters, centerX, centerY, speed }) {
             super(type, shader, brightnessStart, brightnessEnd, characters);
-
             this._centerX = centerX;
             this._centerY = centerY;
             this._speed = speed;
         }
-
-        setUniforms(frameCount, framebuffer, referenceFramebuffer) {
-            super.setUniforms(frameCount,framebuffer, referenceFramebuffer);
+        setUniforms(p, framebuffer, referenceFramebuffer) {
+            super.setUniforms(p, framebuffer, referenceFramebuffer);
             this._shader.setUniform('u_centerX', this._centerX);
             this._shader.setUniform('u_centerY', this._centerY);
             this._shader.setUniform('u_speed', this._speed);
         }
-
         get centerX() {
             return this._centerX;
         }
-
         set centerX(value) {
             this._centerX = value;
         }
-
         get centerY() {
             return this._centerY;
         }
-
         set centerY(value) {
             this._centerY = value;
         }
-
         get speed() {
             return this._speed;
         }
-
         set speed(value) {
             this._speed = value;
         }
     }
 
     class P5AsciifyNoiseGradient extends P5AsciifyGradient {
-
+        _direction;
+        _noiseScale;
+        _speed;
         constructor({ type, shader, brightnessStart, brightnessEnd, characters, noiseScale, speed, direction }) {
             super(type, shader, brightnessStart, brightnessEnd, characters);
-
             this._direction = direction;
             this._noiseScale = noiseScale;
             this._speed = speed;
         }
-
-        setUniforms(frameCount,framebuffer, referenceFramebuffer) {
-            super.setUniforms(frameCount,framebuffer, referenceFramebuffer);
+        setUniforms(p, framebuffer, referenceFramebuffer) {
+            super.setUniforms(p, framebuffer, referenceFramebuffer);
             this._shader.setUniform('direction', this._direction);
             this._shader.setUniform('noiseScale', this._noiseScale);
             this._shader.setUniform('u_speed', this._speed);
         }
-
         get direction() {
             return this._direction;
         }
-
         set direction(value) {
             this._direction = value;
         }
-
         get noiseScale() {
             return this._noiseScale;
         }
-
         set noiseScale(value) {
             this._noiseScale = value;
         }
-
         get speed() {
             return this._speed;
         }
-
         set speed(value) {
             this._speed = value;
         }
@@ -2183,56 +2142,62 @@ void main() {
     var colorSampleShader = "#version 100\nprecision mediump float;\n#define GLSLIFY 1\nuniform sampler2D u_sketchTexture;uniform bool u_previousRendererEnabled;uniform sampler2D u_previousColorTexture;uniform sampler2D u_sampleTexture;uniform sampler2D u_sampleReferenceTexture;uniform vec2 u_gridCellDimensions;uniform int u_sampleMode;uniform vec4 u_staticColor;void main(){vec2 cellCoord=floor(gl_FragCoord.xy);vec2 cellSizeInTexCoords=vec2(1.0)/u_gridCellDimensions;vec2 cellCenterTexCoord=(cellCoord+vec2(0.5))*cellSizeInTexCoords;bool isMatchingSample=texture2D(u_sampleTexture,cellCenterTexCoord)==texture2D(u_sampleReferenceTexture,cellCenterTexCoord);if(isMatchingSample&&u_previousRendererEnabled){gl_FragColor=texture2D(u_previousColorTexture,cellCenterTexCoord);return;}else if(u_sampleMode==0){gl_FragColor=texture2D(u_sketchTexture,cellCenterTexCoord);}else{gl_FragColor=u_staticColor;}}"; // eslint-disable-line
 
     class GradientAsciiRenderer extends AsciiRenderer {
-
+        grayscaleShader;
+        colorSampleShader;
+        asciiShader;
+        grayscaleFramebuffer;
+        prevAsciiCharacterFramebuffer;
+        gradientManager;
         constructor(p5Instance, grid, characterSet, gradientManager, options) {
             super(p5Instance, grid, characterSet, options);
-
             this.options.characterColor = this.p.color(this.options.characterColor);
             this.options.backgroundColor = this.p.color(this.options.backgroundColor);
-
             this.gradientManager = gradientManager;
-
             this.grayscaleShader = this.p.createShader(vertexShader, grayscaleShader);
-
             this.colorSampleShader = this.p.createShader(vertexShader, colorSampleShader);
-
             this.asciiShader = this.p.createShader(vertexShader, asciiConversionShader);
-
-            this.grayscaleFramebuffer = this.p.createFramebuffer({ density: 1, width: this.grid.cols, height: this.grid.rows, depthFormat: this.p.UNSIGNED_INT, textureFiltering: this.p.NEAREST });
-            this.prevAsciiCharacterFramebuffer = this.p.createFramebuffer({ density: 1, width: this.grid.cols, height: this.grid.rows, depthFormat: this.p.UNSIGNED_INT, textureFiltering: this.p.NEAREST });
+            this.grayscaleFramebuffer = this.p.createFramebuffer({
+                density: 1,
+                width: this.grid.cols,
+                height: this.grid.rows,
+                depthFormat: this.p.UNSIGNED_INT,
+                textureFiltering: this.p.NEAREST
+            });
+            this.prevAsciiCharacterFramebuffer = this.p.createFramebuffer({
+                density: 1,
+                width: this.grid.cols,
+                height: this.grid.rows,
+                depthFormat: this.p.UNSIGNED_INT,
+                textureFiltering: this.p.NEAREST
+            });
         }
-
         resizeFramebuffers() {
             super.resizeFramebuffers();
             this.grayscaleFramebuffer.resize(this.grid.cols, this.grid.rows);
             this.prevAsciiCharacterFramebuffer.resize(this.grid.cols, this.grid.rows);
         }
-
         render(inputFramebuffer, previousAsciiRenderer, isFirstRenderer) {
-
+            // Grayscale pass
             this.grayscaleFramebuffer.begin();
             this.p.clear();
             this.p.shader(this.grayscaleShader);
             this.grayscaleShader.setUniform('u_image', inputFramebuffer);
             this.p.rect(0, 0, this.p.width, this.p.height);
             this.grayscaleFramebuffer.end();
-
+            // Initial ASCII character setup
             this.prevAsciiCharacterFramebuffer.begin();
             this.p.clear();
             this.p.image(this.grayscaleFramebuffer, -this.grid.cols / 2, -this.grid.rows / 2);
             this.prevAsciiCharacterFramebuffer.end();
-
             this.asciiCharacterFramebuffer.begin();
             this.p.clear();
             this.p.image(this.grayscaleFramebuffer, -this.grid.cols / 2, -this.grid.rows / 2);
             this.asciiCharacterFramebuffer.end();
-
-            for (let i = 0; i < this.gradientManager._gradients.length; i++) {
-                const gradient = this.gradientManager._gradients[i];
-
+            // Gradient passes
+            for (const gradient of this.gradientManager._gradients) {
                 if (gradient.enabled) {
-                    [this.prevAsciiCharacterFramebuffer, this.asciiCharacterFramebuffer] = [this.asciiCharacterFramebuffer, this.prevAsciiCharacterFramebuffer];
-
+                    [this.prevAsciiCharacterFramebuffer, this.asciiCharacterFramebuffer] =
+                        [this.asciiCharacterFramebuffer, this.prevAsciiCharacterFramebuffer];
                     this.asciiCharacterFramebuffer.begin();
                     this.p.clear();
                     this.p.shader(gradient._shader);
@@ -2241,7 +2206,7 @@ void main() {
                     this.asciiCharacterFramebuffer.end();
                 }
             }
-
+            // Color sample passes
             this.primaryColorSampleFramebuffer.begin();
             this.p.clear();
             this.p.shader(this.colorSampleShader);
@@ -2255,7 +2220,6 @@ void main() {
             this.colorSampleShader.setUniform('u_staticColor', this.options.characterColor._array);
             this.p.rect(0, 0, this.p.width, this.p.height);
             this.primaryColorSampleFramebuffer.end();
-
             this.secondaryColorSampleFramebuffer.begin();
             this.p.clear();
             this.p.shader(this.colorSampleShader);
@@ -2268,7 +2232,7 @@ void main() {
             this.colorSampleShader.setUniform('u_staticColor', this.options.backgroundColor._array);
             this.p.rect(0, 0, this.p.width, this.p.height);
             this.secondaryColorSampleFramebuffer.end();
-
+            // Final output pass
             this.outputFramebuffer.begin();
             this.p.clear();
             this.p.shader(this.asciiShader);

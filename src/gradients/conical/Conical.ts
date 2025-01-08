@@ -1,0 +1,70 @@
+import p5 from 'p5';
+import {P5AsciifyGradient} from '../Gradient';
+
+interface ConicalGradientParams {
+    type: 'conical';
+    shader: p5.Shader;
+    brightnessStart: number;
+    brightnessEnd: number;
+    characters: string[];
+    centerX: number;
+    centerY: number;
+    speed: number;
+}
+
+export default class P5AsciifyConicalGradient extends P5AsciifyGradient {
+    private _centerX: number;
+    private _centerY: number;
+    private _speed: number;
+
+    constructor({
+        type,
+        shader,
+        brightnessStart,
+        brightnessEnd,
+        characters,
+        centerX,
+        centerY,
+        speed
+    }: ConicalGradientParams) {
+        super(type, shader, brightnessStart, brightnessEnd, characters);
+        this._centerX = centerX;
+        this._centerY = centerY;
+        this._speed = speed;
+    }
+
+    setUniforms(
+        p: p5,
+        framebuffer: p5.Framebuffer,
+        referenceFramebuffer: p5.Framebuffer
+    ): void {
+        super.setUniforms(p, framebuffer, referenceFramebuffer);
+        this._shader.setUniform('u_centerX', this._centerX);
+        this._shader.setUniform('u_centerY', this._centerY);
+        this._shader.setUniform('u_speed', this._speed);
+    }
+
+    get centerX(): number {
+        return this._centerX;
+    }
+
+    set centerX(value: number) {
+        this._centerX = value;
+    }
+
+    get centerY(): number {
+        return this._centerY;
+    }
+
+    set centerY(value: number) {
+        this._centerY = value;
+    }
+
+    get speed(): number {
+        return this._speed;
+    }
+
+    set speed(value: number) {
+        this._speed = value;
+    }
+}

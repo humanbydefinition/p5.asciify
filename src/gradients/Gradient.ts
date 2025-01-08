@@ -1,32 +1,39 @@
+// Gradient.ts
+import p5 from 'p5';
 import { P5AsciifyColorPalette } from "../ColorPalette";
 
-class P5AsciifyGradient {
-    constructor(type, shader, brightnessStart, brightnessEnd, characters) {
+export abstract class P5AsciifyGradient {
+    protected _type: string;
+    protected _shader: p5.Shader;
+    protected _brightnessStart: number;
+    protected _brightnessEnd: number;
+    protected _characters: string[];
+    protected _enabled: boolean;
+    protected _onPaletteChangeCallback?: (gradient: P5AsciifyGradient, value: string[]) => void;
+    protected _palette?: P5AsciifyColorPalette;
+
+    constructor(type: string, shader: p5.Shader, brightnessStart: number, brightnessEnd: number, characters: string[]) {
         this._type = type;
         this._shader = shader;
-
-        // map brightness start from 0-255 to 0-1
+        // Normalize brightness values to [0, 1]
         this._brightnessStart = Math.floor((brightnessStart / 255) * 100) / 100;
         this._brightnessEnd = Math.ceil((brightnessEnd / 255) * 100) / 100;
-
         this._characters = characters;
-
         this._enabled = true;
-
-        this._onPaletteChangeCallback = null;
     }
 
-    registerPaletteChangeCallback(callback) {
+    registerPaletteChangeCallback(callback: (gradient: P5AsciifyGradient, value: string[]) => void): void {
         this._onPaletteChangeCallback = callback;
     }
 
-    setup(p5Instance, shader, colors) {
+    setup(p5Instance: p5, shader: p5.Shader, colors: [number, number, number][]): void {
         this._shader = shader;
         this._palette = new P5AsciifyColorPalette(colors);
         this._palette.setup(p5Instance);
     }
 
-    setUniforms(p5, framebuffer, referenceFramebuffer) {
+    setUniforms(p5: p5, framebuffer: p5.Framebuffer, referenceFramebuffer: p5.Framebuffer): void {
+        if (!this._palette) throw new Error('Palette must be set up before setting uniforms.');
         this._shader.setUniform("textureID", framebuffer);
         this._shader.setUniform("originalTextureID", referenceFramebuffer);
         this._shader.setUniform("gradientTexture", this._palette.framebuffer);
@@ -35,39 +42,34 @@ class P5AsciifyGradient {
         this._shader.setUniform("frameCount", p5.frameCount);
     }
 
-    set palette(value) {
+    set palette(value: string[]) {
         if (this._onPaletteChangeCallback) {
             this._onPaletteChangeCallback(this, value);
         }
     }
 
-    get type() {
+    get type(): string {
         return this._type;
     }
 
-    get enabled() {
+    get enabled(): boolean {
         return this._enabled;
     }
-
-    set enabled(value) {
+    set enabled(value: boolean) {
         this._enabled = value;
     }
 
-    get brightnessStart() {
+    get brightnessStart(): number {
         return this._brightnessStart;
     }
-
-    set brightnessStart(value) {
+    set brightnessStart(value: number) {
         this._brightnessStart = value;
     }
 
-    get brightnessEnd() {
+    get brightnessEnd(): number {
         return this._brightnessEnd;
     }
-
-    set brightnessEnd(value) {
+    set brightnessEnd(value: number) {
         this._brightnessEnd = value;
     }
 }
-
-export default P5AsciifyGradient;
