@@ -1,11 +1,13 @@
 import p5 from 'p5';
-import { P5AsciifyLinearGradient, LinearGradientParams } from "../gradients/linear/Linear";
-import { P5AsciifyZigZagGradient, ZigZagGradientParams } from "../gradients/zigzag/ZigZag";
-import { P5AsciifySpiralGradient, SpiralGradientParams } from "../gradients/spiral/Spiral";
-import { P5AsciifyRadialGradient, RadialGradientParams } from "../gradients/radial/Radial";
-import { P5AsciifyConicalGradient, ConicalGradientParams } from "../gradients/conical/Conical";
-import { P5AsciifyNoiseGradient, NoiseGradientParams } from "../gradients/noise/Noise";
-import { P5AsciifyGradient } from '../gradients/Gradient';
+import { P5AsciifyLinearGradient, LinearGradientParams } from "./linear/Linear";
+import { P5AsciifyZigZagGradient, ZigZagGradientParams } from "./zigzag/ZigZag";
+import { P5AsciifySpiralGradient, SpiralGradientParams } from "./spiral/Spiral";
+import { P5AsciifyRadialGradient, RadialGradientParams } from "./radial/Radial";
+import { P5AsciifyConicalGradient, ConicalGradientParams } from "./conical/Conical";
+import { P5AsciifyNoiseGradient, NoiseGradientParams } from "./noise/Noise";
+import { P5AsciifyGradient } from './Gradient';
+
+import { P5AsciifyFontTextureAtlas } from '../FontTextureAtlas';
 
 import vertexShader from '../assets/shaders/vert/shader.vert';
 import linearGradientShader from "../gradients/linear/linear.frag";
@@ -15,7 +17,7 @@ import radialGradientShader from "../gradients/radial/radial.frag";
 import conicalGradientShader from "../gradients/conical/conical.frag";
 import noiseGradientShader from "../gradients/noise/noise.frag";
 
-import P5AsciifyFontTextureAtlas from '../FontTextureAtlas';
+
 
 type GradientType = 'linear' | 'zigzag' | 'spiral' | 'radial' | 'conical' | 'noise';
 

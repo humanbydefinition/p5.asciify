@@ -13,7 +13,7 @@ interface MaxGlyphDimensions {
     height: number;
 }
 
-class P5AsciifyFontTextureAtlas {
+export class P5AsciifyFontTextureAtlas {
     private p: p5;
     private font: any; // Replace 'any' with the actual font type
     private fontSize: number;
@@ -185,5 +185,3 @@ class P5AsciifyFontTextureAtlas {
         );
     }
 }
-
-export default P5AsciifyFontTextureAtlas;

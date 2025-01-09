@@ -48,18 +48,7 @@ function draw() {
 	image(sketchFramebuffer, -windowWidth / 2, -windowHeight / 2);
 
 	if (frameCount == 200) {
-		// Update the ascii rendering based on any conditions you like
-		//loadAsciiFont('path/to/your/font.ttf'); // Optionally update the font after the sketch has run for a while
-		/**
-			setAsciiOptions({ // Optionally update any of the default options
-				common: {
-					fontSize: 16
-				},
-				edge: {
-					enabled: true // Edge detection anyone?
-				}
-			});
-			*/
+		setAsciifyFontSize(32);
 	}
 }
 

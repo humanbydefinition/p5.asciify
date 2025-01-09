@@ -9,13 +9,24 @@ import asciiConversionShader from '../_common_shaders/asciiConversion.frag';
 import colorSampleShader from './shaders/colorSample.frag';
 import asciiCharacterShader from './shaders/asciiCharacter.frag';
 
+interface BrightnessAsciiRendererOptions {
+    enabled: boolean;
+    characters: string;
+    characterColorMode: number;
+    characterColor: p5.Color;
+    backgroundColorMode: number;
+    backgroundColor: p5.Color;
+    invertMode: number;
+    rotationAngle: number;
+}
+
 export default class BrightnessAsciiRenderer extends AsciiRenderer {
     private colorSampleShader: p5.Shader;
     private asciiCharacterShader: p5.Shader;
     private shader: p5.Shader;
     private colorSampleFramebuffer: p5.Framebuffer;
 
-    constructor(p5Instance: p5, grid: P5AsciifyGrid, characterSet: CharacterSet, options: AsciiRendererOptions) {
+    constructor(p5Instance: p5, grid: P5AsciifyGrid, characterSet: CharacterSet, options: BrightnessAsciiRendererOptions) {
         super(p5Instance, grid, characterSet, options);
 
         this.colorSampleShader = this.p.createShader(vertexShader, colorSampleShader);

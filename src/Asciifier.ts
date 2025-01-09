@@ -1,7 +1,7 @@
-import P5AsciifyFontTextureAtlas from './FontTextureAtlas';
+import { P5AsciifyFontTextureAtlas } from './FontTextureAtlas';
 import { P5AsciifyGrid } from './Grid';
 import { P5AsciifyEventEmitter } from './EventEmitter';
-import { RendererManager } from './managers/RendererManager';
+import { RendererManager } from './renderers/RendererManager';
 import p5 from 'p5';
 
 export class Asciifier {

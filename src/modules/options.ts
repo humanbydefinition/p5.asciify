@@ -12,9 +12,12 @@ export function registerOptionsMethods(p5asciify: Asciifier): void {
         if (this._setupDone) {
             p5asciify.asciiFontTextureAtlas.setFontSize(fontSize);
             p5asciify.grid.resizeCellPixelDimensions(
-                this.asciiFontTextureAtlas.maxGlyphDimensions.width,
-                this.asciiFontTextureAtlas.maxGlyphDimensions.height
+                p5asciify.asciiFontTextureAtlas.maxGlyphDimensions.width,
+                p5asciify.asciiFontTextureAtlas.maxGlyphDimensions.height
             );
+
+            p5asciify.rendererManager.renderers.forEach(renderer => renderer.resizeFramebuffers());
+
             p5asciify.rendererManager.renderers.forEach(renderer => renderer.resetShaders());
             p5asciify.rendererManager.textAsciiRenderer.updateFontSize();
         }

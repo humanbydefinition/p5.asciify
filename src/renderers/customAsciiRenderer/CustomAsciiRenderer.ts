@@ -5,10 +5,14 @@ import { P5AsciifyCharacterSet } from '../../CharacterSet';
 import vertexShader from '../../assets/shaders/vert/shader.vert';
 import asciiConversionShader from '../_common_shaders/asciiConversion.frag';
 
+interface CustomAsciiRendererOptions {
+    enabled: boolean;
+}
+
 export default class CustomAsciiRenderer extends AsciiRenderer {
     private shader: p5.Shader;
 
-    constructor(p5Instance: p5, grid: P5AsciifyGrid, characterSet: P5AsciifyCharacterSet, options: AsciiRendererOptions) {
+    constructor(p5Instance: p5, grid: P5AsciifyGrid, characterSet: P5AsciifyCharacterSet, options: CustomAsciiRendererOptions) {
         super(p5Instance, grid, characterSet, options);
         this.shader = this.p.createShader(vertexShader, asciiConversionShader);
     }

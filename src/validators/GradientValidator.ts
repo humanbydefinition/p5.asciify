@@ -1,5 +1,5 @@
 import { P5AsciifyError } from '../AsciifyError';
-import P5AsciifyGradientManager from '../managers/GradientManager';
+import P5AsciifyGradientManager from '../gradients/GradientManager';
 
 /**
  * Validates the parameters for adding an ASCII gradient.

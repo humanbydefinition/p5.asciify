@@ -41,52 +41,41 @@ function draw() {
 
 	image(sketchFramebuffer, -windowWidth / 2, -windowHeight / 2);
 
-	/**
+
 
 	if (frameCount == 100) {
-		setAsciiOptions({
-			text: {
-				invertMode: true,
-			}
-		})
+
+		p5asciify.rendererManager.textAsciiRenderer.invertMode = true;
+
+		p5asciify.rendererManager.textAsciiRenderer.updateOptions({
+			invertMode: true
+		});
 	}
 
 	if (frameCount == 200) {
-		setAsciiOptions({
-			text: {
-				characterColorMode: 1,
-			}
-		})
+
+		p5asciify.rendererManager.textAsciiRenderer.updateOptions({
+			characterColorMode: 1
+		});
 	}
 
 	if (frameCount == 300) {
-		setAsciiOptions({
-			text: {
-				characterColor: "#FF0000"
-			}
-		})
+		p5asciify.rendererManager.textAsciiRenderer.updateOptions({
+			characterColor: "#FF0000"
+		});
 	}
 
 	if (frameCount == 400) {
-		setAsciiOptions({
-			text: {
-				backgroundColor: "#0000FF"
-			}
-		})
+		p5asciify.rendererManager.textAsciiRenderer.updateOptions({
+			backgroundColor: "#0000FF"
+		});
 	}
 
 	if (frameCount == 500) {
-		setAsciiOptions({
-			common: 
-			{
-				fontSize: 32,
-			}
-		})
+		setAsciifyFontSize(32);
 	}
 
-	**/
 
-	
 }
 
 function windowResized() {

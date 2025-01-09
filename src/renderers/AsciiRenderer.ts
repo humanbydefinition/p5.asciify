@@ -3,6 +3,10 @@ import { validateOptions } from "../validators/OptionsValidator";
 import { P5AsciifyGrid } from '../Grid';
 import { P5AsciifyCharacterSet } from '../CharacterSet';
 
+interface AsciiRendererOptions {
+    enabled: boolean;
+}
+
 /**
  * Abstract class for ASCII Renderers.
  */

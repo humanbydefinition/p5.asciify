@@ -9,6 +9,17 @@ import asciiConversionShader from '../_common_shaders/asciiConversion.frag';
 import brightnessSplitShader from './shaders/brightnessSplit.frag';
 import vertexShader from '../../assets/shaders/vert/shader.vert';
 
+interface AccurateAsciiRendererOptions {
+    enabled: boolean;
+    characters: string;
+    characterColorMode: number;
+    characterColor: p5.Color;
+    backgroundColorMode: number;
+    backgroundColor: p5.Color;
+    invertMode: number;
+    rotationAngle: number;
+}
+
 export default class AccurateAsciiRenderer extends AsciiRenderer {
     private characterSelectionShader: p5.Shader;
     private brightnessSampleShader: p5.Shader;
@@ -18,7 +29,7 @@ export default class AccurateAsciiRenderer extends AsciiRenderer {
     private brightnessSampleFramebuffer: p5.Framebuffer;
     private brightnessSplitFramebuffer: p5.Framebuffer;
 
-    constructor(p5Instance: p5, grid: P5AsciifyGrid, characterSet: P5AsciifyCharacterSet, options: AsciiRendererOptions) {
+    constructor(p5Instance: p5, grid: P5AsciifyGrid, characterSet: P5AsciifyCharacterSet, options: AccurateAsciiRendererOptions) {
         super(p5Instance, grid, characterSet, options);
 
         this.characterSelectionShader = this.p.createShader(vertexShader, generateCharacterSelectionShader(this.characterSet.asciiFontTextureAtlas.fontSize, this.characterSet.characters.length));

@@ -8,7 +8,17 @@ import asciiConversionShader from '../_common_shaders/asciiConversion.frag';
 import colorSampleShader from './shaders/colorSample.frag';
 import vertexShader from '../../assets/shaders/vert/shader.vert';
 
-import { P5AsciifyGradientManager } from '../../managers/GradientManager';
+import { P5AsciifyGradientManager } from '../../gradients/GradientManager';
+
+interface GradientAsciiRendererOptions {
+    enabled: boolean;
+    characterColor: p5.Color;
+    backgroundColor: p5.Color;
+    characterColorMode: number;
+    backgroundColorMode: number;
+    invertMode: number;
+    rotationAngle: number;
+}
 
 export default class GradientAsciiRenderer extends AsciiRenderer {
     private grayscaleShader: p5.Shader;
@@ -23,7 +33,7 @@ export default class GradientAsciiRenderer extends AsciiRenderer {
         grid: P5AsciifyGrid,
         characterSet: P5AsciifyCharacterSet,
         gradientManager: P5AsciifyGradientManager,
-        options: AsciiRendererOptions
+        options: GradientAsciiRendererOptions
     ) {
         super(p5Instance, grid, characterSet, options);
 

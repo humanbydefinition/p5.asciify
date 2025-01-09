@@ -11,6 +11,19 @@ import sobelShader from './shaders/sobel.frag';
 
 import { generateSampleShader } from './shaders/shaderGenerators';
 
+interface EdgeAsciiRendererOptions {
+    enabled: boolean;
+    characters: string;
+    characterColorMode: number;
+    characterColor: p5.Color;
+    backgroundColorMode: number;
+    backgroundColor: p5.Color;
+    invertMode: number;
+    rotationAngle: number;
+    sobelThreshold: number;
+    sampleThreshold: number;
+}
+
 export default class EdgeAsciiRenderer extends AsciiRenderer {
     private sobelShader: p5.Shader;
     private sampleShader: p5.Shader;
@@ -20,7 +33,7 @@ export default class EdgeAsciiRenderer extends AsciiRenderer {
     private sobelFramebuffer: p5.Framebuffer;
     private sampleFramebuffer: p5.Framebuffer;
 
-    constructor(p5Instance: p5, grid: P5AsciifyGrid, characterSet: P5AsciifyCharacterSet, options: AsciiRendererOptions) {
+    constructor(p5Instance: p5, grid: P5AsciifyGrid, characterSet: P5AsciifyCharacterSet, options: EdgeAsciiRendererOptions) {
         super(p5Instance, grid, characterSet, options);
 
         this.options.characterColor = this.p.color(this.options.characterColor);

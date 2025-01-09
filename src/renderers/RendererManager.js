@@ -1,8 +1,8 @@
-import BrightnessAsciiRenderer from '../renderers/brightnessAsciiRenderer/BrightnessAsciiRenderer';
-import AccurateAsciiRenderer from '../renderers/accurateAsciiRenderer/AccurateAsciiRenderer';
-import CustomAsciiRenderer from '../renderers/customAsciiRenderer/CustomAsciiRenderer';
-import EdgeAsciiRenderer from '../renderers/edgeAsciiRenderer/EdgeAsciiRenderer';
-import TextAsciiRenderer from '../renderers/textAsciiRenderer/TextAsciiRenderer';
+import BrightnessAsciiRenderer from './brightnessAsciiRenderer/BrightnessAsciiRenderer';
+import AccurateAsciiRenderer from './accurateAsciiRenderer/AccurateAsciiRenderer';
+import CustomAsciiRenderer from './customAsciiRenderer/CustomAsciiRenderer';
+import EdgeAsciiRenderer from './edgeAsciiRenderer/EdgeAsciiRenderer';
+import TextAsciiRenderer from './textAsciiRenderer/TextAsciiRenderer';
 
 import {
     BRIGHTNESS_OPTIONS,
@@ -11,11 +11,11 @@ import {
     EDGE_OPTIONS,
     CUSTOM_OPTIONS,
     TEXT_OPTIONS
-} from '../constants/defaults';
+} from '../constants/defaults.js';
 
 import { P5AsciifyCharacterSet } from '../CharacterSet';
-import { P5AsciifyGradientManager } from './GradientManager';
-import GradientAsciiRenderer from '../renderers/gradientAsciiRenderer/GradientAsciiRenderer.js';
+import { P5AsciifyGradientManager } from '../gradients/GradientManager';
+import GradientAsciiRenderer from './gradientAsciiRenderer/GradientAsciiRenderer';
 
 export class RendererManager {
 
