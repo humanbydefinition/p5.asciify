@@ -1,44 +1,34 @@
 import p5 from 'p5';
-import {P5AsciifyGradient} from '../Gradient';
+import { P5AsciifyGradient } from '../Gradient';
 
-interface SpiralGradientParams {
-    type: 'spiral';
-    shader: p5.Shader;
-    brightnessStart: number;
-    brightnessEnd: number;
-    characters: string[];
+export interface SpiralGradientParams {
     direction: number;
     centerX: number;
     centerY: number;
-    speed?: number;
-    density?: number;
+    speed: number;
+    density: number;
 }
 
-export default class P5AsciifySpiralGradient extends P5AsciifyGradient {
+export class P5AsciifySpiralGradient extends P5AsciifyGradient {
     private _direction: number;
     private _centerX: number;
     private _centerY: number;
     private _speed: number;
     private _density: number;
 
-    constructor({
-        type,
-        shader,
-        brightnessStart,
-        brightnessEnd,
-        characters,
-        direction,
-        centerX,
-        centerY,
-        speed = 0.01,
-        density = 0.01
-    }: SpiralGradientParams) {
-        super(type, shader, brightnessStart, brightnessEnd, characters);
-        this._direction = direction;
-        this._centerX = centerX;
-        this._centerY = centerY;
-        this._speed = speed;
-        this._density = density;
+    constructor(
+        shader: p5.Shader,
+        brightnessStart: number,
+        brightnessEnd: number,
+        characters: string[],
+        params: SpiralGradientParams
+    ) {
+        super(shader, brightnessStart, brightnessEnd, characters);
+        this._direction = params.direction;
+        this._centerX = params.centerX;
+        this._centerY = params.centerY;
+        this._speed = params.speed;
+        this._density = params.density;
     }
 
     setUniforms(

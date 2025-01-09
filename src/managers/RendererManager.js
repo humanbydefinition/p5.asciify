@@ -11,10 +11,10 @@ import {
     EDGE_OPTIONS,
     CUSTOM_OPTIONS,
     TEXT_OPTIONS
-} from '../constants/defaults.js';
+} from '../constants/defaults';
 
 import { P5AsciifyCharacterSet } from '../CharacterSet';
-import P5AsciifyGradientManager from './gradientmanager.js';
+import { P5AsciifyGradientManager } from './GradientManager';
 import GradientAsciiRenderer from '../renderers/gradientAsciiRenderer/GradientAsciiRenderer.js';
 
 export class RendererManager {

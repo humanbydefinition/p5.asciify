@@ -1,36 +1,28 @@
 import p5 from 'p5';
-import {P5AsciifyGradient} from '../Gradient';
+import { P5AsciifyGradient } from '../Gradient';
 
-interface LinearGradientParams {
-    type: 'linear';
-    shader: p5.Shader;
-    brightnessStart: number;
-    brightnessEnd: number;
-    characters: string[];
+export interface LinearGradientParams {
     direction: number;
     angle: number;
-    speed?: number;
+    speed: number;
 }
 
-export default class P5AsciifyLinearGradient extends P5AsciifyGradient {
+export class P5AsciifyLinearGradient extends P5AsciifyGradient {
     private _direction: number;
     private _angle: number;
     private _speed: number;
 
-    constructor({
-        type,
-        shader,
-        brightnessStart,
-        brightnessEnd,
-        characters,
-        direction,
-        angle,
-        speed = 0.01,
-    }: LinearGradientParams) {
-        super(type, shader, brightnessStart, brightnessEnd, characters);
-        this._direction = direction;
-        this._angle = angle;
-        this._speed = speed;
+    constructor(
+        shader: p5.Shader,
+        brightnessStart: number,
+        brightnessEnd: number,
+        characters: string[],
+        params: LinearGradientParams
+    ) {
+        super(shader, brightnessStart, brightnessEnd, characters);
+        this._direction = params.direction;
+        this._angle = params.angle;
+        this._speed = params.speed;
     }
 
     setUniforms(

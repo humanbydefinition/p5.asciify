@@ -8,7 +8,7 @@ import asciiConversionShader from '../_common_shaders/asciiConversion.frag';
 import colorSampleShader from './shaders/colorSample.frag';
 import vertexShader from '../../assets/shaders/vert/shader.vert';
 
-import P5AsciifyGradientManager from '../../managers/gradientmanager.js';
+import { P5AsciifyGradientManager } from '../../managers/GradientManager';
 
 export default class GradientAsciiRenderer extends AsciiRenderer {
     private grayscaleShader: p5.Shader;
@@ -19,10 +19,10 @@ export default class GradientAsciiRenderer extends AsciiRenderer {
     private gradientManager: P5AsciifyGradientManager;
 
     constructor(
-        p5Instance: p5, 
-        grid: P5AsciifyGrid, 
-        characterSet: P5AsciifyCharacterSet, 
-        gradientManager: P5AsciifyGradientManager, 
+        p5Instance: p5,
+        grid: P5AsciifyGrid,
+        characterSet: P5AsciifyCharacterSet,
+        gradientManager: P5AsciifyGradientManager,
         options: AsciiRendererOptions
     ) {
         super(p5Instance, grid, characterSet, options);
@@ -36,20 +36,20 @@ export default class GradientAsciiRenderer extends AsciiRenderer {
         this.colorSampleShader = this.p.createShader(vertexShader, colorSampleShader);
         this.asciiShader = this.p.createShader(vertexShader, asciiConversionShader);
 
-        this.grayscaleFramebuffer = this.p.createFramebuffer({ 
-            density: 1, 
-            width: this.grid.cols, 
-            height: this.grid.rows, 
-            depthFormat: this.p.UNSIGNED_INT, 
-            textureFiltering: this.p.NEAREST 
+        this.grayscaleFramebuffer = this.p.createFramebuffer({
+            density: 1,
+            width: this.grid.cols,
+            height: this.grid.rows,
+            depthFormat: this.p.UNSIGNED_INT,
+            textureFiltering: this.p.NEAREST
         });
-        
-        this.prevAsciiCharacterFramebuffer = this.p.createFramebuffer({ 
-            density: 1, 
-            width: this.grid.cols, 
-            height: this.grid.rows, 
-            depthFormat: this.p.UNSIGNED_INT, 
-            textureFiltering: this.p.NEAREST 
+
+        this.prevAsciiCharacterFramebuffer = this.p.createFramebuffer({
+            density: 1,
+            width: this.grid.cols,
+            height: this.grid.rows,
+            depthFormat: this.p.UNSIGNED_INT,
+            textureFiltering: this.p.NEAREST
         });
     }
 
@@ -82,7 +82,7 @@ export default class GradientAsciiRenderer extends AsciiRenderer {
         // Gradient passes
         for (const gradient of this.gradientManager._gradients) {
             if (gradient.enabled) {
-                [this.prevAsciiCharacterFramebuffer, this.asciiCharacterFramebuffer] = 
+                [this.prevAsciiCharacterFramebuffer, this.asciiCharacterFramebuffer] =
                     [this.asciiCharacterFramebuffer, this.prevAsciiCharacterFramebuffer];
 
                 this.asciiCharacterFramebuffer.begin();

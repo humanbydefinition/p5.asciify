@@ -1,36 +1,28 @@
 import p5 from 'p5';
-import {P5AsciifyGradient} from '../Gradient';
+import { P5AsciifyGradient } from '../Gradient';
 
-interface NoiseGradientParams {
-    type: 'noise';
-    shader: p5.Shader;
-    brightnessStart: number;
-    brightnessEnd: number;
-    characters: string[];
+export interface NoiseGradientParams {
     noiseScale: number;
     speed: number;
     direction: number;
 }
 
-export default class P5AsciifyNoiseGradient extends P5AsciifyGradient {
+export class P5AsciifyNoiseGradient extends P5AsciifyGradient {
     private _direction: number;
     private _noiseScale: number;
     private _speed: number;
 
-    constructor({
-        type,
-        shader,
-        brightnessStart,
-        brightnessEnd,
-        characters,
-        noiseScale,
-        speed,
-        direction
-    }: NoiseGradientParams) {
-        super(type, shader, brightnessStart, brightnessEnd, characters);
-        this._direction = direction;
-        this._noiseScale = noiseScale;
-        this._speed = speed;
+    constructor(
+        shader: p5.Shader,
+        brightnessStart: number,
+        brightnessEnd: number,
+        characters: string[],
+        params: NoiseGradientParams
+    ) {
+        super(shader, brightnessStart, brightnessEnd, characters);
+        this._direction = params.direction;
+        this._noiseScale = params.noiseScale;
+        this._speed = params.speed;
     }
 
     setUniforms(

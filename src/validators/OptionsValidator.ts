@@ -1,4 +1,4 @@
-import { VALID_OPTIONS, VALID_RENDER_MODES, FONT_SIZE_LIMITS, EDGE_CHARACTER_LENGTH } from '../constants/validOptions.js';
+import { VALID_OPTIONS, VALID_RENDER_MODES, FONT_SIZE_LIMITS, EDGE_CHARACTER_LENGTH } from '../constants/validOptions';
 import { P5AsciifyError } from '../AsciifyError.js';
 import p5 from 'p5';
 

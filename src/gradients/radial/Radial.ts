@@ -1,40 +1,31 @@
 import p5 from 'p5';
-import {P5AsciifyGradient} from '../Gradient';
+import { P5AsciifyGradient } from '../Gradient';
 
-interface RadialGradientParams {
-    type: 'radial';
-    shader: p5.Shader;
-    brightnessStart: number;
-    brightnessEnd: number;
-    characters: string[];
+export interface RadialGradientParams {
     direction: number;
     centerX: number;
     centerY: number;
     radius: number;
 }
 
-export default class P5AsciifyRadialGradient extends P5AsciifyGradient {
+export class P5AsciifyRadialGradient extends P5AsciifyGradient {
     private _direction: number;
     private _centerX: number;
     private _centerY: number;
     private _radius: number;
 
-    constructor({
-        type,
-        shader,
-        brightnessStart,
-        brightnessEnd,
-        characters,
-        direction,
-        centerX,
-        centerY,
-        radius
-    }: RadialGradientParams) {
-        super(type, shader, brightnessStart, brightnessEnd, characters);
-        this._direction = direction;
-        this._centerX = centerX;
-        this._centerY = centerY;
-        this._radius = radius;
+    constructor(
+        shader: p5.Shader,
+        brightnessStart: number,
+        brightnessEnd: number,
+        characters: string[],
+        params: RadialGradientParams
+    ) {
+        super(shader, brightnessStart, brightnessEnd, characters);
+        this._direction = params.direction;
+        this._centerX = params.centerX;
+        this._centerY = params.centerY;
+        this._radius = params.radius;
     }
 
     setUniforms(

@@ -1581,7 +1581,6 @@ void main() {
         invertMode: false,
         rotationAngle: 0,
     };
-
     const ACCURATE_OPTIONS = {
         enabled: false,
         characters: "0123456789",
@@ -1592,7 +1591,6 @@ void main() {
         invertMode: false,
         rotationAngle: 0,
     };
-
     const GRADIENT_OPTIONS = {
         enabled: false,
         characterColor: "#FFFFFF",
@@ -1602,7 +1600,6 @@ void main() {
         invertMode: false,
         rotationAngle: 0,
     };
-
     const EDGE_OPTIONS = {
         enabled: false,
         characters: "-/|\\-/|\\",
@@ -1615,11 +1612,9 @@ void main() {
         sampleThreshold: 16,
         rotationAngle: 0,
     };
-
     const CUSTOM_OPTIONS = {
         enabled: false,
     };
-
     const TEXT_OPTIONS = {
         enabled: false,
         characterColor: "#FFFFFF",
@@ -1727,7 +1722,6 @@ void main() {
     }
 
     class P5AsciifyGradient {
-        _type;
         _shader;
         _brightnessStart;
         _brightnessEnd;
@@ -1735,8 +1729,7 @@ void main() {
         _enabled;
         _onPaletteChangeCallback;
         _palette;
-        constructor(type, shader, brightnessStart, brightnessEnd, characters) {
-            this._type = type;
+        constructor(shader, brightnessStart, brightnessEnd, characters) {
             this._shader = shader;
             // Normalize brightness values to [0, 1]
             this._brightnessStart = Math.floor((brightnessStart / 255) * 100) / 100;
@@ -1753,8 +1746,6 @@ void main() {
             this._palette.setup(p5Instance);
         }
         setUniforms(p5, framebuffer, referenceFramebuffer) {
-            if (!this._palette)
-                throw new Error('Palette must be set up before setting uniforms.');
             this._shader.setUniform("textureID", framebuffer);
             this._shader.setUniform("originalTextureID", referenceFramebuffer);
             this._shader.setUniform("gradientTexture", this._palette.framebuffer);
@@ -1766,9 +1757,6 @@ void main() {
             if (this._onPaletteChangeCallback) {
                 this._onPaletteChangeCallback(this, value);
             }
-        }
-        get type() {
-            return this._type;
         }
         get enabled() {
             return this._enabled;
@@ -1794,11 +1782,11 @@ void main() {
         _direction;
         _angle;
         _speed;
-        constructor({ type, shader, brightnessStart, brightnessEnd, characters, direction, angle, speed = 0.01, }) {
-            super(type, shader, brightnessStart, brightnessEnd, characters);
-            this._direction = direction;
-            this._angle = angle;
-            this._speed = speed;
+        constructor(shader, brightnessStart, brightnessEnd, characters, params) {
+            super(shader, brightnessStart, brightnessEnd, characters);
+            this._direction = params.direction;
+            this._angle = params.angle;
+            this._speed = params.speed;
         }
         setUniforms(p, framebuffer, referenceFramebuffer) {
             super.setUniforms(p, framebuffer, referenceFramebuffer);
@@ -1830,8 +1818,8 @@ void main() {
         _direction;
         _angle;
         _speed;
-        constructor(params) {
-            super(params.type, params.shader, params.brightnessStart, params.brightnessEnd, params.characters);
+        constructor(shader, brightnessStart, brightnessEnd, characters, params) {
+            super(shader, brightnessStart, brightnessEnd, characters);
             this._direction = params.direction;
             this._angle = params.angle;
             this._speed = params.speed ?? 0.01;
@@ -1868,13 +1856,13 @@ void main() {
         _centerY;
         _speed;
         _density;
-        constructor({ type, shader, brightnessStart, brightnessEnd, characters, direction, centerX, centerY, speed = 0.01, density = 0.01 }) {
-            super(type, shader, brightnessStart, brightnessEnd, characters);
-            this._direction = direction;
-            this._centerX = centerX;
-            this._centerY = centerY;
-            this._speed = speed;
-            this._density = density;
+        constructor(shader, brightnessStart, brightnessEnd, characters, params) {
+            super(shader, brightnessStart, brightnessEnd, characters);
+            this._direction = params.direction;
+            this._centerX = params.centerX;
+            this._centerY = params.centerY;
+            this._speed = params.speed;
+            this._density = params.density;
         }
         setUniforms(p, framebuffer, referenceFramebuffer) {
             super.setUniforms(p, framebuffer, referenceFramebuffer);
@@ -1921,12 +1909,12 @@ void main() {
         _centerX;
         _centerY;
         _radius;
-        constructor({ type, shader, brightnessStart, brightnessEnd, characters, direction, centerX, centerY, radius }) {
-            super(type, shader, brightnessStart, brightnessEnd, characters);
-            this._direction = direction;
-            this._centerX = centerX;
-            this._centerY = centerY;
-            this._radius = radius;
+        constructor(shader, brightnessStart, brightnessEnd, characters, params) {
+            super(shader, brightnessStart, brightnessEnd, characters);
+            this._direction = params.direction;
+            this._centerX = params.centerX;
+            this._centerY = params.centerY;
+            this._radius = params.radius;
         }
         setUniforms(p, framebuffer, referenceFramebuffer) {
             super.setUniforms(p, framebuffer, referenceFramebuffer);
@@ -1965,11 +1953,11 @@ void main() {
         _centerX;
         _centerY;
         _speed;
-        constructor({ type, shader, brightnessStart, brightnessEnd, characters, centerX, centerY, speed }) {
-            super(type, shader, brightnessStart, brightnessEnd, characters);
-            this._centerX = centerX;
-            this._centerY = centerY;
-            this._speed = speed;
+        constructor(shader, brightnessStart, brightnessEnd, characters, params) {
+            super(shader, brightnessStart, brightnessEnd, characters);
+            this._centerX = params.centerX;
+            this._centerY = params.centerY;
+            this._speed = params.speed;
         }
         setUniforms(p, framebuffer, referenceFramebuffer) {
             super.setUniforms(p, framebuffer, referenceFramebuffer);
@@ -2001,11 +1989,11 @@ void main() {
         _direction;
         _noiseScale;
         _speed;
-        constructor({ type, shader, brightnessStart, brightnessEnd, characters, noiseScale, speed, direction }) {
-            super(type, shader, brightnessStart, brightnessEnd, characters);
-            this._direction = direction;
-            this._noiseScale = noiseScale;
-            this._speed = speed;
+        constructor(shader, brightnessStart, brightnessEnd, characters, params) {
+            super(shader, brightnessStart, brightnessEnd, characters);
+            this._direction = params.direction;
+            this._noiseScale = params.noiseScale;
+            this._speed = params.speed;
         }
         setUniforms(p, framebuffer, referenceFramebuffer) {
             super.setUniforms(p, framebuffer, referenceFramebuffer);
@@ -2046,92 +2034,85 @@ void main() {
     var noiseGradientShader = "precision mediump float;\n#define GLSLIFY 1\nvarying vec2 v_texCoord;uniform sampler2D textureID;uniform sampler2D originalTextureID;uniform sampler2D gradientTexture;uniform int frameCount;uniform float noiseScale;uniform float u_speed;uniform float direction;uniform vec2 gradientTextureDimensions;uniform vec2 u_brightnessRange;vec3 permute(vec3 x){return mod(((x*34.0)+1.0)*x,289.0);}float snoise(vec2 v){const vec4 C=vec4(0.211324865405187,0.366025403784439,-0.577350269189626,0.024390243902439);vec2 i=floor(v+dot(v,C.yy));vec2 x0=v-i+dot(i,C.xx);vec2 i1;i1=(x0.x>x0.y)? vec2(1.0,0.0): vec2(0.0,1.0);vec4 x12=x0.xyxy+C.xxzz;x12.xy-=i1;i=mod(i,289.0);vec3 p=permute(permute(i.y+vec3(0.0,i1.y,1.0))+i.x+vec3(0.0,i1.x,1.0));vec3 m=max(0.5-vec3(dot(x0,x0),dot(x12.xy,x12.xy),dot(x12.zw,x12.zw)),0.0);m=m*m;m=m*m;vec3 x=2.0*fract(p*C.www)-1.0;vec3 h=abs(x)-0.5;vec3 ox=floor(x+0.5);vec3 a0=x-ox;m*=1.79284291400159-0.85373472095314*(a0*a0+h*h);vec3 g;g.x=a0.x*x0.x+h.x*x0.y;g.yz=a0.yz*x12.xz+h.yz*x12.yw;return 130.0*dot(m,g);}void main(){vec4 texColor=texture2D(textureID,v_texCoord);vec4 originalTexColor=texture2D(originalTextureID,v_texCoord);if(texColor.r>=u_brightnessRange[0]&&texColor.r<=u_brightnessRange[1]&&texColor==originalTexColor){vec2 directionVec=vec2(cos(radians(direction)),sin(radians(direction)));vec2 uv=v_texCoord*noiseScale+directionVec*float(frameCount)*u_speed*0.01;float noiseValue=snoise(uv);float normalizedNoiseValue=(noiseValue+1.0)/2.0;float index=normalizedNoiseValue*(gradientTextureDimensions.x-1.0);float texelPosition=(floor(index)+0.5)/gradientTextureDimensions.x;vec4 gradientColor=texture2D(gradientTexture,vec2(texelPosition,0));gl_FragColor=vec4(gradientColor.rgb,texColor.a);}else{gl_FragColor=texColor;}}"; // eslint-disable-line
 
     class P5AsciifyGradientManager {
-
         gradientParams = {
-            "linear": { direction: 1, angle: 0, speed: 0.01 },
-            "zigzag": { direction: 1, angle: 0, speed: 0.01 },
-            "spiral": { direction: 1, centerX: 0.5, centerY: 0.5, speed: 0.01, density: 0.01 },
-            "radial": { direction: 1, centerX: 0.5, centerY: 0.5, radius: 0.5 },
-            "conical": { centerX: 0.5, centerY: 0.5, speed: 0.01 },
-            "noise": { noiseScale: 0.1, speed: 0.01, direction: 1 },
-        }
-
+            linear: { direction: 1, angle: 0, speed: 0.01 },
+            zigzag: { direction: 1, angle: 0, speed: 0.01 },
+            spiral: { direction: 1, centerX: 0.5, centerY: 0.5, speed: 0.01, density: 0.01 },
+            radial: { direction: 1, centerX: 0.5, centerY: 0.5, radius: 0.5 },
+            conical: { centerX: 0.5, centerY: 0.5, speed: 0.01 },
+            noise: { noiseScale: 0.1, speed: 0.01, direction: 1 },
+        };
         gradientShaders = {
-            "linear": linearGradientShader,
-            "zigzag": zigzagGradientShader,
-            "spiral": spiralGradientShader,
-            "radial": radialGradientShader,
-            "conical": conicalGradientShader,
-            "noise": noiseGradientShader,
-        }
-
+            linear: linearGradientShader,
+            zigzag: zigzagGradientShader,
+            spiral: spiralGradientShader,
+            radial: radialGradientShader,
+            conical: conicalGradientShader,
+            noise: noiseGradientShader,
+        };
         gradientConstructors = {
-            "linear": ({ type, shader, params }) => new P5AsciifyLinearGradient({ type, shader, ...params }),
-            "zigzag": ({ type, shader, params }) => new P5AsciifyZigZagGradient({ type, shader, ...params }),
-            "spiral": ({ type, shader, params }) => new P5AsciifySpiralGradient({ type, shader, ...params }),
-            "radial": ({ type, shader, params }) => new P5AsciifyRadialGradient({ type, shader, ...params }),
-            "conical": ({ type, shader, params }) => new P5AsciifyConicalGradient({ type, shader, ...params }),
-            "noise": ({ type, shader, params }) => new P5AsciifyNoiseGradient({ type, shader, ...params }),
-        }
-
+            linear: (shader, brightnessStart, brightnessEnd, characters, params) => new P5AsciifyLinearGradient(shader, brightnessStart, brightnessEnd, characters, params),
+            zigzag: (shader, brightnessStart, brightnessEnd, characters, params) => new P5AsciifyZigZagGradient(shader, brightnessStart, brightnessEnd, characters, params),
+            spiral: (shader, brightnessStart, brightnessEnd, characters, params) => new P5AsciifySpiralGradient(shader, brightnessStart, brightnessEnd, characters, params),
+            radial: (shader, brightnessStart, brightnessEnd, characters, params) => new P5AsciifyRadialGradient(shader, brightnessStart, brightnessEnd, characters, params),
+            conical: (shader, brightnessStart, brightnessEnd, characters, params) => new P5AsciifyConicalGradient(shader, brightnessStart, brightnessEnd, characters, params),
+            noise: (shader, brightnessStart, brightnessEnd, characters, params) => new P5AsciifyNoiseGradient(shader, brightnessStart, brightnessEnd, characters, params),
+        };
         _setupQueue = [];
         _gradients = [];
-
+        fontTextureAtlas;
+        p5Instance;
         setup(fontTextureAtlas) {
             this.fontTextureAtlas = fontTextureAtlas;
             this.setupShaders();
             this.setupGradientQueue();
         }
-
         addInstance(p5Instance) {
             this.p5Instance = p5Instance;
         }
-
         setupGradientQueue() {
-            for (let gradientInstance of this._setupQueue) {
-                gradientInstance.setup(this.p5Instance, this.gradientShaders[gradientInstance.type], this.fontTextureAtlas.getCharsetColorArray(gradientInstance._characters));
+            for (const { gradientInstance, type } of this._setupQueue) {
+                gradientInstance.setup(this.p5Instance, this.gradientShaders[type], this.fontTextureAtlas.getCharsetColorArray(gradientInstance._characters));
             }
-
             this._setupQueue = [];
         }
-
         getGradientParams(gradientName, params) {
             return { ...this.gradientParams[gradientName], ...params };
         }
-
         addGradient(gradientName, brightnessStart, brightnessEnd, characters, params) {
-            const mergedParams = this.getGradientParams(gradientName, { brightnessStart, brightnessEnd, characters, ...params });
-            const gradient = this.gradientConstructors[gradientName]({ type: gradientName, shader: this.gradientShaders[gradientName], params: mergedParams });
+            const mergedParams = this.getGradientParams(gradientName, {
+                brightnessStart,
+                brightnessEnd,
+                characters,
+                ...params
+            });
+            const gradient = this.gradientConstructors[gradientName](this.gradientShaders[gradientName], brightnessStart, brightnessEnd, characters, mergedParams);
             gradient.registerPaletteChangeCallback(this.handleGradientPaletteChange.bind(this));
-
             this._gradients.push(gradient);
-
             if (!this.p5Instance._setupDone) {
-                this._setupQueue.push(gradient);
-            } else {
+                this._setupQueue.push({ gradientInstance: gradient, type: gradientName });
+            }
+            else {
                 gradient.setup(this.p5Instance, this.gradientShaders[gradientName], this.fontTextureAtlas.getCharsetColorArray(characters));
             }
-
             return gradient;
         }
-
         removeGradient(gradient) {
             const index = this._gradients.indexOf(gradient);
             if (index > -1) {
                 this._gradients.splice(index, 1);
             }
         }
-
         handleGradientPaletteChange(gradient, characters) {
             if (!this.p5Instance._setupDone) {
                 gradient._characters = characters;
-            } else {
-                gradient._palette.setColors(this.fontTextureAtlas.getCharsetColorArray(characters));
+            }
+            else {
+                gradient._palette?.setColors(this.fontTextureAtlas.getCharsetColorArray(characters));
             }
         }
-
         setupShaders() {
-            for (let gradientName in this.gradientShaders) {
+            for (const gradientName in this.gradientShaders) {
                 this.gradientShaders[gradientName] = this.p5Instance.createShader(vertexShader, this.gradientShaders[gradientName]);
             }
         }
@@ -2552,57 +2533,36 @@ void main() {
     /**
      * Validates the parameters for adding an ASCII gradient.
      *
-     * @param {Object} gradientManager - The gradient manager instance.
-     * @param {string} gradientName - The name of the gradient.
-     * @param {number} brightnessStart - The starting brightness value (0-255).
-     * @param {number} brightnessEnd - The ending brightness value (0-255).
-     * @param {string} characters - The characters to use for the gradient.
-     * @param {Object} userParams - Additional user parameters for the gradient.
-     * @throws {P5AsciifyError} If any validation fails.
+     * @param gradientManager - The gradient manager instance.
+     * @param gradientName - The name of the gradient.
+     * @param brightnessStart - The starting brightness value (0-255).
+     * @param brightnessEnd - The ending brightness value (0-255).
+     * @param characters - The characters to use for the gradient.
+     * @param userParams - Additional user parameters for the gradient.
+     * @throws P5AsciifyError If any validation fails.
      */
-    function validateGradientParams(
-        gradientManager,
-        gradientName,
-        brightnessStart,
-        brightnessEnd,
-        characters,
-        userParams
-    ) {
+    function validateGradientParams(gradientManager, gradientName, brightnessStart, brightnessEnd, characters, userParams) {
         // Check if the gradient constructor exists
         if (!gradientManager.gradientConstructors[gradientName]) {
-            throw new P5AsciifyError(
-                `Gradient '${gradientName}' does not exist! Available gradients: ${Object.keys(gradientManager.gradientConstructors).join(", ")}`
-            );
+            throw new P5AsciifyError(`Gradient '${gradientName}' does not exist! Available gradients: ${Object.keys(gradientManager.gradientConstructors).join(", ")}`);
         }
-
         // Validate brightnessStart
         if (typeof brightnessStart !== 'number' || brightnessStart < 0 || brightnessStart > 255) {
-            throw new P5AsciifyError(
-                `Invalid brightness start value '${brightnessStart}'. Expected a number between 0 and 255.`
-            );
+            throw new P5AsciifyError(`Invalid brightness start value '${brightnessStart}'. Expected a number between 0 and 255.`);
         }
-
         // Validate brightnessEnd
         if (typeof brightnessEnd !== 'number' || brightnessEnd < 0 || brightnessEnd > 255) {
-            throw new P5AsciifyError(
-                `Invalid brightness end value '${brightnessEnd}'. Expected a number between 0 and 255.`
-            );
+            throw new P5AsciifyError(`Invalid brightness end value '${brightnessEnd}'. Expected a number between 0 and 255.`);
         }
-
         // Validate characters
         if (typeof characters !== 'string') {
-            throw new P5AsciifyError(
-                `Invalid characters value '${characters}'. Expected a string.`
-            );
+            throw new P5AsciifyError(`Invalid characters value '${characters}'. Expected a string.`);
         }
-
         // Validate userParams keys
         const validParams = Object.keys(gradientManager.gradientParams[gradientName]);
         const invalidKeys = Object.keys(userParams).filter(key => !validParams.includes(key));
         if (invalidKeys.length > 0) {
-            throw new P5AsciifyError(
-                `Invalid parameter(s) for gradient '${gradientName}': ${invalidKeys.join(", ")}\nValid parameters are: ${validParams.join(", ")}`
-            );
+            throw new P5AsciifyError(`Invalid parameter(s) for gradient '${gradientName}': ${invalidKeys.join(", ")}\nValid parameters are: ${validParams.join(", ")}`);
         }
     }
 

@@ -1,24 +1,25 @@
 import p5 from 'p5';
 import { P5AsciifyGradient } from '../Gradient';
 
-interface ZigZagGradientParams {
-    type: string;
-    shader: p5.Shader;
-    brightnessStart: number;
-    brightnessEnd: number;
-    characters: string[];
+export interface ZigZagGradientParams {
     direction: number;
     angle: number;
     speed?: number;
 }
 
-export default class P5AsciifyZigZagGradient extends P5AsciifyGradient {
+export class P5AsciifyZigZagGradient extends P5AsciifyGradient {
     private _direction: number;
     private _angle: number;
     private _speed: number;
 
-    constructor(params: ZigZagGradientParams) {
-        super(params.type, params.shader, params.brightnessStart, params.brightnessEnd, params.characters);
+    constructor(
+        shader: p5.Shader,
+        brightnessStart: number,
+        brightnessEnd: number,
+        characters: string[],
+        params: ZigZagGradientParams
+    ) {
+        super(shader, brightnessStart, brightnessEnd, characters);
         this._direction = params.direction;
         this._angle = params.angle;
         this._speed = params.speed ?? 0.01;
