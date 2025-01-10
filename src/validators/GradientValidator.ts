@@ -1,5 +1,7 @@
 import { P5AsciifyError } from '../AsciifyError';
-import P5AsciifyGradientManager from '../gradients/GradientManager';
+import { P5AsciifyGradientManager } from '../gradients/GradientManager';
+
+import { GradientType } from '../gradients/GradientManager';
 
 /**
  * Validates the parameters for adding an ASCII gradient.
@@ -14,7 +16,7 @@ import P5AsciifyGradientManager from '../gradients/GradientManager';
  */
 export function validateGradientParams(
     gradientManager: P5AsciifyGradientManager,
-    gradientName: string,
+    gradientName: GradientType,
     brightnessStart: number,
     brightnessEnd: number,
     characters: string,

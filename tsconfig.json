@@ -19,7 +19,8 @@
       "paths": {
         "@/*": ["./src/*"],
         "@test-utils": ["./test-utils"]
-      }
+      },
+      "typeRoots": ["./node_modules/@types", "./types"],
     },
     "include": ["src", "test-utils"]
   }

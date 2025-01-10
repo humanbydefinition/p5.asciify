@@ -1,40 +1,26 @@
 import p5 from 'p5';
 import { P5AsciifyError } from './AsciifyError';
-import  { Glyph } from 'opentype.js';
-
-interface P5AsciifyFontTextureAtlasOptions {
-    p5Instance: p5;
-    font: p5.Font;
-    fontSize: number;
-}
-
-interface MaxGlyphDimensions {
-    width: number;
-    height: number;
-}
+import { Glyph } from 'opentype.js';
 
 export class P5AsciifyFontTextureAtlas {
-    private p: p5;
-    private font: any; // Replace 'any' with the actual font type
-    private fontSize: number;
     private characters: string[];
     private characterGlyphs: Glyph[];
-    private maxGlyphDimensions: MaxGlyphDimensions;
-    private texture?: p5.Framebuffer;
+    private _maxGlyphDimensions: { width: number; height: number };
+    private texture!: p5.Framebuffer;
     private charsetCols: number = 0;
     private charsetRows: number = 0;
 
-    constructor({ p5Instance, font, fontSize }: P5AsciifyFontTextureAtlasOptions) {
-        this.p = p5Instance;
-        this.font = font;
-        this.fontSize = fontSize;
-
+    constructor(
+        private p: p5, 
+        private font: p5.Font, 
+        private fontSize: number
+    ) {
         this.characters = Object.values(this.font.font.glyphs.glyphs)
             .filter((glyph: Glyph) => glyph.unicode !== undefined)
             .map((glyph: Glyph) => String.fromCharCode(glyph.unicode));
 
         this.characterGlyphs = this.loadCharacterGlyphs();
-        this.maxGlyphDimensions = this.getMaxGlyphDimensions(this.fontSize);
+        this._maxGlyphDimensions = this.getMaxGlyphDimensions(this.fontSize);
         this.createTexture(this.fontSize);
     }
 
@@ -59,8 +45,8 @@ export class P5AsciifyFontTextureAtlas {
      * @param fontSize - The font size to use for calculations.
      * @returns An object containing the maximum width and height of the glyphs.
      */
-    private getMaxGlyphDimensions(fontSize: number): MaxGlyphDimensions {
-        return this.characterGlyphs.reduce<MaxGlyphDimensions>(
+    private getMaxGlyphDimensions(fontSize: number): { width: number; height: number } {
+        return this.characterGlyphs.reduce<{ width: number; height: number }>(
             (maxDims, glyph) => {
                 const bounds = glyph.getPath(0, 0, fontSize).getBoundingBox();
                 return {
@@ -83,7 +69,7 @@ export class P5AsciifyFontTextureAtlas {
             .map((glyph: Glyph) => String.fromCharCode(glyph.unicode));
 
         this.characterGlyphs = this.loadCharacterGlyphs();
-        this.maxGlyphDimensions = this.getMaxGlyphDimensions(this.fontSize);
+        this._maxGlyphDimensions = this.getMaxGlyphDimensions(this.fontSize);
         this.createTexture(this.fontSize);
     }
 
@@ -93,7 +79,7 @@ export class P5AsciifyFontTextureAtlas {
      */
     public setFontSize(fontSize: number): void {
         this.fontSize = fontSize;
-        this.maxGlyphDimensions = this.getMaxGlyphDimensions(this.fontSize);
+        this._maxGlyphDimensions = this.getMaxGlyphDimensions(this.fontSize);
         this.createTexture(this.fontSize);
     }
 
@@ -128,7 +114,7 @@ export class P5AsciifyFontTextureAtlas {
      * @param fontSize - The font size to use for drawing the characters on the texture.
      * @param dimensions - The maximum dimensions of the glyphs.
      */
-    private drawCharacters(fontSize: number, dimensions: MaxGlyphDimensions): void {
+    private drawCharacters(fontSize: number, dimensions: { width: number; height: number }): void {
         this.p.clear();
         this.p.textFont(this.font);
         this.p.fill(255);
@@ -183,5 +169,9 @@ export class P5AsciifyFontTextureAtlas {
                 )
             )
         );
+    }
+
+    get maxGlyphDimensions(): { width: number; height: number } {
+        return this._maxGlyphDimensions;
     }
 }

@@ -8,21 +8,20 @@ export class Asciifier {
     private borderColor: string;
     private fontSize: number;
     private rendererManager: RendererManager;
-    private font: p5.Font | null;
+    private font!: p5.Font;
     private postSetupFunction: (() => void) | null;
     private postDrawFunction: (() => void) | null;
-    private p: p5;
-    private asciiFontTextureAtlas: P5AsciifyFontTextureAtlas;
-    private grid: P5AsciifyGrid;
+    private p!: p5;
+    private asciiFontTextureAtlas!: P5AsciifyFontTextureAtlas;
+    private grid!: P5AsciifyGrid;
     private events: P5AsciifyEventEmitter;
-    private sketchFramebuffer: p5.Framebuffer;
+    private sketchFramebuffer!: p5.Framebuffer;
 
     constructor() {
         this.borderColor = "#000000";
         this.fontSize = 16;
         this.rendererManager = new RendererManager();
         this.events = new P5AsciifyEventEmitter();
-        this.font = null;
         this.postSetupFunction = null;
         this.postDrawFunction = null;
     }
@@ -33,11 +32,17 @@ export class Asciifier {
      */
     public instance(p: p5): void {
         this.p = p;
-        this.p.preload = () => { }; // Define a default preload function
+
+        if (!this.p.preload) {
+            this.p.preload = () => { }; // Define a default preload function
+        }
     }
 
     public addP5Instance(p: p5): void {
-        this.p = p;
+        if (!this.p) {
+            this.p = p;
+        }
+
         this.rendererManager.gradientManager.addInstance(this.p);
     }
 
@@ -45,11 +50,7 @@ export class Asciifier {
      * Sets up the P5Asciify library with the specified options
      */
     public setup(): void {
-        this.asciiFontTextureAtlas = new P5AsciifyFontTextureAtlas({
-            p5Instance: this.p,
-            font: this.font,
-            fontSize: this.fontSize
-        });
+        this.asciiFontTextureAtlas = new P5AsciifyFontTextureAtlas(this.p, this.font, this.fontSize);
 
         this.grid = new P5AsciifyGrid(
             this.p,

@@ -1,18 +1,10 @@
 import { Asciifier } from './Asciifier';
 
-import { registerSetupMethods } from './modules/setup.ts';
-import { registerFontMethods } from './modules/fonts.ts';
-import { registerOptionsMethods } from './modules/options.ts';
-import { registerGradientMethods } from './modules/gradients.ts';
-import { registerRenderingMethods } from './modules/rendering.ts';
-
-// Declare global window interface augmentation
-declare global {
-  interface Window {
-    p5asciify?: Asciifier;
-    preload?: () => void;
-  }
-}
+import { registerSetupMethods } from './modules/setup';
+import { registerFontMethods } from './modules/fonts';
+import { registerOptionsMethods } from './modules/options';
+import { registerGradientMethods } from './modules/gradients';
+import { registerRenderingMethods } from './modules/rendering';
 
 // Initialize the P5Asciify library and export it as a default module
 const p5asciify = new Asciifier();

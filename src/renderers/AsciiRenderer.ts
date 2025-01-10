@@ -16,10 +16,10 @@ export abstract class AsciiRenderer {
     protected characterSet: P5AsciifyCharacterSet;
     protected options: AsciiRendererOptions;
 
-    protected primaryColorSampleFramebuffer: p5.RendererGL;
-    protected secondaryColorSampleFramebuffer: p5.RendererGL;
-    protected asciiCharacterFramebuffer: p5.RendererGL;
-    protected outputFramebuffer: p5.RendererGL;
+    protected primaryColorSampleFramebuffer: p5.Framebuffer;
+    protected secondaryColorSampleFramebuffer: p5.Framebuffer;
+    protected asciiCharacterFramebuffer: p5.Framebuffer;
+    protected outputFramebuffer: p5.Framebuffer;
 
     /**
      * Constructor for AsciiRenderer.

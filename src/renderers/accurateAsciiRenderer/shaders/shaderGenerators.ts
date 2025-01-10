@@ -1,4 +1,4 @@
-export const generateCharacterSelectionShader = (sampleSize) => `
+export const generateCharacterSelectionShader = (sampleSize: number) => `
 #version 100
 precision mediump float;
 
@@ -118,7 +118,7 @@ void main() {
 
 
 
-export const generateBrightnessSampleShader = (samplesPerRow, samplesPerColumn) => `
+export const generateBrightnessSampleShader = (samplesPerRow: number, samplesPerColumn: number) => `
 #version 100
 precision mediump float;
 
@@ -178,7 +178,7 @@ void main() {
 
 `;
 
-export const generateColorSampleShader = (numSlots, samplesPerRow, samplesPerColumn) => `
+export const generateColorSampleShader = (numSlots: number, samplesPerRow: number, samplesPerColumn: number) => `
 #version 100
 precision mediump float;
 

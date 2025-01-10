@@ -4,113 +4,67 @@ import p5 from 'p5';
  * Represents a 2D grid, handling the dimensions and resizing of the grid.
  */
 export class P5AsciifyGrid {
-    private p: p5;
-    private cellWidth: number;
-    private cellHeight: number;
-    private _cols: number = 0;
-    private _rows: number = 0;
-    private _width: number = 0;
-    private _height: number = 0;
-    private _offsetX: number = 0;
-    private _offsetY: number = 0;
+    private _cols = 0;
+    private _rows = 0;
+    private _width = 0;
+    private _height = 0;
+    private _offsetX = 0;
+    private _offsetY = 0;
 
-    constructor(p: p5, cellWidth: number, cellHeight: number) {
-        this.p = p;
-        this.cellWidth = cellWidth;
-        this.cellHeight = cellHeight;
-
+    constructor(
+        private p: p5,
+        private _cellWidth: number,
+        private _cellHeight: number
+    ) {
         this.reset();
     }
 
     /**
-     * Resets the grid dimensions based on the current cell width and height.
-     * Calculates the number of columns and rows and resizes the grid accordingly.
+     * Reset the grid to the default number of columns and rows based on the current canvas and cell dimensions.
      */
     public reset(): void {
-        const [cols, rows] = this._calculateGridCellDimensions();
-        this._cols = cols;
-        this._rows = rows;
-
+        [this._cols, this._rows] = this._calculateGridSize();
         this._resizeGrid();
     }
 
     /**
-     * Resizes the grid dimensions based on the current number of columns and rows, as well as the cell width and height.
-     * Adjusts the grid's offset to center it within the given canvas dimensions.
+     * Reset the total grid width/height and the offset to the outer canvas.
      */
     private _resizeGrid(): void {
-        this._width = this._cols * this.cellWidth;
-        this._height = this._rows * this.cellHeight;
-
+        this._width = this._cols * this._cellWidth;
+        this._height = this._rows * this._cellHeight;
         this._offsetX = Math.floor((this.p.width - this._width) / 2);
         this._offsetY = Math.floor((this.p.height - this._height) / 2);
     }
 
     /**
-     * Calculates the number of columns and rows for the grid based on the current cell and sketch dimensions.
-     * @returns An array containing the number of columns and rows for the grid.
+     * Calculate the number of columns and rows in the grid based on the current canvas and cell dimensions.
+     * @returns The number of columns and rows in the grid.
      */
-    private _calculateGridCellDimensions(): [number, number] {
-        const cols = Math.floor(this.p.width / this.cellWidth);
-        const rows = Math.floor(this.p.height / this.cellHeight);
-        return [cols, rows];
+    private _calculateGridSize(): [number, number] {
+        return [
+            Math.floor(this.p.width / this._cellWidth),
+            Math.floor(this.p.height / this._cellHeight)
+        ];
     }
 
     /**
-     * Resizes the dimensions of a grid cell in pixels.
-     * Recalculates the number of columns and rows and resizes the grid accordingly.
-     * @param newCellWidth - The new width of each cell in the grid.
-     * @param newCellHeight - The new height of each cell in the grid.
+     * Re-assign the grid cell dimensions and reset the grid.
+     * @param newCellWidth The new cell width.
+     * @param newCellHeight The new cell height.
      */
     public resizeCellPixelDimensions(newCellWidth: number, newCellHeight: number): void {
-        this.cellWidth = newCellWidth;
-        this.cellHeight = newCellHeight;
-
+        [this._cellWidth, this._cellHeight] = [newCellWidth, newCellHeight];
         this.reset();
     }
 
-    /**
-     * Resizes the dimensions of the grid based on the number of given columns and rows.
-     * If the new dimensions exceed the maximum dimensions of the grid, the grid is reset to its default dimensions.
-     * @param numCols - The new number of columns for the grid.
-     * @param numRows - The new number of rows for the grid.
-     */
-    public resizeCellDimensions(numCols: number, numRows: number): void {
-        const [maxCols, maxRows] = this._calculateGridCellDimensions();
-        if (numCols > maxCols || numRows > maxRows) {
-            console.warn(`The defined grid dimensions exceed the maximum dimensions of the grid. The maximum dimensions for the given font(size) and sketch dimensions are ${maxCols} x ${maxRows}. Resetting to default dimensions.`);
-            this.reset();
-            return;
-        }
-
-        this._cols = numCols;
-        this._rows = numRows;
-
-        // Resize the grid based on new dimensions
-        this._resizeGrid();
-    }
-
-    public get cols(): number {
-        return this._cols;
-    }
-    
-    public get rows(): number {
-        return this._rows;
-    }
-
-    public get width(): number {
-        return this._width;
-    }
-
-    public get height(): number {
-        return this._height;
-    }
-
-    public get offsetX(): number {
-        return this._offsetX;
-    }
-
-    public get offsetY(): number {
-        return this._offsetY;
-    }
+    // Getters
+    get cellWidth() { return this._cellWidth; }
+    get cellHeight() { return this._cellHeight; }
+    get cols() { return this._cols; }
+    get rows() { return this._rows; }
+    get width() { return this._width; }
+    get height() { return this._height; }
+    get offsetX() { return this._offsetX; }
+    get offsetY() { return this._offsetY; }
 }

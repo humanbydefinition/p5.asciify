@@ -3,6 +3,8 @@ import AccurateAsciiRenderer from './accurateAsciiRenderer/AccurateAsciiRenderer
 import CustomAsciiRenderer from './customAsciiRenderer/CustomAsciiRenderer';
 import EdgeAsciiRenderer from './edgeAsciiRenderer/EdgeAsciiRenderer';
 import TextAsciiRenderer from './textAsciiRenderer/TextAsciiRenderer';
+import GradientAsciiRenderer from './gradientAsciiRenderer/GradientAsciiRenderer';
+import { AsciiRenderer } from './AsciiRenderer';
 
 import {
     BRIGHTNESS_OPTIONS,
@@ -11,19 +13,30 @@ import {
     EDGE_OPTIONS,
     CUSTOM_OPTIONS,
     TEXT_OPTIONS
-} from '../constants/defaults.js';
+} from '../constants/defaults';
 
 import { P5AsciifyCharacterSet } from '../CharacterSet';
 import { P5AsciifyGradientManager } from '../gradients/GradientManager';
-import GradientAsciiRenderer from './gradientAsciiRenderer/GradientAsciiRenderer';
 
 export class RendererManager {
+    private p: any; // P5 instance type could be more specific
+    private grid: any;
+    private fontTextureAtlas: any;
+    private currentCanvasDimensions!: { width: number, height: number };
+    private gradientCharacterSet!: P5AsciifyCharacterSet;
+    private renderers!: AsciiRenderer[];
+    private textAsciiRenderer!: TextAsciiRenderer;
+    public gradientManager: P5AsciifyGradientManager;
+    private lastRenderer: AsciiRenderer | null;
+    private fontBase64!: string;
+    private fontFileType!: string;
 
-    gradientManager = new P5AsciifyGradientManager();
+    constructor() {
+        this.gradientManager = new P5AsciifyGradientManager();
+        this.lastRenderer = null;
+    }
 
-    lastRenderer = null;
-
-    setup(p5Instance, grid, fontTextureAtlas) {
+    public setup(p5Instance: any, grid: any, fontTextureAtlas: any): void {
         this.p = p5Instance;
         this.grid = grid;
         this.fontTextureAtlas = fontTextureAtlas;
@@ -31,28 +44,33 @@ export class RendererManager {
         this.currentCanvasDimensions = {
             width: this.p.width,
             height: this.p.height
-        }
+        };
 
-        this.gradientCharacterSet = new P5AsciifyCharacterSet({ p5Instance: this.p, asciiFontTextureAtlas: fontTextureAtlas, characters: BRIGHTNESS_OPTIONS.characters });
+        this.gradientCharacterSet = new P5AsciifyCharacterSet(
+            this.p,
+            fontTextureAtlas,
+            BRIGHTNESS_OPTIONS.characters
+        );
+
         this.gradientManager.setup(this.fontTextureAtlas);
 
         this.renderers = [
-            new BrightnessAsciiRenderer(this.p, this.grid, new P5AsciifyCharacterSet({ p5Instance: this.p, asciiFontTextureAtlas: fontTextureAtlas, characters: BRIGHTNESS_OPTIONS.characters }), { ...BRIGHTNESS_OPTIONS }),
-            new AccurateAsciiRenderer(this.p, this.grid, new P5AsciifyCharacterSet({ p5Instance: this.p, asciiFontTextureAtlas: fontTextureAtlas, characters: ACCURATE_OPTIONS.characters }), { ...ACCURATE_OPTIONS }),
+            new BrightnessAsciiRenderer(this.p, this.grid, new P5AsciifyCharacterSet(this.p, fontTextureAtlas, BRIGHTNESS_OPTIONS.characters), { ...BRIGHTNESS_OPTIONS }),
+            new AccurateAsciiRenderer(this.p, this.grid, new P5AsciifyCharacterSet(this.p, fontTextureAtlas, ACCURATE_OPTIONS.characters), { ...ACCURATE_OPTIONS }),
             new GradientAsciiRenderer(this.p, this.grid, this.gradientCharacterSet, this.gradientManager, { ...GRADIENT_OPTIONS }),
-            new EdgeAsciiRenderer(this.p, this.grid, new P5AsciifyCharacterSet({ p5Instance: this.p, asciiFontTextureAtlas: fontTextureAtlas, characters: EDGE_OPTIONS.characters }), { ...EDGE_OPTIONS }),
-            new CustomAsciiRenderer(this.p, this.grid, new P5AsciifyCharacterSet({ p5Instance: this.p, asciiFontTextureAtlas: fontTextureAtlas, characters: BRIGHTNESS_OPTIONS.characters }), { ...CUSTOM_OPTIONS }),
-        ]
+            new EdgeAsciiRenderer(this.p, this.grid, new P5AsciifyCharacterSet(this.p, fontTextureAtlas, EDGE_OPTIONS.characters), { ...EDGE_OPTIONS }),
+            new CustomAsciiRenderer(this.p, this.grid, new P5AsciifyCharacterSet(this.p, fontTextureAtlas, BRIGHTNESS_OPTIONS.characters), { ...CUSTOM_OPTIONS }),
+        ];
 
         this.textAsciiRenderer = new TextAsciiRenderer(this.p, fontTextureAtlas, this.grid, this.fontBase64, this.fontFileType, { ...TEXT_OPTIONS });
     }
 
-    render(inputFramebuffer, borderColor) {
+    public render(inputFramebuffer: any, borderColor: any): void {
         let asciiOutput = inputFramebuffer;
         let currentRenderer = this.renderers[0];
         let isFirst = true;
 
-        for (let renderer of this.renderers) {
+        for (const renderer of this.renderers) {
             if (renderer.options.enabled) {
                 renderer.render(inputFramebuffer, currentRenderer, isFirst);
                 asciiOutput = renderer.getOutputFramebuffer();
@@ -73,7 +91,7 @@ export class RendererManager {
         this.checkCanvasDimensions();
     }
 
-    checkCanvasDimensions() {
+    private checkCanvasDimensions(): void {
         if (this.currentCanvasDimensions.width !== this.p.width || this.currentCanvasDimensions.height !== this.p.height) {
             this.currentCanvasDimensions.width = this.p.width;
             this.currentCanvasDimensions.height = this.p.height;

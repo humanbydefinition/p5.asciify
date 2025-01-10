@@ -2,13 +2,11 @@ import p5 from 'p5';
 
 export class P5AsciifyColorPalette {
     colors: [number, number, number][];
-    framebuffer: p5.Graphics | null;
-    p5Instance: p5 | null;
+    framebuffer!: p5.Framebuffer;
+    p5Instance!: p5;
 
     constructor(colors: [number, number, number][]) {
         this.colors = colors;
-        this.framebuffer = null;
-        this.p5Instance = null;
     }
 
     setup(p5Instance: p5): void {
@@ -52,7 +50,7 @@ export class P5AsciifyColorPalette {
         this.updateFramebuffer();
     }
 
-    getFramebuffer(): p5.Graphics | null {
+    getFramebuffer(): p5.Framebuffer {
         return this.framebuffer;
     }
 

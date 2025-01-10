@@ -1,16 +1,8 @@
+import p5 from 'p5';
+
 import { P5AsciifyError } from './AsciifyError';
 import { P5AsciifyColorPalette } from './ColorPalette';
-import p5 from 'p5';
-import { P5AsciifyTextureAtlas } from './FontTextureAtlas';
-
-/**
- * Interface for constructor parameters
- */
-interface P5AsciifyCharacterSetOptions {
-    p5Instance: p5;
-    asciiFontTextureAtlas: P5AsciifyTextureAtlas; 
-    characters: string;
-}
+import { P5AsciifyFontTextureAtlas } from './FontTextureAtlas';
 
 /**
  * @class P5AsciifyCharacterSet
@@ -20,12 +12,12 @@ interface P5AsciifyCharacterSetOptions {
  */
 export class P5AsciifyCharacterSet {
     private p5Instance: p5; 
-    private asciiFontTextureAtlas: P5AsciifyTextureAtlas;
+    private asciiFontTextureAtlas: P5AsciifyFontTextureAtlas;
     private characters: string[];
     private characterColors: [number, number, number][];
     private characterColorPalette: P5AsciifyColorPalette;
 
-    constructor({ p5Instance, asciiFontTextureAtlas, characters }: P5AsciifyCharacterSetOptions) {
+    constructor(p5Instance: p5, asciiFontTextureAtlas: P5AsciifyFontTextureAtlas, characters: string) {
         this.p5Instance = p5Instance;
         this.asciiFontTextureAtlas = asciiFontTextureAtlas;
 

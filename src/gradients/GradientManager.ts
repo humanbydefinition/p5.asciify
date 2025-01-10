@@ -19,7 +19,7 @@ import noiseGradientShader from "../gradients/noise/noise.frag";
 
 
 
-type GradientType = 'linear' | 'zigzag' | 'spiral' | 'radial' | 'conical' | 'noise';
+export type GradientType = 'linear' | 'zigzag' | 'spiral' | 'radial' | 'conical' | 'noise';
 
 type GradientParams = {
     linear: LinearGradientParams;
@@ -36,7 +36,7 @@ interface SetupQueueItem {
 }
 
 export class P5AsciifyGradientManager {
-    private gradientParams: GradientParams = {
+    private _gradientParams: GradientParams = {
         linear: { direction: 1, angle: 0, speed: 0.01 },
         zigzag: { direction: 1, angle: 0, speed: 0.01 },
         spiral: { direction: 1, centerX: 0.5, centerY: 0.5, speed: 0.01, density: 0.01 },
@@ -54,7 +54,7 @@ export class P5AsciifyGradientManager {
         noise: noiseGradientShader,
     };
 
-    private gradientConstructors: Record<GradientType,
+    private _gradientConstructors: Record<GradientType,
         (shader: p5.Shader, brightnessStart: number, brightnessEnd: number, characters: string[], params: any) => P5AsciifyGradient
     > = {
             linear: (shader, brightnessStart, brightnessEnd, characters, params) =>
@@ -102,7 +102,7 @@ export class P5AsciifyGradientManager {
         gradientName: T,
         params: Partial<GradientParams[T]>
     ): GradientParams[T] {
-        return { ...this.gradientParams[gradientName], ...params };
+        return { ...this._gradientParams[gradientName], ...params };
     }
 
     addGradient(
@@ -119,7 +119,7 @@ export class P5AsciifyGradientManager {
             ...params
         });
 
-        const gradient = this.gradientConstructors[gradientName](
+        const gradient = this._gradientConstructors[gradientName](
             this.gradientShaders[gradientName] as unknown as p5.Shader,
             brightnessStart,
             brightnessEnd,
@@ -166,4 +166,15 @@ export class P5AsciifyGradientManager {
             ) as unknown as string;
         }
     }
+
+    public get gradientConstructors(): Record<GradientType,
+        (shader: p5.Shader, brightnessStart: number, brightnessEnd: number, characters: string[], params: any) => P5AsciifyGradient
+    > {
+        return this._gradientConstructors;
+    }
+
+    public get gradientParams(): GradientParams {
+        return this._gradientParams;
+    }
+
 }
