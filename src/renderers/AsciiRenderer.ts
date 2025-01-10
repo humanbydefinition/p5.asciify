@@ -3,13 +3,19 @@ import { validateOptions } from "../validators/OptionsValidator";
 import { P5AsciifyGrid } from '../Grid';
 import { P5AsciifyCharacterSet } from '../CharacterSet';
 
-interface AsciiRendererOptions {
+export interface AsciiRendererOptions {
     enabled: boolean;
     characters: string;
+    characterColorMode: number;
+    characterColor: p5.Color;
+    backgroundColorMode: number;
+    backgroundColor: p5.Color;
+    invertMode: number;
+    rotationAngle: number;
 }
 
 /**
- * Abstract class for ASCII Renderers.
+ * Abstract class for shader-based ASCII Renderers.
  */
 export abstract class AsciiRenderer {
     protected p: p5;
@@ -22,13 +28,6 @@ export abstract class AsciiRenderer {
     protected asciiCharacterFramebuffer: p5.Framebuffer;
     protected _outputFramebuffer: p5.Framebuffer;
 
-    /**
-     * Constructor for AsciiRenderer.
-     * @param p5Instance - The p5.js instance.
-     * @param grid - The grid instance.
-     * @param characterSet - The character set instance.
-     * @param options - Renderer-specific options.
-     */
     constructor(
         p5Instance: p5,
         grid: P5AsciifyGrid,

@@ -297,7 +297,7 @@
     }
 
     /**
-     * Abstract class for ASCII Renderers.
+     * Abstract class for shader-based ASCII Renderers.
      */
     class AsciiRenderer {
         p;
@@ -308,13 +308,6 @@
         secondaryColorSampleFramebuffer;
         asciiCharacterFramebuffer;
         _outputFramebuffer;
-        /**
-         * Constructor for AsciiRenderer.
-         * @param p5Instance - The p5.js instance.
-         * @param grid - The grid instance.
-         * @param characterSet - The character set instance.
-         * @param options - Renderer-specific options.
-         */
         constructor(p5Instance, grid, characterSet, options) {
             if (new.target === AsciiRenderer) {
                 throw new TypeError("Cannot construct AsciiRenderer instances directly");
@@ -396,6 +389,9 @@
 
     var asciiCharacterShader$1 = "#version 100\nprecision mediump float;\n#define GLSLIFY 1\nuniform sampler2D u_colorSampleFramebuffer;uniform sampler2D u_charPaletteTexture;uniform vec2 u_charPaletteSize;uniform vec2 u_textureSize;void main(){vec2 pos=(floor(gl_FragCoord.xy)+0.5)/u_textureSize;float brightness=dot(texture2D(u_colorSampleFramebuffer,pos).rgb,vec3(0.299,0.587,0.114));float index=clamp(floor(brightness*u_charPaletteSize.x),0.0,u_charPaletteSize.x-1.0);gl_FragColor=vec4(texture2D(u_charPaletteTexture,vec2((index+0.5)/u_charPaletteSize.x,0.0)).rgb,1.0);}"; // eslint-disable-line
 
+    /**
+     * ASCII Renderer that uses brightness to determine the ASCII characters to use from the 1D character set.
+     */
     class BrightnessAsciiRenderer extends AsciiRenderer {
         colorSampleShader;
         asciiCharacterShader;
@@ -408,10 +404,19 @@
             this.shader = this.p.createShader(vertexShader, asciiConversionShader);
             this.colorSampleFramebuffer = this.p.createFramebuffer({ density: 1, width: this.grid.cols, height: this.grid.rows, depthFormat: this.p.UNSIGNED_INT, textureFiltering: this.p.NEAREST });
         }
+        /**
+         * Resize the framebuffers used by this renderer.
+         */
         resizeFramebuffers() {
             super.resizeFramebuffers();
             this.colorSampleFramebuffer.resize(this.grid.cols, this.grid.rows);
         }
+        /**
+         * Compute and render the ASCII representation of the input framebuffer.
+         * @param inputFramebuffer The input framebuffer to asciify.
+         * @param previousAsciiRenderer The previous ASCII renderer that rendered the last iteration of the same frame.
+         * @param isFirstRenderer Whether this is the first renderer in the chain.
+         */
         render(inputFramebuffer, previousAsciiRenderer, isFirstRenderer) {
             this.colorSampleFramebuffer.begin();
             this.p.clear();
@@ -459,13 +464,13 @@
             this.shader.setUniform('u_secondaryColorTexture', this.secondaryColorSampleFramebuffer);
             this.shader.setUniform('u_asciiCharacterTexture', this.asciiCharacterFramebuffer);
             if (!isFirstRenderer) {
-                this.shader.setUniform('u_prevAsciiTexture', previousAsciiRenderer._outputFramebuffer);
+                this.shader.setUniform('u_prevAsciiTexture', previousAsciiRenderer.outputFramebuffer);
             }
             this.shader.setUniform('u_gridPixelDimensions', [this.grid.width, this.grid.height]);
             this.shader.setUniform('u_gridOffsetDimensions', [this.grid.offsetX, this.grid.offsetY]);
             this.shader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
-            this.shader.setUniform('u_invertMode', this._options.invertMode);
-            this.shader.setUniform('u_rotationAngle', this.p.radians(this._options.rotationAngle));
+            this.shader.setUniform('u_invertMode', this.options.invertMode);
+            this.shader.setUniform('u_rotationAngle', this.p.radians(this.options.rotationAngle));
             this.p.rect(0, 0, this.p.width, this.p.height);
             this._outputFramebuffer.end();
         }
@@ -2254,13 +2259,12 @@ void main() {
         fontFileType;
         constructor() {
             this.gradientManager = new P5AsciifyGradientManager();
-            this.lastRenderer = null;
         }
         /**
-         *
+         * Sets up the renderer manager with the specified default options.
          * @param p5Instance The p5 instance
-         * @param grid
-         * @param fontTextureAtlas
+         * @param grid The grid instance
+         * @param fontTextureAtlas The font texture atlas instance
          */
         setup(p5Instance, grid, fontTextureAtlas) {
             this.p = p5Instance;
@@ -2281,14 +2285,19 @@ void main() {
             ];
             this.textAsciiRenderer = new TextAsciiRenderer(this.p, fontTextureAtlas, this.grid, this.fontBase64, this.fontFileType, { ...TEXT_OPTIONS });
         }
+        /**
+         * Renders the ASCII output to the canvas.
+         * @param inputFramebuffer The input framebuffer to transform into ASCII.
+         * @param borderColor The border color of the canvas, which is not occupied by the centered ASCII grid.
+         */
         render(inputFramebuffer, borderColor) {
             let asciiOutput = inputFramebuffer;
             let currentRenderer = this.renderers[0];
             let isFirst = true;
             for (const renderer of this.renderers) {
-                if (renderer._options.enabled) {
+                if (renderer.options.enabled) {
                     renderer.render(inputFramebuffer, currentRenderer, isFirst);
-                    asciiOutput = renderer._outputFramebuffer;
+                    asciiOutput = renderer.outputFramebuffer;
                     currentRenderer = renderer;
                     isFirst = false;
                     this.lastRenderer = renderer;
@@ -2302,6 +2311,10 @@ void main() {
             }
             this.checkCanvasDimensions();
         }
+        /**
+         * Continuously checks if the canvas dimensions have changed.
+         * If they have, the grid is reset and the renderers are resized.
+         */
         checkCanvasDimensions() {
             if (this.currentCanvasDimensions.width !== this.p.width || this.currentCanvasDimensions.height !== this.p.height) {
                 this.currentCanvasDimensions.width = this.p.width;

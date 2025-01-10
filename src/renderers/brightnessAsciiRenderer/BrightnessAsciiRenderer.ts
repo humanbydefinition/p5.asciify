@@ -1,32 +1,24 @@
 import p5 from 'p5';
 
-import { AsciiRenderer } from '../AsciiRenderer';
+import { AsciiRenderer, AsciiRendererOptions } from '../AsciiRenderer';
 import { P5AsciifyGrid } from '../../Grid';
-import { CharacterSet } from '../../CharacterSet';
+import { P5AsciifyCharacterSet } from '../../CharacterSet';
 
 import vertexShader from '../../assets/shaders/vert/shader.vert';
 import asciiConversionShader from '../_common_shaders/asciiConversion.frag';
 import colorSampleShader from './shaders/colorSample.frag';
 import asciiCharacterShader from './shaders/asciiCharacter.frag';
 
-interface BrightnessAsciiRendererOptions {
-    enabled: boolean;
-    characters: string;
-    characterColorMode: number;
-    characterColor: p5.Color;
-    backgroundColorMode: number;
-    backgroundColor: p5.Color;
-    invertMode: number;
-    rotationAngle: number;
-}
-
+/**
+ * ASCII Renderer that uses brightness to determine the ASCII characters to use from the 1D character set.
+ */
 export default class BrightnessAsciiRenderer extends AsciiRenderer {
     private colorSampleShader: p5.Shader;
     private asciiCharacterShader: p5.Shader;
     private shader: p5.Shader;
     private colorSampleFramebuffer: p5.Framebuffer;
 
-    constructor(p5Instance: p5, grid: P5AsciifyGrid, characterSet: CharacterSet, options: BrightnessAsciiRendererOptions) {
+    constructor(p5Instance: p5, grid: P5AsciifyGrid, characterSet: P5AsciifyCharacterSet, options: AsciiRendererOptions) {
         super(p5Instance, grid, characterSet, options);
 
         this.colorSampleShader = this.p.createShader(vertexShader, colorSampleShader);
@@ -36,11 +28,20 @@ export default class BrightnessAsciiRenderer extends AsciiRenderer {
         this.colorSampleFramebuffer = this.p.createFramebuffer({ density: 1, width: this.grid.cols, height: this.grid.rows, depthFormat: this.p.UNSIGNED_INT, textureFiltering: this.p.NEAREST });
     }
 
+    /**
+     * Resize the framebuffers used by this renderer.
+     */
     resizeFramebuffers(): void {
         super.resizeFramebuffers();
         this.colorSampleFramebuffer.resize(this.grid.cols, this.grid.rows);
     }
 
+    /**
+     * Compute and render the ASCII representation of the input framebuffer.
+     * @param inputFramebuffer The input framebuffer to asciify.
+     * @param previousAsciiRenderer The previous ASCII renderer that rendered the last iteration of the same frame.
+     * @param isFirstRenderer Whether this is the first renderer in the chain.
+     */
     render(inputFramebuffer: p5.Framebuffer, previousAsciiRenderer: AsciiRenderer, isFirstRenderer: boolean): void {
 
         this.colorSampleFramebuffer.begin();
@@ -92,13 +93,13 @@ export default class BrightnessAsciiRenderer extends AsciiRenderer {
         this.shader.setUniform('u_secondaryColorTexture', this.secondaryColorSampleFramebuffer);
         this.shader.setUniform('u_asciiCharacterTexture', this.asciiCharacterFramebuffer);
         if (!isFirstRenderer) {
-            this.shader.setUniform('u_prevAsciiTexture', previousAsciiRenderer._outputFramebuffer);
+            this.shader.setUniform('u_prevAsciiTexture', previousAsciiRenderer.outputFramebuffer);
         }
         this.shader.setUniform('u_gridPixelDimensions', [this.grid.width, this.grid.height]);
         this.shader.setUniform('u_gridOffsetDimensions', [this.grid.offsetX, this.grid.offsetY]);
         this.shader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
-        this.shader.setUniform('u_invertMode', this._options.invertMode);
-        this.shader.setUniform('u_rotationAngle', this.p.radians(this._options.rotationAngle));
+        this.shader.setUniform('u_invertMode', this.options.invertMode);
+        this.shader.setUniform('u_rotationAngle', this.p.radians(this.options.rotationAngle));
         this.p.rect(0, 0, this.p.width, this.p.height);
         this._outputFramebuffer.end();
     }

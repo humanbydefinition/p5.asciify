@@ -35,20 +35,19 @@ export class RendererManager {
     private renderers!: AsciiRenderer[];
     private textAsciiRenderer!: TextAsciiRenderer;
     public gradientManager: P5AsciifyGradientManager;
-    private lastRenderer: AsciiRenderer | null;
+    private lastRenderer!: AsciiRenderer;
     private fontBase64!: string;
     private fontFileType!: string;
 
     constructor() {
         this.gradientManager = new P5AsciifyGradientManager();
-        this.lastRenderer = null;
     }
 
     /**
-     * 
+     * Sets up the renderer manager with the specified default options.
      * @param p5Instance The p5 instance
-     * @param grid 
-     * @param fontTextureAtlas 
+     * @param grid The grid instance
+     * @param fontTextureAtlas The font texture atlas instance
      */
     public setup(p5Instance: p5, grid: P5AsciifyGrid, fontTextureAtlas: P5AsciifyFontTextureAtlas): void {
         this.p = p5Instance;
@@ -79,15 +78,20 @@ export class RendererManager {
         this.textAsciiRenderer = new TextAsciiRenderer(this.p, fontTextureAtlas, this.grid, this.fontBase64, this.fontFileType, { ...TEXT_OPTIONS });
     }
 
+    /**
+     * Renders the ASCII output to the canvas.
+     * @param inputFramebuffer The input framebuffer to transform into ASCII.
+     * @param borderColor The border color of the canvas, which is not occupied by the centered ASCII grid.
+     */
     public render(inputFramebuffer: any, borderColor: any): void {
         let asciiOutput = inputFramebuffer;
         let currentRenderer = this.renderers[0];
         let isFirst = true;
 
         for (const renderer of this.renderers) {
-            if (renderer._options.enabled) {
+            if (renderer.options.enabled) {
                 renderer.render(inputFramebuffer, currentRenderer, isFirst);
-                asciiOutput = renderer._outputFramebuffer;
+                asciiOutput = renderer.outputFramebuffer;
                 currentRenderer = renderer;
                 isFirst = false;
                 this.lastRenderer = renderer;
@@ -105,6 +109,10 @@ export class RendererManager {
         this.checkCanvasDimensions();
     }
 
+    /**
+     * Continuously checks if the canvas dimensions have changed.
+     * If they have, the grid is reset and the renderers are resized.
+     */
     private checkCanvasDimensions(): void {
         if (this.currentCanvasDimensions.width !== this.p.width || this.currentCanvasDimensions.height !== this.p.height) {
             this.currentCanvasDimensions.width = this.p.width;
