@@ -16,6 +16,7 @@ if (typeof window !== 'undefined') {
   window.preload = function () { }; // Define empty preload function in case user doesn't provide one
 }
 
+// Register library methods to extend the p5 instance
 registerSetupMethods(p5asciify);
 registerFontMethods(p5asciify);
 registerOptionsMethods(p5asciify);

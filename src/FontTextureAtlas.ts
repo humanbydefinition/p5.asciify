@@ -1,52 +1,55 @@
 import p5 from 'p5';
 import { P5AsciifyError } from './AsciifyError';
-import { Glyph } from 'opentype.js';
+import { OpenTypeGlyph } from './types';
 
+/**
+ * Creates a texture atlas containing all characters in a font, and provides utility methods for working with the atlas.
+ */
 export class P5AsciifyFontTextureAtlas {
-    private characters: string[];
-    private characterGlyphs: Glyph[];
+    private _characters: string[];
+    private _characterGlyphs: OpenTypeGlyph[];
     private _maxGlyphDimensions: { width: number; height: number };
-    private texture!: p5.Framebuffer;
-    private charsetCols: number = 0;
-    private charsetRows: number = 0;
+    private _texture!: p5.Framebuffer;
+    private _charsetCols: number = 0;
+    private _charsetRows: number = 0;
 
     constructor(
-        private p: p5, 
-        private font: p5.Font, 
+        private p: p5,
+        private font: p5.Font,
         private fontSize: number
     ) {
-        this.characters = Object.values(this.font.font.glyphs.glyphs)
-            .filter((glyph: Glyph) => glyph.unicode !== undefined)
-            .map((glyph: Glyph) => String.fromCharCode(glyph.unicode));
+        const glyphs = Object.values(this.font.font.glyphs.glyphs) as OpenTypeGlyph[];
+        this._characters = glyphs
+            .filter((glyph): glyph is OpenTypeGlyph => glyph.unicode !== undefined)
+            .map(glyph => String.fromCharCode(glyph.unicode!));
 
-        this.characterGlyphs = this.loadCharacterGlyphs();
-        this._maxGlyphDimensions = this.getMaxGlyphDimensions(this.fontSize);
-        this.createTexture(this.fontSize);
-    }
-
-    private loadCharacterGlyphs(): Glyph[] {
-        // Load glyphs with unicode
-        const glyphs: Glyph[] = Object.values(this.font.font.glyphs.glyphs).filter(
-            (glyph: Glyph) => glyph.unicode !== undefined
-        );
-
-        // Assign colors to the sorted glyphs
-        glyphs.forEach((glyph: Glyph, index: number) => {
-            glyph.r = index % 256;
-            glyph.g = Math.floor(index / 256) % 256;
-            glyph.b = Math.floor(index / 65536);
-        });
-
-        return glyphs;
+        this._characterGlyphs = this._loadCharacterGlyphs();
+        this._maxGlyphDimensions = this._getMaxGlyphDimensions(this.fontSize);
+        this._createTexture(this.fontSize);
     }
 
     /**
-     * Calculates the maximum dimensions of glyphs in the whole font for a given font size.
+     * Loads all glyphs with unicode values from the font and assigns colors to them.
+     * @returns An array of opentype.js glyphs, extended with r, g, and b properties for color.
+     */
+    private _loadCharacterGlyphs(): OpenTypeGlyph[] {
+        return Object.values(this.font.font.glyphs.glyphs as OpenTypeGlyph[])
+            .filter((glyph): glyph is OpenTypeGlyph => glyph.unicode !== undefined)
+            .map((glyph, index) => {
+                glyph.r = index % 256;
+                glyph.g = Math.floor(index / 256) % 256;
+                glyph.b = Math.floor(index / 65536);
+                return glyph;
+            });
+    }
+
+    /**
+     * Calculates the maximum width and height of the glyphs in the font.
      * @param fontSize - The font size to use for calculations.
      * @returns An object containing the maximum width and height of the glyphs.
      */
-    private getMaxGlyphDimensions(fontSize: number): { width: number; height: number } {
-        return this.characterGlyphs.reduce<{ width: number; height: number }>(
+    private _getMaxGlyphDimensions(fontSize: number): { width: number; height: number } {
+        return this._characterGlyphs.reduce<{ width: number; height: number }>(
             (maxDims, glyph) => {
                 const bounds = glyph.getPath(0, 0, fontSize).getBoundingBox();
                 return {
@@ -59,62 +62,60 @@ export class P5AsciifyFontTextureAtlas {
     }
 
     /**
-     * Sets the font object and resets the character set.
+     * Sets the font object and resets the whole atlas.
      * @param font - The new font object.
      */
-    public setFontObject(font: any): void { // Replace 'any' with the actual font type
+    public setFontObject(font: p5.Font): void {
         this.font = font;
-        this.characters = Object.values(this.font.font.glyphs.glyphs)
-            .filter((glyph: Glyph) => glyph.unicode !== undefined)
-            .map((glyph: Glyph) => String.fromCharCode(glyph.unicode));
+        this._characters = Object.values(this.font.font.glyphs.glyphs as OpenTypeGlyph[])
+            .filter((glyph: OpenTypeGlyph) => glyph.unicode !== undefined)
+            .map((glyph: OpenTypeGlyph) => String.fromCharCode(glyph.unicode));
 
-        this.characterGlyphs = this.loadCharacterGlyphs();
-        this._maxGlyphDimensions = this.getMaxGlyphDimensions(this.fontSize);
-        this.createTexture(this.fontSize);
+        this._characterGlyphs = this._loadCharacterGlyphs();
+        this._maxGlyphDimensions = this._getMaxGlyphDimensions(this.fontSize);
+        this._createTexture(this.fontSize);
     }
 
     /**
-     * Sets the font size and updates the maximum glyph dimensions.
+     * Sets the font size, recalculates the maximum glyph dimensions, and recreates the texture.
      * @param fontSize - The new font size.
      */
     public setFontSize(fontSize: number): void {
         this.fontSize = fontSize;
-        this._maxGlyphDimensions = this.getMaxGlyphDimensions(this.fontSize);
-        this.createTexture(this.fontSize);
+        this._maxGlyphDimensions = this._getMaxGlyphDimensions(this.fontSize);
+        this._createTexture(this.fontSize);
     }
 
     /**
-     * Creates a texture containing all characters in the character set, arranged in a 2d grid.
-     * @param fontSize - The font size to use for rendering the texture.
+     * Creates a texture containing all characters in the font, arranged in a 2d grid that is as square as possible.
+     * @param fontSize - The font size to use for creating the texture.
      */
-    public createTexture(fontSize: number): void {
-        this.charsetCols = Math.ceil(Math.sqrt(this.characters.length));
-        this.charsetRows = Math.ceil(this.characters.length / this.charsetCols);
-        const dimensions = this.getMaxGlyphDimensions(fontSize);
+    private _createTexture(fontSize: number): void {
+        this._charsetCols = Math.ceil(Math.sqrt(this._characters.length));
+        this._charsetRows = Math.ceil(this._characters.length / this._charsetCols);
 
-        if (!this.texture) {
-            this.texture = this.p.createFramebuffer({
-                width: dimensions.width * this.charsetCols,
-                height: dimensions.height * this.charsetRows,
+        if (!this._texture) {
+            this._texture = this.p.createFramebuffer({
+                width: this._maxGlyphDimensions.width * this._charsetCols,
+                height: this._maxGlyphDimensions.height * this._charsetRows,
                 depthFormat: this.p.UNSIGNED_INT,
                 textureFiltering: this.p.NEAREST,
             });
         } else {
-            this.texture.resize(dimensions.width * this.charsetCols, dimensions.height * this.charsetRows);
+            this._texture.resize(this._maxGlyphDimensions.width * this._charsetCols, this._maxGlyphDimensions.height * this._charsetRows);
         }
 
-        this.texture.begin();
+        this._texture.begin();
         this.p.clear();
-        this.drawCharacters(fontSize, dimensions);
-        this.texture.end();
+        this.drawCharacters(fontSize);
+        this._texture.end();
     }
 
     /**
      * Draws characters onto the texture.
      * @param fontSize - The font size to use for drawing the characters on the texture.
-     * @param dimensions - The maximum dimensions of the glyphs.
      */
-    private drawCharacters(fontSize: number, dimensions: { width: number; height: number }): void {
+    private drawCharacters(fontSize: number): void {
         this.p.clear();
         this.p.textFont(this.font);
         this.p.fill(255);
@@ -122,27 +123,27 @@ export class P5AsciifyFontTextureAtlas {
         this.p.textAlign(this.p.LEFT, this.p.TOP);
         this.p.noStroke();
 
-        for (let i = 0; i < this.characterGlyphs.length; i++) {
-            const col = i % this.charsetCols;
-            const row = Math.floor(i / this.charsetCols);
-            const x = dimensions.width * col - (dimensions.width * this.charsetCols) / 2;
-            const y = dimensions.height * row - (dimensions.height * this.charsetRows) / 2;
-            this.p.text(String.fromCharCode(this.characterGlyphs[i].unicode), x, y);
+        for (let i = 0; i < this._characterGlyphs.length; i++) {
+            const col = i % this._charsetCols;
+            const row = Math.floor(i / this._charsetCols);
+            const x = this._maxGlyphDimensions.width * col - (this._maxGlyphDimensions.width * this._charsetCols) / 2;
+            const y = this._maxGlyphDimensions.height * row - (this._maxGlyphDimensions.height * this._charsetRows) / 2;
+            this.p.text(String.fromCharCode(this._characterGlyphs[i].unicode), x, y);
         }
     }
 
     /**
-     * Gets an array of RGB colors for given characters or string
+     * Gets an array of RGB colors for a given string or array of characters.
      * @param input - Either a string or array of characters
      * @returns Array of RGB color values
-     * @throws P5AsciifyError If character is not found in the texture atlas
+     * @throws P5AsciifyError If a character is not found in the texture atlas
      */
     public getCharsetColorArray(input: string | string[]): Array<[number, number, number]> {
         const chars: string[] = Array.isArray(input) ? input : Array.from(input);
 
         return chars.map((char: string) => {
-            const glyph = this.characterGlyphs.find(
-                (glyph: Glyph) => glyph.unicodes.includes(char.codePointAt(0) as number)
+            const glyph = this._characterGlyphs.find(
+                (glyph: OpenTypeGlyph) => glyph.unicodes.includes(char.codePointAt(0) as number)
             );
 
             if (!glyph) {
@@ -156,14 +157,14 @@ export class P5AsciifyFontTextureAtlas {
     /**
      * Returns an array of characters that are not supported by the current font.
      * @param characters - The string of characters to check.
-     * @returns An array of unsupported characters.
+     * @returns An array of unsupported characters.List is empty if all characters are supported.
      */
     public getUnsupportedCharacters(characters: string): string[] {
         return Array.from(
             new Set(
                 Array.from(characters).filter(
                     (char: string) =>
-                        !this.characterGlyphs.some((glyph: Glyph) =>
+                        !this._characterGlyphs.some((glyph: OpenTypeGlyph) =>
                             glyph.unicodes.includes(char.codePointAt(0) as number)
                         )
                 )
@@ -171,7 +172,10 @@ export class P5AsciifyFontTextureAtlas {
         );
     }
 
-    get maxGlyphDimensions(): { width: number; height: number } {
-        return this._maxGlyphDimensions;
-    }
+    // Getters
+    get maxGlyphDimensions(): { width: number; height: number } { return this._maxGlyphDimensions; }
+    get texture(): p5.Framebuffer { return this._texture; }
+    get characters(): string[] { return this._characters; }
+    get charsetCols(): number { return this._charsetCols; }
+    get charsetRows(): number { return this._charsetRows; }
 }

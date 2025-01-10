@@ -15,45 +15,52 @@
         }
     }
 
+    /**
+     * Creates a texture atlas containing all characters in a font, and provides utility methods for working with the atlas.
+     */
     class P5AsciifyFontTextureAtlas {
         p;
         font;
         fontSize;
-        characters;
-        characterGlyphs;
+        _characters;
+        _characterGlyphs;
         _maxGlyphDimensions;
-        texture;
-        charsetCols = 0;
-        charsetRows = 0;
+        _texture;
+        _charsetCols = 0;
+        _charsetRows = 0;
         constructor(p, font, fontSize) {
             this.p = p;
             this.font = font;
             this.fontSize = fontSize;
-            this.characters = Object.values(this.font.font.glyphs.glyphs)
+            const glyphs = Object.values(this.font.font.glyphs.glyphs);
+            this._characters = glyphs
                 .filter((glyph) => glyph.unicode !== undefined)
-                .map((glyph) => String.fromCharCode(glyph.unicode));
-            this.characterGlyphs = this.loadCharacterGlyphs();
-            this._maxGlyphDimensions = this.getMaxGlyphDimensions(this.fontSize);
-            this.createTexture(this.fontSize);
+                .map(glyph => String.fromCharCode(glyph.unicode));
+            this._characterGlyphs = this._loadCharacterGlyphs();
+            this._maxGlyphDimensions = this._getMaxGlyphDimensions(this.fontSize);
+            this._createTexture(this.fontSize);
         }
-        loadCharacterGlyphs() {
-            // Load glyphs with unicode
-            const glyphs = Object.values(this.font.font.glyphs.glyphs).filter((glyph) => glyph.unicode !== undefined);
-            // Assign colors to the sorted glyphs
-            glyphs.forEach((glyph, index) => {
+        /**
+         * Loads all glyphs with unicode values from the font and assigns colors to them.
+         * @returns An array of opentype.js glyphs, extended with r, g, and b properties for color.
+         */
+        _loadCharacterGlyphs() {
+            return Object.values(this.font.font.glyphs.glyphs)
+                .filter((glyph) => glyph.unicode !== undefined)
+                .map((glyph, index) => {
                 glyph.r = index % 256;
                 glyph.g = Math.floor(index / 256) % 256;
                 glyph.b = Math.floor(index / 65536);
+                return glyph;
             });
-            return glyphs;
         }
         /**
-         * Calculates the maximum dimensions of glyphs in the whole font for a given font size.
+         * Calculates the maximum width and height of the glyphs in the font.
          * @param fontSize - The font size to use for calculations.
          * @returns An object containing the maximum width and height of the glyphs.
          */
-        getMaxGlyphDimensions(fontSize) {
-            return this.characterGlyphs.reduce((maxDims, glyph) => {
+        _getMaxGlyphDimensions(fontSize) {
+            return this._characterGlyphs.reduce((maxDims, glyph) => {
                 const bounds = glyph.getPath(0, 0, fontSize).getBoundingBox();
                 return {
                     width: Math.ceil(Math.max(maxDims.width, bounds.x2 - bounds.x1)),
@@ -62,81 +69,79 @@
             }, { width: 0, height: 0 });
         }
         /**
-         * Sets the font object and resets the character set.
+         * Sets the font object and resets the whole atlas.
          * @param font - The new font object.
          */
         setFontObject(font) {
             this.font = font;
-            this.characters = Object.values(this.font.font.glyphs.glyphs)
+            this._characters = Object.values(this.font.font.glyphs.glyphs)
                 .filter((glyph) => glyph.unicode !== undefined)
                 .map((glyph) => String.fromCharCode(glyph.unicode));
-            this.characterGlyphs = this.loadCharacterGlyphs();
-            this._maxGlyphDimensions = this.getMaxGlyphDimensions(this.fontSize);
-            this.createTexture(this.fontSize);
+            this._characterGlyphs = this._loadCharacterGlyphs();
+            this._maxGlyphDimensions = this._getMaxGlyphDimensions(this.fontSize);
+            this._createTexture(this.fontSize);
         }
         /**
-         * Sets the font size and updates the maximum glyph dimensions.
+         * Sets the font size, recalculates the maximum glyph dimensions, and recreates the texture.
          * @param fontSize - The new font size.
          */
         setFontSize(fontSize) {
             this.fontSize = fontSize;
-            this._maxGlyphDimensions = this.getMaxGlyphDimensions(this.fontSize);
-            this.createTexture(this.fontSize);
+            this._maxGlyphDimensions = this._getMaxGlyphDimensions(this.fontSize);
+            this._createTexture(this.fontSize);
         }
         /**
-         * Creates a texture containing all characters in the character set, arranged in a 2d grid.
-         * @param fontSize - The font size to use for rendering the texture.
+         * Creates a texture containing all characters in the font, arranged in a 2d grid that is as square as possible.
+         * @param fontSize - The font size to use for creating the texture.
          */
-        createTexture(fontSize) {
-            this.charsetCols = Math.ceil(Math.sqrt(this.characters.length));
-            this.charsetRows = Math.ceil(this.characters.length / this.charsetCols);
-            const dimensions = this.getMaxGlyphDimensions(fontSize);
-            if (!this.texture) {
-                this.texture = this.p.createFramebuffer({
-                    width: dimensions.width * this.charsetCols,
-                    height: dimensions.height * this.charsetRows,
+        _createTexture(fontSize) {
+            this._charsetCols = Math.ceil(Math.sqrt(this._characters.length));
+            this._charsetRows = Math.ceil(this._characters.length / this._charsetCols);
+            if (!this._texture) {
+                this._texture = this.p.createFramebuffer({
+                    width: this._maxGlyphDimensions.width * this._charsetCols,
+                    height: this._maxGlyphDimensions.height * this._charsetRows,
                     depthFormat: this.p.UNSIGNED_INT,
                     textureFiltering: this.p.NEAREST,
                 });
             }
             else {
-                this.texture.resize(dimensions.width * this.charsetCols, dimensions.height * this.charsetRows);
+                this._texture.resize(this._maxGlyphDimensions.width * this._charsetCols, this._maxGlyphDimensions.height * this._charsetRows);
             }
-            this.texture.begin();
+            this._texture.begin();
             this.p.clear();
-            this.drawCharacters(fontSize, dimensions);
-            this.texture.end();
+            this.drawCharacters(fontSize);
+            this._texture.end();
         }
         /**
          * Draws characters onto the texture.
          * @param fontSize - The font size to use for drawing the characters on the texture.
-         * @param dimensions - The maximum dimensions of the glyphs.
          */
-        drawCharacters(fontSize, dimensions) {
+        drawCharacters(fontSize) {
             this.p.clear();
             this.p.textFont(this.font);
             this.p.fill(255);
             this.p.textSize(fontSize);
             this.p.textAlign(this.p.LEFT, this.p.TOP);
             this.p.noStroke();
-            for (let i = 0; i < this.characterGlyphs.length; i++) {
-                const col = i % this.charsetCols;
-                const row = Math.floor(i / this.charsetCols);
-                const x = dimensions.width * col - (dimensions.width * this.charsetCols) / 2;
-                const y = dimensions.height * row - (dimensions.height * this.charsetRows) / 2;
-                this.p.text(String.fromCharCode(this.characterGlyphs[i].unicode), x, y);
+            for (let i = 0; i < this._characterGlyphs.length; i++) {
+                const col = i % this._charsetCols;
+                const row = Math.floor(i / this._charsetCols);
+                const x = this._maxGlyphDimensions.width * col - (this._maxGlyphDimensions.width * this._charsetCols) / 2;
+                const y = this._maxGlyphDimensions.height * row - (this._maxGlyphDimensions.height * this._charsetRows) / 2;
+                this.p.text(String.fromCharCode(this._characterGlyphs[i].unicode), x, y);
             }
         }
         /**
-         * Gets an array of RGB colors for given characters or string
+         * Gets an array of RGB colors for a given string or array of characters.
          * @param input - Either a string or array of characters
          * @returns Array of RGB color values
-         * @throws P5AsciifyError If character is not found in the texture atlas
+         * @throws P5AsciifyError If a character is not found in the texture atlas
          */
         getCharsetColorArray(input) {
             const chars = Array.isArray(input) ? input : Array.from(input);
             return chars.map((char) => {
-                const glyph = this.characterGlyphs.find((glyph) => glyph.unicodes.includes(char.codePointAt(0)));
+                const glyph = this._characterGlyphs.find((glyph) => glyph.unicodes.includes(char.codePointAt(0)));
                 if (!glyph) {
                     throw new P5AsciifyError(`Could not find character in character set: ${char}`);
                 }
@@ -146,14 +151,17 @@
         /**
          * Returns an array of characters that are not supported by the current font.
          * @param characters - The string of characters to check.
-         * @returns An array of unsupported characters.
+         * @returns An array of unsupported characters.List is empty if all characters are supported.
          */
         getUnsupportedCharacters(characters) {
-            return Array.from(new Set(Array.from(characters).filter((char) => !this.characterGlyphs.some((glyph) => glyph.unicodes.includes(char.codePointAt(0))))));
+            return Array.from(new Set(Array.from(characters).filter((char) => !this._characterGlyphs.some((glyph) => glyph.unicodes.includes(char.codePointAt(0))))));
         }
-        get maxGlyphDimensions() {
-            return this._maxGlyphDimensions;
-        }
+        // Getters
+        get maxGlyphDimensions() { return this._maxGlyphDimensions; }
+        get texture() { return this._texture; }
+        get characters() { return this._characters; }
+        get charsetCols() { return this._charsetCols; }
+        get charsetRows() { return this._charsetRows; }
     }
 
     /**
@@ -2593,6 +2601,7 @@ void main() {
         window.p5asciify = p5asciify; // Expose p5asciify instance
         window.preload = function () { }; // Define empty preload function in case user doesn't provide one
     }
+    // Register library methods to extend the p5 instance
     registerSetupMethods(p5asciify);
     registerFontMethods(p5asciify);
     registerOptionsMethods(p5asciify);
