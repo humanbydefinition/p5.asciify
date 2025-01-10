@@ -36,8 +36,8 @@ export default class EdgeAsciiRenderer extends AsciiRenderer {
     constructor(p5Instance: p5, grid: P5AsciifyGrid, characterSet: P5AsciifyCharacterSet, options: EdgeAsciiRendererOptions) {
         super(p5Instance, grid, characterSet, options);
 
-        this.options.characterColor = this.p.color(this.options.characterColor);
-        this.options.backgroundColor = this.p.color(this.options.backgroundColor);
+        this._options.characterColor = this.p.color(this._options.characterColor);
+        this._options.backgroundColor = this.p.color(this._options.backgroundColor);
 
         this.sobelShader = this.p.createShader(vertexShader, sobelShader);
         this.sampleShader = this.p.createShader(vertexShader, generateSampleShader(16, this.grid.cellHeight, this.grid.cellWidth));
@@ -74,7 +74,7 @@ export default class EdgeAsciiRenderer extends AsciiRenderer {
         this.p.shader(this.sobelShader);
         this.sobelShader.setUniform('u_texture', inputFramebuffer);
         this.sobelShader.setUniform('u_textureSize', [this.p.width, this.p.height]);
-        this.sobelShader.setUniform('u_threshold', this.options.sobelThreshold);
+        this.sobelShader.setUniform('u_threshold', this._options.sobelThreshold);
         this.p.rect(0, 0, this.p.width, this.p.height);
         this.sobelFramebuffer.end();
 
@@ -85,7 +85,7 @@ export default class EdgeAsciiRenderer extends AsciiRenderer {
         this.sampleShader.setUniform('u_imageSize', [this.p.width, this.p.height]);
         this.sampleShader.setUniform('u_image', this.sobelFramebuffer);
         this.sampleShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
-        this.sampleShader.setUniform('u_threshold', this.options.sampleThreshold);
+        this.sampleShader.setUniform('u_threshold', this._options.sampleThreshold);
         this.p.rect(0, 0, this.p.width, this.p.height);
         this.sampleFramebuffer.end();
 
@@ -94,12 +94,12 @@ export default class EdgeAsciiRenderer extends AsciiRenderer {
         this.p.clear();
         this.p.shader(this.colorSampleShader);
         this.colorSampleShader.setUniform('u_sketchTexture', inputFramebuffer);
-        this.colorSampleShader.setUniform('u_previousRendererEnabled', previousAsciiRenderer.options.enabled);
+        this.colorSampleShader.setUniform('u_previousRendererEnabled', previousAsciiRenderer._options.enabled);
         this.colorSampleShader.setUniform('u_previousColorTexture', previousAsciiRenderer.primaryColorSampleFramebuffer);
         this.colorSampleShader.setUniform('u_sampleTexture', this.sampleFramebuffer);
         this.colorSampleShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
-        this.colorSampleShader.setUniform('u_sampleMode', this.options.characterColorMode);
-        this.colorSampleShader.setUniform('u_staticColor', this.options.characterColor._array);
+        this.colorSampleShader.setUniform('u_sampleMode', this._options.characterColorMode);
+        this.colorSampleShader.setUniform('u_staticColor', this._options.characterColor._array);
         this.p.rect(0, 0, this.p.width, this.p.height);
         this.primaryColorSampleFramebuffer.end();
 
@@ -108,12 +108,12 @@ export default class EdgeAsciiRenderer extends AsciiRenderer {
         this.p.clear();
         this.p.shader(this.colorSampleShader);
         this.colorSampleShader.setUniform('u_sketchTexture', inputFramebuffer);
-        this.colorSampleShader.setUniform('u_previousRendererEnabled', previousAsciiRenderer.options.enabled);
+        this.colorSampleShader.setUniform('u_previousRendererEnabled', previousAsciiRenderer._options.enabled);
         this.colorSampleShader.setUniform('u_previousColorTexture', previousAsciiRenderer.secondaryColorSampleFramebuffer);
         this.colorSampleShader.setUniform('u_sampleTexture', this.sampleFramebuffer);
         this.colorSampleShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
-        this.colorSampleShader.setUniform('u_sampleMode', this.options.backgroundColorMode);
-        this.colorSampleShader.setUniform('u_staticColor', this.options.backgroundColor._array);
+        this.colorSampleShader.setUniform('u_sampleMode', this._options.backgroundColorMode);
+        this.colorSampleShader.setUniform('u_staticColor', this._options.backgroundColor._array);
         this.p.rect(0, 0, this.p.width, this.p.height);
         this.secondaryColorSampleFramebuffer.end();
 
@@ -130,7 +130,7 @@ export default class EdgeAsciiRenderer extends AsciiRenderer {
         this.asciiCharacterFramebuffer.end();
 
         // Final output pass
-        this.outputFramebuffer.begin();
+        this._outputFramebuffer.begin();
         this.p.clear();
         this.p.shader(this.shader);
         this.shader.setUniform('u_layer', 3);
@@ -139,7 +139,7 @@ export default class EdgeAsciiRenderer extends AsciiRenderer {
         this.shader.setUniform('u_characterTexture', this.characterSet.asciiFontTextureAtlas.texture);
         this.shader.setUniform('u_charsetDimensions', [this.characterSet.asciiFontTextureAtlas.charsetCols, this.characterSet.asciiFontTextureAtlas.charsetRows]);
         if (!isFirstRenderer) {
-            this.shader.setUniform('u_prevAsciiTexture', previousAsciiRenderer.getOutputFramebuffer());
+            this.shader.setUniform('u_prevAsciiTexture', previousAsciiRenderer._outputFramebuffer);
         }
         this.shader.setUniform('u_primaryColorTexture', this.primaryColorSampleFramebuffer);
         this.shader.setUniform('u_secondaryColorTexture', this.secondaryColorSampleFramebuffer);
@@ -148,9 +148,9 @@ export default class EdgeAsciiRenderer extends AsciiRenderer {
         this.shader.setUniform('u_gridPixelDimensions', [this.grid.width, this.grid.height]);
         this.shader.setUniform('u_gridOffsetDimensions', [this.grid.offsetX, this.grid.offsetY]);
         this.shader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
-        this.shader.setUniform('u_invertMode', this.options.invertMode);
-        this.shader.setUniform('u_rotationAngle', this.p.radians(this.options.rotationAngle));
+        this.shader.setUniform('u_invertMode', this._options.invertMode);
+        this.shader.setUniform('u_rotationAngle', this.p.radians(this._options.rotationAngle));
         this.p.rect(0, 0, this.p.width, this.p.height);
-        this.outputFramebuffer.end();
+        this._outputFramebuffer.end();
     }
 }

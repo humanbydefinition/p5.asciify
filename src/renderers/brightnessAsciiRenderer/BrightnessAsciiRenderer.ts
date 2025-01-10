@@ -52,8 +52,8 @@ export default class BrightnessAsciiRenderer extends AsciiRenderer {
         this.colorSampleFramebuffer.end();
 
         this.primaryColorSampleFramebuffer.begin();
-        if (this.options.characterColorMode === 1) {
-            this.p.background(this.options.characterColor);
+        if (this._options.characterColorMode === 1) {
+            this.p.background(this._options.characterColor);
         } else {
             this.p.clear();
             this.p.image(this.colorSampleFramebuffer, -this.grid.cols / 2, -this.grid.rows / 2, this.grid.cols, this.grid.rows);
@@ -61,8 +61,8 @@ export default class BrightnessAsciiRenderer extends AsciiRenderer {
         this.primaryColorSampleFramebuffer.end();
 
         this.secondaryColorSampleFramebuffer.begin();
-        if (this.options.backgroundColorMode === 1) {
-            this.p.background(this.options.backgroundColor);
+        if (this._options.backgroundColorMode === 1) {
+            this.p.background(this._options.backgroundColor);
         } else {
             this.p.clear();
             this.p.image(this.colorSampleFramebuffer, -this.grid.cols / 2, -this.grid.rows / 2, this.grid.cols, this.grid.rows);
@@ -80,7 +80,7 @@ export default class BrightnessAsciiRenderer extends AsciiRenderer {
         this.p.rect(0, 0, this.p.width, this.p.height);
         this.asciiCharacterFramebuffer.end();
 
-        this.outputFramebuffer.begin();
+        this._outputFramebuffer.begin();
         this.p.clear();
         this.p.shader(this.shader);
         this.shader.setUniform('u_layer', 1);
@@ -92,14 +92,14 @@ export default class BrightnessAsciiRenderer extends AsciiRenderer {
         this.shader.setUniform('u_secondaryColorTexture', this.secondaryColorSampleFramebuffer);
         this.shader.setUniform('u_asciiCharacterTexture', this.asciiCharacterFramebuffer);
         if (!isFirstRenderer) {
-            this.shader.setUniform('u_prevAsciiTexture', previousAsciiRenderer.getOutputFramebuffer());
+            this.shader.setUniform('u_prevAsciiTexture', previousAsciiRenderer._outputFramebuffer);
         }
         this.shader.setUniform('u_gridPixelDimensions', [this.grid.width, this.grid.height]);
         this.shader.setUniform('u_gridOffsetDimensions', [this.grid.offsetX, this.grid.offsetY]);
         this.shader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
-        this.shader.setUniform('u_invertMode', this.options.invertMode);
-        this.shader.setUniform('u_rotationAngle', this.p.radians(this.options.rotationAngle));
+        this.shader.setUniform('u_invertMode', this._options.invertMode);
+        this.shader.setUniform('u_rotationAngle', this.p.radians(this._options.rotationAngle));
         this.p.rect(0, 0, this.p.width, this.p.height);
-        this.outputFramebuffer.end();
+        this._outputFramebuffer.end();
     }
 }

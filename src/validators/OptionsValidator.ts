@@ -28,7 +28,6 @@ export function validateOptions(p: p5, options: AsciifyOptions): void {
         options.backgroundColor = p.color(options.backgroundColor);
     }
 
-    // Validate fontSize
     if (options?.fontSize && (options.fontSize < FONT_SIZE_LIMITS.MIN || options.fontSize > FONT_SIZE_LIMITS.MAX)) {
         throw new P5AsciifyError(`Font size ${options.fontSize} is out of bounds. It should be between ${FONT_SIZE_LIMITS.MIN} and ${FONT_SIZE_LIMITS.MAX}.`);
     }

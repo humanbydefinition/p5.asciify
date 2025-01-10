@@ -1,3 +1,5 @@
+import p5 from 'p5';
+
 import BrightnessAsciiRenderer from './brightnessAsciiRenderer/BrightnessAsciiRenderer';
 import AccurateAsciiRenderer from './accurateAsciiRenderer/AccurateAsciiRenderer';
 import CustomAsciiRenderer from './customAsciiRenderer/CustomAsciiRenderer';
@@ -5,6 +7,9 @@ import EdgeAsciiRenderer from './edgeAsciiRenderer/EdgeAsciiRenderer';
 import TextAsciiRenderer from './textAsciiRenderer/TextAsciiRenderer';
 import GradientAsciiRenderer from './gradientAsciiRenderer/GradientAsciiRenderer';
 import { AsciiRenderer } from './AsciiRenderer';
+
+import { P5AsciifyGrid } from '../Grid';
+import { P5AsciifyFontTextureAtlas } from '../FontTextureAtlas';
 
 import {
     BRIGHTNESS_OPTIONS,
@@ -18,8 +23,11 @@ import {
 import { P5AsciifyCharacterSet } from '../CharacterSet';
 import { P5AsciifyGradientManager } from '../gradients/GradientManager';
 
+/**
+ * Manages the available ASCII renderers and handles rendering the ASCII output to the canvas.
+ */
 export class RendererManager {
-    private p: any; // P5 instance type could be more specific
+    private p!: p5;
     private grid: any;
     private fontTextureAtlas: any;
     private currentCanvasDimensions!: { width: number, height: number };
@@ -36,7 +44,13 @@ export class RendererManager {
         this.lastRenderer = null;
     }
 
-    public setup(p5Instance: any, grid: any, fontTextureAtlas: any): void {
+    /**
+     * 
+     * @param p5Instance The p5 instance
+     * @param grid 
+     * @param fontTextureAtlas 
+     */
+    public setup(p5Instance: p5, grid: P5AsciifyGrid, fontTextureAtlas: P5AsciifyFontTextureAtlas): void {
         this.p = p5Instance;
         this.grid = grid;
         this.fontTextureAtlas = fontTextureAtlas;
@@ -71,9 +85,9 @@ export class RendererManager {
         let isFirst = true;
 
         for (const renderer of this.renderers) {
-            if (renderer.options.enabled) {
+            if (renderer._options.enabled) {
                 renderer.render(inputFramebuffer, currentRenderer, isFirst);
-                asciiOutput = renderer.getOutputFramebuffer();
+                asciiOutput = renderer._outputFramebuffer;
                 currentRenderer = renderer;
                 isFirst = false;
                 this.lastRenderer = renderer;

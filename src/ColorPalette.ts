@@ -1,5 +1,8 @@
 import p5 from 'p5';
 
+/**
+ * A 1D color palette for use with the P5Asciify library.
+ */
 export class P5AsciifyColorPalette {
     colors: [number, number, number][];
     framebuffer!: p5.Framebuffer;
@@ -9,6 +12,10 @@ export class P5AsciifyColorPalette {
         this.colors = colors;
     }
 
+    /**
+     * Setup the color palette with a p5 instance.
+     * @param p5Instance The p5 instance to use for creating the framebuffer.
+     */
     setup(p5Instance: p5): void {
         this.p5Instance = p5Instance;
         // Ensure minimum width of 1 to prevent zero-sized framebuffer
@@ -23,6 +30,9 @@ export class P5AsciifyColorPalette {
         this.updateFramebuffer();
     }
 
+    /**
+     * Update the framebuffer with the current colors.
+     */
     updateFramebuffer(): void {
         if (!this.framebuffer || !this.p5Instance) return;
 
@@ -45,16 +55,12 @@ export class P5AsciifyColorPalette {
         this.framebuffer.updatePixels();
     }
 
+    /**
+     * Set the colors of the palette and update the framebuffer.
+     * @param newColors The new colors to set.
+     */
     setColors(newColors: [number, number, number][]): void {
         this.colors = newColors;
         this.updateFramebuffer();
-    }
-
-    getFramebuffer(): p5.Framebuffer {
-        return this.framebuffer;
-    }
-
-    getColors(): [number, number, number][] {
-        return this.colors;
     }
 }

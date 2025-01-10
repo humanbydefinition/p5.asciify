@@ -28,7 +28,7 @@ export class Asciifier {
 
     /**
      * Initialize the p5 instance for the Asciifier
-     * @param p - The p5 instance
+     * @param p The p5 instance
      */
     public instance(p: p5): void {
         this.p = p;
@@ -36,8 +36,16 @@ export class Asciifier {
         if (!this.p.preload) {
             this.p.preload = () => { }; // Define a default preload function
         }
+
+        this.rendererManager.gradientManager.addInstance(this.p);
     }
 
+    /**
+     * Adds the p5 instance in p5.js global mode. Is called automatically on init by p5.js.
+     * Currently a bit confusing with the `instance()` method above, which is relevant for instance mode,
+     * where the user has to call it manually.
+     * @param p The p5 instance
+     */
     public addP5Instance(p: p5): void {
         if (!this.p) {
             this.p = p;

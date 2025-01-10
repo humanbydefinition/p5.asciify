@@ -18,7 +18,7 @@ export default class CustomAsciiRenderer extends AsciiRenderer {
     }
 
     render(inputFramebuffer: p5.Framebuffer, previousAsciiRenderer: AsciiRenderer, isFirstRenderer: boolean): void {
-        this.outputFramebuffer.begin();
+        this._outputFramebuffer.begin();
         this.p.clear();
         this.p.shader(this.shader);
         this.shader.setUniform('u_layer', 4);
@@ -28,7 +28,7 @@ export default class CustomAsciiRenderer extends AsciiRenderer {
         this.shader.setUniform('u_charsetDimensions', [this.characterSet.asciiFontTextureAtlas.charsetCols, this.characterSet.asciiFontTextureAtlas.charsetRows]);
         this.shader.setUniform('u_primaryColorTexture', this.primaryColorSampleFramebuffer);
         if (!isFirstRenderer) {
-            this.shader.setUniform('u_prevAsciiTexture', previousAsciiRenderer.getOutputFramebuffer());
+            this.shader.setUniform('u_prevAsciiTexture', previousAsciiRenderer._outputFramebuffer);
         }
         this.shader.setUniform('u_secondaryColorTexture', this.secondaryColorSampleFramebuffer);
         this.shader.setUniform('u_asciiCharacterTexture', this.asciiCharacterFramebuffer);
@@ -38,6 +38,6 @@ export default class CustomAsciiRenderer extends AsciiRenderer {
         this.shader.setUniform('u_invertMode', 0);
         this.shader.setUniform('u_rotationAngle', 0);
         this.p.rect(0, 0, this.p.width, this.p.height);
-        this.outputFramebuffer.end();
+        this._outputFramebuffer.end();
     }
 }

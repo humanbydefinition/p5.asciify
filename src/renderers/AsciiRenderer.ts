@@ -5,6 +5,7 @@ import { P5AsciifyCharacterSet } from '../CharacterSet';
 
 interface AsciiRendererOptions {
     enabled: boolean;
+    characters: string;
 }
 
 /**
@@ -14,12 +15,12 @@ export abstract class AsciiRenderer {
     protected p: p5;
     protected grid: P5AsciifyGrid;
     protected characterSet: P5AsciifyCharacterSet;
-    protected options: AsciiRendererOptions;
+    protected _options: AsciiRendererOptions;
 
     protected primaryColorSampleFramebuffer: p5.Framebuffer;
     protected secondaryColorSampleFramebuffer: p5.Framebuffer;
     protected asciiCharacterFramebuffer: p5.Framebuffer;
-    protected outputFramebuffer: p5.Framebuffer;
+    protected _outputFramebuffer: p5.Framebuffer;
 
     /**
      * Constructor for AsciiRenderer.
@@ -41,7 +42,7 @@ export abstract class AsciiRenderer {
         this.p = p5Instance;
         this.grid = grid;
         this.characterSet = characterSet;
-        this.options = options;
+        this._options = options;
 
         this.primaryColorSampleFramebuffer = this.p.createFramebuffer({
             density: 1,
@@ -70,7 +71,7 @@ export abstract class AsciiRenderer {
             textureFiltering: this.p.NEAREST
         });
 
-        this.outputFramebuffer = this.p.createFramebuffer({
+        this._outputFramebuffer = this.p.createFramebuffer({
             depthFormat: this.p.UNSIGNED_INT,
             textureFiltering: this.p.NEAREST
         });
@@ -99,8 +100,8 @@ export abstract class AsciiRenderer {
     public updateOptions(newOptions: Partial<AsciiRendererOptions>): void {
         validateOptions(this.p, newOptions);
 
-        this.options = {
-            ...this.options,
+        this._options = {
+            ...this._options,
             ...newOptions
         };
 
@@ -112,30 +113,6 @@ export abstract class AsciiRenderer {
             this.characterSet.setCharacterSet(newOptions.characters);
             this.resetShaders();
         }
-
-        /**
-         * Uncomment and implement additional option handlers as needed.
-         * 
-         * if (newOptions?.characterColorMode !== undefined) {
-         *     this.textAsciiRenderer.updateCharacterColorMode();
-         * }
-         * 
-         * if (newOptions?.characterColor !== undefined) {
-         *     this.textAsciiRenderer.updateCharacterColor();
-         * }
-         * 
-         * if (newOptions?.backgroundColor !== undefined) {
-         *     this.textAsciiRenderer.updateBackgroundColor();
-         * }
-         * 
-         * if (newOptions?.invertMode !== undefined) {
-         *     this.textAsciiRenderer.updateInvertMode();
-         * }
-         * 
-         * if (newOptions?.enabled !== undefined) {
-         *     this.textAsciiRenderer.toggleVisibility();
-         * }
-         */
     }
 
     /**
@@ -144,11 +121,7 @@ export abstract class AsciiRenderer {
      */
     public abstract render(inputFramebuffer: p5.Framebuffer, previousAsciiRenderer: AsciiRenderer, isFirstRenderer: boolean): void;
 
-    /**
-     * Get the framebuffer containing the ASCII-rendered output.
-     * @returns The output framebuffer.
-     */
-    public getOutputFramebuffer(): p5.Framebuffer {
-        return this.outputFramebuffer;
-    }
+    // Getters
+    get outputFramebuffer() { return this._outputFramebuffer; }
+    get options() { return this._options; }
 }

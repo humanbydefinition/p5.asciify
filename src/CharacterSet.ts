@@ -5,10 +5,7 @@ import { P5AsciifyColorPalette } from './ColorPalette';
 import { P5AsciifyFontTextureAtlas } from './FontTextureAtlas';
 
 /**
- * @class P5AsciifyCharacterSet
- * @description
- * A class that represents a character set for the P5Asciify library.
- * It is responsible for maintaining a texture that contains all the characters in the character set.
+ * Represents a set of characters to be used by an ASCII renderer.
  */
 export class P5AsciifyCharacterSet {
     private p5Instance: p5; 
@@ -29,10 +26,10 @@ export class P5AsciifyCharacterSet {
     }
 
     /**
-     * Validates a string of characters to ensure they are supported by the current font.
-     * @param characters - The string of characters to validate.
-     * @returns The validated characters as an array of strings.
-     * @throws P5AsciifyError if unsupported characters are found.
+     * Validates the characters to ensure they are supported by the current font.
+     * @param characters The characters to validate.
+     * @returns The validated characters as a list of characters.
+     * @throws {P5AsciifyError} If any characters are not supported by the font
      */
     private validateCharacters(characters: string): string[] {
         const unsupportedChars: string[] = this.asciiFontTextureAtlas.getUnsupportedCharacters(characters);
@@ -44,7 +41,7 @@ export class P5AsciifyCharacterSet {
 
     /**
      * Sets the characters to be used in the character set and updates the texture.
-     * @param characters - The string of characters to set.
+     * @param characters The string of characters to use.
      */
     public setCharacterSet(characters: string): void {
         this.characters = this.validateCharacters(characters);
