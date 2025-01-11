@@ -8,7 +8,7 @@ import typescript from '@rollup/plugin-typescript';
 
 export default [
     {
-        input: 'src/index.ts',
+        input: 'src/lib/index.ts',
         output: [
             { 
                 file: 'dist/p5.asciify.js', 
