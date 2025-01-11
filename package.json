@@ -29,7 +29,8 @@
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
-    "vitest": "vitest run"
+    "vitest": "vitest run",
+    "vite": "vite"
   },
   "repository": {
     "type": "git",
