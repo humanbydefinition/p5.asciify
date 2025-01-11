@@ -7,20 +7,20 @@ import { RendererManager } from './renderers/RendererManager';
 
 export class P5Asciifier {
     private borderColor: string;
-    private fontSize: number;
-    private rendererManager: RendererManager;
+    private _fontSize: number;
+    public rendererManager: RendererManager;
     private font!: p5.Font;
     private postSetupFunction: (() => void) | null;
     private postDrawFunction: (() => void) | null;
     private p!: p5;
-    private asciiFontTextureAtlas!: P5AsciifyFontTextureAtlas;
-    private grid!: P5AsciifyGrid;
+    public asciiFontTextureAtlas!: P5AsciifyFontTextureAtlas;
+    public grid!: P5AsciifyGrid;
     private events: P5AsciifyEventEmitter;
-    private sketchFramebuffer!: p5.Framebuffer;
+    public sketchFramebuffer!: p5.Framebuffer;
 
     constructor() {
         this.borderColor = "#000000";
-        this.fontSize = 16;
+        this._fontSize = 16;
         this.rendererManager = new RendererManager();
         this.events = new P5AsciifyEventEmitter();
         this.postSetupFunction = null;
@@ -59,7 +59,7 @@ export class P5Asciifier {
      * Sets up the P5Asciify library with the specified options
      */
     public setup(): void {
-        this.asciiFontTextureAtlas = new P5AsciifyFontTextureAtlas(this.p, this.font, this.fontSize);
+        this.asciiFontTextureAtlas = new P5AsciifyFontTextureAtlas(this.p, this.font, this._fontSize);
 
         this.grid = new P5AsciifyGrid(
             this.p,
@@ -114,6 +114,26 @@ export class P5Asciifier {
 
         if (this.postDrawFunction) {
             this.postDrawFunction();
+        }
+    }
+
+    // Getters and setters
+    get fontSize(): number { return this._fontSize; }
+
+    set fontSize(fontSize: number) {
+        this._fontSize = fontSize;
+
+        if (this.p._setupDone) {
+            this.asciiFontTextureAtlas.setFontSize(fontSize);
+            this.grid.resizeCellPixelDimensions(
+                this.asciiFontTextureAtlas.maxGlyphDimensions.width,
+                this.asciiFontTextureAtlas.maxGlyphDimensions.height
+            );
+
+            this.rendererManager.renderers.forEach(renderer => renderer.resizeFramebuffers());
+
+            this.rendererManager.renderers.forEach(renderer => renderer.resetShaders());
+            this.rendererManager.textAsciiRenderer.updateFontSize();
         }
     }
 }

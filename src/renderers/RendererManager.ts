@@ -32,8 +32,8 @@ export class RendererManager {
     private fontTextureAtlas: any;
     private currentCanvasDimensions!: { width: number, height: number };
     private gradientCharacterSet!: P5AsciifyCharacterSet;
-    private renderers!: AsciiRenderer[];
-    private textAsciiRenderer!: TextAsciiRenderer;
+    private _renderers!: AsciiRenderer[];
+    public textAsciiRenderer!: TextAsciiRenderer;
     public gradientManager: P5AsciifyGradientManager;
     private lastRenderer!: AsciiRenderer;
     private fontBase64!: string;
@@ -67,7 +67,7 @@ export class RendererManager {
 
         this.gradientManager.setup(this.fontTextureAtlas);
 
-        this.renderers = [
+        this._renderers = [
             new BrightnessAsciiRenderer(this.p, this.grid, new P5AsciifyCharacterSet(this.p, fontTextureAtlas, BRIGHTNESS_OPTIONS.characters), { ...BRIGHTNESS_OPTIONS }),
             new AccurateAsciiRenderer(this.p, this.grid, new P5AsciifyCharacterSet(this.p, fontTextureAtlas, ACCURATE_OPTIONS.characters), { ...ACCURATE_OPTIONS }),
             new GradientAsciiRenderer(this.p, this.grid, this.gradientCharacterSet, this.gradientManager, { ...GRADIENT_OPTIONS }),
@@ -85,10 +85,10 @@ export class RendererManager {
      */
     public render(inputFramebuffer: any, borderColor: any): void {
         let asciiOutput = inputFramebuffer;
-        let currentRenderer = this.renderers[0];
+        let currentRenderer = this._renderers[0];
         let isFirst = true;
 
-        for (const renderer of this.renderers) {
+        for (const renderer of this._renderers) {
             if (renderer.options.enabled) {
                 renderer.render(inputFramebuffer, currentRenderer, isFirst);
                 asciiOutput = renderer.outputFramebuffer;
@@ -120,11 +120,14 @@ export class RendererManager {
 
             this.grid.reset();
 
-            this.renderers.forEach(renderer => {
+            this._renderers.forEach(renderer => {
                 renderer.resizeFramebuffers();
             });
 
             this.textAsciiRenderer.updateDimensions();
         }
     }
+
+    // Getters and setters
+    get renderers(): AsciiRenderer[] { return this._renderers; }
 }

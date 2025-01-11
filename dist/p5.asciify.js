@@ -1855,18 +1855,18 @@ void main() {
 
     class P5AsciifyGradient {
         _shader;
+        characters;
         _brightnessStart;
         _brightnessEnd;
-        _characters;
         _enabled;
         _onPaletteChangeCallback;
         _palette;
-        constructor(shader, brightnessStart, brightnessEnd, characters) {
-            this._shader = shader;
+        constructor(_shader, brightnessStart, brightnessEnd, characters) {
+            this._shader = _shader;
+            this.characters = characters;
             // Normalize brightness values to [0, 1]
             this._brightnessStart = Math.floor((brightnessStart / 255) * 100) / 100;
             this._brightnessEnd = Math.ceil((brightnessEnd / 255) * 100) / 100;
-            this._characters = characters;
             this._enabled = true;
         }
         registerPaletteChangeCallback(callback) {
@@ -1881,7 +1881,7 @@ void main() {
             this._shader.setUniform("textureID", framebuffer);
             this._shader.setUniform("originalTextureID", referenceFramebuffer);
             this._shader.setUniform("gradientTexture", this._palette.framebuffer);
-            this._shader.setUniform("gradientTextureDimensions", [this._palette.framebuffer.width, 1]);
+            this._shader.setUniform("gradientTextureDimensions", [this._palette.colors.length, 1]);
             this._shader.setUniform("u_brightnessRange", [this._brightnessStart, this._brightnessEnd]);
             this._shader.setUniform("frameCount", p5.frameCount);
         }
@@ -1910,6 +1910,9 @@ void main() {
         }
         get shader() {
             return this._shader;
+        }
+        get palette() {
+            return this._palette;
         }
     }
 
@@ -2207,7 +2210,7 @@ void main() {
         }
         setupGradientQueue() {
             for (const { gradientInstance, type } of this._setupQueue) {
-                gradientInstance.setup(this.p5Instance, this.gradientShaders[type], this.fontTextureAtlas.getCharsetColorArray(gradientInstance._characters));
+                gradientInstance.setup(this.p5Instance, this.gradientShaders[type], this.fontTextureAtlas.getCharsetColorArray(gradientInstance.characters));
             }
             this._setupQueue = [];
         }
@@ -2240,10 +2243,10 @@ void main() {
         }
         handleGradientPaletteChange(gradient, characters) {
             if (!this.p5Instance._setupDone) {
-                gradient._characters = characters;
+                gradient.characters = characters;
             }
             else {
-                gradient._palette?.setColors(this.fontTextureAtlas.getCharsetColorArray(characters));
+                gradient.palette.setColors(this.fontTextureAtlas.getCharsetColorArray(characters));
             }
         }
         setupShaders() {
@@ -2269,7 +2272,7 @@ void main() {
         fontTextureAtlas;
         currentCanvasDimensions;
         gradientCharacterSet;
-        renderers;
+        _renderers;
         textAsciiRenderer;
         gradientManager;
         lastRenderer;
@@ -2294,7 +2297,7 @@ void main() {
             };
             this.gradientCharacterSet = new P5AsciifyCharacterSet(this.p, fontTextureAtlas, BRIGHTNESS_OPTIONS.characters);
             this.gradientManager.setup(this.fontTextureAtlas);
-            this.renderers = [
+            this._renderers = [
                 new BrightnessAsciiRenderer(this.p, this.grid, new P5AsciifyCharacterSet(this.p, fontTextureAtlas, BRIGHTNESS_OPTIONS.characters), { ...BRIGHTNESS_OPTIONS }),
                 new AccurateAsciiRenderer(this.p, this.grid, new P5AsciifyCharacterSet(this.p, fontTextureAtlas, ACCURATE_OPTIONS.characters), { ...ACCURATE_OPTIONS }),
                 new GradientAsciiRenderer(this.p, this.grid, this.gradientCharacterSet, this.gradientManager, { ...GRADIENT_OPTIONS }),
@@ -2310,9 +2313,9 @@ void main() {
          */
         render(inputFramebuffer, borderColor) {
             let asciiOutput = inputFramebuffer;
-            let currentRenderer = this.renderers[0];
+            let currentRenderer = this._renderers[0];
             let isFirst = true;
-            for (const renderer of this.renderers) {
+            for (const renderer of this._renderers) {
                 if (renderer.options.enabled) {
                     renderer.render(inputFramebuffer, currentRenderer, isFirst);
                     asciiOutput = renderer.outputFramebuffer;
@@ -2338,17 +2341,19 @@ void main() {
                 this.currentCanvasDimensions.width = this.p.width;
                 this.currentCanvasDimensions.height = this.p.height;
                 this.grid.reset();
-                this.renderers.forEach(renderer => {
+                this._renderers.forEach(renderer => {
                     renderer.resizeFramebuffers();
                 });
                 this.textAsciiRenderer.updateDimensions();
             }
         }
+        // Getters and setters
+        get renderers() { return this._renderers; }
     }
 
     class P5Asciifier {
         borderColor;
-        fontSize;
+        _fontSize;
         rendererManager;
         font;
         postSetupFunction;
@@ -2360,7 +2365,7 @@ void main() {
         sketchFramebuffer;
         constructor() {
             this.borderColor = "#000000";
-            this.fontSize = 16;
+            this._fontSize = 16;
             this.rendererManager = new RendererManager();
             this.events = new P5AsciifyEventEmitter();
             this.postSetupFunction = null;
@@ -2393,7 +2398,7 @@ void main() {
          * Sets up the P5Asciify library with the specified options
          */
         setup() {
-            this.asciiFontTextureAtlas = new P5AsciifyFontTextureAtlas(this.p, this.font, this.fontSize);
+            this.asciiFontTextureAtlas = new P5AsciifyFontTextureAtlas(this.p, this.font, this._fontSize);
             this.grid = new P5AsciifyGrid(this.p, this.asciiFontTextureAtlas.maxGlyphDimensions.width, this.asciiFontTextureAtlas.maxGlyphDimensions.height);
             this.rendererManager.setup(this.p, this.grid, this.asciiFontTextureAtlas);
             this.sketchFramebuffer = this.p.createFramebuffer({
@@ -2435,6 +2440,18 @@ void main() {
             this.rendererManager.render(this.sketchFramebuffer, this.borderColor);
             if (this.postDrawFunction) {
                 this.postDrawFunction();
+            }
+        }
+        // Getters and setters
+        get fontSize() { return this._fontSize; }
+        set fontSize(fontSize) {
+            this._fontSize = fontSize;
+            if (this.p._setupDone) {
+                this.asciiFontTextureAtlas.setFontSize(fontSize);
+                this.grid.resizeCellPixelDimensions(this.asciiFontTextureAtlas.maxGlyphDimensions.width, this.asciiFontTextureAtlas.maxGlyphDimensions.height);
+                this.rendererManager.renderers.forEach(renderer => renderer.resizeFramebuffers());
+                this.rendererManager.renderers.forEach(renderer => renderer.resetShaders());
+                this.rendererManager.textAsciiRenderer.updateFontSize();
             }
         }
     }
@@ -2519,7 +2536,7 @@ void main() {
                             p5asciify.rendererManager.renderers.forEach(renderer => {
                                 renderer.characterSet.setCharacterSet(renderer.characterSet.characters);
                             });
-                            p5asciify.rendererManager.grid.resizeCellPixelDimensions(p5asciify.asciiFontTextureAtlas.maxGlyphDimensions.width, p5asciify.asciiFontTextureAtlas.maxGlyphDimensions.height);
+                            p5asciify.grid.resizeCellPixelDimensions(p5asciify.asciiFontTextureAtlas.maxGlyphDimensions.width, p5asciify.asciiFontTextureAtlas.maxGlyphDimensions.height);
                             p5asciify.rendererManager.textAsciiRenderer.updateFont(p5asciify.rendererManager.fontBase64, p5asciify.rendererManager.fontFileType);
                         }
                         catch (e) {
@@ -2551,13 +2568,6 @@ void main() {
         };
         p5.prototype.setAsciifyFontSize = function (fontSize) {
             p5asciify.fontSize = fontSize;
-            if (this._setupDone) {
-                p5asciify.asciiFontTextureAtlas.setFontSize(fontSize);
-                p5asciify.grid.resizeCellPixelDimensions(p5asciify.asciiFontTextureAtlas.maxGlyphDimensions.width, p5asciify.asciiFontTextureAtlas.maxGlyphDimensions.height);
-                p5asciify.rendererManager.renderers.forEach(renderer => renderer.resizeFramebuffers());
-                p5asciify.rendererManager.renderers.forEach(renderer => renderer.resetShaders());
-                p5asciify.rendererManager.textAsciiRenderer.updateFontSize();
-            }
         };
         p5.prototype.setAsciifyPostSetupFunction = function (postSetupFunction) {
             p5asciify.postSetupFunction = postSetupFunction;

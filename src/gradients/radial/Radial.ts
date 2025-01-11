@@ -18,7 +18,7 @@ export class P5AsciifyRadialGradient extends P5AsciifyGradient {
         shader: p5.Shader,
         brightnessStart: number,
         brightnessEnd: number,
-        characters: string[],
+        characters: string,
         params: RadialGradientParams
     ) {
         super(shader, brightnessStart, brightnessEnd, characters);

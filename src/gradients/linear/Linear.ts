@@ -16,7 +16,7 @@ export class P5AsciifyLinearGradient extends P5AsciifyGradient {
         shader: p5.Shader,
         brightnessStart: number,
         brightnessEnd: number,
-        characters: string[],
+        characters: string,
         params: LinearGradientParams
     ) {
         super(shader, brightnessStart, brightnessEnd, characters);

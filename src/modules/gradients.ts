@@ -1,11 +1,13 @@
 import { validateGradientParams } from '../validators/GradientValidator';
 import { P5Asciifier } from '../Asciifier';
+import { GradientType } from '../gradients/GradientManager';
+import { P5AsciifyGradient } from '../gradients/Gradient';
 import p5 from 'p5';
 
 export function registerGradientMethods(p5asciify: P5Asciifier): void {
 
     p5.prototype.addAsciiGradient = function (
-        gradientName: string,
+        gradientName: GradientType,
         brightnessStart: number,
         brightnessEnd: number,
         characters: string,
@@ -30,7 +32,7 @@ export function registerGradientMethods(p5asciify: P5Asciifier): void {
     };
 
     p5.prototype.removeAsciiGradient = function (
-        gradientInstance: any
+        gradientInstance: P5AsciifyGradient
     ): void {
         p5asciify.rendererManager.gradientManager.removeGradient(gradientInstance);
     };

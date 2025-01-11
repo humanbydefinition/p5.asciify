@@ -20,7 +20,7 @@ export class P5AsciifySpiralGradient extends P5AsciifyGradient {
         shader: p5.Shader,
         brightnessStart: number,
         brightnessEnd: number,
-        characters: string[],
+        characters: string,
         params: SpiralGradientParams
     ) {
         super(shader, brightnessStart, brightnessEnd, characters);

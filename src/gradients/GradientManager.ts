@@ -55,7 +55,7 @@ export class P5AsciifyGradientManager {
     };
 
     private _gradientConstructors: Record<GradientType,
-        (shader: p5.Shader, brightnessStart: number, brightnessEnd: number, characters: string[], params: any) => P5AsciifyGradient
+        (shader: p5.Shader, brightnessStart: number, brightnessEnd: number, characters: string, params: any) => P5AsciifyGradient
     > = {
             linear: (shader, brightnessStart, brightnessEnd, characters, params) =>
                 new P5AsciifyLinearGradient(shader, brightnessStart, brightnessEnd, characters, params),
@@ -91,7 +91,7 @@ export class P5AsciifyGradientManager {
             gradientInstance.setup(
                 this.p5Instance,
                 this.gradientShaders[type] as unknown as p5.Shader,
-                this.fontTextureAtlas.getCharsetColorArray(gradientInstance._characters)
+                this.fontTextureAtlas.getCharsetColorArray(gradientInstance.characters)
             );
         }
 
@@ -109,7 +109,7 @@ export class P5AsciifyGradientManager {
         gradientName: GradientType,
         brightnessStart: number,
         brightnessEnd: number,
-        characters: string[],
+        characters: string,
         params: Partial<GradientParams[typeof gradientName]>
     ): P5AsciifyGradient {
         const mergedParams = this.getGradientParams(gradientName, {
@@ -150,11 +150,11 @@ export class P5AsciifyGradientManager {
         }
     }
 
-    private handleGradientPaletteChange(gradient: P5AsciifyGradient, characters: string[]): void {
+    private handleGradientPaletteChange(gradient: P5AsciifyGradient, characters: string): void {
         if (!(this.p5Instance as any)._setupDone) {
-            gradient._characters = characters;
+            gradient.characters = characters;
         } else {
-            gradient._palette?.setColors(this.fontTextureAtlas.getCharsetColorArray(characters));
+            gradient.palette.setColors(this.fontTextureAtlas.getCharsetColorArray(characters));
         }
     }
 

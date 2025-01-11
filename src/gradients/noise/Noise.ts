@@ -16,7 +16,7 @@ export class P5AsciifyNoiseGradient extends P5AsciifyGradient {
         shader: p5.Shader,
         brightnessStart: number,
         brightnessEnd: number,
-        characters: string[],
+        characters: string,
         params: NoiseGradientParams
     ) {
         super(shader, brightnessStart, brightnessEnd, characters);

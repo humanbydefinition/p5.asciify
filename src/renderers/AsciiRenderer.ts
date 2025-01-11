@@ -20,8 +20,8 @@ export interface AsciiRendererOptions {
 export abstract class AsciiRenderer<T extends AsciiRendererOptions = AsciiRendererOptions> {
     protected _options: T;
     protected p: p5;
-    protected grid: P5AsciifyGrid;
-    protected characterSet: P5AsciifyCharacterSet;
+    public grid: P5AsciifyGrid;
+    public characterSet: P5AsciifyCharacterSet;
 
     protected _primaryColorSampleFramebuffer: p5.Framebuffer;
     protected _secondaryColorSampleFramebuffer: p5.Framebuffer;
@@ -88,7 +88,7 @@ export abstract class AsciiRenderer<T extends AsciiRendererOptions = AsciiRender
     /**
      * Resets shaders. To be implemented by subclasses.
      */
-    protected resetShaders(): void {
+    public resetShaders(): void {
 
     }
 

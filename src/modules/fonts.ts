@@ -54,7 +54,7 @@ export function registerFontMethods(p5asciify: P5Asciifier): void {
                             renderer.characterSet.setCharacterSet(renderer.characterSet.characters);
                         });
 
-                        p5asciify.rendererManager.grid.resizeCellPixelDimensions(
+                        p5asciify.grid.resizeCellPixelDimensions(
                             p5asciify.asciiFontTextureAtlas.maxGlyphDimensions.width,
                             p5asciify.asciiFontTextureAtlas.maxGlyphDimensions.height
                         );
