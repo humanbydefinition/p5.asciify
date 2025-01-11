@@ -17,7 +17,7 @@ export class P5AsciifyFontTextureAtlas {
     constructor(
         private p: p5Type,
         private font: p5.Font,
-        private fontSize: number
+        private _fontSize: number
     ) {
         const glyphs = Object.values(this.font.font.glyphs.glyphs) as OpenTypeGlyph[];
         this._characters = glyphs
@@ -25,8 +25,8 @@ export class P5AsciifyFontTextureAtlas {
             .map(glyph => String.fromCharCode(glyph.unicode!));
 
         this._characterGlyphs = this._loadCharacterGlyphs();
-        this._maxGlyphDimensions = this._getMaxGlyphDimensions(this.fontSize);
-        this._createTexture(this.fontSize);
+        this._maxGlyphDimensions = this._getMaxGlyphDimensions(this._fontSize);
+        this._createTexture(this._fontSize);
     }
 
     /**
@@ -73,8 +73,8 @@ export class P5AsciifyFontTextureAtlas {
             .map((glyph: OpenTypeGlyph) => String.fromCharCode(glyph.unicode));
 
         this._characterGlyphs = this._loadCharacterGlyphs();
-        this._maxGlyphDimensions = this._getMaxGlyphDimensions(this.fontSize);
-        this._createTexture(this.fontSize);
+        this._maxGlyphDimensions = this._getMaxGlyphDimensions(this._fontSize);
+        this._createTexture(this._fontSize);
     }
 
     /**
@@ -82,9 +82,9 @@ export class P5AsciifyFontTextureAtlas {
      * @param fontSize - The new font size.
      */
     public setFontSize(fontSize: number): void {
-        this.fontSize = fontSize;
-        this._maxGlyphDimensions = this._getMaxGlyphDimensions(this.fontSize);
-        this._createTexture(this.fontSize);
+        this._fontSize = fontSize;
+        this._maxGlyphDimensions = this._getMaxGlyphDimensions(this._fontSize);
+        this._createTexture(this._fontSize);
     }
 
     /**
@@ -179,4 +179,5 @@ export class P5AsciifyFontTextureAtlas {
     get characters(): string[] { return this._characters; }
     get charsetCols(): number { return this._charsetCols; }
     get charsetRows(): number { return this._charsetRows; }
+    get fontSize(): number { return this._fontSize; }
 }

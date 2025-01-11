@@ -17,22 +17,22 @@ export interface AsciiRendererOptions {
 /**
  * Abstract class for shader-based ASCII Renderers.
  */
-export abstract class AsciiRenderer {
+export abstract class AsciiRenderer<T extends AsciiRendererOptions = AsciiRendererOptions> {
+    protected _options: T;
     protected p: p5;
     protected grid: P5AsciifyGrid;
     protected characterSet: P5AsciifyCharacterSet;
-    protected _options: AsciiRendererOptions;
 
-    protected primaryColorSampleFramebuffer: p5.Framebuffer;
-    protected secondaryColorSampleFramebuffer: p5.Framebuffer;
-    protected asciiCharacterFramebuffer: p5.Framebuffer;
+    protected _primaryColorSampleFramebuffer: p5.Framebuffer;
+    protected _secondaryColorSampleFramebuffer: p5.Framebuffer;
+    protected _asciiCharacterFramebuffer: p5.Framebuffer;
     protected _outputFramebuffer: p5.Framebuffer;
 
     constructor(
         p5Instance: p5,
         grid: P5AsciifyGrid,
         characterSet: P5AsciifyCharacterSet,
-        options: AsciiRendererOptions
+        options: T
     ) {
         if (new.target === AsciiRenderer) {
             throw new TypeError("Cannot construct AsciiRenderer instances directly");
@@ -43,7 +43,7 @@ export abstract class AsciiRenderer {
         this.characterSet = characterSet;
         this._options = options;
 
-        this.primaryColorSampleFramebuffer = this.p.createFramebuffer({
+        this._primaryColorSampleFramebuffer = this.p.createFramebuffer({
             density: 1,
             antialias: false,
             width: this.grid.cols,
@@ -52,7 +52,7 @@ export abstract class AsciiRenderer {
             textureFiltering: this.p.NEAREST
         });
 
-        this.secondaryColorSampleFramebuffer = this.p.createFramebuffer({
+        this._secondaryColorSampleFramebuffer = this.p.createFramebuffer({
             density: 1,
             antialias: false,
             width: this.grid.cols,
@@ -61,7 +61,7 @@ export abstract class AsciiRenderer {
             textureFiltering: this.p.NEAREST
         });
 
-        this.asciiCharacterFramebuffer = this.p.createFramebuffer({
+        this._asciiCharacterFramebuffer = this.p.createFramebuffer({
             density: 1,
             antialias: false,
             width: this.grid.cols,
@@ -80,9 +80,9 @@ export abstract class AsciiRenderer {
      * Resizes all framebuffers based on the grid dimensions.
      */
     public resizeFramebuffers(): void {
-        this.primaryColorSampleFramebuffer.resize(this.grid.cols, this.grid.rows);
-        this.secondaryColorSampleFramebuffer.resize(this.grid.cols, this.grid.rows);
-        this.asciiCharacterFramebuffer.resize(this.grid.cols, this.grid.rows);
+        this._primaryColorSampleFramebuffer.resize(this.grid.cols, this.grid.rows);
+        this._secondaryColorSampleFramebuffer.resize(this.grid.cols, this.grid.rows);
+        this._asciiCharacterFramebuffer.resize(this.grid.cols, this.grid.rows);
     }
 
     /**
@@ -123,4 +123,7 @@ export abstract class AsciiRenderer {
     // Getters
     get outputFramebuffer() { return this._outputFramebuffer; }
     get options() { return this._options; }
+    get primaryColorSampleFramebuffer() { return this._primaryColorSampleFramebuffer; }
+    get secondaryColorSampleFramebuffer() { return this._secondaryColorSampleFramebuffer; }
+    get asciiCharacterFramebuffer() { return this._asciiCharacterFramebuffer; }
 }

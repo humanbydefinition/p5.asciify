@@ -177,4 +177,6 @@ export class P5AsciifyGradientManager {
         return this._gradientParams;
     }
 
+    get gradients(): P5AsciifyGradient[] { return this._gradients; }
+
 }

@@ -58,34 +58,34 @@ export default class BrightnessAsciiRenderer extends AsciiRenderer {
         this.p.rect(0, 0, this.p.width, this.p.height);
         this.colorSampleFramebuffer.end();
 
-        this.primaryColorSampleFramebuffer.begin();
+        this._primaryColorSampleFramebuffer.begin();
         if (this._options.characterColorMode === 1) {
             this.p.background(this._options.characterColor);
         } else {
             this.p.clear();
             this.p.image(this.colorSampleFramebuffer, -this.grid.cols / 2, -this.grid.rows / 2, this.grid.cols, this.grid.rows);
         }
-        this.primaryColorSampleFramebuffer.end();
+        this._primaryColorSampleFramebuffer.end();
 
-        this.secondaryColorSampleFramebuffer.begin();
+        this._secondaryColorSampleFramebuffer.begin();
         if (this._options.backgroundColorMode === 1) {
             this.p.background(this._options.backgroundColor);
         } else {
             this.p.clear();
             this.p.image(this.colorSampleFramebuffer, -this.grid.cols / 2, -this.grid.rows / 2, this.grid.cols, this.grid.rows);
         }
-        this.secondaryColorSampleFramebuffer.end();
+        this._secondaryColorSampleFramebuffer.end();
 
-        this.asciiCharacterFramebuffer.begin();
+        this._asciiCharacterFramebuffer.begin();
         this.p.clear();
         this.p.shader(this.asciiCharacterShader);
         this.asciiCharacterShader.setUniform('u_textureSize', [this.grid.cols, this.grid.rows]);
         this.asciiCharacterShader.setUniform('u_colorSampleFramebuffer', this.colorSampleFramebuffer);
         this.asciiCharacterShader.setUniform('u_charPaletteTexture', this.characterSet.characterColorPalette.framebuffer);
-        this.asciiCharacterShader.setUniform('u_charPaletteSize', [this.characterSet.characterColorPalette.framebuffer.width, 1]);
+        this.asciiCharacterShader.setUniform('u_charPaletteSize', [this.characterSet.characterColorPalette.colors.length, 1]);
 
         this.p.rect(0, 0, this.p.width, this.p.height);
-        this.asciiCharacterFramebuffer.end();
+        this._asciiCharacterFramebuffer.end();
 
         this._outputFramebuffer.begin();
         this.p.clear();
@@ -95,9 +95,9 @@ export default class BrightnessAsciiRenderer extends AsciiRenderer {
         this.shader.setUniform('u_resolution', [this.p.width, this.p.height]);
         this.shader.setUniform('u_characterTexture', this.characterSet.asciiFontTextureAtlas.texture);
         this.shader.setUniform('u_charsetDimensions', [this.characterSet.asciiFontTextureAtlas.charsetCols, this.characterSet.asciiFontTextureAtlas.charsetRows]);
-        this.shader.setUniform('u_primaryColorTexture', this.primaryColorSampleFramebuffer);
-        this.shader.setUniform('u_secondaryColorTexture', this.secondaryColorSampleFramebuffer);
-        this.shader.setUniform('u_asciiCharacterTexture', this.asciiCharacterFramebuffer);
+        this.shader.setUniform('u_primaryColorTexture', this._primaryColorSampleFramebuffer);
+        this.shader.setUniform('u_secondaryColorTexture', this._secondaryColorSampleFramebuffer);
+        this.shader.setUniform('u_asciiCharacterTexture', this._asciiCharacterFramebuffer);
         if (!isFirstRenderer) {
             this.shader.setUniform('u_prevAsciiTexture', previousAsciiRenderer.outputFramebuffer);
         }

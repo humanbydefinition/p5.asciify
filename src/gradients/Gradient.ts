@@ -67,4 +67,8 @@ export class P5AsciifyGradient {
     set brightnessEnd(value: number) {
         this._brightnessEnd = value;
     }
+
+    get shader(): p5.Shader {
+        return this._shader;
+    }
 }

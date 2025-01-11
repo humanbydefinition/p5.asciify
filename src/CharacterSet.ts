@@ -8,21 +8,20 @@ import { P5AsciifyFontTextureAtlas } from './FontTextureAtlas';
  * Represents a set of characters to be used by an ASCII renderer.
  */
 export class P5AsciifyCharacterSet {
-    private p5Instance: p5; 
-    private asciiFontTextureAtlas: P5AsciifyFontTextureAtlas;
-    private characters: string[];
+    private _characters: string[];
     private characterColors: [number, number, number][];
-    private characterColorPalette: P5AsciifyColorPalette;
+    public characterColorPalette: P5AsciifyColorPalette;
 
-    constructor(p5Instance: p5, asciiFontTextureAtlas: P5AsciifyFontTextureAtlas, characters: string) {
-        this.p5Instance = p5Instance;
-        this.asciiFontTextureAtlas = asciiFontTextureAtlas;
-
-        this.characters = this.validateCharacters(characters);
-        this.characterColors = this.asciiFontTextureAtlas.getCharsetColorArray(this.characters);
+    constructor(
+        private p: p5,
+        public asciiFontTextureAtlas: P5AsciifyFontTextureAtlas,
+        characters: string
+    ) {
+        this._characters = this.validateCharacters(characters);
+        this.characterColors = this.asciiFontTextureAtlas.getCharsetColorArray(this._characters);
 
         this.characterColorPalette = new P5AsciifyColorPalette(this.characterColors);
-        this.characterColorPalette.setup(this.p5Instance);
+        this.characterColorPalette.setup(this.p);
     }
 
     /**
@@ -44,8 +43,11 @@ export class P5AsciifyCharacterSet {
      * @param characters The string of characters to use.
      */
     public setCharacterSet(characters: string): void {
-        this.characters = this.validateCharacters(characters);
-        this.characterColors = this.asciiFontTextureAtlas.getCharsetColorArray(this.characters);
+        this._characters = this.validateCharacters(characters);
+        this.characterColors = this.asciiFontTextureAtlas.getCharsetColorArray(this._characters);
         this.characterColorPalette.setColors(this.characterColors);
     }
+
+    // Getters
+    get characters() { return this._characters; }
 }

@@ -1,7 +1,3 @@
-/**************************************************
- * Type Definitions & Imports
- **************************************************/
-
 import p5 from 'p5';
 
 import { P5AsciifyFontTextureAtlas } from '../../FontTextureAtlas';
@@ -18,13 +14,6 @@ interface TextAsciiRendererOptions {
 }
 
 export default class TextAsciiRenderer {
-  private p: p5;
-  private asciiFontTextureAtlas: P5AsciifyFontTextureAtlas;
-  private grid: P5AsciifyGrid;
-  private options: TextAsciiRendererOptions;
-
-  private fontBase64: string;
-  private fontFileType: string;
 
   private backgroundColor: string = '';
   private foregroundColor: string = '';
@@ -43,19 +32,13 @@ export default class TextAsciiRenderer {
   private previousBgColors: Array<Array<string | null>> = [];
 
   constructor(
-    p5Instance: p5,
-    asciiFontTextureAtlas: P5AsciifyFontTextureAtlas,
-    grid: P5AsciifyGrid,
-    fontBase64: string,
-    fontFileType: string,
-    options: TextAsciiRendererOptions,
+    private p: p5,
+    private asciiFontTextureAtlas: P5AsciifyFontTextureAtlas,
+    private grid: P5AsciifyGrid,
+    private fontBase64: string,
+    private fontFileType: string,
+    private _options: TextAsciiRendererOptions,
   ) {
-    this.p = p5Instance;
-    this.asciiFontTextureAtlas = asciiFontTextureAtlas;
-    this.grid = grid;
-    this.fontBase64 = fontBase64;
-    this.fontFileType = fontFileType;
-    this.options = options;
 
     this.updateColors();
     this.initFontFace();
@@ -102,7 +85,7 @@ export default class TextAsciiRenderer {
     this.textAsciiRenderer.style('background-color', this.backgroundColor);
     this.textAsciiRenderer.style('color', this.foregroundColor);
 
-    if (!this.options.enabled) {
+    if (!this._options.enabled) {
       this.textAsciiRenderer.hide();
     }
   }
@@ -127,7 +110,7 @@ export default class TextAsciiRenderer {
    **************************************************/
 
   public updateOptions(options: Partial<TextAsciiRendererOptions>): void {
-    this.options = { ...this.options, ...options };
+    this._options = { ...this._options, ...options };
 
     if (!this.p._setupDone) {
       return;
@@ -175,12 +158,12 @@ export default class TextAsciiRenderer {
 
   public updateColors(): void {
     // Switch foreground/background color depending on invertMode
-    this.backgroundColor = this.options.invertMode
-      ? this.options.characterColor
-      : this.options.backgroundColor;
-    this.foregroundColor = this.options.invertMode
-      ? this.options.backgroundColor
-      : this.options.characterColor;
+    this.backgroundColor = this._options.invertMode
+      ? this._options.characterColor
+      : this._options.backgroundColor;
+    this.foregroundColor = this._options.invertMode
+      ? this._options.backgroundColor
+      : this._options.characterColor;
 
     if (this.textAsciiRenderer) {
       this.textAsciiRenderer.style('background-color', this.backgroundColor);
@@ -202,7 +185,7 @@ export default class TextAsciiRenderer {
 
     // Force clearing per-character styles if both color modes are enabled
     // so that the next frame re-applies correct colors
-    if (this.options.characterColorMode !== 0 && this.options.backgroundColorMode !== 0) {
+    if (this._options.characterColorMode !== 0 && this._options.backgroundColorMode !== 0) {
       this.clearPerCharacterStyles();
     }
   }
@@ -215,7 +198,7 @@ export default class TextAsciiRenderer {
   public updateCharacterColor(): void {
     this.updateColors();
     this.applyContainerStyles();
-    if (this.options.characterColorMode !== 0) {
+    if (this._options.characterColorMode !== 0) {
       this.clearPerCharacterStyles();
     }
   }
@@ -223,13 +206,13 @@ export default class TextAsciiRenderer {
   public updateBackgroundColor(): void {
     this.updateColors();
     this.applyContainerStyles();
-    if (this.options.characterColorMode !== 0) {
+    if (this._options.characterColorMode !== 0) {
       this.clearPerCharacterStyles();
     }
   }
 
   public updateCharacterColorMode(): void {
-    if (this.options.characterColorMode !== 0) {
+    if (this._options.characterColorMode !== 0) {
       this.clearPerCharacterStyles();
     }
   }
@@ -287,17 +270,17 @@ export default class TextAsciiRenderer {
 
   public outputAsciiToHtml(asciiRenderer: AsciiRenderer): void {
     // 1) Load ASCII character data
-    asciiRenderer.asciiCharacterFramebuffer.loadPixels();
-    const asciiPixels = asciiRenderer.asciiCharacterFramebuffer.pixels;
+    asciiRenderer._asciiCharacterFramebuffer.loadPixels();
+    const asciiPixels = asciiRenderer._asciiCharacterFramebuffer.pixels;
 
     // 2) Load color data if color mode requires it
     const primaryColorPixels = this.getPixelsIfModeEnabled(
-      this.options.characterColorMode,
-      asciiRenderer.primaryColorSampleFramebuffer,
+      this._options.characterColorMode,
+      asciiRenderer._primaryColorSampleFramebuffer,
     );
     const secondaryColorPixels = this.getPixelsIfModeEnabled(
-      this.options.backgroundColorMode,
-      asciiRenderer.secondaryColorSampleFramebuffer,
+      this._options.backgroundColorMode,
+      asciiRenderer._secondaryColorSampleFramebuffer,
     );
 
     // 3) Iterate through each cell
@@ -313,14 +296,14 @@ export default class TextAsciiRenderer {
         this.updateCharSpanContent(x, y, ch, charSpan);
 
         // Apply per-character color mode
-        if (this.options.characterColorMode === 0 && primaryColorPixels) {
+        if (this._options.characterColorMode === 0 && primaryColorPixels) {
           this.applyPrimaryColorMode(charSpan, x, y, primaryColorPixels, pixelIdx);
         } else {
           this.resetIfNotPrimaryMode(x, y, charSpan);
         }
 
         // Apply per-character background color mode
-        if (this.options.backgroundColorMode === 0 && secondaryColorPixels) {
+        if (this._options.backgroundColorMode === 0 && secondaryColorPixels) {
           this.applySecondaryColorMode(charSpan, x, y, secondaryColorPixels, pixelIdx);
         } else {
           this.resetIfNotSecondaryMode(x, y, charSpan);
@@ -382,7 +365,7 @@ export default class TextAsciiRenderer {
     pixelIdx: number,
   ): void {
     const newColor = this.rgbFromPixels(primaryColorPixels, pixelIdx);
-    if (this.options.invertMode) {
+    if (this._options.invertMode) {
       // Invert: primary color -> background, foreground -> text
       this.updateBackgroundColorForCharSpan(x, y, charSpan, newColor);
       this.updateTextColorForCharSpan(x, y, charSpan, this.foregroundColor);
@@ -401,7 +384,7 @@ export default class TextAsciiRenderer {
     pixelIdx: number,
   ): void {
     const newColor = this.rgbFromPixels(secondaryColorPixels, pixelIdx);
-    if (this.options.invertMode) {
+    if (this._options.invertMode) {
       // Invert: secondary color -> text
       this.updateTextColorForCharSpan(x, y, charSpan, newColor);
       this.clearBackgroundColorForCharSpan(x, y, charSpan);
@@ -417,7 +400,7 @@ export default class TextAsciiRenderer {
     charSpan: HTMLSpanElement,
   ): void {
     if (
-      this.options.characterColorMode !== 0 &&
+      this._options.characterColorMode !== 0 &&
       this.previousColors[y][x] !== this.foregroundColor
     ) {
       this.updateTextColorForCharSpan(x, y, charSpan, this.foregroundColor);
@@ -429,7 +412,7 @@ export default class TextAsciiRenderer {
     y: number,
     charSpan: HTMLSpanElement,
   ): void {
-    if (this.options.characterColorMode !== 0 && this.previousColors[y][x] !== null) {
+    if (this._options.characterColorMode !== 0 && this.previousColors[y][x] !== null) {
       this.updateTextColorForCharSpan(x, y, charSpan, this.foregroundColor);
     }
   }
@@ -439,7 +422,7 @@ export default class TextAsciiRenderer {
     y: number,
     charSpan: HTMLSpanElement,
   ): void {
-    if (this.options.backgroundColorMode !== 0 && this.previousBgColors[y][x] !== null) {
+    if (this._options.backgroundColorMode !== 0 && this.previousBgColors[y][x] !== null) {
       this.clearBackgroundColorForCharSpan(x, y, charSpan);
     }
   }
@@ -526,10 +509,13 @@ export default class TextAsciiRenderer {
 
   public toggleVisibility(): void {
     if (!this.textAsciiRenderer) return;
-    if (this.options.enabled) {
+    if (this._options.enabled) {
       this.textAsciiRenderer.style('display', 'flex');
     } else {
       this.textAsciiRenderer.hide();
     }
   }
+
+  // Getters
+  get options(): TextAsciiRendererOptions { return this._options; }
 }
