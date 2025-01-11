@@ -1,9 +1,9 @@
 import { P5AsciifyError } from "../AsciifyError.js";
 import URSAFONT_BASE64 from '../assets/fonts/ursafont_base64.txt';
 import p5 from 'p5';
-import { Asciifier } from '../Asciifier';
+import { P5Asciifier } from '../Asciifier';
 
-export function registerFontMethods(p5asciify: Asciifier): void {
+export function registerFontMethods(p5asciify: P5Asciifier): void {
 
     p5.prototype.preloadAsciiFont = function (this: p5): void {
         this._incrementPreload();

@@ -1,10 +1,11 @@
+import p5 from 'p5';
+
 import { P5AsciifyFontTextureAtlas } from './FontTextureAtlas';
 import { P5AsciifyGrid } from './Grid';
 import { P5AsciifyEventEmitter } from './EventEmitter';
 import { RendererManager } from './renderers/RendererManager';
-import p5 from 'p5';
 
-export class Asciifier {
+export class P5Asciifier {
     private borderColor: string;
     private fontSize: number;
     private rendererManager: RendererManager;

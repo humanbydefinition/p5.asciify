@@ -402,7 +402,13 @@
             this.colorSampleShader = this.p.createShader(vertexShader, colorSampleShader$2);
             this.asciiCharacterShader = this.p.createShader(vertexShader, asciiCharacterShader$1);
             this.shader = this.p.createShader(vertexShader, asciiConversionShader);
-            this.colorSampleFramebuffer = this.p.createFramebuffer({ density: 1, width: this.grid.cols, height: this.grid.rows, depthFormat: this.p.UNSIGNED_INT, textureFiltering: this.p.NEAREST });
+            this.colorSampleFramebuffer = this.p.createFramebuffer({
+                density: 1,
+                width: this.grid.cols,
+                height: this.grid.rows,
+                depthFormat: this.p.UNSIGNED_INT,
+                textureFiltering: this.p.NEAREST
+            });
         }
         /**
          * Resize the framebuffers used by this renderer.
@@ -469,8 +475,8 @@
             this.shader.setUniform('u_gridPixelDimensions', [this.grid.width, this.grid.height]);
             this.shader.setUniform('u_gridOffsetDimensions', [this.grid.offsetX, this.grid.offsetY]);
             this.shader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
-            this.shader.setUniform('u_invertMode', this.options.invertMode);
-            this.shader.setUniform('u_rotationAngle', this.p.radians(this.options.rotationAngle));
+            this.shader.setUniform('u_invertMode', this._options.invertMode);
+            this.shader.setUniform('u_rotationAngle', this.p.radians(this._options.rotationAngle));
             this.p.rect(0, 0, this.p.width, this.p.height);
             this._outputFramebuffer.end();
         }
@@ -2328,7 +2334,7 @@ void main() {
         }
     }
 
-    class Asciifier {
+    class P5Asciifier {
         borderColor;
         fontSize;
         rendererManager;
@@ -2427,10 +2433,6 @@ void main() {
      * @throws {P5AsciifyError} If any validation fails.
      */
     function validateSetup(p) {
-        // Check if setup has already been done
-        if (p._setupDone) {
-            return;
-        }
         // Ensure WebGL renderer is used
         if (p._renderer.drawingContext instanceof CanvasRenderingContext2D) {
             throw new P5AsciifyError("WebGL renderer is required for p5.asciify to work.");
@@ -2618,7 +2620,7 @@ void main() {
     }
 
     // Initialize the P5Asciify library and export it as a default module
-    const p5asciify = new Asciifier();
+    const p5asciify = new P5Asciifier();
     // Expose P5Asciify to the global scope if not in a module environment
     if (typeof window !== 'undefined') {
         window.p5asciify = p5asciify; // Expose p5asciify instance

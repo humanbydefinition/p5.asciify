@@ -1,7 +1,7 @@
-import { Asciifier } from '../Asciifier';
+import { P5Asciifier } from '../Asciifier';
 import p5 from 'p5';
 
-export function registerRenderingMethods(p5asciify: Asciifier): void {
+export function registerRenderingMethods(p5asciify: P5Asciifier): void {
     p5.prototype.preDrawAddPush = function (): void {
         p5asciify.sketchFramebuffer.begin();
         this.clear();

@@ -1,7 +1,7 @@
-import { Asciifier } from '../Asciifier.js';
+import { P5Asciifier } from '../Asciifier.js';
 import p5 from 'p5';
 
-export function registerOptionsMethods(p5asciify: Asciifier): void {
+export function registerOptionsMethods(p5asciify: P5Asciifier): void {
     p5.prototype.setAsciifyBorderColor = function (this: p5, color: p5.Color | string): void {
         p5asciify.borderColor = this.color(color);
     };

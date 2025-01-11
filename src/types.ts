@@ -1,3 +1,4 @@
+import p5 from 'p5';
 
 /**
  * Extends the opentype.js `Glyph` class with r, g, and b properties for color.

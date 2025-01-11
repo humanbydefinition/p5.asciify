@@ -1,6 +1,7 @@
 import p5 from 'p5';
 import { P5AsciifyError } from './AsciifyError';
 import { OpenTypeGlyph } from './types';
+import { p5Type } from './types.js';
 
 /**
  * Creates a texture atlas containing all characters in a font, and provides utility methods for working with the atlas.
@@ -14,7 +15,7 @@ export class P5AsciifyFontTextureAtlas {
     private _charsetRows: number = 0;
 
     constructor(
-        private p: p5,
+        private p: p5Type,
         private font: p5.Font,
         private fontSize: number
     ) {

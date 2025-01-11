@@ -7,11 +7,6 @@ import p5 from 'p5';
  * @throws {P5AsciifyError} If any validation fails.
  */
 export function validateSetup(p: p5) {
-    // Check if setup has already been done
-    if (p._setupDone) {
-        return;
-    }
-
     // Ensure WebGL renderer is used
     if (p._renderer.drawingContext instanceof CanvasRenderingContext2D) {
         throw new P5AsciifyError("WebGL renderer is required for p5.asciify to work.");

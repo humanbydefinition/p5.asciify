@@ -1,8 +1,8 @@
-import { Asciifier } from '../Asciifier';
+import { P5Asciifier } from '../Asciifier';
 
 declare global {
     interface Window {
-        p5asciify?: Asciifier;
+        p5asciify?: P5Asciifier;
         preload?: () => void;
     }
 }

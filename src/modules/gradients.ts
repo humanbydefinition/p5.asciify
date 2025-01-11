@@ -1,8 +1,8 @@
 import { validateGradientParams } from '../validators/GradientValidator';
-import { Asciifier } from '../Asciifier';
+import { P5Asciifier } from '../Asciifier';
 import p5 from 'p5';
 
-export function registerGradientMethods(p5asciify: Asciifier): void {
+export function registerGradientMethods(p5asciify: P5Asciifier): void {
 
     p5.prototype.addAsciiGradient = function (
         gradientName: string,

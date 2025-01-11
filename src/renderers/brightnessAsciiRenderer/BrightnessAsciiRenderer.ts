@@ -25,7 +25,13 @@ export default class BrightnessAsciiRenderer extends AsciiRenderer {
         this.asciiCharacterShader = this.p.createShader(vertexShader, asciiCharacterShader);
         this.shader = this.p.createShader(vertexShader, asciiConversionShader);
 
-        this.colorSampleFramebuffer = this.p.createFramebuffer({ density: 1, width: this.grid.cols, height: this.grid.rows, depthFormat: this.p.UNSIGNED_INT, textureFiltering: this.p.NEAREST });
+        this.colorSampleFramebuffer = this.p.createFramebuffer({
+            density: 1,
+            width: this.grid.cols,
+            height: this.grid.rows,
+            depthFormat: this.p.UNSIGNED_INT,
+            textureFiltering: this.p.NEAREST
+        });
     }
 
     /**
@@ -98,8 +104,8 @@ export default class BrightnessAsciiRenderer extends AsciiRenderer {
         this.shader.setUniform('u_gridPixelDimensions', [this.grid.width, this.grid.height]);
         this.shader.setUniform('u_gridOffsetDimensions', [this.grid.offsetX, this.grid.offsetY]);
         this.shader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
-        this.shader.setUniform('u_invertMode', this.options.invertMode);
-        this.shader.setUniform('u_rotationAngle', this.p.radians(this.options.rotationAngle));
+        this.shader.setUniform('u_invertMode', this._options.invertMode);
+        this.shader.setUniform('u_rotationAngle', this.p.radians(this._options.rotationAngle));
         this.p.rect(0, 0, this.p.width, this.p.height);
         this._outputFramebuffer.end();
     }
