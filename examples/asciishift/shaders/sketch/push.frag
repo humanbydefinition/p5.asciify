@@ -1,5 +1,3 @@
-#version 100
-
 precision lowp float;
 
 uniform sampler2D u_shiftMapTexture; // Texture containing the shift values

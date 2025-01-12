@@ -1,5 +1,4 @@
 export const generateCharacterSelectionShader = (sampleSize: number) => `
-#version 100
 precision mediump float;
 
 // Uniforms for character texture and its grid dimensions
@@ -119,7 +118,6 @@ void main() {
 
 
 export const generateBrightnessSampleShader = (samplesPerRow: number, samplesPerColumn: number) => `
-#version 100
 precision mediump float;
 
 // Uniforms
@@ -179,7 +177,6 @@ void main() {
 `;
 
 export const generateColorSampleShader = (numSlots: number, samplesPerRow: number, samplesPerColumn: number) => `
-#version 100
 precision mediump float;
 
 // Uniforms

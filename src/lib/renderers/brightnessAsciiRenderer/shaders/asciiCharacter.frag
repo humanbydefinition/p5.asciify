@@ -1,4 +1,3 @@
-#version 100
 precision mediump float;
 
 uniform sampler2D u_colorSampleFramebuffer;
