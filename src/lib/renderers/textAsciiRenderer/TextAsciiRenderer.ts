@@ -173,9 +173,6 @@ export default class TextAsciiRenderer {
 
   public updateFontSize(): void {
     this.textAsciiRenderer?.style('font-size', `${this.asciiFontTextureAtlas.fontSize}px`);
-
-    console.log("Font size updated to: ", this.asciiFontTextureAtlas.fontSize);
-
     this.updateDimensions();
   }
 
