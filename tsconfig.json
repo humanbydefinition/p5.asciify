@@ -6,12 +6,14 @@
     "module": "ESNext",  
     "moduleResolution": "Node",
 
+    "allowJs": true,
+
     "lib": ["DOM", "ESNext"],
 
     // Generate .d.ts files
     "declaration": true,
     "declarationMap": false,     // or true if you want .d.ts.map
-    "emitDeclarationOnly": false,
+    "emitDeclarationOnly": true,
     "declarationDir": "dist/types",
     
     // Output compiled .js and .d.ts to /dist

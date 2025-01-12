@@ -25,6 +25,5 @@ export default defineConfig({
     },
     plugins: [
         glsl({ compress: true }),
-        dts({ rollupTypes: true, tsconfigPath: './tsconfig.json' }),
     ],
 });
