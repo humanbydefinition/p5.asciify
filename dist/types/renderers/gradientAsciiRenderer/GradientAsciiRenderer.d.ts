@@ -3,6 +3,9 @@ import { AsciiRenderer, AsciiRendererOptions } from '../AsciiRenderer';
 import { P5AsciifyGrid } from '../../Grid';
 import { P5AsciifyCharacterSet } from '../../CharacterSet';
 import { P5AsciifyGradientManager } from '../../gradients/GradientManager';
+/**
+ * An ASCII renderer that applies all defined ASCII gradients/patterns to the input framebuffer.
+ */
 export default class GradientAsciiRenderer extends AsciiRenderer {
     private grayscaleShader;
     private colorSampleShader;

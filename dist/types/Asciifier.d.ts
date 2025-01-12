@@ -3,6 +3,9 @@ import { P5AsciifyFontTextureAtlas } from './FontTextureAtlas';
 import { P5AsciifyGrid } from './Grid';
 import { P5AsciifyEventEmitter } from './EventEmitter';
 import { RendererManager } from './renderers/RendererManager';
+/**
+ * The main class for the p5.asciify library. This class is responsible for setting up the library and running the rendering pipeline.
+ */
 export declare class P5Asciifier {
     private borderColor;
     private _fontSize;
@@ -38,10 +41,12 @@ export declare class P5Asciifier {
     asciify(): void;
     /**
      * Sets the font size for the ascii renderers
+     * @param fontSize The font size to set
      */
     set fontSize(fontSize: number);
     /**
      * Sets the font for the ascii renderers
+     * @param font The font to set
      */
     set font(font: p5.Font);
     get fontSize(): number;

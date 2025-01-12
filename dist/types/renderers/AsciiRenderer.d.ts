@@ -15,21 +15,21 @@ export interface AsciiRendererOptions {
  * Abstract class for shader-based ASCII Renderers.
  */
 export declare abstract class AsciiRenderer<T extends AsciiRendererOptions = AsciiRendererOptions> {
-    protected _options: T;
-    protected p: p5;
-    grid: P5AsciifyGrid;
-    characterSet: P5AsciifyCharacterSet;
+    private p;
+    private grid;
+    private characterSet;
+    private _options;
     protected _primaryColorSampleFramebuffer: p5.Framebuffer;
     protected _secondaryColorSampleFramebuffer: p5.Framebuffer;
     protected _asciiCharacterFramebuffer: p5.Framebuffer;
     protected _outputFramebuffer: p5.Framebuffer;
-    constructor(p5Instance: p5, grid: P5AsciifyGrid, characterSet: P5AsciifyCharacterSet, options: T);
+    constructor(p: p5, grid: P5AsciifyGrid, characterSet: P5AsciifyCharacterSet, _options: T);
     /**
      * Resizes all framebuffers based on the grid dimensions.
      */
     resizeFramebuffers(): void;
     /**
-     * Resets shaders. To be implemented by subclasses.
+     * Resets the shaders for the renderer.
      */
     resetShaders(): void;
     /**
@@ -38,8 +38,8 @@ export declare abstract class AsciiRenderer<T extends AsciiRendererOptions = Asc
      */
     updateOptions(newOptions: Partial<AsciiRendererOptions>): void;
     /**
-     * Render ASCII based on the input framebuffer.
-     * @param inputFramebuffer - The input framebuffer to base ASCII rendering on.
+     * Convert and render the input framebuffer to ASCII.
+     * @param inputFramebuffer - The input framebuffer to convert to ASCII.
      */
     abstract render(inputFramebuffer: p5.Framebuffer, previousAsciiRenderer: AsciiRenderer, isFirstRenderer: boolean): void;
     get outputFramebuffer(): p5.Framebuffer;

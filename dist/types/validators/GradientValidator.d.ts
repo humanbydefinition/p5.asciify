@@ -2,7 +2,6 @@ import { P5AsciifyGradientManager } from '../gradients/GradientManager';
 import { GradientType } from '../gradients/GradientManager';
 /**
  * Validates the parameters for adding an ASCII gradient.
- *
  * @param gradientManager - The gradient manager instance.
  * @param gradientName - The name of the gradient.
  * @param brightnessStart - The starting brightness value (0-255).

@@ -14,9 +14,7 @@ export declare class RendererManager {
     private gradientCharacterSet;
     private _renderers;
     gradientManager: P5AsciifyGradientManager;
-    private lastRenderer;
-    private fontBase64;
-    private fontFileType;
+    lastRenderer: AsciiRenderer;
     constructor();
     /**
      * Sets up the renderer manager with the specified default options.
