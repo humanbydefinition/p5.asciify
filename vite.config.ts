@@ -1,11 +1,10 @@
 import { defineConfig } from 'vite';
 import glsl from 'vite-plugin-glsl';
-import dts from 'vite-plugin-dts';
 
 export default defineConfig({
     server: {
         open: '/examples/index.html',
-      },
+    },
     build: {
         minify: true,
         lib: {
