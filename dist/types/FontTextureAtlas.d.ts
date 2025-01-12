@@ -1,5 +1,4 @@
 import p5 from 'p5';
-import { p5Type } from './types.js';
 /**
  * Creates a texture atlas containing all characters in a font, and provides utility methods for working with the atlas.
  */
@@ -13,7 +12,7 @@ export declare class P5AsciifyFontTextureAtlas {
     private _texture;
     private _charsetCols;
     private _charsetRows;
-    constructor(p: p5Type, font: p5.Font, _fontSize: number);
+    constructor(p: p5, font: p5.Font, _fontSize: number);
     /**
      * Loads all glyphs with unicode values from the font and assigns colors to them.
      * @returns An array of opentype.js glyphs, extended with r, g, and b properties for color.
