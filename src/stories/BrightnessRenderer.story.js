@@ -1,4 +1,4 @@
-import { createSketch, DEFAULT_OPTIONS } from '../../../examples/0_basic/sketch';
+import { createSketch, DEFAULT_OPTIONS } from '../../examples/0_basic/sketch';
 
 
 export default {
