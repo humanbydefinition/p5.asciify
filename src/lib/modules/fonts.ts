@@ -14,7 +14,7 @@ export function registerFontMethods(p5asciify: P5Asciifier): void {
         const setFont = (loadedFont: p5.Font) => {
             p5asciify.font = loadedFont;
             this._decrementPreload();
-            p5asciify.emit('fontUpdated', {});
+            p5asciify.eventEmitter.emit('fontUpdated', {});
         };
     
         if (typeof font === 'string') {

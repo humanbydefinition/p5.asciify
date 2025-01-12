@@ -1,18 +1,19 @@
 import p5 from 'p5';
 import { P5AsciifyFontTextureAtlas } from './FontTextureAtlas';
 import { P5AsciifyGrid } from './Grid';
+import { P5AsciifyEventEmitter } from './EventEmitter';
 import { RendererManager } from './renderers/RendererManager';
 export declare class P5Asciifier {
     private borderColor;
     private _fontSize;
     rendererManager: RendererManager;
-    private font;
+    private _font;
     private postSetupFunction;
     private postDrawFunction;
     private p;
     asciiFontTextureAtlas: P5AsciifyFontTextureAtlas;
     grid: P5AsciifyGrid;
-    private events;
+    eventEmitter: P5AsciifyEventEmitter;
     sketchFramebuffer: p5.Framebuffer;
     constructor();
     /**
@@ -32,27 +33,17 @@ export declare class P5Asciifier {
      */
     setup(): void;
     /**
-     * Emit an event with data
-     * @param eventName - Name of the event to emit
-     * @param data - Data to pass with the event
-     */
-    emit(eventName: string, data: any): void;
-    /**
-     * Register an event listener
-     * @param eventName - Name of the event to listen for
-     * @param callback - Callback function to execute
-     */
-    on(eventName: string, callback: (data: any) => void): void;
-    /**
-     * Remove an event listener
-     * @param eventName - Name of the event to remove
-     * @param callback - Callback function to remove
-     */
-    off(eventName: string, callback: (data: any) => void): void;
-    /**
      * Runs the rendering pipeline for the P5Asciify library
      */
     asciify(): void;
-    get fontSize(): number;
+    /**
+     * Sets the font size for the ascii renderers
+     */
     set fontSize(fontSize: number);
+    /**
+     * Sets the font for the ascii renderers
+     */
+    set font(font: p5.Font);
+    get fontSize(): number;
+    get font(): p5.Font;
 }

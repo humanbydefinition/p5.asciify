@@ -14,7 +14,6 @@ interface AsciifyOptions {
 
 /**
  * Validates the options for p5.asciify.
- *
  * @param {p5} p - The p5.js instance.
  * @param {AsciifyOptions} options - The options to validate.
  * @throws {P5AsciifyError} If any validation fails.

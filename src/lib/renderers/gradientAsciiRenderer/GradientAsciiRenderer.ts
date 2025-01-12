@@ -10,6 +10,9 @@ import asciiConversionShader from '../_common_shaders/asciiConversion.frag';
 import colorSampleShader from './shaders/colorSample.frag';
 import vertexShader from '../../assets/shaders/vert/shader.vert';
 
+/**
+ * An ASCII renderer that applies all defined ASCII gradients/patterns to the input framebuffer.
+ */
 export default class GradientAsciiRenderer extends AsciiRenderer {
     private grayscaleShader: p5.Shader;
     private colorSampleShader: p5.Shader;

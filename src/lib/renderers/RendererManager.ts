@@ -33,9 +33,7 @@ export class RendererManager {
     private gradientCharacterSet!: P5AsciifyCharacterSet;
     private _renderers!: AsciiRenderer[];
     public gradientManager: P5AsciifyGradientManager;
-    private lastRenderer!: AsciiRenderer;
-    private fontBase64!: string;
-    private fontFileType!: string;
+    public lastRenderer!: AsciiRenderer;
 
     constructor() {
         this.gradientManager = new P5AsciifyGradientManager();

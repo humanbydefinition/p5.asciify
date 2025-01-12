@@ -5,6 +5,9 @@ import { P5AsciifyGrid } from './Grid';
 import { P5AsciifyEventEmitter } from './EventEmitter';
 import { RendererManager } from './renderers/RendererManager';
 
+/**
+ * The main class for the p5.asciify library. This class is responsible for setting up the library and running the rendering pipeline.
+ */
 export class P5Asciifier {
     private borderColor: string;
     private _fontSize: number;
@@ -15,14 +18,14 @@ export class P5Asciifier {
     private p!: p5;
     public asciiFontTextureAtlas!: P5AsciifyFontTextureAtlas;
     public grid!: P5AsciifyGrid;
-    private events: P5AsciifyEventEmitter;
+    public eventEmitter: P5AsciifyEventEmitter;
     public sketchFramebuffer!: p5.Framebuffer;
 
     constructor() {
         this.borderColor = "#000000";
         this._fontSize = 16;
         this.rendererManager = new RendererManager();
-        this.events = new P5AsciifyEventEmitter();
+        this.eventEmitter = new P5AsciifyEventEmitter();
         this.postSetupFunction = null;
         this.postDrawFunction = null;
     }
@@ -80,33 +83,6 @@ export class P5Asciifier {
     }
 
     /**
-     * Emit an event with data
-     * @param eventName - Name of the event to emit
-     * @param data - Data to pass with the event
-     */
-    public emit(eventName: string, data: any): void {
-        this.events.emit(eventName, data);
-    }
-
-    /**
-     * Register an event listener
-     * @param eventName - Name of the event to listen for
-     * @param callback - Callback function to execute
-     */
-    public on(eventName: string, callback: (data: any) => void): void {
-        this.events.on(eventName, callback);
-    }
-
-    /**
-     * Remove an event listener
-     * @param eventName - Name of the event to remove
-     * @param callback - Callback function to remove
-     */
-    public off(eventName: string, callback: (data: any) => void): void {
-        this.events.off(eventName, callback);
-    }
-
-    /**
      * Runs the rendering pipeline for the P5Asciify library
      */
     public asciify(): void {
@@ -117,10 +93,10 @@ export class P5Asciifier {
         }
     }
 
-    // Getters and setters
-    get fontSize(): number { return this._fontSize; }
-    get font(): p5.Font { return this._font; }
-
+    /**
+     * Sets the font size for the ascii renderers
+     * @param fontSize The font size to set
+     */
     set fontSize(fontSize: number) {
         this._fontSize = fontSize;
 
@@ -137,6 +113,10 @@ export class P5Asciifier {
         }
     }
 
+    /**
+     * Sets the font for the ascii renderers
+     * @param font The font to set
+     */
     set font(font: p5.Font) {
         this._font = font;
 
@@ -150,4 +130,8 @@ export class P5Asciifier {
             );
         }
     }
+
+    // Getters
+    get fontSize(): number { return this._fontSize; }
+    get font(): p5.Font { return this._font; }
 }

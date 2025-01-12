@@ -86,7 +86,7 @@ export abstract class AsciiRenderer<T extends AsciiRendererOptions = AsciiRender
     }
 
     /**
-     * Resets shaders. To be implemented by subclasses.
+     * Resets the shaders for the renderer.
      */
     public resetShaders(): void {
 
@@ -115,8 +115,8 @@ export abstract class AsciiRenderer<T extends AsciiRendererOptions = AsciiRender
     }
 
     /**
-     * Render ASCII based on the input framebuffer.
-     * @param inputFramebuffer - The input framebuffer to base ASCII rendering on.
+     * Convert and render the input framebuffer to ASCII.
+     * @param inputFramebuffer - The input framebuffer to convert to ASCII.
      */
     public abstract render(inputFramebuffer: p5.Framebuffer, previousAsciiRenderer: AsciiRenderer, isFirstRenderer: boolean): void;
 

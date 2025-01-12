@@ -65,7 +65,5 @@ export class P5AsciifyColorPalette {
     }
 
     // Getters
-    get colors(): [number, number, number][] {
-        return this._colors;
-    }
+    get colors(): [number, number, number][] { return this._colors; }
 }

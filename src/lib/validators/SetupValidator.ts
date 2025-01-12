@@ -9,7 +9,7 @@ import p5 from 'p5';
 export function validateSetup(p: p5) {
     // Ensure WebGL renderer is used
     if (p._renderer.drawingContext instanceof CanvasRenderingContext2D) {
-        throw new P5AsciifyError("WebGL renderer is required for p5.asciify to work.");
+        throw new P5AsciifyError("WebGL renderer is required for p5.asciify to run.");
     }
 
     // Check p5.js version
@@ -26,6 +26,6 @@ export function validateSetup(p: p5) {
     }
 
     if (compareVersions(p.VERSION, "1.8.0") < 0) {
-        throw new P5AsciifyError("p5.asciify requires p5.js v1.8.0 or higher to work.");
+        throw new P5AsciifyError("p5.asciify requires p5.js v1.8.0 or higher to run.");
     }
 }

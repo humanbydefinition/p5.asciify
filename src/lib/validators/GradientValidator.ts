@@ -5,7 +5,6 @@ import { GradientType } from '../gradients/GradientManager';
 
 /**
  * Validates the parameters for adding an ASCII gradient.
- *
  * @param gradientManager - The gradient manager instance.
  * @param gradientName - The name of the gradient.
  * @param brightnessStart - The starting brightness value (0-255).
@@ -29,19 +28,17 @@ export function validateGradientParams(
         );
     }
 
-    // Validate brightnessStart
-    if (typeof brightnessStart !== 'number' || brightnessStart < 0 || brightnessStart > 255) {
-        throw new P5AsciifyError(
-            `Invalid brightness start value '${brightnessStart}'. Expected a number between 0 and 255.`
-        );
-    }
+    const validateNumberInRange = (value: any, min: number, max: number, name: string) => {
+        if (typeof value !== 'number' || value < min || value > max) {
+            throw new P5AsciifyError(
+                `Invalid ${name} value '${value}'. Expected a number between ${min} and ${max}.`
+            );
+        }
+    };
 
-    // Validate brightnessEnd
-    if (typeof brightnessEnd !== 'number' || brightnessEnd < 0 || brightnessEnd > 255) {
-        throw new P5AsciifyError(
-            `Invalid brightness end value '${brightnessEnd}'. Expected a number between 0 and 255.`
-        );
-    }
+    // Validate brightness ranges
+    validateNumberInRange(brightnessStart, 0, 255, 'brightness start');
+    validateNumberInRange(brightnessEnd, 0, 255, 'brightness end');
 
     // Validate characters
     if (typeof characters !== 'string') {
