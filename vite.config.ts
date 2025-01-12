@@ -3,6 +3,9 @@ import glsl from 'vite-plugin-glsl';
 import typescript from '@rollup/plugin-typescript';
 
 export default defineConfig({
+    server: {
+        open: '/examples/index.html',
+      },
     build: {
         minify: true,
         lib: {
@@ -15,9 +18,8 @@ export default defineConfig({
             external: ['p5'],
             output: {
                 globals: {
-                    p5: 'p5',
-                    p5asciify: 'p5asciify'
-                }
+                    p5: 'p5'
+                },
             },
             plugins: [
                 glsl({ compress: true }),
