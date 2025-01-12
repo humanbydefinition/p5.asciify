@@ -50,7 +50,7 @@ export function registerFontMethods(p5asciify: P5Asciifier): void {
                     () => { reject(new P5AsciifyError(`loadAsciiFont() | Failed to load font from path: '${font}'`)); }
                 );
             } else {
-                reject(new P5AsciifyError(`loadAsciiFont() | Invalid font parameter. Expected a string/path.`));
+                reject(new P5AsciifyError(`loadAsciiFont() | Invalid font parameter. Expected a path.`));
             }
         });
     };
