@@ -18,10 +18,6 @@ export interface AsciiRendererOptions {
  * Abstract class for shader-based ASCII Renderers.
  */
 export abstract class AsciiRenderer<T extends AsciiRendererOptions = AsciiRendererOptions> {
-    protected _options: T;
-    protected p: p5;
-    public grid: P5AsciifyGrid;
-    public characterSet: P5AsciifyCharacterSet;
 
     protected _primaryColorSampleFramebuffer: p5.Framebuffer;
     protected _secondaryColorSampleFramebuffer: p5.Framebuffer;
@@ -29,19 +25,14 @@ export abstract class AsciiRenderer<T extends AsciiRendererOptions = AsciiRender
     protected _outputFramebuffer: p5.Framebuffer;
 
     constructor(
-        p5Instance: p5,
-        grid: P5AsciifyGrid,
-        characterSet: P5AsciifyCharacterSet,
-        options: T
+        private p: p5,
+        private grid: P5AsciifyGrid,
+        private characterSet: P5AsciifyCharacterSet,
+        private _options: T
     ) {
         if (new.target === AsciiRenderer) {
             throw new TypeError("Cannot construct AsciiRenderer instances directly");
         }
-
-        this.p = p5Instance;
-        this.grid = grid;
-        this.characterSet = characterSet;
-        this._options = options;
 
         this._primaryColorSampleFramebuffer = this.p.createFramebuffer({
             density: 1,
