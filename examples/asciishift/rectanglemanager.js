@@ -1,6 +1,6 @@
 // RectangleManager.js
 
-class RectangleManager {
+export class RectangleManager {
     /**
      * Initializes the RectangleManager with grid dimensions, split depth, spacing, and maximum rectangle count.
      * Creates a set of non-overlapping rectangles filling the grid space based on the split depth.
@@ -10,7 +10,8 @@ class RectangleManager {
      * @param {number} [spacing=1] - Spacing between rectangles.
      * @param {number} [maxRectangleCount=64] - Maximum number of rectangles to generate. Extra rectangles are filled with zero dimensions.
      */
-    constructor(gridCols, gridRows, splitDepth = 3, spacing = 1, maxRectangleCount = 16) {
+    constructor(p, gridCols, gridRows, splitDepth = 3, spacing = 1, maxRectangleCount = 16) {
+        this.p = p;
         this.gridCols = gridCols;
         this.gridRows = gridRows;
         this.maxRectangleCount = maxRectangleCount;
@@ -60,7 +61,7 @@ class RectangleManager {
             this.rectangles.push({ x: 0, y: 0, width: 0, height: 0 });
         }
 
-        this.rectangles = shuffle(this.rectangles); // Shuffle the rectangles
+        this.rectangles = this.p.shuffle(this.rectangles); // Shuffle the rectangles
     }
 
     /**
@@ -82,7 +83,7 @@ class RectangleManager {
         }
 
         // Decide split direction randomly
-        const splitHorizontal = random() > 0.5;
+        const splitHorizontal = this.p.random() > 0.5;
 
         if (splitHorizontal) {
             // Ensure there is enough height to split and apply spacing
@@ -98,7 +99,7 @@ class RectangleManager {
 
             // Choose a split point ensuring spacing is reserved between the two child containers
             const minSplit = Math.min(1, container.height - this.spacing - 1);
-            const splitPoint = Math.floor(random() * (container.height - this.spacing)) + minSplit;
+            const splitPoint = Math.floor(this.p.random() * (container.height - this.spacing)) + minSplit;
 
             // Define first child container
             const firstChild = {
@@ -133,7 +134,7 @@ class RectangleManager {
 
             // Choose a split point ensuring spacing is reserved between the two child containers
             const minSplit = Math.min(1, container.width - this.spacing - 1);
-            const splitPoint = Math.floor(random() * (container.width - this.spacing)) + minSplit;
+            const splitPoint = Math.floor(this.p.random() * (container.width - this.spacing)) + minSplit;
 
             // Define first child container
             const firstChild = {

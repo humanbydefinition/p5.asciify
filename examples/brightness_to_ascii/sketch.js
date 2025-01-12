@@ -1,54 +1,60 @@
-/**
- * This test checks if all the ascii characters of any character set are fully and uniquely represented,
- * based on a quantized brightness value.
- */
+import p5 from 'p5';
+import p5asciify from '../../src/lib/index';
 
-let sketchFramebuffer;
-let grid;
-let characterSet = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const sketch = (p) => {
+    let sketchFramebuffer;
+    let grid;
+    let characterSet = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-function setup() {
-    createCanvas(windowWidth, windowHeight, WEBGL);
-    sketchFramebuffer = createFramebuffer({ format: FLOAT });
+    p5asciify.instance(p);
 
-    setAsciifyFontSize(32);
+    p.setup = () => {
+        p.createCanvas(p.windowWidth, p.windowHeight, p.WEBGL);
+        sketchFramebuffer = p.createFramebuffer({ format: p.FLOAT });
 
-    setAsciifyPostSetupFunction(() => {
-        p5asciify.rendererManager.renderers[0].updateOptions({
-            enabled: true,
-            characters: characterSet,
-            characterColorMode: 1,
+        p.setAsciifyFontSize(32);
+
+        p.setAsciifyPostSetupFunction(() => {
+            p5asciify.rendererManager.renderers[0].updateOptions({
+                enabled: true,
+                characters: characterSet,
+                characterColorMode: 1,
+            });
         });
-    });
-}
+    };
 
-function draw() {
-    let startX = -p5asciify.grid.width / 2; // Calculate the starting position to center the grid
-    let startY = -p5asciify.grid.height / 2;
+    p.draw = () => {
+        let startX = -p5asciify.grid.width / 2;
+        let startY = -p5asciify.grid.height / 2;
 
-    sketchFramebuffer.begin();
-    background(0);
+        sketchFramebuffer.begin();
+        p.background(0);
 
-    // Draw the grid
-    for (let i = 0; i < characterSet.length; i++) {
-        let gridCol = i % p5asciify.grid.cols;
-        let gridRow = Math.floor(i / p5asciify.grid.cols);
+        // Draw the grid
+        for (let i = 0; i < characterSet.length; i++) {
+            let gridCol = i % p5asciify.grid.cols;
+            let gridRow = Math.floor(i / p5asciify.grid.cols);
 
-        // Calculate the quantized brightness value for each cell based on the character set length
-        let brightness = i * (255 / characterSet.length) + (255 / (2 * characterSet.length));
-        fill(brightness);
-        stroke(255, 255, 0); // Yellow stroke around each cell
-        rect(startX + gridCol * p5asciify.grid.cellWidth, startY + gridRow * p5asciify.grid.cellHeight, p5asciify.grid.cellWidth, p5asciify.grid.cellHeight);
-    }
+            let brightness = i * (255 / characterSet.length) + (255 / (2 * characterSet.length));
+            p.fill(brightness);
+            p.stroke(255, 255, 0);
+            p.rect(startX + gridCol * p5asciify.grid.cellWidth, 
+                  startY + gridRow * p5asciify.grid.cellHeight, 
+                  p5asciify.grid.cellWidth, 
+                  p5asciify.grid.cellHeight);
+        }
 
-    noFill();
-    stroke(255, 0, 0); // Red stroke around the whole grid
-    rect(startX, startY, p5asciify.grid.width, p5asciify.grid.height);
-    sketchFramebuffer.end();
+        p.noFill();
+        p.stroke(255, 0, 0);
+        p.rect(startX, startY, p5asciify.grid.width, p5asciify.grid.height);
+        sketchFramebuffer.end();
 
-    image(sketchFramebuffer, -windowWidth / 2, -windowHeight / 2);
-}
+        p.image(sketchFramebuffer, -p.windowWidth / 2, -p.windowHeight / 2);
+    };
 
-function windowResized() {
-    resizeCanvas(windowWidth, windowHeight);
-}
+    p.windowResized = () => {
+        p.resizeCanvas(p.windowWidth, p.windowHeight);
+    };
+};
+
+const myp5 = new p5(sketch);

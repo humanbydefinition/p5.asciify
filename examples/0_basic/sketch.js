@@ -1,53 +1,51 @@
-/**
- * This is a basic example of how to use the p5.asciify library, updating ascii options and font dynamically.
- * It renders a rotating 3D box into an ASCII representation.
- */
+import p5 from 'p5';
+import p5asciify from '../../src/lib/index';
 
-let sketchFramebuffer;
+const sketch = (p) => {
+	let sketchFramebuffer;
 
-function preload() {
-	//Optionally load a custom font to use for the ASCII characters.
-	//loadAsciiFont('path/to/your/font.ttf');
-}
+	p5asciify.instance(p); // Initialize p5asciify with the p5 instance
 
-function setup() {
-	createCanvas(windowWidth, windowHeight, WEBGL); // WebGL mode is required currently
+	p.preload = () => {
+		//Optionally load a custom font
+		//p.loadAsciiFont('path/to/your/font.ttf');
+	};
 
-	sketchFramebuffer = createFramebuffer({ format: FLOAT });
+	p.setup = () => {
+		p.createCanvas(p.windowWidth, p.windowHeight, p.WEBGL);
 
-	setAsciifyPostSetupFunction(() => {
-		p5asciify.rendererManager.renderers[0].updateOptions({
-			enabled: true,
-			characters: " .:-=+*#%@",
-			characterColor: "#ff0000",
-			characterColorMode: 0,
-			backgroundColor: "#000000",
-			backgroundColorMode: 1,
-			invertMode: true,
+		sketchFramebuffer = p.createFramebuffer({ format: p.FLOAT });
+
+		p.setAsciifyPostSetupFunction(() => {
+			p5asciify.rendererManager.renderers[0].updateOptions({
+				enabled: true,
+				characters: " .:-=+*#%@",
+				characterColor: "#ff0000",
+				characterColorMode: 0,
+				backgroundColor: "#000000",
+				backgroundColorMode: 1,
+				invertMode: true,
+			});
 		});
-	});
-}
+	};
 
-function draw() {
-	/**
-	Your creative code goes here to replace the following code, drawing to the graphic buffer.
-	Currently, the code draws a Tim Rodenbroeker-esque rotating 3D box to the graphic buffer.
-	Check out his courses on creative coding at https://timrodenbroeker.de/ (no affiliation, I just enjoyed his courses)
-	**/
-	sketchFramebuffer.begin();
-	clear();
-	background(0);
-	fill(255);
-	rotateX(radians(frameCount * 3));
-	rotateZ(radians(frameCount));
-	directionalLight(255, 255, 255, 0, 0, -1);
-	box(800, 100, 100);
+	p.draw = () => {
+		sketchFramebuffer.begin();
+		p.clear();
+		p.background(0);
+		p.fill(255);
+		p.rotateX(p.radians(p.frameCount * 3));
+		p.rotateZ(p.radians(p.frameCount));
+		p.directionalLight(255, 255, 255, 0, 0, -1);
+		p.box(800, 100, 100);
+		sketchFramebuffer.end();
 
-	sketchFramebuffer.end();
+		p.image(sketchFramebuffer, -p.windowWidth / 2, -p.windowHeight / 2);
+	};
 
-	image(sketchFramebuffer, -windowWidth / 2, -windowHeight / 2);
-}
+	p.windowResized = () => {
+		p.resizeCanvas(p.windowWidth, p.windowHeight);
+	};
+};
 
-function windowResized() {
-	resizeCanvas(windowWidth, windowHeight);
-}
+const myp5 = new p5(sketch);

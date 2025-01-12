@@ -1,93 +1,94 @@
-/**
- * This example demonstrates how to use the edge detection feature of p5.asciify.
- *
- * The example creates a sketch that displays a number of rectangles that grow and shrink over time.
- * Each rectangle is displayed with a random color and angle.
- */
+import p5 from 'p5';
+import p5asciify from '../../src/lib/index';
 
-let sketchFramebuffer;
+const sketch = (p) => {
+    let sketchFramebuffer;
+    let rectangles = [];
+    let maxRectangles = 30;
 
-let rectangles = [];
-let maxRectangles = 30;
-
-function setup() {
-    createCanvas(windowWidth, windowHeight, WEBGL);
-    sketchFramebuffer = createFramebuffer({ format: FLOAT });
-
-    setAsciifyFontSize(8);
-
-    for (let i = 0; i < maxRectangles; i++) rectangles.push(new Rectangle());
-
-    setAsciifyPostSetupFunction(() => {
-        p5asciify.rendererManager.renderers[3].updateOptions({
-            enabled: true,
-            characters: "-/|\\-/|\\",
-            characterColor: "#ffffff",
-            characterColorMode: 1,
-            backgroundColor: "#000000",
-            backgroundColorMode: 1,
-            invertMode: false,
-            sobelThreshold: 0.01,
-            sampleThreshold: 16,
-        });
-    });
-}
-
-function draw() {
-    sketchFramebuffer.begin();
-
-    background(0);
-    noStroke();
-
-    rectangles = rectangles.filter((rect) => {
-        rect.update();
-        rect.display();
-        return rect.size > 0;
-    });
-
-    while (rectangles.length < maxRectangles) rectangles.push(new Rectangle());
-
-    sketchFramebuffer.end();
-
-    image(sketchFramebuffer, -windowWidth / 2, -windowHeight / 2);
-}
-
-function windowResized() {
-    resizeCanvas(windowWidth, windowHeight);
-}
-
-class Rectangle {
-    constructor() {
-        this.x = random(-windowWidth / 2, windowWidth / 2);
-        this.y = random(-windowHeight / 2, windowHeight / 2);
-        this.size = 0;
-        this.maxSize = random(50, 200);
-        this.growing = true;
-        this.color = color(random(255), random(255), random(255));
-        this.angle = random(TWO_PI);
-    }
-
-    update() {
-        if (this.growing) {
-            this.size = min(this.size + 3, this.maxSize);
-            this.growing = this.size < this.maxSize;
-        } else {
-            this.size = max(this.size - 3, 0);
-            if (this.size === 0) return true;
+    class Rectangle {
+        constructor() {
+            this.x = p.random(-p.windowWidth / 2, p.windowWidth / 2);
+            this.y = p.random(-p.windowHeight / 2, p.windowHeight / 2);
+            this.size = 0;
+            this.maxSize = p.random(50, 200);
+            this.growing = true;
+            this.color = p.color(p.random(255), p.random(255), p.random(255));
+            this.angle = p.random(p.TWO_PI);
         }
 
-        if (!this.growing && random() < 0.01) this.growing = true;
-        if (random() < 0.01) this.growing = false;
+        update() {
+            if (this.growing) {
+                this.size = p.min(this.size + 3, this.maxSize);
+                this.growing = this.size < this.maxSize;
+            } else {
+                this.size = p.max(this.size - 3, 0);
+                if (this.size === 0) return true;
+            }
 
-        return false;
+            if (!this.growing && p.random() < 0.01) this.growing = true;
+            if (p.random() < 0.01) this.growing = false;
+
+            return false;
+        }
+
+        display() {
+            p.push();
+            p.translate(this.x, this.y);
+            p.rotate(this.angle);
+            p.fill(this.color);
+            p.rect(-this.size / 2, -this.size / 2, this.size, this.size);
+            p.pop();
+        }
     }
 
-    display() {
-        push();
-        translate(this.x, this.y);
-        rotate(this.angle);
-        fill(this.color);
-        rect(-this.size / 2, -this.size / 2, this.size, this.size);
-        pop();
-    }
-}
+    p5asciify.instance(p);
+
+    p.setup = () => {
+        p.createCanvas(p.windowWidth, p.windowHeight, p.WEBGL);
+        sketchFramebuffer = p.createFramebuffer({ format: p.FLOAT });
+
+        p.setAsciifyFontSize(8);
+
+        for (let i = 0; i < maxRectangles; i++) rectangles.push(new Rectangle());
+
+        p.setAsciifyPostSetupFunction(() => {
+            p5asciify.rendererManager.renderers[3].updateOptions({
+                enabled: true,
+                characters: "-/|\\-/|\\",
+                characterColor: "#ffffff",
+                characterColorMode: 1,
+                backgroundColor: "#000000",
+                backgroundColorMode: 1,
+                invertMode: false,
+                sobelThreshold: 0.01,
+                sampleThreshold: 16,
+            });
+        });
+    };
+
+    p.draw = () => {
+        sketchFramebuffer.begin();
+
+        p.background(0);
+        p.noStroke();
+
+        rectangles = rectangles.filter((rect) => {
+            rect.update();
+            rect.display();
+            return rect.size > 0;
+        });
+
+        while (rectangles.length < maxRectangles) rectangles.push(new Rectangle());
+
+        sketchFramebuffer.end();
+
+        p.image(sketchFramebuffer, -p.windowWidth / 2, -p.windowHeight / 2);
+    };
+
+    p.windowResized = () => {
+        p.resizeCanvas(p.windowWidth, p.windowHeight);
+    };
+};
+
+const myp5 = new p5(sketch);

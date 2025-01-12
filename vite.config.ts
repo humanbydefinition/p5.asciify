@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite';
 import glsl from 'vite-plugin-glsl';
-import typescript from '@rollup/plugin-typescript';
+import dts from 'vite-plugin-dts';
 
 export default defineConfig({
     server: {
@@ -21,12 +21,10 @@ export default defineConfig({
                     p5: 'p5'
                 },
             },
-            plugins: [
-                glsl({ compress: true }),
-            ]
         }
     },
     plugins: [
-        typescript()
+        glsl({ compress: true }),
+        dts({ rollupTypes: true, tsconfigPath: './tsconfig.json' }),
     ],
 });

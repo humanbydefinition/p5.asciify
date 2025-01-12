@@ -1,83 +1,83 @@
-let sketchFramebuffer;
+import p5 from 'p5';
+import p5asciify from '../../src/lib/index';
 
-function setup() {
-	createCanvas(windowWidth, windowHeight, WEBGL); // WebGL mode is required currently
+const sketch = (p) => {
+	let sketchFramebuffer;
 
-	sketchFramebuffer = createFramebuffer({ format: FLOAT });
+	p5asciify.instance(p);
 
-	setAsciifyPostSetupFunction(() => {
+	p.setup = () => {
+		p.createCanvas(p.windowWidth, p.windowHeight, p.WEBGL);
+		sketchFramebuffer = p.createFramebuffer({ format: p.FLOAT });
 
-		p5asciify.rendererManager.renderers[0].updateOptions({
-			enabled: true,
-			characters: " .:-=+*#%@",
-			characterColor: "#ff0000",
-			characterColorMode: 0,
-			backgroundColor: "#000000",
-			backgroundColorMode: 1,
-			invertMode: true,
+		p.setAsciifyPostSetupFunction(() => {
+			p5asciify.rendererManager.renderers[0].updateOptions({
+				enabled: true,
+				characters: " .:-=+*#%@",
+				characterColor: "#ff0000",
+				characterColorMode: 0,
+				backgroundColor: "#000000",
+				backgroundColorMode: 1,
+				invertMode: true,
+			});
+
+			p5asciify.rendererManager.renderers[3].updateOptions({
+				enabled: true,
+				invertMode: true
+			});
+
+			p5asciify.rendererManager.textAsciiRenderer.options.enabled = true;
+			p5asciify.rendererManager.textAsciiRenderer.toggleVisibility();
 		});
+	};
 
-		p5asciify.rendererManager.renderers[3].updateOptions({
-			enabled: true,
-			invertMode: true
-		});
+	p.draw = () => {
+		sketchFramebuffer.begin();
 
-		p5asciify.rendererManager.textAsciiRenderer.options.enabled = true;
-		p5asciify.rendererManager.textAsciiRenderer.toggleVisibility();
-	});
-}
+		p.background(0);
+		p.fill(255);
+		p.rotateX(p.radians(p.frameCount * 3));
+		p.rotateZ(p.radians(p.frameCount));
+		p.directionalLight(255, 255, 255, 0, 0, -1);
+		p.box(800, 100, 100);
 
-function draw() {
-	sketchFramebuffer.begin();
+		sketchFramebuffer.end();
 
-	background(0);
-	fill(255);
-	rotateX(radians(frameCount * 3));
-	rotateZ(radians(frameCount));
-	directionalLight(255, 255, 255, 0, 0, -1);
-	box(800, 100, 100);
+		p.image(sketchFramebuffer, -p.windowWidth / 2, -p.windowHeight / 2);
 
-	sketchFramebuffer.end();
+		if (p.frameCount == 100) {
+			p5asciify.rendererManager.textAsciiRenderer.invertMode = true;
+			p5asciify.rendererManager.textAsciiRenderer.updateOptions({
+				invertMode: true
+			});
+		}
 
-	image(sketchFramebuffer, -windowWidth / 2, -windowHeight / 2);
+		if (p.frameCount == 200) {
+			p5asciify.rendererManager.textAsciiRenderer.updateOptions({
+				characterColorMode: 1
+			});
+		}
 
+		if (p.frameCount == 300) {
+			p5asciify.rendererManager.textAsciiRenderer.updateOptions({
+				characterColor: "#FF0000"
+			});
+		}
 
+		if (p.frameCount == 400) {
+			p5asciify.rendererManager.textAsciiRenderer.updateOptions({
+				backgroundColor: "#0000FF"
+			});
+		}
 
-	if (frameCount == 100) {
+		if (p.frameCount == 500) {
+			p.setAsciifyFontSize(32);
+		}
+	};
 
-		p5asciify.rendererManager.textAsciiRenderer.invertMode = true;
+	p.windowResized = () => {
+		p.resizeCanvas(p.windowWidth, p.windowHeight);
+	};
+};
 
-		p5asciify.rendererManager.textAsciiRenderer.updateOptions({
-			invertMode: true
-		});
-	}
-
-	if (frameCount == 200) {
-
-		p5asciify.rendererManager.textAsciiRenderer.updateOptions({
-			characterColorMode: 1
-		});
-	}
-
-	if (frameCount == 300) {
-		p5asciify.rendererManager.textAsciiRenderer.updateOptions({
-			characterColor: "#FF0000"
-		});
-	}
-
-	if (frameCount == 400) {
-		p5asciify.rendererManager.textAsciiRenderer.updateOptions({
-			backgroundColor: "#0000FF"
-		});
-	}
-
-	if (frameCount == 500) {
-		setAsciifyFontSize(32);
-	}
-
-
-}
-
-function windowResized() {
-	resizeCanvas(windowWidth, windowHeight);
-}
+const myp5 = new p5(sketch);

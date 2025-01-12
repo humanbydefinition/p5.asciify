@@ -1,137 +1,124 @@
-/**
- * This test checks if all the effects can be applied and modified without causing any errors.
- */
+import p5 from 'p5';
+import p5asciify from '../../src/lib/index';
 
-let sketchFramebuffer;
+const sketch = (p) => {
+    let sketchFramebuffer;
+    let linearGradient, spiralGradient, radialGradient, 
+        zigzagGradient, conicalGradient, noiseGradient;
+    let kaleidoscopeEffect, distortionEffect;
 
-let linearGradient;
-let spiralGradient;
-let radialGradient;
-let zigzagGradient;
-let conicalGradient;
-let noiseGradient;
+    let gridRows = 3;
+    let gridCols = 3;
+    let fillColors = [
+        [150, 160, 170],
+        [180, 190, 200],
+        [210, 220, 230],
+    ];
 
-let kaleidoscopeEffect;
-let distortionEffect;
+    const getFillColor = (row, col) => {
+        return fillColors[row][col];
+    };
 
-let gridRows = 3;
-let gridCols = 3;
+    p5asciify.instance(p);
 
-let fillColors = [
-    [150, 160, 170],
-    [180, 190, 200],
-    [210, 220, 230],
-];
+    p.setup = () => {
+        p.createCanvas(p.windowWidth, p.windowHeight, p.WEBGL);
+        sketchFramebuffer = p.createFramebuffer({ format: p.FLOAT });
 
-function setup() {
-    createCanvas(windowWidth, windowHeight, WEBGL);
-    framebuffer = createFramebuffer({ format: FLOAT });
-
-    linearGradient = addAsciiGradient("linear", 150, 150, "gradients ", {
-        direction: 1,
-        angle: 0,
-        speed: 0.1,
-    });
-    spiralGradient = addAsciiGradient("spiral", 160, 160, "are  ", {
-        direction: 1,
-        speed: 0.01,
-        density: 0.5,
-    });
-    radialGradient = addAsciiGradient("radial", 170, 170, "now ", {
-        direction: -1,
-        radius: 1.0,
-    });
-    zigzagGradient = addAsciiGradient("zigzag", 180, 180, "available ", {
-        direction: 1,
-        speed: 0.2,
-    });
-    conicalGradient = addAsciiGradient("conical", 190, 190, "in ", {
-        speed: 0.01,
-    });
-    noiseGradient = addAsciiGradient("noise", 210, 240, "p5.asciify ", {
-        noiseScale: 0.5,
-        speed: 0.1,
-        direction: 1,
-    });
-
-    setAsciifyPostSetupFunction(() => {
-        p5asciify.rendererManager.renderers[2].updateOptions({
-            enabled: true,
-            characterColorMode: 1,
-            characterColor: "#ff0000",
-            invertMode: true,
+        linearGradient = p.addAsciiGradient("linear", 150, 150, "gradients ", {
+            direction: 1,
+            angle: 0,
+            speed: 0.1,
         });
-            
-
-        p5asciify.rendererManager.renderers[0].updateOptions({
-            enabled: true,
-            characterColorMode: 0,
-            characters: ".",
-        })
-
-        p5asciify.rendererManager.renderers[3].updateOptions({
-            enabled: true,
-            characterColorMode: 1,
-            sobelThreshold: 0.1,
-            sampleThreshold: 16,
+        spiralGradient = p.addAsciiGradient("spiral", 160, 160, "are  ", {
+            direction: 1,
+            speed: 0.01,
+            density: 0.5,
         });
-    });
-}
+        radialGradient = p.addAsciiGradient("radial", 170, 170, "now ", {
+            direction: -1,
+            radius: 1.0,
+        });
+        zigzagGradient = p.addAsciiGradient("zigzag", 180, 180, "available ", {
+            direction: 1,
+            speed: 0.2,
+        });
+        conicalGradient = p.addAsciiGradient("conical", 190, 190, "in ", {
+            speed: 0.01,
+        });
+        noiseGradient = p.addAsciiGradient("noise", 210, 240, "p5.asciify ", {
+            noiseScale: 0.5,
+            speed: 0.1,
+            direction: 1,
+        });
 
-function getFillColor(row, col) {
-    return fillColors[row][col];
-}
+        p.setAsciifyPostSetupFunction(() => {
+            p5asciify.rendererManager.renderers[2].updateOptions({
+                enabled: true,
+                characterColorMode: 1,
+                characterColor: "#ff0000",
+                invertMode: true,
+            });
 
-function draw() {
-    framebuffer.begin();
-    background(0);
+            p5asciify.rendererManager.renderers[0].updateOptions({
+                enabled: true,
+                characterColorMode: 0,
+                characters: ".",
+            });
 
-    noStroke();
+            p5asciify.rendererManager.renderers[3].updateOptions({
+                enabled: true,
+                characterColorMode: 1,
+                sobelThreshold: 0.1,
+                sampleThreshold: 16,
+            });
+        });
+    };
 
-    const rectWidth = windowWidth / gridCols;
-    const rectHeight = windowHeight / gridRows;
+    p.draw = () => {
+        sketchFramebuffer.begin();
+        p.background(0);
+        p.noStroke();
 
-    for (let row = 0; row < gridRows; row++) {
-        for (let col = 0; col < gridCols; col++) {
-            let fillColor = getFillColor(row, col);
-            fill(fillColor);
-            rect(
-                -windowWidth / 2 + col * rectWidth,
-                -windowHeight / 2 + row * rectHeight,
-                rectWidth,
-                rectHeight
-            );
+        const rectWidth = p.windowWidth / gridCols;
+        const rectHeight = p.windowHeight / gridRows;
+
+        for (let row = 0; row < gridRows; row++) {
+            for (let col = 0; col < gridCols; col++) {
+                let fillColor = getFillColor(row, col);
+                p.fill(fillColor);
+                p.rect(
+                    -p.windowWidth / 2 + col * rectWidth,
+                    -p.windowHeight / 2 + row * rectHeight,
+                    rectWidth,
+                    rectHeight
+                );
+            }
         }
-    }
 
-    framebuffer.end();
+        sketchFramebuffer.end();
+        p.image(sketchFramebuffer, -p.windowWidth / 2, -p.windowHeight / 2);
 
-    image(framebuffer, -windowWidth / 2, -windowHeight / 2);
+        if (p.frameCount % 60 == 0) {
+            zigzagGradient.enabled = !zigzagGradient.enabled;
+        }
 
-    if (frameCount % 60 == 0) {
-        zigzagGradient.enabled = !zigzagGradient.enabled;
-    }
+        if (p.frameCount === 120) {
+            radialGradient.palette = "finally ";
+        }
 
-    if (frameCount === 120) {
-        radialGradient.palette = "finally ";
-    }
+        linearGradient.angle += 0.5;
+        spiralGradient.centerX = p.map(p.mouseX, 0, p.windowWidth, 0, 1);
+        spiralGradient.centerY = p.map(p.mouseY, 0, p.windowHeight, 0, 1);
+        radialGradient.centerX = p.map(p.mouseX, 0, p.windowWidth, 0, 1);
+        radialGradient.centerY = p.map(p.mouseY, 0, p.windowHeight, 0, 1);
+        conicalGradient.centerX = p.map(p.mouseX, 0, p.windowWidth, 0, 1);
+        conicalGradient.centerY = p.map(p.mouseY, 0, p.windowHeight, 0, 1);
+    };
 
-    /** 
-    if (frameCount === 180) {
-        removeAsciiGradient(spiralGradient);
-    }
-    **/
+    p.windowResized = () => {
+        p.resizeCanvas(p.windowWidth, p.windowHeight);
+    };
+};
 
-    linearGradient.angle += 0.5;
-    //zigzagGradient.angle += 0.5;
-    spiralGradient.centerX = map(mouseX, 0, windowWidth, 0, 1);
-    spiralGradient.centerY = map(mouseY, 0, windowHeight, 0, 1);
-    radialGradient.centerX = map(mouseX, 0, windowWidth, 0, 1);
-    radialGradient.centerY = map(mouseY, 0, windowHeight, 0, 1);
-    conicalGradient.centerX = map(mouseX, 0, windowWidth, 0, 1);
-    conicalGradient.centerY = map(mouseY, 0, windowHeight, 0, 1);
-}
-
-function windowResized() {
-    resizeCanvas(windowWidth, windowHeight);
-}
+const myp5 = new p5(sketch);
