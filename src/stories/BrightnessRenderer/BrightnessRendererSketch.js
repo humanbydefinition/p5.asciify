@@ -1,5 +1,5 @@
 import p5 from 'p5';
-import p5asciify from '../../../dist/p5.asciify.esm.js';
+import p5asciify from '../../lib/index';
 import '../sketch.css';
 
 export const createSketch = (args = {}) => {
