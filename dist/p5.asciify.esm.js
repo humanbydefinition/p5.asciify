@@ -894,7 +894,7 @@ class W {
   }
   updateFontSize() {
     var A;
-    (A = this.textAsciiRenderer) == null || A.style("font-size", `${this.asciiFontTextureAtlas.fontSize}px`), console.log("Font size updated to: ", this.asciiFontTextureAtlas.fontSize), this.updateDimensions();
+    (A = this.textAsciiRenderer) == null || A.style("font-size", `${this.asciiFontTextureAtlas.fontSize}px`), this.updateDimensions();
   }
   updateInvertMode() {
     this.updateColors(), this.applyContainerStyles(), this._options.characterColorMode !== 0 && this._options.backgroundColorMode !== 0 && this.clearPerCharacterStyles();
