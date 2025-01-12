@@ -9,7 +9,7 @@ import asciiCharacterShader from './shaders/asciiCharacter.frag';
 import asciiConversionShader from '../_common_shaders/asciiConversion.frag';
 import sobelShader from './shaders/sobel.frag';
 
-import { generateSampleShader } from './shaders/shaderGenerators';
+import { generateSampleShader } from './shaders/shaderGenerators.min';
 
 interface EdgeAsciiRendererOptions extends AsciiRendererOptions {
     sobelThreshold: number;

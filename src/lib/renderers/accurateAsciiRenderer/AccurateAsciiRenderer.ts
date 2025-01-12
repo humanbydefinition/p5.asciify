@@ -4,7 +4,7 @@ import { AsciiRenderer } from '../AsciiRenderer';
 import { P5AsciifyGrid } from '../../Grid';
 import { P5AsciifyCharacterSet } from '../../CharacterSet';
 
-import { generateCharacterSelectionShader, generateBrightnessSampleShader, generateColorSampleShader } from './shaders/shaderGenerators';
+import { generateCharacterSelectionShader, generateBrightnessSampleShader, generateColorSampleShader } from './shaders/shaderGenerators.min';
 import asciiConversionShader from '../_common_shaders/asciiConversion.frag';
 import brightnessSplitShader from './shaders/brightnessSplit.frag';
 import vertexShader from '../../assets/shaders/vert/shader.vert';
