@@ -1,4 +1,4 @@
-import { P5Asciifier } from '../Asciifier';
+import { P5Asciifier } from '../lib/Asciifier';
 
 declare global {
     interface Window {

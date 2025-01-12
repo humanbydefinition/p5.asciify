@@ -30,6 +30,8 @@
     "strict": true,
     "skipLibCheck": false,
     "forceConsistentCasingInFileNames": true,
+
+    
   },
-  "include": ["src/lib"]
+  "include": ["src/lib", "src/types"]
 }
