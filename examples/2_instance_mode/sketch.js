@@ -1,3 +1,6 @@
+import p5 from 'p5';
+import p5asciify from '../../dist/p5.asciify.esm.js';
+
 const theSketch = (sketch) => {
 
     p5asciify.instance(sketch); // Pass the p5 instance to the p5asciify library before setup
@@ -35,4 +38,4 @@ const theSketch = (sketch) => {
     };
 };
 
-let myp5 = new p5(theSketch);
+const myp5 = new p5(theSketch);
