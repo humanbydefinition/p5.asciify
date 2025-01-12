@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
     "target": "ESNext", 
+
+    "importHelpers": true,
     
     // Let the bundler produce UMD/ES out of ESNext modules
     "module": "ESNext",  
