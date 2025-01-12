@@ -9,7 +9,7 @@ export class P5Asciifier {
     private borderColor: string;
     private _fontSize: number;
     public rendererManager: RendererManager;
-    private font!: p5.Font;
+    private _font!: p5.Font;
     private postSetupFunction: (() => void) | null;
     private postDrawFunction: (() => void) | null;
     private p!: p5;
@@ -59,7 +59,7 @@ export class P5Asciifier {
      * Sets up the P5Asciify library with the specified options
      */
     public setup(): void {
-        this.asciiFontTextureAtlas = new P5AsciifyFontTextureAtlas(this.p, this.font, this._fontSize);
+        this.asciiFontTextureAtlas = new P5AsciifyFontTextureAtlas(this.p, this._font, this._fontSize);
 
         this.grid = new P5AsciifyGrid(
             this.p,
@@ -119,6 +119,7 @@ export class P5Asciifier {
 
     // Getters and setters
     get fontSize(): number { return this._fontSize; }
+    get font(): p5.Font { return this._font; }
 
     set fontSize(fontSize: number) {
         this._fontSize = fontSize;
@@ -133,6 +134,20 @@ export class P5Asciifier {
             this.rendererManager.renderers.forEach(renderer => renderer.resizeFramebuffers());
 
             this.rendererManager.renderers.forEach(renderer => renderer.resetShaders());
+        }
+    }
+
+    set font(font: p5.Font) {
+        this._font = font;
+
+        if (this.p._setupDone) {
+            this.asciiFontTextureAtlas.setFontObject(font);
+            this.rendererManager.renderers.forEach(renderer => renderer.characterSet.setCharacterSet(renderer.characterSet.characters));
+
+            this.grid.resizeCellPixelDimensions(
+                this.asciiFontTextureAtlas.maxGlyphDimensions.width,
+                this.asciiFontTextureAtlas.maxGlyphDimensions.height
+            );
         }
     }
 }
