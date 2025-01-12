@@ -1,23 +1,14 @@
-import { createSketch } from './BrightnessRendererSketch';
+import { createSketch, DEFAULT_OPTIONS } from '../../../examples/0_basic/sketch';
+
 
 export default {
   title: 'Tests/BrightnessRenderer',
   parameters: {
     layout: 'fullscreen',
   },
-  render: (args) => createSketch(args)
+  render: (args) =>  createSketch({ ...args, container: document.createElement('div') }),
 };
 
 export const BrightnessRenderer = {
-  args: {
-    enabled: true,
-    characters: " .:-=+*#%@",
-    characterColor: "#ffffff",
-    characterColorMode: 0,
-    backgroundColor: "#000000",
-    backgroundColorMode: 1,
-    invertMode: true,
-    fontSize: 16,
-    rotationAngle: 0
-  }
+  args: DEFAULT_OPTIONS
 };
