@@ -7,37 +7,16 @@ export function registerFontMethods(p5asciify: P5Asciifier): void {
 
     p5.prototype.preloadAsciiFont = function (this: p5): void {
         this._incrementPreload();
-        p5asciify.font = this.loadFont(
-            URSAFONT_BASE64,
-            (loadedFont: p5.Font) => {
-                p5asciify.font = loadedFont;
-            },
-            () => { throw new P5AsciifyError(`loadAsciiFont() | Failed to load font from path: '${URSAFONT_BASE64}'`); }
-        );
-    }
+        this.loadAsciiFont(URSAFONT_BASE64)
+            .catch((error) => {
+                throw new P5AsciifyError(`preloadAsciiFont() | Failed to load default font: ${error.message}`);
+            });
+    };
 
     p5.prototype.loadAsciiFont = function (this: p5, font: string | p5.Font): Promise<void> {
         return new Promise((resolve, reject) => {
             const setFont = async (loadedFont: p5.Font) => {
                 p5asciify.font = loadedFont;
-
-                if (this._setupDone) {
-                    try {
-                        p5asciify.asciiFontTextureAtlas.setFontObject(loadedFont);
-
-                        p5asciify.rendererManager.renderers.forEach(renderer => {
-                            renderer.characterSet.setCharacterSet(renderer.characterSet.characters);
-                        });
-
-                        p5asciify.grid.resizeCellPixelDimensions(
-                            p5asciify.asciiFontTextureAtlas.maxGlyphDimensions.width,
-                            p5asciify.asciiFontTextureAtlas.maxGlyphDimensions.height
-                        );
-                    } catch (e) {
-                        return reject(e);
-                    }
-                }
-
                 this._decrementPreload();
                 p5asciify.emit('fontUpdated', {});
                 resolve();
