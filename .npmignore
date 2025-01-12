@@ -1,0 +1,4 @@
+# Include only the necessary files
+!dist/
+!README.md
+!LICENSE
