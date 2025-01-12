@@ -1,5 +1,5 @@
 import { P5AsciifyError } from "../AsciifyError.js";
-import URSAFONT_BASE64 from '../assets/fonts/ursafont_base64.txt';
+import URSAFONT_BASE64 from '../assets/fonts/ursafont_base64.txt?raw';
 import p5 from 'p5';
 import { P5Asciifier } from '../Asciifier';
 

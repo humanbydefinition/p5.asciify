@@ -108,6 +108,5 @@ void main() {
         gl_FragColor = vec4(mostFrequentColor, 1.0);
     }
 }
-
 `;
 
