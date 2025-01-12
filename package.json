@@ -46,12 +46,11 @@
     "url": "git+https://github.com/humanbydefinition/p5-asciify.git"
   },
   "keywords": [
+    "p5",
     "p5-library",
     "p5js",
     "ascii",
-    "javascript",
-    "webgl",
-    "glsl"
+    "textmode"
   ],
   "author": "humanbydefinition",
   "license": "MIT",
