@@ -30,10 +30,10 @@ function setup() {
 
 function draw() {
 	/**
-	  Your creative code goes here to replace the following code, drawing to the graphic buffer.
-	  Currently, the code draws a Tim Rodenbroeker-esque rotating 3D box to the graphic buffer.
-	  Check out his courses on creative coding at https://timrodenbroeker.de/ (no affiliation, I just enjoyed his courses)
-	  **/
+	Your creative code goes here to replace the following code, drawing to the graphic buffer.
+	Currently, the code draws a Tim Rodenbroeker-esque rotating 3D box to the graphic buffer.
+	Check out his courses on creative coding at https://timrodenbroeker.de/ (no affiliation, I just enjoyed his courses)
+	**/
 	sketchFramebuffer.begin();
 	clear();
 	background(0);
@@ -46,10 +46,6 @@ function draw() {
 	sketchFramebuffer.end();
 
 	image(sketchFramebuffer, -windowWidth / 2, -windowHeight / 2);
-
-	if (frameCount == 200) {
-		setAsciifyFontSize(32);
-	}
 }
 
 function windowResized() {
