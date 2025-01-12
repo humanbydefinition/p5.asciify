@@ -133,7 +133,6 @@ export class P5Asciifier {
             this.rendererManager.renderers.forEach(renderer => renderer.resizeFramebuffers());
 
             this.rendererManager.renderers.forEach(renderer => renderer.resetShaders());
-            this.rendererManager.textAsciiRenderer.updateFontSize();
         }
     }
 }

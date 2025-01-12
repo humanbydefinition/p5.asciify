@@ -1,5 +1,4 @@
 import p5 from 'p5';
-import TextAsciiRenderer from './textAsciiRenderer/TextAsciiRenderer';
 import { AsciiRenderer } from './AsciiRenderer';
 import { P5AsciifyGrid } from '../Grid';
 import { P5AsciifyFontTextureAtlas } from '../FontTextureAtlas';
@@ -14,7 +13,6 @@ export declare class RendererManager {
     private currentCanvasDimensions;
     private gradientCharacterSet;
     private _renderers;
-    textAsciiRenderer: TextAsciiRenderer;
     gradientManager: P5AsciifyGradientManager;
     private lastRenderer;
     private fontBase64;

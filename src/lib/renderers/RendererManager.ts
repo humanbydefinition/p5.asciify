@@ -4,7 +4,6 @@ import BrightnessAsciiRenderer from './brightnessAsciiRenderer/BrightnessAsciiRe
 import AccurateAsciiRenderer from './accurateAsciiRenderer/AccurateAsciiRenderer';
 import CustomAsciiRenderer from './customAsciiRenderer/CustomAsciiRenderer';
 import EdgeAsciiRenderer from './edgeAsciiRenderer/EdgeAsciiRenderer';
-import TextAsciiRenderer from './textAsciiRenderer/TextAsciiRenderer';
 import GradientAsciiRenderer from './gradientAsciiRenderer/GradientAsciiRenderer';
 import { AsciiRenderer } from './AsciiRenderer';
 
@@ -33,7 +32,6 @@ export class RendererManager {
     private currentCanvasDimensions!: { width: number, height: number };
     private gradientCharacterSet!: P5AsciifyCharacterSet;
     private _renderers!: AsciiRenderer[];
-    public textAsciiRenderer!: TextAsciiRenderer;
     public gradientManager: P5AsciifyGradientManager;
     private lastRenderer!: AsciiRenderer;
     private fontBase64!: string;
@@ -74,8 +72,6 @@ export class RendererManager {
             new EdgeAsciiRenderer(this.p, this.grid, new P5AsciifyCharacterSet(this.p, fontTextureAtlas, EDGE_OPTIONS.characters), { ...EDGE_OPTIONS }),
             new CustomAsciiRenderer(this.p, this.grid, new P5AsciifyCharacterSet(this.p, fontTextureAtlas, BRIGHTNESS_OPTIONS.characters), { ...CUSTOM_OPTIONS }),
         ];
-
-        this.textAsciiRenderer = new TextAsciiRenderer(this.p, fontTextureAtlas, this.grid, this.fontBase64, this.fontFileType, { ...TEXT_OPTIONS });
     }
 
     /**
@@ -102,10 +98,6 @@ export class RendererManager {
         this.p.background(borderColor);
         this.p.image(asciiOutput, -this.p.width / 2, -this.p.height / 2);
 
-        if (this.textAsciiRenderer.options.enabled) {
-            this.textAsciiRenderer.outputAsciiToHtml(this.lastRenderer);
-        }
-
         this.checkCanvasDimensions();
     }
 
@@ -123,8 +115,6 @@ export class RendererManager {
             this._renderers.forEach(renderer => {
                 renderer.resizeFramebuffers();
             });
-
-            this.textAsciiRenderer.updateDimensions();
         }
     }
 
