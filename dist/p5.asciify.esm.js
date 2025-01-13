@@ -1105,7 +1105,7 @@ function dA(s) {
 }
 function uA(s) {
   g.prototype.setAsciifyBorderColor = function(A) {
-    s.borderColor = this.color(A);
+    s.borderColor = A;
   }, g.prototype.setAsciifyFontSize = function(A) {
     s.fontSize = A;
   }, g.prototype.setAsciifyPostSetupFunction = function(A) {
@@ -1157,13 +1157,11 @@ function fA(s) {
   };
 }
 function DA(s) {
-  g.prototype.preDrawAddPush = function() {
+  g.prototype.preAsciifyDraw = function() {
     s.sketchFramebuffer.begin(), this.clear(), this.push();
-  }, g.prototype.registerMethod("pre", g.prototype.preDrawAddPush), g.prototype.postDrawAddPop = function() {
-    this.pop(), s.sketchFramebuffer.end();
-  }, g.prototype.registerMethod("post", g.prototype.postDrawAddPop), g.prototype.asciify = function() {
-    s.asciify();
-  }, g.prototype.registerMethod("post", g.prototype.asciify);
+  }, g.prototype.registerMethod("pre", g.prototype.preAsciifyDraw), g.prototype.postAsciifyDraw = function() {
+    this.pop(), s.sketchFramebuffer.end(), s.asciify();
+  }, g.prototype.registerMethod("post", g.prototype.postAsciifyDraw);
 }
 const c = new QA();
 typeof window < "u" && (window.p5asciify = c, window.preload = function() {
