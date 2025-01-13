@@ -34,9 +34,6 @@ export abstract class AsciiRenderer<T extends AsciiRendererOptions = AsciiRender
         public characterSet: P5AsciifyCharacterSet,
         protected _options: T
     ) {
-        if (new.target === AsciiRenderer) {
-            throw new TypeError("Cannot construct AsciiRenderer instances directly");
-        }
 
         this._primaryColorSampleFramebuffer = this.p.createFramebuffer({
             density: 1,

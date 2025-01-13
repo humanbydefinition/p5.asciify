@@ -57,7 +57,6 @@ void main() {
     // Sample the character index from the ASCII character texture
     vec4 encodedIndexVec = texture2D(u_asciiCharacterTexture, charIndexTexCoord);
 
-    
     if(encodedIndexVec.rgba == vec4(0.0)) {
         gl_FragColor = texture2D(u_prevAsciiTexture, logicalFragCoord / u_resolution);
         return;
