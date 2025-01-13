@@ -3,6 +3,9 @@ import { validateSetup } from '../validators/SetupValidator';
 import { P5Asciifier } from '../Asciifier';
 import p5 from 'p5';
 
+/**
+ * Registers the `setupP5Instance` and `setupAsciifier` methods to the p5.js instance.
+ */
 export function registerSetupMethods(p5asciify: P5Asciifier): void {
 
     p5.prototype.setupP5Instance = function (this: p5): void {

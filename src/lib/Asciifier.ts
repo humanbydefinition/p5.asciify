@@ -9,12 +9,12 @@ import { RendererManager } from './renderers/RendererManager';
  * The main class for the p5.asciify library. This class is responsible for setting up the library and running the rendering pipeline.
  */
 export class P5Asciifier {
-    private borderColor: string;
+    public borderColor: string;
     private _fontSize: number;
     public rendererManager: RendererManager;
     private _font!: p5.Font;
-    private postSetupFunction: (() => void) | null;
-    private postDrawFunction: (() => void) | null;
+    public postSetupFunction: (() => void) | null;
+    public postDrawFunction: (() => void) | null;
     private p!: p5;
     public asciiFontTextureAtlas!: P5AsciifyFontTextureAtlas;
     public grid!: P5AsciifyGrid;

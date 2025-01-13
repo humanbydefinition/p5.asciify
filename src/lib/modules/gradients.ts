@@ -4,8 +4,19 @@ import { GradientType } from '../gradients/GradientManager';
 import { P5AsciifyGradient } from '../gradients/Gradient';
 import p5 from 'p5';
 
+/**
+ * Registers the `addAsciiGradient` and `removeAsciiGradient` methods to the p5.js instance.
+ */
 export function registerGradientMethods(p5asciify: P5Asciifier): void {
 
+    /**
+     * Adds a new gradient to the gradient manager, which will be rendered by the GradientAsciiRenderer.
+     * @param gradientName The name of the gradient.
+     * @param brightnessStart The brightness value at which the gradient starts.
+     * @param brightnessEnd The brightness value at which the gradient ends.
+     * @param characters The characters to use for the gradient.
+     * @param userParams Optional parameters to pass to the gradient.
+     */
     p5.prototype.addAsciiGradient = function (
         gradientName: GradientType,
         brightnessStart: number,
@@ -31,6 +42,9 @@ export function registerGradientMethods(p5asciify: P5Asciifier): void {
         );
     };
 
+    /**
+     * Removes a gradient from the gradient manager.
+     */
     p5.prototype.removeAsciiGradient = function (
         gradientInstance: P5AsciifyGradient
     ): void {
