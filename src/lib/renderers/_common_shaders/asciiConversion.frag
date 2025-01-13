@@ -20,8 +20,6 @@ uniform vec2 u_resolution;
 uniform float u_pixelRatio; // Added uniform for pixel ratio
 
 uniform sampler2D u_prevAsciiTexture;
-uniform sampler2D u_gradientReferenceTexture;
-uniform sampler2D u_edgesTexture;
 
 uniform int u_layer;
 
@@ -58,24 +56,7 @@ void main() {
     // Sample primary color (foreground color)
     vec4 primaryColor = texture2D(u_primaryColorTexture, charIndexTexCoord);
 
-    if(u_layer == 2) {
-        // asciiGradient.frag logic
-        vec4 encodedIndexVec = texture2D(u_asciiCharacterTexture, charIndexTexCoord);
-        vec4 gradientReferenceColor = texture2D(u_gradientReferenceTexture, charIndexTexCoord);
-
-        if(encodedIndexVec.rgb == gradientReferenceColor.rgb) {
-            gl_FragColor = texture2D(u_prevAsciiTexture, logicalFragCoord / u_resolution);
-            return;
-        }
-    } else if(u_layer == 3) {
-        // asciiEdge.frag logic
-        vec4 edgeColor = texture2D(u_edgesTexture, charIndexTexCoord);
-
-        if(edgeColor.rgb == vec3(0.0)) {
-            gl_FragColor = texture2D(u_prevAsciiTexture, logicalFragCoord / u_resolution);
-            return;
-        }
-    } else if(u_layer == 4) {
+     if(u_layer == 4) {
         // asciiCustom.frag logic
         vec4 encodedIndexVec = texture2D(u_asciiCharacterTexture, charIndexTexCoord);
 
