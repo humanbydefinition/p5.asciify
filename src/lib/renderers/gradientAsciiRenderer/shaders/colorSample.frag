@@ -2,7 +2,6 @@ precision mediump float;
 
 // Uniforms
 uniform sampler2D u_sketchTexture;
-uniform bool u_previousRendererEnabled;
 uniform sampler2D u_previousColorTexture;
 uniform sampler2D u_sampleTexture;
 uniform sampler2D u_sampleReferenceTexture;
@@ -23,7 +22,7 @@ void main() {
     // Check if the sample texture matches the reference texture
     bool isMatchingSample = texture2D(u_sampleTexture, cellCenterTexCoord) == texture2D(u_sampleReferenceTexture, cellCenterTexCoord);
     
-    if (isMatchingSample && u_previousRendererEnabled) {
+    if (isMatchingSample) {
         gl_FragColor = texture2D(u_previousColorTexture, cellCenterTexCoord);
         return;
     } else if (u_sampleMode == 0) {

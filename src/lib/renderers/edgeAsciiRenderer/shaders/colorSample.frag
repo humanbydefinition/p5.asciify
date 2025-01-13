@@ -2,7 +2,6 @@ precision mediump float;
 
 // Uniforms
 uniform sampler2D u_sketchTexture;
-uniform bool u_previousRendererEnabled;
 uniform sampler2D u_previousColorTexture;
 uniform sampler2D u_sampleTexture;
 uniform vec2 u_gridCellDimensions;
@@ -22,7 +21,7 @@ void main() {
     // Check if the sample texture is black
     bool isBlackSample = texture2D(u_sampleTexture, cellCenterTexCoord) == vec4(vec3(0.0), 1.0);
 
-    if (isBlackSample && u_previousRendererEnabled) {
+    if (isBlackSample) {
         gl_FragColor = texture2D(u_previousColorTexture, cellCenterTexCoord);
     } else if (u_sampleMode == 0) {
         gl_FragColor = texture2D(u_sketchTexture, cellCenterTexCoord);

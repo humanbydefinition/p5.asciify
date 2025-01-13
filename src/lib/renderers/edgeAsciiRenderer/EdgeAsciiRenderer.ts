@@ -89,7 +89,6 @@ export default class EdgeAsciiRenderer extends AsciiRenderer<EdgeAsciiRendererOp
         this.p.clear();
         this.p.shader(this.colorSampleShader);
         this.colorSampleShader.setUniform('u_sketchTexture', inputFramebuffer);
-        this.colorSampleShader.setUniform('u_previousRendererEnabled', previousAsciiRenderer.options.enabled);
         this.colorSampleShader.setUniform('u_previousColorTexture', previousAsciiRenderer.primaryColorSampleFramebuffer);
         this.colorSampleShader.setUniform('u_sampleTexture', this.sampleFramebuffer);
         this.colorSampleShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
@@ -103,7 +102,6 @@ export default class EdgeAsciiRenderer extends AsciiRenderer<EdgeAsciiRendererOp
         this.p.clear();
         this.p.shader(this.colorSampleShader);
         this.colorSampleShader.setUniform('u_sketchTexture', inputFramebuffer);
-        this.colorSampleShader.setUniform('u_previousRendererEnabled', previousAsciiRenderer.options.enabled);
         this.colorSampleShader.setUniform('u_previousColorTexture', previousAsciiRenderer.secondaryColorSampleFramebuffer);
         this.colorSampleShader.setUniform('u_sampleTexture', this.sampleFramebuffer);
         this.colorSampleShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);

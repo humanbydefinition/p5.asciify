@@ -101,7 +101,6 @@ export default class GradientAsciiRenderer extends AsciiRenderer {
         this.p.clear();
         this.p.shader(this.colorSampleShader);
         this.colorSampleShader.setUniform('u_sketchTexture', inputFramebuffer);
-        this.colorSampleShader.setUniform('u_previousRendererEnabled', previousAsciiRenderer.options.enabled);
         this.colorSampleShader.setUniform('u_previousColorTexture', previousAsciiRenderer.primaryColorSampleFramebuffer);
         this.colorSampleShader.setUniform('u_sampleTexture', this._asciiCharacterFramebuffer);
         this.colorSampleShader.setUniform('u_sampleReferenceTexture', this.grayscaleFramebuffer);
@@ -115,7 +114,6 @@ export default class GradientAsciiRenderer extends AsciiRenderer {
         this.p.clear();
         this.p.shader(this.colorSampleShader);
         this.colorSampleShader.setUniform('u_sketchTexture', inputFramebuffer);
-        this.colorSampleShader.setUniform('u_previousRendererEnabled', previousAsciiRenderer.options.enabled);
         this.colorSampleShader.setUniform('u_previousColorTexture', previousAsciiRenderer.secondaryColorSampleFramebuffer);
         this.colorSampleShader.setUniform('u_sampleTexture', this._asciiCharacterFramebuffer);
         this.colorSampleShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);

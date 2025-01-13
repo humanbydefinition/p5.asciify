@@ -8,10 +8,16 @@ import p5 from 'p5';
  */
 export function registerSetupMethods(p5asciify: P5Asciifier): void {
 
+    /**
+     * Sets up the p5.js instance for use with this library.
+     */
     p5.prototype.setupP5Instance = function (this: p5): void {
         p5asciify.addP5Instance(this);
     };
 
+    /**
+     * Sets up the p5.asciify library.
+     */
     p5.prototype.setupAsciifier = function (this: p5): void {
         validateSetup(this);
         p5asciify.setup();
