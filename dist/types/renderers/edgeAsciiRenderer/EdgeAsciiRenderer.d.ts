@@ -6,6 +6,9 @@ interface EdgeAsciiRendererOptions extends AsciiRendererOptions {
     sobelThreshold: number;
     sampleThreshold: number;
 }
+/**
+ * An ASCII renderer that applies ASCII edges to the input sketch by using edge detection.
+ */
 export default class EdgeAsciiRenderer extends AsciiRenderer<EdgeAsciiRendererOptions> {
     private sobelShader;
     private sampleShader;
@@ -17,6 +20,6 @@ export default class EdgeAsciiRenderer extends AsciiRenderer<EdgeAsciiRendererOp
     constructor(p5Instance: p5, grid: P5AsciifyGrid, characterSet: P5AsciifyCharacterSet, options: EdgeAsciiRendererOptions);
     resizeFramebuffers(): void;
     resetShaders(): void;
-    render(inputFramebuffer: p5.Framebuffer, previousAsciiRenderer: AsciiRenderer, isFirstRenderer: boolean): void;
+    render(inputFramebuffer: p5.Framebuffer, previousAsciiRenderer: AsciiRenderer): void;
 }
 export {};

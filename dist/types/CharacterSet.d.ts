@@ -23,5 +23,9 @@ export declare class P5AsciifyCharacterSet {
      * @param characters The string of characters to use.
      */
     setCharacterSet(characters: string): void;
+    /**
+     * Resets the character set colors. Gets called when the font atlas is updated.
+     */
+    reset(): void;
     get characters(): string[];
 }

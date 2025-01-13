@@ -12,6 +12,9 @@ interface AccurateAsciiRendererOptions {
     invertMode: number;
     rotationAngle: number;
 }
+/**
+ * An ASCII renderer that attempts to accurately represent the input sketch using the available ASCII characters.
+ */
 export default class AccurateAsciiRenderer extends AsciiRenderer {
     private characterSelectionShader;
     private brightnessSampleShader;
@@ -23,6 +26,6 @@ export default class AccurateAsciiRenderer extends AsciiRenderer {
     constructor(p5Instance: p5, grid: P5AsciifyGrid, characterSet: P5AsciifyCharacterSet, options: AccurateAsciiRendererOptions);
     resizeFramebuffers(): void;
     resetShaders(): void;
-    render(inputFramebuffer: p5.Framebuffer, previousAsciiRenderer: AsciiRenderer, isFirstRenderer: boolean): void;
+    render(inputFramebuffer: p5.Framebuffer, previousAsciiRenderer: AsciiRenderer): void;
 }
 export {};
