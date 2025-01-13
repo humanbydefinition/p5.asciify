@@ -62,7 +62,7 @@ export default class EdgeAsciiRenderer extends AsciiRenderer<EdgeAsciiRendererOp
         this.sampleShader = this.p.createShader(vertexShader, generateSampleShader(16, this.grid.cellHeight, this.grid.cellWidth));
     }
 
-    render(inputFramebuffer: p5.Framebuffer, previousAsciiRenderer: AsciiRenderer, isFirstRenderer: boolean): void {
+    render(inputFramebuffer: p5.Framebuffer, previousAsciiRenderer: AsciiRenderer): void {
         // Sobel pass
         this.sobelFramebuffer.begin();
         this.p.clear();
@@ -133,7 +133,7 @@ export default class EdgeAsciiRenderer extends AsciiRenderer<EdgeAsciiRendererOp
         this.shader.setUniform('u_resolution', [this.p.width, this.p.height]);
         this.shader.setUniform('u_characterTexture', this.characterSet.asciiFontTextureAtlas.texture);
         this.shader.setUniform('u_charsetDimensions', [this.characterSet.asciiFontTextureAtlas.charsetCols, this.characterSet.asciiFontTextureAtlas.charsetRows]);
-        if (!isFirstRenderer) {
+        if (previousAsciiRenderer !== this) {
             this.shader.setUniform('u_prevAsciiTexture', previousAsciiRenderer.outputFramebuffer);
         }
         this.shader.setUniform('u_primaryColorTexture', this._primaryColorSampleFramebuffer);

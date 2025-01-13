@@ -34,21 +34,12 @@ export default class BrightnessAsciiRenderer extends AsciiRenderer {
         });
     }
 
-    /**
-     * Resize the framebuffers used by this renderer.
-     */
     resizeFramebuffers(): void {
         super.resizeFramebuffers();
         this.colorSampleFramebuffer.resize(this.grid.cols, this.grid.rows);
     }
 
-    /**
-     * Compute and render the ASCII representation of the input framebuffer.
-     * @param inputFramebuffer The input framebuffer to asciify.
-     * @param previousAsciiRenderer The previous ASCII renderer that rendered the last iteration of the same frame.
-     * @param isFirstRenderer Whether this is the first renderer in the chain.
-     */
-    render(inputFramebuffer: p5.Framebuffer, previousAsciiRenderer: AsciiRenderer, isFirstRenderer: boolean): void {
+    render(inputFramebuffer: p5.Framebuffer, previousAsciiRenderer: AsciiRenderer): void {
 
         this.colorSampleFramebuffer.begin();
         this.p.clear();
@@ -98,7 +89,7 @@ export default class BrightnessAsciiRenderer extends AsciiRenderer {
         this.shader.setUniform('u_primaryColorTexture', this._primaryColorSampleFramebuffer);
         this.shader.setUniform('u_secondaryColorTexture', this._secondaryColorSampleFramebuffer);
         this.shader.setUniform('u_asciiCharacterTexture', this._asciiCharacterFramebuffer);
-        if (!isFirstRenderer) {
+        if (previousAsciiRenderer !== this) {
             this.shader.setUniform('u_prevAsciiTexture', previousAsciiRenderer.outputFramebuffer);
         }
         this.shader.setUniform('u_gridPixelDimensions', [this.grid.width, this.grid.height]);

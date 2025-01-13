@@ -28,7 +28,7 @@ export abstract class AsciiRenderer<T extends AsciiRendererOptions = AsciiRender
         protected p: p5,
         protected grid: P5AsciifyGrid,
         public characterSet: P5AsciifyCharacterSet,
-        private _options: T
+        protected _options: T
     ) {
         if (new.target === AsciiRenderer) {
             throw new TypeError("Cannot construct AsciiRenderer instances directly");
@@ -109,9 +109,8 @@ export abstract class AsciiRenderer<T extends AsciiRendererOptions = AsciiRender
      * Convert and render the input framebuffer to ASCII.
      * @param inputFramebuffer - The input framebuffer to convert to ASCII.
      * @param previousAsciiRenderer - The previous ASCII renderer in the pipeline.
-     * @param isFirstRenderer - Whether this is the first renderer in the pipeline.
      */
-    public abstract render(inputFramebuffer: p5.Framebuffer, previousAsciiRenderer: AsciiRenderer, isFirstRenderer: boolean): void;
+    public abstract render(inputFramebuffer: p5.Framebuffer, previousAsciiRenderer: AsciiRenderer): void;
 
     // Getters
     get outputFramebuffer() { return this._outputFramebuffer; }

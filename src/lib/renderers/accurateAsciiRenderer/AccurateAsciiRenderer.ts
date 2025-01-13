@@ -20,6 +20,9 @@ interface AccurateAsciiRendererOptions {
     rotationAngle: number;
 }
 
+/**
+ * An ASCII renderer that attempts to accurately represent the input sketch using the available ASCII characters.
+ */
 export default class AccurateAsciiRenderer extends AsciiRenderer {
     private characterSelectionShader: p5.Shader;
     private brightnessSampleShader: p5.Shader;
@@ -62,7 +65,7 @@ export default class AccurateAsciiRenderer extends AsciiRenderer {
         this.colorSampleShader = this.p.createShader(vertexShader, generateColorSampleShader(16, this.grid.cellHeight, this.grid.cellWidth));
     }
 
-    render(inputFramebuffer: p5.Framebuffer, previousAsciiRenderer: AsciiRenderer, isFirstRenderer: boolean): void {
+    render(inputFramebuffer: p5.Framebuffer, previousAsciiRenderer: AsciiRenderer): void {
         // Brightness sample pass
         this.brightnessSampleFramebuffer.begin();
         this.p.clear();
@@ -148,7 +151,7 @@ export default class AccurateAsciiRenderer extends AsciiRenderer {
         this.shader.setUniform('u_primaryColorTexture', this._primaryColorSampleFramebuffer);
         this.shader.setUniform('u_secondaryColorTexture', this._secondaryColorSampleFramebuffer);
         this.shader.setUniform('u_asciiCharacterTexture', this._asciiCharacterFramebuffer);
-        if (!isFirstRenderer) {
+        if (previousAsciiRenderer !== this) {
             this.shader.setUniform('u_prevAsciiTexture', previousAsciiRenderer.outputFramebuffer);
         }
         this.shader.setUniform('u_gridPixelDimensions', [this.grid.width, this.grid.height]);

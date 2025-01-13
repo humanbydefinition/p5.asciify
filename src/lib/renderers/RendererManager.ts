@@ -80,14 +80,12 @@ export class RendererManager {
     public render(inputFramebuffer: any, borderColor: any): void {
         let asciiOutput = inputFramebuffer;
         let currentRenderer = this._renderers[0];
-        let isFirst = true;
 
         for (const renderer of this._renderers) {
             if (renderer.options.enabled) {
-                renderer.render(inputFramebuffer, currentRenderer, isFirst);
+                renderer.render(inputFramebuffer, currentRenderer);
                 asciiOutput = renderer.outputFramebuffer;
                 currentRenderer = renderer;
-                isFirst = false;
                 this.lastRenderer = renderer;
             }
         }

@@ -62,7 +62,7 @@ export default class GradientAsciiRenderer extends AsciiRenderer {
         this.prevAsciiCharacterFramebuffer.resize(this.grid.cols, this.grid.rows);
     }
 
-    render(inputFramebuffer: p5.Framebuffer, previousAsciiRenderer: AsciiRenderer, isFirstRenderer: boolean): void {
+    render(inputFramebuffer: p5.Framebuffer, previousAsciiRenderer: AsciiRenderer): void {
         // Grayscale pass
         this.grayscaleFramebuffer.begin();
         this.p.clear();
@@ -137,7 +137,7 @@ export default class GradientAsciiRenderer extends AsciiRenderer {
         this.asciiShader.setUniform('u_primaryColorTexture', this._primaryColorSampleFramebuffer);
         this.asciiShader.setUniform('u_secondaryColorTexture', this._secondaryColorSampleFramebuffer);
         this.asciiShader.setUniform('u_asciiCharacterTexture', this._asciiCharacterFramebuffer);
-        if (!isFirstRenderer) {
+        if (previousAsciiRenderer !== this) {
             this.asciiShader.setUniform('u_prevAsciiTexture', previousAsciiRenderer.outputFramebuffer);
         }
         this.asciiShader.setUniform('u_gridPixelDimensions', [this.grid.width, this.grid.height]);
