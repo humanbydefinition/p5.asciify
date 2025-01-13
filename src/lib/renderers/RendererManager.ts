@@ -16,7 +16,6 @@ import {
     GRADIENT_OPTIONS,
     EDGE_OPTIONS,
     CUSTOM_OPTIONS,
-    TEXT_OPTIONS
 } from '../constants/defaults';
 
 import { P5AsciifyCharacterSet } from '../CharacterSet';
