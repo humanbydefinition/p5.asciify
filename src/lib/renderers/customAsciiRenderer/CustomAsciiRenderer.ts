@@ -5,6 +5,9 @@ import { P5AsciifyCharacterSet } from '../../CharacterSet';
 import vertexShader from '../../assets/shaders/vert/shader.vert';
 import asciiConversionShader from '../_common_shaders/asciiConversion.frag';
 
+/**
+ * A customizable ASCII art renderer that allows user-defined transformations on it's framebuffers.
+ */
 export default class CustomAsciiRenderer extends AsciiRenderer {
     private shader: p5.Shader;
 
