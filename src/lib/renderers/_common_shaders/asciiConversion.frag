@@ -21,6 +21,7 @@ uniform float u_pixelRatio; // Added uniform for pixel ratio
 
 uniform sampler2D u_prevAsciiTexture;
 uniform sampler2D u_gradientReferenceTexture;
+uniform sampler2D u_edgesTexture;
 
 uniform int u_layer;
 
@@ -63,6 +64,14 @@ void main() {
         vec4 gradientReferenceColor = texture2D(u_gradientReferenceTexture, charIndexTexCoord);
 
         if(encodedIndexVec.rgb == gradientReferenceColor.rgb) {
+            gl_FragColor = texture2D(u_prevAsciiTexture, logicalFragCoord / u_resolution);
+            return;
+        }
+    } else if(u_layer == 3) {
+        // asciiEdge.frag logic
+        vec4 edgeColor = texture2D(u_edgesTexture, charIndexTexCoord);
+
+        if(edgeColor.rgb == vec3(0.0)) {
             gl_FragColor = texture2D(u_prevAsciiTexture, logicalFragCoord / u_resolution);
             return;
         }
