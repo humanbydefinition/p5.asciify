@@ -48,6 +48,14 @@ export class P5AsciifyCharacterSet {
         this.characterColorPalette.setColors(this.characterColors);
     }
 
+    /**
+     * Resets the character set colors. Gets called when the font atlas is updated.
+     */
+    public reset(): void {
+        this.characterColors = this.asciiFontTextureAtlas.getCharsetColorArray(this._characters);
+        this.characterColorPalette.setColors(this.characterColors);
+    }
+
     // Getters
     get characters() { return this._characters; }
 }

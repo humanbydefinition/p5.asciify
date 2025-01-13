@@ -122,7 +122,7 @@ export class P5Asciifier {
 
         if (this.p._setupDone) {
             this.asciiFontTextureAtlas.setFontObject(font);
-            this.rendererManager.renderers.forEach(renderer => renderer.characterSet.setCharacterSet(renderer.characterSet.characters));
+            this.rendererManager.renderers.forEach(renderer => renderer.characterSet.reset());
 
             this.grid.resizeCellPixelDimensions(
                 this.asciiFontTextureAtlas.maxGlyphDimensions.width,
