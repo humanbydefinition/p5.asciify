@@ -45,13 +45,6 @@ export const EDGE_OPTIONS = {
 
 export const CUSTOM_OPTIONS = {
     enabled: false,
-};
-
-export const TEXT_OPTIONS = {
-    enabled: false,
-    characterColor: "#FFFFFF",
-    characterColorMode: 0,
-    backgroundColor: "#000000",
-    backgroundColorMode: 1,
     invertMode: false,
+    rotationAngle: 0,
 };
