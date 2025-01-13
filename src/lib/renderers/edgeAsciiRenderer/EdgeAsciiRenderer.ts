@@ -139,7 +139,6 @@ export default class EdgeAsciiRenderer extends AsciiRenderer<EdgeAsciiRendererOp
         this.shader.setUniform('u_primaryColorTexture', this._primaryColorSampleFramebuffer);
         this.shader.setUniform('u_secondaryColorTexture', this._secondaryColorSampleFramebuffer);
         this.shader.setUniform('u_asciiCharacterTexture', this._asciiCharacterFramebuffer);
-        this.shader.setUniform('u_edgesTexture', this.sampleFramebuffer);
         this.shader.setUniform('u_gridPixelDimensions', [this.grid.width, this.grid.height]);
         this.shader.setUniform('u_gridOffsetDimensions', [this.grid.offsetX, this.grid.offsetY]);
         this.shader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
