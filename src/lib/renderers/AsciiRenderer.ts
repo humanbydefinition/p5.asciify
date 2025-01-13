@@ -27,7 +27,7 @@ export abstract class AsciiRenderer<T extends AsciiRendererOptions = AsciiRender
     constructor(
         private p: p5,
         private grid: P5AsciifyGrid,
-        private characterSet: P5AsciifyCharacterSet,
+        public characterSet: P5AsciifyCharacterSet,
         private _options: T
     ) {
         if (new.target === AsciiRenderer) {
