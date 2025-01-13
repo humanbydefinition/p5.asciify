@@ -41,12 +41,6 @@ export declare const EDGE_OPTIONS: {
 };
 export declare const CUSTOM_OPTIONS: {
     enabled: boolean;
-};
-export declare const TEXT_OPTIONS: {
-    enabled: boolean;
-    characterColor: string;
-    characterColorMode: number;
-    backgroundColor: string;
-    backgroundColorMode: number;
     invertMode: boolean;
+    rotationAngle: number;
 };

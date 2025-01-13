@@ -14,7 +14,6 @@ export default class EdgeAsciiRenderer extends AsciiRenderer<EdgeAsciiRendererOp
     private sampleShader;
     private colorSampleShader;
     private asciiCharacterShader;
-    private shader;
     private sobelFramebuffer;
     private sampleFramebuffer;
     constructor(p5Instance: p5, grid: P5AsciifyGrid, characterSet: P5AsciifyCharacterSet, options: EdgeAsciiRendererOptions);

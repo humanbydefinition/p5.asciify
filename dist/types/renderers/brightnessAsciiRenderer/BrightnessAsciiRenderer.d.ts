@@ -8,7 +8,6 @@ import { P5AsciifyCharacterSet } from '../../CharacterSet';
 export default class BrightnessAsciiRenderer extends AsciiRenderer {
     private colorSampleShader;
     private asciiCharacterShader;
-    private shader;
     private colorSampleFramebuffer;
     constructor(p5Instance: p5, grid: P5AsciifyGrid, characterSet: P5AsciifyCharacterSet, options: AsciiRendererOptions);
     resizeFramebuffers(): void;

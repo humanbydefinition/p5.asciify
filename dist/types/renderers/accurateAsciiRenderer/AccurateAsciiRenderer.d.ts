@@ -20,7 +20,6 @@ export default class AccurateAsciiRenderer extends AsciiRenderer {
     private brightnessSampleShader;
     private colorSampleShader;
     private brightnessSplitShader;
-    private shader;
     private brightnessSampleFramebuffer;
     private brightnessSplitFramebuffer;
     constructor(p5Instance: p5, grid: P5AsciifyGrid, characterSet: P5AsciifyCharacterSet, options: AccurateAsciiRendererOptions);

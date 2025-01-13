@@ -9,7 +9,6 @@ import { P5AsciifyGradientManager } from '../../gradients/GradientManager';
 export default class GradientAsciiRenderer extends AsciiRenderer {
     private grayscaleShader;
     private colorSampleShader;
-    private asciiShader;
     private grayscaleFramebuffer;
     private prevAsciiGradientFramebuffer;
     private gradientManager;
