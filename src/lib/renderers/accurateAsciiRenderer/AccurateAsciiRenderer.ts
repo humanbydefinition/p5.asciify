@@ -5,7 +5,6 @@ import { P5AsciifyGrid } from '../../Grid';
 import { P5AsciifyCharacterSet } from '../../CharacterSet';
 
 import { generateCharacterSelectionShader, generateBrightnessSampleShader, generateColorSampleShader } from './shaders/shaderGenerators.min';
-import asciiConversionShader from '../_common_shaders/asciiConversion.frag';
 import brightnessSplitShader from './shaders/brightnessSplit.frag';
 import vertexShader from '../../assets/shaders/vert/shader.vert';
 
@@ -28,7 +27,6 @@ export default class AccurateAsciiRenderer extends AsciiRenderer {
     private brightnessSampleShader: p5.Shader;
     private colorSampleShader: p5.Shader;
     private brightnessSplitShader: p5.Shader;
-    private shader: p5.Shader;
     private brightnessSampleFramebuffer: p5.Framebuffer;
     private brightnessSplitFramebuffer: p5.Framebuffer;
 
@@ -39,7 +37,6 @@ export default class AccurateAsciiRenderer extends AsciiRenderer {
         this.brightnessSampleShader = this.p.createShader(vertexShader, generateBrightnessSampleShader(this.grid.cellHeight, this.grid.cellWidth));
         this.colorSampleShader = this.p.createShader(vertexShader, generateColorSampleShader(16, this.grid.cellHeight, this.grid.cellWidth));
         this.brightnessSplitShader = this.p.createShader(vertexShader, brightnessSplitShader);
-        this.shader = this.p.createShader(vertexShader, asciiConversionShader);
 
         this.brightnessSampleFramebuffer = this.p.createFramebuffer({ 
             density: 1, 
@@ -139,27 +136,6 @@ export default class AccurateAsciiRenderer extends AsciiRenderer {
         this.p.rect(0, 0, this.p.width, this.p.height);
         this._asciiCharacterFramebuffer.end();
 
-        // Final output pass
-        this._outputFramebuffer.begin();
-        this.p.clear();
-        this.p.shader(this.shader);
-        this.shader.setUniform('u_layer', 1);
-        this.shader.setUniform('u_pixelRatio', this.p.pixelDensity());
-        this.shader.setUniform('u_resolution', [this.p.width, this.p.height]);
-        this.shader.setUniform('u_characterTexture', this.characterSet.asciiFontTextureAtlas.texture);
-        this.shader.setUniform('u_charsetDimensions', [this.characterSet.asciiFontTextureAtlas.charsetCols, this.characterSet.asciiFontTextureAtlas.charsetRows]);
-        this.shader.setUniform('u_primaryColorTexture', this._primaryColorSampleFramebuffer);
-        this.shader.setUniform('u_secondaryColorTexture', this._secondaryColorSampleFramebuffer);
-        this.shader.setUniform('u_asciiCharacterTexture', this._asciiCharacterFramebuffer);
-        if (previousAsciiRenderer !== this) {
-            this.shader.setUniform('u_prevAsciiTexture', previousAsciiRenderer.outputFramebuffer);
-        }
-        this.shader.setUniform('u_gridPixelDimensions', [this.grid.width, this.grid.height]);
-        this.shader.setUniform('u_gridOffsetDimensions', [this.grid.offsetX, this.grid.offsetY]);
-        this.shader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
-        this.shader.setUniform('u_invertMode', this._options.invertMode);
-        this.shader.setUniform('u_rotationAngle', this.p.radians(this._options.rotationAngle));
-        this.p.rect(0, 0, this.p.width, this.p.height);
-        this._outputFramebuffer.end();
+        super.render(inputFramebuffer, previousAsciiRenderer);
     }
 }

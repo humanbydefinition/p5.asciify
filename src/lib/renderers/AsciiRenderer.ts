@@ -3,6 +3,9 @@ import { validateOptions } from "../validators/OptionsValidator";
 import { P5AsciifyGrid } from '../Grid';
 import { P5AsciifyCharacterSet } from '../CharacterSet';
 
+import vertexShader from '../assets/shaders/vert/shader.vert';
+import asciiConversionShader from './_common_shaders/asciiConversion.frag';
+
 export interface AsciiRendererOptions {
     enabled: boolean;
     characters: string;
@@ -23,6 +26,7 @@ export abstract class AsciiRenderer<T extends AsciiRendererOptions = AsciiRender
     protected _secondaryColorSampleFramebuffer: p5.Framebuffer;
     protected _asciiCharacterFramebuffer: p5.Framebuffer;
     protected _outputFramebuffer: p5.Framebuffer;
+    protected _shader: p5.Shader;
 
     constructor(
         protected p: p5,
@@ -65,6 +69,8 @@ export abstract class AsciiRenderer<T extends AsciiRendererOptions = AsciiRender
             depthFormat: this.p.UNSIGNED_INT,
             textureFiltering: this.p.NEAREST
         });
+
+        this._shader = this.p.createShader(vertexShader, asciiConversionShader);
     }
 
     /**
@@ -110,7 +116,28 @@ export abstract class AsciiRenderer<T extends AsciiRendererOptions = AsciiRender
      * @param inputFramebuffer - The input framebuffer to convert to ASCII.
      * @param previousAsciiRenderer - The previous ASCII renderer in the pipeline.
      */
-    public abstract render(inputFramebuffer: p5.Framebuffer, previousAsciiRenderer: AsciiRenderer): void;
+    public render(inputFramebuffer: p5.Framebuffer, previousAsciiRenderer: AsciiRenderer): void {
+        this._outputFramebuffer.begin();
+        this.p.clear();
+        this.p.shader(this._shader);
+        this._shader.setUniform('u_pixelRatio', this.p.pixelDensity());
+        this._shader.setUniform('u_resolution', [this.p.width, this.p.height]);
+        this._shader.setUniform('u_characterTexture', this.characterSet.asciiFontTextureAtlas.texture);
+        this._shader.setUniform('u_charsetDimensions', [this.characterSet.asciiFontTextureAtlas.charsetCols, this.characterSet.asciiFontTextureAtlas.charsetRows]);
+        this._shader.setUniform('u_primaryColorTexture', this._primaryColorSampleFramebuffer);
+        this._shader.setUniform('u_secondaryColorTexture', this._secondaryColorSampleFramebuffer);
+        this._shader.setUniform('u_asciiCharacterTexture', this._asciiCharacterFramebuffer);
+        if (previousAsciiRenderer !== this) {
+            this._shader.setUniform('u_prevAsciiTexture', previousAsciiRenderer.outputFramebuffer);
+        }
+        this._shader.setUniform('u_gridPixelDimensions', [this.grid.width, this.grid.height]);
+        this._shader.setUniform('u_gridOffsetDimensions', [this.grid.offsetX, this.grid.offsetY]);
+        this._shader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
+        this._shader.setUniform('u_invertMode', this._options.invertMode);
+        this._shader.setUniform('u_rotationAngle', this.p.radians(this._options.rotationAngle));
+        this.p.rect(0, 0, this.p.width, this.p.height);
+        this._outputFramebuffer.end();
+    }
 
     // Getters
     get outputFramebuffer() { return this._outputFramebuffer; }

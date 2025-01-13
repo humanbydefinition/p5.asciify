@@ -21,8 +21,6 @@ uniform float u_pixelRatio; // Added uniform for pixel ratio
 
 uniform sampler2D u_prevAsciiTexture;
 
-uniform int u_layer;
-
 // Function to rotate coordinates
 mat2 rotate2D(float angle) {
     float s = sin(angle);
@@ -56,18 +54,15 @@ void main() {
     // Sample primary color (foreground color)
     vec4 primaryColor = texture2D(u_primaryColorTexture, charIndexTexCoord);
 
-     if(u_layer == 4) {
-        // asciiCustom.frag logic
-        vec4 encodedIndexVec = texture2D(u_asciiCharacterTexture, charIndexTexCoord);
-
-        if(encodedIndexVec.rgba == vec4(0.0)) {
-            gl_FragColor = texture2D(u_prevAsciiTexture, logicalFragCoord / u_resolution);
-            return;
-        }
-    }
-
     // Sample the character index from the ASCII character texture
     vec4 encodedIndexVec = texture2D(u_asciiCharacterTexture, charIndexTexCoord);
+
+    /**
+    if(encodedIndexVec.rgba == vec4(0.0)) {
+        gl_FragColor = texture2D(u_prevAsciiTexture, logicalFragCoord / u_resolution);
+        return;
+    }
+    **/
 
     // Decode the bestCharIndex from red and green channels
     int charIndex = int(encodedIndexVec.r * 255.0 + 0.5) + int(encodedIndexVec.g * 255.0 + 0.5) * 256;

@@ -6,7 +6,6 @@ import { P5AsciifyCharacterSet } from '../../CharacterSet';
 import vertexShader from '../../assets/shaders/vert/shader.vert';
 import colorSampleShader from './shaders/colorSample.frag';
 import asciiCharacterShader from './shaders/asciiCharacter.frag';
-import asciiConversionShader from '../_common_shaders/asciiConversion.frag';
 import sobelShader from './shaders/sobel.frag';
 
 import { generateSampleShader } from './shaders/shaderGenerators.min';
@@ -24,7 +23,6 @@ export default class EdgeAsciiRenderer extends AsciiRenderer<EdgeAsciiRendererOp
     private sampleShader: p5.Shader;
     private colorSampleShader: p5.Shader;
     private asciiCharacterShader: p5.Shader;
-    private shader: p5.Shader;
     private sobelFramebuffer: p5.Framebuffer;
     private sampleFramebuffer: p5.Framebuffer;
 
@@ -38,7 +36,6 @@ export default class EdgeAsciiRenderer extends AsciiRenderer<EdgeAsciiRendererOp
         this.sampleShader = this.p.createShader(vertexShader, generateSampleShader(16, this.grid.cellHeight, this.grid.cellWidth));
         this.colorSampleShader = this.p.createShader(vertexShader, colorSampleShader);
         this.asciiCharacterShader = this.p.createShader(vertexShader, asciiCharacterShader);
-        this.shader = this.p.createShader(vertexShader, asciiConversionShader);
 
         this.sobelFramebuffer = this.p.createFramebuffer({ 
             depthFormat: this.p.UNSIGNED_INT, 
@@ -122,27 +119,6 @@ export default class EdgeAsciiRenderer extends AsciiRenderer<EdgeAsciiRendererOp
         this.p.rect(0, 0, this.p.width, this.p.height);
         this._asciiCharacterFramebuffer.end();
 
-        // Final output pass
-        this._outputFramebuffer.begin();
-        this.p.clear();
-        this.p.shader(this.shader);
-        this.shader.setUniform('u_layer', 3);
-        this.shader.setUniform('u_pixelRatio', this.p.pixelDensity());
-        this.shader.setUniform('u_resolution', [this.p.width, this.p.height]);
-        this.shader.setUniform('u_characterTexture', this.characterSet.asciiFontTextureAtlas.texture);
-        this.shader.setUniform('u_charsetDimensions', [this.characterSet.asciiFontTextureAtlas.charsetCols, this.characterSet.asciiFontTextureAtlas.charsetRows]);
-        if (previousAsciiRenderer !== this) {
-            this.shader.setUniform('u_prevAsciiTexture', previousAsciiRenderer.outputFramebuffer);
-        }
-        this.shader.setUniform('u_primaryColorTexture', this._primaryColorSampleFramebuffer);
-        this.shader.setUniform('u_secondaryColorTexture', this._secondaryColorSampleFramebuffer);
-        this.shader.setUniform('u_asciiCharacterTexture', this._asciiCharacterFramebuffer);
-        this.shader.setUniform('u_gridPixelDimensions', [this.grid.width, this.grid.height]);
-        this.shader.setUniform('u_gridOffsetDimensions', [this.grid.offsetX, this.grid.offsetY]);
-        this.shader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
-        this.shader.setUniform('u_invertMode', this._options.invertMode);
-        this.shader.setUniform('u_rotationAngle', this.p.radians(this._options.rotationAngle));
-        this.p.rect(0, 0, this.p.width, this.p.height);
-        this._outputFramebuffer.end();
+        super.render(inputFramebuffer, previousAsciiRenderer);
     }
 }
