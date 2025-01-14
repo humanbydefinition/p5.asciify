@@ -12,7 +12,7 @@ export class P5AsciifyGradient {
     protected _fontTextureAtlas!: P5AsciifyFontTextureAtlas;
 
     constructor(
-        private _shader: p5.Shader,
+        protected _shader: p5.Shader,
         brightnessStart: number,
         brightnessEnd: number,
         private _characters: string

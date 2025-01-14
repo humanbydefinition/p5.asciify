@@ -26,11 +26,10 @@ export class P5AsciifyLinearGradient extends P5AsciifyGradient {
     }
 
     setUniforms(
-        p: p5,
         framebuffer: p5.Framebuffer,
         referenceFramebuffer: p5.Framebuffer
     ): void {
-        super.setUniforms(p, framebuffer, referenceFramebuffer);
+        super.setUniforms(framebuffer, referenceFramebuffer);
         this._shader.setUniform('u_gradientDirection', this._direction);
         this._shader.setUniform('u_angle', (this._angle * Math.PI) / 180);
         this._shader.setUniform('u_speed', this._speed);
