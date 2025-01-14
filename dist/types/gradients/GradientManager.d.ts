@@ -30,7 +30,6 @@ export declare class P5AsciifyGradientManager {
     private getGradientParams;
     addGradient(gradientName: GradientType, brightnessStart: number, brightnessEnd: number, characters: string, params: Partial<GradientParams[typeof gradientName]>): P5AsciifyGradient;
     removeGradient(gradient: P5AsciifyGradient): void;
-    private handleGradientPaletteChange;
     private setupShaders;
     get gradientConstructors(): Record<GradientType, (shader: p5.Shader, brightnessStart: number, brightnessEnd: number, characters: string[], params: any) => P5AsciifyGradient>;
     get gradientParams(): GradientParams;

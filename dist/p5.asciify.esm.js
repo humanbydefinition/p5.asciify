@@ -2,7 +2,7 @@ var b = Object.defineProperty;
 var F = (s, A, e) => A in s ? b(s, A, { enumerable: !0, configurable: !0, writable: !0, value: e }) : s[A] = e;
 var r = (s, A, e) => F(s, typeof A != "symbol" ? A + "" : A, e);
 import g from "p5";
-class n extends Error {
+class Q extends Error {
   constructor(A) {
     super(A), this.name = "P5AsciifyError";
   }
@@ -92,7 +92,7 @@ class y {
         (o) => o.unicodes.includes(t.codePointAt(0))
       );
       if (!i)
-        throw new n(`Could not find character in character set: ${t}`);
+        throw new Q(`Could not find character in character set: ${t}`);
       return [i.r, i.g, i.b];
     });
   }
@@ -240,7 +240,7 @@ const u = {
 };
 function M(s, A) {
   if (A != null && A.characterColor && (A.characterColor = s.color(A.characterColor)), A != null && A.backgroundColor && (A.backgroundColor = s.color(A.backgroundColor)), A != null && A.fontSize && (A.fontSize < u.MIN || A.fontSize > u.MAX))
-    throw new n(`Font size ${A.fontSize} is out of bounds. It should be between ${u.MIN} and ${u.MAX}.`);
+    throw new Q(`Font size ${A.fontSize} is out of bounds. It should be between ${u.MIN} and ${u.MAX}.`);
 }
 var B = "precision mediump float;attribute vec3 aPosition;attribute vec2 aTexCoord;varying vec2 v_texCoord;void main(){vec4 positionVec4=vec4(aPosition,1.0);positionVec4.xy=positionVec4.xy*2.0-1.0;gl_Position=positionVec4;v_texCoord=aTexCoord;}", Y = "precision mediump float;uniform sampler2D u_characterTexture;uniform vec2 u_charsetDimensions;uniform sampler2D u_primaryColorTexture;uniform sampler2D u_secondaryColorTexture;uniform sampler2D u_asciiCharacterTexture;uniform vec2 u_gridCellDimensions;uniform vec2 u_gridPixelDimensions;uniform vec2 u_gridOffsetDimensions;uniform float u_rotationAngle;uniform int u_invertMode;uniform vec2 u_resolution;uniform float u_pixelRatio;uniform sampler2D u_prevAsciiTexture;mat2 rotate2D(float angle){float s=sin(angle);float c=cos(angle);return mat2(c,-s,s,c);}void main(){vec2 logicalFragCoord=gl_FragCoord.xy/u_pixelRatio;vec2 adjustedCoord=(logicalFragCoord-u_gridOffsetDimensions)/u_gridPixelDimensions;vec2 gridCoord=adjustedCoord*u_gridCellDimensions;vec2 cellCoord=floor(gridCoord);vec2 charIndexTexCoord=(cellCoord+vec2(0.5))/u_gridCellDimensions;vec4 secondaryColor=texture2D(u_secondaryColorTexture,charIndexTexCoord);if(adjustedCoord.x<0.0||adjustedCoord.x>1.0||adjustedCoord.y<0.0||adjustedCoord.y>1.0){gl_FragColor=vec4(0);return;}vec4 primaryColor=texture2D(u_primaryColorTexture,charIndexTexCoord);vec4 encodedIndexVec=texture2D(u_asciiCharacterTexture,charIndexTexCoord);if(encodedIndexVec.rgba==vec4(0.0)){gl_FragColor=texture2D(u_prevAsciiTexture,logicalFragCoord/u_resolution);return;}int charIndex=int(encodedIndexVec.r*255.0+0.5)+int(encodedIndexVec.g*255.0+0.5)*256;int charCol=charIndex-(charIndex/int(u_charsetDimensions.x))*int(u_charsetDimensions.x);int charRow=charIndex/int(u_charsetDimensions.x);vec2 charCoord=vec2(float(charCol)/u_charsetDimensions.x,float(charRow)/u_charsetDimensions.y);vec2 fractionalPart=fract(gridCoord)-0.5;fractionalPart=rotate2D(u_rotationAngle)*fractionalPart;fractionalPart+=0.5;vec2 cellMin=charCoord;vec2 cellMax=charCoord+vec2(1.0/u_charsetDimensions.x,1.0/u_charsetDimensions.y);vec2 texCoord=charCoord+fractionalPart*vec2(1.0/u_charsetDimensions.x,1.0/u_charsetDimensions.y);bool outsideBounds=any(lessThan(texCoord,cellMin))||any(greaterThan(texCoord,cellMax));vec4 charColor=outsideBounds ? secondaryColor : texture2D(u_characterTexture,texCoord);if(u_invertMode==1){charColor.a=1.0-charColor.a;charColor.rgb=vec3(1.0);}vec4 finalColor=vec4(primaryColor.rgb*charColor.rgb,charColor.a);gl_FragColor=mix(secondaryColor,finalColor,charColor.a);if(outsideBounds){gl_FragColor=u_invertMode==1 ? primaryColor : secondaryColor;}}";
 class C {
@@ -451,7 +451,7 @@ class W extends C {
   render(e, t) {
     this.grayscaleFramebuffer.begin(), this.p.clear(), this.p.shader(this.grayscaleShader), this.grayscaleShader.setUniform("u_image", e), this.p.rect(0, 0, this.p.width, this.p.height), this.grayscaleFramebuffer.end(), this.prevAsciiGradientFramebuffer.begin(), this.p.clear(), this.p.image(this.grayscaleFramebuffer, -this.grid.cols / 2, -this.grid.rows / 2), this.prevAsciiGradientFramebuffer.end(), this.nextAsciiGradientFramebuffer.begin(), this.p.clear(), this.p.image(this.grayscaleFramebuffer, -this.grid.cols / 2, -this.grid.rows / 2), this.nextAsciiGradientFramebuffer.end();
     for (const i of this.gradientManager.gradients)
-      i.enabled && ([this.prevAsciiGradientFramebuffer, this.nextAsciiGradientFramebuffer] = [this.nextAsciiGradientFramebuffer, this.prevAsciiGradientFramebuffer], this.nextAsciiGradientFramebuffer.begin(), this.p.clear(), this.p.shader(i.shader), i.setUniforms(this.p, this.prevAsciiGradientFramebuffer, this.grayscaleFramebuffer), this.p.rect(0, 0, this.grid.cols, this.grid.rows), this.nextAsciiGradientFramebuffer.end());
+      i.enabled && ([this.prevAsciiGradientFramebuffer, this.nextAsciiGradientFramebuffer] = [this.nextAsciiGradientFramebuffer, this.prevAsciiGradientFramebuffer], this.nextAsciiGradientFramebuffer.begin(), this.p.clear(), this.p.shader(i.shader), i.setUniforms(this.prevAsciiGradientFramebuffer, this.grayscaleFramebuffer), this.p.rect(0, 0, this.grid.cols, this.grid.rows), this.nextAsciiGradientFramebuffer.end());
     this._asciiCharacterFramebuffer.begin(), this.p.clear(), this.p.shader(this.asciiCharacterShader), this.asciiCharacterShader.setUniform("u_prevAsciiCharacterTexture", t.asciiCharacterFramebuffer), this.asciiCharacterShader.setUniform("u_prevGradientTexture", this.grayscaleFramebuffer), this.asciiCharacterShader.setUniform("u_nextGradientTexture", this.nextAsciiGradientFramebuffer), this.asciiCharacterShader.setUniform("u_resolution", [this.grid.cols, this.grid.rows]), this.p.rect(0, 0, this.grid.cols, this.grid.rows), this._asciiCharacterFramebuffer.end(), this._primaryColorSampleFramebuffer.begin(), this.p.clear(), this.p.shader(this.colorSampleShader), this.colorSampleShader.setUniform("u_sketchTexture", e), this.colorSampleShader.setUniform("u_previousColorTexture", t.primaryColorSampleFramebuffer), this.colorSampleShader.setUniform("u_sampleTexture", this.nextAsciiGradientFramebuffer), this.colorSampleShader.setUniform("u_sampleReferenceTexture", this.grayscaleFramebuffer), this.colorSampleShader.setUniform("u_gridCellDimensions", [this.grid.cols, this.grid.rows]), this.colorSampleShader.setUniform("u_sampleMode", this._options.characterColorMode), this.colorSampleShader.setUniform("u_staticColor", this._options.characterColor._array), this.p.rect(0, 0, this.p.width, this.p.height), this._primaryColorSampleFramebuffer.end(), this._secondaryColorSampleFramebuffer.begin(), this.p.clear(), this.p.shader(this.colorSampleShader), this.colorSampleShader.setUniform("u_sketchTexture", e), this.colorSampleShader.setUniform("u_previousColorTexture", t.secondaryColorSampleFramebuffer), this.colorSampleShader.setUniform("u_sampleTexture", this.nextAsciiGradientFramebuffer), this.colorSampleShader.setUniform("u_gridCellDimensions", [this.grid.cols, this.grid.rows]), this.colorSampleShader.setUniform("u_sampleMode", this._options.backgroundColorMode), this.colorSampleShader.setUniform("u_staticColor", this._options.backgroundColor._array), this.p.rect(0, 0, this.p.width, this.p.height), this._secondaryColorSampleFramebuffer.end(), super.render(e, t);
   }
 }
@@ -560,7 +560,7 @@ class d {
   validateCharacters(A) {
     const e = this.asciiFontTextureAtlas.getUnsupportedCharacters(A);
     if (e.length > 0)
-      throw new n(`The following characters are not supported by the current font: [${e.join(", ")}].`);
+      throw new Q(`The following characters are not supported by the current font: [${e.join(", ")}].`);
     return Array.from(A);
   }
   /**
@@ -583,48 +583,45 @@ class d {
 }
 class h {
   constructor(A, e, t, i) {
+    r(this, "_p");
     r(this, "_brightnessStart");
     r(this, "_brightnessEnd");
-    r(this, "_enabled");
+    r(this, "enabled");
     r(this, "_onPaletteChangeCallback");
     r(this, "_palette");
-    this._shader = A, this.characters = i, this._brightnessStart = Math.floor(e / 255 * 100) / 100, this._brightnessEnd = Math.ceil(t / 255 * 100) / 100, this._enabled = !0;
+    r(this, "_fontTextureAtlas");
+    this._shader = A, this._characters = i, this._brightnessStart = Math.floor(e / 255 * 100) / 100, this._brightnessEnd = Math.ceil(t / 255 * 100) / 100, this.enabled = !0;
   }
-  registerPaletteChangeCallback(A) {
-    this._onPaletteChangeCallback = A;
+  setup(A, e, t, i) {
+    this._p = A, this._fontTextureAtlas = e, this._shader = t, this._palette = new S(i), this._palette.setup(A);
   }
-  setup(A, e, t) {
-    this._shader = e, this._palette = new S(t), this._palette.setup(A);
-  }
-  setUniforms(A, e, t) {
-    this._shader.setUniform("textureID", e), this._shader.setUniform("originalTextureID", t), this._shader.setUniform("gradientTexture", this._palette.framebuffer), this._shader.setUniform("gradientTextureDimensions", [this._palette.colors.length, 1]), this._shader.setUniform("u_brightnessRange", [this._brightnessStart, this._brightnessEnd]), this._shader.setUniform("frameCount", A.frameCount);
-  }
-  set palette(A) {
-    this._onPaletteChangeCallback && this._onPaletteChangeCallback(this, A);
-  }
-  get enabled() {
-    return this._enabled;
-  }
-  set enabled(A) {
-    this._enabled = A;
-  }
-  get brightnessStart() {
-    return this._brightnessStart;
+  setUniforms(A, e) {
+    this._shader.setUniform("textureID", A), this._shader.setUniform("originalTextureID", e), this._shader.setUniform("gradientTexture", this._palette.framebuffer), this._shader.setUniform("gradientTextureDimensions", [this._palette.colors.length, 1]), this._shader.setUniform("u_brightnessRange", [this._brightnessStart, this._brightnessEnd]), this._shader.setUniform("frameCount", this._p.frameCount);
   }
   set brightnessStart(A) {
     this._brightnessStart = A;
   }
-  get brightnessEnd() {
-    return this._brightnessEnd;
-  }
   set brightnessEnd(A) {
     this._brightnessEnd = A;
+  }
+  set characters(A) {
+    this._characters = A, this._p._setupDone && this.palette.setColors(this._fontTextureAtlas.getCharsetColorArray(A));
+  }
+  // Getters
+  get characters() {
+    return this._characters;
   }
   get shader() {
     return this._shader;
   }
   get palette() {
     return this._palette;
+  }
+  get brightnessEnd() {
+    return this._brightnessEnd;
+  }
+  get brightnessStart() {
+    return this._brightnessStart;
   }
 }
 class $ extends h {
@@ -870,6 +867,7 @@ class QA {
     for (const { gradientInstance: A, type: e } of this._setupQueue)
       A.setup(
         this.p5Instance,
+        this.fontTextureAtlas,
         this.gradientShaders[e],
         this.fontTextureAtlas.getCharsetColorArray(A.characters)
       );
@@ -884,25 +882,22 @@ class QA {
       brightnessEnd: t,
       characters: i,
       ...o
-    }), Q = this._gradientConstructors[A](
+    }), n = this._gradientConstructors[A](
       this.gradientShaders[A],
       e,
       t,
       i,
       a
     );
-    return Q.registerPaletteChangeCallback(this.handleGradientPaletteChange.bind(this)), this._gradients.push(Q), this.p5Instance._setupDone ? Q.setup(
+    return this._gradients.push(n), this.p5Instance._setupDone ? n.setup(
       this.p5Instance,
       this.gradientShaders[A],
       this.fontTextureAtlas.getCharsetColorArray(i)
-    ) : this._setupQueue.push({ gradientInstance: Q, type: A }), Q;
+    ) : this._setupQueue.push({ gradientInstance: n, type: A }), n;
   }
   removeGradient(A) {
     const e = this._gradients.indexOf(A);
     e > -1 && this._gradients.splice(e, 1);
-  }
-  handleGradientPaletteChange(A, e) {
-    this.p5Instance._setupDone ? A.palette.setColors(this.fontTextureAtlas.getCharsetColorArray(e)) : A.characters = e;
   }
   setupShaders() {
     for (const A in this.gradientShaders)
@@ -1061,17 +1056,17 @@ class EA {
 }
 function hA(s) {
   if (s._renderer.drawingContext instanceof CanvasRenderingContext2D)
-    throw new n("WebGL renderer is required for p5.asciify to run.");
+    throw new Q("WebGL renderer is required for p5.asciify to run.");
   function A(e, t) {
     const [i, o] = [e, t].map((a) => a.split(".").map(Number));
     for (let a = 0; a < Math.max(i.length, o.length); a++) {
-      const Q = i[a] ?? 0, c = o[a] ?? 0;
-      if (Q !== c) return Q > c ? 1 : -1;
+      const n = i[a] ?? 0, c = o[a] ?? 0;
+      if (n !== c) return n > c ? 1 : -1;
     }
     return 0;
   }
   if (A(s.VERSION, "1.8.0") < 0)
-    throw new n("p5.asciify requires p5.js v1.8.0 or higher to run.");
+    throw new Q("p5.asciify requires p5.js v1.8.0 or higher to run.");
 }
 function lA(s) {
   g.prototype.setupP5Instance = function() {
@@ -1096,13 +1091,13 @@ function dA(s) {
           e(t);
         },
         () => {
-          throw new n(`loadAsciiFont() | Failed to load font from path: '${A}'`);
+          throw new Q(`loadAsciiFont() | Failed to load font from path: '${A}'`);
         }
       );
     else if (A instanceof g.Font)
       e(A);
     else
-      throw new n("loadAsciiFont() | Invalid font parameter. Expected a path, base64 string, or p5.Font object.");
+      throw new Q("loadAsciiFont() | Invalid font parameter. Expected a path, base64 string, or p5.Font object.");
   }, g.prototype.registerMethod("beforePreload", g.prototype.preloadAsciiFont), g.prototype.registerPreloadMethod("loadAsciiFont", g.prototype);
 }
 function CA(s) {
@@ -1118,24 +1113,24 @@ function CA(s) {
 }
 function uA(s, A, e, t, i, o) {
   if (!s.gradientConstructors[A])
-    throw new n(
+    throw new Q(
       `Gradient '${A}' does not exist! Available gradients: ${Object.keys(s.gradientConstructors).join(", ")}`
     );
   const a = (E, f, m, v) => {
     if (typeof E != "number" || E < f || E > m)
-      throw new n(
+      throw new Q(
         `Invalid ${v} value '${E}'. Expected a number between ${f} and ${m}.`
       );
   };
   if (a(e, 0, 255, "brightness start"), a(t, 0, 255, "brightness end"), typeof i != "string")
-    throw new n(
+    throw new Q(
       `Invalid characters value '${i}'. Expected a string.`
     );
-  const Q = Object.keys(s.gradientParams[A]), c = Object.keys(o).filter((E) => !Q.includes(E));
+  const n = Object.keys(s.gradientParams[A]), c = Object.keys(o).filter((E) => !n.includes(E));
   if (c.length > 0)
-    throw new n(
+    throw new Q(
       `Invalid parameter(s) for gradient '${A}': ${c.join(", ")}
-Valid parameters are: ${Q.join(", ")}`
+Valid parameters are: ${n.join(", ")}`
     );
 }
 function DA(s) {
