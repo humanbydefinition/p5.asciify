@@ -632,8 +632,8 @@ class $ extends h {
     r(this, "_speed");
     this._direction = a.direction, this._angle = a.angle, this._speed = a.speed;
   }
-  setUniforms(e, t, i) {
-    super.setUniforms(e, t, i), this._shader.setUniform("u_gradientDirection", this._direction), this._shader.setUniform("u_angle", this._angle * Math.PI / 180), this._shader.setUniform("u_speed", this._speed);
+  setUniforms(e, t) {
+    super.setUniforms(e, t), this._shader.setUniform("u_gradientDirection", this._direction), this._shader.setUniform("u_angle", this._angle * Math.PI / 180), this._shader.setUniform("u_speed", this._speed);
   }
   get direction() {
     return this._direction;
@@ -662,8 +662,8 @@ class q extends h {
     r(this, "_speed");
     this._direction = a.direction, this._angle = a.angle, this._speed = a.speed ?? 0.01;
   }
-  setUniforms(e, t, i) {
-    super.setUniforms(e, t, i), this._shader.setUniform("u_gradientDirection", this._direction), this._shader.setUniform("u_angle", this._angle * Math.PI / 180), this._shader.setUniform("u_speed", this._speed);
+  setUniforms(e, t) {
+    super.setUniforms(e, t), this._shader.setUniform("u_gradientDirection", this._direction), this._shader.setUniform("u_angle", this._angle * Math.PI / 180), this._shader.setUniform("u_speed", this._speed);
   }
   get direction() {
     return this._direction;
@@ -694,8 +694,8 @@ class AA extends h {
     r(this, "_density");
     this._direction = a.direction, this._centerX = a.centerX, this._centerY = a.centerY, this._speed = a.speed, this._density = a.density;
   }
-  setUniforms(e, t, i) {
-    super.setUniforms(e, t, i), this._shader.setUniform("u_gradientDirection", this._direction), this._shader.setUniform("u_centerX", this._centerX), this._shader.setUniform("u_centerY", this._centerY), this._shader.setUniform("u_speed", this._speed), this._shader.setUniform("u_density", this._density);
+  setUniforms(e, t) {
+    super.setUniforms(e, t), this._shader.setUniform("u_gradientDirection", this._direction), this._shader.setUniform("u_centerX", this._centerX), this._shader.setUniform("u_centerY", this._centerY), this._shader.setUniform("u_speed", this._speed), this._shader.setUniform("u_density", this._density);
   }
   get direction() {
     return this._direction;
@@ -737,8 +737,8 @@ class eA extends h {
     r(this, "_radius");
     this._direction = a.direction, this._centerX = a.centerX, this._centerY = a.centerY, this._radius = a.radius;
   }
-  setUniforms(e, t, i) {
-    super.setUniforms(e, t, i), this._shader.setUniform("u_gradientDirection", this._direction), this._shader.setUniform("u_centerX", this._centerX), this._shader.setUniform("u_centerY", this._centerY), this._shader.setUniform("u_radius", this._radius);
+  setUniforms(e, t) {
+    super.setUniforms(e, t), this._shader.setUniform("u_gradientDirection", this._direction), this._shader.setUniform("u_centerX", this._centerX), this._shader.setUniform("u_centerY", this._centerY), this._shader.setUniform("u_radius", this._radius);
   }
   get direction() {
     return this._direction;
@@ -773,8 +773,8 @@ class tA extends h {
     r(this, "_speed");
     this._centerX = a.centerX, this._centerY = a.centerY, this._speed = a.speed;
   }
-  setUniforms(e, t, i) {
-    super.setUniforms(e, t, i), this._shader.setUniform("u_centerX", this._centerX), this._shader.setUniform("u_centerY", this._centerY), this._shader.setUniform("u_speed", this._speed);
+  setUniforms(e, t) {
+    super.setUniforms(e, t), this._shader.setUniform("u_centerX", this._centerX), this._shader.setUniform("u_centerY", this._centerY), this._shader.setUniform("u_speed", this._speed);
   }
   get centerX() {
     return this._centerX;
@@ -803,8 +803,8 @@ class rA extends h {
     r(this, "_speed");
     this._direction = a.direction, this._noiseScale = a.noiseScale, this._speed = a.speed;
   }
-  setUniforms(e, t, i) {
-    super.setUniforms(e, t, i), this._shader.setUniform("direction", this._direction), this._shader.setUniform("noiseScale", this._noiseScale), this._shader.setUniform("u_speed", this._speed);
+  setUniforms(e, t) {
+    super.setUniforms(e, t), this._shader.setUniform("direction", this._direction), this._shader.setUniform("noiseScale", this._noiseScale), this._shader.setUniform("u_speed", this._speed);
   }
   get direction() {
     return this._direction;

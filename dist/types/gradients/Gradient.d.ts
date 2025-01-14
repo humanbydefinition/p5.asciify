@@ -2,7 +2,7 @@ import p5 from 'p5';
 import { P5AsciifyColorPalette } from "../ColorPalette";
 import { P5AsciifyFontTextureAtlas } from '../FontTextureAtlas';
 export declare class P5AsciifyGradient {
-    private _shader;
+    protected _shader: p5.Shader;
     private _characters;
     protected _p: p5;
     protected _brightnessStart: number;

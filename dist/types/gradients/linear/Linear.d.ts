@@ -10,7 +10,7 @@ export declare class P5AsciifyLinearGradient extends P5AsciifyGradient {
     private _angle;
     private _speed;
     constructor(shader: p5.Shader, brightnessStart: number, brightnessEnd: number, characters: string, params: LinearGradientParams);
-    setUniforms(p: p5, framebuffer: p5.Framebuffer, referenceFramebuffer: p5.Framebuffer): void;
+    setUniforms(framebuffer: p5.Framebuffer, referenceFramebuffer: p5.Framebuffer): void;
     get direction(): number;
     set direction(value: number);
     get angle(): number;

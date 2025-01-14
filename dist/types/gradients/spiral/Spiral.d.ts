@@ -14,7 +14,7 @@ export declare class P5AsciifySpiralGradient extends P5AsciifyGradient {
     private _speed;
     private _density;
     constructor(shader: p5.Shader, brightnessStart: number, brightnessEnd: number, characters: string, params: SpiralGradientParams);
-    setUniforms(p: p5, framebuffer: p5.Framebuffer, referenceFramebuffer: p5.Framebuffer): void;
+    setUniforms(framebuffer: p5.Framebuffer, referenceFramebuffer: p5.Framebuffer): void;
     get direction(): number;
     set direction(value: number);
     get centerX(): number;
