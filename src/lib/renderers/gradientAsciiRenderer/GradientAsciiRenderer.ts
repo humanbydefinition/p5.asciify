@@ -17,7 +17,9 @@ export default class GradientAsciiRenderer extends AsciiRenderer {
     private grayscaleShader: p5.Shader;
     private colorSampleShader: p5.Shader;
     private grayscaleFramebuffer: p5.Framebuffer;
+    private asciiCharacterShader: p5.Shader;
     private prevAsciiGradientFramebuffer: p5.Framebuffer;
+    private nextAsciiGradientFramebuffer: p5.Framebuffer;
     private gradientManager: P5AsciifyGradientManager;
 
     constructor(
