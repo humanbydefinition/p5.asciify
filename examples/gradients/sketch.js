@@ -104,7 +104,7 @@ const sketch = (p) => {
         }
 
         if (p.frameCount === 120) {
-            radialGradient.palette = "finally ";
+            radialGradient.characters = "finally ";
         }
 
         linearGradient.angle += 0.5;

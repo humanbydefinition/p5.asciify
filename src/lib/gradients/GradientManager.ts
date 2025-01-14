@@ -17,8 +17,6 @@ import radialGradientShader from "../gradients/radial/radial.frag";
 import conicalGradientShader from "../gradients/conical/conical.frag";
 import noiseGradientShader from "../gradients/noise/noise.frag";
 
-
-
 export type GradientType = 'linear' | 'zigzag' | 'spiral' | 'radial' | 'conical' | 'noise';
 
 type GradientParams = {
@@ -28,11 +26,6 @@ type GradientParams = {
     radial: RadialGradientParams;
     conical: ConicalGradientParams;
     noise: NoiseGradientParams;
-}
-
-interface SetupQueueItem {
-    gradientInstance: P5AsciifyGradient;
-    type: GradientType;
 }
 
 export class P5AsciifyGradientManager {
@@ -45,7 +38,7 @@ export class P5AsciifyGradientManager {
         noise: { noiseScale: 0.1, speed: 0.01, direction: 1 },
     };
 
-    private gradientShaders: Record<GradientType, string> = {
+    private gradientShaders: Record<GradientType, string | p5.Shader> = {
         linear: linearGradientShader,
         zigzag: zigzagGradientShader,
         spiral: spiralGradientShader,
@@ -71,7 +64,7 @@ export class P5AsciifyGradientManager {
                 new P5AsciifyNoiseGradient(shader, brightnessStart, brightnessEnd, characters, params),
         };
 
-    private _setupQueue: SetupQueueItem[] = [];
+    private _setupQueue: Array<{ gradientInstance: P5AsciifyGradient, type: GradientType; }> = [];
     private _gradients: P5AsciifyGradient[] = [];
     private fontTextureAtlas!: P5AsciifyFontTextureAtlas;
     private p5Instance!: p5;
@@ -90,7 +83,8 @@ export class P5AsciifyGradientManager {
         for (const { gradientInstance, type } of this._setupQueue) {
             gradientInstance.setup(
                 this.p5Instance,
-                this.gradientShaders[type] as unknown as p5.Shader,
+                this.fontTextureAtlas,
+                this.gradientShaders[type] as p5.Shader,
                 this.fontTextureAtlas.getCharsetColorArray(gradientInstance.characters)
             );
         }
@@ -120,14 +114,13 @@ export class P5AsciifyGradientManager {
         });
 
         const gradient = this._gradientConstructors[gradientName](
-            this.gradientShaders[gradientName] as unknown as p5.Shader,
+            this.gradientShaders[gradientName] as p5.Shader,
             brightnessStart,
             brightnessEnd,
             characters,
             mergedParams
         );
 
-        gradient.registerPaletteChangeCallback(this.handleGradientPaletteChange.bind(this));
         this._gradients.push(gradient);
 
         if (!(this.p5Instance as any)._setupDone) {
@@ -150,14 +143,6 @@ export class P5AsciifyGradientManager {
         }
     }
 
-    private handleGradientPaletteChange(gradient: P5AsciifyGradient, characters: string): void {
-        if (!(this.p5Instance as any)._setupDone) {
-            gradient.characters = characters;
-        } else {
-            gradient.palette.setColors(this.fontTextureAtlas.getCharsetColorArray(characters));
-        }
-    }
-
     private setupShaders(): void {
         for (const gradientName in this.gradientShaders) {
             this.gradientShaders[gradientName as GradientType] = this.p5Instance.createShader(
@@ -167,16 +152,15 @@ export class P5AsciifyGradientManager {
         }
     }
 
-    public get gradientConstructors(): Record<GradientType,
+    get gradientConstructors(): Record<GradientType,
         (shader: p5.Shader, brightnessStart: number, brightnessEnd: number, characters: string[], params: any) => P5AsciifyGradient
     > {
         return this._gradientConstructors;
     }
 
-    public get gradientParams(): GradientParams {
+    get gradientParams(): GradientParams {
         return this._gradientParams;
     }
 
     get gradients(): P5AsciifyGradient[] { return this._gradients; }
-
 }
