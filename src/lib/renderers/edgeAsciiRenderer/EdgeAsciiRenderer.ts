@@ -86,8 +86,8 @@ export default class EdgeAsciiRenderer extends AsciiRenderer<EdgeAsciiRendererOp
         this.colorSampleShader.setUniform('u_previousColorTexture', previousAsciiRenderer.primaryColorSampleFramebuffer);
         this.colorSampleShader.setUniform('u_sampleTexture', this.sampleFramebuffer);
         this.colorSampleShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
-        this.colorSampleShader.setUniform('u_sampleMode', this._options.characterColorMode);
-        this.colorSampleShader.setUniform('u_staticColor', this._options.characterColor._array);
+        this.colorSampleShader.setUniform('u_sampleMode', this._options.characterColorMode as number);
+        this.colorSampleShader.setUniform('u_staticColor', (this._options.characterColor as p5.Color)._array);
         this.p.rect(0, 0, this.p.width, this.p.height);
         this._primaryColorSampleFramebuffer.end();
 
@@ -99,8 +99,8 @@ export default class EdgeAsciiRenderer extends AsciiRenderer<EdgeAsciiRendererOp
         this.colorSampleShader.setUniform('u_previousColorTexture', previousAsciiRenderer.secondaryColorSampleFramebuffer);
         this.colorSampleShader.setUniform('u_sampleTexture', this.sampleFramebuffer);
         this.colorSampleShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
-        this.colorSampleShader.setUniform('u_sampleMode', this._options.backgroundColorMode);
-        this.colorSampleShader.setUniform('u_staticColor', this._options.backgroundColor._array);
+        this.colorSampleShader.setUniform('u_sampleMode', this._options.backgroundColorMode as number);
+        this.colorSampleShader.setUniform('u_staticColor', (this._options.backgroundColor as p5.Color)._array);
         this.p.rect(0, 0, this.p.width, this.p.height);
         this._secondaryColorSampleFramebuffer.end();
 

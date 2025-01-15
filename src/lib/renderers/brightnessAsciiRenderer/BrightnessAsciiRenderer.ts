@@ -52,7 +52,7 @@ export default class BrightnessAsciiRenderer extends AsciiRenderer {
 
         this._primaryColorSampleFramebuffer.begin();
         if (this._options.characterColorMode === 1) {
-            this.p.background(this._options.characterColor);
+            this.p.background(this._options.characterColor as p5.Color);
         } else {
             this.p.clear();
             this.p.image(this.colorSampleFramebuffer, -this.grid.cols / 2, -this.grid.rows / 2, this.grid.cols, this.grid.rows);
@@ -61,7 +61,7 @@ export default class BrightnessAsciiRenderer extends AsciiRenderer {
 
         this._secondaryColorSampleFramebuffer.begin();
         if (this._options.backgroundColorMode === 1) {
-            this.p.background(this._options.backgroundColor);
+            this.p.background(this._options.backgroundColor as p5.Color);
         } else {
             this.p.clear();
             this.p.image(this.colorSampleFramebuffer, -this.grid.cols / 2, -this.grid.rows / 2, this.grid.cols, this.grid.rows);

@@ -84,7 +84,7 @@ export default class AccurateAsciiRenderer extends AsciiRenderer {
         // Primary color sample pass
         this._primaryColorSampleFramebuffer.begin();
         if (this._options.characterColorMode === 1) {
-            this.p.background(this._options.characterColor);
+            this.p.background(this._options.characterColor as p5.Color);
         } else {
             this.p.clear();
             this.p.shader(this.colorSampleShader);
@@ -101,7 +101,7 @@ export default class AccurateAsciiRenderer extends AsciiRenderer {
         // Secondary color sample pass
         this._secondaryColorSampleFramebuffer.begin();
         if (this._options.backgroundColorMode === 1) {
-            this.p.background(this._options.backgroundColor);
+            this.p.background(this._options.backgroundColor as p5.Color);
         } else {
             this.p.clear();
             this.p.shader(this.colorSampleShader);
