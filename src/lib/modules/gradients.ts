@@ -1,6 +1,6 @@
 import { validateGradientParams } from '../validators/GradientValidator';
 import { P5Asciifier } from '../Asciifier';
-import { GradientType } from '../gradients/GradientManager';
+import { GradientType } from '../gradients/types';
 import { P5AsciifyGradient } from '../gradients/Gradient';
 import p5 from 'p5';
 

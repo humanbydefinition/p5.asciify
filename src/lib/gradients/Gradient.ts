@@ -7,7 +7,7 @@ import { validateNumberInRange } from '../utils';
 /**
  * Represents a gradient that can be applied to the gradient ascii renderer.
  */
-export class P5AsciifyGradient {
+export abstract class P5AsciifyGradient {
     protected _p!: p5;
     protected _brightnessStart: number;
     protected _brightnessEnd: number;

@@ -1,12 +1,10 @@
 import p5 from 'p5';
 import { P5AsciifyGradient } from '../Gradient';
+import { ConicalGradientParams } from '../types';
 
-export interface ConicalGradientParams {
-    centerX: number;
-    centerY: number;
-    speed: number;
-}
-
+/**
+ * A conical gradient that moves in a conical pattern across the screen.
+ */
 export class P5AsciifyConicalGradient extends P5AsciifyGradient {
     public centerX: number;
     public centerY: number;

@@ -1,12 +1,10 @@
 import p5 from 'p5';
 import { P5AsciifyGradient } from '../Gradient';
+import { NoiseGradientParams } from '../types';
 
-export interface NoiseGradientParams {
-    noiseScale: number;
-    speed: number;
-    direction: number;
-}
-
+/**
+ * A noise gradient that moves in a noise pattern across the screen.
+ */
 export class P5AsciifyNoiseGradient extends P5AsciifyGradient {
     public direction: number;
     public noiseScale: number;

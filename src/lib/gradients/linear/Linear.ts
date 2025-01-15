@@ -1,12 +1,10 @@
 import p5 from 'p5';
 import { P5AsciifyGradient } from '../Gradient';
+import { LinearGradientParams } from '../types';
 
-export interface LinearGradientParams {
-    direction: number;
-    angle: number;
-    speed: number;
-}
-
+/**
+ * A linear gradient that moves in a linear pattern across the screen.
+ */
 export class P5AsciifyLinearGradient extends P5AsciifyGradient {
     public direction: number;
     public angle: number;

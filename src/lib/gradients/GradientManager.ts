@@ -1,13 +1,15 @@
 import p5 from 'p5';
-import { P5AsciifyLinearGradient, LinearGradientParams } from "./linear/Linear";
-import { P5AsciifyZigZagGradient, ZigZagGradientParams } from "./zigzag/ZigZag";
-import { P5AsciifySpiralGradient, SpiralGradientParams } from "./spiral/Spiral";
-import { P5AsciifyRadialGradient, RadialGradientParams } from "./radial/Radial";
-import { P5AsciifyConicalGradient, ConicalGradientParams } from "./conical/Conical";
-import { P5AsciifyNoiseGradient, NoiseGradientParams } from "./noise/Noise";
+import { P5AsciifyLinearGradient } from "./linear/Linear";
+import { P5AsciifyZigZagGradient } from "./zigzag/ZigZag";
+import { P5AsciifySpiralGradient } from "./spiral/Spiral";
+import { P5AsciifyRadialGradient } from "./radial/Radial";
+import { P5AsciifyConicalGradient } from "./conical/Conical";
+import { P5AsciifyNoiseGradient } from "./noise/Noise";
 import { P5AsciifyGradient } from './Gradient';
 
 import { P5AsciifyFontTextureAtlas } from '../FontTextureAtlas';
+
+import { GradientParams, GradientType } from './types';
 
 import vertexShader from '../assets/shaders/vert/shader.vert';
 import linearGradientShader from "../gradients/linear/linear.frag";
@@ -16,17 +18,6 @@ import spiralGradientShader from "../gradients/spiral/spiral.frag";
 import radialGradientShader from "../gradients/radial/radial.frag";
 import conicalGradientShader from "../gradients/conical/conical.frag";
 import noiseGradientShader from "../gradients/noise/noise.frag";
-
-export type GradientType = 'linear' | 'zigzag' | 'spiral' | 'radial' | 'conical' | 'noise';
-
-type GradientParams = {
-    linear: LinearGradientParams;
-    zigzag: ZigZagGradientParams;
-    spiral: SpiralGradientParams;
-    radial: RadialGradientParams;
-    conical: ConicalGradientParams;
-    noise: NoiseGradientParams;
-}
 
 /**
  * Manages the creation and removal of gradients for the gradient ascii renderer.

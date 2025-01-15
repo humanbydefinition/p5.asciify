@@ -1,12 +1,12 @@
 import p5 from 'p5';
 import { P5AsciifyGradient } from '../Gradient';
 
-export interface ZigZagGradientParams {
-    direction: number;
-    angle: number;
-    speed?: number;
-}
+import { ZigZagGradientParams } from '../types';
 
+/**
+ * A zigzag gradient that moves in a zigzag pattern across the screen.
+ * Each row/column moves in the opposite direction of the previous row/column.
+ */
 export class P5AsciifyZigZagGradient extends P5AsciifyGradient {
     public direction: number;
     public angle: number;
