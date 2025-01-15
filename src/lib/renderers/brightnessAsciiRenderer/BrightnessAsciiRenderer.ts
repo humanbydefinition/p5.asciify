@@ -21,9 +21,6 @@ export default class BrightnessAsciiRenderer extends AsciiRenderer {
     constructor(p5Instance: p5, grid: P5AsciifyGrid, characterSet: P5AsciifyCharacterSet, options: AsciiRendererOptions) {
         super(p5Instance, grid, characterSet, options);
 
-        this._options.characterColor = this.p.color(this._options.characterColor as string);
-        this._options.backgroundColor = this.p.color(this._options.backgroundColor as string);
-
         this.colorSampleShader = this.p.createShader(vertexShader, colorSampleShader);
         this.asciiCharacterShader = this.p.createShader(vertexShader, asciiCharacterShader);
 

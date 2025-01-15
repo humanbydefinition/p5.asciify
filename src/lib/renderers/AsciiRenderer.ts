@@ -25,6 +25,13 @@ export class AsciiRenderer<T extends AsciiRendererOptions = AsciiRendererOptions
         protected _options: T
     ) {
 
+        if (this._options.characterColor) {
+            this._options.characterColor = this.p.color(this._options.characterColor as string);
+        }
+        if (this._options.backgroundColor) {
+            this._options.backgroundColor = this.p.color(this._options.backgroundColor as string);
+        }
+
         this._primaryColorSampleFramebuffer = this.p.createFramebuffer({
             density: 1,
             antialias: false,

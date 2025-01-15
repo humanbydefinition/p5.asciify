@@ -33,9 +33,6 @@ export default class GradientAsciiRenderer extends AsciiRenderer {
     ) {
         super(p5Instance, grid, characterSet, options);
 
-        this._options.characterColor = this.p.color(this._options.characterColor as string);
-        this._options.backgroundColor = this.p.color(this._options.backgroundColor as string);
-
         this.gradientManager = gradientManager;
 
         this.grayscaleShader = this.p.createShader(vertexShader, grayscaleShader);
