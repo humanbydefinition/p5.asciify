@@ -2,10 +2,8 @@ import p5 from 'p5';
 import p5asciify from '../../src/lib/index';
 
 const sketch = (p) => {
-    let sketchFramebuffer;
     let linearGradient, spiralGradient, radialGradient, 
         zigzagGradient, conicalGradient, noiseGradient;
-    let kaleidoscopeEffect, distortionEffect;
 
     let gridRows = 3;
     let gridCols = 3;
@@ -23,7 +21,6 @@ const sketch = (p) => {
 
     p.setup = () => {
         p.createCanvas(p.windowWidth, p.windowHeight, p.WEBGL);
-        sketchFramebuffer = p.createFramebuffer({ format: p.FLOAT });
 
         linearGradient = p.addAsciiGradient("linear", 150, 150, "gradients ", {
             direction: 1,
@@ -76,7 +73,6 @@ const sketch = (p) => {
     };
 
     p.draw = () => {
-        sketchFramebuffer.begin();
         p.background(0);
         p.noStroke();
 
@@ -95,9 +91,6 @@ const sketch = (p) => {
                 );
             }
         }
-
-        sketchFramebuffer.end();
-        p.image(sketchFramebuffer, -p.windowWidth / 2, -p.windowHeight / 2);
 
         if (p.frameCount % 60 == 0) {
             zigzagGradient.enabled = !zigzagGradient.enabled;
