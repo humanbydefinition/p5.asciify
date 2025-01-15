@@ -34,5 +34,9 @@ export declare class RendererManager {
      * If they have, the grid is reset and the renderers are resized.
      */
     private checkCanvasDimensions;
+    /**
+     * Resets the dimensions of all renderers.
+     */
+    resetRendererDimensions(): void;
     get renderers(): AsciiRenderer[];
 }
