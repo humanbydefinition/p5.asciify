@@ -107,9 +107,7 @@ export class P5Asciifier {
                 this.asciiFontTextureAtlas.maxGlyphDimensions.height
             );
 
-            this.rendererManager.renderers.forEach(renderer => renderer.resizeFramebuffers());
-
-            this.rendererManager.renderers.forEach(renderer => renderer.resetShaders());
+            this.rendererManager.resetRendererDimensions();
         }
     }
 

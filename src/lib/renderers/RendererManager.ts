@@ -106,11 +106,15 @@ export class RendererManager {
 
             this.grid.reset();
 
-            this._renderers.forEach(renderer => {
-                renderer.resizeFramebuffers();
-                renderer.resetShaders();
-            });
+            this.resetRendererDimensions();
         }
+    }
+
+    public resetRendererDimensions(): void {
+        this._renderers.forEach(renderer => {
+            renderer.resizeFramebuffers();
+            renderer.resetShaders();
+        });
     }
 
     // Getters and setters
