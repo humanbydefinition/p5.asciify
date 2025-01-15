@@ -18,6 +18,7 @@ type GradientParams = {
 };
 export declare class P5AsciifyGradientManager {
     private _gradientParams;
+    private gradientShaderSources;
     private gradientShaders;
     private _gradientConstructors;
     private _setupQueue;
@@ -31,7 +32,7 @@ export declare class P5AsciifyGradientManager {
     addGradient(gradientName: GradientType, brightnessStart: number, brightnessEnd: number, characters: string, params: Partial<GradientParams[typeof gradientName]>): P5AsciifyGradient;
     removeGradient(gradient: P5AsciifyGradient): void;
     private setupShaders;
-    get gradientConstructors(): Record<GradientType, (shader: p5.Shader, brightnessStart: number, brightnessEnd: number, characters: string, params: any) => P5AsciifyGradient>;
+    get gradientConstructors(): Record<GradientType, (brightnessStart: number, brightnessEnd: number, characters: string, params: any) => P5AsciifyGradient>;
     get gradientParams(): GradientParams;
     get gradients(): P5AsciifyGradient[];
 }

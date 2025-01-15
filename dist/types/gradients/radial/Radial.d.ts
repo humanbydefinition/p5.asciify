@@ -11,7 +11,7 @@ export declare class P5AsciifyRadialGradient extends P5AsciifyGradient {
     private _centerX;
     private _centerY;
     private _radius;
-    constructor(shader: p5.Shader, brightnessStart: number, brightnessEnd: number, characters: string, params: RadialGradientParams);
+    constructor(brightnessStart: number, brightnessEnd: number, characters: string, params: RadialGradientParams);
     setUniforms(framebuffer: p5.Framebuffer, referenceFramebuffer: p5.Framebuffer): void;
     get direction(): number;
     set direction(value: number);

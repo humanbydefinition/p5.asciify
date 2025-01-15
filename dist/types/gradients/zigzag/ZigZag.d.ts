@@ -9,7 +9,7 @@ export declare class P5AsciifyZigZagGradient extends P5AsciifyGradient {
     private _direction;
     private _angle;
     private _speed;
-    constructor(shader: p5.Shader, brightnessStart: number, brightnessEnd: number, characters: string, params: ZigZagGradientParams);
+    constructor(brightnessStart: number, brightnessEnd: number, characters: string, params: ZigZagGradientParams);
     setUniforms(framebuffer: p5.Framebuffer, referenceFramebuffer: p5.Framebuffer): void;
     get direction(): number;
     set direction(value: number);

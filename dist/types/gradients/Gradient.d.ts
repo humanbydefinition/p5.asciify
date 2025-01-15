@@ -2,7 +2,6 @@ import p5 from 'p5';
 import { P5AsciifyColorPalette } from "../ColorPalette";
 import { P5AsciifyFontTextureAtlas } from '../FontTextureAtlas';
 export declare class P5AsciifyGradient {
-    protected _shader: p5.Shader;
     private _characters;
     protected _p: p5;
     protected _brightnessStart: number;
@@ -11,7 +10,8 @@ export declare class P5AsciifyGradient {
     protected _onPaletteChangeCallback?: (gradient: P5AsciifyGradient, value: string[]) => void;
     protected _palette: P5AsciifyColorPalette;
     protected _fontTextureAtlas: P5AsciifyFontTextureAtlas;
-    constructor(_shader: p5.Shader, brightnessStart: number, brightnessEnd: number, _characters: string);
+    protected _shader: p5.Shader;
+    constructor(brightnessStart: number, brightnessEnd: number, _characters: string);
     setup(p5Instance: p5, fontTextureAtlas: P5AsciifyFontTextureAtlas, shader: p5.Shader, colors: [number, number, number][]): void;
     setUniforms(framebuffer: p5.Framebuffer, referenceFramebuffer: p5.Framebuffer): void;
     set brightnessStart(value: number);
