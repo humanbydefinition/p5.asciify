@@ -1,5 +1,5 @@
 import { P5AsciifyGradientManager } from '../gradients/GradientManager';
-import { GradientType } from '../gradients/GradientManager';
+import { GradientType } from '../gradients/types';
 /**
  * Validates the parameters for adding an ASCII gradient.
  * @param gradientManager - The gradient manager instance.

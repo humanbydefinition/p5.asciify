@@ -1,21 +1,7 @@
 import p5 from 'p5';
-import { LinearGradientParams } from "./linear/Linear";
-import { ZigZagGradientParams } from "./zigzag/ZigZag";
-import { SpiralGradientParams } from "./spiral/Spiral";
-import { RadialGradientParams } from "./radial/Radial";
-import { ConicalGradientParams } from "./conical/Conical";
-import { NoiseGradientParams } from "./noise/Noise";
 import { P5AsciifyGradient } from './Gradient';
 import { P5AsciifyFontTextureAtlas } from '../FontTextureAtlas';
-export type GradientType = 'linear' | 'zigzag' | 'spiral' | 'radial' | 'conical' | 'noise';
-type GradientParams = {
-    linear: LinearGradientParams;
-    zigzag: ZigZagGradientParams;
-    spiral: SpiralGradientParams;
-    radial: RadialGradientParams;
-    conical: ConicalGradientParams;
-    noise: NoiseGradientParams;
-};
+import { GradientParams, GradientType } from './types';
 /**
  * Manages the creation and removal of gradients for the gradient ascii renderer.
  */
@@ -65,4 +51,3 @@ export declare class P5AsciifyGradientManager {
     get gradients(): P5AsciifyGradient[];
     get gradientConstructors(): Record<GradientType, (brightnessStart: number, brightnessEnd: number, characters: string, params: any) => P5AsciifyGradient>;
 }
-export {};

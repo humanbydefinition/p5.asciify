@@ -4,7 +4,7 @@ import { P5AsciifyFontTextureAtlas } from '../FontTextureAtlas';
 /**
  * Represents a gradient that can be applied to the gradient ascii renderer.
  */
-export declare class P5AsciifyGradient {
+export declare abstract class P5AsciifyGradient {
     private _characters;
     protected _p: p5;
     protected _brightnessStart: number;
