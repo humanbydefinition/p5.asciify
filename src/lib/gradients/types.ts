@@ -1,4 +1,10 @@
+import { P5AsciifyGradient } from './Gradient';
+
 export type GradientType = 'linear' | 'zigzag' | 'spiral' | 'radial' | 'conical' | 'noise';
+
+export type GradientConstructorMap = Record<GradientType, 
+    (brightnessStart: number, brightnessEnd: number, characters: string, params: any) => P5AsciifyGradient
+>;
 
 export type ConicalGradientParams = {
     centerX: number;

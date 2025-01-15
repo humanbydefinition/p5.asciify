@@ -9,7 +9,7 @@ import { P5AsciifyGradient } from './Gradient';
 
 import { P5AsciifyFontTextureAtlas } from '../FontTextureAtlas';
 
-import { GradientParams, GradientType } from './types';
+import { GradientParams, GradientType, GradientConstructorMap } from './types';
 
 import vertexShader from '../assets/shaders/vert/shader.vert';
 import linearGradientShader from "../gradients/linear/linear.frag";
@@ -43,22 +43,20 @@ export class P5AsciifyGradientManager {
 
     private gradientShaders: Partial<Record<GradientType, p5.Shader>> = {};
 
-    private _gradientConstructors: Record<GradientType,
-        (brightnessStart: number, brightnessEnd: number, characters: string, params: any) => P5AsciifyGradient
-    > = {
-            linear: (brightnessStart, brightnessEnd, characters, params) =>
-                new P5AsciifyLinearGradient(brightnessStart, brightnessEnd, characters, params),
-            zigzag: (brightnessStart, brightnessEnd, characters, params) =>
-                new P5AsciifyZigZagGradient(brightnessStart, brightnessEnd, characters, params),
-            spiral: (brightnessStart, brightnessEnd, characters, params) =>
-                new P5AsciifySpiralGradient(brightnessStart, brightnessEnd, characters, params),
-            radial: (brightnessStart, brightnessEnd, characters, params) =>
-                new P5AsciifyRadialGradient(brightnessStart, brightnessEnd, characters, params),
-            conical: (brightnessStart, brightnessEnd, characters, params) =>
-                new P5AsciifyConicalGradient(brightnessStart, brightnessEnd, characters, params),
-            noise: (brightnessStart, brightnessEnd, characters, params) =>
-                new P5AsciifyNoiseGradient(brightnessStart, brightnessEnd, characters, params),
-        };
+    private _gradientConstructors: GradientConstructorMap = {
+        linear: (brightnessStart, brightnessEnd, characters, params) =>
+            new P5AsciifyLinearGradient(brightnessStart, brightnessEnd, characters, params),
+        zigzag: (brightnessStart, brightnessEnd, characters, params) =>
+            new P5AsciifyZigZagGradient(brightnessStart, brightnessEnd, characters, params),
+        spiral: (brightnessStart, brightnessEnd, characters, params) =>
+            new P5AsciifySpiralGradient(brightnessStart, brightnessEnd, characters, params),
+        radial: (brightnessStart, brightnessEnd, characters, params) =>
+            new P5AsciifyRadialGradient(brightnessStart, brightnessEnd, characters, params),
+        conical: (brightnessStart, brightnessEnd, characters, params) =>
+            new P5AsciifyConicalGradient(brightnessStart, brightnessEnd, characters, params),
+        noise: (brightnessStart, brightnessEnd, characters, params) =>
+            new P5AsciifyNoiseGradient(brightnessStart, brightnessEnd, characters, params),
+    };
 
     private _setupQueue: Array<{ gradientInstance: P5AsciifyGradient, type: GradientType; }> = [];
     private _gradients: P5AsciifyGradient[] = [];
@@ -162,10 +160,5 @@ export class P5AsciifyGradientManager {
     // Getters
     get gradientParams(): GradientParams { return this._gradientParams; }
     get gradients(): P5AsciifyGradient[] { return this._gradients; }
-
-    get gradientConstructors(): Record<GradientType,
-        (brightnessStart: number, brightnessEnd: number, characters: string, params: any) => P5AsciifyGradient
-    > {
-        return this._gradientConstructors;
-    }
+    get gradientConstructors(): GradientConstructorMap { return this._gradientConstructors; }
 }
