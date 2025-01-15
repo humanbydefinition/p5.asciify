@@ -1035,11 +1035,11 @@ function lA(s) {
   };
 }
 function cA(s) {
-  B.prototype.preAsciifyDraw = function() {
+  B.prototype.registerMethod("pre", function() {
     s.sketchFramebuffer.begin(), this.clear(), this.push();
-  }, B.prototype.postAsciifyDraw = function() {
+  }), B.prototype.registerMethod("post", function() {
     this.pop(), s.sketchFramebuffer.end(), s.asciify();
-  }, B.prototype.registerMethod("pre", B.prototype.preAsciifyDraw), B.prototype.registerMethod("post", B.prototype.postAsciifyDraw);
+  });
 }
 const n = new aA();
 typeof window < "u" && (window.p5asciify = n);
