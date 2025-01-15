@@ -4,7 +4,7 @@ import { AsciiRenderer } from '../AsciiRenderer';
 import { P5AsciifyGrid } from '../../Grid';
 import { P5AsciifyCharacterSet } from '../../CharacterSet';
 
-import { BrightnessAsciiRendererOptions } from '../types';
+import { AsciiRendererOptions } from '../types';
 
 import vertexShader from '../../assets/shaders/vert/shader.vert';
 import colorSampleShader from './shaders/colorSample.frag';
@@ -18,11 +18,11 @@ export default class BrightnessAsciiRenderer extends AsciiRenderer {
     private asciiCharacterShader: p5.Shader;
     private colorSampleFramebuffer: p5.Framebuffer;
 
-    constructor(p5Instance: p5, grid: P5AsciifyGrid, characterSet: P5AsciifyCharacterSet, options: BrightnessAsciiRendererOptions) {
+    constructor(p5Instance: p5, grid: P5AsciifyGrid, characterSet: P5AsciifyCharacterSet, options: AsciiRendererOptions) {
         super(p5Instance, grid, characterSet, options);
 
-        this._options.characterColor = this.p.color(this._options.characterColor);
-        this._options.backgroundColor = this.p.color(this._options.backgroundColor);
+        this._options.characterColor = this.p.color(this._options.characterColor as string);
+        this._options.backgroundColor = this.p.color(this._options.backgroundColor as string);
 
         this.colorSampleShader = this.p.createShader(vertexShader, colorSampleShader);
         this.asciiCharacterShader = this.p.createShader(vertexShader, asciiCharacterShader);

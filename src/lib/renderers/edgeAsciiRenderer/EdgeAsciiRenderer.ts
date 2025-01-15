@@ -1,5 +1,5 @@
 import p5 from 'p5';
-import { AsciiRenderer, AsciiRendererOptions } from '../AsciiRenderer';
+import { AsciiRenderer } from '../AsciiRenderer';
 import { P5AsciifyGrid } from '../../Grid';
 import { P5AsciifyCharacterSet } from '../../CharacterSet';
 
@@ -26,8 +26,8 @@ export default class EdgeAsciiRenderer extends AsciiRenderer<EdgeAsciiRendererOp
     constructor(p5Instance: p5, grid: P5AsciifyGrid, characterSet: P5AsciifyCharacterSet, options: EdgeAsciiRendererOptions) {
         super(p5Instance, grid, characterSet, options);
 
-        this._options.characterColor = this.p.color(this._options.characterColor);
-        this._options.backgroundColor = this.p.color(this._options.backgroundColor);
+        this._options.characterColor = this.p.color(this._options.characterColor as string);
+        this._options.backgroundColor = this.p.color(this._options.backgroundColor as string);
 
         this.sobelShader = this.p.createShader(vertexShader, sobelShader);
         this.sampleShader = this.p.createShader(vertexShader, generateSampleShader(16, this.grid.cellHeight, this.grid.cellWidth));

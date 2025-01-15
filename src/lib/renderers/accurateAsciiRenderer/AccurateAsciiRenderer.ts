@@ -4,7 +4,7 @@ import { AsciiRenderer } from '../AsciiRenderer';
 import { P5AsciifyGrid } from '../../Grid';
 import { P5AsciifyCharacterSet } from '../../CharacterSet';
 
-import { AccurateAsciiRendererOptions } from '../types';
+import { AsciiRendererOptions } from '../types';
 
 import { generateCharacterSelectionShader, generateBrightnessSampleShader, generateColorSampleShader } from './shaders/shaderGenerators.min';
 import brightnessSplitShader from './shaders/brightnessSplit.frag';
@@ -21,11 +21,11 @@ export default class AccurateAsciiRenderer extends AsciiRenderer {
     private brightnessSampleFramebuffer: p5.Framebuffer;
     private brightnessSplitFramebuffer: p5.Framebuffer;
 
-    constructor(p5Instance: p5, grid: P5AsciifyGrid, characterSet: P5AsciifyCharacterSet, options: AccurateAsciiRendererOptions) {
+    constructor(p5Instance: p5, grid: P5AsciifyGrid, characterSet: P5AsciifyCharacterSet, options: AsciiRendererOptions) {
         super(p5Instance, grid, characterSet, options);
 
-        this._options.characterColor = this.p.color(this._options.characterColor);
-        this._options.backgroundColor = this.p.color(this._options.backgroundColor);
+        this._options.characterColor = this.p.color(this._options.characterColor as string);
+        this._options.backgroundColor = this.p.color(this._options.backgroundColor as string);
 
         this.characterSelectionShader = this.p.createShader(vertexShader, generateCharacterSelectionShader(this.characterSet.asciiFontTextureAtlas.fontSize, this.characterSet.characters.length));
         this.brightnessSampleShader = this.p.createShader(vertexShader, generateBrightnessSampleShader(this.grid.cellHeight, this.grid.cellWidth));

@@ -72,9 +72,7 @@ export class AsciiRenderer<T extends AsciiRendererOptions = AsciiRendererOptions
     /**
      * Resets the shaders for the renderer.
      */
-    public resetShaders(): void {
-
-    }
+    public resetShaders(): void { return; }
 
     /**
      * Updates renderer options.
@@ -82,11 +80,11 @@ export class AsciiRenderer<T extends AsciiRendererOptions = AsciiRendererOptions
      */
     public updateOptions(newOptions: Partial<AsciiRendererOptions>): void {
         if (newOptions?.characterColor) {
-            newOptions.characterColor = this.p.color(newOptions.characterColor);
+            newOptions.characterColor = this.p.color(newOptions.characterColor as string);
         }
-    
+
         if (newOptions?.backgroundColor) {
-            newOptions.backgroundColor = this.p.color(newOptions.backgroundColor);
+            newOptions.backgroundColor = this.p.color(newOptions.backgroundColor as string);
         }
 
         this._options = {
