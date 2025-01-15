@@ -1,5 +1,4 @@
 import p5 from 'p5';
-import { validateOptions } from "../validators/OptionsValidator";
 import { P5AsciifyGrid } from '../Grid';
 import { P5AsciifyCharacterSet } from '../CharacterSet';
 
@@ -82,7 +81,13 @@ export class AsciiRenderer<T extends AsciiRendererOptions = AsciiRendererOptions
      * @param newOptions - The new options to update.
      */
     public updateOptions(newOptions: Partial<AsciiRendererOptions>): void {
-        validateOptions(this.p, newOptions);
+        if (newOptions?.characterColor) {
+            newOptions.characterColor = this.p.color(newOptions.characterColor);
+        }
+    
+        if (newOptions?.backgroundColor) {
+            newOptions.backgroundColor = this.p.color(newOptions.backgroundColor);
+        }
 
         this._options = {
             ...this._options,
