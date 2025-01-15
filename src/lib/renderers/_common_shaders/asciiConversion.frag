@@ -14,7 +14,7 @@ uniform vec2 u_gridOffsetDimensions;
 
 uniform float u_rotationAngle;
 
-uniform int u_invertMode;
+uniform bool u_invertMode;
 
 uniform vec2 u_resolution;
 uniform float u_pixelRatio; // Added uniform for pixel ratio
@@ -89,7 +89,7 @@ void main() {
     vec4 charColor = outsideBounds ? secondaryColor : texture2D(u_characterTexture, texCoord);
 
     // If the inversion mode is enabled, invert the character color
-    if(u_invertMode == 1) {
+    if(u_invertMode) {
         charColor.a = 1.0 - charColor.a;
         charColor.rgb = vec3(1.0);
     }
@@ -102,6 +102,6 @@ void main() {
 
     // Override final color with background color for out-of-bounds areas due to rotation
     if(outsideBounds) {
-        gl_FragColor = u_invertMode == 1 ? primaryColor : secondaryColor;
+        gl_FragColor = u_invertMode ? primaryColor : secondaryColor;
     }
 }

@@ -1,9 +1,11 @@
 import p5 from 'p5';
 
-import { AsciiRenderer, AsciiRendererOptions } from '../AsciiRenderer';
+import { AsciiRenderer } from '../AsciiRenderer';
 import { P5AsciifyGrid } from '../../Grid';
 import { P5AsciifyCharacterSet } from '../../CharacterSet';
 import { P5AsciifyGradientManager } from '../../gradients/GradientManager';
+
+import { GradientAsciiRendererOptions } from '../types';
 
 import grayscaleShader from './shaders/grayscale.frag';
 import colorSampleShader from './shaders/colorSample.frag';
@@ -27,7 +29,7 @@ export default class GradientAsciiRenderer extends AsciiRenderer {
         grid: P5AsciifyGrid,
         characterSet: P5AsciifyCharacterSet,
         gradientManager: P5AsciifyGradientManager,
-        options: AsciiRendererOptions
+        options: GradientAsciiRendererOptions
     ) {
         super(p5Instance, grid, characterSet, options);
 

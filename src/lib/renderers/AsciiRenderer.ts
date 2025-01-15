@@ -3,24 +3,15 @@ import { validateOptions } from "../validators/OptionsValidator";
 import { P5AsciifyGrid } from '../Grid';
 import { P5AsciifyCharacterSet } from '../CharacterSet';
 
+import { AsciiRendererOptions } from './types';
+
 import vertexShader from '../assets/shaders/vert/shader.vert';
 import asciiConversionShader from './_common_shaders/asciiConversion.frag';
-
-export interface AsciiRendererOptions {
-    enabled: boolean;
-    characters: string;
-    characterColorMode: number;
-    characterColor: p5.Color;
-    backgroundColorMode: number;
-    backgroundColor: p5.Color;
-    invertMode: number;
-    rotationAngle: number;
-}
 
 /**
  * Abstract class for shader-based ASCII Renderers.
  */
-export abstract class AsciiRenderer<T extends AsciiRendererOptions = AsciiRendererOptions> {
+export class AsciiRenderer<T extends AsciiRendererOptions = AsciiRendererOptions> {
 
     protected _primaryColorSampleFramebuffer: p5.Framebuffer;
     protected _secondaryColorSampleFramebuffer: p5.Framebuffer;

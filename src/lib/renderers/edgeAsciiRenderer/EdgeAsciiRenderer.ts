@@ -3,17 +3,14 @@ import { AsciiRenderer, AsciiRendererOptions } from '../AsciiRenderer';
 import { P5AsciifyGrid } from '../../Grid';
 import { P5AsciifyCharacterSet } from '../../CharacterSet';
 
+import { EdgeAsciiRendererOptions } from '../types';
+
 import vertexShader from '../../assets/shaders/vert/shader.vert';
 import colorSampleShader from './shaders/colorSample.frag';
 import asciiCharacterShader from './shaders/asciiCharacter.frag';
 import sobelShader from './shaders/sobel.frag';
 
 import { generateSampleShader } from './shaders/shaderGenerators.min';
-
-interface EdgeAsciiRendererOptions extends AsciiRendererOptions {
-    sobelThreshold: number;
-    sampleThreshold: number;
-}
 
 /**
  * An ASCII renderer that applies ASCII edges to the input sketch by using edge detection.

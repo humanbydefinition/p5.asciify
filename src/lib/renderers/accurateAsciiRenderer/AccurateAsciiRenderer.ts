@@ -4,20 +4,11 @@ import { AsciiRenderer } from '../AsciiRenderer';
 import { P5AsciifyGrid } from '../../Grid';
 import { P5AsciifyCharacterSet } from '../../CharacterSet';
 
+import { AccurateAsciiRendererOptions } from '../types';
+
 import { generateCharacterSelectionShader, generateBrightnessSampleShader, generateColorSampleShader } from './shaders/shaderGenerators.min';
 import brightnessSplitShader from './shaders/brightnessSplit.frag';
 import vertexShader from '../../assets/shaders/vert/shader.vert';
-
-interface AccurateAsciiRendererOptions {
-    enabled: boolean;
-    characters: string;
-    characterColorMode: number;
-    characterColor: p5.Color;
-    backgroundColorMode: number;
-    backgroundColor: p5.Color;
-    invertMode: number;
-    rotationAngle: number;
-}
 
 /**
  * An ASCII renderer that attempts to accurately represent the input sketch using the available ASCII characters.
@@ -32,6 +23,9 @@ export default class AccurateAsciiRenderer extends AsciiRenderer {
 
     constructor(p5Instance: p5, grid: P5AsciifyGrid, characterSet: P5AsciifyCharacterSet, options: AccurateAsciiRendererOptions) {
         super(p5Instance, grid, characterSet, options);
+
+        this._options.characterColor = this.p.color(this._options.characterColor);
+        this._options.backgroundColor = this.p.color(this._options.backgroundColor);
 
         this.characterSelectionShader = this.p.createShader(vertexShader, generateCharacterSelectionShader(this.characterSet.asciiFontTextureAtlas.fontSize, this.characterSet.characters.length));
         this.brightnessSampleShader = this.p.createShader(vertexShader, generateBrightnessSampleShader(this.grid.cellHeight, this.grid.cellWidth));

@@ -2,7 +2,6 @@ import p5 from 'p5';
 
 import BrightnessAsciiRenderer from './brightnessAsciiRenderer/BrightnessAsciiRenderer';
 import AccurateAsciiRenderer from './accurateAsciiRenderer/AccurateAsciiRenderer';
-import CustomAsciiRenderer from './customAsciiRenderer/CustomAsciiRenderer';
 import EdgeAsciiRenderer from './edgeAsciiRenderer/EdgeAsciiRenderer';
 import GradientAsciiRenderer from './gradientAsciiRenderer/GradientAsciiRenderer';
 import { AsciiRenderer } from './AsciiRenderer';
