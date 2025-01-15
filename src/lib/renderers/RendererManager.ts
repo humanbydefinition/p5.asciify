@@ -110,6 +110,9 @@ export class RendererManager {
         }
     }
 
+    /**
+     * Resets the dimensions of all renderers.
+     */
     public resetRendererDimensions(): void {
         this._renderers.forEach(renderer => {
             renderer.resizeFramebuffers();
