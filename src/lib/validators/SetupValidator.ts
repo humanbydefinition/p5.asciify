@@ -8,9 +8,10 @@ import p5 from 'p5';
  */
 export function validateSetup(p: p5) {
     // Ensure WebGL renderer is used
-    if (p._renderer.drawingContext instanceof CanvasRenderingContext2D) {
-        throw new P5AsciifyError("WebGL renderer is required for p5.asciify to run.");
-    }
+    if (!(p._renderer.drawingContext instanceof WebGLRenderingContext || 
+        p._renderer.drawingContext instanceof WebGL2RenderingContext)) {
+      throw new P5AsciifyError("WebGL renderer is required for p5.asciify to run.");
+  }
 
     // Check p5.js version
     function compareVersions(v1: string, v2: string): number {
