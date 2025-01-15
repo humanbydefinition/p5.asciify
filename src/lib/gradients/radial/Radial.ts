@@ -9,10 +9,10 @@ export interface RadialGradientParams {
 }
 
 export class P5AsciifyRadialGradient extends P5AsciifyGradient {
-    private _direction: number;
-    private _centerX: number;
-    private _centerY: number;
-    private _radius: number;
+    public direction: number;
+    public centerX: number;
+    public centerY: number;
+    public radius: number;
 
     constructor(
         brightnessStart: number,
@@ -21,10 +21,10 @@ export class P5AsciifyRadialGradient extends P5AsciifyGradient {
         params: RadialGradientParams
     ) {
         super(brightnessStart, brightnessEnd, characters);
-        this._direction = params.direction;
-        this._centerX = params.centerX;
-        this._centerY = params.centerY;
-        this._radius = params.radius;
+        this.direction = params.direction;
+        this.centerX = params.centerX;
+        this.centerY = params.centerY;
+        this.radius = params.radius;
     }
 
     setUniforms(
@@ -32,41 +32,9 @@ export class P5AsciifyRadialGradient extends P5AsciifyGradient {
         referenceFramebuffer: p5.Framebuffer
     ): void {
         super.setUniforms(framebuffer, referenceFramebuffer);
-        this._shader.setUniform('u_gradientDirection', this._direction);
-        this._shader.setUniform('u_centerX', this._centerX);
-        this._shader.setUniform('u_centerY', this._centerY);
-        this._shader.setUniform('u_radius', this._radius);
-    }
-
-    get direction(): number {
-        return this._direction;
-    }
-
-    set direction(value: number) {
-        this._direction = value;
-    }
-
-    get centerX(): number {
-        return this._centerX;
-    }
-
-    set centerX(value: number) {
-        this._centerX = value;
-    }
-
-    get centerY(): number {
-        return this._centerY;
-    }
-
-    set centerY(value: number) {
-        this._centerY = value;
-    }
-
-    get radius(): number {
-        return this._radius;
-    }
-
-    set radius(value: number) {
-        this._radius = value;
+        this._shader.setUniform('u_gradientDirection', this.direction);
+        this._shader.setUniform('u_centerX', this.centerX);
+        this._shader.setUniform('u_centerY', this.centerY);
+        this._shader.setUniform('u_radius', this.radius);
     }
 }

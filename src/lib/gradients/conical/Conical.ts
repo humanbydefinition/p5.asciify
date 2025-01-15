@@ -8,9 +8,9 @@ export interface ConicalGradientParams {
 }
 
 export class P5AsciifyConicalGradient extends P5AsciifyGradient {
-    private _centerX: number;
-    private _centerY: number;
-    private _speed: number;
+    public centerX: number;
+    public centerY: number;
+    public speed: number;
 
     constructor(
         brightnessStart: number,
@@ -19,9 +19,9 @@ export class P5AsciifyConicalGradient extends P5AsciifyGradient {
         params: ConicalGradientParams
     ) {
         super(brightnessStart, brightnessEnd, characters);
-        this._centerX = params.centerX;
-        this._centerY = params.centerY;
-        this._speed = params.speed;
+        this.centerX = params.centerX;
+        this.centerY = params.centerY;
+        this.speed = params.speed;
     }
 
     setUniforms(
@@ -29,32 +29,8 @@ export class P5AsciifyConicalGradient extends P5AsciifyGradient {
         referenceFramebuffer: p5.Framebuffer
     ): void {
         super.setUniforms(framebuffer, referenceFramebuffer);
-        this._shader.setUniform('u_centerX', this._centerX);
-        this._shader.setUniform('u_centerY', this._centerY);
-        this._shader.setUniform('u_speed', this._speed);
-    }
-
-    get centerX(): number {
-        return this._centerX;
-    }
-
-    set centerX(value: number) {
-        this._centerX = value;
-    }
-
-    get centerY(): number {
-        return this._centerY;
-    }
-
-    set centerY(value: number) {
-        this._centerY = value;
-    }
-
-    get speed(): number {
-        return this._speed;
-    }
-
-    set speed(value: number) {
-        this._speed = value;
+        this._shader.setUniform('u_centerX', this.centerX);
+        this._shader.setUniform('u_centerY', this.centerY);
+        this._shader.setUniform('u_speed', this.speed);
     }
 }

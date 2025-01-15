@@ -10,11 +10,11 @@ export interface SpiralGradientParams {
 }
 
 export class P5AsciifySpiralGradient extends P5AsciifyGradient {
-    private _direction: number;
-    private _centerX: number;
-    private _centerY: number;
-    private _speed: number;
-    private _density: number;
+    public direction: number;
+    public centerX: number;
+    public centerY: number;
+    public speed: number;
+    public density: number;
 
     constructor(
         brightnessStart: number,
@@ -23,11 +23,11 @@ export class P5AsciifySpiralGradient extends P5AsciifyGradient {
         params: SpiralGradientParams
     ) {
         super(brightnessStart, brightnessEnd, characters);
-        this._direction = params.direction;
-        this._centerX = params.centerX;
-        this._centerY = params.centerY;
-        this._speed = params.speed;
-        this._density = params.density;
+        this.direction = params.direction;
+        this.centerX = params.centerX;
+        this.centerY = params.centerY;
+        this.speed = params.speed;
+        this.density = params.density;
     }
 
     setUniforms(
@@ -35,50 +35,10 @@ export class P5AsciifySpiralGradient extends P5AsciifyGradient {
         referenceFramebuffer: p5.Framebuffer
     ): void {
         super.setUniforms(framebuffer, referenceFramebuffer);
-        this._shader.setUniform('u_gradientDirection', this._direction);
-        this._shader.setUniform('u_centerX', this._centerX);
-        this._shader.setUniform('u_centerY', this._centerY);
-        this._shader.setUniform('u_speed', this._speed);
-        this._shader.setUniform('u_density', this._density);
-    }
-
-    get direction(): number {
-        return this._direction;
-    }
-
-    set direction(value: number) {
-        this._direction = value;
-    }
-
-    get centerX(): number {
-        return this._centerX;
-    }
-
-    set centerX(value: number) {
-        this._centerX = value;
-    }
-
-    get centerY(): number {
-        return this._centerY;
-    }
-
-    set centerY(value: number) {
-        this._centerY = value;
-    }
-
-    get speed(): number {
-        return this._speed;
-    }
-
-    set speed(value: number) {
-        this._speed = value;
-    }
-
-    get density(): number {
-        return this._density;
-    }
-
-    set density(value: number) {
-        this._density = value;
+        this._shader.setUniform('u_gradientDirection', this.direction);
+        this._shader.setUniform('u_centerX', this.centerX);
+        this._shader.setUniform('u_centerY', this.centerY);
+        this._shader.setUniform('u_speed', this.speed);
+        this._shader.setUniform('u_density', this.density);
     }
 }

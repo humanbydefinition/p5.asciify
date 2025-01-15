@@ -8,9 +8,9 @@ export interface ZigZagGradientParams {
 }
 
 export class P5AsciifyZigZagGradient extends P5AsciifyGradient {
-    private _direction: number;
-    private _angle: number;
-    private _speed: number;
+    public direction: number;
+    public angle: number;
+    public speed: number;
 
     constructor(
         brightnessStart: number,
@@ -19,9 +19,9 @@ export class P5AsciifyZigZagGradient extends P5AsciifyGradient {
         params: ZigZagGradientParams
     ) {
         super(brightnessStart, brightnessEnd, characters);
-        this._direction = params.direction;
-        this._angle = params.angle;
-        this._speed = params.speed ?? 0.01;
+        this.direction = params.direction;
+        this.angle = params.angle;
+        this.speed = params.speed ?? 0.01;
     }
 
     setUniforms(
@@ -29,32 +29,8 @@ export class P5AsciifyZigZagGradient extends P5AsciifyGradient {
         referenceFramebuffer: p5.Framebuffer
     ): void {
         super.setUniforms(framebuffer, referenceFramebuffer);
-        this._shader.setUniform('u_gradientDirection', this._direction);
-        this._shader.setUniform('u_angle', (this._angle * Math.PI) / 180);
-        this._shader.setUniform('u_speed', this._speed);
-    }
-
-    get direction(): number {
-        return this._direction;
-    }
-
-    set direction(value: number) {
-        this._direction = value;
-    }
-
-    get angle(): number {
-        return this._angle;
-    }
-
-    set angle(value: number) {
-        this._angle = value;
-    }
-
-    get speed(): number {
-        return this._speed;
-    }
-
-    set speed(value: number) {
-        this._speed = value;
+        this._shader.setUniform('u_gradientDirection', this.direction);
+        this._shader.setUniform('u_angle', (this.angle * Math.PI) / 180);
+        this._shader.setUniform('u_speed', this.speed);
     }
 }
