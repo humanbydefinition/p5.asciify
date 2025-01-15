@@ -3,7 +3,7 @@
  * Currently doesn't actually `extend` the class, but rather defines a new interface,
  * since there is no typing provided for the opentype.js library.
  */
-export interface OpenTypeGlyph {
+export type OpenTypeGlyph = {
     unicode: number;
     unicodes: number[];
     getPath(x: number, y: number, fontSize: number): {
@@ -17,4 +17,4 @@ export interface OpenTypeGlyph {
     r?: number;
     g?: number;
     b?: number;
-}
+};

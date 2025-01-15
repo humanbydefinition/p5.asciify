@@ -1,7 +1,7 @@
 import p5 from 'p5';
 import { P5AsciifyGradient } from './Gradient';
 import { P5AsciifyFontTextureAtlas } from '../FontTextureAtlas';
-import { GradientParams, GradientType } from './types';
+import { GradientParams, GradientType, GradientConstructorMap } from './types';
 /**
  * Manages the creation and removal of gradients for the gradient ascii renderer.
  */
@@ -49,5 +49,5 @@ export declare class P5AsciifyGradientManager {
     private setupShaders;
     get gradientParams(): GradientParams;
     get gradients(): P5AsciifyGradient[];
-    get gradientConstructors(): Record<GradientType, (brightnessStart: number, brightnessEnd: number, characters: string, params: any) => P5AsciifyGradient>;
+    get gradientConstructors(): GradientConstructorMap;
 }
