@@ -1,20 +1,11 @@
 import p5 from 'p5';
 import { P5AsciifyGrid } from '../Grid';
 import { P5AsciifyCharacterSet } from '../CharacterSet';
-export interface AsciiRendererOptions {
-    enabled: boolean;
-    characters: string;
-    characterColorMode: number;
-    characterColor: p5.Color;
-    backgroundColorMode: number;
-    backgroundColor: p5.Color;
-    invertMode: number;
-    rotationAngle: number;
-}
+import { AsciiRendererOptions } from './types';
 /**
  * Abstract class for shader-based ASCII Renderers.
  */
-export declare abstract class AsciiRenderer<T extends AsciiRendererOptions = AsciiRendererOptions> {
+export declare class AsciiRenderer<T extends AsciiRendererOptions = AsciiRendererOptions> {
     protected p: p5;
     protected grid: P5AsciifyGrid;
     characterSet: P5AsciifyCharacterSet;
