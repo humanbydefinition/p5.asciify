@@ -1,7 +1,6 @@
 import p5 from 'p5';
 import { P5AsciifyFontTextureAtlas } from './FontTextureAtlas';
 import { P5AsciifyGrid } from './Grid';
-import { P5AsciifyEventEmitter } from './EventEmitter';
 import { RendererManager } from './renderers/RendererManager';
 /**
  * The main class for the p5.asciify library. This class is responsible for setting up the library and running the rendering pipeline.
@@ -16,7 +15,6 @@ export declare class P5Asciifier {
     private p;
     asciiFontTextureAtlas: P5AsciifyFontTextureAtlas;
     grid: P5AsciifyGrid;
-    eventEmitter: P5AsciifyEventEmitter;
     sketchFramebuffer: p5.Framebuffer;
     constructor();
     /**
