@@ -28,6 +28,9 @@ type GradientParams = {
     noise: NoiseGradientParams;
 }
 
+/**
+ * Manages the creation and removal of gradients for the gradient ascii renderer.
+ */
 export class P5AsciifyGradientManager {
     private _gradientParams: GradientParams = {
         linear: { direction: 1, angle: 0, speed: 0.01 },
@@ -71,16 +74,27 @@ export class P5AsciifyGradientManager {
     private fontTextureAtlas!: P5AsciifyFontTextureAtlas;
     private p5Instance!: p5;
 
+    /**
+     * Setup the gradient manager with the font texture atlas.
+     * @param fontTextureAtlas The font texture atlas to use for the gradients.
+     */
     setup(fontTextureAtlas: P5AsciifyFontTextureAtlas): void {
         this.fontTextureAtlas = fontTextureAtlas;
         this.setupShaders();
         this.setupGradientQueue();
     }
 
+    /**
+     * Add the p5 instance to the gradient manager. Gets called once the p5.asciify library has the p5 instance.
+     * @param p5Instance 
+     */
     addInstance(p5Instance: p5): void {
         this.p5Instance = p5Instance;
     }
 
+    /**
+     * Setup the gradients that were added before the user's `setup` function has finished.
+     */
     private setupGradientQueue(): void {
         for (const { gradientInstance, type } of this._setupQueue) {
             gradientInstance.setup(
@@ -94,13 +108,15 @@ export class P5AsciifyGradientManager {
         this._setupQueue = [];
     }
 
-    private getGradientParams<T extends GradientType>(
-        gradientName: T,
-        params: Partial<GradientParams[T]>
-    ): GradientParams[T] {
-        return { ...this._gradientParams[gradientName], ...params };
-    }
-
+    /**
+     * Add a gradient to the gradient manager.
+     * @param gradientName The name of the gradient to add.
+     * @param brightnessStart The start brightness of the gradient.
+     * @param brightnessEnd The end brightness of the gradient.
+     * @param characters The characters to use for the gradient.
+     * @param params The parameters for the gradient.
+     * @returns The gradient instance.
+     */
     addGradient(
         gradientName: GradientType,
         brightnessStart: number,
@@ -112,7 +128,7 @@ export class P5AsciifyGradientManager {
             brightnessStart,
             brightnessEnd,
             characters,
-            this.getGradientParams(gradientName, params)
+            { ...this._gradientParams[gradientName], ...params }
         );
 
         this._gradients.push(gradient);
@@ -131,6 +147,10 @@ export class P5AsciifyGradientManager {
         return gradient;
     }
 
+    /**
+     * Remove a gradient from the gradient manager.
+     * @param gradient The gradient to remove.
+     */
     removeGradient(gradient: P5AsciifyGradient): void {
         const index = this._gradients.indexOf(gradient);
         if (index > -1) {
@@ -138,6 +158,9 @@ export class P5AsciifyGradientManager {
         }
     }
 
+    /**
+     * Initialize the shaders for the gradients.
+     */
     private setupShaders(): void {
         for (const gradientName of Object.keys(this.gradientShaderSources) as GradientType[]) {
             const fragShader = this.gradientShaderSources[gradientName];
@@ -145,15 +168,13 @@ export class P5AsciifyGradientManager {
         }
     }
 
+    // Getters
+    get gradientParams(): GradientParams { return this._gradientParams; }
+    get gradients(): P5AsciifyGradient[] { return this._gradients; }
+
     get gradientConstructors(): Record<GradientType,
         (brightnessStart: number, brightnessEnd: number, characters: string, params: any) => P5AsciifyGradient
     > {
         return this._gradientConstructors;
     }
-
-    get gradientParams(): GradientParams {
-        return this._gradientParams;
-    }
-
-    get gradients(): P5AsciifyGradient[] { return this._gradients; }
 }
