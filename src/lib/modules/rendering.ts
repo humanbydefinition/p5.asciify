@@ -9,7 +9,7 @@ export function registerRenderingMethods(p5asciify: P5Asciifier): void {
     /**
      * Adds a pre-draw method to the p5.js instance which wraps the user draw loop in a framebuffer.
      */
-    p5.prototype.registerMethod("pre", function (): void {
+    p5.prototype.registerMethod("pre", function (this: p5): void {
         p5asciify.sketchFramebuffer.begin();
         this.clear();
         this.push();
@@ -18,7 +18,7 @@ export function registerRenderingMethods(p5asciify: P5Asciifier): void {
     /**
      * Adds a post-draw method to the p5.js instance which ends the framebuffer and calls the asciify method.
      */
-    p5.prototype.registerMethod("post", function (): void {
+    p5.prototype.registerMethod("post", function (this: p5): void {
         this.pop();
         p5asciify.sketchFramebuffer.end();
 
