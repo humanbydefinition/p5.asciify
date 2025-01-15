@@ -4,7 +4,7 @@ import { P5AsciifyFontTextureAtlas } from './FontTextureAtlas';
 import { P5AsciifyGrid } from './Grid';
 import { RendererManager } from './renderers/RendererManager';
 import { P5AsciifyError } from './AsciifyError';
-import { FONT_SIZE_LIMITS } from './constants/validOptions';
+import { FONT_SIZE_LIMITS } from './constants';
 
 /**
  * The main class for the p5.asciify library. This class is responsible for setting up the library and running the rendering pipeline.
