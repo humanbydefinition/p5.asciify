@@ -1,5 +1,5 @@
 import { P5Asciifier } from '../Asciifier';
 /**
- * Registers the `preloadAsciiFont` and `loadAsciiFont` methods to the p5.js instance.
+ * Registers font-related methods to p5.js: preloads UrsaFont and adds loadAsciiFont().
  */
 export declare function registerFontMethods(p5asciify: P5Asciifier): void;
