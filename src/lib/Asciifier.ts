@@ -47,20 +47,6 @@ export class P5Asciifier {
     }
 
     /**
-     * Adds the p5 instance in p5.js global mode. Is called automatically on init by p5.js.
-     * Currently a bit confusing with the `instance()` method above, which is relevant for instance mode,
-     * where the user has to call it manually.
-     * @param p The p5 instance
-     */
-    public addP5Instance(p: p5): void {
-        if (!this.p) {
-            this.p = p;
-        }
-
-        this.rendererManager.gradientManager.addInstance(this.p);
-    }
-
-    /**
      * Sets up the P5Asciify library with the specified options
      */
     public setup(): void {

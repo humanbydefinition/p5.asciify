@@ -41,7 +41,13 @@ export function registerFontMethods(p5asciify: P5Asciifier): void {
             throw new P5AsciifyError('loadAsciiFont() | Invalid font parameter. Expected a path, base64 string, or p5.Font object.');
         }
     };
-
-    p5.prototype.registerMethod("beforePreload", p5.prototype.preloadAsciiFont);
     p5.prototype.registerPreloadMethod('loadAsciiFont', p5.prototype);
+
+    /**
+     * Preloads the default font `UrsaFont` to be used with this library.
+     */
+    p5.prototype.registerMethod("init", function(this: p5) {
+        this._incrementPreload();
+        this.loadAsciiFont(URSAFONT_BASE64);
+    });
 }
