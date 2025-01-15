@@ -2,7 +2,6 @@ import p5 from 'p5';
 
 import { P5AsciifyFontTextureAtlas } from './FontTextureAtlas';
 import { P5AsciifyGrid } from './Grid';
-import { P5AsciifyEventEmitter } from './EventEmitter';
 import { RendererManager } from './renderers/RendererManager';
 import { P5AsciifyError } from './AsciifyError';
 import { FONT_SIZE_LIMITS } from './constants/validOptions';
@@ -20,14 +19,12 @@ export class P5Asciifier {
     private p!: p5;
     public asciiFontTextureAtlas!: P5AsciifyFontTextureAtlas;
     public grid!: P5AsciifyGrid;
-    public eventEmitter: P5AsciifyEventEmitter;
     public sketchFramebuffer!: p5.Framebuffer;
 
     constructor() {
         this.borderColor = "#000000";
         this._fontSize = 16;
         this.rendererManager = new RendererManager();
-        this.eventEmitter = new P5AsciifyEventEmitter();
         this.postSetupFunction = null;
         this.postDrawFunction = null;
     }
