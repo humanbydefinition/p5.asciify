@@ -108,6 +108,7 @@ export class RendererManager {
 
             this._renderers.forEach(renderer => {
                 renderer.resizeFramebuffers();
+                renderer.resetShaders();
             });
         }
     }
