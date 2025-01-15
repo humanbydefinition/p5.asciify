@@ -4,6 +4,8 @@ import { P5AsciifyFontTextureAtlas } from './FontTextureAtlas';
 import { P5AsciifyGrid } from './Grid';
 import { P5AsciifyEventEmitter } from './EventEmitter';
 import { RendererManager } from './renderers/RendererManager';
+import { P5AsciifyError } from './AsciifyError';
+import { FONT_SIZE_LIMITS } from './constants/validOptions';
 
 /**
  * The main class for the p5.asciify library. This class is responsible for setting up the library and running the rendering pipeline.
@@ -98,6 +100,11 @@ export class P5Asciifier {
      * @param fontSize The font size to set
      */
     set fontSize(fontSize: number) {
+
+        if (fontSize < FONT_SIZE_LIMITS.MIN || fontSize > FONT_SIZE_LIMITS.MAX) {
+            throw new P5AsciifyError(`Font size ${fontSize} is out of bounds. It should be between ${FONT_SIZE_LIMITS.MIN} and ${FONT_SIZE_LIMITS.MAX}.`);
+        }
+
         this._fontSize = fontSize;
 
         if (this.p._setupDone) {
