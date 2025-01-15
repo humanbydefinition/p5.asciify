@@ -3,6 +3,8 @@ import { P5AsciifyGradientManager } from '../gradients/GradientManager';
 
 import { GradientType } from '../gradients/GradientManager';
 
+import { validateNumberInRange } from '../utils';
+
 /**
  * Validates the parameters for adding an ASCII gradient.
  * @param gradientManager - The gradient manager instance.
@@ -27,14 +29,6 @@ export function validateGradientParams(
             `Gradient '${gradientName}' does not exist! Available gradients: ${Object.keys(gradientManager.gradientConstructors).join(", ")}`
         );
     }
-
-    const validateNumberInRange = (value: any, min: number, max: number, name: string) => {
-        if (typeof value !== 'number' || value < min || value > max) {
-            throw new P5AsciifyError(
-                `Invalid ${name} value '${value}'. Expected a number between ${min} and ${max}.`
-            );
-        }
-    };
 
     // Validate brightness ranges
     validateNumberInRange(brightnessStart, 0, 255, 'brightness start');
