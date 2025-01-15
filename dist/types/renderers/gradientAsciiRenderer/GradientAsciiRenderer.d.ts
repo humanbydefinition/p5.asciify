@@ -10,7 +10,9 @@ export default class GradientAsciiRenderer extends AsciiRenderer {
     private grayscaleShader;
     private colorSampleShader;
     private grayscaleFramebuffer;
+    private asciiCharacterShader;
     private prevAsciiGradientFramebuffer;
+    private nextAsciiGradientFramebuffer;
     private gradientManager;
     constructor(p5Instance: p5, grid: P5AsciifyGrid, characterSet: P5AsciifyCharacterSet, gradientManager: P5AsciifyGradientManager, options: AsciiRendererOptions);
     resizeFramebuffers(): void;

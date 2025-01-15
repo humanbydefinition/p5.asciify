@@ -13,13 +13,12 @@ export class P5AsciifyNoiseGradient extends P5AsciifyGradient {
     private _speed: number;
 
     constructor(
-        shader: p5.Shader,
         brightnessStart: number,
         brightnessEnd: number,
         characters: string,
         params: NoiseGradientParams
     ) {
-        super(shader, brightnessStart, brightnessEnd, characters);
+        super(brightnessStart, brightnessEnd, characters);
         this._direction = params.direction;
         this._noiseScale = params.noiseScale;
         this._speed = params.speed;

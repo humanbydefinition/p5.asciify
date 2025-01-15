@@ -17,13 +17,12 @@ export class P5AsciifySpiralGradient extends P5AsciifyGradient {
     private _density: number;
 
     constructor(
-        shader: p5.Shader,
         brightnessStart: number,
         brightnessEnd: number,
         characters: string,
         params: SpiralGradientParams
     ) {
-        super(shader, brightnessStart, brightnessEnd, characters);
+        super(brightnessStart, brightnessEnd, characters);
         this._direction = params.direction;
         this._centerX = params.centerX;
         this._centerY = params.centerY;

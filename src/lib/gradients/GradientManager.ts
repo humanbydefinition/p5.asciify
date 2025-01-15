@@ -38,7 +38,7 @@ export class P5AsciifyGradientManager {
         noise: { noiseScale: 0.1, speed: 0.01, direction: 1 },
     };
 
-    private gradientShaders: Record<GradientType, string | p5.Shader> = {
+    private gradientShaderSources: Record<GradientType, string> = {
         linear: linearGradientShader,
         zigzag: zigzagGradientShader,
         spiral: spiralGradientShader,
@@ -47,21 +47,23 @@ export class P5AsciifyGradientManager {
         noise: noiseGradientShader,
     };
 
+    private gradientShaders: Partial<Record<GradientType, p5.Shader>> = {};
+
     private _gradientConstructors: Record<GradientType,
-        (shader: p5.Shader, brightnessStart: number, brightnessEnd: number, characters: string, params: any) => P5AsciifyGradient
+        (brightnessStart: number, brightnessEnd: number, characters: string, params: any) => P5AsciifyGradient
     > = {
-            linear: (shader, brightnessStart, brightnessEnd, characters, params) =>
-                new P5AsciifyLinearGradient(shader, brightnessStart, brightnessEnd, characters, params),
-            zigzag: (shader, brightnessStart, brightnessEnd, characters, params) =>
-                new P5AsciifyZigZagGradient(shader, brightnessStart, brightnessEnd, characters, params),
-            spiral: (shader, brightnessStart, brightnessEnd, characters, params) =>
-                new P5AsciifySpiralGradient(shader, brightnessStart, brightnessEnd, characters, params),
-            radial: (shader, brightnessStart, brightnessEnd, characters, params) =>
-                new P5AsciifyRadialGradient(shader, brightnessStart, brightnessEnd, characters, params),
-            conical: (shader, brightnessStart, brightnessEnd, characters, params) =>
-                new P5AsciifyConicalGradient(shader, brightnessStart, brightnessEnd, characters, params),
-            noise: (shader, brightnessStart, brightnessEnd, characters, params) =>
-                new P5AsciifyNoiseGradient(shader, brightnessStart, brightnessEnd, characters, params),
+            linear: (brightnessStart, brightnessEnd, characters, params) =>
+                new P5AsciifyLinearGradient(brightnessStart, brightnessEnd, characters, params),
+            zigzag: (brightnessStart, brightnessEnd, characters, params) =>
+                new P5AsciifyZigZagGradient(brightnessStart, brightnessEnd, characters, params),
+            spiral: (brightnessStart, brightnessEnd, characters, params) =>
+                new P5AsciifySpiralGradient(brightnessStart, brightnessEnd, characters, params),
+            radial: (brightnessStart, brightnessEnd, characters, params) =>
+                new P5AsciifyRadialGradient(brightnessStart, brightnessEnd, characters, params),
+            conical: (brightnessStart, brightnessEnd, characters, params) =>
+                new P5AsciifyConicalGradient(brightnessStart, brightnessEnd, characters, params),
+            noise: (brightnessStart, brightnessEnd, characters, params) =>
+                new P5AsciifyNoiseGradient(brightnessStart, brightnessEnd, characters, params),
         };
 
     private _setupQueue: Array<{ gradientInstance: P5AsciifyGradient, type: GradientType; }> = [];
@@ -107,7 +109,6 @@ export class P5AsciifyGradientManager {
         params: Partial<GradientParams[typeof gradientName]>
     ): P5AsciifyGradient {
         const gradient = this._gradientConstructors[gradientName](
-            this.gradientShaders[gradientName] as p5.Shader,
             brightnessStart,
             brightnessEnd,
             characters,
@@ -116,13 +117,13 @@ export class P5AsciifyGradientManager {
 
         this._gradients.push(gradient);
 
-        if (!(this.p5Instance as any)._setupDone) {
+        if (!this.p5Instance._setupDone) {
             this._setupQueue.push({ gradientInstance: gradient, type: gradientName });
         } else {
             gradient.setup(
                 this.p5Instance,
                 this.fontTextureAtlas,
-                this.gradientShaders[gradientName] as unknown as p5.Shader,
+                this.gradientShaders[gradientName] as p5.Shader,
                 this.fontTextureAtlas.getCharsetColorArray(characters)
             );
         }
@@ -138,16 +139,14 @@ export class P5AsciifyGradientManager {
     }
 
     private setupShaders(): void {
-        for (const gradientName in this.gradientShaders) {
-            this.gradientShaders[gradientName as GradientType] = this.p5Instance.createShader(
-                vertexShader,
-                this.gradientShaders[gradientName as GradientType]
-            ) as unknown as string;
+        for (const gradientName of Object.keys(this.gradientShaderSources) as GradientType[]) {
+            const fragShader = this.gradientShaderSources[gradientName];
+            this.gradientShaders[gradientName] = this.p5Instance.createShader(vertexShader, fragShader);
         }
     }
 
     get gradientConstructors(): Record<GradientType,
-        (shader: p5.Shader, brightnessStart: number, brightnessEnd: number, characters: string, params: any) => P5AsciifyGradient
+        (brightnessStart: number, brightnessEnd: number, characters: string, params: any) => P5AsciifyGradient
     > {
         return this._gradientConstructors;
     }

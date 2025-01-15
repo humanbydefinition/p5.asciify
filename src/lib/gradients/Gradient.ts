@@ -10,9 +10,9 @@ export class P5AsciifyGradient {
     protected _onPaletteChangeCallback?: (gradient: P5AsciifyGradient, value: string[]) => void;
     protected _palette!: P5AsciifyColorPalette;
     protected _fontTextureAtlas!: P5AsciifyFontTextureAtlas;
+    protected _shader!: p5.Shader;
 
     constructor(
-        protected _shader: p5.Shader,
         brightnessStart: number,
         brightnessEnd: number,
         private _characters: string

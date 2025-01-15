@@ -15,13 +15,12 @@ export class P5AsciifyRadialGradient extends P5AsciifyGradient {
     private _radius: number;
 
     constructor(
-        shader: p5.Shader,
         brightnessStart: number,
         brightnessEnd: number,
         characters: string,
         params: RadialGradientParams
     ) {
-        super(shader, brightnessStart, brightnessEnd, characters);
+        super(brightnessStart, brightnessEnd, characters);
         this._direction = params.direction;
         this._centerX = params.centerX;
         this._centerY = params.centerY;

@@ -13,13 +13,12 @@ export class P5AsciifyLinearGradient extends P5AsciifyGradient {
     private _speed: number;
 
     constructor(
-        shader: p5.Shader,
         brightnessStart: number,
         brightnessEnd: number,
         characters: string,
         params: LinearGradientParams
     ) {
-        super(shader, brightnessStart, brightnessEnd, characters);
+        super(brightnessStart, brightnessEnd, characters);
         this._direction = params.direction;
         this._angle = params.angle;
         this._speed = params.speed;

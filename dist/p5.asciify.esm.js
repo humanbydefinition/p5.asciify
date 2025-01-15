@@ -423,7 +423,9 @@ class W extends C {
     r(this, "grayscaleShader");
     r(this, "colorSampleShader");
     r(this, "grayscaleFramebuffer");
+    r(this, "asciiCharacterShader");
     r(this, "prevAsciiGradientFramebuffer");
+    r(this, "nextAsciiGradientFramebuffer");
     r(this, "gradientManager");
     this._options.characterColor = this.p.color(this._options.characterColor), this._options.backgroundColor = this.p.color(this._options.backgroundColor), this.gradientManager = o, this.grayscaleShader = this.p.createShader(B, K), this.colorSampleShader = this.p.createShader(B, j), this.asciiCharacterShader = this.p.createShader(B, L), this.grayscaleFramebuffer = this.p.createFramebuffer({
       density: 1,
@@ -581,7 +583,7 @@ class d {
     return this._characters;
   }
 }
-class h {
+class E {
   constructor(A, e, t, i) {
     r(this, "_p");
     r(this, "_brightnessStart");
@@ -624,7 +626,7 @@ class h {
     return this._brightnessStart;
   }
 }
-class $ extends h {
+class $ extends E {
   constructor(e, t, i, o, a) {
     super(e, t, i, o);
     r(this, "_direction");
@@ -654,7 +656,7 @@ class $ extends h {
     this._speed = e;
   }
 }
-class q extends h {
+class q extends E {
   constructor(e, t, i, o, a) {
     super(e, t, i, o);
     r(this, "_direction");
@@ -684,7 +686,7 @@ class q extends h {
     this._speed = e;
   }
 }
-class AA extends h {
+class AA extends E {
   constructor(e, t, i, o, a) {
     super(e, t, i, o);
     r(this, "_direction");
@@ -728,7 +730,7 @@ class AA extends h {
     this._density = e;
   }
 }
-class eA extends h {
+class eA extends E {
   constructor(e, t, i, o, a) {
     super(e, t, i, o);
     r(this, "_direction");
@@ -765,7 +767,7 @@ class eA extends h {
     this._radius = e;
   }
 }
-class tA extends h {
+class tA extends E {
   constructor(e, t, i, o, a) {
     super(e, t, i, o);
     r(this, "_centerX");
@@ -795,7 +797,7 @@ class tA extends h {
     this._speed = e;
   }
 }
-class rA extends h {
+class rA extends E {
   constructor(e, t, i, o, a) {
     super(e, t, i, o);
     r(this, "_direction");
@@ -877,23 +879,19 @@ class QA {
     return { ...this._gradientParams[A], ...e };
   }
   addGradient(A, e, t, i, o) {
-    const a = this.getGradientParams(A, {
-      brightnessStart: e,
-      brightnessEnd: t,
-      characters: i,
-      ...o
-    }), n = this._gradientConstructors[A](
+    const a = this._gradientConstructors[A](
       this.gradientShaders[A],
       e,
       t,
       i,
-      a
+      this.getGradientParams(A, o)
     );
-    return this._gradients.push(n), this.p5Instance._setupDone ? n.setup(
+    return this._gradients.push(a), this.p5Instance._setupDone ? a.setup(
       this.p5Instance,
+      this.fontTextureAtlas,
       this.gradientShaders[A],
       this.fontTextureAtlas.getCharsetColorArray(i)
-    ) : this._setupQueue.push({ gradientInstance: n, type: A }), n;
+    ) : this._setupQueue.push({ gradientInstance: a, type: A }), a;
   }
   removeGradient(A) {
     const e = this._gradients.indexOf(A);
@@ -1060,8 +1058,8 @@ function hA(s) {
   function A(e, t) {
     const [i, o] = [e, t].map((a) => a.split(".").map(Number));
     for (let a = 0; a < Math.max(i.length, o.length); a++) {
-      const n = i[a] ?? 0, c = o[a] ?? 0;
-      if (n !== c) return n > c ? 1 : -1;
+      const l = i[a] ?? 0, c = o[a] ?? 0;
+      if (l !== c) return l > c ? 1 : -1;
     }
     return 0;
   }
@@ -1116,21 +1114,21 @@ function uA(s, A, e, t, i, o) {
     throw new Q(
       `Gradient '${A}' does not exist! Available gradients: ${Object.keys(s.gradientConstructors).join(", ")}`
     );
-  const a = (E, f, m, v) => {
-    if (typeof E != "number" || E < f || E > m)
+  const a = (n, f, m, v) => {
+    if (typeof n != "number" || n < f || n > m)
       throw new Q(
-        `Invalid ${v} value '${E}'. Expected a number between ${f} and ${m}.`
+        `Invalid ${v} value '${n}'. Expected a number between ${f} and ${m}.`
       );
   };
   if (a(e, 0, 255, "brightness start"), a(t, 0, 255, "brightness end"), typeof i != "string")
     throw new Q(
       `Invalid characters value '${i}'. Expected a string.`
     );
-  const n = Object.keys(s.gradientParams[A]), c = Object.keys(o).filter((E) => !n.includes(E));
+  const l = Object.keys(s.gradientParams[A]), c = Object.keys(o).filter((n) => !l.includes(n));
   if (c.length > 0)
     throw new Q(
       `Invalid parameter(s) for gradient '${A}': ${c.join(", ")}
-Valid parameters are: ${n.join(", ")}`
+Valid parameters are: ${l.join(", ")}`
     );
 }
 function DA(s) {
@@ -1160,14 +1158,14 @@ function fA(s) {
     this.pop(), s.sketchFramebuffer.end(), s.asciify();
   }, g.prototype.registerMethod("pre", g.prototype.preAsciifyDraw), g.prototype.registerMethod("post", g.prototype.postAsciifyDraw);
 }
-const l = new EA();
-typeof window < "u" && (window.p5asciify = l, window.preload = function() {
+const h = new EA();
+typeof window < "u" && (window.p5asciify = h, window.preload = function() {
 });
-lA(l);
-dA(l);
-CA(l);
-DA(l);
-fA(l);
+lA(h);
+dA(h);
+CA(h);
+DA(h);
+fA(h);
 export {
-  l as default
+  h as default
 };
