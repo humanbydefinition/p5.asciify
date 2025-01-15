@@ -106,19 +106,12 @@ export class P5AsciifyGradientManager {
         characters: string,
         params: Partial<GradientParams[typeof gradientName]>
     ): P5AsciifyGradient {
-        const mergedParams = this.getGradientParams(gradientName, {
-            brightnessStart,
-            brightnessEnd,
-            characters,
-            ...params
-        });
-
         const gradient = this._gradientConstructors[gradientName](
             this.gradientShaders[gradientName] as p5.Shader,
             brightnessStart,
             brightnessEnd,
             characters,
-            mergedParams
+            this.getGradientParams(gradientName, params)
         );
 
         this._gradients.push(gradient);
@@ -128,6 +121,7 @@ export class P5AsciifyGradientManager {
         } else {
             gradient.setup(
                 this.p5Instance,
+                this.fontTextureAtlas,
                 this.gradientShaders[gradientName] as unknown as p5.Shader,
                 this.fontTextureAtlas.getCharsetColorArray(characters)
             );
@@ -153,7 +147,7 @@ export class P5AsciifyGradientManager {
     }
 
     get gradientConstructors(): Record<GradientType,
-        (shader: p5.Shader, brightnessStart: number, brightnessEnd: number, characters: string[], params: any) => P5AsciifyGradient
+        (shader: p5.Shader, brightnessStart: number, brightnessEnd: number, characters: string, params: any) => P5AsciifyGradient
     > {
         return this._gradientConstructors;
     }
