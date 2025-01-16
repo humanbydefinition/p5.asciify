@@ -36,7 +36,7 @@
   },
   "scripts": {
     "build": "vite build && tsc",
-    "dev": "vite",
+    "dev": "vite --host",
     "vitest": "vitest run",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
