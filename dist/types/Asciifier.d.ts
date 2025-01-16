@@ -21,7 +21,7 @@ export declare class P5Asciifier {
      * Initialize the p5 instance for the Asciifier
      * @param p The p5 instance
      */
-    instance(p: p5): void;
+    instance(p: p5, addDummyPreloadFunction?: boolean): void;
     /**
      * Sets up the P5Asciify library with the specified options
      */

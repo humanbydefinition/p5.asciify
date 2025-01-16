@@ -10,9 +10,9 @@ import { registerRenderingMethods } from './modules/rendering';
 const p5asciify = new P5Asciifier();
 export default p5asciify;
 
-// Expose P5Asciify to the global scope if not in a module environment
+// If in p5.js global mode, define a dummy preload function in case user doesn't provide one
 if (typeof window !== 'undefined') {
-  window.p5asciify = p5asciify;  // Expose p5asciify instance
+  window.preload = function () { }; // Define empty preload function in case user doesn't provide one
 }
 
 // Register library methods to extend the p5 instance

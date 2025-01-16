@@ -33,11 +33,12 @@ export class P5Asciifier {
      * Initialize the p5 instance for the Asciifier
      * @param p The p5 instance
      */
-    public instance(p: p5): void {
+    public instance(p: p5, addDummyPreloadFunction: boolean = true): void {
         this.p = p;
+        this.p.p5asciify = this;
 
-        if (!this.p.preload) {
-            this.p.preload = () => { }; // Define a default preload function
+        if (!p.preload && addDummyPreloadFunction) {
+            p.preload = () => { };
         }
 
         this.rendererManager.gradientManager.addInstance(this.p);
