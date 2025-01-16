@@ -2,7 +2,6 @@ import p5 from 'p5';
 import p5asciify from '../../src/lib/index';
 
 const sketch = (p) => {
-    let sketchFramebuffer;
     let rectangles = [];
     let maxRectangles = 30;
 
@@ -46,7 +45,6 @@ const sketch = (p) => {
 
     p.setup = () => {
         p.createCanvas(p.windowWidth, p.windowHeight, p.WEBGL);
-        sketchFramebuffer = p.createFramebuffer({ format: p.FLOAT });
 
         p.setAsciifyFontSize(8);
 
@@ -68,8 +66,6 @@ const sketch = (p) => {
     };
 
     p.draw = () => {
-        sketchFramebuffer.begin();
-
         p.background(0);
         p.noStroke();
 
@@ -80,10 +76,6 @@ const sketch = (p) => {
         });
 
         while (rectangles.length < maxRectangles) rectangles.push(new Rectangle());
-
-        sketchFramebuffer.end();
-
-        p.image(sketchFramebuffer, -p.windowWidth / 2, -p.windowHeight / 2);
     };
 
     p.windowResized = () => {

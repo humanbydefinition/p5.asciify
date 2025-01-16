@@ -65,8 +65,6 @@ export const createSketch = (options = {}) => {
       const startX = -p5asciify.grid.width / 2;
       const startY = -p5asciify.grid.height / 2;
 
-      // Draw your scene into the framebuffer
-      sketchFramebuffer.begin();
       p.background(0);
 
       // Fill each cell with a gradient of brightness values
@@ -91,13 +89,6 @@ export const createSketch = (options = {}) => {
       p.noFill();
       p.stroke(255, 0, 0);
       p.rect(startX, startY, p5asciify.grid.width, p5asciify.grid.height);
-
-      // End drawing to framebuffer
-      sketchFramebuffer.end();
-
-      // Clear the main canvas, then render the framebuffer to it
-      p.clear();
-      p.image(sketchFramebuffer, -p.windowWidth / 2, -p.windowHeight / 2);
     };
 
     // If the window is resized, also resize the p5 canvas
