@@ -3,7 +3,7 @@ import { AsciiRenderer } from '../AsciiRenderer';
 import { P5AsciifyGrid } from '../../Grid';
 import { P5AsciifyCharacterSet } from '../../CharacterSet';
 
-import { EdgeAsciiRendererOptions } from '../types';
+import { AsciiRendererOptions } from '../types';
 
 import vertexShader from '../../assets/shaders/vert/shader.vert';
 import colorSampleShader from './shaders/colorSample.frag';
@@ -15,7 +15,7 @@ import { generateSampleShader } from './shaders/shaderGenerators.min';
 /**
  * An ASCII renderer that applies ASCII edges to the input sketch by using edge detection.
  */
-export default class EdgeAsciiRenderer extends AsciiRenderer<EdgeAsciiRendererOptions> {
+export default class EdgeAsciiRenderer extends AsciiRenderer<AsciiRendererOptions> {
     private sobelShader: p5.Shader;
     private sampleShader: p5.Shader;
     private colorSampleShader: p5.Shader;
@@ -23,7 +23,7 @@ export default class EdgeAsciiRenderer extends AsciiRenderer<EdgeAsciiRendererOp
     private sobelFramebuffer: p5.Framebuffer;
     private sampleFramebuffer: p5.Framebuffer;
 
-    constructor(p5Instance: p5, grid: P5AsciifyGrid, characterSet: P5AsciifyCharacterSet, options: EdgeAsciiRendererOptions) {
+    constructor(p5Instance: p5, grid: P5AsciifyGrid, characterSet: P5AsciifyCharacterSet, options: AsciiRendererOptions) {
         super(p5Instance, grid, characterSet, options);
 
         this.sobelShader = this.p.createShader(vertexShader, sobelShader);

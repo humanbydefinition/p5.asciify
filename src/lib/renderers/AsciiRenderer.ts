@@ -3,6 +3,7 @@ import { P5AsciifyGrid } from '../Grid';
 import { P5AsciifyCharacterSet } from '../CharacterSet';
 
 import { AsciiRendererOptions } from './types';
+import { validateRendererOptions } from '../validators/RendererOptionsValidator';
 
 import vertexShader from '../assets/shaders/vert/shader.vert';
 import asciiConversionShader from './_common_shaders/asciiConversion.frag';
@@ -86,6 +87,8 @@ export class AsciiRenderer<T extends AsciiRendererOptions = AsciiRendererOptions
      * @param newOptions - The new options to update.
      */
     public updateOptions(newOptions: Partial<AsciiRendererOptions>): void {
+        validateRendererOptions(newOptions);
+
         if (newOptions?.characterColor) {
             newOptions.characterColor = this.p.color(newOptions.characterColor as string);
         }
