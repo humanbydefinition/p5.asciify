@@ -7,6 +7,7 @@ import p5 from 'p5';
 declare global {
     interface Window {
         preload?: () => void;
+        p5asciify: P5Asciifier;
     }
 }
 /**

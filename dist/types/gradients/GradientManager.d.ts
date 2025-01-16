@@ -13,17 +13,13 @@ export declare class P5AsciifyGradientManager {
     private _setupQueue;
     private _gradients;
     private fontTextureAtlas;
-    private p5Instance;
+    private p;
+    constructor(p5Instance: p5);
     /**
      * Setup the gradient manager with the font texture atlas.
      * @param fontTextureAtlas The font texture atlas to use for the gradients.
      */
     setup(fontTextureAtlas: P5AsciifyFontTextureAtlas): void;
-    /**
-     * Add the p5 instance to the gradient manager. Gets called once the p5.asciify library has the p5 instance.
-     * @param p5Instance
-     */
-    addInstance(p5Instance: p5): void;
     /**
      * Setup the gradients that were added before the user's `setup` function has finished.
      */

@@ -199,7 +199,7 @@ class F {
   }
 }
 var a = "precision mediump float;attribute vec3 aPosition;attribute vec2 aTexCoord;varying vec2 v_texCoord;void main(){vec4 positionVec4=vec4(aPosition,1.0);positionVec4.xy=positionVec4.xy*2.0-1.0;gl_Position=positionVec4;v_texCoord=aTexCoord;}", y = "precision mediump float;uniform sampler2D u_characterTexture;uniform vec2 u_charsetDimensions;uniform sampler2D u_primaryColorTexture;uniform sampler2D u_secondaryColorTexture;uniform sampler2D u_asciiCharacterTexture;uniform vec2 u_gridCellDimensions;uniform vec2 u_gridPixelDimensions;uniform vec2 u_gridOffsetDimensions;uniform float u_rotationAngle;uniform bool u_invertMode;uniform vec2 u_resolution;uniform float u_pixelRatio;uniform sampler2D u_prevAsciiTexture;mat2 rotate2D(float angle){float s=sin(angle);float c=cos(angle);return mat2(c,-s,s,c);}void main(){vec2 logicalFragCoord=gl_FragCoord.xy/u_pixelRatio;vec2 adjustedCoord=(logicalFragCoord-u_gridOffsetDimensions)/u_gridPixelDimensions;vec2 gridCoord=adjustedCoord*u_gridCellDimensions;vec2 cellCoord=floor(gridCoord);vec2 charIndexTexCoord=(cellCoord+vec2(0.5))/u_gridCellDimensions;vec4 secondaryColor=texture2D(u_secondaryColorTexture,charIndexTexCoord);if(adjustedCoord.x<0.0||adjustedCoord.x>1.0||adjustedCoord.y<0.0||adjustedCoord.y>1.0){gl_FragColor=vec4(0);return;}vec4 primaryColor=texture2D(u_primaryColorTexture,charIndexTexCoord);vec4 encodedIndexVec=texture2D(u_asciiCharacterTexture,charIndexTexCoord);if(encodedIndexVec.rgba==vec4(0.0)){gl_FragColor=texture2D(u_prevAsciiTexture,logicalFragCoord/u_resolution);return;}int charIndex=int(encodedIndexVec.r*255.0+0.5)+int(encodedIndexVec.g*255.0+0.5)*256;int charCol=charIndex-(charIndex/int(u_charsetDimensions.x))*int(u_charsetDimensions.x);int charRow=charIndex/int(u_charsetDimensions.x);vec2 charCoord=vec2(float(charCol)/u_charsetDimensions.x,float(charRow)/u_charsetDimensions.y);vec2 fractionalPart=fract(gridCoord)-0.5;fractionalPart=rotate2D(u_rotationAngle)*fractionalPart;fractionalPart+=0.5;vec2 cellMin=charCoord;vec2 cellMax=charCoord+vec2(1.0/u_charsetDimensions.x,1.0/u_charsetDimensions.y);vec2 texCoord=charCoord+fractionalPart*vec2(1.0/u_charsetDimensions.x,1.0/u_charsetDimensions.y);bool outsideBounds=any(lessThan(texCoord,cellMin))||any(greaterThan(texCoord,cellMax));vec4 charColor=outsideBounds ? secondaryColor : texture2D(u_characterTexture,texCoord);if(u_invertMode){charColor.a=1.0-charColor.a;charColor.rgb=vec3(1.0);}vec4 finalColor=vec4(primaryColor.rgb*charColor.rgb,charColor.a);gl_FragColor=mix(secondaryColor,finalColor,charColor.a);if(outsideBounds){gl_FragColor=u_invertMode ? primaryColor : secondaryColor;}}";
-class l {
+class c {
   constructor(A, e, r, i) {
     t(this, "_primaryColorSampleFramebuffer");
     t(this, "_secondaryColorSampleFramebuffer");
@@ -279,7 +279,7 @@ class l {
   }
 }
 var T = "precision mediump float;uniform sampler2D u_sketchTexture;uniform vec2 u_gridCellDimensions;void main(){vec2 logicalFragCoord=gl_FragCoord.xy;vec2 cellCoord=floor(logicalFragCoord);vec2 cellSizeInTexCoords=1.0/u_gridCellDimensions;vec2 cellCenterTexCoord=(cellCoord+vec2(0.5))*cellSizeInTexCoords;vec4 sampledColor=texture2D(u_sketchTexture,cellCenterTexCoord);gl_FragColor=sampledColor;}", G = "precision mediump float;uniform sampler2D u_colorSampleFramebuffer;uniform sampler2D u_charPaletteTexture;uniform vec2 u_charPaletteSize;uniform vec2 u_textureSize;void main(){vec2 pos=(floor(gl_FragCoord.xy)+0.5)/u_textureSize;float brightness=dot(texture2D(u_colorSampleFramebuffer,pos).rgb,vec3(0.299,0.587,0.114));float index=clamp(floor(brightness*u_charPaletteSize.x),0.0,u_charPaletteSize.x-1.0);gl_FragColor=vec4(texture2D(u_charPaletteTexture,vec2((index+0.5)/u_charPaletteSize.x,0.0)).rgb,1.0);}";
-class M extends l {
+class M extends c {
   constructor(e, r, i, o) {
     super(e, r, i, o);
     t(this, "colorSampleShader");
@@ -308,7 +308,7 @@ precision mediump float;uniform sampler2D u_inputImage;uniform vec2 u_inputImage
 precision mediump float;uniform sampler2D u_inputImage,u_inputImageBW;uniform vec2 u_inputImageSize;uniform int u_gridCols,u_gridRows,u_colorRank;const int e=${s},u=${A},f=${e};void main(){vec2 i=floor(gl_FragCoord.xy),t=u_inputImageSize/vec2(float(u_gridCols),float(u_gridRows));i*=t;vec2 k=(i+t*.5)/u_inputImageSize;vec4 v=texture2D(u_inputImage,k),c[e];float b[e];for(int i=0;i<e;i++)c[i]=vec4(0),b[i]=0.;for(int v=0;v<u;v++)for(int k=0;k<f;k++){vec2 s=clamp((i+(vec2(float(v),float(k))+.5)*(t/vec2(float(u),float(f))))/u_inputImageSize,0.,1.);vec4 m=texture2D(u_inputImage,s),d=texture2D(u_inputImageBW,s);float r=step(.5,d.x);bool z=false;if(u_colorRank==1&&r>.5)z=true;else if(u_colorRank==2&&r<=.5)z=true;if(!z)continue;z=false;for(int i=0;i<e;i++)if(m.xyz==c[i].xyz){b[i]+=1.;z=true;break;}if(!z)for(int i=0;i<e;i++)if(b[i]==0.){c[i]=m;b[i]=1.;break;}}float z=0.;vec4 m=vec4(0);for(int i=0;i<e;i++){float u=b[i];vec4 k=c[i];if(u>z)z=u,m=k;}if(u_colorRank==2&&z==0.)m=v;gl_FragColor=vec4(m.xyz,1);}
 `;
 var U = "precision mediump float;uniform sampler2D u_inputImage;uniform sampler2D u_brightnessTexture;uniform vec2 u_inputImageSize;uniform int u_gridCols;uniform int u_gridRows;uniform float u_pixelRatio;const float EPSILON=0.01;void main(){vec2 logicalFragCoord=floor(gl_FragCoord.xy/u_pixelRatio);float cellWidth=u_inputImageSize.x/float(u_gridCols);float cellHeight=u_inputImageSize.y/float(u_gridRows);float gridX=floor(logicalFragCoord.x/cellWidth);float gridY=floor(logicalFragCoord.y/cellHeight);gridX=clamp(gridX,0.0,float(u_gridCols-1));gridY=clamp(gridY,0.0,float(u_gridRows-1));vec2 brightnessTexCoord=(vec2(gridX,gridY)+0.5)/vec2(float(u_gridCols),float(u_gridRows));float averageBrightness=texture2D(u_brightnessTexture,brightnessTexCoord).r;vec2 imageTexCoord=logicalFragCoord/u_inputImageSize;vec4 originalColor=texture2D(u_inputImage,imageTexCoord);float fragmentBrightness=0.299*originalColor.r+0.587*originalColor.g+0.114*originalColor.b;float brightnessDifference=fragmentBrightness-averageBrightness;float finalColorValue;if(brightnessDifference<-EPSILON){finalColorValue=0.0;}else{finalColorValue=1.0;}gl_FragColor=vec4(vec3(finalColorValue),1.0);}";
-class Y extends l {
+class Y extends c {
   constructor(e, r, i, o) {
     super(e, r, i, o);
     t(this, "characterSelectionShader");
@@ -342,7 +342,7 @@ var z = "precision mediump float;uniform sampler2D u_sketchTexture;uniform sampl
 const p = (s, A, e) => `
 precision mediump float;uniform sampler2D u_image;uniform vec2 u_imageSize,u_gridCellDimensions;uniform int u_threshold;const vec3 i=vec3(0);const int e=${s},k=${A},s=${e};vec3 f[e];int u[e];float r(float i){return floor(i+.5);}void main(){vec2 v=floor(gl_FragCoord.xy);ivec2 b=ivec2(v);int y=b.x,c=b.y;v=u_imageSize/u_gridCellDimensions;b=ivec2(r(float(y)*v.x),r(float(c)*v.y));y=0;for(int v=0;v<e;v++)f[v]=i,u[v]=0;for(int v=0;v<s;v++)for(int c=0;c<k;c++){ivec2 r=b+ivec2(c,v);if(r.x<0||r.y<0||r.x>=int(u_imageSize.x)||r.y>=int(u_imageSize.y))continue;vec2 s=(vec2(r)+.5)/u_imageSize;vec3 t=texture2D(u_image,s).xyz;if(length(t-i)<.001)continue;y++;bool m=false;for(int v=0;v<e;v++)if(length(t-f[v])<.001){u[v]++;m=true;break;}if(!m)for(int v=0;v<e;v++)if(u[v]==0){f[v]=t;u[v]=1;break;}}vec3 m=i;c=0;for(int v=0;v<e;v++)if(u[v]>c)m=f[v],c=u[v];gl_FragColor=y<u_threshold?vec4(i,1):vec4(m,1);}
 `;
-class N extends l {
+class N extends c {
   constructor(e, r, i, o) {
     super(e, r, i, o);
     t(this, "sobelShader");
@@ -373,7 +373,7 @@ class N extends l {
   }
 }
 var O = "precision mediump float;uniform sampler2D u_image;varying vec2 v_texCoord;void main(){vec4 color=texture2D(u_image,v_texCoord);float luminance=0.299*color.r+0.587*color.g+0.114*color.b;color.rgb=vec3(luminance);gl_FragColor=color;}", X = "precision mediump float;uniform sampler2D u_sketchTexture;uniform sampler2D u_previousColorTexture;uniform sampler2D u_sampleTexture;uniform sampler2D u_sampleReferenceTexture;uniform vec2 u_gridCellDimensions;uniform int u_sampleMode;uniform vec4 u_staticColor;void main(){vec2 cellCoord=floor(gl_FragCoord.xy);vec2 cellSizeInTexCoords=vec2(1.0)/u_gridCellDimensions;vec2 cellCenterTexCoord=(cellCoord+vec2(0.5))*cellSizeInTexCoords;bool isMatchingSample=texture2D(u_sampleTexture,cellCenterTexCoord)==texture2D(u_sampleReferenceTexture,cellCenterTexCoord);if(isMatchingSample){gl_FragColor=texture2D(u_previousColorTexture,cellCenterTexCoord);return;}else if(u_sampleMode==0){gl_FragColor=texture2D(u_sketchTexture,cellCenterTexCoord);}else{gl_FragColor=u_staticColor;}}", H = "precision mediump float;uniform sampler2D u_prevAsciiCharacterTexture;uniform sampler2D u_prevGradientTexture;uniform sampler2D u_nextGradientTexture;uniform vec2 u_resolution;void main(){vec2 uv=gl_FragCoord.xy/u_resolution;vec4 prevAscii=texture2D(u_prevAsciiCharacterTexture,uv);vec4 prevGradient=texture2D(u_prevGradientTexture,uv);vec4 nextGradient=texture2D(u_nextGradientTexture,uv);bool colorsMatch=prevGradient==nextGradient;gl_FragColor=colorsMatch ? prevAscii : nextGradient;}";
-class J extends l {
+class J extends c {
   constructor(e, r, i, o, g) {
     super(e, r, i, g);
     t(this, "grayscaleShader");
@@ -505,7 +505,7 @@ class x {
     return this._colors;
   }
 }
-class h {
+class l {
   constructor(A, e, r) {
     t(this, "_characters");
     t(this, "characterColors");
@@ -696,7 +696,7 @@ class q extends E {
 }
 var AA = "precision mediump float;varying vec2 v_texCoord;uniform sampler2D textureID;uniform sampler2D originalTextureID;uniform sampler2D gradientTexture;uniform int frameCount;uniform float u_gradientDirection;uniform float u_speed;uniform float u_angle;uniform vec2 gradientTextureDimensions;uniform vec2 u_brightnessRange;void main(){vec2 logicalFragCoord=floor(gl_FragCoord.xy);vec4 texColor=texture2D(textureID,v_texCoord);vec4 originalTexColor=texture2D(originalTextureID,v_texCoord);if(texColor.r>=u_brightnessRange.x&&texColor.r<=u_brightnessRange.y&&texColor==originalTexColor){float position=logicalFragCoord.x*cos(u_angle)+logicalFragCoord.y*sin(u_angle);float index=mod(position+float(frameCount)*u_gradientDirection*u_speed,gradientTextureDimensions.x);index=floor(index);float texelPosition=(index+0.5)/gradientTextureDimensions.x;vec4 gradientColor=texture2D(gradientTexture,vec2(texelPosition,0.0));gl_FragColor=vec4(gradientColor.rgb,texColor.a);}else{gl_FragColor=texColor;}}", eA = "precision mediump float;varying vec2 v_texCoord;uniform sampler2D textureID;uniform sampler2D originalTextureID;uniform sampler2D gradientTexture;uniform int frameCount;uniform float u_gradientDirection;uniform float u_speed;uniform float u_angle;uniform vec2 gradientTextureDimensions;uniform vec2 u_brightnessRange;void main(){vec4 texColor=texture2D(textureID,v_texCoord);vec4 originalTexColor=texture2D(originalTextureID,v_texCoord);if(texColor.r>=u_brightnessRange[0]&&texColor.r<=u_brightnessRange[1]&&texColor==originalTexColor){vec2 logicalFragCoord=gl_FragCoord.xy;float positionX=logicalFragCoord.x*cos(u_angle)-logicalFragCoord.y*sin(u_angle);float positionY=logicalFragCoord.x*sin(u_angle)+logicalFragCoord.y*cos(u_angle);float rowIndex=floor(positionY);float direction=mod(rowIndex,2.0)==0.0 ? 1.0 :-1.0;float rowPosition=positionX;float index=mod(rowPosition+float(frameCount)*u_speed*direction*u_gradientDirection,gradientTextureDimensions.x);index=floor(index);float texelPosition=(index+0.5)/gradientTextureDimensions.x;vec4 gradientColor=texture2D(gradientTexture,vec2(texelPosition,0));gl_FragColor=vec4(gradientColor.rgb,texColor.a);}else{gl_FragColor=texColor;}}", rA = "precision mediump float;varying vec2 v_texCoord;uniform sampler2D textureID;uniform sampler2D originalTextureID;uniform sampler2D gradientTexture;uniform int frameCount;uniform float u_gradientDirection;uniform float u_centerX;uniform float u_centerY;uniform float u_speed;uniform float u_density;uniform vec2 gradientTextureDimensions;uniform vec2 u_brightnessRange;void main(){vec4 texColor=texture2D(textureID,v_texCoord);vec4 originalTexColor=texture2D(originalTextureID,v_texCoord);if(texColor.r>=u_brightnessRange[0]&&texColor.r<=u_brightnessRange[1]&&texColor==originalTexColor){vec2 relativePosition=v_texCoord-vec2(u_centerX,u_centerY);float distance=length(relativePosition);float angle=atan(relativePosition.y,relativePosition.x);float adjustedAngle=angle+float(frameCount)*u_gradientDirection*u_speed;float index=mod((distance+adjustedAngle*u_density)*gradientTextureDimensions.x,gradientTextureDimensions.x);float normalizedIndex=(floor(index)+0.5)/gradientTextureDimensions.x;vec4 gradientColor=texture2D(gradientTexture,vec2(normalizedIndex,0));gl_FragColor=vec4(gradientColor.rgb,texColor.a);}else{gl_FragColor=texColor;}}", tA = "precision mediump float;varying vec2 v_texCoord;uniform sampler2D textureID;uniform sampler2D originalTextureID;uniform sampler2D gradientTexture;uniform float u_centerX;uniform float u_centerY;uniform float u_radius;uniform int frameCount;uniform int u_gradientDirection;uniform vec2 gradientTextureDimensions;uniform vec2 u_brightnessRange;void main(){vec4 texColor=texture2D(textureID,v_texCoord);vec4 originalTexColor=texture2D(originalTextureID,v_texCoord);if(texColor.r>=u_brightnessRange[0]&&texColor.r<=u_brightnessRange[1]&&texColor==originalTexColor){vec2 relativePosition=v_texCoord-vec2(u_centerX,u_centerY);float distance=length(relativePosition);float normalizedDistance=clamp(distance/u_radius,0.0,1.0);float index=normalizedDistance*(gradientTextureDimensions.x-1.0);float animatedIndex=mod(index+float(frameCount)*0.1*float(-u_gradientDirection),gradientTextureDimensions.x);float normalizedIndex=(floor(animatedIndex)+0.5)/gradientTextureDimensions.x;vec4 gradientColor=texture2D(gradientTexture,vec2(normalizedIndex,0));gl_FragColor=vec4(gradientColor.rgb,texColor.a);}else{gl_FragColor=texColor;}}", iA = "precision mediump float;varying vec2 v_texCoord;uniform sampler2D textureID;uniform sampler2D originalTextureID;uniform sampler2D gradientTexture;uniform float u_centerX;uniform float u_centerY;uniform int frameCount;uniform float u_speed;uniform vec2 gradientTextureDimensions;uniform vec2 u_brightnessRange;void main(){vec2 flippedTexCoord=vec2(v_texCoord.x,v_texCoord.y);vec4 texColor=texture2D(textureID,flippedTexCoord);vec4 originalTexColor=texture2D(originalTextureID,flippedTexCoord);if(texColor.r>=u_brightnessRange[0]&&texColor.r<=u_brightnessRange[1]&&texColor==originalTexColor){vec2 relativePosition=flippedTexCoord-vec2(u_centerX,u_centerY);float angle=atan(relativePosition.y,relativePosition.x);float adjustedAngle=angle+float(frameCount)*u_speed;float normalizedAngle=mod(adjustedAngle+3.14159265,2.0*3.14159265)/(2.0*3.14159265);float index=normalizedAngle*gradientTextureDimensions.x;float normalizedIndex=mod(floor(index)+0.5,gradientTextureDimensions.x)/gradientTextureDimensions.x;vec4 gradientColor=texture2D(gradientTexture,vec2(normalizedIndex,0));gl_FragColor=vec4(gradientColor.rgb,texColor.a);}else{gl_FragColor=texColor;}}", sA = "precision mediump float;varying vec2 v_texCoord;uniform sampler2D textureID;uniform sampler2D originalTextureID;uniform sampler2D gradientTexture;uniform int frameCount;uniform float noiseScale;uniform float u_speed;uniform float direction;uniform vec2 gradientTextureDimensions;uniform vec2 u_brightnessRange;vec3 permute(vec3 x){return mod(((x*34.0)+1.0)*x,289.0);}float snoise(vec2 v){const vec4 C=vec4(0.211324865405187,0.366025403784439,-0.577350269189626,0.024390243902439);vec2 i=floor(v+dot(v,C.yy));vec2 x0=v-i+dot(i,C.xx);vec2 i1;i1=(x0.x>x0.y)? vec2(1.0,0.0): vec2(0.0,1.0);vec4 x12=x0.xyxy+C.xxzz;x12.xy-=i1;i=mod(i,289.0);vec3 p=permute(permute(i.y+vec3(0.0,i1.y,1.0))+i.x+vec3(0.0,i1.x,1.0));vec3 m=max(0.5-vec3(dot(x0,x0),dot(x12.xy,x12.xy),dot(x12.zw,x12.zw)),0.0);m=m*m;m=m*m;vec3 x=2.0*fract(p*C.www)-1.0;vec3 h=abs(x)-0.5;vec3 ox=floor(x+0.5);vec3 a0=x-ox;m*=1.79284291400159-0.85373472095314*(a0*a0+h*h);vec3 g;g.x=a0.x*x0.x+h.x*x0.y;g.yz=a0.yz*x12.xz+h.yz*x12.yw;return 130.0*dot(m,g);}void main(){vec4 texColor=texture2D(textureID,v_texCoord);vec4 originalTexColor=texture2D(originalTextureID,v_texCoord);if(texColor.r>=u_brightnessRange[0]&&texColor.r<=u_brightnessRange[1]&&texColor==originalTexColor){vec2 directionVec=vec2(cos(radians(direction)),sin(radians(direction)));vec2 uv=v_texCoord*noiseScale+directionVec*float(frameCount)*u_speed*0.01;float noiseValue=snoise(uv);float normalizedNoiseValue=(noiseValue+1.0)/2.0;float index=normalizedNoiseValue*(gradientTextureDimensions.x-1.0);float texelPosition=(floor(index)+0.5)/gradientTextureDimensions.x;vec4 gradientColor=texture2D(gradientTexture,vec2(texelPosition,0));gl_FragColor=vec4(gradientColor.rgb,texColor.a);}else{gl_FragColor=texColor;}}";
 class oA {
-  constructor() {
+  constructor(A) {
     t(this, "_gradientParams", {
       linear: { direction: 1, angle: 0, speed: 0.01 },
       zigzag: { direction: 1, angle: 0, speed: 0.01 },
@@ -725,7 +725,8 @@ class oA {
     t(this, "_setupQueue", []);
     t(this, "_gradients", []);
     t(this, "fontTextureAtlas");
-    t(this, "p5Instance");
+    t(this, "p");
+    this.p = A;
   }
   /**
    * Setup the gradient manager with the font texture atlas.
@@ -735,19 +736,12 @@ class oA {
     this.fontTextureAtlas = A, this.setupShaders(), this.setupGradientQueue();
   }
   /**
-   * Add the p5 instance to the gradient manager. Gets called once the p5.asciify library has the p5 instance.
-   * @param p5Instance 
-   */
-  addInstance(A) {
-    this.p5Instance = A;
-  }
-  /**
    * Setup the gradients that were added before the user's `setup` function has finished.
    */
   setupGradientQueue() {
     for (const { gradientInstance: A, type: e } of this._setupQueue)
       A.setup(
-        this.p5Instance,
+        this.p,
         this.fontTextureAtlas,
         this.gradientShaders[e],
         this.fontTextureAtlas.getCharsetColorArray(A.characters)
@@ -770,8 +764,8 @@ class oA {
       i,
       { ...this._gradientParams[A], ...o }
     );
-    return this._gradients.push(g), this.p5Instance._setupDone ? g.setup(
-      this.p5Instance,
+    return this._gradients.push(g), this.p._setupDone ? g.setup(
+      this.p,
       this.fontTextureAtlas,
       this.gradientShaders[A],
       this.fontTextureAtlas.getCharsetColorArray(i)
@@ -791,7 +785,7 @@ class oA {
   setupShaders() {
     for (const A of Object.keys(this.gradientShaderSources)) {
       const e = this.gradientShaderSources[A];
-      this.gradientShaders[A] = this.p5Instance.createShader(a, e);
+      this.gradientShaders[A] = this.p.createShader(a, e);
     }
   }
   // Getters
@@ -806,7 +800,7 @@ class oA {
   }
 }
 class aA {
-  constructor() {
+  constructor(A) {
     t(this, "p");
     t(this, "grid");
     t(this, "fontTextureAtlas");
@@ -815,7 +809,7 @@ class aA {
     t(this, "_renderers");
     t(this, "gradientManager");
     t(this, "lastRenderer");
-    this.gradientManager = new oA();
+    this.p = A, this.gradientManager = new oA(A);
   }
   /**
    * Sets up the renderer manager with the specified default options.
@@ -823,20 +817,20 @@ class aA {
    * @param grid The grid instance
    * @param fontTextureAtlas The font texture atlas instance
    */
-  setup(A, e, r) {
-    this.p = A, this.grid = e, this.fontTextureAtlas = r, this.currentCanvasDimensions = {
+  setup(A, e) {
+    this.grid = A, this.fontTextureAtlas = e, this.currentCanvasDimensions = {
       width: this.p.width,
       height: this.p.height
-    }, this.gradientCharacterSet = new h(
+    }, this.gradientCharacterSet = new l(
       this.p,
-      r,
+      e,
       d.characters
     ), this.gradientManager.setup(this.fontTextureAtlas), this._renderers = [
-      new M(this.p, this.grid, new h(this.p, r, d.characters), { ...d }),
-      new Y(this.p, this.grid, new h(this.p, r, I.characters), { ...I }),
+      new M(this.p, this.grid, new l(this.p, e, d.characters), { ...d }),
+      new Y(this.p, this.grid, new l(this.p, e, I.characters), { ...I }),
       new J(this.p, this.grid, this.gradientCharacterSet, this.gradientManager, { ...K }),
-      new N(this.p, this.grid, new h(this.p, r, _.characters), { ..._ }),
-      new l(this.p, this.grid, new h(this.p, r, d.characters), { ...j })
+      new N(this.p, this.grid, new l(this.p, e, _.characters), { ..._ }),
+      new c(this.p, this.grid, new l(this.p, e, d.characters), { ...j })
     ];
   }
   /**
@@ -882,7 +876,7 @@ class gA {
     t(this, "asciiFontTextureAtlas");
     t(this, "grid");
     t(this, "sketchFramebuffer");
-    this.borderColor = "#000000", this._fontSize = 16, this.rendererManager = new aA(), this.postSetupFunction = null, this.postDrawFunction = null;
+    this.borderColor = "#000000", this._fontSize = 16, this.postSetupFunction = null, this.postDrawFunction = null;
   }
   /**
    * Initialize the p5 instance for the Asciifier
@@ -890,7 +884,7 @@ class gA {
    */
   instance(A, e = !0) {
     this.p = A, this.p.p5asciify = this, !A.preload && e && (A.preload = () => {
-    }), this.rendererManager.gradientManager.addInstance(this.p);
+    }), this.rendererManager = new aA(this.p);
   }
   /**
    * Sets up the P5Asciify library with the specified options
@@ -900,7 +894,7 @@ class gA {
       this.p,
       this.asciiFontTextureAtlas.maxGlyphDimensions.width,
       this.asciiFontTextureAtlas.maxGlyphDimensions.height
-    ), this.rendererManager.setup(this.p, this.grid, this.asciiFontTextureAtlas), this.sketchFramebuffer = this.p.createFramebuffer({
+    ), this.rendererManager.setup(this.grid, this.asciiFontTextureAtlas), this.sketchFramebuffer = this.p.createFramebuffer({
       depthFormat: this.p.UNSIGNED_INT,
       textureFiltering: this.p.NEAREST
     }), this.postSetupFunction && this.postSetupFunction();
@@ -947,8 +941,8 @@ function BA(s) {
   function A(e, r) {
     const [i, o] = [e, r].map((g) => g.split(".").map(Number));
     for (let g = 0; g < Math.max(i.length, o.length); g++) {
-      const n = i[g] ?? 0, C = o[g] ?? 0;
-      if (n !== C) return n > C ? 1 : -1;
+      const h = i[g] ?? 0, C = o[g] ?? 0;
+      if (h !== C) return h > C ? 1 : -1;
     }
     return 0;
   }
@@ -1007,10 +1001,10 @@ function hA(s, A, e, r, i, o) {
     throw new Q(
       `Invalid characters value '${i}'. Expected a string.`
     );
-  const g = Object.keys(s.gradientParams[A]), n = Object.keys(o).filter((C) => !g.includes(C));
-  if (n.length > 0)
+  const g = Object.keys(s.gradientParams[A]), h = Object.keys(o).filter((C) => !g.includes(C));
+  if (h.length > 0)
     throw new Q(
-      `Invalid parameter(s) for gradient '${A}': ${n.join(", ")}
+      `Invalid parameter(s) for gradient '${A}': ${h.join(", ")}
 Valid parameters are: ${g.join(", ")}`
     );
 }
@@ -1041,14 +1035,14 @@ function cA(s) {
     this.pop(), s.sketchFramebuffer.end(), s.asciify();
   });
 }
-const c = new gA();
+const n = new gA();
 typeof window < "u" && (window.preload = function() {
-});
-QA(c);
-EA(c);
-nA(c);
-lA(c);
-cA(c);
+}, window.p5asciify = n);
+QA(n);
+EA(n);
+nA(n);
+lA(n);
+cA(n);
 export {
-  c as default
+  n as default
 };
