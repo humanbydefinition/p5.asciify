@@ -13,6 +13,7 @@ export default p5asciify;
 // If in p5.js global mode, define a dummy preload function in case user doesn't provide one
 if (typeof window !== 'undefined') {
   window.preload = function () { }; // Define empty preload function in case user doesn't provide one
+  window.p5asciify = p5asciify;
 }
 
 // Register library methods to extend the p5 instance
