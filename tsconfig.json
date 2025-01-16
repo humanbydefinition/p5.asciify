@@ -28,7 +28,7 @@
 
     // Type-checking
     "strict": true,
-    "skipLibCheck": false,
+    "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
   },
   "include": ["src/lib", "src/types"]

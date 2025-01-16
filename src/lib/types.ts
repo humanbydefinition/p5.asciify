@@ -13,31 +13,26 @@ declare global {
 
 /**
  * Extends the p5.js instance typing with the p5.asciify library properties and methods.
- * Also adds existing p5.js properties and methods that are not included in the types/p5/index.d.ts file.
+ * Also adds existing p5.js properties and methods that are not included or properly defined in the types/p5/index.d.ts file.
  */
 declare module 'p5' {
-    namespace p5 {
-        class Framebuffer {
-            begin(): void;
-            end(): void;
-            resize(width: number, height: number): void;
-            remove(): void;
+    interface Shader {
+        setUniform(
+            uniformName: string,
+            value: p5.Framebuffer | number | boolean | number[] | Image | Graphics | MediaElement
+        ): void;
+    }
 
-            createFramebuffer(options?: {
-                width?: number;
-                height?: number;
-                format?: number;
-                channels?: number;
-                depth?: boolean;
-                depthFormat?: number;
-                antialias?: boolean | number;
-                textureFiltering?: number;
-            }): p5.Framebuffer;
-        }
+    interface Color {
+        _array: number[];
+    }
+
+    interface Framebuffer {
+        loadPixels(): void;
+        updatePixels(): void;
     }
 
     interface p5InstanceExtensions {
-
         // Extended properties relevant to the p5.asciify library
         p5asciify: P5Asciifier;
         loadAsciiFont(font: string | Font, callback?: () => void): void;
@@ -53,20 +48,21 @@ declare module 'p5' {
             characters: string,
             userParams?: Record<string, any>
         ): P5AsciifyGradient;
-        
 
         // Existing properties in the p5.js library, which do not exist in types/p5/index.d.ts
         _setupDone: boolean;
         _renderer: {
-            drawingContext:  | WebGLRenderingContext | WebGL2RenderingContext;
+            drawingContext: | WebGLRenderingContext | WebGL2RenderingContext;
         };
         _incrementPreload(): void;
         _decrementPreload(): void;
-        
+
         registerMethod(
             name: 'init' | 'pre' | 'post' | 'remove' | 'afterSetup',
             f: (this: p5) => void
         ): void;
+
+        createFramebuffer(options?: object): p5.Framebuffer;
     }
 }
 

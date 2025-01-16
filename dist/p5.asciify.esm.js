@@ -317,7 +317,7 @@ class Y extends l {
     t(this, "brightnessSplitShader");
     t(this, "brightnessSampleFramebuffer");
     t(this, "brightnessSplitFramebuffer");
-    this.characterSelectionShader = this.p.createShader(a, f(this.characterSet.asciiFontTextureAtlas.fontSize, this.characterSet.characters.length)), this.brightnessSampleShader = this.p.createShader(a, m(this.grid.cellHeight, this.grid.cellWidth)), this.colorSampleShader = this.p.createShader(a, P(16, this.grid.cellHeight, this.grid.cellWidth)), this.brightnessSplitShader = this.p.createShader(a, U), this.brightnessSampleFramebuffer = this.p.createFramebuffer({
+    this.characterSelectionShader = this.p.createShader(a, f(this.characterSet.asciiFontTextureAtlas.fontSize)), this.brightnessSampleShader = this.p.createShader(a, m(this.grid.cellHeight, this.grid.cellWidth)), this.colorSampleShader = this.p.createShader(a, P(16, this.grid.cellHeight, this.grid.cellWidth)), this.brightnessSplitShader = this.p.createShader(a, U), this.brightnessSampleFramebuffer = this.p.createFramebuffer({
       density: 1,
       width: this.grid.cols,
       height: this.grid.rows,

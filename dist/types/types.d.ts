@@ -11,26 +11,18 @@ declare global {
 }
 /**
  * Extends the p5.js instance typing with the p5.asciify library properties and methods.
- * Also adds existing p5.js properties and methods that are not included in the types/p5/index.d.ts file.
+ * Also adds existing p5.js properties and methods that are not included or properly defined in the types/p5/index.d.ts file.
  */
 declare module 'p5' {
-    namespace p5 {
-        class Framebuffer {
-            begin(): void;
-            end(): void;
-            resize(width: number, height: number): void;
-            remove(): void;
-            createFramebuffer(options?: {
-                width?: number;
-                height?: number;
-                format?: number;
-                channels?: number;
-                depth?: boolean;
-                depthFormat?: number;
-                antialias?: boolean | number;
-                textureFiltering?: number;
-            }): p5.Framebuffer;
-        }
+    interface Shader {
+        setUniform(uniformName: string, value: p5.Framebuffer | number | boolean | number[] | Image | Graphics | MediaElement): void;
+    }
+    interface Color {
+        _array: number[];
+    }
+    interface Framebuffer {
+        loadPixels(): void;
+        updatePixels(): void;
     }
     interface p5InstanceExtensions {
         p5asciify: P5Asciifier;
@@ -48,6 +40,7 @@ declare module 'p5' {
         _incrementPreload(): void;
         _decrementPreload(): void;
         registerMethod(name: 'init' | 'pre' | 'post' | 'remove' | 'afterSetup', f: (this: p5) => void): void;
+        createFramebuffer(options?: object): p5.Framebuffer;
     }
 }
 /**
