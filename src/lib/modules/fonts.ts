@@ -17,14 +17,12 @@ export function registerFontMethods(p5asciify: P5Asciifier): void {
             p5asciify.font = loadedFont;
             this._decrementPreload();
         };
-    
+
         if (typeof font === 'string') {
             this.loadFont(
                 font,
                 (loadedFont: p5.Font) => { setFont(loadedFont); },
-                () => { 
-                    throw new P5AsciifyError(`loadAsciiFont() | Failed to load font from path: '${font}'`);
-                }
+                () => { throw new P5AsciifyError(`loadAsciiFont() | Failed to load font from path: '${font}'`); }
             );
         } else if (font instanceof p5.Font) {
             setFont(font);
@@ -36,7 +34,7 @@ export function registerFontMethods(p5asciify: P5Asciifier): void {
     /**
      * Preloads the default font `UrsaFont` to be used with this library.
      */
-    p5.prototype.registerMethod("init", function(this: p5) {
+    p5.prototype.registerMethod("init", function (this: p5) {
         this._incrementPreload();
         this.loadAsciiFont(URSAFONT_BASE64);
     });

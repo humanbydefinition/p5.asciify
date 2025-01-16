@@ -1,8 +1,6 @@
 import { P5AsciifyError } from '../AsciifyError';
 import { P5AsciifyGradientManager } from '../gradients/GradientManager';
-
 import { GradientType } from '../gradients/types';
-
 import { validateNumberInRange } from '../utils';
 
 /**
