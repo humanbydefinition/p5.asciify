@@ -12,7 +12,7 @@ import { FONT_SIZE_LIMITS } from './constants';
 export class P5Asciifier {
     public borderColor: string;
     private _fontSize: number;
-    public rendererManager: RendererManager;
+    public rendererManager!: RendererManager;
     private _font!: p5.Font;
     public postSetupFunction: (() => void) | null;
     public postDrawFunction: (() => void) | null;
@@ -24,7 +24,7 @@ export class P5Asciifier {
     constructor() {
         this.borderColor = "#000000";
         this._fontSize = 16;
-        this.rendererManager = new RendererManager();
+        
         this.postSetupFunction = null;
         this.postDrawFunction = null;
     }
@@ -41,7 +41,7 @@ export class P5Asciifier {
             p.preload = () => { };
         }
 
-        this.rendererManager.gradientManager.addInstance(this.p);
+        this.rendererManager = new RendererManager(this.p);
     }
 
     /**
@@ -56,7 +56,7 @@ export class P5Asciifier {
             this.asciiFontTextureAtlas.maxGlyphDimensions.height
         );
 
-        this.rendererManager.setup(this.p, this.grid, this.asciiFontTextureAtlas);
+        this.rendererManager.setup(this.grid, this.asciiFontTextureAtlas);
 
         this.sketchFramebuffer = this.p.createFramebuffer({
             depthFormat: this.p.UNSIGNED_INT,

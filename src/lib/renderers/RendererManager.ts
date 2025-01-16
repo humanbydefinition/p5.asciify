@@ -33,8 +33,9 @@ export class RendererManager {
     public gradientManager: P5AsciifyGradientManager;
     public lastRenderer!: AsciiRenderer;
 
-    constructor() {
-        this.gradientManager = new P5AsciifyGradientManager();
+    constructor(p5Instance: p5) {
+        this.p = p5Instance;
+        this.gradientManager = new P5AsciifyGradientManager(p5Instance);
     }
 
     /**
@@ -43,8 +44,7 @@ export class RendererManager {
      * @param grid The grid instance
      * @param fontTextureAtlas The font texture atlas instance
      */
-    public setup(p5Instance: p5, grid: P5AsciifyGrid, fontTextureAtlas: P5AsciifyFontTextureAtlas): void {
-        this.p = p5Instance;
+    public setup(grid: P5AsciifyGrid, fontTextureAtlas: P5AsciifyFontTextureAtlas): void {
         this.grid = grid;
         this.fontTextureAtlas = fontTextureAtlas;
 

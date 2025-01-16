@@ -61,7 +61,11 @@ export class P5AsciifyGradientManager {
     private _setupQueue: Array<{ gradientInstance: P5AsciifyGradient, type: GradientType; }> = [];
     private _gradients: P5AsciifyGradient[] = [];
     private fontTextureAtlas!: P5AsciifyFontTextureAtlas;
-    private p5Instance!: p5;
+    private p!: p5;
+
+    constructor(p5Instance: p5) {
+        this.p = p5Instance;
+    }
 
     /**
      * Setup the gradient manager with the font texture atlas.
@@ -74,20 +78,12 @@ export class P5AsciifyGradientManager {
     }
 
     /**
-     * Add the p5 instance to the gradient manager. Gets called once the p5.asciify library has the p5 instance.
-     * @param p5Instance 
-     */
-    addInstance(p5Instance: p5): void {
-        this.p5Instance = p5Instance;
-    }
-
-    /**
      * Setup the gradients that were added before the user's `setup` function has finished.
      */
     private setupGradientQueue(): void {
         for (const { gradientInstance, type } of this._setupQueue) {
             gradientInstance.setup(
-                this.p5Instance,
+                this.p,
                 this.fontTextureAtlas,
                 this.gradientShaders[type] as p5.Shader,
                 this.fontTextureAtlas.getCharsetColorArray(gradientInstance.characters)
@@ -122,11 +118,11 @@ export class P5AsciifyGradientManager {
 
         this._gradients.push(gradient);
 
-        if (!this.p5Instance._setupDone) {
+        if (!this.p._setupDone) {
             this._setupQueue.push({ gradientInstance: gradient, type: gradientName });
         } else {
             gradient.setup(
-                this.p5Instance,
+                this.p,
                 this.fontTextureAtlas,
                 this.gradientShaders[gradientName] as p5.Shader,
                 this.fontTextureAtlas.getCharsetColorArray(characters)
@@ -153,7 +149,7 @@ export class P5AsciifyGradientManager {
     private setupShaders(): void {
         for (const gradientName of Object.keys(this.gradientShaderSources) as GradientType[]) {
             const fragShader = this.gradientShaderSources[gradientName];
-            this.gradientShaders[gradientName] = this.p5Instance.createShader(vertexShader, fragShader);
+            this.gradientShaders[gradientName] = this.p.createShader(vertexShader, fragShader);
         }
     }
 
