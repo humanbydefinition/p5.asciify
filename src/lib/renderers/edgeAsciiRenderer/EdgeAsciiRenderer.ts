@@ -13,6 +13,8 @@ import sobelShader from './shaders/sobel.frag';
 
 import { generateSampleShader } from './shaders/shaderGenerators.min';
 
+import { EDGE_CHARACTER_LENGTH } from '../../constants';
+
 /**
  * An ASCII renderer that applies ASCII edges to the input sketch by using edge detection.
  */
@@ -59,8 +61,8 @@ export default class EdgeAsciiRenderer extends AsciiRenderer<AsciiRendererOption
         super.updateOptions(newOptions);
 
         // Specific check for EdgeAsciiRenderer: characters string must have length 8
-        if (newOptions?.characters && newOptions.characters.length !== 8) {
-            throw new P5AsciifyError('For EdgeAsciiRenderer, `characters` must be a string of length 8.');
+        if (newOptions?.characters && newOptions.characters.length !== EDGE_CHARACTER_LENGTH) {
+            throw new P5AsciifyError(`For EdgeAsciiRenderer, 'characters' must be a string of length ${EDGE_CHARACTER_LENGTH}.`);
         }
     }
 
