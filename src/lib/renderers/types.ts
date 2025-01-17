@@ -9,6 +9,6 @@ export interface AsciiRendererOptions {
     backgroundColorMode?: number;
     invertMode: boolean;
     rotationAngle: number;
-    sobelThreshold: number;
-    sampleThreshold: number;
+    sobelThreshold?: number;
+    sampleThreshold?: number;
 }

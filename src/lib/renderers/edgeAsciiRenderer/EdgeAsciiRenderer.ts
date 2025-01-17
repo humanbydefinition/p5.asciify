@@ -60,7 +60,7 @@ export default class EdgeAsciiRenderer extends AsciiRenderer<AsciiRendererOption
         this.p.shader(this.sobelShader);
         this.sobelShader.setUniform('u_texture', inputFramebuffer);
         this.sobelShader.setUniform('u_textureSize', [this.p.width, this.p.height]);
-        this.sobelShader.setUniform('u_threshold', this.options.sobelThreshold);
+        this.sobelShader.setUniform('u_threshold', this.options.sobelThreshold as number);
         this.p.rect(0, 0, this.p.width, this.p.height);
         this.sobelFramebuffer.end();
 
@@ -71,7 +71,7 @@ export default class EdgeAsciiRenderer extends AsciiRenderer<AsciiRendererOption
         this.sampleShader.setUniform('u_imageSize', [this.p.width, this.p.height]);
         this.sampleShader.setUniform('u_image', this.sobelFramebuffer);
         this.sampleShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
-        this.sampleShader.setUniform('u_threshold', this.options.sampleThreshold);
+        this.sampleShader.setUniform('u_threshold', this.options.sampleThreshold as number);
         this.p.rect(0, 0, this.p.width, this.p.height);
         this.sampleFramebuffer.end();
 
