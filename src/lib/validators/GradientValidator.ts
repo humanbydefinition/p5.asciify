@@ -21,22 +21,37 @@ export function validateGradientParams(
     characters: string,
     userParams: Record<string, any>
 ): void {
-    // Check if the gradient constructor exists
+    // Validate gradient name type and existence
+    if (typeof gradientName !== 'string') {
+        throw new P5AsciifyError('Gradient name must be a string');
+    }
     if (!gradientManager.gradientConstructors[gradientName]) {
         throw new P5AsciifyError(
             `Gradient '${gradientName}' does not exist! Available gradients: ${Object.keys(gradientManager.gradientConstructors).join(", ")}`
         );
     }
 
-    // Validate brightness ranges
+    // Validate brightness types and ranges
+    if (typeof brightnessStart !== 'number') {
+        throw new P5AsciifyError('Brightness start value must be a number');
+    }
+    if (typeof brightnessEnd !== 'number') {
+        throw new P5AsciifyError('Brightness end value must be a number');
+    }
     validateNumberInRange(brightnessStart, 0, 255, 'brightness start');
     validateNumberInRange(brightnessEnd, 0, 255, 'brightness end');
 
     // Validate characters
     if (typeof characters !== 'string') {
-        throw new P5AsciifyError(
-            `Invalid characters value '${characters}'. Expected a string.`
-        );
+        throw new P5AsciifyError('Characters must be a string');
+    }
+    if (characters.length === 0) {
+        throw new P5AsciifyError('Characters string cannot be empty');
+    }
+
+    // Validate userParams
+    if (!userParams || typeof userParams !== 'object' || Array.isArray(userParams)) {
+        throw new P5AsciifyError('User parameters must be an object');
     }
 
     // Validate userParams keys

@@ -398,12 +398,16 @@ class O extends c {
   resetShaders() {
     this.sampleShader = this.p.createShader(g, I(16, this.grid.cellHeight, this.grid.cellWidth));
   }
+  updateOptions(e) {
+    if (super.updateOptions(e), e != null && e.characters && e.characters.length !== 8)
+      throw new a("For EdgeAsciiRenderer, `characters` must be a string of length 8.");
+  }
   render(e, t) {
     this.sobelFramebuffer.begin(), this.p.clear(), this.p.shader(this.sobelShader), this.sobelShader.setUniform("u_texture", e), this.sobelShader.setUniform("u_textureSize", [this.p.width, this.p.height]), this.sobelShader.setUniform("u_threshold", this.options.sobelThreshold), this.p.rect(0, 0, this.p.width, this.p.height), this.sobelFramebuffer.end(), this.sampleFramebuffer.begin(), this.p.clear(), this.p.shader(this.sampleShader), this.sampleShader.setUniform("u_imageSize", [this.p.width, this.p.height]), this.sampleShader.setUniform("u_image", this.sobelFramebuffer), this.sampleShader.setUniform("u_gridCellDimensions", [this.grid.cols, this.grid.rows]), this.sampleShader.setUniform("u_threshold", this.options.sampleThreshold), this.p.rect(0, 0, this.p.width, this.p.height), this.sampleFramebuffer.end(), this._primaryColorSampleFramebuffer.begin(), this.p.clear(), this.p.shader(this.colorSampleShader), this.colorSampleShader.setUniform("u_sketchTexture", e), this.colorSampleShader.setUniform("u_previousColorTexture", t.primaryColorSampleFramebuffer), this.colorSampleShader.setUniform("u_sampleTexture", this.sampleFramebuffer), this.colorSampleShader.setUniform("u_gridCellDimensions", [this.grid.cols, this.grid.rows]), this.colorSampleShader.setUniform("u_sampleMode", this._options.characterColorMode), this.colorSampleShader.setUniform("u_staticColor", this._options.characterColor._array), this.p.rect(0, 0, this.p.width, this.p.height), this._primaryColorSampleFramebuffer.end(), this._secondaryColorSampleFramebuffer.begin(), this.p.clear(), this.p.shader(this.colorSampleShader), this.colorSampleShader.setUniform("u_sketchTexture", e), this.colorSampleShader.setUniform("u_previousColorTexture", t.secondaryColorSampleFramebuffer), this.colorSampleShader.setUniform("u_sampleTexture", this.sampleFramebuffer), this.colorSampleShader.setUniform("u_gridCellDimensions", [this.grid.cols, this.grid.rows]), this.colorSampleShader.setUniform("u_sampleMode", this._options.backgroundColorMode), this.colorSampleShader.setUniform("u_staticColor", this._options.backgroundColor._array), this.p.rect(0, 0, this.p.width, this.p.height), this._secondaryColorSampleFramebuffer.end(), this._asciiCharacterFramebuffer.begin(), this.p.clear(), this.p.shader(this.asciiCharacterShader), this.asciiCharacterShader.setUniform("u_sketchTexture", this.sampleFramebuffer), this.asciiCharacterShader.setUniform("u_colorPaletteTexture", this.characterSet.characterColorPalette.framebuffer), this.asciiCharacterShader.setUniform("u_previousAsciiCharacterTexture", t.asciiCharacterFramebuffer), this.asciiCharacterShader.setUniform("u_gridCellDimensions", [this.grid.cols, this.grid.rows]), this.asciiCharacterShader.setUniform("u_totalChars", this.characterSet.characters.length), this.p.rect(0, 0, this.p.width, this.p.height), this._asciiCharacterFramebuffer.end(), super.render(e, t);
   }
 }
 var X = "precision mediump float;uniform sampler2D u_image;varying vec2 v_texCoord;void main(){vec4 color=texture2D(u_image,v_texCoord);float luminance=0.299*color.r+0.587*color.g+0.114*color.b;color.rgb=vec3(luminance);gl_FragColor=color;}", H = "precision mediump float;uniform sampler2D u_sketchTexture;uniform sampler2D u_previousColorTexture;uniform sampler2D u_sampleTexture;uniform sampler2D u_sampleReferenceTexture;uniform vec2 u_gridCellDimensions;uniform int u_sampleMode;uniform vec4 u_staticColor;void main(){vec2 cellCoord=floor(gl_FragCoord.xy);vec2 cellSizeInTexCoords=vec2(1.0)/u_gridCellDimensions;vec2 cellCenterTexCoord=(cellCoord+vec2(0.5))*cellSizeInTexCoords;bool isMatchingSample=texture2D(u_sampleTexture,cellCenterTexCoord)==texture2D(u_sampleReferenceTexture,cellCenterTexCoord);if(isMatchingSample){gl_FragColor=texture2D(u_previousColorTexture,cellCenterTexCoord);return;}else if(u_sampleMode==0){gl_FragColor=texture2D(u_sketchTexture,cellCenterTexCoord);}else{gl_FragColor=u_staticColor;}}", J = "precision mediump float;uniform sampler2D u_prevAsciiCharacterTexture;uniform sampler2D u_prevGradientTexture;uniform sampler2D u_nextGradientTexture;uniform vec2 u_resolution;void main(){vec2 uv=gl_FragCoord.xy/u_resolution;vec4 prevAscii=texture2D(u_prevAsciiCharacterTexture,uv);vec4 prevGradient=texture2D(u_prevGradientTexture,uv);vec4 nextGradient=texture2D(u_nextGradientTexture,uv);bool colorsMatch=prevGradient==nextGradient;gl_FragColor=colorsMatch ? prevAscii : nextGradient;}";
-class K extends c {
+class j extends c {
   constructor(e, t, s, o, B) {
     super(e, t, s, B);
     i(this, "grayscaleShader");
@@ -434,7 +438,7 @@ class K extends c {
     });
   }
   resizeFramebuffers() {
-    super.resizeFramebuffers(), this.grayscaleFramebuffer.resize(this.grid.cols, this.grid.rows), this.prevAsciiGradientFramebuffer.resize(this.grid.cols, this.grid.rows);
+    super.resizeFramebuffers(), this.grayscaleFramebuffer.resize(this.grid.cols, this.grid.rows), this.prevAsciiGradientFramebuffer.resize(this.grid.cols, this.grid.rows), this.nextAsciiGradientFramebuffer.resize(this.grid.cols, this.grid.rows);
   }
   render(e, t) {
     this.grayscaleFramebuffer.begin(), this.p.clear(), this.p.shader(this.grayscaleShader), this.grayscaleShader.setUniform("u_image", e), this.p.rect(0, 0, this.p.width, this.p.height), this.grayscaleFramebuffer.end(), this.prevAsciiGradientFramebuffer.begin(), this.p.clear(), this.p.image(this.grayscaleFramebuffer, -this.grid.cols / 2, -this.grid.rows / 2), this.prevAsciiGradientFramebuffer.end(), this.nextAsciiGradientFramebuffer.begin(), this.p.clear(), this.p.image(this.grayscaleFramebuffer, -this.grid.cols / 2, -this.grid.rows / 2), this.nextAsciiGradientFramebuffer.end();
@@ -461,7 +465,7 @@ const C = {
   backgroundColorMode: 1,
   invertMode: !1,
   rotationAngle: 0
-}, j = {
+}, K = {
   enabled: !1,
   characterColor: "#FFFFFF",
   characterColorMode: 0,
@@ -858,7 +862,7 @@ class gA {
     ), this.gradientManager.setup(this.fontTextureAtlas), this._renderers = [
       new U(this.p, this.grid, new l(this.p, e, C.characters), { ...C }),
       new z(this.p, this.grid, new l(this.p, e, p.characters), { ...p }),
-      new K(this.p, this.grid, this.gradientCharacterSet, this.gradientManager, { ...j }),
+      new j(this.p, this.grid, this.gradientCharacterSet, this.gradientManager, { ...K }),
       new O(this.p, this.grid, new l(this.p, e, _.characters), { ..._ }),
       new c(this.p, this.grid, new l(this.p, e, C.characters), { ...W })
     ];
@@ -1023,14 +1027,22 @@ function hA(r) {
   };
 }
 function lA(r, A, e, t, s, o) {
+  if (typeof A != "string")
+    throw new a("Gradient name must be a string");
   if (!r.gradientConstructors[A])
     throw new a(
       `Gradient '${A}' does not exist! Available gradients: ${Object.keys(r.gradientConstructors).join(", ")}`
     );
+  if (typeof e != "number")
+    throw new a("Brightness start value must be a number");
+  if (typeof t != "number")
+    throw new a("Brightness end value must be a number");
   if (D(e, 0, 255, "brightness start"), D(t, 0, 255, "brightness end"), typeof s != "string")
-    throw new a(
-      `Invalid characters value '${s}'. Expected a string.`
-    );
+    throw new a("Characters must be a string");
+  if (s.length === 0)
+    throw new a("Characters string cannot be empty");
+  if (!o || typeof o != "object" || Array.isArray(o))
+    throw new a("User parameters must be an object");
   const B = Object.keys(r.gradientParams[A]), h = Object.keys(o).filter((d) => !B.includes(d));
   if (h.length > 0)
     throw new a(

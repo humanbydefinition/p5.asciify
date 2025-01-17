@@ -16,5 +16,6 @@ export default class EdgeAsciiRenderer extends AsciiRenderer<AsciiRendererOption
     constructor(p5Instance: p5, grid: P5AsciifyGrid, characterSet: P5AsciifyCharacterSet, options: AsciiRendererOptions);
     resizeFramebuffers(): void;
     resetShaders(): void;
+    updateOptions(newOptions: Partial<AsciiRendererOptions>): void;
     render(inputFramebuffer: p5.Framebuffer, previousAsciiRenderer: AsciiRenderer): void;
 }
