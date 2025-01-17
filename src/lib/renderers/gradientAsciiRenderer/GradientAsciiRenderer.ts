@@ -68,6 +68,7 @@ export default class GradientAsciiRenderer extends AsciiRenderer {
         super.resizeFramebuffers();
         this.grayscaleFramebuffer.resize(this.grid.cols, this.grid.rows);
         this.prevAsciiGradientFramebuffer.resize(this.grid.cols, this.grid.rows);
+        this.nextAsciiGradientFramebuffer.resize(this.grid.cols, this.grid.rows);
     }
 
     render(inputFramebuffer: p5.Framebuffer, previousAsciiRenderer: AsciiRenderer): void {
