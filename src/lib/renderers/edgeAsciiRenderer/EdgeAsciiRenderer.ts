@@ -2,6 +2,7 @@ import p5 from 'p5';
 import { AsciiRenderer } from '../AsciiRenderer';
 import { P5AsciifyGrid } from '../../Grid';
 import { P5AsciifyCharacterSet } from '../../CharacterSet';
+import { P5AsciifyError } from '../../AsciifyError';
 
 import { AsciiRendererOptions } from '../types';
 
@@ -51,6 +52,16 @@ export default class EdgeAsciiRenderer extends AsciiRenderer<AsciiRendererOption
 
     resetShaders(): void {
         this.sampleShader = this.p.createShader(vertexShader, generateSampleShader(16, this.grid.cellHeight, this.grid.cellWidth));
+    }
+
+    public updateOptions(newOptions: Partial<AsciiRendererOptions>): void {
+        // Call the base method to handle the rest of the validations and updates
+        super.updateOptions(newOptions);
+
+        // Specific check for EdgeAsciiRenderer: characters string must have length 8
+        if (newOptions?.characters && newOptions.characters.length !== 8) {
+            throw new P5AsciifyError('For EdgeAsciiRenderer, `characters` must be a string of length 8.');
+        }
     }
 
     render(inputFramebuffer: p5.Framebuffer, previousAsciiRenderer: AsciiRenderer): void {
