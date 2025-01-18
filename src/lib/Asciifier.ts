@@ -3,8 +3,6 @@ import p5 from 'p5';
 import { P5AsciifyFontTextureAtlas } from './FontTextureAtlas';
 import { P5AsciifyGrid } from './Grid';
 import { RendererManager } from './renderers/RendererManager';
-import { P5AsciifyError } from './AsciifyError';
-import { FONT_SIZE_LIMITS } from './constants';
 
 /**
  * The main class for the p5.asciify library. This class is responsible for setting up the library and running the rendering pipeline.
@@ -14,7 +12,6 @@ export class P5Asciifier {
     private _fontSize: number;
     public rendererManager!: RendererManager;
     private _font!: p5.Font;
-    public postDrawFunction: (() => void) | null;
     private p!: p5;
     public asciiFontTextureAtlas!: P5AsciifyFontTextureAtlas;
     public grid!: P5AsciifyGrid;
@@ -23,8 +20,6 @@ export class P5Asciifier {
     constructor() {
         this.borderColor = "#000000";
         this._fontSize = 16;
-        
-        this.postDrawFunction = null;
     }
 
     /**
