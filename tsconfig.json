@@ -36,5 +36,5 @@
     ]
 
   },
-  "include": ["src/lib", "src/types"]
+  "include": ["src/lib", "src/declarations.d.ts"]
 }
