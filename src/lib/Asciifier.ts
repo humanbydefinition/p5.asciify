@@ -210,8 +210,9 @@ export class P5Asciifier {
     }
 
     /**
-     * Sets the background color for the ascii renderers. Potentially covers the empty space on the edges of the canvas, not occupied by the centered ASCII grid.
-     * @param color The color to set.
+     * Sets the background color for the ascii renderers. 
+     * Covers the empty space on the edges of the canvas, which potentially is not occupied by the centered ASCII grid.
+     * @param color The color to set. Needs to be a valid type to pass to the `background()` function provided by p5.js.
      * @throws {P5AsciifyError} If the color is not a string, array or p5.Color.
      */
     public background(color: string | p5.Color | [number, number?, number?, number?]) {
