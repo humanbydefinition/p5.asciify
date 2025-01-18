@@ -229,7 +229,7 @@ function G(t) {
     throw new g("`sampleThreshold` must be a number.");
 }
 var h = "precision mediump float;attribute vec3 aPosition;attribute vec2 aTexCoord;varying vec2 v_texCoord;void main(){vec4 positionVec4=vec4(aPosition,1.0);positionVec4.xy=positionVec4.xy*2.0-1.0;gl_Position=positionVec4;v_texCoord=aTexCoord;}", M = "precision mediump float;uniform sampler2D u_characterTexture;uniform vec2 u_charsetDimensions;uniform sampler2D u_primaryColorTexture;uniform sampler2D u_secondaryColorTexture;uniform sampler2D u_asciiCharacterTexture;uniform vec2 u_gridCellDimensions;uniform vec2 u_gridPixelDimensions;uniform vec2 u_gridOffsetDimensions;uniform float u_rotationAngle;uniform bool u_invertMode;uniform vec2 u_resolution;uniform float u_pixelRatio;uniform sampler2D u_prevAsciiTexture;mat2 rotate2D(float angle){float s=sin(angle);float c=cos(angle);return mat2(c,-s,s,c);}void main(){vec2 logicalFragCoord=gl_FragCoord.xy/u_pixelRatio;vec2 adjustedCoord=(logicalFragCoord-u_gridOffsetDimensions)/u_gridPixelDimensions;vec2 gridCoord=adjustedCoord*u_gridCellDimensions;vec2 cellCoord=floor(gridCoord);vec2 charIndexTexCoord=(cellCoord+vec2(0.5))/u_gridCellDimensions;vec4 secondaryColor=texture2D(u_secondaryColorTexture,charIndexTexCoord);if(adjustedCoord.x<0.0||adjustedCoord.x>1.0||adjustedCoord.y<0.0||adjustedCoord.y>1.0){gl_FragColor=vec4(0);return;}vec4 primaryColor=texture2D(u_primaryColorTexture,charIndexTexCoord);vec4 encodedIndexVec=texture2D(u_asciiCharacterTexture,charIndexTexCoord);if(encodedIndexVec.rgba==vec4(0.0)){gl_FragColor=texture2D(u_prevAsciiTexture,logicalFragCoord/u_resolution);return;}int charIndex=int(encodedIndexVec.r*255.0+0.5)+int(encodedIndexVec.g*255.0+0.5)*256;int charCol=charIndex-(charIndex/int(u_charsetDimensions.x))*int(u_charsetDimensions.x);int charRow=charIndex/int(u_charsetDimensions.x);vec2 charCoord=vec2(float(charCol)/u_charsetDimensions.x,float(charRow)/u_charsetDimensions.y);vec2 fractionalPart=fract(gridCoord)-0.5;fractionalPart=rotate2D(u_rotationAngle)*fractionalPart;fractionalPart+=0.5;vec2 cellMin=charCoord;vec2 cellMax=charCoord+vec2(1.0/u_charsetDimensions.x,1.0/u_charsetDimensions.y);vec2 texCoord=charCoord+fractionalPart*vec2(1.0/u_charsetDimensions.x,1.0/u_charsetDimensions.y);bool outsideBounds=any(lessThan(texCoord,cellMin))||any(greaterThan(texCoord,cellMax));vec4 charColor=outsideBounds ? secondaryColor : texture2D(u_characterTexture,texCoord);if(u_invertMode){charColor.a=1.0-charColor.a;charColor.rgb=vec3(1.0);}vec4 finalColor=vec4(primaryColor.rgb*charColor.rgb,charColor.a);gl_FragColor=mix(secondaryColor,finalColor,charColor.a);if(outsideBounds){gl_FragColor=u_invertMode ? primaryColor : secondaryColor;}}";
-class C {
+class c {
   constructor(A, e, r, s) {
     i(this, "_primaryColorSampleFramebuffer");
     i(this, "_secondaryColorSampleFramebuffer");
@@ -309,7 +309,7 @@ class C {
   }
 }
 var U = "precision mediump float;uniform sampler2D u_sketchTexture;uniform vec2 u_gridCellDimensions;void main(){vec2 logicalFragCoord=gl_FragCoord.xy;vec2 cellCoord=floor(logicalFragCoord);vec2 cellSizeInTexCoords=1.0/u_gridCellDimensions;vec2 cellCenterTexCoord=(cellCoord+vec2(0.5))*cellSizeInTexCoords;vec4 sampledColor=texture2D(u_sketchTexture,cellCenterTexCoord);gl_FragColor=sampledColor;}", Y = "precision mediump float;uniform sampler2D u_colorSampleFramebuffer;uniform sampler2D u_charPaletteTexture;uniform vec2 u_charPaletteSize;uniform vec2 u_textureSize;void main(){vec2 pos=(floor(gl_FragCoord.xy)+0.5)/u_textureSize;float brightness=dot(texture2D(u_colorSampleFramebuffer,pos).rgb,vec3(0.299,0.587,0.114));float index=clamp(floor(brightness*u_charPaletteSize.x),0.0,u_charPaletteSize.x-1.0);gl_FragColor=vec4(texture2D(u_charPaletteTexture,vec2((index+0.5)/u_charPaletteSize.x,0.0)).rgb,1.0);}";
-class z extends C {
+class z extends c {
   constructor(e, r, s, o) {
     super(e, r, s, o);
     i(this, "colorSampleShader");
@@ -338,7 +338,7 @@ precision mediump float;uniform sampler2D u_inputImage;uniform vec2 u_inputImage
 precision mediump float;uniform sampler2D u_inputImage,u_inputImageBW;uniform vec2 u_inputImageSize;uniform int u_gridCols,u_gridRows,u_colorRank;const int e=${t},u=${A},f=${e};void main(){vec2 i=floor(gl_FragCoord.xy),t=u_inputImageSize/vec2(float(u_gridCols),float(u_gridRows));i*=t;vec2 k=(i+t*.5)/u_inputImageSize;vec4 v=texture2D(u_inputImage,k),c[e];float b[e];for(int i=0;i<e;i++)c[i]=vec4(0),b[i]=0.;for(int v=0;v<u;v++)for(int k=0;k<f;k++){vec2 s=clamp((i+(vec2(float(v),float(k))+.5)*(t/vec2(float(u),float(f))))/u_inputImageSize,0.,1.);vec4 m=texture2D(u_inputImage,s),d=texture2D(u_inputImageBW,s);float r=step(.5,d.x);bool z=false;if(u_colorRank==1&&r>.5)z=true;else if(u_colorRank==2&&r<=.5)z=true;if(!z)continue;z=false;for(int i=0;i<e;i++)if(m.xyz==c[i].xyz){b[i]+=1.;z=true;break;}if(!z)for(int i=0;i<e;i++)if(b[i]==0.){c[i]=m;b[i]=1.;break;}}float z=0.;vec4 m=vec4(0);for(int i=0;i<e;i++){float u=b[i];vec4 k=c[i];if(u>z)z=u,m=k;}if(u_colorRank==2&&z==0.)m=v;gl_FragColor=vec4(m.xyz,1);}
 `;
 var k = "precision mediump float;uniform sampler2D u_inputImage;uniform sampler2D u_brightnessTexture;uniform vec2 u_inputImageSize;uniform int u_gridCols;uniform int u_gridRows;uniform float u_pixelRatio;const float EPSILON=0.01;void main(){vec2 logicalFragCoord=floor(gl_FragCoord.xy/u_pixelRatio);float cellWidth=u_inputImageSize.x/float(u_gridCols);float cellHeight=u_inputImageSize.y/float(u_gridRows);float gridX=floor(logicalFragCoord.x/cellWidth);float gridY=floor(logicalFragCoord.y/cellHeight);gridX=clamp(gridX,0.0,float(u_gridCols-1));gridY=clamp(gridY,0.0,float(u_gridRows-1));vec2 brightnessTexCoord=(vec2(gridX,gridY)+0.5)/vec2(float(u_gridCols),float(u_gridRows));float averageBrightness=texture2D(u_brightnessTexture,brightnessTexCoord).r;vec2 imageTexCoord=logicalFragCoord/u_inputImageSize;vec4 originalColor=texture2D(u_inputImage,imageTexCoord);float fragmentBrightness=0.299*originalColor.r+0.587*originalColor.g+0.114*originalColor.b;float brightnessDifference=fragmentBrightness-averageBrightness;float finalColorValue;if(brightnessDifference<-EPSILON){finalColorValue=0.0;}else{finalColorValue=1.0;}gl_FragColor=vec4(vec3(finalColorValue),1.0);}";
-class R extends C {
+class R extends c {
   constructor(e, r, s, o) {
     super(e, r, s, o);
     i(this, "characterSelectionShader");
@@ -416,7 +416,7 @@ precision mediump float;uniform sampler2D u_image;uniform vec2 u_imageSize,u_gri
   MIN: 1,
   MAX: 128
 }, x = 8;
-class j extends C {
+class j extends c {
   constructor(e, r, s, o) {
     super(e, r, s, o);
     i(this, "sobelShader");
@@ -451,7 +451,7 @@ class j extends C {
   }
 }
 var K = "precision mediump float;uniform sampler2D u_image;varying vec2 v_texCoord;void main(){vec4 color=texture2D(u_image,v_texCoord);float luminance=0.299*color.r+0.587*color.g+0.114*color.b;color.rgb=vec3(luminance);gl_FragColor=color;}", W = "precision mediump float;uniform sampler2D u_sketchTexture;uniform sampler2D u_previousColorTexture;uniform sampler2D u_sampleTexture;uniform sampler2D u_sampleReferenceTexture;uniform vec2 u_gridCellDimensions;uniform int u_sampleMode;uniform vec4 u_staticColor;void main(){vec2 cellCoord=floor(gl_FragCoord.xy);vec2 cellSizeInTexCoords=vec2(1.0)/u_gridCellDimensions;vec2 cellCenterTexCoord=(cellCoord+vec2(0.5))*cellSizeInTexCoords;bool isMatchingSample=texture2D(u_sampleTexture,cellCenterTexCoord)==texture2D(u_sampleReferenceTexture,cellCenterTexCoord);if(isMatchingSample){gl_FragColor=texture2D(u_previousColorTexture,cellCenterTexCoord);return;}else if(u_sampleMode==0){gl_FragColor=texture2D(u_sketchTexture,cellCenterTexCoord);}else{gl_FragColor=u_staticColor;}}", V = "precision mediump float;uniform sampler2D u_prevAsciiCharacterTexture;uniform sampler2D u_prevGradientTexture;uniform sampler2D u_nextGradientTexture;uniform vec2 u_resolution;void main(){vec2 uv=gl_FragCoord.xy/u_resolution;vec4 prevAscii=texture2D(u_prevAsciiCharacterTexture,uv);vec4 prevGradient=texture2D(u_prevGradientTexture,uv);vec4 nextGradient=texture2D(u_nextGradientTexture,uv);bool colorsMatch=prevGradient==nextGradient;gl_FragColor=colorsMatch ? prevAscii : nextGradient;}";
-class L extends C {
+class L extends c {
   constructor(e, r, s, o, a) {
     super(e, r, s, a);
     i(this, "grayscaleShader");
@@ -529,7 +529,7 @@ class b {
     return this._colors;
   }
 }
-class c {
+class l {
   constructor(A, e, r) {
     i(this, "_characters");
     i(this, "characterColors");
@@ -579,7 +579,7 @@ const f = (t, A, e, r) => {
   }
   return 0;
 };
-class d {
+class C {
   constructor(A, e, r, s, o, a, B) {
     i(this, "_brightnessStart");
     i(this, "_brightnessEnd");
@@ -637,7 +637,7 @@ class d {
     return this._brightnessStart;
   }
 }
-class $ extends d {
+class $ extends C {
   constructor(e, r, s, o, a, B, E, Q) {
     super(e, r, s, o, a, B, E);
     i(this, "direction");
@@ -650,7 +650,7 @@ class $ extends d {
     super.setUniforms(e, r), this._shader.setUniform("u_gradientDirection", this.direction), this._shader.setUniform("u_angle", this.angle * Math.PI / 180), this._shader.setUniform("u_speed", this.speed), this._shader.setUniform("u_zigzag", this.zigzag);
   }
 }
-class q extends d {
+class q extends C {
   constructor(e, r, s, o, a, B, E, Q) {
     super(e, r, s, o, a, B, E);
     i(this, "direction");
@@ -664,7 +664,7 @@ class q extends d {
     super.setUniforms(e, r), this._shader.setUniform("u_gradientDirection", this.direction), this._shader.setUniform("u_centerX", this.centerX), this._shader.setUniform("u_centerY", this.centerY), this._shader.setUniform("u_speed", this.speed), this._shader.setUniform("u_density", this.density);
   }
 }
-class AA extends d {
+class AA extends C {
   constructor(e, r, s, o, a, B, E, Q) {
     super(e, r, s, o, a, B, E);
     i(this, "direction");
@@ -677,7 +677,7 @@ class AA extends d {
     super.setUniforms(e, r), this._shader.setUniform("u_gradientDirection", this.direction), this._shader.setUniform("u_centerX", this.centerX), this._shader.setUniform("u_centerY", this.centerY), this._shader.setUniform("u_radius", this.radius);
   }
 }
-class eA extends d {
+class eA extends C {
   constructor(e, r, s, o, a, B, E, Q) {
     super(e, r, s, o, a, B, E);
     i(this, "centerX");
@@ -689,7 +689,7 @@ class eA extends d {
     super.setUniforms(e, r), this._shader.setUniform("u_centerX", this.centerX), this._shader.setUniform("u_centerY", this.centerY), this._shader.setUniform("u_speed", this.speed);
   }
 }
-class rA extends d {
+class rA extends C {
   constructor(e, r, s, o, a, B, E, Q) {
     super(e, r, s, o, a, B, E);
     i(this, "direction");
@@ -784,16 +784,16 @@ class BA {
     this.p = A, this.grid = e, this.fontTextureAtlas = r, this.currentCanvasDimensions = {
       width: this.p.width,
       height: this.p.height
-    }, this.gradientManager = new gA(A, this.fontTextureAtlas), this.gradientCharacterSet = new c(
+    }, this.gradientManager = new gA(A, this.fontTextureAtlas), this.gradientCharacterSet = new l(
       this.p,
       r,
       u.characters
     ), this._renderers = [
-      new z(this.p, this.grid, new c(this.p, r, u.characters), { ...u }),
-      new R(this.p, this.grid, new c(this.p, r, _.characters), { ..._ }),
+      new z(this.p, this.grid, new l(this.p, r, u.characters), { ...u }),
+      new R(this.p, this.grid, new l(this.p, r, _.characters), { ..._ }),
       new L(this.p, this.grid, this.gradientCharacterSet, this.gradientManager, { ...H }),
-      new j(this.p, this.grid, new c(this.p, r, w.characters), { ...w }),
-      new C(this.p, this.grid, new c(this.p, r, u.characters), { ...J })
+      new j(this.p, this.grid, new l(this.p, r, w.characters), { ...w }),
+      new c(this.p, this.grid, new l(this.p, r, u.characters), { ...J })
     ], this.lastRenderer = this._renderers[0];
   }
   /**
@@ -829,16 +829,14 @@ class BA {
 }
 class QA {
   constructor() {
-    i(this, "borderColor");
+    i(this, "_borderColor");
     i(this, "_fontSize");
     i(this, "rendererManager");
     i(this, "_font");
-    i(this, "postDrawFunction");
     i(this, "p");
     i(this, "asciiFontTextureAtlas");
     i(this, "grid");
     i(this, "sketchFramebuffer");
-    this.borderColor = "#000000", this._fontSize = 16, this.postDrawFunction = null;
   }
   /**
    * Initialize the p5 instance for the Asciifier
@@ -852,7 +850,7 @@ class QA {
    * Sets up the P5Asciify library with the specified options
    */
   setup() {
-    this.asciiFontTextureAtlas = new y(this.p, this._font, this._fontSize), this.grid = new T(
+    this._borderColor = "#000000", this._fontSize = 16, this.asciiFontTextureAtlas = new y(this.p, this._font, this._fontSize), this.grid = new T(
       this.p,
       this.asciiFontTextureAtlas.maxGlyphDimensions.width,
       this.asciiFontTextureAtlas.maxGlyphDimensions.height
@@ -866,14 +864,16 @@ class QA {
    * @param fontSize The font size to set
    */
   set fontSize(A) {
+    if (A < D.MIN || A > D.MAX)
+      throw new g(`Font size ${A} is out of bounds. It should be between ${D.MIN} and ${D.MAX}.`);
     this._fontSize = A, this.p._setupDone && (this.asciiFontTextureAtlas.setFontSize(A), this.grid.resizeCellPixelDimensions(
       this.asciiFontTextureAtlas.maxGlyphDimensions.width,
       this.asciiFontTextureAtlas.maxGlyphDimensions.height
     ), this.rendererManager.resetRendererDimensions());
   }
   /**
-   * Sets the font for the ascii renderers
-   * @param font The font to set
+   * Sets the font for the ascii renderers.
+   * @param font The font to set.
    */
   set font(A) {
     this._font = A, this.p._setupDone && (this.asciiFontTextureAtlas.setFontObject(A), this.rendererManager.renderers.forEach((e) => e.characterSet.reset()), this.grid.resizeCellPixelDimensions(
@@ -881,12 +881,25 @@ class QA {
       this.asciiFontTextureAtlas.maxGlyphDimensions.height
     ));
   }
+  /**
+   * Sets the border color for the ascii renderers.
+   * @param color The color to set.
+   * @throws {P5AsciifyError} If the color is not a string, array or p5.Color.
+   */
+  set borderColor(A) {
+    if (typeof A != "string" && !Array.isArray(A) && !(A instanceof n.Color))
+      throw new g(`Invalid color type: ${typeof A}. Expected string, array or p5.Color.`);
+    this._borderColor = A;
+  }
   // Getters
   get fontSize() {
     return this._fontSize;
   }
   get font() {
     return this._font;
+  }
+  get borderColor() {
+    return this._borderColor;
   }
 }
 function EA(t) {
@@ -928,16 +941,7 @@ function nA(t) {
     this._incrementPreload(), this.loadAsciiFont(S);
   });
 }
-function lA(t) {
-  n.prototype.setAsciifyBorderColor = function(A) {
-    t.borderColor = A;
-  }, n.prototype.setAsciifyFontSize = function(A) {
-    if (A < D.MIN || A > D.MAX)
-      throw new g(`Font size ${A} is out of bounds. It should be between ${D.MIN} and ${D.MAX}.`);
-    t.fontSize = A;
-  };
-}
-function cA(t, A, e, r, s, o) {
+function lA(t, A, e, r, s, o) {
   if (typeof A != "string")
     throw new g("Gradient name must be a string");
   if (!t.gradientConstructors[A])
@@ -961,9 +965,9 @@ function cA(t, A, e, r, s, o) {
 Valid parameters are: ${a.join(", ")}`
     );
 }
-function CA(t) {
+function cA(t) {
   n.prototype.addAsciiGradient = function(A, e, r, s, o = {}) {
-    return cA(
+    return lA(
       t.rendererManager.gradientManager,
       A,
       e,
@@ -981,7 +985,7 @@ function CA(t) {
     t.rendererManager.gradientManager.removeGradient(A);
   };
 }
-function dA(t) {
+function CA(t) {
   n.prototype.drawAsciify = function() {
   }, n.prototype.registerMethod("pre", function() {
     t.sketchFramebuffer.begin(), this.clear(), this.push();
@@ -989,14 +993,16 @@ function dA(t) {
     this.pop(), t.sketchFramebuffer.end(), t.rendererManager.render(t.sketchFramebuffer, t.borderColor), this.drawAsciify();
   });
 }
-const l = new QA();
+const d = new QA();
 typeof window < "u" && (window.preload = function() {
-}, window.p5asciify = l);
-hA(l);
-nA(l);
-lA(l);
-CA(l);
-dA(l);
+}, window.p5asciify = d);
+hA(d);
+nA(d);
+cA(d);
+CA(d);
 export {
-  l as default
+  QA as P5Asciifier,
+  y as P5AsciifyFontTextureAtlas,
+  T as P5AsciifyGrid,
+  d as p5asciify
 };

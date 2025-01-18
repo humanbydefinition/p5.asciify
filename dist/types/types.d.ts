@@ -28,8 +28,6 @@ declare module 'p5' {
     interface p5InstanceExtensions {
         p5asciify: P5Asciifier;
         loadAsciiFont(font: string | Font, callback?: () => void): void;
-        setAsciifyBorderColor(hex: string): void;
-        setAsciifyFontSize(fontSize: number): void;
         removeAsciiGradient(gradientInstance: P5AsciifyGradient): void;
         setupAsciify(): void;
         drawAsciify(): void;
