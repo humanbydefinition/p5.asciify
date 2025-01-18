@@ -26,7 +26,7 @@ export const createSketch = (options = {}) => {
 
     p.setupAsciify = () => {
       if (finalOptions.fontSize) {
-        p5asciify.fontSize = finalOptions.fontSize;
+        p5asciify.fontSize(finalOptions.fontSize);
       }
 
       p5asciify.rendererManager.renderers[0].updateOptions({

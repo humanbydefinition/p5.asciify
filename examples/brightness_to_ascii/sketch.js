@@ -45,7 +45,7 @@ export const createSketch = (options = {}) => {
     p.setupAsciify = () => {
       // Set the ASCII font size
       if (finalOptions.fontSize) {
-        p5asciify.fontSize = finalOptions.fontSize;;
+        p5asciify.fontSize(finalOptions.fontSize);
       }
 
       p5asciify.rendererManager.renderers[0].updateOptions({

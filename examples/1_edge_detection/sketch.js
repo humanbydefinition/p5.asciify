@@ -50,8 +50,7 @@ const sketch = (p) => {
     };
 
     p.setupAsciify = () => {
-
-        p5asciify.fontSize = 8;
+        p5asciify.fontSize(8);
 
         p5asciify.rendererManager.renderers[3].updateOptions({
             enabled: true,

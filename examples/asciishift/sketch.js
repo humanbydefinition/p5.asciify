@@ -93,7 +93,7 @@ const sketch = (p) => {
 		}
 		colorPaletteFramebuffer.updatePixels();
 
-		p5asciify.fontSize = 16;
+		p5asciify.fontSize(16);
 	};
 
 	p.setupAsciify = () => {
