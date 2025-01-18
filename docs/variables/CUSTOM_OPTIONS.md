@@ -8,7 +8,7 @@
 
 > `const` **CUSTOM\_OPTIONS**: `object`
 
-Defined in: [defaults.ts:84](https://github.com/humanbydefinition/p5-asciify/blob/a63e5ac9d57de51ede54fce5ccb4d7ba2bb3745f/src/lib/defaults.ts#L84)
+Defined in: [defaults.ts:84](https://github.com/humanbydefinition/p5-asciify/blob/4fd2e8db8d519fa467f370c6f15b2c0cecde58e7/src/lib/defaults.ts#L84)
 
 Default configuration options for custom ASCII renderer
 
@@ -16,6 +16,6 @@ Default configuration options for custom ASCII renderer
 
 | Name | Type | Default value | Description | Defined in |
 | ------ | ------ | ------ | ------ | ------ |
-| <a id="enabled"></a> `enabled` | `boolean` | false | Enable/disable the renderer | [defaults.ts:86](https://github.com/humanbydefinition/p5-asciify/blob/a63e5ac9d57de51ede54fce5ccb4d7ba2bb3745f/src/lib/defaults.ts#L86) |
-| <a id="invertmode"></a> `invertMode` | `boolean` | false | Invert the rendering | [defaults.ts:88](https://github.com/humanbydefinition/p5-asciify/blob/a63e5ac9d57de51ede54fce5ccb4d7ba2bb3745f/src/lib/defaults.ts#L88) |
-| <a id="rotationangle"></a> `rotationAngle` | `number` | 0 | Rotation angle of characters in degrees | [defaults.ts:90](https://github.com/humanbydefinition/p5-asciify/blob/a63e5ac9d57de51ede54fce5ccb4d7ba2bb3745f/src/lib/defaults.ts#L90) |
+| <a id="enabled"></a> `enabled` | `boolean` | false | Enable/disable the renderer | [defaults.ts:86](https://github.com/humanbydefinition/p5-asciify/blob/4fd2e8db8d519fa467f370c6f15b2c0cecde58e7/src/lib/defaults.ts#L86) |
+| <a id="invertmode"></a> `invertMode` | `boolean` | false | Invert the rendering | [defaults.ts:88](https://github.com/humanbydefinition/p5-asciify/blob/4fd2e8db8d519fa467f370c6f15b2c0cecde58e7/src/lib/defaults.ts#L88) |
+| <a id="rotationangle"></a> `rotationAngle` | `number` | 0 | Rotation angle of characters in degrees | [defaults.ts:90](https://github.com/humanbydefinition/p5-asciify/blob/4fd2e8db8d519fa467f370c6f15b2c0cecde58e7/src/lib/defaults.ts#L90) |
