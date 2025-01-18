@@ -4,12 +4,17 @@ import p5 from 'p5';
  * Represents a 2D grid, handling the dimensions and resizing of the grid.
  */
 export class P5AsciifyGrid {
-    private _cols = 0;
-    private _rows = 0;
-    private _width = 0;
-    private _height = 0;
-    private _offsetX = 0;
-    private _offsetY = 0;
+    /**
+     * The number of columns in the grid.
+     */
+    private _cols!: number;
+
+    /* The number of rows in the grid. */
+    private _rows!: number;
+    private _width!: number;
+    private _height!: number;
+    private _offsetX!: number;
+    private _offsetY!: number;
 
     constructor(
         private p: p5,
