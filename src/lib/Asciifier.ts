@@ -119,22 +119,21 @@ export class P5Asciifier {
      * @param font The font to set.
      */
     set font(font: string | p5.Font) {
-
-        const setFont = (loadedFont: p5.Font) => {
-            this._font = loadedFont;
-            this.p._decrementPreload();
-        };
+        if (typeof font !== 'string' && !(font instanceof p5.Font)) {
+            throw new P5AsciifyError('Invalid font parameter. Expected a path, base64 string, or p5.Font object.');
+        }
 
         if (typeof font === 'string') {
             this.p.loadFont(
                 font,
-                (loadedFont: p5.Font) => { setFont(loadedFont); },
+                (loadedFont: p5.Font) => {
+                    this._font = loadedFont;
+                    this.p._decrementPreload();
+                },
                 () => { throw new P5AsciifyError(`Failed to load font from path: '${font}'`); }
             );
-        } else if (font instanceof p5.Font) {
-            setFont(font);
         } else {
-            throw new P5AsciifyError('Invalid font parameter. Expected a path, base64 string, or p5.Font object.');
+            this._font = font;
         }
 
         if (this.p._setupDone) {
