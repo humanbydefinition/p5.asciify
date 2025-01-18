@@ -5,7 +5,6 @@ import p5 from 'p5';
  * The color palette is stored in a framebuffer, which is used to pass the colors to various shaders in the library.
  *
  * @remarks
- *
  * Used in the {@link P5AsciifyCharacterSet} class to store the colors of the characters in the character set,
  * which are then passed to the shaders for rendering and decoding the pixel colors to ASCII characters.
  *

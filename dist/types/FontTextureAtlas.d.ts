@@ -6,12 +6,24 @@ export declare class P5AsciifyFontTextureAtlas {
     private p;
     private font;
     private _fontSize;
+    /** Array of characters in the font. */
     private _characters;
+    /** Array of `opentype.js` glyphs with unicode values, extended with r, g, and b properties for color. */
     private _characterGlyphs;
+    /** Maximum width and height of the glyphs in the font. */
     private _maxGlyphDimensions;
+    /** Texture containing all characters in the font. As square as possible. */
     private _texture;
+    /** Number of columns in the texture. */
     private _charsetCols;
+    /** Number of rows in the texture. */
     private _charsetRows;
+    /**
+     * Creates a new `P5AsciifyFontTextureAtlas` instance.
+     * @param p The p5 instance.
+     * @param font The font object to use for the texture atlas.
+     * @param _fontSize The font size to use for the texture atlas.
+     */
     constructor(p: p5, font: p5.Font, _fontSize: number);
     /**
      * Loads all glyphs with unicode values from the font and assigns colors to them.
@@ -46,9 +58,9 @@ export declare class P5AsciifyFontTextureAtlas {
     private drawCharacters;
     /**
      * Gets an array of RGB colors for a given string or array of characters.
-     * @param input - Either a string or array of characters
-     * @returns Array of RGB color values
-     * @throws P5AsciifyError If a character is not found in the texture atlas
+     * @param input - Either a string or array of characters.
+     * @returns Array of RGB color values.
+     * @throws {@link P5AsciifyError} If a character is not found in the texture atlas.
      */
     getCharsetColorArray(input: string | string[]): Array<[number, number, number]>;
     /**

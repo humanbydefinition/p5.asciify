@@ -31,11 +31,13 @@
 
 | Variable | Description |
 | ------ | ------ |
-| [ACCURATE\_OPTIONS](variables/ACCURATE_OPTIONS.md) | Default configuration options for accurate ASCII renderer |
-| [BRIGHTNESS\_OPTIONS](variables/BRIGHTNESS_OPTIONS.md) | Default configuration options for brightness-based ASCII renderer |
-| [CUSTOM\_OPTIONS](variables/CUSTOM_OPTIONS.md) | Default configuration options for custom ASCII renderer |
+| [ACCURATE\_DEFAULT\_OPTIONS](variables/ACCURATE_DEFAULT_OPTIONS.md) | Default configuration options for accurate ASCII renderer |
+| [BRIGHTNESS\_DEFAULT\_OPTIONS](variables/BRIGHTNESS_DEFAULT_OPTIONS.md) | Default configuration options for brightness-based ASCII renderer |
+| [CUSTOM\_DEFAULT\_OPTIONS](variables/CUSTOM_DEFAULT_OPTIONS.md) | Default configuration options for custom ASCII renderer |
+| [DEFAULT\_BACKGROUND\_COLOR](variables/DEFAULT_BACKGROUND_COLOR.md) | Default background color behind the ASCII grid |
+| [DEFAULT\_FONT\_SIZE](variables/DEFAULT_FONT_SIZE.md) | Default font size for the ASCII rendering |
 | [EDGE\_CHARACTER\_LENGTH](variables/EDGE_CHARACTER_LENGTH.md) | Number of characters used in edge detection renderer's character set |
-| [EDGE\_OPTIONS](variables/EDGE_OPTIONS.md) | Default configuration options for edge detection ASCII renderer |
+| [EDGE\_DEFAULT\_OPTIONS](variables/EDGE_DEFAULT_OPTIONS.md) | Default configuration options for edge detection ASCII renderer |
 | [FONT\_SIZE\_LIMITS](variables/FONT_SIZE_LIMITS.md) | Font size constraints for ASCII rendering |
-| [GRADIENT\_OPTIONS](variables/GRADIENT_OPTIONS.md) | Default configuration options for gradient-based ASCII renderer |
+| [GRADIENT\_DEFAULT\_OPTIONS](variables/GRADIENT_DEFAULT_OPTIONS.md) | Default configuration options for gradient-based ASCII renderer |
 | [p5asciify](variables/p5asciify.md) | The main instance of the p5.asciify library, which is used to access all of the library's functionality. |

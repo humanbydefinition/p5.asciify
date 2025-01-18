@@ -13,6 +13,6 @@ export declare class P5AsciifyLinearGradient extends P5AsciifyGradient {
     angle: number;
     speed: number;
     zigzag: boolean;
-    constructor(p: p5, _fontTextureAtlas: P5AsciifyFontTextureAtlas, _shader: p5.Shader, colors: [number, number, number][], brightnessStart: number, brightnessEnd: number, characters: string, params: LinearGradientParams);
+    constructor(p: p5, _fontTextureAtlas: P5AsciifyFontTextureAtlas, _shader: p5.Shader, brightnessStart: number, brightnessEnd: number, characters: string, params: LinearGradientParams);
     setUniforms(framebuffer: p5.Framebuffer, referenceFramebuffer: p5.Framebuffer): void;
 }

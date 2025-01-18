@@ -6,7 +6,7 @@
 
 # Class: P5AsciifyColorPalette
 
-Defined in: [ColorPalette.ts:15](https://github.com/humanbydefinition/p5-asciify/blob/be3647d4a706edbeac596a8651a8ee16fcb3e2d3/src/lib/ColorPalette.ts#L15)
+Defined in: [ColorPalette.ts:14](https://github.com/humanbydefinition/p5-asciify/blob/c1880d7b18dd0a4a469b44acbbc4ef3375e21c2d/src/lib/ColorPalette.ts#L14)
 
 A 1D color palette for use with the `p5.asciify` library.
 
@@ -25,7 +25,7 @@ Also used by the [P5AsciifyGradient](P5AsciifyGradient.md) classes to store the 
 
 > **new P5AsciifyColorPalette**(`p`, `_colors`): [`P5AsciifyColorPalette`](P5AsciifyColorPalette.md)
 
-Defined in: [ColorPalette.ts:25](https://github.com/humanbydefinition/p5-asciify/blob/be3647d4a706edbeac596a8651a8ee16fcb3e2d3/src/lib/ColorPalette.ts#L25)
+Defined in: [ColorPalette.ts:24](https://github.com/humanbydefinition/p5-asciify/blob/c1880d7b18dd0a4a469b44acbbc4ef3375e21c2d/src/lib/ColorPalette.ts#L24)
 
 Create a new color palette instance.
 
@@ -44,9 +44,9 @@ Create a new color palette instance.
 
 | Property | Modifier | Type | Description | Defined in |
 | ------ | ------ | ------ | ------ | ------ |
-| <a id="_colors-1"></a> `_colors` | `private` | \[`number`, `number`, `number`\][] | The colors to store in the palette. | [ColorPalette.ts:27](https://github.com/humanbydefinition/p5-asciify/blob/be3647d4a706edbeac596a8651a8ee16fcb3e2d3/src/lib/ColorPalette.ts#L27) |
-| <a id="framebuffer"></a> `framebuffer` | `public` | `Framebuffer` | The framebuffer used to store the color palette. | [ColorPalette.ts:18](https://github.com/humanbydefinition/p5-asciify/blob/be3647d4a706edbeac596a8651a8ee16fcb3e2d3/src/lib/ColorPalette.ts#L18) |
-| <a id="p-1"></a> `p` | `private` | `__module` | The p5 instance. | [ColorPalette.ts:26](https://github.com/humanbydefinition/p5-asciify/blob/be3647d4a706edbeac596a8651a8ee16fcb3e2d3/src/lib/ColorPalette.ts#L26) |
+| <a id="_colors-1"></a> `_colors` | `private` | \[`number`, `number`, `number`\][] | The colors to store in the palette. | [ColorPalette.ts:26](https://github.com/humanbydefinition/p5-asciify/blob/c1880d7b18dd0a4a469b44acbbc4ef3375e21c2d/src/lib/ColorPalette.ts#L26) |
+| <a id="framebuffer"></a> `framebuffer` | `public` | `Framebuffer` | The framebuffer used to store the color palette. | [ColorPalette.ts:17](https://github.com/humanbydefinition/p5-asciify/blob/c1880d7b18dd0a4a469b44acbbc4ef3375e21c2d/src/lib/ColorPalette.ts#L17) |
+| <a id="p-1"></a> `p` | `private` | `__module` | The p5 instance. | [ColorPalette.ts:25](https://github.com/humanbydefinition/p5-asciify/blob/c1880d7b18dd0a4a469b44acbbc4ef3375e21c2d/src/lib/ColorPalette.ts#L25) |
 
 ## Accessors
 
@@ -56,7 +56,7 @@ Create a new color palette instance.
 
 > **get** **colors**(): \[`number`, `number`, `number`\][]
 
-Defined in: [ColorPalette.ts:75](https://github.com/humanbydefinition/p5-asciify/blob/be3647d4a706edbeac596a8651a8ee16fcb3e2d3/src/lib/ColorPalette.ts#L75)
+Defined in: [ColorPalette.ts:74](https://github.com/humanbydefinition/p5-asciify/blob/c1880d7b18dd0a4a469b44acbbc4ef3375e21c2d/src/lib/ColorPalette.ts#L74)
 
 ##### Returns
 
@@ -68,7 +68,7 @@ Defined in: [ColorPalette.ts:75](https://github.com/humanbydefinition/p5-asciify
 
 > **setColors**(`newColors`): `void`
 
-Defined in: [ColorPalette.ts:69](https://github.com/humanbydefinition/p5-asciify/blob/be3647d4a706edbeac596a8651a8ee16fcb3e2d3/src/lib/ColorPalette.ts#L69)
+Defined in: [ColorPalette.ts:68](https://github.com/humanbydefinition/p5-asciify/blob/c1880d7b18dd0a4a469b44acbbc4ef3375e21c2d/src/lib/ColorPalette.ts#L68)
 
 Set the colors of the palette and update the framebuffer.
 
@@ -88,7 +88,7 @@ Set the colors of the palette and update the framebuffer.
 
 > **updateFramebuffer**(): `void`
 
-Defined in: [ColorPalette.ts:43](https://github.com/humanbydefinition/p5-asciify/blob/be3647d4a706edbeac596a8651a8ee16fcb3e2d3/src/lib/ColorPalette.ts#L43)
+Defined in: [ColorPalette.ts:42](https://github.com/humanbydefinition/p5-asciify/blob/c1880d7b18dd0a4a469b44acbbc4ef3375e21c2d/src/lib/ColorPalette.ts#L42)
 
 Update the framebuffer with the currently selected colors.
 

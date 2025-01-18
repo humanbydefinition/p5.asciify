@@ -14,7 +14,7 @@ export declare abstract class P5AsciifyGradient {
     enabled: boolean;
     protected _onPaletteChangeCallback?: (gradient: P5AsciifyGradient, value: string[]) => void;
     protected _palette: P5AsciifyColorPalette;
-    constructor(p: p5, _fontTextureAtlas: P5AsciifyFontTextureAtlas, _shader: p5.Shader, colors: [number, number, number][], brightnessStart: number, brightnessEnd: number, _characters: string);
+    constructor(p: p5, _fontTextureAtlas: P5AsciifyFontTextureAtlas, _shader: p5.Shader, brightnessStart: number, brightnessEnd: number, _characters: string);
     /**
      * Sets the uniforms for the gradient shader.
      * @param framebuffer - The framebuffer to use.
