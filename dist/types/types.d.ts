@@ -1,5 +1,4 @@
 import { P5Asciifier } from './Asciifier';
-import { P5AsciifyGradient } from './gradients/Gradient';
 import p5 from 'p5';
 /**
  * Extends the global window object with a preload function, in case the user doesn't provide one.
@@ -28,10 +27,8 @@ declare module 'p5' {
     interface p5InstanceExtensions {
         p5asciify: P5Asciifier;
         loadAsciiFont(font: string | Font, callback?: () => void): void;
-        removeAsciiGradient(gradientInstance: P5AsciifyGradient): void;
         setupAsciify(): void;
         drawAsciify(): void;
-        addAsciiGradient(gradientName: string, brightnessStart: number, brightnessEnd: number, characters: string, userParams?: Record<string, any>): P5AsciifyGradient;
         _setupDone: boolean;
         _renderer: {
             drawingContext: WebGLRenderingContext | WebGL2RenderingContext;
