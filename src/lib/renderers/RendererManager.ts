@@ -63,7 +63,7 @@ export class P5AsciifyRendererManager {
      * @param inputFramebuffer The input framebuffer to transform into ASCII.
      * @param borderColor The border color of the canvas, which is not occupied by the centered ASCII grid.
      */
-    public render(inputFramebuffer: any, borderColor: any): void {
+    public render(inputFramebuffer: any): void {
         let asciiOutput = inputFramebuffer;
         let currentRenderer = this._renderers[0];
 
@@ -76,9 +76,7 @@ export class P5AsciifyRendererManager {
             }
         }
 
-        this.p.clear();
-        this.p.background(borderColor);
-        this.p.image(asciiOutput, -this.p.width / 2, -this.p.height / 2);
+        
 
         this.checkCanvasDimensions();
     }

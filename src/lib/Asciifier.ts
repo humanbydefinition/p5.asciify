@@ -109,6 +109,18 @@ export class P5Asciifier {
     }
 
     /**
+     * Renders the ASCII output to the canvas.
+     * Is called automatically every time the user's `draw()` function has finished.
+     */
+    public asciify(): void {
+        this.rendererManager.render(this.sketchFramebuffer);
+
+        this._p.clear();
+        this._p.background(this._borderColor as p5.Color);
+        this._p.image(this.rendererManager.lastRenderer.outputFramebuffer, -this._p.width / 2, -this._p.height / 2);
+    }
+
+    /**
      * Adds a new gradient to the renderer managers gradient manager, which will be rendered by the `GradientAsciiRenderer`.
      * @param gradientName The name of the gradient.
      * @param brightnessStart The brightness value at which the gradient starts.
@@ -142,8 +154,8 @@ export class P5Asciifier {
     }
 
     /**
-     * Sets the font size for the ascii renderers
-     * @param fontSize The font size to set
+     * Sets the font size for the ascii renderers.
+     * @param fontSize The font size to set.
      */
     public fontSize(fontSize: number): void {
 
@@ -166,9 +178,9 @@ export class P5Asciifier {
 
     /**
      * Sets the font for the ascii renderers.
-     * @param font The font to set.
+     * @param font The font to use. Can be a path, base64 string, or p5.Font object.
      */
-    set font(font: string | p5.Font) {
+    public loadFont(font: string | p5.Font) {
         if (typeof font !== 'string' && !(font instanceof p5.Font)) {
             throw new P5AsciifyError('Invalid font parameter. Expected a path, base64 string, or p5.Font object.');
         }
@@ -202,15 +214,11 @@ export class P5Asciifier {
      * @param color The color to set.
      * @throws {P5AsciifyError} If the color is not a string, array or p5.Color.
      */
-    set borderColor(color: string | p5.Color | [number, number?, number?, number?]) {
+    public borderColor(color: string | p5.Color | [number, number?, number?, number?]) {
         if (typeof color !== "string" && !Array.isArray(color) && !(color instanceof p5.Color)) {
             throw new P5AsciifyError(`Invalid color type: ${typeof color}. Expected string, array or p5.Color.`);
         }
 
         this._borderColor = color;
     }
-
-    // Getters
-    get font(): p5.Font { return this._font; }
-    get borderColor(): string | p5.Color | [number, number?, number?, number?] { return this._borderColor; }
 }

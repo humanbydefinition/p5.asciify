@@ -33,7 +33,7 @@ p5.prototype.registerMethod('init', function (this: p5) {
   p5asciify.instance(this, false);
 
   this._incrementPreload();
-  p5asciify.font = URSAFONT_BASE64;
+  p5asciify.loadFont(URSAFONT_BASE64);
 });
 
 /**
@@ -61,7 +61,7 @@ p5.prototype.registerMethod("post", function (this: p5): void {
   this.pop();
   p5asciify.sketchFramebuffer.end();
 
-  p5asciify.rendererManager.render(p5asciify.sketchFramebuffer, p5asciify.borderColor);
+  p5asciify.asciify();
   this.drawAsciify();
 });
 
