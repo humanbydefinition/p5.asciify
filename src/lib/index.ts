@@ -2,13 +2,13 @@ import { P5Asciifier } from './Asciifier';
 
 import { registerSetupMethods } from './modules/setup';
 import { registerFontMethods } from './modules/fonts';
-import { registerOptionsMethods } from './modules/options';
 import { registerGradientMethods } from './modules/gradients';
 import { registerRenderingMethods } from './modules/rendering';
 
-// Initialize the P5Asciify library and export it as a default module
-const p5asciify = new P5Asciifier();
-export default p5asciify;
+/**
+ * The main instance of the p5.asciify library, which is used to access all of the library's functionality.
+ */
+export const p5asciify = new P5Asciifier();
 
 // If in p5.js global mode, define a dummy preload function in case user doesn't provide one
 if (typeof window !== 'undefined') {
@@ -19,6 +19,10 @@ if (typeof window !== 'undefined') {
 // Register library methods to extend the p5 instance
 registerSetupMethods(p5asciify);
 registerFontMethods(p5asciify);
-registerOptionsMethods(p5asciify);
 registerGradientMethods(p5asciify);
 registerRenderingMethods(p5asciify);
+
+// Exports
+export { P5Asciifier } from './Asciifier';
+export { P5AsciifyFontTextureAtlas } from './FontTextureAtlas';
+export { P5AsciifyGrid } from './Grid';

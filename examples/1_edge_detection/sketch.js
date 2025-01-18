@@ -1,5 +1,5 @@
 import p5 from 'p5';
-import p5asciify from '../../src/lib/index';
+import { p5asciify } from '../../src/lib/index';
 
 const sketch = (p) => {
     let rectangles = [];
@@ -46,12 +46,13 @@ const sketch = (p) => {
     p.setup = () => {
         p.createCanvas(p.windowWidth, p.windowHeight, p.WEBGL);
 
-        p.setAsciifyFontSize(8);
-
         for (let i = 0; i < maxRectangles; i++) rectangles.push(new Rectangle());
     };
 
     p.setupAsciify = () => {
+
+        p5asciify.fontSize = 8;
+
         p5asciify.rendererManager.renderers[3].updateOptions({
             enabled: true,
             characters: "-/|\\-/|\\",

@@ -37,8 +37,6 @@ declare module 'p5' {
         // Extended properties relevant to the p5.asciify library
         p5asciify: P5Asciifier;
         loadAsciiFont(font: string | Font, callback?: () => void): void;
-        setAsciifyBorderColor(hex: string): void;
-        setAsciifyFontSize(fontSize: number): void;
         removeAsciiGradient(gradientInstance: P5AsciifyGradient): void;
         setupAsciify(): void;
         drawAsciify(): void;

@@ -12,7 +12,7 @@
  */
 
 import p5 from 'p5';
-import p5asciify from '../../src/lib/index';
+import { p5asciify } from '../../src/lib/index';
 import { RectangleManager } from './RectangleManager';
 
 const sketch = (p) => {
@@ -93,7 +93,7 @@ const sketch = (p) => {
 		}
 		colorPaletteFramebuffer.updatePixels();
 
-		p.setAsciifyFontSize(16);
+		p5asciify.fontSize = 16;
 	};
 
 	p.setupAsciify = () => {
@@ -101,7 +101,7 @@ const sketch = (p) => {
 		secondaryColorSampleFramebuffer = p5asciify.rendererManager.renderers[4].secondaryColorSampleFramebuffer;
 		asciiCharacterFramebuffer = p5asciify.rendererManager.renderers[4].asciiCharacterFramebuffer;
 
-		p.setAsciifyBorderColor(p.color(0));
+		p5asciify.borderColor = p.color(0);
 		p5asciify.rendererManager.renderers[4].updateOptions({ enabled: true });
 
 		charsetColorPalette = p5asciify.asciiFontTextureAtlas.getCharsetColorArray(charset);

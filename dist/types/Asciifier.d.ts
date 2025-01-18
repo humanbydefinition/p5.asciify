@@ -6,16 +6,14 @@ import { RendererManager } from './renderers/RendererManager';
  * The main class for the p5.asciify library. This class is responsible for setting up the library and running the rendering pipeline.
  */
 export declare class P5Asciifier {
-    borderColor: string;
+    private _borderColor;
     private _fontSize;
     rendererManager: RendererManager;
     private _font;
-    postDrawFunction: (() => void) | null;
     private p;
     asciiFontTextureAtlas: P5AsciifyFontTextureAtlas;
     grid: P5AsciifyGrid;
     sketchFramebuffer: p5.Framebuffer;
-    constructor();
     /**
      * Initialize the p5 instance for the Asciifier
      * @param p The p5 instance
@@ -31,10 +29,17 @@ export declare class P5Asciifier {
      */
     set fontSize(fontSize: number);
     /**
-     * Sets the font for the ascii renderers
-     * @param font The font to set
+     * Sets the font for the ascii renderers.
+     * @param font The font to set.
      */
     set font(font: p5.Font);
+    /**
+     * Sets the border color for the ascii renderers.
+     * @param color The color to set.
+     * @throws {P5AsciifyError} If the color is not a string, array or p5.Color.
+     */
+    set borderColor(color: string | p5.Color | [number, number?, number?, number?]);
     get fontSize(): number;
     get font(): p5.Font;
+    get borderColor(): string | p5.Color | [number, number?, number?, number?];
 }

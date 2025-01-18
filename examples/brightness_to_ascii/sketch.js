@@ -1,5 +1,5 @@
 import p5 from 'p5';
-import p5asciify from '../../src/lib/index';
+import { p5asciify } from '../../src/lib/index';
 
 // You can adjust these default options as needed
 export const DEFAULT_OPTIONS = {
@@ -40,14 +40,14 @@ export const createSketch = (options = {}) => {
 
       // Create a framebuffer to draw your brightness test
       sketchFramebuffer = p.createFramebuffer({ format: p.FLOAT });
-
-      // Set the ASCII font size
-      if (finalOptions.fontSize) {
-        p.setAsciifyFontSize(finalOptions.fontSize);
-      }
     };
 
     p.setupAsciify = () => {
+      // Set the ASCII font size
+      if (finalOptions.fontSize) {
+        p5asciify.fontSize = finalOptions.fontSize;;
+      }
+
       p5asciify.rendererManager.renderers[0].updateOptions({
         enabled: finalOptions.enabled,
         characters: finalOptions.characters,

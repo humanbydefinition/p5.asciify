@@ -1,5 +1,5 @@
 import p5 from 'p5';
-import p5asciify from '../../src/lib/index';
+import { p5asciify } from '../../src/lib/index';
 
 export const DEFAULT_OPTIONS = {
   enabled: true,
@@ -27,13 +27,13 @@ export const createSketch = (options = {}) => {
 
     p.setup = () => {
       p.createCanvas(p.windowWidth, p.windowHeight, p.WEBGL);
-
-      if (finalOptions.fontSize) {
-        p.setAsciifyFontSize(finalOptions.fontSize);
-      }
     };
 
     p.setupAsciify = () => {
+      if (finalOptions.fontSize) {
+        p5asciify.fontSize = finalOptions.fontSize;
+      }
+
       p5asciify.rendererManager.renderers[0].updateOptions({
         enabled: finalOptions.enabled,
         characters: finalOptions.characters,
