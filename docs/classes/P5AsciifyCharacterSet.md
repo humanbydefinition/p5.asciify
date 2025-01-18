@@ -6,7 +6,7 @@
 
 # Class: P5AsciifyCharacterSet
 
-Defined in: [CharacterSet.ts:10](https://github.com/humanbydefinition/p5-asciify/blob/ab0a5f34e5803d0db3b161f396f9df8a22264484/src/lib/CharacterSet.ts#L10)
+Defined in: [CharacterSet.ts:10](https://github.com/humanbydefinition/p5-asciify/blob/39d9fee9f763a951fac34341285367eb4f497799/src/lib/CharacterSet.ts#L10)
 
 Represents a set of characters to be used by an ASCII renderer.
 
@@ -16,7 +16,7 @@ Represents a set of characters to be used by an ASCII renderer.
 
 > **new P5AsciifyCharacterSet**(`p`, `asciiFontTextureAtlas`, `characters`): [`P5AsciifyCharacterSet`](P5AsciifyCharacterSet.md)
 
-Defined in: [CharacterSet.ts:15](https://github.com/humanbydefinition/p5-asciify/blob/ab0a5f34e5803d0db3b161f396f9df8a22264484/src/lib/CharacterSet.ts#L15)
+Defined in: [CharacterSet.ts:15](https://github.com/humanbydefinition/p5-asciify/blob/39d9fee9f763a951fac34341285367eb4f497799/src/lib/CharacterSet.ts#L15)
 
 #### Parameters
 
@@ -34,11 +34,11 @@ Defined in: [CharacterSet.ts:15](https://github.com/humanbydefinition/p5-asciify
 
 | Property | Modifier | Type | Defined in |
 | ------ | ------ | ------ | ------ |
-| <a id="_characters"></a> `_characters` | `private` | `string`[] | [CharacterSet.ts:11](https://github.com/humanbydefinition/p5-asciify/blob/ab0a5f34e5803d0db3b161f396f9df8a22264484/src/lib/CharacterSet.ts#L11) |
-| <a id="asciifonttextureatlas-1"></a> `asciiFontTextureAtlas` | `public` | [`P5AsciifyFontTextureAtlas`](P5AsciifyFontTextureAtlas.md) | [CharacterSet.ts:17](https://github.com/humanbydefinition/p5-asciify/blob/ab0a5f34e5803d0db3b161f396f9df8a22264484/src/lib/CharacterSet.ts#L17) |
-| <a id="charactercolorpalette"></a> `characterColorPalette` | `public` | [`P5AsciifyColorPalette`](P5AsciifyColorPalette.md) | [CharacterSet.ts:13](https://github.com/humanbydefinition/p5-asciify/blob/ab0a5f34e5803d0db3b161f396f9df8a22264484/src/lib/CharacterSet.ts#L13) |
-| <a id="charactercolors"></a> `characterColors` | `private` | \[`number`, `number`, `number`\][] | [CharacterSet.ts:12](https://github.com/humanbydefinition/p5-asciify/blob/ab0a5f34e5803d0db3b161f396f9df8a22264484/src/lib/CharacterSet.ts#L12) |
-| <a id="p-1"></a> `p` | `private` | `__module` | [CharacterSet.ts:16](https://github.com/humanbydefinition/p5-asciify/blob/ab0a5f34e5803d0db3b161f396f9df8a22264484/src/lib/CharacterSet.ts#L16) |
+| <a id="_characters"></a> `_characters` | `private` | `string`[] | [CharacterSet.ts:11](https://github.com/humanbydefinition/p5-asciify/blob/39d9fee9f763a951fac34341285367eb4f497799/src/lib/CharacterSet.ts#L11) |
+| <a id="asciifonttextureatlas-1"></a> `asciiFontTextureAtlas` | `public` | [`P5AsciifyFontTextureAtlas`](P5AsciifyFontTextureAtlas.md) | [CharacterSet.ts:17](https://github.com/humanbydefinition/p5-asciify/blob/39d9fee9f763a951fac34341285367eb4f497799/src/lib/CharacterSet.ts#L17) |
+| <a id="charactercolorpalette"></a> `characterColorPalette` | `public` | [`P5AsciifyColorPalette`](P5AsciifyColorPalette.md) | [CharacterSet.ts:13](https://github.com/humanbydefinition/p5-asciify/blob/39d9fee9f763a951fac34341285367eb4f497799/src/lib/CharacterSet.ts#L13) |
+| <a id="charactercolors"></a> `characterColors` | `private` | \[`number`, `number`, `number`\][] | [CharacterSet.ts:12](https://github.com/humanbydefinition/p5-asciify/blob/39d9fee9f763a951fac34341285367eb4f497799/src/lib/CharacterSet.ts#L12) |
+| <a id="p-1"></a> `p` | `private` | `__module` | [CharacterSet.ts:16](https://github.com/humanbydefinition/p5-asciify/blob/39d9fee9f763a951fac34341285367eb4f497799/src/lib/CharacterSet.ts#L16) |
 
 ## Accessors
 
@@ -48,7 +48,7 @@ Defined in: [CharacterSet.ts:15](https://github.com/humanbydefinition/p5-asciify
 
 > **get** **characters**(): `string`[]
 
-Defined in: [CharacterSet.ts:59](https://github.com/humanbydefinition/p5-asciify/blob/ab0a5f34e5803d0db3b161f396f9df8a22264484/src/lib/CharacterSet.ts#L59)
+Defined in: [CharacterSet.ts:59](https://github.com/humanbydefinition/p5-asciify/blob/39d9fee9f763a951fac34341285367eb4f497799/src/lib/CharacterSet.ts#L59)
 
 ##### Returns
 
@@ -60,7 +60,7 @@ Defined in: [CharacterSet.ts:59](https://github.com/humanbydefinition/p5-asciify
 
 > **reset**(): `void`
 
-Defined in: [CharacterSet.ts:53](https://github.com/humanbydefinition/p5-asciify/blob/ab0a5f34e5803d0db3b161f396f9df8a22264484/src/lib/CharacterSet.ts#L53)
+Defined in: [CharacterSet.ts:53](https://github.com/humanbydefinition/p5-asciify/blob/39d9fee9f763a951fac34341285367eb4f497799/src/lib/CharacterSet.ts#L53)
 
 Resets the character set colors. Gets called when the font atlas is updated.
 
@@ -74,7 +74,7 @@ Resets the character set colors. Gets called when the font atlas is updated.
 
 > **setCharacterSet**(`characters`): `void`
 
-Defined in: [CharacterSet.ts:44](https://github.com/humanbydefinition/p5-asciify/blob/ab0a5f34e5803d0db3b161f396f9df8a22264484/src/lib/CharacterSet.ts#L44)
+Defined in: [CharacterSet.ts:44](https://github.com/humanbydefinition/p5-asciify/blob/39d9fee9f763a951fac34341285367eb4f497799/src/lib/CharacterSet.ts#L44)
 
 Sets the characters to be used in the character set and updates the texture.
 
@@ -94,7 +94,7 @@ Sets the characters to be used in the character set and updates the texture.
 
 > `private` **validateCharacters**(`characters`): `string`[]
 
-Defined in: [CharacterSet.ts:32](https://github.com/humanbydefinition/p5-asciify/blob/ab0a5f34e5803d0db3b161f396f9df8a22264484/src/lib/CharacterSet.ts#L32)
+Defined in: [CharacterSet.ts:32](https://github.com/humanbydefinition/p5-asciify/blob/39d9fee9f763a951fac34341285367eb4f497799/src/lib/CharacterSet.ts#L32)
 
 Validates the characters to ensure they are supported by the current font.
 
