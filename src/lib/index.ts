@@ -19,7 +19,6 @@ if (typeof window !== 'undefined') {
 // Register library methods to extend the p5 instance
 registerSetupMethods(p5asciify);
 registerFontMethods(p5asciify);
-registerGradientMethods(p5asciify);
 registerRenderingMethods(p5asciify);
 
 // Exports

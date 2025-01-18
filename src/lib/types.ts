@@ -37,16 +37,8 @@ declare module 'p5' {
         // Extended properties relevant to the p5.asciify library
         p5asciify: P5Asciifier;
         loadAsciiFont(font: string | Font, callback?: () => void): void;
-        removeAsciiGradient(gradientInstance: P5AsciifyGradient): void;
         setupAsciify(): void;
         drawAsciify(): void;
-        addAsciiGradient(
-            gradientName: string,
-            brightnessStart: number,
-            brightnessEnd: number,
-            characters: string,
-            userParams?: Record<string, any>
-        ): P5AsciifyGradient;
 
         // Existing properties in the p5.js library, which do not exist in types/p5/index.d.ts
         _setupDone: boolean;

@@ -26,7 +26,6 @@ export function registerSetupMethods(p5asciify: P5Asciifier): void {
      */
     p5.prototype.registerMethod('afterSetup', function(this: p5) {
         this._incrementPreload();
-        this.loadAsciiFont(URSAFONT_BASE64);
         validateSetup(this);
         p5asciify.setup();
         this.setupAsciify();

@@ -5,6 +5,9 @@ import { P5AsciifyGrid } from './Grid';
 import { RendererManager } from './renderers/RendererManager';
 import { P5AsciifyError } from './AsciifyError';
 import { FONT_SIZE_LIMITS } from './constants';
+import { GradientType } from './gradients/types';
+import { validateGradientParams } from './validators/GradientValidator';
+import { P5AsciifyGradient } from './gradients/Gradient';
 
 /**
  * The main class for the p5.asciify library. This class is responsible for setting up the library and running the rendering pipeline.
@@ -56,6 +59,39 @@ export class P5Asciifier {
     }
 
     /**
+     * Adds a new gradient to the renderer managers gradient manager, which will be rendered by the GradientAsciiRenderer.
+     * @param gradientName The name of the gradient.
+     * @param brightnessStart The brightness value at which the gradient starts.
+     * @param brightnessEnd The brightness value at which the gradient ends.
+     * @param characters The characters to use for the gradient.
+     * @param userParams Optional parameters to pass to the gradient.
+     */
+    public addAsciiGradient(
+        gradientName: GradientType,
+        brightnessStart: number,
+        brightnessEnd: number,
+        characters: string,
+        userParams: Record<string, any> = {}
+    ): P5AsciifyGradient {
+        validateGradientParams(
+            this.rendererManager.gradientManager,
+            gradientName,
+            brightnessStart,
+            brightnessEnd,
+            characters,
+            userParams
+        );
+
+        return this.rendererManager.gradientManager.addGradient(
+            gradientName,
+            brightnessStart,
+            brightnessEnd,
+            characters,
+            userParams
+        );
+    }
+
+    /**
      * Sets the font size for the ascii renderers
      * @param fontSize The font size to set
      */
@@ -82,11 +118,27 @@ export class P5Asciifier {
      * Sets the font for the ascii renderers.
      * @param font The font to set.
      */
-    set font(font: p5.Font) {
-        this._font = font;
+    set font(font: string | p5.Font) {
+
+        const setFont = (loadedFont: p5.Font) => {
+            this._font = loadedFont;
+            this.p._decrementPreload();
+        };
+
+        if (typeof font === 'string') {
+            this.p.loadFont(
+                font,
+                (loadedFont: p5.Font) => { setFont(loadedFont); },
+                () => { throw new P5AsciifyError(`Failed to load font from path: '${font}'`); }
+            );
+        } else if (font instanceof p5.Font) {
+            setFont(font);
+        } else {
+            throw new P5AsciifyError('Invalid font parameter. Expected a path, base64 string, or p5.Font object.');
+        }
 
         if (this.p._setupDone) {
-            this.asciiFontTextureAtlas.setFontObject(font);
+            this.asciiFontTextureAtlas.setFontObject(font as p5.Font);
             this.rendererManager.renderers.forEach(renderer => renderer.characterSet.reset());
 
             this.grid.resizeCellPixelDimensions(
