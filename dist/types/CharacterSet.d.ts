@@ -9,13 +9,9 @@ import { P5AsciifyFontTextureAtlas } from './FontTextureAtlas';
 export declare class P5AsciifyCharacterSet {
     private p;
     asciiFontTextureAtlas: P5AsciifyFontTextureAtlas;
-    /**
-     * The color palette for the character set.
-     */
+    /** The color palette for the character set. */
     characterColorPalette: P5AsciifyColorPalette;
-    /**
-     * The list of characters in the character set.
-     */
+    /** The list of individual characters in the character set. */
     private _characters;
     /**
      * Create a new character set instance.
@@ -27,8 +23,8 @@ export declare class P5AsciifyCharacterSet {
     /**
      * Validates the characters to ensure they are supported by the current font.
      * @param characters The characters to validate.
-     * @returns The validated characters as a list of characters.
-     * @throws {P5AsciifyError} If any characters are not supported by the set font.
+     * @returns The validated characters as a list of individual characters.
+     * @throws {@link P5AsciifyError} If any characters are not supported by the set font.
      */
     private validateCharacters;
     /**

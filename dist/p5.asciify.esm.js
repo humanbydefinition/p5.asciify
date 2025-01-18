@@ -144,29 +144,17 @@ class y {
    * @param _cellHeight The height of each cell in the grid.
    */
   constructor(A, e, r) {
-    /**
-     * The number of columns in the grid.
-     */
+    /** The number of columns in the grid. */
     i(this, "_cols");
-    /**
-     * The number of rows in the grid.
-     */
+    /** The number of rows in the grid. */
     i(this, "_rows");
-    /**
-     * The total width of the grid in pixels.
-     */
+    /** The total width of the grid in pixels. */
     i(this, "_width");
-    /**
-     * The total height of the grid in pixels.
-     */
+    /** The total height of the grid in pixels. */
     i(this, "_height");
-    /**
-     * The offset to the outer canvas on the x-axis when centering the grid.
-     */
+    /** The offset to the outer canvas on the x-axis when centering the grid. */
     i(this, "_offsetX");
-    /**
-     * The offset to the outer canvas on the y-axis when centering the grid.
-     */
+    /** The offset to the outer canvas on the y-axis when centering the grid. */
     i(this, "_offsetY");
     this._p = A, this._cellWidth = e, this._cellHeight = r, this.reset();
   }
@@ -549,7 +537,13 @@ const u = {
   rotationAngle: 0
 };
 class b {
+  /**
+   * Create a new color palette instance.
+   * @param p The p5 instance.
+   * @param _colors The colors to store in the palette.
+   */
   constructor(A, e) {
+    /** The framebuffer used to store the color palette. */
     i(this, "framebuffer");
     this.p = A, this._colors = e;
     const r = Math.max(this._colors.length, 1);
@@ -562,7 +556,7 @@ class b {
     }), this.updateFramebuffer();
   }
   /**
-   * Update the framebuffer with the current colors.
+   * Update the framebuffer with the currently selected colors.
    */
   updateFramebuffer() {
     if (!this.framebuffer || !this.p) return;
@@ -594,21 +588,17 @@ class c {
    * @param characters The characters to use in the character set.
    */
   constructor(A, e, r) {
-    /**
-     * The color palette for the character set.
-     */
+    /** The color palette for the character set. */
     i(this, "characterColorPalette");
-    /**
-     * The list of characters in the character set.
-     */
+    /** The list of individual characters in the character set. */
     i(this, "_characters");
     this.p = A, this.asciiFontTextureAtlas = e, this._characters = this.validateCharacters(r), this.characterColorPalette = new b(this.p, this.asciiFontTextureAtlas.getCharsetColorArray(this._characters));
   }
   /**
    * Validates the characters to ensure they are supported by the current font.
    * @param characters The characters to validate.
-   * @returns The validated characters as a list of characters.
-   * @throws {P5AsciifyError} If any characters are not supported by the set font.
+   * @returns The validated characters as a list of individual characters.
+   * @throws {@link P5AsciifyError} If any characters are not supported by the set font.
    */
   validateCharacters(A) {
     const e = this.asciiFontTextureAtlas.getUnsupportedCharacters(A);
@@ -906,37 +896,21 @@ Valid parameters are: ${a.join(", ")}`
 }
 class gA {
   constructor() {
-    /**
-     * Contains texture with all glyphs of a given font.
-     */
+    /** Contains texture with all glyphs of a given font.*/
     i(this, "asciiFontTextureAtlas");
-    /**
-     * Contains the grid dimensions and offsets to create a perfect grid based on the canvas and font size.
-     */
+    /** Contains the grid dimensions and offsets to create a perfect grid based on the canvas and font size. */
     i(this, "grid");
-    /**
-     * Wraps around the user's `draw()` function to capture it's output for the ascii renderers.
-     */
+    /** Wraps around the user's `draw()` function to capture it's output for the ascii renderers. */
     i(this, "sketchFramebuffer");
-    /**
-     * Manages the available ASCII renderers and handles rendering the ASCII output to the canvas.
-     */
+    /** Manages the available ASCII renderers and handles rendering the ASCII output to the canvas. */
     i(this, "rendererManager");
-    /**
-     * The p5 instance.
-     */
+    /** The p5 instance. */
     i(this, "_p");
-    /**
-     * The font to use for the ASCII rendering.
-     */
+    /** The font to use for the ASCII rendering. */
     i(this, "_font");
-    /**
-     * The background color to use for the ASCII rendering for the offset space, not occupied by the centered ASCII grid.
-     */
+    /** The background color to use for the ASCII rendering for the offset space, not occupied by the centered ASCII grid. */
     i(this, "_backgroundColor", "#000000");
-    /**
-     * The font size to use for the ASCII rendering.
-     */
+    /** The font size to use for the ASCII rendering. */
     i(this, "_fontSize", 16);
   }
   /**

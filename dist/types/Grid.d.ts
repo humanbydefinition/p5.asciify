@@ -8,29 +8,17 @@ export declare class P5AsciifyGrid {
     private _p;
     private _cellWidth;
     private _cellHeight;
-    /**
-     * The number of columns in the grid.
-     */
+    /** The number of columns in the grid. */
     private _cols;
-    /**
-     * The number of rows in the grid.
-     */
+    /** The number of rows in the grid. */
     private _rows;
-    /**
-     * The total width of the grid in pixels.
-     */
+    /** The total width of the grid in pixels. */
     private _width;
-    /**
-     * The total height of the grid in pixels.
-     */
+    /** The total height of the grid in pixels. */
     private _height;
-    /**
-     * The offset to the outer canvas on the x-axis when centering the grid.
-     */
+    /** The offset to the outer canvas on the x-axis when centering the grid. */
     private _offsetX;
-    /**
-     * The offset to the outer canvas on the y-axis when centering the grid.
-     */
+    /** The offset to the outer canvas on the y-axis when centering the grid. */
     private _offsetY;
     /**
      * Create a new grid instance.

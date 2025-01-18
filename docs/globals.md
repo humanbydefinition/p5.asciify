@@ -12,10 +12,10 @@
 | [P5AsciifyAccurateRenderer](classes/P5AsciifyAccurateRenderer.md) | An ASCII renderer that attempts to accurately represent the input sketch using the available ASCII characters. |
 | [P5AsciifyBrightnessRenderer](classes/P5AsciifyBrightnessRenderer.md) | ASCII Renderer that uses brightness to determine the ASCII characters to use from the 1D character set. |
 | [P5AsciifyCharacterSet](classes/P5AsciifyCharacterSet.md) | Represents a set of characters to be used by an ASCII renderer. |
-| [P5AsciifyColorPalette](classes/P5AsciifyColorPalette.md) | A 1D color palette for use with the P5Asciify library. |
+| [P5AsciifyColorPalette](classes/P5AsciifyColorPalette.md) | A 1D color palette for use with the `p5.asciify` library. |
 | [P5AsciifyConicalGradient](classes/P5AsciifyConicalGradient.md) | A conical gradient that moves in a conical pattern across the screen. |
 | [P5AsciifyEdgeRenderer](classes/P5AsciifyEdgeRenderer.md) | An ASCII renderer that applies ASCII edges to the input sketch by using edge detection. |
-| [P5AsciifyError](classes/P5AsciifyError.md) | Custom error class for the P5Asciify library. Represents errors specific to the P5Asciify library. |
+| [P5AsciifyError](classes/P5AsciifyError.md) | Custom error class for the P5Asciify library. |
 | [P5AsciifyFontTextureAtlas](classes/P5AsciifyFontTextureAtlas.md) | Creates a texture atlas containing all characters in a font, and provides utility methods for working with the atlas. |
 | [P5AsciifyGradient](classes/P5AsciifyGradient.md) | Represents a gradient that can be applied to the gradient ascii renderer. |
 | [P5AsciifyGradientManager](classes/P5AsciifyGradientManager.md) | Manages the creation and removal of gradients for the gradient ascii renderer. |
