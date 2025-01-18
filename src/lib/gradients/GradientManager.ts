@@ -36,14 +36,14 @@ export class P5AsciifyGradientManager {
     private gradientShaders: Partial<Record<GradientType, p5.Shader>> = {};
 
     private _gradientConstructors: GradientConstructorMap = {
-        linear: (p, fontTextureAtlas, shader, colors, brightnessStart, brightnessEnd, characters, params) =>
-            new P5AsciifyLinearGradient(p, fontTextureAtlas, shader, colors, brightnessStart, brightnessEnd, characters, params),
-        spiral: (p, fontTextureAtlas, shader, colors, brightnessStart, brightnessEnd, characters, params) =>
-            new P5AsciifySpiralGradient(p, fontTextureAtlas, shader, colors, brightnessStart, brightnessEnd, characters, params),
-        radial: (p, fontTextureAtlas, shader, colors, brightnessStart, brightnessEnd, characters, params) =>
-            new P5AsciifyRadialGradient(p, fontTextureAtlas, shader, colors, brightnessStart, brightnessEnd, characters, params),
-        conical: (p, fontTextureAtlas, shader, colors, brightnessStart, brightnessEnd, characters, params) =>
-            new P5AsciifyConicalGradient(p, fontTextureAtlas, shader, colors, brightnessStart, brightnessEnd, characters, params),
+        linear: (p, fontTextureAtlas, shader, brightnessStart, brightnessEnd, characters, params) =>
+            new P5AsciifyLinearGradient(p, fontTextureAtlas, shader, brightnessStart, brightnessEnd, characters, params),
+        spiral: (p, fontTextureAtlas, shader, brightnessStart, brightnessEnd, characters, params) =>
+            new P5AsciifySpiralGradient(p, fontTextureAtlas, shader, brightnessStart, brightnessEnd, characters, params),
+        radial: (p, fontTextureAtlas, shader, brightnessStart, brightnessEnd, characters, params) =>
+            new P5AsciifyRadialGradient(p, fontTextureAtlas, shader, brightnessStart, brightnessEnd, characters, params),
+        conical: (p, fontTextureAtlas, shader, brightnessStart, brightnessEnd, characters, params) =>
+            new P5AsciifyConicalGradient(p, fontTextureAtlas, shader, brightnessStart, brightnessEnd, characters, params),
     };
 
     private _gradients: P5AsciifyGradient[] = [];
@@ -80,7 +80,6 @@ export class P5AsciifyGradientManager {
             this.p,
             this.fontTextureAtlas,
             this.gradientShaders[gradientName] as p5.Shader,
-            this.fontTextureAtlas.getCharsetColorArray(characters),
             brightnessStart,
             brightnessEnd,
             characters,

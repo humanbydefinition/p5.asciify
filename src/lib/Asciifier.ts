@@ -9,6 +9,8 @@ import { GradientType } from './gradients/types';
 import { validateGradientParams } from './validators/GradientValidator';
 import { P5AsciifyGradient } from './gradients/Gradient';
 
+import { DEFAULT_FONT_SIZE, DEFAULT_BACKGROUND_COLOR } from './defaults';
+
 /**
  * The main class for the `p5.asciify` library. 
  * 
@@ -46,10 +48,10 @@ export class P5Asciifier {
     private _font!: p5.Font;
 
     /** The background color to use for the ASCII rendering for the offset space, not occupied by the centered ASCII grid. */
-    private _backgroundColor: string | p5.Color | [number, number?, number?, number?] = "#000000";
+    private _backgroundColor: string | p5.Color | [number, number?, number?, number?] = DEFAULT_BACKGROUND_COLOR;
 
     /** The font size to use for the ASCII rendering. */
-    private _fontSize: number = 16;
+    private _fontSize: number = DEFAULT_FONT_SIZE;
 
 
     /**

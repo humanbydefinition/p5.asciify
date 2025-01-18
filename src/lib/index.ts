@@ -88,5 +88,16 @@ export { P5AsciifyEdgeRenderer } from './renderers/edge/EdgeAsciiRenderer';
 export { P5AsciifyGradientRenderer } from './renderers/gradient/GradientAsciiRenderer';
 
 // Constants and defaults
-export { BRIGHTNESS_OPTIONS, ACCURATE_OPTIONS, GRADIENT_OPTIONS, EDGE_OPTIONS, CUSTOM_OPTIONS } from './defaults';
-export { FONT_SIZE_LIMITS, EDGE_CHARACTER_LENGTH } from './constants';
+export {
+  BRIGHTNESS_DEFAULT_OPTIONS,
+  ACCURATE_DEFAULT_OPTIONS,
+  GRADIENT_DEFAULT_OPTIONS,
+  EDGE_DEFAULT_OPTIONS, CUSTOM_DEFAULT_OPTIONS,
+  DEFAULT_FONT_SIZE,
+  DEFAULT_BACKGROUND_COLOR
+} from './defaults';
+
+export {
+  FONT_SIZE_LIMITS,
+  EDGE_CHARACTER_LENGTH
+} from './constants';

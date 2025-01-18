@@ -18,12 +18,11 @@ export abstract class P5AsciifyGradient {
         protected p: p5, 
         protected _fontTextureAtlas: P5AsciifyFontTextureAtlas, 
         protected _shader: p5.Shader, 
-        colors: [number, number, number][],
         brightnessStart: number,
         brightnessEnd: number,
         private _characters: string
     ) {
-        this._palette = new P5AsciifyColorPalette(this.p, colors);
+        this._palette = new P5AsciifyColorPalette(this.p, this._fontTextureAtlas.getCharsetColorArray(this._characters));
 
         // Normalize brightness values to [0, 1]
         this._brightnessStart = Math.floor((brightnessStart / 255) * 100) / 100;

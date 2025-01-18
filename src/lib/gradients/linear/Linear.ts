@@ -16,13 +16,12 @@ export class P5AsciifyLinearGradient extends P5AsciifyGradient {
         protected p: p5,
         protected _fontTextureAtlas: P5AsciifyFontTextureAtlas,
         protected _shader: p5.Shader,
-        colors: [number, number, number][],
         brightnessStart: number,
         brightnessEnd: number,
         characters: string,
         params: LinearGradientParams
     ) {
-        super(p, _fontTextureAtlas, _shader, colors, brightnessStart, brightnessEnd, characters);
+        super(p, _fontTextureAtlas, _shader, brightnessStart, brightnessEnd, characters);
         this.direction = params.direction;
         this.angle = params.angle;
         this.speed = params.speed;

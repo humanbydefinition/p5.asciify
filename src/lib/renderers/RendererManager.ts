@@ -10,11 +10,11 @@ import { P5AsciifyGrid } from '../Grid';
 import { P5AsciifyFontTextureAtlas } from '../FontTextureAtlas';
 
 import {
-    BRIGHTNESS_OPTIONS,
-    ACCURATE_OPTIONS,
-    GRADIENT_OPTIONS,
-    EDGE_OPTIONS,
-    CUSTOM_OPTIONS,
+    BRIGHTNESS_DEFAULT_OPTIONS,
+    ACCURATE_DEFAULT_OPTIONS,
+    GRADIENT_DEFAULT_OPTIONS,
+    EDGE_DEFAULT_OPTIONS,
+    CUSTOM_DEFAULT_OPTIONS,
 } from '../defaults';
 
 import { P5AsciifyCharacterSet } from '../CharacterSet';
@@ -44,15 +44,15 @@ export class P5AsciifyRendererManager {
         this.gradientCharacterSet = new P5AsciifyCharacterSet(
             this.p,
             fontTextureAtlas,
-            BRIGHTNESS_OPTIONS.characters
+            BRIGHTNESS_DEFAULT_OPTIONS.characters
         );
 
         this._renderers = [
-            new P5AsciifyBrightnessRenderer(this.p, this.grid, new P5AsciifyCharacterSet(this.p, fontTextureAtlas, BRIGHTNESS_OPTIONS.characters), { ...BRIGHTNESS_OPTIONS }),
-            new P5AsciifyAccurateRenderer(this.p, this.grid, new P5AsciifyCharacterSet(this.p, fontTextureAtlas, ACCURATE_OPTIONS.characters), { ...ACCURATE_OPTIONS }),
-            new P5AsciifyGradientRenderer(this.p, this.grid, this.gradientCharacterSet, this.gradientManager, { ...GRADIENT_OPTIONS }),
-            new P5AsciifyEdgeRenderer(this.p, this.grid, new P5AsciifyCharacterSet(this.p, fontTextureAtlas, EDGE_OPTIONS.characters), { ...EDGE_OPTIONS }),
-            new P5AsciifyRenderer(this.p, this.grid, new P5AsciifyCharacterSet(this.p, fontTextureAtlas, BRIGHTNESS_OPTIONS.characters), { ...CUSTOM_OPTIONS }),
+            new P5AsciifyBrightnessRenderer(this.p, this.grid, new P5AsciifyCharacterSet(this.p, fontTextureAtlas, BRIGHTNESS_DEFAULT_OPTIONS.characters), { ...BRIGHTNESS_DEFAULT_OPTIONS }),
+            new P5AsciifyAccurateRenderer(this.p, this.grid, new P5AsciifyCharacterSet(this.p, fontTextureAtlas, ACCURATE_DEFAULT_OPTIONS.characters), { ...ACCURATE_DEFAULT_OPTIONS }),
+            new P5AsciifyGradientRenderer(this.p, this.grid, this.gradientCharacterSet, this.gradientManager, { ...GRADIENT_DEFAULT_OPTIONS }),
+            new P5AsciifyEdgeRenderer(this.p, this.grid, new P5AsciifyCharacterSet(this.p, fontTextureAtlas, EDGE_DEFAULT_OPTIONS.characters), { ...EDGE_DEFAULT_OPTIONS }),
+            new P5AsciifyRenderer(this.p, this.grid, new P5AsciifyCharacterSet(this.p, fontTextureAtlas, BRIGHTNESS_DEFAULT_OPTIONS.characters), { ...CUSTOM_DEFAULT_OPTIONS }),
         ];
 
         this.lastRenderer = this._renderers[0];

@@ -1,91 +1,97 @@
 /** Default configuration options for brightness-based ASCII renderer */
-export const BRIGHTNESS_OPTIONS = {
+export const BRIGHTNESS_DEFAULT_OPTIONS = {
     /** Enable/disable the renderer */
     enabled: true,
     /** Characters used for brightness mapping (from darkest to brightest) */
     characters: "0123456789",
-    /** Color of the ASCII characters */
+    /** Color of the ASCII characters. Only used when `characterColorMode` is set to `1` */
     characterColor: "#FFFFFF",
-    /** Character color blend mode (0: static, 1: source) */
+    /** Character color mode (0: `sampled`, 1: `fixed`) */
     characterColorMode: 0,
-    /** Background color */
+    /** Cell background color. Only used when `characterColorMode` is set to `1` */
     backgroundColor: "#000000",
-    /** Background color blend mode (0: static, 1: source) */
+    /** Background color mode (0: `sampled`, 1: `fixed`) */
     backgroundColorMode: 1,
-    /** Invert the brightness mapping */
+    /** Swap the cells ASCII character colors with it's cell background colors */
     invertMode: false,
-    /** Rotation angle of characters in degrees */
+    /** Rotation angle of all characters in the grid in degrees */
     rotationAngle: 0,
 };
 
 /** Default configuration options for accurate ASCII renderer */
-export const ACCURATE_OPTIONS = {
+export const ACCURATE_DEFAULT_OPTIONS = {
     /** Enable/disable the renderer */
     enabled: false,
     /** Characters used for pattern matching */
     characters: "0123456789",
-    /** Color of the ASCII characters */
+    /** Color of the ASCII characters. Only used when `characterColorMode` is set to `1` */
     characterColor: "#FFFFFF",
-    /** Character color blend mode (0: static, 1: source) */
+    /** Character color mode (0: `sampled`, 1: `fixed`) */
     characterColorMode: 0,
-    /** Background color */
+    /** Cell background color. Only used when `characterColorMode` is set to `1` */
     backgroundColor: "#000000",
-    /** Background color blend mode (0: static, 1: source) */
+    /** Background color mode (0: `sampled`, 1: `fixed`) */
     backgroundColorMode: 1,
-    /** Invert the pattern matching */
+    /** Swap the cells ASCII character colors with it's cell background colors */
     invertMode: false,
-    /** Rotation angle of characters in degrees */
+    /** Rotation angle of all characters in the grid in degrees */
     rotationAngle: 0,
 }
 
 /** Default configuration options for gradient-based ASCII renderer */
-export const GRADIENT_OPTIONS = {
+export const GRADIENT_DEFAULT_OPTIONS = {
     /** Enable/disable the renderer */
     enabled: false,
-    /** Color of the ASCII characters */
+    /** Color of the ASCII characters. Only used when `characterColorMode` is set to `1` */
     characterColor: "#FFFFFF",
-    /** Character color blend mode (0: static, 1: source) */
+    /** Character color mode (0: `sampled`, 1: `fixed`) */
     characterColorMode: 0,
-    /** Background color */
+    /** Cell background color. Only used when `characterColorMode` is set to `1` */
     backgroundColor: "#000000",
-    /** Background color blend mode (0: static, 1: source) */
+    /** Background color mode (0: `sampled`, 1: `fixed`) */
     backgroundColorMode: 1,
-    /** Invert the gradient mapping */
+    /** Swap the cells ASCII character colors with it's cell background colors */
     invertMode: false,
-    /** Rotation angle of characters in degrees */
+    /** Rotation angle of all characters in the grid in degrees */
     rotationAngle: 0,
 };
 
 /** Default configuration options for edge detection ASCII renderer */
-export const EDGE_OPTIONS = {
+export const EDGE_DEFAULT_OPTIONS = {
     /** Enable/disable the renderer */
     enabled: false,
     /** Characters used for edge representation (8 characters for different angles) */
     characters: "-/|\\-/|\\",
-    /** Color of the ASCII characters */
+    /** Color of the ASCII characters. Only used when `characterColorMode` is set to `1` */
     characterColor: "#FFFFFF",
-    /** Character color blend mode (0: static, 1: source) */
+    /** Character color mode (0: `sampled`, 1: `fixed`) */
     characterColorMode: 0,
-    /** Background color */
+    /** Cell background color. Only used when `characterColorMode` is set to `1` */
     backgroundColor: "#000000",
-    /** Background color blend mode (0: static, 1: source) */
+    /** Background color mode (0: `sampled`, 1: `fixed`) */
     backgroundColorMode: 1,
-    /** Invert the edge detection */
+    /** Swap the cells ASCII character colors with it's cell background colors */
     invertMode: false,
-    /** Threshold for Sobel edge detection (0.0 to 1.0) */
+    /** Threshold for Sobel edge detection. Responsible for edge detection sensitivity */
     sobelThreshold: 0.5,
-    /** Sampling threshold for edge detection */
+    /** Sampling threshold for edge detection. In this case, 16 pixels in a grid cell need to contain an edge to render it */
     sampleThreshold: 16,
-    /** Rotation angle of characters in degrees */
+    /** Rotation angle of all characters in the grid in degrees */
     rotationAngle: 0,
 };
 
 /** Default configuration options for custom ASCII renderer */
-export const CUSTOM_OPTIONS = {
+export const CUSTOM_DEFAULT_OPTIONS = {
     /** Enable/disable the renderer */
     enabled: false,
-    /** Invert the rendering */
+    /** Swap the cells ASCII character colors with it's cell background colors */
     invertMode: false,
-    /** Rotation angle of characters in degrees */
+    /** Rotation angle of all characters in the grid in degrees */
     rotationAngle: 0,
 };
+
+/** Default font size for the ASCII rendering */
+export const DEFAULT_FONT_SIZE = 16;
+
+/** Default background color behind the ASCII grid */
+export const DEFAULT_BACKGROUND_COLOR = "#000000";
