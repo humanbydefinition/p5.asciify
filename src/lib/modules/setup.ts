@@ -19,6 +19,9 @@ export function registerSetupMethods(p5asciify: P5Asciifier): void {
      */
     p5.prototype.registerMethod('init', function(this: p5) {
         p5asciify.instance(this, false);
+
+        this._incrementPreload();
+        p5asciify.font = URSAFONT_BASE64;
     });
 
     /**
