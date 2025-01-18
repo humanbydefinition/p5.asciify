@@ -34,7 +34,7 @@
 | [ACCURATE\_DEFAULT\_OPTIONS](variables/ACCURATE_DEFAULT_OPTIONS.md) | Default configuration options for accurate ASCII renderer |
 | [BRIGHTNESS\_DEFAULT\_OPTIONS](variables/BRIGHTNESS_DEFAULT_OPTIONS.md) | Default configuration options for brightness-based ASCII renderer |
 | [CUSTOM\_DEFAULT\_OPTIONS](variables/CUSTOM_DEFAULT_OPTIONS.md) | Default configuration options for custom ASCII renderer |
-| [DEFAULT\_BACKGROUND\_COLOR](variables/DEFAULT_BACKGROUND_COLOR.md) | The default background color used behind the ASCII grid. This color fills the space not occupied by the centered ASCII grid. |
+| [DEFAULT\_BACKGROUND\_COLOR](variables/DEFAULT_BACKGROUND_COLOR.md) | Default background color behind the ASCII grid |
 | [DEFAULT\_FONT\_SIZE](variables/DEFAULT_FONT_SIZE.md) | Default font size for the ASCII rendering |
 | [EDGE\_CHARACTER\_LENGTH](variables/EDGE_CHARACTER_LENGTH.md) | Number of characters used in edge detection renderer's character set |
 | [EDGE\_DEFAULT\_OPTIONS](variables/EDGE_DEFAULT_OPTIONS.md) | Default configuration options for edge detection ASCII renderer |

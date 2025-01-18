@@ -93,9 +93,5 @@ export const CUSTOM_DEFAULT_OPTIONS = {
 /** Default font size for the ASCII rendering */
 export const DEFAULT_FONT_SIZE = 16;
 
-/** 
- * The default background color used behind the ASCII grid.
- * This color fills the space not occupied by the centered ASCII grid.
- * @default "#000000"
- */
+/** Default background color behind the ASCII grid */
 export const DEFAULT_BACKGROUND_COLOR = "#000000";
