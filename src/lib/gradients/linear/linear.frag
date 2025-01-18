@@ -15,7 +15,7 @@ uniform vec2 u_brightnessRange;
 void main() {
     vec4 texColor = texture2D(textureID, v_texCoord);
     vec4 originalTexColor = texture2D(originalTextureID, v_texCoord);
-    if (!(texColor.r >= u_brightnessRange.x && texColor.r <= u_brightnessRange.y && texColor == originalTexColor)) {
+    if (!(originalTexColor.r >= u_brightnessRange[0] && originalTexColor.r <= u_brightnessRange[1])) {
         gl_FragColor = texColor;
         return;
     }

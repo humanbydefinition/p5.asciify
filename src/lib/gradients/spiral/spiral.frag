@@ -18,7 +18,7 @@ void main() {
     vec4 texColor = texture2D(textureID, v_texCoord);
     vec4 originalTexColor = texture2D(originalTextureID, v_texCoord);
 
-    if(texColor.r >= u_brightnessRange[0] && texColor.r <= u_brightnessRange[1] && texColor == originalTexColor) {
+    if(originalTexColor.r >= u_brightnessRange[0] && originalTexColor.r <= u_brightnessRange[1]) {
 
         vec2 relativePosition = v_texCoord - vec2(u_centerX, u_centerY);
         float distance = length(relativePosition);

@@ -51,7 +51,7 @@ void main() {
     vec4 originalTexColor = texture2D(originalTextureID, v_texCoord);
 
     // Check if the pixel color in the original texture matches the target color within the tolerance
-    if(texColor.r >= u_brightnessRange[0] && texColor.r <= u_brightnessRange[1] && texColor == originalTexColor) {
+    if(originalTexColor.r >= u_brightnessRange[0] && originalTexColor.r <= u_brightnessRange[1]) {
 
         // Generate Perlin noise value based on texture coordinates and frame count
         vec2 directionVec = vec2(cos(radians(direction)), sin(radians(direction)));
