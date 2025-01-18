@@ -1,12 +1,12 @@
 import p5 from 'p5';
-import { AsciiRenderer } from '../AsciiRenderer';
+import { P5AsciifyRenderer } from '../AsciiRenderer';
 import { P5AsciifyGrid } from '../../Grid';
 import { P5AsciifyCharacterSet } from '../../CharacterSet';
 import { AsciiRendererOptions } from '../types';
 /**
  * An ASCII renderer that applies ASCII edges to the input sketch by using edge detection.
  */
-export default class EdgeAsciiRenderer extends AsciiRenderer<AsciiRendererOptions> {
+export declare class P5AsciifyEdgeRenderer extends P5AsciifyRenderer<AsciiRendererOptions> {
     private sobelShader;
     private sampleShader;
     private colorSampleShader;
@@ -17,5 +17,5 @@ export default class EdgeAsciiRenderer extends AsciiRenderer<AsciiRendererOption
     resizeFramebuffers(): void;
     resetShaders(): void;
     updateOptions(newOptions: Partial<AsciiRendererOptions>): void;
-    render(inputFramebuffer: p5.Framebuffer, previousAsciiRenderer: AsciiRenderer): void;
+    render(inputFramebuffer: p5.Framebuffer, previousAsciiRenderer: P5AsciifyRenderer): void;
 }

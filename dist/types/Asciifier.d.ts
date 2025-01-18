@@ -1,7 +1,7 @@
 import p5 from 'p5';
 import { P5AsciifyFontTextureAtlas } from './FontTextureAtlas';
 import { P5AsciifyGrid } from './Grid';
-import { RendererManager } from './renderers/RendererManager';
+import { P5AsciifyRendererManager } from './renderers/RendererManager';
 import { GradientType } from './gradients/types';
 import { P5AsciifyGradient } from './gradients/Gradient';
 /**
@@ -10,7 +10,7 @@ import { P5AsciifyGradient } from './gradients/Gradient';
 export declare class P5Asciifier {
     private _borderColor;
     private _fontSize;
-    rendererManager: RendererManager;
+    rendererManager: P5AsciifyRendererManager;
     private _font;
     private p;
     asciiFontTextureAtlas: P5AsciifyFontTextureAtlas;

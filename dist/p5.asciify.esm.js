@@ -995,7 +995,23 @@ n.prototype.registerMethod("post", function() {
 });
 export {
   QA as P5Asciifier,
+  k as P5AsciifyAccurateRenderer,
+  Y as P5AsciifyBrightnessRenderer,
+  c as P5AsciifyCharacterSet,
+  b as P5AsciifyColorPalette,
+  AA as P5AsciifyConicalGradient,
+  J as P5AsciifyEdgeRenderer,
+  g as P5AsciifyError,
   F as P5AsciifyFontTextureAtlas,
+  d as P5AsciifyGradient,
+  aA as P5AsciifyGradientManager,
+  V as P5AsciifyGradientRenderer,
   y as P5AsciifyGrid,
+  Z as P5AsciifyLinearGradient,
+  eA as P5AsciifyNoiseGradient,
+  q as P5AsciifyRadialGradient,
+  C as P5AsciifyRenderer,
+  gA as P5AsciifyRendererManager,
+  $ as P5AsciifySpiralGradient,
   l as p5asciify
 };

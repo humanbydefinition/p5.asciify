@@ -5,7 +5,7 @@ import { AsciiRendererOptions } from './types';
 /**
  * Abstract class for shader-based ASCII Renderers.
  */
-export declare class AsciiRenderer<T extends AsciiRendererOptions = AsciiRendererOptions> {
+export declare class P5AsciifyRenderer<T extends AsciiRendererOptions = AsciiRendererOptions> {
     protected p: p5;
     protected grid: P5AsciifyGrid;
     characterSet: P5AsciifyCharacterSet;
@@ -34,7 +34,7 @@ export declare class AsciiRenderer<T extends AsciiRendererOptions = AsciiRendere
      * @param inputFramebuffer - The input framebuffer to convert to ASCII.
      * @param previousAsciiRenderer - The previous ASCII renderer in the pipeline.
      */
-    render(inputFramebuffer: p5.Framebuffer, previousAsciiRenderer: AsciiRenderer): void;
+    render(inputFramebuffer: p5.Framebuffer, previousAsciiRenderer: P5AsciifyRenderer): void;
     get outputFramebuffer(): p5.Framebuffer;
     get options(): T;
     get primaryColorSampleFramebuffer(): p5.Framebuffer;
