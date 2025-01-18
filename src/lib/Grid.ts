@@ -2,6 +2,7 @@ import p5 from 'p5';
 
 /**
  * Represents a 2D grid, where each cell has a fixed width and height.
+ * 
  * Based on the current canvas dimensions, the grid is resized to fit the maximum number of cells.
  */
 export class P5AsciifyGrid {
@@ -37,12 +38,12 @@ export class P5AsciifyGrid {
 
     /**
      * Create a new grid instance.
-     * @param p The p5 instance.
+     * @param _p The p5 instance.
      * @param _cellWidth The width of each cell in the grid.
      * @param _cellHeight The height of each cell in the grid.
      */
     constructor(
-        private p: p5,
+        private _p: p5,
         private _cellWidth: number,
         private _cellHeight: number
     ) {
@@ -50,10 +51,10 @@ export class P5AsciifyGrid {
     }
 
     /**
-     * Reset the grid to the default number of columns and rows based on the current canvas and `_cellWidth` and `_cellHeight`.
+     * Reset the grid to the default number of columns and rows based on the current canvas, and `_cellWidth` and `_cellHeight`.
      */
     public reset(): void {
-        [this._cols, this._rows] = [Math.floor(this.p.width / this._cellWidth), Math.floor(this.p.height / this._cellHeight)];
+        [this._cols, this._rows] = [Math.floor(this._p.width / this._cellWidth), Math.floor(this._p.height / this._cellHeight)];
         this._resizeGrid();
     }
 
@@ -63,8 +64,8 @@ export class P5AsciifyGrid {
     private _resizeGrid(): void {
         this._width = this._cols * this._cellWidth;
         this._height = this._rows * this._cellHeight;
-        this._offsetX = Math.floor((this.p.width - this._width) / 2);
-        this._offsetY = Math.floor((this.p.height - this._height) / 2);
+        this._offsetX = Math.floor((this._p.width - this._width) / 2);
+        this._offsetY = Math.floor((this._p.height - this._height) / 2);
     }
 
     /**
