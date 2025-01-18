@@ -1,0 +1,18 @@
+{
+    "entryPoints": [
+        "src/lib/index.ts",
+    ],
+    "out": "docs",
+    "name": "p5.asciify",
+    "readme": "README.md",
+    "excludePrivate": false,
+    "excludeProtected": false,
+    "excludeExternals": false,
+    "includeVersion": true,
+    /** "plugin": ["typedoc-plugin-markdown"], **/
+    "tsconfig": "tsconfig.json",
+    "exclude": [
+        "**/node_modules/**"
+    ],
+    "logLevel": "Verbose"  // Add verbose logging
+}
