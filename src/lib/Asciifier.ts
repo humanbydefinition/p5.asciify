@@ -81,6 +81,7 @@ export class P5Asciifier {
 
     /**
      * Sets up the `p5.asciify` library by initializing the font texture atlas, grid, renderer manager, and sketch framebuffer.
+     * 
      * Is called automatically after the user's `setup()` function has finished.
      */
     public setup(): void {
@@ -110,6 +111,7 @@ export class P5Asciifier {
 
     /**
      * Renders the ASCII output to the canvas.
+     * 
      * Is called automatically every time the user's `draw()` function has finished.
      */
     public asciify(): void {
@@ -211,6 +213,7 @@ export class P5Asciifier {
 
     /**
      * Sets the background color for the ascii renderers. 
+     * 
      * Covers the empty space on the edges of the canvas, which potentially is not occupied by the centered ASCII grid.
      * @param color The color to set. Needs to be a valid type to pass to the `background()` function provided by p5.js.
      * @throws {P5AsciifyError} If the color is not a string, array or p5.Color.
