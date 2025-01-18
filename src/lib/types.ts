@@ -1,5 +1,4 @@
 import { P5Asciifier } from './Asciifier';
-import { P5AsciifyGradient } from './gradients/Gradient';
 import p5 from 'p5';
 
 /**

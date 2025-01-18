@@ -1,5 +1,3 @@
-
-
 /** Font size constraints for ASCII rendering */
 export const FONT_SIZE_LIMITS = {
     /** Minimum allowed font size in pixels */

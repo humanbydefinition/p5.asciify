@@ -82,11 +82,11 @@ export { P5AsciifySpiralGradient } from './gradients/spiral/Spiral';
 
 export { P5AsciifyRendererManager } from './renderers/RendererManager';
 export { P5AsciifyRenderer } from './renderers/AsciiRenderer';
-export { P5AsciifyAccurateRenderer } from './renderers/accurateAsciiRenderer/AccurateAsciiRenderer';
-export { P5AsciifyBrightnessRenderer } from './renderers/brightnessAsciiRenderer/BrightnessAsciiRenderer';
-export { P5AsciifyEdgeRenderer } from './renderers/edgeAsciiRenderer/EdgeAsciiRenderer';
-export { P5AsciifyGradientRenderer } from './renderers/gradientAsciiRenderer/GradientAsciiRenderer';
+export { P5AsciifyAccurateRenderer } from './renderers/accurate/AccurateAsciiRenderer';
+export { P5AsciifyBrightnessRenderer } from './renderers/brightness/BrightnessAsciiRenderer';
+export { P5AsciifyEdgeRenderer } from './renderers/edge/EdgeAsciiRenderer';
+export { P5AsciifyGradientRenderer } from './renderers/gradient/GradientAsciiRenderer';
 
 // Constants and defaults
-export { BRIGHTNESS_OPTIONS, ACCURATE_OPTIONS, GRADIENT_OPTIONS, EDGE_OPTIONS, CUSTOM_OPTIONS } from './renderers/defaults';
-export { FONT_SIZE_LIMITS, EDGE_CHARACTER_LENGTH } from './renderers/constants';
+export { BRIGHTNESS_OPTIONS, ACCURATE_OPTIONS, GRADIENT_OPTIONS, EDGE_OPTIONS, CUSTOM_OPTIONS } from './defaults';
+export { FONT_SIZE_LIMITS, EDGE_CHARACTER_LENGTH } from './constants';

@@ -1,9 +1,9 @@
 import p5 from 'p5';
 
-import { P5AsciifyBrightnessRenderer } from './brightnessAsciiRenderer/BrightnessAsciiRenderer';
-import { P5AsciifyAccurateRenderer } from './accurateAsciiRenderer/AccurateAsciiRenderer';
-import { P5AsciifyEdgeRenderer } from './edgeAsciiRenderer/EdgeAsciiRenderer';
-import { P5AsciifyGradientRenderer } from './gradientAsciiRenderer/GradientAsciiRenderer';
+import { P5AsciifyBrightnessRenderer } from './brightness/BrightnessAsciiRenderer';
+import { P5AsciifyAccurateRenderer } from './accurate/AccurateAsciiRenderer';
+import { P5AsciifyEdgeRenderer } from './edge/EdgeAsciiRenderer';
+import { P5AsciifyGradientRenderer } from './gradient/GradientAsciiRenderer';
 import { P5AsciifyRenderer } from './AsciiRenderer';
 
 import { P5AsciifyGrid } from '../Grid';
@@ -15,7 +15,7 @@ import {
     GRADIENT_OPTIONS,
     EDGE_OPTIONS,
     CUSTOM_OPTIONS,
-} from './defaults';
+} from '../defaults';
 
 import { P5AsciifyCharacterSet } from '../CharacterSet';
 import { P5AsciifyGradientManager } from '../gradients/GradientManager';

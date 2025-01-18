@@ -13,7 +13,7 @@ import sobelShader from './shaders/sobel.frag';
 
 import { generateSampleShader } from './shaders/shaderGenerators.min';
 
-import { EDGE_CHARACTER_LENGTH } from '../constants';
+import { EDGE_CHARACTER_LENGTH } from '../../constants';
 
 /**
  * An ASCII renderer that applies ASCII edges to the input sketch by using edge detection.
