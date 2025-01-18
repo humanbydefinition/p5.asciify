@@ -13,7 +13,6 @@ export { P5AsciifyGradientManager } from './gradients/GradientManager';
 export { P5AsciifyGradient } from './gradients/Gradient';
 export { P5AsciifyConicalGradient } from './gradients/conical/Conical';
 export { P5AsciifyLinearGradient } from './gradients/linear/Linear';
-export { P5AsciifyNoiseGradient } from './gradients/noise/Noise';
 export { P5AsciifyRadialGradient } from './gradients/radial/Radial';
 export { P5AsciifySpiralGradient } from './gradients/spiral/Spiral';
 export { P5AsciifyRendererManager } from './renderers/RendererManager';

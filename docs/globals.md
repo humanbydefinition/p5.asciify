@@ -22,7 +22,6 @@
 | [P5AsciifyGradientRenderer](classes/P5AsciifyGradientRenderer.md) | An ASCII renderer that applies all defined ASCII gradients/patterns to the input framebuffer. |
 | [P5AsciifyGrid](classes/P5AsciifyGrid.md) | Represents a 2D grid, handling the dimensions and resizing of the grid. |
 | [P5AsciifyLinearGradient](classes/P5AsciifyLinearGradient.md) | A linear gradient that moves in a linear pattern across the screen. |
-| [P5AsciifyNoiseGradient](classes/P5AsciifyNoiseGradient.md) | A noise gradient that moves in a noise pattern across the screen. |
 | [P5AsciifyRadialGradient](classes/P5AsciifyRadialGradient.md) | A radial gradient that moves in a radial pattern across the screen. |
 | [P5AsciifyRenderer](classes/P5AsciifyRenderer.md) | Abstract class for shader-based ASCII Renderers. |
 | [P5AsciifyRendererManager](classes/P5AsciifyRendererManager.md) | Manages the available ASCII renderers and handles rendering the ASCII output to the canvas. |
