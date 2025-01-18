@@ -23,6 +23,4 @@
     "enumMembersFormat": "table",
     "propertyMembersFormat": "table",
     "typeDeclarationFormat": "table",
-    "expandParameters": true,
-
 }
