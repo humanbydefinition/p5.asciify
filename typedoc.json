@@ -16,5 +16,5 @@
     ],
     "logLevel": "Verbose",
     "plugin": ["typedoc-plugin-markdown"],
-    "parametersFormat": "table",
+    "parametersFormat": "htmlTable",
 }

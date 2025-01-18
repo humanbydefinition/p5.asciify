@@ -8,6 +8,6 @@
 
 > `const` **p5asciify**: [`P5Asciifier`](../classes/P5Asciifier.md)
 
-Defined in: [index.ts:11](https://github.com/humanbydefinition/p5-asciify/blob/b23c0a7605ccbc2d4cd852933c46a3e289232263/src/lib/index.ts#L11)
+Defined in: [index.ts:11](https://github.com/humanbydefinition/p5-asciify/blob/f02ca91b53ec7b24731659c0e56dabb5a64ea74e/src/lib/index.ts#L11)
 
 The main instance of the p5.asciify library, which is used to access all of the library's functionality.
