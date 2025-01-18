@@ -24,42 +24,30 @@ import { P5AsciifyGradientManager } from '../gradients/GradientManager';
  * Manages the available ASCII renderers and handles rendering the ASCII output to the canvas.
  */
 export class RendererManager {
-    private p!: p5;
-    private grid: any;
-    private fontTextureAtlas: any;
     private currentCanvasDimensions!: { width: number, height: number };
     private gradientCharacterSet!: P5AsciifyCharacterSet;
     private _renderers!: AsciiRenderer[];
     public gradientManager: P5AsciifyGradientManager;
     public lastRenderer!: AsciiRenderer;
 
-    constructor(p5Instance: p5) {
-        this.p = p5Instance;
-        this.gradientManager = new P5AsciifyGradientManager(p5Instance);
-    }
-
-    /**
-     * Sets up the renderer manager with the specified default options.
-     * @param p5Instance The p5 instance
-     * @param grid The grid instance
-     * @param fontTextureAtlas The font texture atlas instance
-     */
-    public setup(grid: P5AsciifyGrid, fontTextureAtlas: P5AsciifyFontTextureAtlas): void {
-        this.grid = grid;
-        this.fontTextureAtlas = fontTextureAtlas;
+    constructor(
+        private p: p5,
+        private grid: P5AsciifyGrid, 
+        private fontTextureAtlas: P5AsciifyFontTextureAtlas
+    ) {
+        
 
         this.currentCanvasDimensions = {
             width: this.p.width,
             height: this.p.height
         };
 
+        this.gradientManager = new P5AsciifyGradientManager(p, this.fontTextureAtlas);
         this.gradientCharacterSet = new P5AsciifyCharacterSet(
             this.p,
             fontTextureAtlas,
             BRIGHTNESS_OPTIONS.characters
         );
-
-        this.gradientManager.setup(this.fontTextureAtlas);
 
         this._renderers = [
             new BrightnessAsciiRenderer(this.p, this.grid, new P5AsciifyCharacterSet(this.p, fontTextureAtlas, BRIGHTNESS_OPTIONS.characters), { ...BRIGHTNESS_OPTIONS }),

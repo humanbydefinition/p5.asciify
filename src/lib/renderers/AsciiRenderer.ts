@@ -25,7 +25,6 @@ export class AsciiRenderer<T extends AsciiRendererOptions = AsciiRendererOptions
         public characterSet: P5AsciifyCharacterSet,
         protected _options: T
     ) {
-
         if (this._options.characterColor) {
             this._options.characterColor = this.p.color(this._options.characterColor as string);
         }

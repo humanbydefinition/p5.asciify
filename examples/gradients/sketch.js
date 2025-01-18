@@ -22,35 +22,38 @@ const sketch = (p) => {
     p.setup = () => {
         p.createCanvas(p.windowWidth, p.windowHeight, p.WEBGL);
 
-        linearGradient = p.addAsciiGradient("linear", 150, 150, "gradients ", {
-            direction: 1,
-            angle: 0,
-            speed: 0.1,
-        });
-        spiralGradient = p.addAsciiGradient("spiral", 160, 160, "are  ", {
-            direction: 1,
-            speed: 0.01,
-            density: 0.5,
-        });
-        radialGradient = p.addAsciiGradient("radial", 170, 170, "now ", {
-            direction: -1,
-            radius: 1.0,
-        });
-        zigzagGradient = p.addAsciiGradient("linear", 180, 180, "available ", {
-            direction: 1,
-            speed: 0.2,
-            zigzag: true,
-        });
-        conicalGradient = p.addAsciiGradient("conical", 190, 190, "in ", {
-            speed: 0.01,
-        });
-        noiseGradient = p.addAsciiGradient("noise", 210, 240, "p5.asciify ", {
-            noiseScale: 0.5,
-            speed: 0.1,
-            direction: 1,
-        });
+        
 
         p.setAsciifyPostSetupFunction(() => {
+
+            linearGradient = p.addAsciiGradient("linear", 150, 150, "gradients ", {
+                direction: 1,
+                angle: 0,
+                speed: 0.1,
+            });
+            spiralGradient = p.addAsciiGradient("spiral", 160, 160, "are  ", {
+                direction: 1,
+                speed: 0.01,
+                density: 0.5,
+            });
+            radialGradient = p.addAsciiGradient("radial", 170, 170, "now ", {
+                direction: -1,
+                radius: 1.0,
+            });
+            zigzagGradient = p.addAsciiGradient("linear", 180, 180, "available ", {
+                direction: 1,
+                speed: 0.2,
+                zigzag: true,
+            });
+            conicalGradient = p.addAsciiGradient("conical", 190, 190, "in ", {
+                speed: 0.01,
+            });
+            noiseGradient = p.addAsciiGradient("noise", 210, 240, "p5.asciify ", {
+                noiseScale: 0.5,
+                speed: 0.1,
+                direction: 1,
+            });
+
             p5asciify.rendererManager.renderers[2].updateOptions({
                 enabled: true,
                 characterColorMode: 1,

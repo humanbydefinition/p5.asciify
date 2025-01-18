@@ -40,8 +40,6 @@ export class P5Asciifier {
         if (!p.preload && addDummyPreloadFunction) {
             p.preload = () => { };
         }
-
-        this.rendererManager = new RendererManager(this.p);
     }
 
     /**
@@ -56,7 +54,7 @@ export class P5Asciifier {
             this.asciiFontTextureAtlas.maxGlyphDimensions.height
         );
 
-        this.rendererManager.setup(this.grid, this.asciiFontTextureAtlas);
+        this.rendererManager = new RendererManager(this.p, this.grid, this.asciiFontTextureAtlas);
 
         this.sketchFramebuffer = this.p.createFramebuffer({
             depthFormat: this.p.UNSIGNED_INT,

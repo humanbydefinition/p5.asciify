@@ -52,39 +52,13 @@ export class P5AsciifyGradientManager {
             new P5AsciifyNoiseGradient(brightnessStart, brightnessEnd, characters, params),
     };
 
-    private _setupQueue: Array<{ gradientInstance: P5AsciifyGradient, type: GradientType; }> = [];
     private _gradients: P5AsciifyGradient[] = [];
-    private fontTextureAtlas!: P5AsciifyFontTextureAtlas;
-    private p!: p5;
 
-    constructor(p5Instance: p5) {
-        this.p = p5Instance;
-    }
-
-    /**
-     * Setup the gradient manager with the font texture atlas.
-     * @param fontTextureAtlas The font texture atlas to use for the gradients.
-     */
-    setup(fontTextureAtlas: P5AsciifyFontTextureAtlas): void {
-        this.fontTextureAtlas = fontTextureAtlas;
+    constructor(
+        private p: p5,
+        private fontTextureAtlas: P5AsciifyFontTextureAtlas
+    ) {
         this.setupShaders();
-        this.setupGradientQueue();
-    }
-
-    /**
-     * Setup the gradients that were added before the user's `setup` function has finished.
-     */
-    private setupGradientQueue(): void {
-        for (const { gradientInstance, type } of this._setupQueue) {
-            gradientInstance.setup(
-                this.p,
-                this.fontTextureAtlas,
-                this.gradientShaders[type] as p5.Shader,
-                this.fontTextureAtlas.getCharsetColorArray(gradientInstance.characters)
-            );
-        }
-
-        this._setupQueue = [];
     }
 
     /**
@@ -112,16 +86,12 @@ export class P5AsciifyGradientManager {
 
         this._gradients.push(gradient);
 
-        if (!this.p._setupDone) {
-            this._setupQueue.push({ gradientInstance: gradient, type: gradientName });
-        } else {
-            gradient.setup(
-                this.p,
-                this.fontTextureAtlas,
-                this.gradientShaders[gradientName] as p5.Shader,
-                this.fontTextureAtlas.getCharsetColorArray(characters)
-            );
-        }
+        gradient.setup(
+            this.p,
+            this.fontTextureAtlas,
+            this.gradientShaders[gradientName] as p5.Shader,
+            this.fontTextureAtlas.getCharsetColorArray(characters)
+        );
 
         return gradient;
     }
