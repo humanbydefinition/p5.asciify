@@ -31,4 +31,11 @@
 
 | Variable | Description |
 | ------ | ------ |
+| [ACCURATE\_OPTIONS](variables/ACCURATE_OPTIONS.md) | - |
+| [BRIGHTNESS\_OPTIONS](variables/BRIGHTNESS_OPTIONS.md) | - |
+| [CUSTOM\_OPTIONS](variables/CUSTOM_OPTIONS.md) | - |
+| [EDGE\_CHARACTER\_LENGTH](variables/EDGE_CHARACTER_LENGTH.md) | - |
+| [EDGE\_OPTIONS](variables/EDGE_OPTIONS.md) | - |
+| [FONT\_SIZE\_LIMITS](variables/FONT_SIZE_LIMITS.md) | - |
+| [GRADIENT\_OPTIONS](variables/GRADIENT_OPTIONS.md) | - |
 | [p5asciify](variables/p5asciify.md) | The main instance of the p5.asciify library, which is used to access all of the library's functionality. |

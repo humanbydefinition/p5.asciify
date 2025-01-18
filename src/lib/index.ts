@@ -86,3 +86,4 @@ export { P5AsciifyAccurateRenderer } from './renderers/accurateAsciiRenderer/Acc
 export { P5AsciifyBrightnessRenderer } from './renderers/brightnessAsciiRenderer/BrightnessAsciiRenderer';
 export { P5AsciifyEdgeRenderer } from './renderers/edgeAsciiRenderer/EdgeAsciiRenderer';
 export { P5AsciifyGradientRenderer } from './renderers/gradientAsciiRenderer/GradientAsciiRenderer';
+export { BRIGHTNESS_OPTIONS, ACCURATE_OPTIONS, GRADIENT_OPTIONS, EDGE_OPTIONS, CUSTOM_OPTIONS, FONT_SIZE_LIMITS, EDGE_CHARACTER_LENGTH } from './constants';
