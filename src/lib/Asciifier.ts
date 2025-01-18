@@ -156,8 +156,17 @@ export class P5Asciifier {
     }
 
     /**
+     * Removes a gradient from the renderer managers gradient manager.
+     * @param gradient The gradient to remove.
+     */
+    public removeAsciiGradient(gradient: P5AsciifyGradient): void {
+        this.rendererManager.gradientManager.removeGradient(gradient);
+    }
+
+    /**
      * Sets the font size for the ascii renderers.
      * @param fontSize The font size to set.
+     * @throws {P5AsciifyError} If the font size is out of bounds.
      */
     public fontSize(fontSize: number): void {
 
@@ -181,6 +190,7 @@ export class P5Asciifier {
     /**
      * Sets the font for the ascii renderers.
      * @param font The font to use. Can be a path, base64 string, or p5.Font object.
+     * @throws {P5AsciifyError} If the font parameter is invalid or the font fails to load.
      */
     public loadFont(font: string | p5.Font) {
         if (typeof font !== 'string' && !(font instanceof p5.Font)) {
