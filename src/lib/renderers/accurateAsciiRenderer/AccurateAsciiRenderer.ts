@@ -1,6 +1,6 @@
 import p5 from 'p5';
 
-import { AsciiRenderer } from '../AsciiRenderer';
+import { P5AsciifyRenderer } from '../AsciiRenderer';
 import { P5AsciifyGrid } from '../../Grid';
 import { P5AsciifyCharacterSet } from '../../CharacterSet';
 
@@ -13,7 +13,7 @@ import vertexShader from '../../assets/shaders/vert/shader.vert';
 /**
  * An ASCII renderer that attempts to accurately represent the input sketch using the available ASCII characters.
  */
-export default class AccurateAsciiRenderer extends AsciiRenderer {
+export class P5AsciifyAccurateRenderer extends P5AsciifyRenderer {
     private characterSelectionShader: p5.Shader;
     private brightnessSampleShader: p5.Shader;
     private colorSampleShader: p5.Shader;
@@ -53,7 +53,7 @@ export default class AccurateAsciiRenderer extends AsciiRenderer {
         this.colorSampleShader = this.p.createShader(vertexShader, generateColorSampleShader(16, this.grid.cellHeight, this.grid.cellWidth));
     }
 
-    render(inputFramebuffer: p5.Framebuffer, previousAsciiRenderer: AsciiRenderer): void {
+    render(inputFramebuffer: p5.Framebuffer, previousAsciiRenderer: P5AsciifyRenderer): void {
         // Brightness sample pass
         this.brightnessSampleFramebuffer.begin();
         this.p.clear();

@@ -18,7 +18,7 @@ if (typeof window !== 'undefined') {
  * Add `setupAsciify` function to p5 instance, which can be overridden by the user.
  * This function is called after the p5.asciify setup has been completed.
  */
-p5.prototype.setupAsciify = function(): void {};
+p5.prototype.setupAsciify = function (): void { };
 
 /**
  * Add `drawAsciify` function to p5 instance, which can be overridden by the user.
@@ -29,20 +29,20 @@ p5.prototype.drawAsciify = function (): void { };
 /**
  * Extend the p5.asciify instance to the p5 instance and run the p5.asciify init method
  */
-p5.prototype.registerMethod('init', function(this: p5) {
-    p5asciify.instance(this, false);
+p5.prototype.registerMethod('init', function (this: p5) {
+  p5asciify.instance(this, false);
 
-    this._incrementPreload();
-    p5asciify.font = URSAFONT_BASE64;
+  this._incrementPreload();
+  p5asciify.font = URSAFONT_BASE64;
 });
 
 /**
  * After the user's setup function is finished, run the p5.asciify setup
  */
-p5.prototype.registerMethod('afterSetup', function(this: p5) {
-    validateSetup(this);
-    p5asciify.setup();
-    this.setupAsciify();
+p5.prototype.registerMethod('afterSetup', function (this: p5) {
+  validateSetup(this);
+  p5asciify.setup();
+  this.setupAsciify();
 });
 
 /**
@@ -65,7 +65,27 @@ p5.prototype.registerMethod("post", function (this: p5): void {
   this.drawAsciify();
 });
 
-// Exports
+// Class exports
 export { P5Asciifier } from './Asciifier';
+export { P5AsciifyError } from './AsciifyError';
+export { P5AsciifyCharacterSet } from './CharacterSet';
+export { P5AsciifyColorPalette } from './ColorPalette';
 export { P5AsciifyFontTextureAtlas } from './FontTextureAtlas';
 export { P5AsciifyGrid } from './Grid';
+
+export { P5AsciifyGradientManager } from './gradients/GradientManager';
+export { P5AsciifyGradient } from './gradients/Gradient';
+export { P5AsciifyConicalGradient } from './gradients/conical/Conical';
+export { P5AsciifyLinearGradient } from './gradients/linear/Linear';
+export { P5AsciifyNoiseGradient } from './gradients/noise/Noise';
+export { P5AsciifyRadialGradient } from './gradients/radial/Radial';
+export { P5AsciifySpiralGradient } from './gradients/spiral/Spiral';
+
+export { P5AsciifyRendererManager } from './renderers/RendererManager';
+export { P5AsciifyRenderer } from './renderers/AsciiRenderer';
+export { P5AsciifyAccurateRenderer } from './renderers/accurateAsciiRenderer/AccurateAsciiRenderer';
+export { P5AsciifyBrightnessRenderer } from './renderers/brightnessAsciiRenderer/BrightnessAsciiRenderer';
+export { P5AsciifyEdgeRenderer } from './renderers/edgeAsciiRenderer/EdgeAsciiRenderer';
+export { P5AsciifyGradientRenderer } from './renderers/gradientAsciiRenderer/GradientAsciiRenderer';
+
+export { }

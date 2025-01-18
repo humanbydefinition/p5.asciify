@@ -2,7 +2,7 @@ import p5 from 'p5';
 
 import { P5AsciifyFontTextureAtlas } from './FontTextureAtlas';
 import { P5AsciifyGrid } from './Grid';
-import { RendererManager } from './renderers/RendererManager';
+import { P5AsciifyRendererManager } from './renderers/RendererManager';
 import { P5AsciifyError } from './AsciifyError';
 import { FONT_SIZE_LIMITS } from './constants';
 import { GradientType } from './gradients/types';
@@ -15,7 +15,7 @@ import { P5AsciifyGradient } from './gradients/Gradient';
 export class P5Asciifier {
     private _borderColor!: string | p5.Color | [number, number?, number?, number?];
     private _fontSize!: number;
-    public rendererManager!: RendererManager;
+    public rendererManager!: P5AsciifyRendererManager;
     private _font!: p5.Font;
     private p!: p5;
     public asciiFontTextureAtlas!: P5AsciifyFontTextureAtlas;
@@ -50,7 +50,7 @@ export class P5Asciifier {
             this.asciiFontTextureAtlas.maxGlyphDimensions.height
         );
 
-        this.rendererManager = new RendererManager(this.p, this.grid, this.asciiFontTextureAtlas);
+        this.rendererManager = new P5AsciifyRendererManager(this.p, this.grid, this.asciiFontTextureAtlas);
 
         this.sketchFramebuffer = this.p.createFramebuffer({
             depthFormat: this.p.UNSIGNED_INT,

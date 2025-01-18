@@ -1,5 +1,5 @@
 import p5 from 'p5';
-import { AsciiRenderer } from '../AsciiRenderer';
+import { P5AsciifyRenderer } from '../AsciiRenderer';
 import { P5AsciifyGrid } from '../../Grid';
 import { P5AsciifyCharacterSet } from '../../CharacterSet';
 import { P5AsciifyError } from '../../AsciifyError';
@@ -18,7 +18,7 @@ import { EDGE_CHARACTER_LENGTH } from '../../constants';
 /**
  * An ASCII renderer that applies ASCII edges to the input sketch by using edge detection.
  */
-export default class EdgeAsciiRenderer extends AsciiRenderer<AsciiRendererOptions> {
+export class P5AsciifyEdgeRenderer extends P5AsciifyRenderer<AsciiRendererOptions> {
     private sobelShader: p5.Shader;
     private sampleShader: p5.Shader;
     private colorSampleShader: p5.Shader;
@@ -66,7 +66,7 @@ export default class EdgeAsciiRenderer extends AsciiRenderer<AsciiRendererOption
         }
     }
 
-    render(inputFramebuffer: p5.Framebuffer, previousAsciiRenderer: AsciiRenderer): void {
+    render(inputFramebuffer: p5.Framebuffer, previousAsciiRenderer: P5AsciifyRenderer): void {
         // Sobel pass
         this.sobelFramebuffer.begin();
         this.p.clear();

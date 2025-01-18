@@ -1,6 +1,6 @@
 import p5 from 'p5';
 
-import { AsciiRenderer } from '../AsciiRenderer';
+import { P5AsciifyRenderer } from '../AsciiRenderer';
 import { P5AsciifyGrid } from '../../Grid';
 import { P5AsciifyCharacterSet } from '../../CharacterSet';
 import { P5AsciifyGradientManager } from '../../gradients/GradientManager';
@@ -15,7 +15,7 @@ import vertexShader from '../../assets/shaders/vert/shader.vert';
 /**
  * An ASCII renderer that applies all defined ASCII gradients/patterns to the input framebuffer.
  */
-export default class GradientAsciiRenderer extends AsciiRenderer {
+export class P5AsciifyGradientRenderer extends P5AsciifyRenderer {
     private grayscaleShader: p5.Shader;
     private colorSampleShader: p5.Shader;
     private grayscaleFramebuffer: p5.Framebuffer;
@@ -71,7 +71,7 @@ export default class GradientAsciiRenderer extends AsciiRenderer {
         this.nextAsciiGradientFramebuffer.resize(this.grid.cols, this.grid.rows);
     }
 
-    render(inputFramebuffer: p5.Framebuffer, previousAsciiRenderer: AsciiRenderer): void {
+    render(inputFramebuffer: p5.Framebuffer, previousAsciiRenderer: P5AsciifyRenderer): void {
         // Grayscale pass
         this.grayscaleFramebuffer.begin();
         this.p.clear();

@@ -1,6 +1,6 @@
 import p5 from 'p5';
 
-import { AsciiRenderer } from '../AsciiRenderer';
+import { P5AsciifyRenderer } from '../AsciiRenderer';
 import { P5AsciifyGrid } from '../../Grid';
 import { P5AsciifyCharacterSet } from '../../CharacterSet';
 
@@ -13,7 +13,7 @@ import asciiCharacterShader from './shaders/asciiCharacter.frag';
 /**
  * ASCII Renderer that uses brightness to determine the ASCII characters to use from the 1D character set.
  */
-export default class BrightnessAsciiRenderer extends AsciiRenderer {
+export class P5AsciifyBrightnessRenderer extends P5AsciifyRenderer {
     private colorSampleShader: p5.Shader;
     private asciiCharacterShader: p5.Shader;
     private colorSampleFramebuffer: p5.Framebuffer;
@@ -38,7 +38,7 @@ export default class BrightnessAsciiRenderer extends AsciiRenderer {
         this.colorSampleFramebuffer.resize(this.grid.cols, this.grid.rows);
     }
 
-    render(inputFramebuffer: p5.Framebuffer, previousAsciiRenderer: AsciiRenderer): void {
+    render(inputFramebuffer: p5.Framebuffer, previousAsciiRenderer: P5AsciifyRenderer): void {
         this.colorSampleFramebuffer.begin();
         this.p.clear();
         this.p.shader(this.colorSampleShader);

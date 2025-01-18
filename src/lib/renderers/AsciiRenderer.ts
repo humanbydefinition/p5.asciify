@@ -11,7 +11,7 @@ import asciiConversionShader from './_common_shaders/asciiConversion.frag';
 /**
  * Abstract class for shader-based ASCII Renderers.
  */
-export class AsciiRenderer<T extends AsciiRendererOptions = AsciiRendererOptions> {
+export class P5AsciifyRenderer<T extends AsciiRendererOptions = AsciiRendererOptions> {
 
     protected _primaryColorSampleFramebuffer: p5.Framebuffer;
     protected _secondaryColorSampleFramebuffer: p5.Framebuffer;
@@ -116,7 +116,7 @@ export class AsciiRenderer<T extends AsciiRendererOptions = AsciiRendererOptions
      * @param inputFramebuffer - The input framebuffer to convert to ASCII.
      * @param previousAsciiRenderer - The previous ASCII renderer in the pipeline.
      */
-    public render(inputFramebuffer: p5.Framebuffer, previousAsciiRenderer: AsciiRenderer): void {
+    public render(inputFramebuffer: p5.Framebuffer, previousAsciiRenderer: P5AsciifyRenderer): void {
         this._outputFramebuffer.begin();
         this.p.clear();
         this.p.shader(this._shader);
