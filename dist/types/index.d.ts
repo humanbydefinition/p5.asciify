@@ -22,4 +22,3 @@ export { P5AsciifyAccurateRenderer } from './renderers/accurateAsciiRenderer/Acc
 export { P5AsciifyBrightnessRenderer } from './renderers/brightnessAsciiRenderer/BrightnessAsciiRenderer';
 export { P5AsciifyEdgeRenderer } from './renderers/edgeAsciiRenderer/EdgeAsciiRenderer';
 export { P5AsciifyGradientRenderer } from './renderers/gradientAsciiRenderer/GradientAsciiRenderer';
-export {};
