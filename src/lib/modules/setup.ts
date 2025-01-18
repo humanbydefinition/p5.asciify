@@ -28,7 +28,6 @@ export function registerSetupMethods(p5asciify: P5Asciifier): void {
      * After the user's setup function is finished, run the p5.asciify setup
      */
     p5.prototype.registerMethod('afterSetup', function(this: p5) {
-        this._incrementPreload();
         validateSetup(this);
         p5asciify.setup();
         this.setupAsciify();
