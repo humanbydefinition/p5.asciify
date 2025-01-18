@@ -8,7 +8,7 @@
 
 | Class | Description |
 | ------ | ------ |
-| [P5Asciifier](classes/P5Asciifier.md) | The main class for the p5.asciify library. This class is responsible for setting up the library and running the rendering pipeline. |
+| [P5Asciifier](classes/P5Asciifier.md) | The main class for the p5.asciify library. This class is responsible for setting up the library, and managing its properties. |
 | [P5AsciifyAccurateRenderer](classes/P5AsciifyAccurateRenderer.md) | An ASCII renderer that attempts to accurately represent the input sketch using the available ASCII characters. |
 | [P5AsciifyBrightnessRenderer](classes/P5AsciifyBrightnessRenderer.md) | ASCII Renderer that uses brightness to determine the ASCII characters to use from the 1D character set. |
 | [P5AsciifyCharacterSet](classes/P5AsciifyCharacterSet.md) | Represents a set of characters to be used by an ASCII renderer. |

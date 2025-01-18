@@ -8,7 +8,7 @@
 
 > `const` **GRADIENT\_OPTIONS**: `object`
 
-Defined in: [defaults.ts:42](https://github.com/humanbydefinition/p5-asciify/blob/894d4b9418de1a4cfbf9cd8986198f9aaca3e8b2/src/lib/defaults.ts#L42)
+Defined in: [defaults.ts:42](https://github.com/humanbydefinition/p5-asciify/blob/97a886fbd6773eeef25eaef50ed7335671b5702c/src/lib/defaults.ts#L42)
 
 Default configuration options for gradient-based ASCII renderer
 
@@ -16,10 +16,10 @@ Default configuration options for gradient-based ASCII renderer
 
 | Name | Type | Default value | Description | Defined in |
 | ------ | ------ | ------ | ------ | ------ |
-| <a id="backgroundcolor"></a> `backgroundColor` | `string` | "#000000" | Background color | [defaults.ts:50](https://github.com/humanbydefinition/p5-asciify/blob/894d4b9418de1a4cfbf9cd8986198f9aaca3e8b2/src/lib/defaults.ts#L50) |
-| <a id="backgroundcolormode"></a> `backgroundColorMode` | `number` | 1 | Background color blend mode (0: static, 1: source) | [defaults.ts:52](https://github.com/humanbydefinition/p5-asciify/blob/894d4b9418de1a4cfbf9cd8986198f9aaca3e8b2/src/lib/defaults.ts#L52) |
-| <a id="charactercolor"></a> `characterColor` | `string` | "#FFFFFF" | Color of the ASCII characters | [defaults.ts:46](https://github.com/humanbydefinition/p5-asciify/blob/894d4b9418de1a4cfbf9cd8986198f9aaca3e8b2/src/lib/defaults.ts#L46) |
-| <a id="charactercolormode"></a> `characterColorMode` | `number` | 0 | Character color blend mode (0: static, 1: source) | [defaults.ts:48](https://github.com/humanbydefinition/p5-asciify/blob/894d4b9418de1a4cfbf9cd8986198f9aaca3e8b2/src/lib/defaults.ts#L48) |
-| <a id="enabled"></a> `enabled` | `boolean` | false | Enable/disable the renderer | [defaults.ts:44](https://github.com/humanbydefinition/p5-asciify/blob/894d4b9418de1a4cfbf9cd8986198f9aaca3e8b2/src/lib/defaults.ts#L44) |
-| <a id="invertmode"></a> `invertMode` | `boolean` | false | Invert the gradient mapping | [defaults.ts:54](https://github.com/humanbydefinition/p5-asciify/blob/894d4b9418de1a4cfbf9cd8986198f9aaca3e8b2/src/lib/defaults.ts#L54) |
-| <a id="rotationangle"></a> `rotationAngle` | `number` | 0 | Rotation angle of characters in degrees | [defaults.ts:56](https://github.com/humanbydefinition/p5-asciify/blob/894d4b9418de1a4cfbf9cd8986198f9aaca3e8b2/src/lib/defaults.ts#L56) |
+| <a id="backgroundcolor"></a> `backgroundColor` | `string` | "#000000" | Background color | [defaults.ts:50](https://github.com/humanbydefinition/p5-asciify/blob/97a886fbd6773eeef25eaef50ed7335671b5702c/src/lib/defaults.ts#L50) |
+| <a id="backgroundcolormode"></a> `backgroundColorMode` | `number` | 1 | Background color blend mode (0: static, 1: source) | [defaults.ts:52](https://github.com/humanbydefinition/p5-asciify/blob/97a886fbd6773eeef25eaef50ed7335671b5702c/src/lib/defaults.ts#L52) |
+| <a id="charactercolor"></a> `characterColor` | `string` | "#FFFFFF" | Color of the ASCII characters | [defaults.ts:46](https://github.com/humanbydefinition/p5-asciify/blob/97a886fbd6773eeef25eaef50ed7335671b5702c/src/lib/defaults.ts#L46) |
+| <a id="charactercolormode"></a> `characterColorMode` | `number` | 0 | Character color blend mode (0: static, 1: source) | [defaults.ts:48](https://github.com/humanbydefinition/p5-asciify/blob/97a886fbd6773eeef25eaef50ed7335671b5702c/src/lib/defaults.ts#L48) |
+| <a id="enabled"></a> `enabled` | `boolean` | false | Enable/disable the renderer | [defaults.ts:44](https://github.com/humanbydefinition/p5-asciify/blob/97a886fbd6773eeef25eaef50ed7335671b5702c/src/lib/defaults.ts#L44) |
+| <a id="invertmode"></a> `invertMode` | `boolean` | false | Invert the gradient mapping | [defaults.ts:54](https://github.com/humanbydefinition/p5-asciify/blob/97a886fbd6773eeef25eaef50ed7335671b5702c/src/lib/defaults.ts#L54) |
+| <a id="rotationangle"></a> `rotationAngle` | `number` | 0 | Rotation angle of characters in degrees | [defaults.ts:56](https://github.com/humanbydefinition/p5-asciify/blob/97a886fbd6773eeef25eaef50ed7335671b5702c/src/lib/defaults.ts#L56) |
