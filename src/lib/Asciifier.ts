@@ -46,7 +46,7 @@ export class P5Asciifier {
     private _font!: p5.Font;
 
     /* The border color to use for the offset space, not occupied by the centered ASCII grid */
-    private _borderColor: string | p5.Color | [number, number?, number?, number?] = "#000000";
+    private _backgroundColor: string | p5.Color | [number, number?, number?, number?] = "#000000";
 
     /* The font size to use for the ASCII rendering */
     private _fontSize: number = 16;
@@ -116,7 +116,7 @@ export class P5Asciifier {
         this.rendererManager.render(this.sketchFramebuffer);
 
         this._p.clear();
-        this._p.background(this._borderColor as p5.Color);
+        this._p.background(this._backgroundColor as p5.Color);
         this._p.image(this.rendererManager.lastRenderer.outputFramebuffer, -this._p.width / 2, -this._p.height / 2);
     }
 
@@ -210,15 +210,15 @@ export class P5Asciifier {
     }
 
     /**
-     * Sets the border color for the ascii renderers.
+     * Sets the background color for the ascii renderers. Potentially covers the empty space on the edges of the canvas, not occupied by the centered ASCII grid.
      * @param color The color to set.
      * @throws {P5AsciifyError} If the color is not a string, array or p5.Color.
      */
-    public borderColor(color: string | p5.Color | [number, number?, number?, number?]) {
+    public background(color: string | p5.Color | [number, number?, number?, number?]) {
         if (typeof color !== "string" && !Array.isArray(color) && !(color instanceof p5.Color)) {
             throw new P5AsciifyError(`Invalid color type: ${typeof color}. Expected string, array or p5.Color.`);
         }
 
-        this._borderColor = color;
+        this._backgroundColor = color;
     }
 }
