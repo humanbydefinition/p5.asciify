@@ -6,7 +6,7 @@
 
 # Class: P5Asciifier
 
-Defined in: [Asciifier.ts:29](https://github.com/humanbydefinition/p5-asciify/blob/4f781d7ed529d2b1cbfa493a9ac838a4592cbc36/src/lib/Asciifier.ts#L29)
+Defined in: [Asciifier.ts:29](https://github.com/humanbydefinition/p5-asciify/blob/cdff850585d76a5bcd9825304acbb40250c3497b/src/lib/Asciifier.ts#L29)
 
 The main class for the p5.asciify library. 
 
@@ -37,116 +37,16 @@ At this point, the `p5.asciify` is fully functional and ready to interact with.
 
 ## Properties
 
-| Property | Modifier | Type | Defined in |
-| ------ | ------ | ------ | ------ |
-| <a id="_bordercolor"></a> `_borderColor` | `private` | `string` \| `Color` \| \[`number`, `number`?, `number`?, `number`?\] | [Asciifier.ts:49](https://github.com/humanbydefinition/p5-asciify/blob/4f781d7ed529d2b1cbfa493a9ac838a4592cbc36/src/lib/Asciifier.ts#L49) |
-| <a id="_font"></a> `_font` | `private` | `Font` | [Asciifier.ts:46](https://github.com/humanbydefinition/p5-asciify/blob/4f781d7ed529d2b1cbfa493a9ac838a4592cbc36/src/lib/Asciifier.ts#L46) |
-| <a id="_fontsize"></a> `_fontSize` | `private` | `number` | [Asciifier.ts:52](https://github.com/humanbydefinition/p5-asciify/blob/4f781d7ed529d2b1cbfa493a9ac838a4592cbc36/src/lib/Asciifier.ts#L52) |
-| <a id="asciifonttextureatlas"></a> `asciiFontTextureAtlas` | `public` | [`P5AsciifyFontTextureAtlas`](P5AsciifyFontTextureAtlas.md) | [Asciifier.ts:31](https://github.com/humanbydefinition/p5-asciify/blob/4f781d7ed529d2b1cbfa493a9ac838a4592cbc36/src/lib/Asciifier.ts#L31) |
-| <a id="grid"></a> `grid` | `public` | [`P5AsciifyGrid`](P5AsciifyGrid.md) | [Asciifier.ts:34](https://github.com/humanbydefinition/p5-asciify/blob/4f781d7ed529d2b1cbfa493a9ac838a4592cbc36/src/lib/Asciifier.ts#L34) |
-| <a id="p"></a> `p` | `private` | `__module` | [Asciifier.ts:43](https://github.com/humanbydefinition/p5-asciify/blob/4f781d7ed529d2b1cbfa493a9ac838a4592cbc36/src/lib/Asciifier.ts#L43) |
-| <a id="renderermanager"></a> `rendererManager` | `public` | [`P5AsciifyRendererManager`](P5AsciifyRendererManager.md) | [Asciifier.ts:40](https://github.com/humanbydefinition/p5-asciify/blob/4f781d7ed529d2b1cbfa493a9ac838a4592cbc36/src/lib/Asciifier.ts#L40) |
-| <a id="sketchframebuffer"></a> `sketchFramebuffer` | `public` | `Framebuffer` | [Asciifier.ts:37](https://github.com/humanbydefinition/p5-asciify/blob/4f781d7ed529d2b1cbfa493a9ac838a4592cbc36/src/lib/Asciifier.ts#L37) |
-
-## Accessors
-
-### borderColor
-
-#### Get Signature
-
-> **get** **borderColor**(): `string` \| `Color` \| \[`number`, `number`?, `number`?, `number`?\]
-
-Defined in: [Asciifier.ts:211](https://github.com/humanbydefinition/p5-asciify/blob/4f781d7ed529d2b1cbfa493a9ac838a4592cbc36/src/lib/Asciifier.ts#L211)
-
-##### Returns
-
-`string` \| `Color` \| \[`number`, `number`?, `number`?, `number`?\]
-
-#### Set Signature
-
-> **set** **borderColor**(`color`): `void`
-
-Defined in: [Asciifier.ts:200](https://github.com/humanbydefinition/p5-asciify/blob/4f781d7ed529d2b1cbfa493a9ac838a4592cbc36/src/lib/Asciifier.ts#L200)
-
-Sets the border color for the ascii renderers.
-
-##### Throws
-
-If the color is not a string, array or p5.Color.
-
-##### Parameters
-
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `color` | `string` \| `Color` \| \[`number`, `number`?, `number`?, `number`?\] | The color to set. |
-
-##### Returns
-
-`void`
-
-***
-
-### font
-
-#### Get Signature
-
-> **get** **font**(): `Font`
-
-Defined in: [Asciifier.ts:210](https://github.com/humanbydefinition/p5-asciify/blob/4f781d7ed529d2b1cbfa493a9ac838a4592cbc36/src/lib/Asciifier.ts#L210)
-
-##### Returns
-
-`Font`
-
-#### Set Signature
-
-> **set** **font**(`font`): `void`
-
-Defined in: [Asciifier.ts:166](https://github.com/humanbydefinition/p5-asciify/blob/4f781d7ed529d2b1cbfa493a9ac838a4592cbc36/src/lib/Asciifier.ts#L166)
-
-Sets the font for the ascii renderers.
-
-##### Parameters
-
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `font` | `string` \| `Font` | The font to set. |
-
-##### Returns
-
-`void`
-
-***
-
-### fontSize
-
-#### Get Signature
-
-> **get** **fontSize**(): `number`
-
-Defined in: [Asciifier.ts:209](https://github.com/humanbydefinition/p5-asciify/blob/4f781d7ed529d2b1cbfa493a9ac838a4592cbc36/src/lib/Asciifier.ts#L209)
-
-##### Returns
-
-`number`
-
-#### Set Signature
-
-> **set** **fontSize**(`fontSize`): `void`
-
-Defined in: [Asciifier.ts:143](https://github.com/humanbydefinition/p5-asciify/blob/4f781d7ed529d2b1cbfa493a9ac838a4592cbc36/src/lib/Asciifier.ts#L143)
-
-Sets the font size for the ascii renderers
-
-##### Parameters
-
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `fontSize` | `number` | The font size to set |
-
-##### Returns
-
-`void`
+| Property | Modifier | Type | Default value | Defined in |
+| ------ | ------ | ------ | ------ | ------ |
+| <a id="_bordercolor"></a> `_borderColor` | `private` | `string` \| `Color` \| \[`number`, `number`?, `number`?, `number`?\] | `"#000000"` | [Asciifier.ts:49](https://github.com/humanbydefinition/p5-asciify/blob/cdff850585d76a5bcd9825304acbb40250c3497b/src/lib/Asciifier.ts#L49) |
+| <a id="_font"></a> `_font` | `private` | `Font` | `undefined` | [Asciifier.ts:46](https://github.com/humanbydefinition/p5-asciify/blob/cdff850585d76a5bcd9825304acbb40250c3497b/src/lib/Asciifier.ts#L46) |
+| <a id="_fontsize"></a> `_fontSize` | `private` | `number` | `16` | [Asciifier.ts:52](https://github.com/humanbydefinition/p5-asciify/blob/cdff850585d76a5bcd9825304acbb40250c3497b/src/lib/Asciifier.ts#L52) |
+| <a id="_p"></a> `_p` | `private` | `__module` | `undefined` | [Asciifier.ts:43](https://github.com/humanbydefinition/p5-asciify/blob/cdff850585d76a5bcd9825304acbb40250c3497b/src/lib/Asciifier.ts#L43) |
+| <a id="asciifonttextureatlas"></a> `asciiFontTextureAtlas` | `public` | [`P5AsciifyFontTextureAtlas`](P5AsciifyFontTextureAtlas.md) | `undefined` | [Asciifier.ts:31](https://github.com/humanbydefinition/p5-asciify/blob/cdff850585d76a5bcd9825304acbb40250c3497b/src/lib/Asciifier.ts#L31) |
+| <a id="grid"></a> `grid` | `public` | [`P5AsciifyGrid`](P5AsciifyGrid.md) | `undefined` | [Asciifier.ts:34](https://github.com/humanbydefinition/p5-asciify/blob/cdff850585d76a5bcd9825304acbb40250c3497b/src/lib/Asciifier.ts#L34) |
+| <a id="renderermanager"></a> `rendererManager` | `public` | [`P5AsciifyRendererManager`](P5AsciifyRendererManager.md) | `undefined` | [Asciifier.ts:40](https://github.com/humanbydefinition/p5-asciify/blob/cdff850585d76a5bcd9825304acbb40250c3497b/src/lib/Asciifier.ts#L40) |
+| <a id="sketchframebuffer"></a> `sketchFramebuffer` | `public` | `Framebuffer` | `undefined` | [Asciifier.ts:37](https://github.com/humanbydefinition/p5-asciify/blob/cdff850585d76a5bcd9825304acbb40250c3497b/src/lib/Asciifier.ts#L37) |
 
 ## Methods
 
@@ -154,9 +54,9 @@ Sets the font size for the ascii renderers
 
 > **addAsciiGradient**(`gradientName`, `brightnessStart`, `brightnessEnd`, `characters`, `userParams`): [`P5AsciifyGradient`](P5AsciifyGradient.md)
 
-Defined in: [Asciifier.ts:114](https://github.com/humanbydefinition/p5-asciify/blob/4f781d7ed529d2b1cbfa493a9ac838a4592cbc36/src/lib/Asciifier.ts#L114)
+Defined in: [Asciifier.ts:131](https://github.com/humanbydefinition/p5-asciify/blob/cdff850585d76a5bcd9825304acbb40250c3497b/src/lib/Asciifier.ts#L131)
 
-Adds a new gradient to the renderer managers gradient manager, which will be rendered by the GradientAsciiRenderer.
+Adds a new gradient to the renderer managers gradient manager, which will be rendered by the `GradientAsciiRenderer`.
 
 #### Parameters
 
@@ -174,14 +74,72 @@ Adds a new gradient to the renderer managers gradient manager, which will be ren
 
 ***
 
+### asciify()
+
+> **asciify**(): `void`
+
+Defined in: [Asciifier.ts:115](https://github.com/humanbydefinition/p5-asciify/blob/cdff850585d76a5bcd9825304acbb40250c3497b/src/lib/Asciifier.ts#L115)
+
+Renders the ASCII output to the canvas.
+Is called automatically every time the user's `draw()` function has finished.
+
+#### Returns
+
+`void`
+
+***
+
+### borderColor()
+
+> **borderColor**(`color`): `void`
+
+Defined in: [Asciifier.ts:217](https://github.com/humanbydefinition/p5-asciify/blob/cdff850585d76a5bcd9825304acbb40250c3497b/src/lib/Asciifier.ts#L217)
+
+Sets the border color for the ascii renderers.
+
+#### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `color` | `string` \| `Color` \| \[`number`, `number`?, `number`?, `number`?\] | The color to set. |
+
+#### Returns
+
+`void`
+
+#### Throws
+
+If the color is not a string, array or p5.Color.
+
+***
+
+### fontSize()
+
+> **fontSize**(`fontSize`): `void`
+
+Defined in: [Asciifier.ts:160](https://github.com/humanbydefinition/p5-asciify/blob/cdff850585d76a5bcd9825304acbb40250c3497b/src/lib/Asciifier.ts#L160)
+
+Sets the font size for the ascii renderers.
+
+#### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `fontSize` | `number` | The font size to set. |
+
+#### Returns
+
+`void`
+
+***
+
 ### instance()
 
 > **instance**(`p`, `addDummyPreloadFunction`): `void`
 
-Defined in: [Asciifier.ts:74](https://github.com/humanbydefinition/p5-asciify/blob/4f781d7ed529d2b1cbfa493a9ac838a4592cbc36/src/lib/Asciifier.ts#L74)
+Defined in: [Asciifier.ts:73](https://github.com/humanbydefinition/p5-asciify/blob/cdff850585d76a5bcd9825304acbb40250c3497b/src/lib/Asciifier.ts#L73)
 
-Used to pass the p5 instance to the `p5.asciify` library. 
-Is called automatically by `p5.js` during initialization.
+Used to pass the p5 instance to the `p5.asciify` library.
 
 #### Parameters
 
@@ -209,13 +167,34 @@ The implementation and difference with dummy `preload` definitions for `GLOBAL` 
 
 ***
 
+### loadFont()
+
+> **loadFont**(`font`): `void`
+
+Defined in: [Asciifier.ts:183](https://github.com/humanbydefinition/p5-asciify/blob/cdff850585d76a5bcd9825304acbb40250c3497b/src/lib/Asciifier.ts#L183)
+
+Sets the font for the ascii renderers.
+
+#### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `font` | `string` \| `Font` | The font to use. Can be a path, base64 string, or p5.Font object. |
+
+#### Returns
+
+`void`
+
+***
+
 ### setup()
 
 > **setup**(): `void`
 
-Defined in: [Asciifier.ts:86](https://github.com/humanbydefinition/p5-asciify/blob/4f781d7ed529d2b1cbfa493a9ac838a4592cbc36/src/lib/Asciifier.ts#L86)
+Defined in: [Asciifier.ts:86](https://github.com/humanbydefinition/p5-asciify/blob/cdff850585d76a5bcd9825304acbb40250c3497b/src/lib/Asciifier.ts#L86)
 
-Sets up the P5Asciify library with the specified options
+Sets up the `p5.asciify` library by initializing the font texture atlas, grid, renderer manager, and sketch framebuffer.
+Is called automatically after the user's `setup()` function has finished.
 
 #### Returns
 
