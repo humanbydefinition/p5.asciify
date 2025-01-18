@@ -8,7 +8,7 @@
 
 > `const` **FONT\_SIZE\_LIMITS**: `object`
 
-Defined in: [constants.ts:2](https://github.com/humanbydefinition/p5-asciify/blob/8597320ec5175865c8be3913f712407a19fe08c4/src/lib/constants.ts#L2)
+Defined in: [constants.ts:2](https://github.com/humanbydefinition/p5-asciify/blob/962e73d5322ad3ee9e39152d22240240aa4f883f/src/lib/constants.ts#L2)
 
 Font size constraints for ASCII rendering
 
@@ -16,5 +16,5 @@ Font size constraints for ASCII rendering
 
 | Name | Type | Default value | Description | Defined in |
 | ------ | ------ | ------ | ------ | ------ |
-| <a id="max"></a> `MAX` | `128` | 128 | Maximum allowed font size in pixels | [constants.ts:6](https://github.com/humanbydefinition/p5-asciify/blob/8597320ec5175865c8be3913f712407a19fe08c4/src/lib/constants.ts#L6) |
-| <a id="min"></a> `MIN` | `1` | 1 | Minimum allowed font size in pixels | [constants.ts:4](https://github.com/humanbydefinition/p5-asciify/blob/8597320ec5175865c8be3913f712407a19fe08c4/src/lib/constants.ts#L4) |
+| <a id="max"></a> `MAX` | `128` | 128 | Maximum allowed font size in pixels | [constants.ts:6](https://github.com/humanbydefinition/p5-asciify/blob/962e73d5322ad3ee9e39152d22240240aa4f883f/src/lib/constants.ts#L6) |
+| <a id="min"></a> `MIN` | `1` | 1 | Minimum allowed font size in pixels | [constants.ts:4](https://github.com/humanbydefinition/p5-asciify/blob/962e73d5322ad3ee9e39152d22240240aa4f883f/src/lib/constants.ts#L4) |

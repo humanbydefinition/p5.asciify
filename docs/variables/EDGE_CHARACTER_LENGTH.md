@@ -8,6 +8,6 @@
 
 > `const` **EDGE\_CHARACTER\_LENGTH**: `8` = `8`
 
-Defined in: [constants.ts:10](https://github.com/humanbydefinition/p5-asciify/blob/8597320ec5175865c8be3913f712407a19fe08c4/src/lib/constants.ts#L10)
+Defined in: [constants.ts:10](https://github.com/humanbydefinition/p5-asciify/blob/962e73d5322ad3ee9e39152d22240240aa4f883f/src/lib/constants.ts#L10)
 
 Number of characters used in edge detection renderer's character set

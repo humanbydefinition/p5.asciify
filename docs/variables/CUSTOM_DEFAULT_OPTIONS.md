@@ -8,7 +8,7 @@
 
 > `const` **CUSTOM\_DEFAULT\_OPTIONS**: `object`
 
-Defined in: [defaults.ts:84](https://github.com/humanbydefinition/p5-asciify/blob/8597320ec5175865c8be3913f712407a19fe08c4/src/lib/defaults.ts#L84)
+Defined in: [defaults.ts:84](https://github.com/humanbydefinition/p5-asciify/blob/962e73d5322ad3ee9e39152d22240240aa4f883f/src/lib/defaults.ts#L84)
 
 Default configuration options for custom ASCII renderer
 
@@ -16,6 +16,6 @@ Default configuration options for custom ASCII renderer
 
 | Name | Type | Default value | Description | Defined in |
 | ------ | ------ | ------ | ------ | ------ |
-| <a id="enabled"></a> `enabled` | `boolean` | false | Enable/disable the renderer | [defaults.ts:86](https://github.com/humanbydefinition/p5-asciify/blob/8597320ec5175865c8be3913f712407a19fe08c4/src/lib/defaults.ts#L86) |
-| <a id="invertmode"></a> `invertMode` | `boolean` | false | Swap the cells ASCII character colors with it's cell background colors | [defaults.ts:88](https://github.com/humanbydefinition/p5-asciify/blob/8597320ec5175865c8be3913f712407a19fe08c4/src/lib/defaults.ts#L88) |
-| <a id="rotationangle"></a> `rotationAngle` | `number` | 0 | Rotation angle of all characters in the grid in degrees | [defaults.ts:90](https://github.com/humanbydefinition/p5-asciify/blob/8597320ec5175865c8be3913f712407a19fe08c4/src/lib/defaults.ts#L90) |
+| <a id="enabled"></a> `enabled` | `boolean` | false | Enable/disable the renderer | [defaults.ts:86](https://github.com/humanbydefinition/p5-asciify/blob/962e73d5322ad3ee9e39152d22240240aa4f883f/src/lib/defaults.ts#L86) |
+| <a id="invertmode"></a> `invertMode` | `boolean` | false | Swap the cells ASCII character colors with it's cell background colors | [defaults.ts:88](https://github.com/humanbydefinition/p5-asciify/blob/962e73d5322ad3ee9e39152d22240240aa4f883f/src/lib/defaults.ts#L88) |
+| <a id="rotationangle"></a> `rotationAngle` | `number` | 0 | Rotation angle of all characters in the grid in degrees | [defaults.ts:90](https://github.com/humanbydefinition/p5-asciify/blob/962e73d5322ad3ee9e39152d22240240aa4f883f/src/lib/defaults.ts#L90) |
