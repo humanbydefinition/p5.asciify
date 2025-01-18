@@ -18,4 +18,6 @@
     "plugin": ["typedoc-plugin-markdown"],
     "indexFormat": "table",
     "parametersFormat": "table",
+    "interfacePropertiesFormat": "table",
+    "classPropertiesFormat": "table",
 }
