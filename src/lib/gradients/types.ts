@@ -1,6 +1,6 @@
 import { P5AsciifyGradient } from './Gradient';
 
-export type GradientType = 'linear' | 'zigzag' | 'spiral' | 'radial' | 'conical' | 'noise';
+export type GradientType = 'linear' | 'spiral' | 'radial' | 'conical' | 'noise';
 
 export type GradientConstructorMap = Record<GradientType, 
     (brightnessStart: number, brightnessEnd: number, characters: string, params: any) => P5AsciifyGradient
@@ -16,6 +16,7 @@ export type LinearGradientParams = {
     direction: number;
     angle: number;
     speed: number;
+    zigzag: boolean;
 }
 
 export type NoiseGradientParams = {
@@ -39,15 +40,8 @@ export type SpiralGradientParams = {
     density: number;
 }
 
-export type ZigZagGradientParams = {
-    direction: number;
-    angle: number;
-    speed?: number;
-}
-
 export type GradientParams = {
     linear: LinearGradientParams;
-    zigzag: ZigZagGradientParams;
     spiral: SpiralGradientParams;
     radial: RadialGradientParams;
     conical: ConicalGradientParams;

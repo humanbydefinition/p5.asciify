@@ -36,9 +36,10 @@ const sketch = (p) => {
             direction: -1,
             radius: 1.0,
         });
-        zigzagGradient = p.addAsciiGradient("zigzag", 180, 180, "available ", {
+        zigzagGradient = p.addAsciiGradient("linear", 180, 180, "available ", {
             direction: 1,
             speed: 0.2,
+            zigzag: true,
         });
         conicalGradient = p.addAsciiGradient("conical", 190, 190, "in ", {
             speed: 0.01,

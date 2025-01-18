@@ -9,6 +9,7 @@ export class P5AsciifyLinearGradient extends P5AsciifyGradient {
     public direction: number;
     public angle: number;
     public speed: number;
+    public zigzag: boolean;
 
     constructor(
         brightnessStart: number,
@@ -20,6 +21,7 @@ export class P5AsciifyLinearGradient extends P5AsciifyGradient {
         this.direction = params.direction;
         this.angle = params.angle;
         this.speed = params.speed;
+        this.zigzag = params.zigzag;
     }
 
     setUniforms(
@@ -30,5 +32,6 @@ export class P5AsciifyLinearGradient extends P5AsciifyGradient {
         this._shader.setUniform('u_gradientDirection', this.direction);
         this._shader.setUniform('u_angle', (this.angle * Math.PI) / 180);
         this._shader.setUniform('u_speed', this.speed);
+        this._shader.setUniform('u_zigzag', this.zigzag);
     }
 }

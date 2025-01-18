@@ -1,6 +1,5 @@
 import p5 from 'p5';
 import { P5AsciifyLinearGradient } from "./linear/Linear";
-import { P5AsciifyZigZagGradient } from "./zigzag/ZigZag";
 import { P5AsciifySpiralGradient } from "./spiral/Spiral";
 import { P5AsciifyRadialGradient } from "./radial/Radial";
 import { P5AsciifyConicalGradient } from "./conical/Conical";
@@ -13,7 +12,6 @@ import { GradientParams, GradientType, GradientConstructorMap } from './types';
 
 import vertexShader from '../assets/shaders/vert/shader.vert';
 import linearGradientShader from "../gradients/linear/linear.frag";
-import zigzagGradientShader from "../gradients/zigzag/zigzag.frag";
 import spiralGradientShader from "../gradients/spiral/spiral.frag";
 import radialGradientShader from "../gradients/radial/radial.frag";
 import conicalGradientShader from "../gradients/conical/conical.frag";
@@ -24,8 +22,7 @@ import noiseGradientShader from "../gradients/noise/noise.frag";
  */
 export class P5AsciifyGradientManager {
     private _gradientParams: GradientParams = {
-        linear: { direction: 1, angle: 0, speed: 0.01 },
-        zigzag: { direction: 1, angle: 0, speed: 0.01 },
+        linear: { direction: 1, angle: 0, speed: 0.01, zigzag: false },
         spiral: { direction: 1, centerX: 0.5, centerY: 0.5, speed: 0.01, density: 0.01 },
         radial: { direction: 1, centerX: 0.5, centerY: 0.5, radius: 0.5 },
         conical: { centerX: 0.5, centerY: 0.5, speed: 0.01 },
@@ -34,7 +31,6 @@ export class P5AsciifyGradientManager {
 
     private gradientShaderSources: Record<GradientType, string> = {
         linear: linearGradientShader,
-        zigzag: zigzagGradientShader,
         spiral: spiralGradientShader,
         radial: radialGradientShader,
         conical: conicalGradientShader,
@@ -46,8 +42,6 @@ export class P5AsciifyGradientManager {
     private _gradientConstructors: GradientConstructorMap = {
         linear: (brightnessStart, brightnessEnd, characters, params) =>
             new P5AsciifyLinearGradient(brightnessStart, brightnessEnd, characters, params),
-        zigzag: (brightnessStart, brightnessEnd, characters, params) =>
-            new P5AsciifyZigZagGradient(brightnessStart, brightnessEnd, characters, params),
         spiral: (brightnessStart, brightnessEnd, characters, params) =>
             new P5AsciifySpiralGradient(brightnessStart, brightnessEnd, characters, params),
         radial: (brightnessStart, brightnessEnd, characters, params) =>
