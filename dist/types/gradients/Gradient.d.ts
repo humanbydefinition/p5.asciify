@@ -5,24 +5,16 @@ import { P5AsciifyFontTextureAtlas } from '../FontTextureAtlas';
  * Represents a gradient that can be applied to the gradient ascii renderer.
  */
 export declare abstract class P5AsciifyGradient {
+    protected p: p5;
+    protected _fontTextureAtlas: P5AsciifyFontTextureAtlas;
+    protected _shader: p5.Shader;
     private _characters;
-    protected _p: p5;
     protected _brightnessStart: number;
     protected _brightnessEnd: number;
     enabled: boolean;
     protected _onPaletteChangeCallback?: (gradient: P5AsciifyGradient, value: string[]) => void;
     protected _palette: P5AsciifyColorPalette;
-    protected _fontTextureAtlas: P5AsciifyFontTextureAtlas;
-    protected _shader: p5.Shader;
-    constructor(brightnessStart: number, brightnessEnd: number, _characters: string);
-    /**
-     * Sets up the gradient with the necessary p5 instance, font texture atlas, shader, and colors.
-     * @param p5Instance The p5 instance to use.
-     * @param fontTextureAtlas The font texture atlas to use.
-     * @param shader The shader to use.
-     * @param colors The colors to use for the gradient, which correspond to the characters in the font texture atlas.
-     */
-    setup(p5Instance: p5, fontTextureAtlas: P5AsciifyFontTextureAtlas, shader: p5.Shader, colors: [number, number, number][]): void;
+    constructor(p: p5, _fontTextureAtlas: P5AsciifyFontTextureAtlas, _shader: p5.Shader, colors: [number, number, number][], brightnessStart: number, brightnessEnd: number, _characters: string);
     /**
      * Sets the uniforms for the gradient shader.
      * @param framebuffer - The framebuffer to use.

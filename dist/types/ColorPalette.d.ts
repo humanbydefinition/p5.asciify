@@ -3,15 +3,10 @@ import p5 from 'p5';
  * A 1D color palette for use with the P5Asciify library.
  */
 export declare class P5AsciifyColorPalette {
-    _colors: [number, number, number][];
+    private p;
+    private _colors;
     framebuffer: p5.Framebuffer;
-    p5Instance: p5;
-    constructor(colors: [number, number, number][]);
-    /**
-     * Setup the color palette with a p5 instance.
-     * @param p5Instance The p5 instance to use for creating the framebuffer.
-     */
-    setup(p5Instance: p5): void;
+    constructor(p: p5, _colors: [number, number, number][]);
     /**
      * Update the framebuffer with the current colors.
      */

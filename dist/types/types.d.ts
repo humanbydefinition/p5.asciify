@@ -31,8 +31,8 @@ declare module 'p5' {
         setAsciifyBorderColor(hex: string): void;
         setAsciifyFontSize(fontSize: number): void;
         removeAsciiGradient(gradientInstance: P5AsciifyGradient): void;
-        setAsciifyPostSetupFunction(postSetupFunction: () => void): void;
-        setAsciifyPostDrawFunction(postDrawFunction: () => void): void;
+        setupAsciify(): void;
+        drawAsciify(): void;
         addAsciiGradient(gradientName: string, brightnessStart: number, brightnessEnd: number, characters: string, userParams?: Record<string, any>): P5AsciifyGradient;
         _setupDone: boolean;
         _renderer: {

@@ -10,7 +10,6 @@ export declare class P5Asciifier {
     private _fontSize;
     rendererManager: RendererManager;
     private _font;
-    postSetupFunction: (() => void) | null;
     postDrawFunction: (() => void) | null;
     private p;
     asciiFontTextureAtlas: P5AsciifyFontTextureAtlas;
@@ -26,10 +25,6 @@ export declare class P5Asciifier {
      * Sets up the P5Asciify library with the specified options
      */
     setup(): void;
-    /**
-     * Runs the rendering pipeline for the P5Asciify library
-     */
-    asciify(): void;
     /**
      * Sets the font size for the ascii renderers
      * @param fontSize The font size to set
