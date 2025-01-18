@@ -1,10 +1,11 @@
 import p5 from 'p5';
 /**
  * Represents a 2D grid, where each cell has a fixed width and height.
+ *
  * Based on the current canvas dimensions, the grid is resized to fit the maximum number of cells.
  */
 export declare class P5AsciifyGrid {
-    private p;
+    private _p;
     private _cellWidth;
     private _cellHeight;
     /**
@@ -33,13 +34,13 @@ export declare class P5AsciifyGrid {
     private _offsetY;
     /**
      * Create a new grid instance.
-     * @param p The p5 instance.
+     * @param _p The p5 instance.
      * @param _cellWidth The width of each cell in the grid.
      * @param _cellHeight The height of each cell in the grid.
      */
-    constructor(p: p5, _cellWidth: number, _cellHeight: number);
+    constructor(_p: p5, _cellWidth: number, _cellHeight: number);
     /**
-     * Reset the grid to the default number of columns and rows based on the current canvas and `_cellWidth` and `_cellHeight`.
+     * Reset the grid to the default number of columns and rows based on the current canvas, and `_cellWidth` and `_cellHeight`.
      */
     reset(): void;
     /**

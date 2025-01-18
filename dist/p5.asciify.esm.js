@@ -3,6 +3,10 @@ var v = (t, A, e) => A in t ? S(t, A, { enumerable: !0, configurable: !0, writab
 var i = (t, A, e) => v(t, typeof A != "symbol" ? A + "" : A, e);
 import n from "p5";
 class g extends Error {
+  /**
+   * Create a new P5AsciifyError instance.
+   * @param message The error message.
+   */
   constructor(A) {
     super(A), this.name = "P5AsciifyError";
   }
@@ -135,7 +139,7 @@ class F {
 class y {
   /**
    * Create a new grid instance.
-   * @param p The p5 instance.
+   * @param _p The p5 instance.
    * @param _cellWidth The width of each cell in the grid.
    * @param _cellHeight The height of each cell in the grid.
    */
@@ -164,19 +168,19 @@ class y {
      * The offset to the outer canvas on the y-axis when centering the grid.
      */
     i(this, "_offsetY");
-    this.p = A, this._cellWidth = e, this._cellHeight = r, this.reset();
+    this._p = A, this._cellWidth = e, this._cellHeight = r, this.reset();
   }
   /**
-   * Reset the grid to the default number of columns and rows based on the current canvas and `_cellWidth` and `_cellHeight`.
+   * Reset the grid to the default number of columns and rows based on the current canvas, and `_cellWidth` and `_cellHeight`.
    */
   reset() {
-    [this._cols, this._rows] = [Math.floor(this.p.width / this._cellWidth), Math.floor(this.p.height / this._cellHeight)], this._resizeGrid();
+    [this._cols, this._rows] = [Math.floor(this._p.width / this._cellWidth), Math.floor(this._p.height / this._cellHeight)], this._resizeGrid();
   }
   /**
    * Reset the total grid width & height, and the offset to the outer canvas.
    */
   _resizeGrid() {
-    this._width = this._cols * this._cellWidth, this._height = this._rows * this._cellHeight, this._offsetX = Math.floor((this.p.width - this._width) / 2), this._offsetY = Math.floor((this.p.height - this._height) / 2);
+    this._width = this._cols * this._cellWidth, this._height = this._rows * this._cellHeight, this._offsetX = Math.floor((this._p.width - this._width) / 2), this._offsetY = Math.floor((this._p.height - this._height) / 2);
   }
   /**
    * Re-assign the grid cell dimensions and reset the grid.
@@ -583,17 +587,28 @@ class b {
   }
 }
 class c {
+  /**
+   * Create a new character set instance.
+   * @param p The p5 instance.
+   * @param asciiFontTextureAtlas The font texture atlas to reference for character colors.
+   * @param characters The characters to use in the character set.
+   */
   constructor(A, e, r) {
-    i(this, "_characters");
-    i(this, "characterColors");
+    /**
+     * The color palette for the character set.
+     */
     i(this, "characterColorPalette");
-    this.p = A, this.asciiFontTextureAtlas = e, this._characters = this.validateCharacters(r), this.characterColors = this.asciiFontTextureAtlas.getCharsetColorArray(this._characters), this.characterColorPalette = new b(this.p, this.characterColors);
+    /**
+     * The list of characters in the character set.
+     */
+    i(this, "_characters");
+    this.p = A, this.asciiFontTextureAtlas = e, this._characters = this.validateCharacters(r), this.characterColorPalette = new b(this.p, this.asciiFontTextureAtlas.getCharsetColorArray(this._characters));
   }
   /**
    * Validates the characters to ensure they are supported by the current font.
    * @param characters The characters to validate.
    * @returns The validated characters as a list of characters.
-   * @throws {P5AsciifyError} If any characters are not supported by the font
+   * @throws {P5AsciifyError} If any characters are not supported by the set font.
    */
   validateCharacters(A) {
     const e = this.asciiFontTextureAtlas.getUnsupportedCharacters(A);
@@ -602,17 +617,17 @@ class c {
     return Array.from(A);
   }
   /**
-   * Sets the characters to be used in the character set and updates the texture.
+   * Sets the characters to be used in the character set and updates the color palette texture.
    * @param characters The string of characters to use.
    */
   setCharacterSet(A) {
-    this._characters = this.validateCharacters(A), this.characterColors = this.asciiFontTextureAtlas.getCharsetColorArray(this._characters), this.characterColorPalette.setColors(this.characterColors);
+    this._characters = this.validateCharacters(A), this.characterColorPalette.setColors(this.asciiFontTextureAtlas.getCharsetColorArray(this._characters));
   }
   /**
-   * Resets the character set colors. Gets called when the font atlas is updated.
+   * Resets the character set colors. Gets called when the font atlas is updated with a new font.
    */
   reset() {
-    this.characterColors = this.asciiFontTextureAtlas.getCharsetColorArray(this._characters), this.characterColorPalette.setColors(this.characterColors);
+    this.characterColorPalette.setColors(this.asciiFontTextureAtlas.getCharsetColorArray(this._characters));
   }
   // Getters
   get characters() {

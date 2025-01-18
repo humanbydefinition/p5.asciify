@@ -20,7 +20,7 @@
 | [P5AsciifyGradient](classes/P5AsciifyGradient.md) | Represents a gradient that can be applied to the gradient ascii renderer. |
 | [P5AsciifyGradientManager](classes/P5AsciifyGradientManager.md) | Manages the creation and removal of gradients for the gradient ascii renderer. |
 | [P5AsciifyGradientRenderer](classes/P5AsciifyGradientRenderer.md) | An ASCII renderer that applies all defined ASCII gradients/patterns to the input framebuffer. |
-| [P5AsciifyGrid](classes/P5AsciifyGrid.md) | Represents a 2D grid, where each cell has a fixed width and height. Based on the current canvas dimensions, the grid is resized to fit the maximum number of cells. |
+| [P5AsciifyGrid](classes/P5AsciifyGrid.md) | Represents a 2D grid, where each cell has a fixed width and height. |
 | [P5AsciifyLinearGradient](classes/P5AsciifyLinearGradient.md) | A linear gradient that moves in a linear pattern across the screen. |
 | [P5AsciifyRadialGradient](classes/P5AsciifyRadialGradient.md) | A radial gradient that moves in a radial pattern across the screen. |
 | [P5AsciifyRenderer](classes/P5AsciifyRenderer.md) | Abstract class for shader-based ASCII Renderers. |
