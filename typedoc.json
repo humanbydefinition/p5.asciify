@@ -23,4 +23,5 @@
     "enumMembersFormat": "table",
     "propertyMembersFormat": "table",
     "typeDeclarationFormat": "table",
+    "useCodeBlocks": true,
 }
