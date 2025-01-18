@@ -47,7 +47,10 @@ export class P5Asciifier {
     /** The font to use for the ASCII rendering. */
     private _font!: p5.Font;
 
-    /** The background color to use for the ASCII rendering for the offset space, not occupied by the centered ASCII grid. */
+    /** 
+     * The background color to use for the ASCII rendering for the offset space, not occupied by the centered ASCII grid.
+     * @default {@link DEFAULT_BACKGROUND_COLOR}
+     */
     private _backgroundColor: string | p5.Color | [number, number?, number?, number?] = DEFAULT_BACKGROUND_COLOR;
 
     /** The font size to use for the ASCII rendering. */
