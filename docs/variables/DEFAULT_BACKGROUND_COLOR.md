@@ -8,6 +8,13 @@
 
 > `const` **DEFAULT\_BACKGROUND\_COLOR**: `"#000000"` = `"#000000"`
 
-Defined in: [defaults.ts:97](https://github.com/humanbydefinition/p5-asciify/blob/c1880d7b18dd0a4a469b44acbbc4ef3375e21c2d/src/lib/defaults.ts#L97)
+Defined in: [defaults.ts:101](https://github.com/humanbydefinition/p5-asciify/blob/2eef0f93be0b07a27bd830cf8224669b9f9d1a6b/src/lib/defaults.ts#L101)
 
-Default background color behind the ASCII grid
+The default background color used behind the ASCII grid.
+This color fills the space not occupied by the centered ASCII grid.
+
+## Default
+
+```ts
+"#000000"
+```

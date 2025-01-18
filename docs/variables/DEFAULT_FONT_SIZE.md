@@ -8,6 +8,6 @@
 
 > `const` **DEFAULT\_FONT\_SIZE**: `16` = `16`
 
-Defined in: [defaults.ts:94](https://github.com/humanbydefinition/p5-asciify/blob/c1880d7b18dd0a4a469b44acbbc4ef3375e21c2d/src/lib/defaults.ts#L94)
+Defined in: [defaults.ts:94](https://github.com/humanbydefinition/p5-asciify/blob/2eef0f93be0b07a27bd830cf8224669b9f9d1a6b/src/lib/defaults.ts#L94)
 
 Default font size for the ASCII rendering
