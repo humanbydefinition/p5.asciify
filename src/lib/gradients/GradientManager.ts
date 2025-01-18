@@ -26,14 +26,14 @@ export class P5AsciifyGradientManager {
         conical: { centerX: 0.5, centerY: 0.5, speed: 0.01 },
     };
 
-    private gradientShaderSources: Record<GradientType, string> = {
+    private _gradientShaderSources: Record<GradientType, string> = {
         linear: linearGradientShader,
         spiral: spiralGradientShader,
         radial: radialGradientShader,
         conical: conicalGradientShader,
     };
 
-    private gradientShaders: Partial<Record<GradientType, p5.Shader>> = {};
+    private _gradientShaders: Partial<Record<GradientType, p5.Shader>> = {};
 
     private _gradientConstructors: GradientConstructorMap = {
         linear: (p, fontTextureAtlas, shader, brightnessStart, brightnessEnd, characters, params) =>
@@ -49,13 +49,13 @@ export class P5AsciifyGradientManager {
     private _gradients: P5AsciifyGradient[] = [];
 
     constructor(
-        private p: p5,
-        private fontTextureAtlas: P5AsciifyFontTextureAtlas
+        private _p: p5,
+        private _fontTextureAtlas: P5AsciifyFontTextureAtlas
     ) {
         // Initialize the shaders for the gradients.
-        for (const gradientName of Object.keys(this.gradientShaderSources) as GradientType[]) {
-            const fragShader = this.gradientShaderSources[gradientName];
-            this.gradientShaders[gradientName] = this.p.createShader(vertexShader, fragShader);
+        for (const gradientName of Object.keys(this._gradientShaderSources) as GradientType[]) {
+            const fragShader = this._gradientShaderSources[gradientName];
+            this._gradientShaders[gradientName] = this._p.createShader(vertexShader, fragShader);
         }
     }
 
@@ -77,9 +77,9 @@ export class P5AsciifyGradientManager {
     ): P5AsciifyGradient {
 
         const gradient = this._gradientConstructors[gradientName](
-            this.p,
-            this.fontTextureAtlas,
-            this.gradientShaders[gradientName] as p5.Shader,
+            this._p,
+            this._fontTextureAtlas,
+            this._gradientShaders[gradientName] as p5.Shader,
             brightnessStart,
             brightnessEnd,
             characters,

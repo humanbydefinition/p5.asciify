@@ -20,9 +20,9 @@ export abstract class P5AsciifyGradient {
         protected _shader: p5.Shader, 
         brightnessStart: number,
         brightnessEnd: number,
-        private _characters: string
+        characters: string
     ) {
-        this._palette = new P5AsciifyColorPalette(this.p, this._fontTextureAtlas.getCharsetColorArray(this._characters));
+        this._palette = new P5AsciifyColorPalette(this.p, this._fontTextureAtlas.getCharsetColorArray(Array.from(characters)));
 
         // Normalize brightness values to [0, 1]
         this._brightnessStart = Math.floor((brightnessStart / 255) * 100) / 100;
@@ -71,15 +71,12 @@ export abstract class P5AsciifyGradient {
      * @throws P5AsciifyError If the string does contain characters that are not available in the font texture atlas.
      */
     set characters(value: string) {
-        this._characters = value;
-
         if (this.p._setupDone) {
-            this.palette.setColors(this._fontTextureAtlas.getCharsetColorArray(value));
+            this.palette.setColors(this._fontTextureAtlas.getCharsetColorArray(Array.from(value)));
         }
     }
 
     // Getters
-    get characters(): string { return this._characters; }
     get shader(): p5.Shader { return this._shader; }
     get palette(): P5AsciifyColorPalette { return this._palette; }
     get brightnessEnd(): number { return this._brightnessEnd; }

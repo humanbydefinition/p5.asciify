@@ -1,3 +1,4 @@
+/** Importing p5.js @module */
 import p5 from 'p5';
 
 import { P5AsciifyFontTextureAtlas } from './FontTextureAtlas';

@@ -156,7 +156,7 @@ export class P5AsciifyFontTextureAtlas {
      * @returns Array of RGB color values.
      * @throws {@link P5AsciifyError} If a character is not found in the texture atlas.
      */
-    public getCharsetColorArray(input: string | string[]): Array<[number, number, number]> {
+    public getCharsetColorArray(input: string[]): Array<[number, number, number]> {
         const chars: string[] = Array.isArray(input) ? input : Array.from(input);
 
         return chars.map((char: string) => {
@@ -174,8 +174,8 @@ export class P5AsciifyFontTextureAtlas {
 
     /**
      * Returns an array of characters that are not supported by the current font.
-     * @param characters - The string of characters to check.
-     * @returns An array of unsupported characters.List is empty if all characters are supported.
+     * @param characters The string of characters to check.
+     * @returns An array of unsupported characters. List is empty if all characters are supported.
      */
     public getUnsupportedCharacters(characters: string): string[] {
         return Array.from(
