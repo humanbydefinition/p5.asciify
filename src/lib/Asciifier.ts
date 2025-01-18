@@ -10,16 +10,16 @@ import { validateGradientParams } from './validators/GradientValidator';
 import { P5AsciifyGradient } from './gradients/Gradient';
 
 /**
- * The main class for the p5.asciify library. 
+ * The main class for the `p5.asciify` library. 
  * 
  * Responsible for setting up the library, managing its properties, and providing an interface for interacting with the library.
  * 
  * @remarks
- * The P5Asciifier class is initialized without any parameters.
+ * The `P5Asciifier` class is initialized without any parameters.
  * 
- * Once the p5.js instance is available, the `instance()` method is called automatically in `GLOBAL` mode to pass the p5 instance to the library.
+ * Once the `p5.js` instance is available, the `instance()` method is called automatically in `GLOBAL` mode to pass the `p5` instance to the library.
  * 
- * In `INSTANCE` mode, the `instance()` method must be called manually to pass the p5 instance to the library.
+ * In `INSTANCE` mode, the `instance()` method must be called manually to pass the `p5` instance to the library.
  * 
  * After the users `setup()` function has finished, the Asciifier's `setup()` method 
  * is called automatically to fully initialize the library.
