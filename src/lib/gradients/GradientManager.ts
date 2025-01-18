@@ -3,7 +3,6 @@ import { P5AsciifyLinearGradient } from "./linear/Linear";
 import { P5AsciifySpiralGradient } from "./spiral/Spiral";
 import { P5AsciifyRadialGradient } from "./radial/Radial";
 import { P5AsciifyConicalGradient } from "./conical/Conical";
-import { P5AsciifyNoiseGradient } from "./noise/Noise";
 import { P5AsciifyGradient } from './Gradient';
 
 import { P5AsciifyFontTextureAtlas } from '../FontTextureAtlas';
@@ -15,7 +14,6 @@ import linearGradientShader from "../gradients/linear/linear.frag";
 import spiralGradientShader from "../gradients/spiral/spiral.frag";
 import radialGradientShader from "../gradients/radial/radial.frag";
 import conicalGradientShader from "../gradients/conical/conical.frag";
-import noiseGradientShader from "../gradients/noise/noise.frag";
 
 /**
  * Manages the creation and removal of gradients for the gradient ascii renderer.
@@ -26,7 +24,6 @@ export class P5AsciifyGradientManager {
         spiral: { direction: 1, centerX: 0.5, centerY: 0.5, speed: 0.01, density: 0.01 },
         radial: { direction: 1, centerX: 0.5, centerY: 0.5, radius: 0.5 },
         conical: { centerX: 0.5, centerY: 0.5, speed: 0.01 },
-        noise: { noiseScale: 0.1, speed: 0.01, direction: 1 },
     };
 
     private gradientShaderSources: Record<GradientType, string> = {
@@ -34,7 +31,6 @@ export class P5AsciifyGradientManager {
         spiral: spiralGradientShader,
         radial: radialGradientShader,
         conical: conicalGradientShader,
-        noise: noiseGradientShader,
     };
 
     private gradientShaders: Partial<Record<GradientType, p5.Shader>> = {};
@@ -48,8 +44,6 @@ export class P5AsciifyGradientManager {
             new P5AsciifyRadialGradient(p, fontTextureAtlas, shader, colors, brightnessStart, brightnessEnd, characters, params),
         conical: (p, fontTextureAtlas, shader, colors, brightnessStart, brightnessEnd, characters, params) =>
             new P5AsciifyConicalGradient(p, fontTextureAtlas, shader, colors, brightnessStart, brightnessEnd, characters, params),
-        noise: (p, fontTextureAtlas, shader, colors, brightnessStart, brightnessEnd, characters, params) =>
-            new P5AsciifyNoiseGradient(p, fontTextureAtlas, shader, colors, brightnessStart, brightnessEnd, characters, params),
     };
 
     private _gradients: P5AsciifyGradient[] = [];

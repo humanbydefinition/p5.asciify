@@ -46,11 +46,6 @@ const sketch = (p) => {
         conicalGradient = p5asciify.addAsciiGradient("conical", 190, 190, "in ", {
             speed: 0.01,
         });
-        noiseGradient = p5asciify.addAsciiGradient("noise", 210, 240, "p5.asciify ", {
-            noiseScale: 0.5,
-            speed: 0.1,
-            direction: 1,
-        });
 
         p5asciify.rendererManager.renderers[2].updateOptions({
             enabled: true,
