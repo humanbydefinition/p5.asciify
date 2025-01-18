@@ -166,7 +166,7 @@ export class P5Asciifier {
     /**
      * Sets the font size for the ascii renderers.
      * @param fontSize The font size to set.
-     * @throws {P5AsciifyError} If the font size is out of bounds.
+     * @throws {@link P5AsciifyError} If the font size is out of bounds.
      */
     public fontSize(fontSize: number): void {
 
@@ -190,7 +190,7 @@ export class P5Asciifier {
     /**
      * Sets the font for the ascii renderers.
      * @param font The font to use. Can be a path, base64 string, or p5.Font object.
-     * @throws {P5AsciifyError} If the font parameter is invalid or the font fails to load.
+     * @throws {@link P5AsciifyError} If the font parameter is invalid or the font fails to load.
      */
     public loadFont(font: string | p5.Font) {
         if (typeof font !== 'string' && !(font instanceof p5.Font)) {
@@ -226,7 +226,7 @@ export class P5Asciifier {
      * 
      * Covers the empty space on the edges of the canvas, which potentially is not occupied by the centered ASCII grid.
      * @param color The color to set. Needs to be a valid type to pass to the `background()` function provided by p5.js.
-     * @throws {P5AsciifyError} If the color is not a string, array or p5.Color.
+     * @throws {@link P5AsciifyError} If the color is not a string, array or p5.Color.
      */
     public background(color: string | p5.Color | [number, number?, number?, number?]) {
         if (typeof color !== "string" && !Array.isArray(color) && !(color instanceof p5.Color)) {
