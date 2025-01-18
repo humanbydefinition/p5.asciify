@@ -11,32 +11,65 @@ import { P5AsciifyGradient } from './gradients/Gradient';
 
 /**
  * The main class for the p5.asciify library. 
- * This class is responsible for setting up the library, and managing its properties.
+ * 
+ * Responsible for setting up the library, managing its properties, and providing an interface for interacting with the library.
  * 
  * @remarks
  * The P5Asciifier class is initialized without any parameters.
  * 
- * Once the p5.js instance is available, the instance() method is called automatically 
- * to pass the p5 instance to the Asciifier.
+ * Once the p5.js instance is available, the `instance()` method is called automatically in `GLOBAL` mode to pass the p5 instance to the library.
+ * 
+ * In `INSTANCE` mode, the `instance()` method must be called manually to pass the p5 instance to the library.
  * 
  * After the users `setup()` function has finished, the Asciifier's `setup()` method 
  * is called automatically to fully initialize the library.
  * 
- * At this point, the p5.asciify is fully functional and ready to interact with.
+ * At this point, the `p5.asciify` is fully functional and ready to interact with.
  */
 export class P5Asciifier {
-    private _borderColor!: string | p5.Color | [number, number?, number?, number?];
-    private _fontSize!: number;
-    public rendererManager!: P5AsciifyRendererManager;
-    private _font!: p5.Font;
-    private p!: p5;
+    /* Contains texture with all glyphs of a given font */
     public asciiFontTextureAtlas!: P5AsciifyFontTextureAtlas;
+
+    /* Contains the grid dimensions and offsets to create a perfect grid based on the canvas and font size */
     public grid!: P5AsciifyGrid;
+
+    /* Wraps around the user's `draw()` function to capture it's output for the ascii renderers */
     public sketchFramebuffer!: p5.Framebuffer;
 
+    /* Manages the available ASCII renderers and handles rendering the ASCII output to the canvas */
+    public rendererManager!: P5AsciifyRendererManager;
+
+    /* The p5 instance */
+    private p!: p5;
+
+    /* The font to use for the ASCII rendering */
+    private _font!: p5.Font;
+    
+    /* The border color to use for the offset space, not occupied by the centered ASCII grid */
+    private _borderColor!: string | p5.Color | [number, number?, number?, number?];
+
+    /* The font size to use for the ASCII rendering */
+    private _fontSize!: number;
+    
+
     /**
-     * Initialize the p5 instance for the Asciifier
+     * Used to pass the p5 instance to the `p5.asciify` library. 
+     * Is called automatically by `p5.js` during initialization.
+     * 
+     * @remarks
+     * This method is called automatically in `GLOBAL` mode. In `INSTANCE` mode, it must be called manually at the start of the sketch.
+     * 
+     * In `GLOBAL` mode, `addDummyPreloadFunction` is set to `false` to prevent the p5 instance from adding a dummy preload function,
+     * which is already added to `window` by the library.
+     * 
+     * In `INSTANCE` mode, `addDummyPreloadFunction` is set to `true` to add a dummy preload function to the p5 instance directly.
+     * 
+     * A dummy `preload` function is necessary in case the user does not provide one, since `p5.asciify` relies on the benefits of the `preload` function.
+     * 
+     * The implementation and difference with dummy `preload` definitions for `GLOBAL` and `INSTANCE` modes is questionable, but I haven't found a better solution yet.
+     * 
      * @param p The p5 instance
+     * @param addDummyPreloadFunction Whether to add a dummy preload function to the p5 instance
      */
     public instance(p: p5, addDummyPreloadFunction: boolean = true): void {
         this.p = p;
