@@ -20,4 +20,8 @@
     "parametersFormat": "table",
     "interfacePropertiesFormat": "table",
     "classPropertiesFormat": "table",
+    "enumMembersFormat": "table",
+    "propertyMembersFormat": "table",
+    "typeDeclarationFormat": "table",
+
 }
