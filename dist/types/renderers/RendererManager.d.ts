@@ -15,14 +15,7 @@ export declare class RendererManager {
     private _renderers;
     gradientManager: P5AsciifyGradientManager;
     lastRenderer: AsciiRenderer;
-    constructor(p5Instance: p5);
-    /**
-     * Sets up the renderer manager with the specified default options.
-     * @param p5Instance The p5 instance
-     * @param grid The grid instance
-     * @param fontTextureAtlas The font texture atlas instance
-     */
-    setup(grid: P5AsciifyGrid, fontTextureAtlas: P5AsciifyFontTextureAtlas): void;
+    constructor(p: p5, grid: P5AsciifyGrid, fontTextureAtlas: P5AsciifyFontTextureAtlas);
     /**
      * Renders the ASCII output to the canvas.
      * @param inputFramebuffer The input framebuffer to transform into ASCII.

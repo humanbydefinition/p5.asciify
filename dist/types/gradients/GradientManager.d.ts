@@ -6,24 +6,14 @@ import { GradientParams, GradientType, GradientConstructorMap } from './types';
  * Manages the creation and removal of gradients for the gradient ascii renderer.
  */
 export declare class P5AsciifyGradientManager {
+    private p;
+    private fontTextureAtlas;
     private _gradientParams;
     private gradientShaderSources;
     private gradientShaders;
     private _gradientConstructors;
-    private _setupQueue;
     private _gradients;
-    private fontTextureAtlas;
-    private p;
-    constructor(p5Instance: p5);
-    /**
-     * Setup the gradient manager with the font texture atlas.
-     * @param fontTextureAtlas The font texture atlas to use for the gradients.
-     */
-    setup(fontTextureAtlas: P5AsciifyFontTextureAtlas): void;
-    /**
-     * Setup the gradients that were added before the user's `setup` function has finished.
-     */
-    private setupGradientQueue;
+    constructor(p: p5, fontTextureAtlas: P5AsciifyFontTextureAtlas);
     /**
      * Add a gradient to the gradient manager.
      * @param gradientName The name of the gradient to add.
