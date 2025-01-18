@@ -15,10 +15,16 @@ if (typeof window !== 'undefined') {
 }
 
 /**
-     * Add `setupAsciify` function to p5 instance, which can be overridden by the user.
-     * This function is called after the p5.asciify setup has been completed.
-     */
+ * Add `setupAsciify` function to p5 instance, which can be overridden by the user.
+ * This function is called after the p5.asciify setup has been completed.
+ */
 p5.prototype.setupAsciify = function(): void {};
+
+/**
+ * Add `drawAsciify` function to p5 instance, which can be overridden by the user.
+ * This function is called after the p5.asciify draw has been completed.
+ */
+p5.prototype.drawAsciify = function (): void { };
 
 /**
  * Extend the p5.asciify instance to the p5 instance and run the p5.asciify init method
@@ -38,12 +44,6 @@ p5.prototype.registerMethod('afterSetup', function(this: p5) {
     p5asciify.setup();
     this.setupAsciify();
 });
-
-/**
- * Add `drawAsciify` function to p5 instance, which can be overridden by the user.
- * This function is called after the p5.asciify draw has been completed.
- */
-p5.prototype.drawAsciify = function (): void { };
 
 /**
  * Adds a pre-draw method to the p5.js instance which wraps the user draw loop in a framebuffer.
