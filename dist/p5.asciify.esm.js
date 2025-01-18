@@ -924,24 +924,17 @@ class QA {
    * @param font The font to set.
    */
   set font(A) {
-    const e = (r) => {
-      this._font = r, this.p._decrementPreload();
-    };
-    if (typeof A == "string")
-      this.p.loadFont(
-        A,
-        (r) => {
-          e(r);
-        },
-        () => {
-          throw new g(`Failed to load font from path: '${A}'`);
-        }
-      );
-    else if (A instanceof n.Font)
-      e(A);
-    else
+    if (typeof A != "string" && !(A instanceof n.Font))
       throw new g("Invalid font parameter. Expected a path, base64 string, or p5.Font object.");
-    this.p._setupDone && (this.asciiFontTextureAtlas.setFontObject(A), this.rendererManager.renderers.forEach((r) => r.characterSet.reset()), this.grid.resizeCellPixelDimensions(
+    typeof A == "string" ? this.p.loadFont(
+      A,
+      (e) => {
+        this._font = e, this.p._decrementPreload();
+      },
+      () => {
+        throw new g(`Failed to load font from path: '${A}'`);
+      }
+    ) : this._font = A, this.p._setupDone && (this.asciiFontTextureAtlas.setFontObject(A), this.rendererManager.renderers.forEach((e) => e.characterSet.reset()), this.grid.resizeCellPixelDimensions(
       this.asciiFontTextureAtlas.maxGlyphDimensions.width,
       this.asciiFontTextureAtlas.maxGlyphDimensions.height
     ));
