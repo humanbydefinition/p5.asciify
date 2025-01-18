@@ -94,10 +94,9 @@ const sketch = (p) => {
 		colorPaletteFramebuffer.updatePixels();
 
 		p.setAsciifyFontSize(16);
-		p.setAsciifyPostSetupFunction(setupAsciify);
 	};
 
-	const setupAsciify = () => {
+	p.setupAsciify = () => {
 		primaryColorSampleFramebuffer = p5asciify.rendererManager.renderers[4].primaryColorSampleFramebuffer;
 		secondaryColorSampleFramebuffer = p5asciify.rendererManager.renderers[4].secondaryColorSampleFramebuffer;
 		asciiCharacterFramebuffer = p5asciify.rendererManager.renderers[4].asciiCharacterFramebuffer;

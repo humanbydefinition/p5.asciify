@@ -24,7 +24,7 @@ export const DEFAULT_OPTIONS = {
 export const createSketch = (options = {}) => {
   // Merge user options with our defaults
   const finalOptions = { ...DEFAULT_OPTIONS, ...options };
-  
+
   // p5 instance variable
   let p5Instance = null;
 
@@ -45,18 +45,17 @@ export const createSketch = (options = {}) => {
       if (finalOptions.fontSize) {
         p.setAsciifyFontSize(finalOptions.fontSize);
       }
+    };
 
-      // Configure the ASCII renderer after p5Asciify is set up
-      p.setAsciifyPostSetupFunction(() => {
-        p5asciify.rendererManager.renderers[0].updateOptions({
-          enabled: finalOptions.enabled,
-          characters: finalOptions.characters,
-          characterColor: finalOptions.characterColor,
-          characterColorMode: finalOptions.characterColorMode,
-          backgroundColor: finalOptions.backgroundColor,
-          backgroundColorMode: finalOptions.backgroundColorMode,
-          invertMode: finalOptions.invertMode
-        });
+    p.setupAsciify = () => {
+      p5asciify.rendererManager.renderers[0].updateOptions({
+        enabled: finalOptions.enabled,
+        characters: finalOptions.characters,
+        characterColor: finalOptions.characterColor,
+        characterColorMode: finalOptions.characterColorMode,
+        backgroundColor: finalOptions.backgroundColor,
+        backgroundColorMode: finalOptions.backgroundColorMode,
+        invertMode: finalOptions.invertMode
       });
     };
 
@@ -73,8 +72,8 @@ export const createSketch = (options = {}) => {
         const gridRow = Math.floor(i / p5asciify.grid.cols);
 
         // Calculate a brightness value for each cell
-        const brightness = i * (255 / finalOptions.characters.length) 
-                         + (255 / (2 * finalOptions.characters.length));
+        const brightness = i * (255 / finalOptions.characters.length)
+          + (255 / (2 * finalOptions.characters.length));
         p.fill(brightness);
         p.stroke(255, 255, 0);
         p.rect(
@@ -98,11 +97,11 @@ export const createSketch = (options = {}) => {
   };
 
   // For Storybook usage
-    if (options.container) {
-      p5Instance = new p5(sketch, options.container);
-      return options.container;
-    }
-    
-    // For standalone example usage
-    p5Instance = new p5(sketch);
+  if (options.container) {
+    p5Instance = new p5(sketch, options.container);
+    return options.container;
+  }
+
+  // For standalone example usage
+  p5Instance = new p5(sketch);
 };

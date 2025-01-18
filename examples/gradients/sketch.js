@@ -2,7 +2,7 @@ import p5 from 'p5';
 import p5asciify from '../../src/lib/index';
 
 const sketch = (p) => {
-    let linearGradient, spiralGradient, radialGradient, 
+    let linearGradient, spiralGradient, radialGradient,
         zigzagGradient, conicalGradient, noiseGradient;
 
     let gridRows = 3;
@@ -21,58 +21,55 @@ const sketch = (p) => {
 
     p.setup = () => {
         p.createCanvas(p.windowWidth, p.windowHeight, p.WEBGL);
+    };
 
-        
+    p.setupAsciify = () => {
+        linearGradient = p.addAsciiGradient("linear", 150, 150, "gradients ", {
+            direction: 1,
+            angle: 0,
+            speed: 0.1,
+        });
+        spiralGradient = p.addAsciiGradient("spiral", 160, 160, "are  ", {
+            direction: 1,
+            speed: 0.01,
+            density: 0.5,
+        });
+        radialGradient = p.addAsciiGradient("radial", 170, 170, "now ", {
+            direction: -1,
+            radius: 1.0,
+        });
+        zigzagGradient = p.addAsciiGradient("linear", 180, 180, "available ", {
+            direction: 1,
+            speed: 0.2,
+            zigzag: true,
+        });
+        conicalGradient = p.addAsciiGradient("conical", 190, 190, "in ", {
+            speed: 0.01,
+        });
+        noiseGradient = p.addAsciiGradient("noise", 210, 240, "p5.asciify ", {
+            noiseScale: 0.5,
+            speed: 0.1,
+            direction: 1,
+        });
 
-        p.setAsciifyPostSetupFunction(() => {
+        p5asciify.rendererManager.renderers[2].updateOptions({
+            enabled: true,
+            characterColorMode: 1,
+            characterColor: "#ff0000",
+            invertMode: true,
+        });
 
-            linearGradient = p.addAsciiGradient("linear", 150, 150, "gradients ", {
-                direction: 1,
-                angle: 0,
-                speed: 0.1,
-            });
-            spiralGradient = p.addAsciiGradient("spiral", 160, 160, "are  ", {
-                direction: 1,
-                speed: 0.01,
-                density: 0.5,
-            });
-            radialGradient = p.addAsciiGradient("radial", 170, 170, "now ", {
-                direction: -1,
-                radius: 1.0,
-            });
-            zigzagGradient = p.addAsciiGradient("linear", 180, 180, "available ", {
-                direction: 1,
-                speed: 0.2,
-                zigzag: true,
-            });
-            conicalGradient = p.addAsciiGradient("conical", 190, 190, "in ", {
-                speed: 0.01,
-            });
-            noiseGradient = p.addAsciiGradient("noise", 210, 240, "p5.asciify ", {
-                noiseScale: 0.5,
-                speed: 0.1,
-                direction: 1,
-            });
+        p5asciify.rendererManager.renderers[0].updateOptions({
+            enabled: true,
+            characterColorMode: 0,
+            characters: ".",
+        });
 
-            p5asciify.rendererManager.renderers[2].updateOptions({
-                enabled: true,
-                characterColorMode: 1,
-                characterColor: "#ff0000",
-                invertMode: true,
-            });
-
-            p5asciify.rendererManager.renderers[0].updateOptions({
-                enabled: true,
-                characterColorMode: 0,
-                characters: ".",
-            });
-
-            p5asciify.rendererManager.renderers[3].updateOptions({
-                enabled: true,
-                characterColorMode: 1,
-                sobelThreshold: 0.1,
-                sampleThreshold: 16,
-            });
+        p5asciify.rendererManager.renderers[3].updateOptions({
+            enabled: true,
+            characterColorMode: 1,
+            sobelThreshold: 0.1,
+            sampleThreshold: 16,
         });
     };
 

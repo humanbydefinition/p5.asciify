@@ -20,8 +20,7 @@ export class P5AsciifyCharacterSet {
         this._characters = this.validateCharacters(characters);
         this.characterColors = this.asciiFontTextureAtlas.getCharsetColorArray(this._characters);
 
-        this.characterColorPalette = new P5AsciifyColorPalette(this.characterColors);
-        this.characterColorPalette.setup(this.p);
+        this.characterColorPalette = new P5AsciifyColorPalette(this.p, this.characterColors);
     }
 
     /**

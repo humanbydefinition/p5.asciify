@@ -24,19 +24,17 @@ import { P5AsciifyGradientManager } from '../gradients/GradientManager';
  * Manages the available ASCII renderers and handles rendering the ASCII output to the canvas.
  */
 export class RendererManager {
-    private currentCanvasDimensions!: { width: number, height: number };
-    private gradientCharacterSet!: P5AsciifyCharacterSet;
-    private _renderers!: AsciiRenderer[];
+    private currentCanvasDimensions: { width: number, height: number };
+    private gradientCharacterSet: P5AsciifyCharacterSet;
+    private _renderers: AsciiRenderer[];
     public gradientManager: P5AsciifyGradientManager;
-    public lastRenderer!: AsciiRenderer;
+    public lastRenderer: AsciiRenderer;
 
     constructor(
         private p: p5,
         private grid: P5AsciifyGrid, 
         private fontTextureAtlas: P5AsciifyFontTextureAtlas
     ) {
-        
-
         this.currentCanvasDimensions = {
             width: this.p.width,
             height: this.p.height
@@ -56,6 +54,8 @@ export class RendererManager {
             new EdgeAsciiRenderer(this.p, this.grid, new P5AsciifyCharacterSet(this.p, fontTextureAtlas, EDGE_OPTIONS.characters), { ...EDGE_OPTIONS }),
             new AsciiRenderer(this.p, this.grid, new P5AsciifyCharacterSet(this.p, fontTextureAtlas, BRIGHTNESS_OPTIONS.characters), { ...CUSTOM_OPTIONS }),
         ];
+
+        this.lastRenderer = this._renderers[0];
     }
 
     /**

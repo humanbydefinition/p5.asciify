@@ -9,10 +9,15 @@ import URSAFONT_BASE64 from '../assets/fonts/ursafont_base64.txt?raw';
 export function registerSetupMethods(p5asciify: P5Asciifier): void {
 
     /**
+     * Add `setupAsciify` function to p5 instance, which can be overridden by the user.
+     * This function is called after the p5.asciify setup has been completed.
+     */
+    p5.prototype.setupAsciify = function(): void {};
+
+    /**
      * Extend the p5.asciify instance to the p5 instance and run the p5.asciify init method
      */
     p5.prototype.registerMethod('init', function(this: p5) {
-
         p5asciify.instance(this, false);
     });
 
@@ -24,5 +29,6 @@ export function registerSetupMethods(p5asciify: P5Asciifier): void {
         this.loadAsciiFont(URSAFONT_BASE64);
         validateSetup(this);
         p5asciify.setup();
+        this.setupAsciify();
     });
 }

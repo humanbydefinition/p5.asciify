@@ -1,4 +1,5 @@
 import p5 from 'p5';
+import { P5AsciifyFontTextureAtlas } from '../../FontTextureAtlas';
 import { P5AsciifyGradient } from '../Gradient';
 import { LinearGradientParams } from '../types';
 
@@ -12,12 +13,16 @@ export class P5AsciifyLinearGradient extends P5AsciifyGradient {
     public zigzag: boolean;
 
     constructor(
+        protected p: p5,
+        protected _fontTextureAtlas: P5AsciifyFontTextureAtlas,
+        protected _shader: p5.Shader,
+        colors: [number, number, number][],
         brightnessStart: number,
         brightnessEnd: number,
         characters: string,
         params: LinearGradientParams
     ) {
-        super(brightnessStart, brightnessEnd, characters);
+        super(p, _fontTextureAtlas, _shader, colors, brightnessStart, brightnessEnd, characters);
         this.direction = params.direction;
         this.angle = params.angle;
         this.speed = params.speed;

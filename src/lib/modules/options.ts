@@ -1,8 +1,10 @@
 import { P5Asciifier } from '../Asciifier.js';
+import { P5AsciifyError } from '../AsciifyError.js';
+import { FONT_SIZE_LIMITS } from '../constants.js';
 import p5 from 'p5';
 
 /**
- * Registers the `setAsciifyBorderColor`, `setAsciifyFontSize`, `setAsciifyPostSetupFunction`, and `setAsciifyPostDrawFunction` methods to the p5.js instance.
+ * Registers the `setAsciifyBorderColor` and `setAsciifyFontSize` methods to the p5.js instance.
  */
 export function registerOptionsMethods(p5asciify: P5Asciifier): void {
 
@@ -19,22 +21,11 @@ export function registerOptionsMethods(p5asciify: P5Asciifier): void {
      * @param fontSize The font size to set.
      */
     p5.prototype.setAsciifyFontSize = function (this: p5, fontSize: number): void {
+
+        if (fontSize < FONT_SIZE_LIMITS.MIN || fontSize > FONT_SIZE_LIMITS.MAX) {
+            throw new P5AsciifyError(`Font size ${fontSize} is out of bounds. It should be between ${FONT_SIZE_LIMITS.MIN} and ${FONT_SIZE_LIMITS.MAX}.`);
+        }
+
         p5asciify.fontSize = fontSize;
-    };
-
-    /**
-     * Sets a function to be called after the p5.asciify setup is complete.
-     * @param postSetupFunction The function to call after the p5.asciify setup.
-     */
-    p5.prototype.setAsciifyPostSetupFunction = function (this: p5, postSetupFunction: () => void): void {
-        p5asciify.postSetupFunction = postSetupFunction;
-    };
-
-    /**
-     * Sets a function to be called after the p5.asciify draw is complete.
-     * @param postDrawFunction The function to call after the draw loop.
-     */
-    p5.prototype.setAsciifyPostDrawFunction = function (this: p5, postDrawFunction: () => void): void {
-        p5asciify.postDrawFunction = postDrawFunction;
     };
 }

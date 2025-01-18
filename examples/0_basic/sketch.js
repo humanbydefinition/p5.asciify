@@ -16,7 +16,7 @@ export const DEFAULT_OPTIONS = {
 export const createSketch = (options = {}) => {
   const finalOptions = { ...DEFAULT_OPTIONS, ...options };
   let p5Instance = null;
-  
+
   const sketch = (p) => {
     p5asciify.instance(p);
 
@@ -27,23 +27,23 @@ export const createSketch = (options = {}) => {
 
     p.setup = () => {
       p.createCanvas(p.windowWidth, p.windowHeight, p.WEBGL);
-      
-      p.setAsciifyPostSetupFunction(() => {
-        p5asciify.rendererManager.renderers[0].updateOptions({
-          enabled: finalOptions.enabled,
-          characters: finalOptions.characters,
-          characterColor: finalOptions.characterColor,
-          characterColorMode: finalOptions.characterColorMode,
-          backgroundColor: finalOptions.backgroundColor,
-          backgroundColorMode: finalOptions.backgroundColorMode,
-          invertMode: finalOptions.invertMode,
-          rotationAngle: finalOptions.rotationAngle
-        });
-      });
 
       if (finalOptions.fontSize) {
         p.setAsciifyFontSize(finalOptions.fontSize);
       }
+    };
+
+    p.setupAsciify = () => {
+      p5asciify.rendererManager.renderers[0].updateOptions({
+        enabled: finalOptions.enabled,
+        characters: finalOptions.characters,
+        characterColor: finalOptions.characterColor,
+        characterColorMode: finalOptions.characterColorMode,
+        backgroundColor: finalOptions.backgroundColor,
+        backgroundColorMode: finalOptions.backgroundColorMode,
+        invertMode: finalOptions.invertMode,
+        rotationAngle: finalOptions.rotationAngle
+      });
     };
 
     p.draw = () => {
@@ -66,7 +66,7 @@ export const createSketch = (options = {}) => {
     p5Instance = new p5(sketch, options.container);
     return options.container;
   }
-  
+
   // For standalone example usage
   p5Instance = new p5(sketch);
 };

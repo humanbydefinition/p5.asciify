@@ -1,6 +1,6 @@
 import p5 from 'p5';
 import { P5AsciifyGradient } from '../Gradient';
-
+import { P5AsciifyFontTextureAtlas } from '../../FontTextureAtlas';
 import { RadialGradientParams } from '../types';
 
 /**
@@ -13,12 +13,16 @@ export class P5AsciifyRadialGradient extends P5AsciifyGradient {
     public radius: number;
 
     constructor(
+        protected p: p5,
+        protected _fontTextureAtlas: P5AsciifyFontTextureAtlas,
+        protected _shader: p5.Shader,
+        colors: [number, number, number][],
         brightnessStart: number,
         brightnessEnd: number,
         characters: string,
         params: RadialGradientParams
     ) {
-        super(brightnessStart, brightnessEnd, characters);
+        super(p, _fontTextureAtlas, _shader, colors, brightnessStart, brightnessEnd, characters);
         this.direction = params.direction;
         this.centerX = params.centerX;
         this.centerY = params.centerY;

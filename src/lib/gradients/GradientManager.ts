@@ -40,16 +40,16 @@ export class P5AsciifyGradientManager {
     private gradientShaders: Partial<Record<GradientType, p5.Shader>> = {};
 
     private _gradientConstructors: GradientConstructorMap = {
-        linear: (brightnessStart, brightnessEnd, characters, params) =>
-            new P5AsciifyLinearGradient(brightnessStart, brightnessEnd, characters, params),
-        spiral: (brightnessStart, brightnessEnd, characters, params) =>
-            new P5AsciifySpiralGradient(brightnessStart, brightnessEnd, characters, params),
-        radial: (brightnessStart, brightnessEnd, characters, params) =>
-            new P5AsciifyRadialGradient(brightnessStart, brightnessEnd, characters, params),
-        conical: (brightnessStart, brightnessEnd, characters, params) =>
-            new P5AsciifyConicalGradient(brightnessStart, brightnessEnd, characters, params),
-        noise: (brightnessStart, brightnessEnd, characters, params) =>
-            new P5AsciifyNoiseGradient(brightnessStart, brightnessEnd, characters, params),
+        linear: (p, fontTextureAtlas, shader, colors, brightnessStart, brightnessEnd, characters, params) =>
+            new P5AsciifyLinearGradient(p, fontTextureAtlas, shader, colors, brightnessStart, brightnessEnd, characters, params),
+        spiral: (p, fontTextureAtlas, shader, colors, brightnessStart, brightnessEnd, characters, params) =>
+            new P5AsciifySpiralGradient(p, fontTextureAtlas, shader, colors, brightnessStart, brightnessEnd, characters, params),
+        radial: (p, fontTextureAtlas, shader, colors, brightnessStart, brightnessEnd, characters, params) =>
+            new P5AsciifyRadialGradient(p, fontTextureAtlas, shader, colors, brightnessStart, brightnessEnd, characters, params),
+        conical: (p, fontTextureAtlas, shader, colors, brightnessStart, brightnessEnd, characters, params) =>
+            new P5AsciifyConicalGradient(p, fontTextureAtlas, shader, colors, brightnessStart, brightnessEnd, characters, params),
+        noise: (p, fontTextureAtlas, shader, colors, brightnessStart, brightnessEnd, characters, params) =>
+            new P5AsciifyNoiseGradient(p, fontTextureAtlas, shader, colors, brightnessStart, brightnessEnd, characters, params),
     };
 
     private _gradients: P5AsciifyGradient[] = [];
@@ -58,7 +58,11 @@ export class P5AsciifyGradientManager {
         private p: p5,
         private fontTextureAtlas: P5AsciifyFontTextureAtlas
     ) {
-        this.setupShaders();
+        // Initialize the shaders for the gradients.
+        for (const gradientName of Object.keys(this.gradientShaderSources) as GradientType[]) {
+            const fragShader = this.gradientShaderSources[gradientName];
+            this.gradientShaders[gradientName] = this.p.createShader(vertexShader, fragShader);
+        }
     }
 
     /**
@@ -77,7 +81,12 @@ export class P5AsciifyGradientManager {
         characters: string,
         params: Partial<GradientParams[typeof gradientName]>
     ): P5AsciifyGradient {
+
         const gradient = this._gradientConstructors[gradientName](
+            this.p,
+            this.fontTextureAtlas,
+            this.gradientShaders[gradientName] as p5.Shader,
+            this.fontTextureAtlas.getCharsetColorArray(characters),
             brightnessStart,
             brightnessEnd,
             characters,
@@ -85,13 +94,6 @@ export class P5AsciifyGradientManager {
         );
 
         this._gradients.push(gradient);
-
-        gradient.setup(
-            this.p,
-            this.fontTextureAtlas,
-            this.gradientShaders[gradientName] as p5.Shader,
-            this.fontTextureAtlas.getCharsetColorArray(characters)
-        );
 
         return gradient;
     }
@@ -104,16 +106,6 @@ export class P5AsciifyGradientManager {
         const index = this._gradients.indexOf(gradient);
         if (index > -1) {
             this._gradients.splice(index, 1);
-        }
-    }
-
-    /**
-     * Initialize the shaders for the gradients.
-     */
-    private setupShaders(): void {
-        for (const gradientName of Object.keys(this.gradientShaderSources) as GradientType[]) {
-            const fragShader = this.gradientShaderSources[gradientName];
-            this.gradientShaders[gradientName] = this.p.createShader(vertexShader, fragShader);
         }
     }
 

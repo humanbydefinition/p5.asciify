@@ -3,7 +3,7 @@ import p5asciify from '../../src/lib/index';
 
 const sketch = (p) => {
     let img;
-    
+
     const renderModes = ['accurate', 'brightness'];
     let currentModeIndex = 0;
     let renderMode = renderModes[currentModeIndex];
@@ -16,19 +16,19 @@ const sketch = (p) => {
 
     p.setup = () => {
         p.createCanvas(p.windowWidth, p.windowHeight, p.WEBGL);
+    };
 
-        p.setAsciifyPostSetupFunction(() => {
-            p5asciify.rendererManager.renderers[0].updateOptions({
-                enabled: false,
-            });
+    p.setupAsciify = () => {
+        p5asciify.rendererManager.renderers[0].updateOptions({
+            enabled: false,
+        });
 
-            p5asciify.rendererManager.renderers[1].updateOptions({
-                enabled: true,
-                characters: ` .‼╨\`',-_ú:░+;╘╙╤╥!"/=\^i~±âñ◘─├┬┴()*<>l|ÖÜèë←↑→↓♪?fr{}°²¶ÄÅÆÉíüƒΘΦφⁿ₧∙∞┌┘╒╓╪╫■□♀LT[]cjptvxzÑ∟7qyä│┤║╕╖╡╢╣Feo«»½απ↨≤≥╗☼1au•↔4CIYZks┼╔╚╞╟╩▄█▌▐$3gn£à▬◙%2EJSmw¡ª¼↕≈╜╝▲►◄♂59hå♠♦PVXbd¥6@GKç♣8ADOUÇáéó▀▒♫ê⌂#0HR§ºBQ═╠╦╬¢¬µ¿ï÷⌐&MNW♥ìîτ└▼ε∩╧▓☺☻ÿùûòöæô≡ßΓΣσ⌠⌡┐╛○·Ωδ√`,
-                renderMode: renderMode,
-                characterColorMode: 0,
-                backgroundColorMode: 0,
-            });
+        p5asciify.rendererManager.renderers[1].updateOptions({
+            enabled: true,
+            characters: ` .‼╨\`',-_ú:░+;╘╙╤╥!"/=\^i~±âñ◘─├┬┴()*<>l|ÖÜèë←↑→↓♪?fr{}°²¶ÄÅÆÉíüƒΘΦφⁿ₧∙∞┌┘╒╓╪╫■□♀LT[]cjptvxzÑ∟7qyä│┤║╕╖╡╢╣Feo«»½απ↨≤≥╗☼1au•↔4CIYZks┼╔╚╞╟╩▄█▌▐$3gn£à▬◙%2EJSmw¡ª¼↕≈╜╝▲►◄♂59hå♠♦PVXbd¥6@GKç♣8ADOUÇáéó▀▒♫ê⌂#0HR§ºBQ═╠╦╬¢¬µ¿ï÷⌐&MNW♥ìîτ└▼ε∩╧▓☺☻ÿùûòöæô≡ßΓΣσ⌠⌡┐╛○·Ωδ√`,
+            renderMode: renderMode,
+            characterColorMode: 0,
+            backgroundColorMode: 0,
         });
     };
 

@@ -49,19 +49,19 @@ const sketch = (p) => {
         p.setAsciifyFontSize(8);
 
         for (let i = 0; i < maxRectangles; i++) rectangles.push(new Rectangle());
+    };
 
-        p.setAsciifyPostSetupFunction(() => {
-            p5asciify.rendererManager.renderers[3].updateOptions({
-                enabled: true,
-                characters: "-/|\\-/|\\",
-                characterColor: "#ffffff",
-                characterColorMode: 1,
-                backgroundColor: "#000000",
-                backgroundColorMode: 1,
-                invertMode: false,
-                sobelThreshold: 0.01,
-                sampleThreshold: 16,
-            });
+    p.setupAsciify = () => {
+        p5asciify.rendererManager.renderers[3].updateOptions({
+            enabled: true,
+            characters: "-/|\\-/|\\",
+            characterColor: "#ffffff",
+            characterColorMode: 1,
+            backgroundColor: "#000000",
+            backgroundColorMode: 1,
+            invertMode: false,
+            sobelThreshold: 0.01,
+            sampleThreshold: 16,
         });
     };
 

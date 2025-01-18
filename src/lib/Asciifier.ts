@@ -14,7 +14,6 @@ export class P5Asciifier {
     private _fontSize: number;
     public rendererManager!: RendererManager;
     private _font!: p5.Font;
-    public postSetupFunction: (() => void) | null;
     public postDrawFunction: (() => void) | null;
     private p!: p5;
     public asciiFontTextureAtlas!: P5AsciifyFontTextureAtlas;
@@ -25,7 +24,6 @@ export class P5Asciifier {
         this.borderColor = "#000000";
         this._fontSize = 16;
         
-        this.postSetupFunction = null;
         this.postDrawFunction = null;
     }
 
@@ -60,21 +58,6 @@ export class P5Asciifier {
             depthFormat: this.p.UNSIGNED_INT,
             textureFiltering: this.p.NEAREST
         });
-
-        if (this.postSetupFunction) {
-            this.postSetupFunction();
-        }
-    }
-
-    /**
-     * Runs the rendering pipeline for the P5Asciify library
-     */
-    public asciify(): void {
-        this.rendererManager.render(this.sketchFramebuffer, this.borderColor);
-
-        if (this.postDrawFunction) {
-            this.postDrawFunction();
-        }
     }
 
     /**
@@ -82,11 +65,6 @@ export class P5Asciifier {
      * @param fontSize The font size to set
      */
     set fontSize(fontSize: number) {
-
-        if (fontSize < FONT_SIZE_LIMITS.MIN || fontSize > FONT_SIZE_LIMITS.MAX) {
-            throw new P5AsciifyError(`Font size ${fontSize} is out of bounds. It should be between ${FONT_SIZE_LIMITS.MIN} and ${FONT_SIZE_LIMITS.MAX}.`);
-        }
-
         this._fontSize = fontSize;
 
         if (this.p._setupDone) {
