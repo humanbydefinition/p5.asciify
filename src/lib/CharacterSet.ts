@@ -41,7 +41,7 @@ export class P5AsciifyCharacterSet {
      * Validates the characters to ensure they are supported by the current font.
      * @param characters The characters to validate.
      * @returns The validated characters as a list of characters.
-     * @throws {P5AsciifyError} If any characters are not supported by the set font.
+     * @throws {@link P5AsciifyError} If any characters are not supported by the set font.
      */
     private validateCharacters(characters: string): string[] {
         const unsupportedChars: string[] = this.asciiFontTextureAtlas.getUnsupportedCharacters(characters);
