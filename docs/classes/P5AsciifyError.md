@@ -6,7 +6,7 @@
 
 # Class: P5AsciifyError
 
-Defined in: [AsciifyError.ts:5](https://github.com/humanbydefinition/p5-asciify/blob/19019252009e2dce4c7cdce7a1f6dcfa67e0e5df/src/lib/AsciifyError.ts#L5)
+Defined in: [AsciifyError.ts:5](https://github.com/humanbydefinition/p5-asciify/blob/36a49a9e61e37560f02cabd72a830fdaa28b2804/src/lib/AsciifyError.ts#L5)
 
 Custom error class for the P5Asciify library.
 Represents errors specific to the P5Asciify library.
@@ -19,11 +19,9 @@ Represents errors specific to the P5Asciify library.
 
 ### new P5AsciifyError()
 
-```ts
-new P5AsciifyError(message): P5AsciifyError
-```
+> **new P5AsciifyError**(`message`): [`P5AsciifyError`](P5AsciifyError.md)
 
-Defined in: [AsciifyError.ts:6](https://github.com/humanbydefinition/p5-asciify/blob/19019252009e2dce4c7cdce7a1f6dcfa67e0e5df/src/lib/AsciifyError.ts#L6)
+Defined in: [AsciifyError.ts:6](https://github.com/humanbydefinition/p5-asciify/blob/36a49a9e61e37560f02cabd72a830fdaa28b2804/src/lib/AsciifyError.ts#L6)
 
 #### Parameters
 
@@ -37,6 +35,4 @@ Defined in: [AsciifyError.ts:6](https://github.com/humanbydefinition/p5-asciify/
 
 #### Overrides
 
-```ts
-Error.constructor
-```
+`Error.constructor`

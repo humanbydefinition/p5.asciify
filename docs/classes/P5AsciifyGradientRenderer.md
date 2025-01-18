@@ -6,7 +6,7 @@
 
 # Class: P5AsciifyGradientRenderer
 
-Defined in: [renderers/gradient/GradientAsciiRenderer.ts:18](https://github.com/humanbydefinition/p5-asciify/blob/19019252009e2dce4c7cdce7a1f6dcfa67e0e5df/src/lib/renderers/gradient/GradientAsciiRenderer.ts#L18)
+Defined in: [renderers/gradient/GradientAsciiRenderer.ts:18](https://github.com/humanbydefinition/p5-asciify/blob/36a49a9e61e37560f02cabd72a830fdaa28b2804/src/lib/renderers/gradient/GradientAsciiRenderer.ts#L18)
 
 An ASCII renderer that applies all defined ASCII gradients/patterns to the input framebuffer.
 
@@ -18,16 +18,9 @@ An ASCII renderer that applies all defined ASCII gradients/patterns to the input
 
 ### new P5AsciifyGradientRenderer()
 
-```ts
-new P5AsciifyGradientRenderer(
-   p5Instance, 
-   grid, 
-   characterSet, 
-   gradientManager, 
-   options): P5AsciifyGradientRenderer
-```
+> **new P5AsciifyGradientRenderer**(`p5Instance`, `grid`, `characterSet`, `gradientManager`, `options`): [`P5AsciifyGradientRenderer`](P5AsciifyGradientRenderer.md)
 
-Defined in: [renderers/gradient/GradientAsciiRenderer.ts:27](https://github.com/humanbydefinition/p5-asciify/blob/19019252009e2dce4c7cdce7a1f6dcfa67e0e5df/src/lib/renderers/gradient/GradientAsciiRenderer.ts#L27)
+Defined in: [renderers/gradient/GradientAsciiRenderer.ts:27](https://github.com/humanbydefinition/p5-asciify/blob/36a49a9e61e37560f02cabd72a830fdaa28b2804/src/lib/renderers/gradient/GradientAsciiRenderer.ts#L27)
 
 #### Parameters
 
@@ -51,22 +44,22 @@ Defined in: [renderers/gradient/GradientAsciiRenderer.ts:27](https://github.com/
 
 | Property | Modifier | Type | Inherited from | Defined in |
 | ------ | ------ | ------ | ------ | ------ |
-| <a id="_asciicharacterframebuffer"></a> `_asciiCharacterFramebuffer` | `protected` | `Framebuffer` | [`P5AsciifyRenderer`](P5AsciifyRenderer.md).[`_asciiCharacterFramebuffer`](P5AsciifyRenderer.md#_asciicharacterframebuffer) | [renderers/AsciiRenderer.ts:18](https://github.com/humanbydefinition/p5-asciify/blob/19019252009e2dce4c7cdce7a1f6dcfa67e0e5df/src/lib/renderers/AsciiRenderer.ts#L18) |
-| <a id="_options"></a> `_options` | `protected` | `AsciiRendererOptions` | [`P5AsciifyRenderer`](P5AsciifyRenderer.md).[`_options`](P5AsciifyRenderer.md#_options-1) | [renderers/AsciiRenderer.ts:26](https://github.com/humanbydefinition/p5-asciify/blob/19019252009e2dce4c7cdce7a1f6dcfa67e0e5df/src/lib/renderers/AsciiRenderer.ts#L26) |
-| <a id="_outputframebuffer"></a> `_outputFramebuffer` | `protected` | `Framebuffer` | [`P5AsciifyRenderer`](P5AsciifyRenderer.md).[`_outputFramebuffer`](P5AsciifyRenderer.md#_outputframebuffer) | [renderers/AsciiRenderer.ts:19](https://github.com/humanbydefinition/p5-asciify/blob/19019252009e2dce4c7cdce7a1f6dcfa67e0e5df/src/lib/renderers/AsciiRenderer.ts#L19) |
-| <a id="_primarycolorsampleframebuffer"></a> `_primaryColorSampleFramebuffer` | `protected` | `Framebuffer` | [`P5AsciifyRenderer`](P5AsciifyRenderer.md).[`_primaryColorSampleFramebuffer`](P5AsciifyRenderer.md#_primarycolorsampleframebuffer) | [renderers/AsciiRenderer.ts:16](https://github.com/humanbydefinition/p5-asciify/blob/19019252009e2dce4c7cdce7a1f6dcfa67e0e5df/src/lib/renderers/AsciiRenderer.ts#L16) |
-| <a id="_secondarycolorsampleframebuffer"></a> `_secondaryColorSampleFramebuffer` | `protected` | `Framebuffer` | [`P5AsciifyRenderer`](P5AsciifyRenderer.md).[`_secondaryColorSampleFramebuffer`](P5AsciifyRenderer.md#_secondarycolorsampleframebuffer) | [renderers/AsciiRenderer.ts:17](https://github.com/humanbydefinition/p5-asciify/blob/19019252009e2dce4c7cdce7a1f6dcfa67e0e5df/src/lib/renderers/AsciiRenderer.ts#L17) |
-| <a id="_shader"></a> `_shader` | `protected` | `Shader` | [`P5AsciifyRenderer`](P5AsciifyRenderer.md).[`_shader`](P5AsciifyRenderer.md#_shader) | [renderers/AsciiRenderer.ts:20](https://github.com/humanbydefinition/p5-asciify/blob/19019252009e2dce4c7cdce7a1f6dcfa67e0e5df/src/lib/renderers/AsciiRenderer.ts#L20) |
-| <a id="asciicharactershader"></a> `asciiCharacterShader` | `private` | `Shader` | - | [renderers/gradient/GradientAsciiRenderer.ts:22](https://github.com/humanbydefinition/p5-asciify/blob/19019252009e2dce4c7cdce7a1f6dcfa67e0e5df/src/lib/renderers/gradient/GradientAsciiRenderer.ts#L22) |
-| <a id="characterset-1"></a> `characterSet` | `public` | [`P5AsciifyCharacterSet`](P5AsciifyCharacterSet.md) | [`P5AsciifyRenderer`](P5AsciifyRenderer.md).[`characterSet`](P5AsciifyRenderer.md#characterset-1) | [renderers/AsciiRenderer.ts:25](https://github.com/humanbydefinition/p5-asciify/blob/19019252009e2dce4c7cdce7a1f6dcfa67e0e5df/src/lib/renderers/AsciiRenderer.ts#L25) |
-| <a id="colorsampleshader"></a> `colorSampleShader` | `private` | `Shader` | - | [renderers/gradient/GradientAsciiRenderer.ts:20](https://github.com/humanbydefinition/p5-asciify/blob/19019252009e2dce4c7cdce7a1f6dcfa67e0e5df/src/lib/renderers/gradient/GradientAsciiRenderer.ts#L20) |
-| <a id="gradientmanager-1"></a> `gradientManager` | `private` | [`P5AsciifyGradientManager`](P5AsciifyGradientManager.md) | - | [renderers/gradient/GradientAsciiRenderer.ts:25](https://github.com/humanbydefinition/p5-asciify/blob/19019252009e2dce4c7cdce7a1f6dcfa67e0e5df/src/lib/renderers/gradient/GradientAsciiRenderer.ts#L25) |
-| <a id="grayscaleframebuffer"></a> `grayscaleFramebuffer` | `private` | `Framebuffer` | - | [renderers/gradient/GradientAsciiRenderer.ts:21](https://github.com/humanbydefinition/p5-asciify/blob/19019252009e2dce4c7cdce7a1f6dcfa67e0e5df/src/lib/renderers/gradient/GradientAsciiRenderer.ts#L21) |
-| <a id="grayscaleshader"></a> `grayscaleShader` | `private` | `Shader` | - | [renderers/gradient/GradientAsciiRenderer.ts:19](https://github.com/humanbydefinition/p5-asciify/blob/19019252009e2dce4c7cdce7a1f6dcfa67e0e5df/src/lib/renderers/gradient/GradientAsciiRenderer.ts#L19) |
-| <a id="grid-1"></a> `grid` | `protected` | [`P5AsciifyGrid`](P5AsciifyGrid.md) | [`P5AsciifyRenderer`](P5AsciifyRenderer.md).[`grid`](P5AsciifyRenderer.md#grid-1) | [renderers/AsciiRenderer.ts:24](https://github.com/humanbydefinition/p5-asciify/blob/19019252009e2dce4c7cdce7a1f6dcfa67e0e5df/src/lib/renderers/AsciiRenderer.ts#L24) |
-| <a id="nextasciigradientframebuffer"></a> `nextAsciiGradientFramebuffer` | `private` | `Framebuffer` | - | [renderers/gradient/GradientAsciiRenderer.ts:24](https://github.com/humanbydefinition/p5-asciify/blob/19019252009e2dce4c7cdce7a1f6dcfa67e0e5df/src/lib/renderers/gradient/GradientAsciiRenderer.ts#L24) |
-| <a id="p"></a> `p` | `protected` | `__module` | [`P5AsciifyRenderer`](P5AsciifyRenderer.md).[`p`](P5AsciifyRenderer.md#p-1) | [renderers/AsciiRenderer.ts:23](https://github.com/humanbydefinition/p5-asciify/blob/19019252009e2dce4c7cdce7a1f6dcfa67e0e5df/src/lib/renderers/AsciiRenderer.ts#L23) |
-| <a id="prevasciigradientframebuffer"></a> `prevAsciiGradientFramebuffer` | `private` | `Framebuffer` | - | [renderers/gradient/GradientAsciiRenderer.ts:23](https://github.com/humanbydefinition/p5-asciify/blob/19019252009e2dce4c7cdce7a1f6dcfa67e0e5df/src/lib/renderers/gradient/GradientAsciiRenderer.ts#L23) |
+| <a id="_asciicharacterframebuffer"></a> `_asciiCharacterFramebuffer` | `protected` | `Framebuffer` | [`P5AsciifyRenderer`](P5AsciifyRenderer.md).[`_asciiCharacterFramebuffer`](P5AsciifyRenderer.md#_asciicharacterframebuffer) | [renderers/AsciiRenderer.ts:18](https://github.com/humanbydefinition/p5-asciify/blob/36a49a9e61e37560f02cabd72a830fdaa28b2804/src/lib/renderers/AsciiRenderer.ts#L18) |
+| <a id="_options"></a> `_options` | `protected` | `AsciiRendererOptions` | [`P5AsciifyRenderer`](P5AsciifyRenderer.md).[`_options`](P5AsciifyRenderer.md#_options-1) | [renderers/AsciiRenderer.ts:26](https://github.com/humanbydefinition/p5-asciify/blob/36a49a9e61e37560f02cabd72a830fdaa28b2804/src/lib/renderers/AsciiRenderer.ts#L26) |
+| <a id="_outputframebuffer"></a> `_outputFramebuffer` | `protected` | `Framebuffer` | [`P5AsciifyRenderer`](P5AsciifyRenderer.md).[`_outputFramebuffer`](P5AsciifyRenderer.md#_outputframebuffer) | [renderers/AsciiRenderer.ts:19](https://github.com/humanbydefinition/p5-asciify/blob/36a49a9e61e37560f02cabd72a830fdaa28b2804/src/lib/renderers/AsciiRenderer.ts#L19) |
+| <a id="_primarycolorsampleframebuffer"></a> `_primaryColorSampleFramebuffer` | `protected` | `Framebuffer` | [`P5AsciifyRenderer`](P5AsciifyRenderer.md).[`_primaryColorSampleFramebuffer`](P5AsciifyRenderer.md#_primarycolorsampleframebuffer) | [renderers/AsciiRenderer.ts:16](https://github.com/humanbydefinition/p5-asciify/blob/36a49a9e61e37560f02cabd72a830fdaa28b2804/src/lib/renderers/AsciiRenderer.ts#L16) |
+| <a id="_secondarycolorsampleframebuffer"></a> `_secondaryColorSampleFramebuffer` | `protected` | `Framebuffer` | [`P5AsciifyRenderer`](P5AsciifyRenderer.md).[`_secondaryColorSampleFramebuffer`](P5AsciifyRenderer.md#_secondarycolorsampleframebuffer) | [renderers/AsciiRenderer.ts:17](https://github.com/humanbydefinition/p5-asciify/blob/36a49a9e61e37560f02cabd72a830fdaa28b2804/src/lib/renderers/AsciiRenderer.ts#L17) |
+| <a id="_shader"></a> `_shader` | `protected` | `Shader` | [`P5AsciifyRenderer`](P5AsciifyRenderer.md).[`_shader`](P5AsciifyRenderer.md#_shader) | [renderers/AsciiRenderer.ts:20](https://github.com/humanbydefinition/p5-asciify/blob/36a49a9e61e37560f02cabd72a830fdaa28b2804/src/lib/renderers/AsciiRenderer.ts#L20) |
+| <a id="asciicharactershader"></a> `asciiCharacterShader` | `private` | `Shader` | - | [renderers/gradient/GradientAsciiRenderer.ts:22](https://github.com/humanbydefinition/p5-asciify/blob/36a49a9e61e37560f02cabd72a830fdaa28b2804/src/lib/renderers/gradient/GradientAsciiRenderer.ts#L22) |
+| <a id="characterset-1"></a> `characterSet` | `public` | [`P5AsciifyCharacterSet`](P5AsciifyCharacterSet.md) | [`P5AsciifyRenderer`](P5AsciifyRenderer.md).[`characterSet`](P5AsciifyRenderer.md#characterset-1) | [renderers/AsciiRenderer.ts:25](https://github.com/humanbydefinition/p5-asciify/blob/36a49a9e61e37560f02cabd72a830fdaa28b2804/src/lib/renderers/AsciiRenderer.ts#L25) |
+| <a id="colorsampleshader"></a> `colorSampleShader` | `private` | `Shader` | - | [renderers/gradient/GradientAsciiRenderer.ts:20](https://github.com/humanbydefinition/p5-asciify/blob/36a49a9e61e37560f02cabd72a830fdaa28b2804/src/lib/renderers/gradient/GradientAsciiRenderer.ts#L20) |
+| <a id="gradientmanager-1"></a> `gradientManager` | `private` | [`P5AsciifyGradientManager`](P5AsciifyGradientManager.md) | - | [renderers/gradient/GradientAsciiRenderer.ts:25](https://github.com/humanbydefinition/p5-asciify/blob/36a49a9e61e37560f02cabd72a830fdaa28b2804/src/lib/renderers/gradient/GradientAsciiRenderer.ts#L25) |
+| <a id="grayscaleframebuffer"></a> `grayscaleFramebuffer` | `private` | `Framebuffer` | - | [renderers/gradient/GradientAsciiRenderer.ts:21](https://github.com/humanbydefinition/p5-asciify/blob/36a49a9e61e37560f02cabd72a830fdaa28b2804/src/lib/renderers/gradient/GradientAsciiRenderer.ts#L21) |
+| <a id="grayscaleshader"></a> `grayscaleShader` | `private` | `Shader` | - | [renderers/gradient/GradientAsciiRenderer.ts:19](https://github.com/humanbydefinition/p5-asciify/blob/36a49a9e61e37560f02cabd72a830fdaa28b2804/src/lib/renderers/gradient/GradientAsciiRenderer.ts#L19) |
+| <a id="grid-1"></a> `grid` | `protected` | [`P5AsciifyGrid`](P5AsciifyGrid.md) | [`P5AsciifyRenderer`](P5AsciifyRenderer.md).[`grid`](P5AsciifyRenderer.md#grid-1) | [renderers/AsciiRenderer.ts:24](https://github.com/humanbydefinition/p5-asciify/blob/36a49a9e61e37560f02cabd72a830fdaa28b2804/src/lib/renderers/AsciiRenderer.ts#L24) |
+| <a id="nextasciigradientframebuffer"></a> `nextAsciiGradientFramebuffer` | `private` | `Framebuffer` | - | [renderers/gradient/GradientAsciiRenderer.ts:24](https://github.com/humanbydefinition/p5-asciify/blob/36a49a9e61e37560f02cabd72a830fdaa28b2804/src/lib/renderers/gradient/GradientAsciiRenderer.ts#L24) |
+| <a id="p"></a> `p` | `protected` | `__module` | [`P5AsciifyRenderer`](P5AsciifyRenderer.md).[`p`](P5AsciifyRenderer.md#p-1) | [renderers/AsciiRenderer.ts:23](https://github.com/humanbydefinition/p5-asciify/blob/36a49a9e61e37560f02cabd72a830fdaa28b2804/src/lib/renderers/AsciiRenderer.ts#L23) |
+| <a id="prevasciigradientframebuffer"></a> `prevAsciiGradientFramebuffer` | `private` | `Framebuffer` | - | [renderers/gradient/GradientAsciiRenderer.ts:23](https://github.com/humanbydefinition/p5-asciify/blob/36a49a9e61e37560f02cabd72a830fdaa28b2804/src/lib/renderers/gradient/GradientAsciiRenderer.ts#L23) |
 
 ## Accessors
 
@@ -74,11 +67,9 @@ Defined in: [renderers/gradient/GradientAsciiRenderer.ts:27](https://github.com/
 
 #### Get Signature
 
-```ts
-get asciiCharacterFramebuffer(): Framebuffer
-```
+> **get** **asciiCharacterFramebuffer**(): `Framebuffer`
 
-Defined in: [renderers/AsciiRenderer.ts:147](https://github.com/humanbydefinition/p5-asciify/blob/19019252009e2dce4c7cdce7a1f6dcfa67e0e5df/src/lib/renderers/AsciiRenderer.ts#L147)
+Defined in: [renderers/AsciiRenderer.ts:147](https://github.com/humanbydefinition/p5-asciify/blob/36a49a9e61e37560f02cabd72a830fdaa28b2804/src/lib/renderers/AsciiRenderer.ts#L147)
 
 ##### Returns
 
@@ -94,11 +85,9 @@ Defined in: [renderers/AsciiRenderer.ts:147](https://github.com/humanbydefinitio
 
 #### Get Signature
 
-```ts
-get options(): T
-```
+> **get** **options**(): `T`
 
-Defined in: [renderers/AsciiRenderer.ts:144](https://github.com/humanbydefinition/p5-asciify/blob/19019252009e2dce4c7cdce7a1f6dcfa67e0e5df/src/lib/renderers/AsciiRenderer.ts#L144)
+Defined in: [renderers/AsciiRenderer.ts:144](https://github.com/humanbydefinition/p5-asciify/blob/36a49a9e61e37560f02cabd72a830fdaa28b2804/src/lib/renderers/AsciiRenderer.ts#L144)
 
 ##### Returns
 
@@ -114,11 +103,9 @@ Defined in: [renderers/AsciiRenderer.ts:144](https://github.com/humanbydefinitio
 
 #### Get Signature
 
-```ts
-get outputFramebuffer(): Framebuffer
-```
+> **get** **outputFramebuffer**(): `Framebuffer`
 
-Defined in: [renderers/AsciiRenderer.ts:143](https://github.com/humanbydefinition/p5-asciify/blob/19019252009e2dce4c7cdce7a1f6dcfa67e0e5df/src/lib/renderers/AsciiRenderer.ts#L143)
+Defined in: [renderers/AsciiRenderer.ts:143](https://github.com/humanbydefinition/p5-asciify/blob/36a49a9e61e37560f02cabd72a830fdaa28b2804/src/lib/renderers/AsciiRenderer.ts#L143)
 
 ##### Returns
 
@@ -134,11 +121,9 @@ Defined in: [renderers/AsciiRenderer.ts:143](https://github.com/humanbydefinitio
 
 #### Get Signature
 
-```ts
-get primaryColorSampleFramebuffer(): Framebuffer
-```
+> **get** **primaryColorSampleFramebuffer**(): `Framebuffer`
 
-Defined in: [renderers/AsciiRenderer.ts:145](https://github.com/humanbydefinition/p5-asciify/blob/19019252009e2dce4c7cdce7a1f6dcfa67e0e5df/src/lib/renderers/AsciiRenderer.ts#L145)
+Defined in: [renderers/AsciiRenderer.ts:145](https://github.com/humanbydefinition/p5-asciify/blob/36a49a9e61e37560f02cabd72a830fdaa28b2804/src/lib/renderers/AsciiRenderer.ts#L145)
 
 ##### Returns
 
@@ -154,11 +139,9 @@ Defined in: [renderers/AsciiRenderer.ts:145](https://github.com/humanbydefinitio
 
 #### Get Signature
 
-```ts
-get secondaryColorSampleFramebuffer(): Framebuffer
-```
+> **get** **secondaryColorSampleFramebuffer**(): `Framebuffer`
 
-Defined in: [renderers/AsciiRenderer.ts:146](https://github.com/humanbydefinition/p5-asciify/blob/19019252009e2dce4c7cdce7a1f6dcfa67e0e5df/src/lib/renderers/AsciiRenderer.ts#L146)
+Defined in: [renderers/AsciiRenderer.ts:146](https://github.com/humanbydefinition/p5-asciify/blob/36a49a9e61e37560f02cabd72a830fdaa28b2804/src/lib/renderers/AsciiRenderer.ts#L146)
 
 ##### Returns
 
@@ -172,11 +155,9 @@ Defined in: [renderers/AsciiRenderer.ts:146](https://github.com/humanbydefinitio
 
 ### render()
 
-```ts
-render(inputFramebuffer, previousAsciiRenderer): void
-```
+> **render**(`inputFramebuffer`, `previousAsciiRenderer`): `void`
 
-Defined in: [renderers/gradient/GradientAsciiRenderer.ts:74](https://github.com/humanbydefinition/p5-asciify/blob/19019252009e2dce4c7cdce7a1f6dcfa67e0e5df/src/lib/renderers/gradient/GradientAsciiRenderer.ts#L74)
+Defined in: [renderers/gradient/GradientAsciiRenderer.ts:74](https://github.com/humanbydefinition/p5-asciify/blob/36a49a9e61e37560f02cabd72a830fdaa28b2804/src/lib/renderers/gradient/GradientAsciiRenderer.ts#L74)
 
 Convert and render the input framebuffer to ASCII.
 
@@ -199,11 +180,9 @@ Convert and render the input framebuffer to ASCII.
 
 ### resetShaders()
 
-```ts
-resetShaders(): void
-```
+> **resetShaders**(): `void`
 
-Defined in: [renderers/AsciiRenderer.ts:82](https://github.com/humanbydefinition/p5-asciify/blob/19019252009e2dce4c7cdce7a1f6dcfa67e0e5df/src/lib/renderers/AsciiRenderer.ts#L82)
+Defined in: [renderers/AsciiRenderer.ts:82](https://github.com/humanbydefinition/p5-asciify/blob/36a49a9e61e37560f02cabd72a830fdaa28b2804/src/lib/renderers/AsciiRenderer.ts#L82)
 
 Resets the shaders for the renderer.
 
@@ -219,11 +198,9 @@ Resets the shaders for the renderer.
 
 ### resizeFramebuffers()
 
-```ts
-resizeFramebuffers(): void
-```
+> **resizeFramebuffers**(): `void`
 
-Defined in: [renderers/gradient/GradientAsciiRenderer.ts:67](https://github.com/humanbydefinition/p5-asciify/blob/19019252009e2dce4c7cdce7a1f6dcfa67e0e5df/src/lib/renderers/gradient/GradientAsciiRenderer.ts#L67)
+Defined in: [renderers/gradient/GradientAsciiRenderer.ts:67](https://github.com/humanbydefinition/p5-asciify/blob/36a49a9e61e37560f02cabd72a830fdaa28b2804/src/lib/renderers/gradient/GradientAsciiRenderer.ts#L67)
 
 Resizes all framebuffers based on the grid dimensions.
 
@@ -239,11 +216,9 @@ Resizes all framebuffers based on the grid dimensions.
 
 ### updateOptions()
 
-```ts
-updateOptions(newOptions): void
-```
+> **updateOptions**(`newOptions`): `void`
 
-Defined in: [renderers/AsciiRenderer.ts:88](https://github.com/humanbydefinition/p5-asciify/blob/19019252009e2dce4c7cdce7a1f6dcfa67e0e5df/src/lib/renderers/AsciiRenderer.ts#L88)
+Defined in: [renderers/AsciiRenderer.ts:88](https://github.com/humanbydefinition/p5-asciify/blob/36a49a9e61e37560f02cabd72a830fdaa28b2804/src/lib/renderers/AsciiRenderer.ts#L88)
 
 Updates renderer options.
 
