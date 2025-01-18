@@ -30,6 +30,11 @@
     "strict": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
+
+    "types": [
+      "vite-plugin-glsl/ext"
+    ]
+
   },
   "include": ["src/lib", "src/types"]
 }
