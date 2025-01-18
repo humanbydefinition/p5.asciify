@@ -8,11 +8,13 @@
 
 > `const` **FONT\_SIZE\_LIMITS**: `object`
 
-Defined in: [constants.ts:52](https://github.com/humanbydefinition/p5-asciify/blob/bcd07949fa384e1b98f5f7468c32a61b5e1abf5a/src/lib/constants.ts#L52)
+Defined in: renderers/constants.ts:4
+
+Font size constraints for ASCII rendering
 
 ## Type declaration
 
-| Name | Type | Default value | Defined in |
-| ------ | ------ | ------ | ------ |
-| <a id="max"></a> `MAX` | `number` | 128 | [constants.ts:54](https://github.com/humanbydefinition/p5-asciify/blob/bcd07949fa384e1b98f5f7468c32a61b5e1abf5a/src/lib/constants.ts#L54) |
-| <a id="min"></a> `MIN` | `number` | 1 | [constants.ts:53](https://github.com/humanbydefinition/p5-asciify/blob/bcd07949fa384e1b98f5f7468c32a61b5e1abf5a/src/lib/constants.ts#L53) |
+| Name | Type | Default value | Description | Defined in |
+| ------ | ------ | ------ | ------ | ------ |
+| <a id="max"></a> `MAX` | `128` | 128 | Maximum allowed font size in pixels | renderers/constants.ts:8 |
+| <a id="min"></a> `MIN` | `1` | 1 | Minimum allowed font size in pixels | renderers/constants.ts:6 |

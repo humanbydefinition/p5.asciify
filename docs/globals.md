@@ -31,11 +31,11 @@
 
 | Variable | Description |
 | ------ | ------ |
-| [ACCURATE\_OPTIONS](variables/ACCURATE_OPTIONS.md) | - |
-| [BRIGHTNESS\_OPTIONS](variables/BRIGHTNESS_OPTIONS.md) | - |
-| [CUSTOM\_OPTIONS](variables/CUSTOM_OPTIONS.md) | - |
-| [EDGE\_CHARACTER\_LENGTH](variables/EDGE_CHARACTER_LENGTH.md) | - |
-| [EDGE\_OPTIONS](variables/EDGE_OPTIONS.md) | - |
-| [FONT\_SIZE\_LIMITS](variables/FONT_SIZE_LIMITS.md) | - |
-| [GRADIENT\_OPTIONS](variables/GRADIENT_OPTIONS.md) | - |
+| [ACCURATE\_OPTIONS](variables/ACCURATE_OPTIONS.md) | Default configuration options for accurate ASCII renderer |
+| [BRIGHTNESS\_OPTIONS](variables/BRIGHTNESS_OPTIONS.md) | Default configuration options for brightness-based ASCII renderer |
+| [CUSTOM\_OPTIONS](variables/CUSTOM_OPTIONS.md) | Default configuration options for custom ASCII renderer |
+| [EDGE\_CHARACTER\_LENGTH](variables/EDGE_CHARACTER_LENGTH.md) | Number of characters used in edge detection renderer's character set |
+| [EDGE\_OPTIONS](variables/EDGE_OPTIONS.md) | Default configuration options for edge detection ASCII renderer |
+| [FONT\_SIZE\_LIMITS](variables/FONT_SIZE_LIMITS.md) | Font size constraints for ASCII rendering |
+| [GRADIENT\_OPTIONS](variables/GRADIENT_OPTIONS.md) | Default configuration options for gradient-based ASCII renderer |
 | [p5asciify](variables/p5asciify.md) | The main instance of the p5.asciify library, which is used to access all of the library's functionality. |

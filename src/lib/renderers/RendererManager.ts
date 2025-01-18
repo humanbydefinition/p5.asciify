@@ -15,7 +15,7 @@ import {
     GRADIENT_OPTIONS,
     EDGE_OPTIONS,
     CUSTOM_OPTIONS,
-} from '../constants';
+} from './defaults';
 
 import { P5AsciifyCharacterSet } from '../CharacterSet';
 import { P5AsciifyGradientManager } from '../gradients/GradientManager';

@@ -4,7 +4,7 @@ import { P5AsciifyFontTextureAtlas } from './FontTextureAtlas';
 import { P5AsciifyGrid } from './Grid';
 import { P5AsciifyRendererManager } from './renderers/RendererManager';
 import { P5AsciifyError } from './AsciifyError';
-import { FONT_SIZE_LIMITS } from './constants';
+import { FONT_SIZE_LIMITS } from './renderers/constants';
 import { GradientType } from './gradients/types';
 import { validateGradientParams } from './validators/GradientValidator';
 import { P5AsciifyGradient } from './gradients/Gradient';
