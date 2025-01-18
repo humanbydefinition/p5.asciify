@@ -1,31 +1,51 @@
 import p5 from 'p5';
 /**
- * Represents a 2D grid, handling the dimensions and resizing of the grid.
+ * Represents a 2D grid, where each cell has a fixed width and height.
+ * Based on the current canvas dimensions, the grid is resized to fit the maximum number of cells.
  */
 export declare class P5AsciifyGrid {
     private p;
     private _cellWidth;
     private _cellHeight;
+    /**
+     * The number of columns in the grid.
+     */
     private _cols;
+    /**
+     * The number of rows in the grid.
+     */
     private _rows;
+    /**
+     * The total width of the grid in pixels.
+     */
     private _width;
+    /**
+     * The total height of the grid in pixels.
+     */
     private _height;
+    /**
+     * The offset to the outer canvas on the x-axis when centering the grid.
+     */
     private _offsetX;
+    /**
+     * The offset to the outer canvas on the y-axis when centering the grid.
+     */
     private _offsetY;
+    /**
+     * Create a new grid instance.
+     * @param p The p5 instance.
+     * @param _cellWidth The width of each cell in the grid.
+     * @param _cellHeight The height of each cell in the grid.
+     */
     constructor(p: p5, _cellWidth: number, _cellHeight: number);
     /**
-     * Reset the grid to the default number of columns and rows based on the current canvas and cell dimensions.
+     * Reset the grid to the default number of columns and rows based on the current canvas and `_cellWidth` and `_cellHeight`.
      */
     reset(): void;
     /**
-     * Reset the total grid width/height and the offset to the outer canvas.
+     * Reset the total grid width & height, and the offset to the outer canvas.
      */
     private _resizeGrid;
-    /**
-     * Calculate the number of columns and rows in the grid based on the current canvas and cell dimensions.
-     * @returns The number of columns and rows in the grid.
-     */
-    private _calculateGridSize;
     /**
      * Re-assign the grid cell dimensions and reset the grid.
      * @param newCellWidth The new cell width.

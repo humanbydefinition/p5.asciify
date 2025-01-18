@@ -21,7 +21,7 @@ export declare class P5AsciifyRendererManager {
      * @param inputFramebuffer The input framebuffer to transform into ASCII.
      * @param borderColor The border color of the canvas, which is not occupied by the centered ASCII grid.
      */
-    render(inputFramebuffer: any, borderColor: any): void;
+    render(inputFramebuffer: any): void;
     /**
      * Continuously checks if the canvas dimensions have changed.
      * If they have, the grid is reset and the renderers are resized.

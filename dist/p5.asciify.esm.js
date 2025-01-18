@@ -133,36 +133,50 @@ class F {
   }
 }
 class y {
+  /**
+   * Create a new grid instance.
+   * @param p The p5 instance.
+   * @param _cellWidth The width of each cell in the grid.
+   * @param _cellHeight The height of each cell in the grid.
+   */
   constructor(A, e, r) {
-    i(this, "_cols", 0);
-    i(this, "_rows", 0);
-    i(this, "_width", 0);
-    i(this, "_height", 0);
-    i(this, "_offsetX", 0);
-    i(this, "_offsetY", 0);
+    /**
+     * The number of columns in the grid.
+     */
+    i(this, "_cols");
+    /**
+     * The number of rows in the grid.
+     */
+    i(this, "_rows");
+    /**
+     * The total width of the grid in pixels.
+     */
+    i(this, "_width");
+    /**
+     * The total height of the grid in pixels.
+     */
+    i(this, "_height");
+    /**
+     * The offset to the outer canvas on the x-axis when centering the grid.
+     */
+    i(this, "_offsetX");
+    /**
+     * The offset to the outer canvas on the y-axis when centering the grid.
+     */
+    i(this, "_offsetY");
     this.p = A, this._cellWidth = e, this._cellHeight = r, this.reset();
   }
   /**
-   * Reset the grid to the default number of columns and rows based on the current canvas and cell dimensions.
+   * Reset the grid to the default number of columns and rows based on the current canvas and `_cellWidth` and `_cellHeight`.
    */
   reset() {
-    [this._cols, this._rows] = this._calculateGridSize(), this._resizeGrid();
+    [this._cols, this._rows] = [Math.floor(this.p.width / this._cellWidth), Math.floor(this.p.height / this._cellHeight)], this._resizeGrid();
   }
   /**
-   * Reset the total grid width/height and the offset to the outer canvas.
+   * Reset the total grid width & height, and the offset to the outer canvas.
    */
   _resizeGrid() {
     this._width = this._cols * this._cellWidth, this._height = this._rows * this._cellHeight, this._offsetX = Math.floor((this.p.width - this._width) / 2), this._offsetY = Math.floor((this.p.height - this._height) / 2);
-  }
-  /**
-   * Calculate the number of columns and rows in the grid based on the current canvas and cell dimensions.
-   * @returns The number of columns and rows in the grid.
-   */
-  _calculateGridSize() {
-    return [
-      Math.floor(this.p.width / this._cellWidth),
-      Math.floor(this.p.height / this._cellHeight)
-    ];
   }
   /**
    * Re-assign the grid cell dimensions and reset the grid.
@@ -337,8 +351,8 @@ precision mediump float;uniform sampler2D u_inputImage;uniform vec2 u_inputImage
 `, I = (t, A, e) => `
 precision mediump float;uniform sampler2D u_inputImage,u_inputImageBW;uniform vec2 u_inputImageSize;uniform int u_gridCols,u_gridRows,u_colorRank;const int e=${t},u=${A},f=${e};void main(){vec2 i=floor(gl_FragCoord.xy),t=u_inputImageSize/vec2(float(u_gridCols),float(u_gridRows));i*=t;vec2 k=(i+t*.5)/u_inputImageSize;vec4 v=texture2D(u_inputImage,k),c[e];float b[e];for(int i=0;i<e;i++)c[i]=vec4(0),b[i]=0.;for(int v=0;v<u;v++)for(int k=0;k<f;k++){vec2 s=clamp((i+(vec2(float(v),float(k))+.5)*(t/vec2(float(u),float(f))))/u_inputImageSize,0.,1.);vec4 m=texture2D(u_inputImage,s),d=texture2D(u_inputImageBW,s);float r=step(.5,d.x);bool z=false;if(u_colorRank==1&&r>.5)z=true;else if(u_colorRank==2&&r<=.5)z=true;if(!z)continue;z=false;for(int i=0;i<e;i++)if(m.xyz==c[i].xyz){b[i]+=1.;z=true;break;}if(!z)for(int i=0;i<e;i++)if(b[i]==0.){c[i]=m;b[i]=1.;break;}}float z=0.;vec4 m=vec4(0);for(int i=0;i<e;i++){float u=b[i];vec4 k=c[i];if(u>z)z=u,m=k;}if(u_colorRank==2&&z==0.)m=v;gl_FragColor=vec4(m.xyz,1);}
 `;
-var z = "precision mediump float;uniform sampler2D u_inputImage;uniform sampler2D u_brightnessTexture;uniform vec2 u_inputImageSize;uniform int u_gridCols;uniform int u_gridRows;uniform float u_pixelRatio;const float EPSILON=0.01;void main(){vec2 logicalFragCoord=floor(gl_FragCoord.xy/u_pixelRatio);float cellWidth=u_inputImageSize.x/float(u_gridCols);float cellHeight=u_inputImageSize.y/float(u_gridRows);float gridX=floor(logicalFragCoord.x/cellWidth);float gridY=floor(logicalFragCoord.y/cellHeight);gridX=clamp(gridX,0.0,float(u_gridCols-1));gridY=clamp(gridY,0.0,float(u_gridRows-1));vec2 brightnessTexCoord=(vec2(gridX,gridY)+0.5)/vec2(float(u_gridCols),float(u_gridRows));float averageBrightness=texture2D(u_brightnessTexture,brightnessTexCoord).r;vec2 imageTexCoord=logicalFragCoord/u_inputImageSize;vec4 originalColor=texture2D(u_inputImage,imageTexCoord);float fragmentBrightness=0.299*originalColor.r+0.587*originalColor.g+0.114*originalColor.b;float brightnessDifference=fragmentBrightness-averageBrightness;float finalColorValue;if(brightnessDifference<-EPSILON){finalColorValue=0.0;}else{finalColorValue=1.0;}gl_FragColor=vec4(vec3(finalColorValue),1.0);}";
-class k extends C {
+var k = "precision mediump float;uniform sampler2D u_inputImage;uniform sampler2D u_brightnessTexture;uniform vec2 u_inputImageSize;uniform int u_gridCols;uniform int u_gridRows;uniform float u_pixelRatio;const float EPSILON=0.01;void main(){vec2 logicalFragCoord=floor(gl_FragCoord.xy/u_pixelRatio);float cellWidth=u_inputImageSize.x/float(u_gridCols);float cellHeight=u_inputImageSize.y/float(u_gridRows);float gridX=floor(logicalFragCoord.x/cellWidth);float gridY=floor(logicalFragCoord.y/cellHeight);gridX=clamp(gridX,0.0,float(u_gridCols-1));gridY=clamp(gridY,0.0,float(u_gridRows-1));vec2 brightnessTexCoord=(vec2(gridX,gridY)+0.5)/vec2(float(u_gridCols),float(u_gridRows));float averageBrightness=texture2D(u_brightnessTexture,brightnessTexCoord).r;vec2 imageTexCoord=logicalFragCoord/u_inputImageSize;vec4 originalColor=texture2D(u_inputImage,imageTexCoord);float fragmentBrightness=0.299*originalColor.r+0.587*originalColor.g+0.114*originalColor.b;float brightnessDifference=fragmentBrightness-averageBrightness;float finalColorValue;if(brightnessDifference<-EPSILON){finalColorValue=0.0;}else{finalColorValue=1.0;}gl_FragColor=vec4(vec3(finalColorValue),1.0);}";
+class z extends C {
   constructor(e, r, s, o) {
     super(e, r, s, o);
     i(this, "characterSelectionShader");
@@ -347,7 +361,7 @@ class k extends C {
     i(this, "brightnessSplitShader");
     i(this, "brightnessSampleFramebuffer");
     i(this, "brightnessSplitFramebuffer");
-    this.characterSelectionShader = this.p.createShader(E, m(this.characterSet.asciiFontTextureAtlas.fontSize)), this.brightnessSampleShader = this.p.createShader(E, P(this.grid.cellHeight, this.grid.cellWidth)), this.colorSampleShader = this.p.createShader(E, I(16, this.grid.cellHeight, this.grid.cellWidth)), this.brightnessSplitShader = this.p.createShader(E, z), this.brightnessSampleFramebuffer = this.p.createFramebuffer({
+    this.characterSelectionShader = this.p.createShader(E, m(this.characterSet.asciiFontTextureAtlas.fontSize)), this.brightnessSampleShader = this.p.createShader(E, P(this.grid.cellHeight, this.grid.cellWidth)), this.colorSampleShader = this.p.createShader(E, I(16, this.grid.cellHeight, this.grid.cellWidth)), this.brightnessSplitShader = this.p.createShader(E, k), this.brightnessSampleFramebuffer = this.p.createFramebuffer({
       density: 1,
       width: this.grid.cols,
       height: this.grid.rows,
@@ -814,7 +828,7 @@ class oA {
       u.characters
     ), this._renderers = [
       new Y(this.p, this.grid, new c(this.p, r, u.characters), { ...u }),
-      new k(this.p, this.grid, new c(this.p, r, w.characters), { ...w }),
+      new z(this.p, this.grid, new c(this.p, r, w.characters), { ...w }),
       new K(this.p, this.grid, this.gradientCharacterSet, this.gradientManager, { ...W }),
       new X(this.p, this.grid, new c(this.p, r, x.characters), { ...x }),
       new C(this.p, this.grid, new c(this.p, r, u.characters), { ...L })
@@ -825,11 +839,11 @@ class oA {
    * @param inputFramebuffer The input framebuffer to transform into ASCII.
    * @param borderColor The border color of the canvas, which is not occupied by the centered ASCII grid.
    */
-  render(A, e) {
-    let r = A, s = this._renderers[0];
-    for (const o of this._renderers)
-      o.options.enabled && (o.render(A, s), r = o.outputFramebuffer, s = o, this.lastRenderer = o);
-    this.p.clear(), this.p.background(e), this.p.image(r, -this.p.width / 2, -this.p.height / 2), this.checkCanvasDimensions();
+  render(A) {
+    let e = this._renderers[0];
+    for (const r of this._renderers)
+      r.options.enabled && (r.render(A, e), r.outputFramebuffer, e = r, this.lastRenderer = r);
+    this.checkCanvasDimensions();
   }
   /**
    * Continuously checks if the canvas dimensions have changed.
@@ -877,38 +891,94 @@ Valid parameters are: ${a.join(", ")}`
 }
 class gA {
   constructor() {
-    i(this, "_borderColor");
-    i(this, "_fontSize");
-    i(this, "rendererManager");
-    i(this, "_font");
-    i(this, "p");
+    /**
+     * Contains texture with all glyphs of a given font.
+     */
     i(this, "asciiFontTextureAtlas");
+    /**
+     * Contains the grid dimensions and offsets to create a perfect grid based on the canvas and font size.
+     */
     i(this, "grid");
+    /**
+     * Wraps around the user's `draw()` function to capture it's output for the ascii renderers.
+     */
     i(this, "sketchFramebuffer");
+    /**
+     * Manages the available ASCII renderers and handles rendering the ASCII output to the canvas.
+     */
+    i(this, "rendererManager");
+    /**
+     * The p5 instance.
+     */
+    i(this, "_p");
+    /**
+     * The font to use for the ASCII rendering.
+     */
+    i(this, "_font");
+    /**
+     * The background color to use for the ASCII rendering for the offset space, not occupied by the centered ASCII grid.
+     */
+    i(this, "_backgroundColor", "#000000");
+    /**
+     * The font size to use for the ASCII rendering.
+     */
+    i(this, "_fontSize", 16);
   }
   /**
-   * Initialize the p5 instance for the Asciifier
+   * Used to pass the p5 instance to the `p5.asciify` library. 
+   * 
+   * @remarks
+   * This method is called automatically in `GLOBAL` mode. In `INSTANCE` mode, it must be called manually at the start of the sketch.
+   * 
+   * In `GLOBAL` mode, `addDummyPreloadFunction` is set to `false` to prevent the p5 instance from adding a dummy preload function,
+   * which is already added to `window` by the library.
+   * 
+   * In `INSTANCE` mode, `addDummyPreloadFunction` is set to `true` to add a dummy preload function to the p5 instance directly.
+   * 
+   * A dummy `preload` function is necessary in case the user does not provide one, since `p5.asciify` relies on the benefits of the `preload` function.
+   * 
+   * The implementation and difference with dummy `preload` definitions for `GLOBAL` and `INSTANCE` modes is questionable, but I haven't found a better solution yet.
+   * 
    * @param p The p5 instance
+   * @param addDummyPreloadFunction Whether to add a dummy preload function to the p5 instance
    */
   instance(A, e = !0) {
-    this.p = A, this.p.p5asciify = this, !A.preload && e && (A.preload = () => {
+    this._p = A, this._p.p5asciify = this, !A.preload && e && (A.preload = () => {
     });
   }
   /**
-   * Sets up the P5Asciify library with the specified options
+   * Sets up the `p5.asciify` library by initializing the font texture atlas, grid, renderer manager, and sketch framebuffer.
+   * 
+   * Is called automatically after the user's `setup()` function has finished.
    */
   setup() {
-    this._borderColor = "#000000", this._fontSize = 16, this.asciiFontTextureAtlas = new F(this.p, this._font, this._fontSize), this.grid = new y(
-      this.p,
+    this.asciiFontTextureAtlas = new F(
+      this._p,
+      this._font,
+      this._fontSize
+    ), this.grid = new y(
+      this._p,
       this.asciiFontTextureAtlas.maxGlyphDimensions.width,
       this.asciiFontTextureAtlas.maxGlyphDimensions.height
-    ), this.rendererManager = new oA(this.p, this.grid, this.asciiFontTextureAtlas), this.sketchFramebuffer = this.p.createFramebuffer({
-      depthFormat: this.p.UNSIGNED_INT,
-      textureFiltering: this.p.NEAREST
+    ), this.rendererManager = new oA(
+      this._p,
+      this.grid,
+      this.asciiFontTextureAtlas
+    ), this.sketchFramebuffer = this._p.createFramebuffer({
+      depthFormat: this._p.UNSIGNED_INT,
+      textureFiltering: this._p.NEAREST
     });
   }
   /**
-   * Adds a new gradient to the renderer managers gradient manager, which will be rendered by the GradientAsciiRenderer.
+   * Renders the ASCII output to the canvas.
+   * 
+   * Is called automatically every time the user's `draw()` function has finished.
+   */
+  asciify() {
+    this.rendererManager.render(this.sketchFramebuffer), this._p.clear(), this._p.background(this._backgroundColor), this._p.image(this.rendererManager.lastRenderer.outputFramebuffer, -this._p.width / 2, -this._p.height / 2);
+  }
+  /**
+   * Adds a new gradient to the renderer managers gradient manager, which will be rendered by the `GradientAsciiRenderer`.
    * @param gradientName The name of the gradient.
    * @param brightnessStart The brightness value at which the gradient starts.
    * @param brightnessEnd The brightness value at which the gradient ends.
@@ -932,56 +1002,57 @@ class gA {
     );
   }
   /**
-   * Sets the font size for the ascii renderers
-   * @param fontSize The font size to set
+   * Removes a gradient from the renderer managers gradient manager.
+   * @param gradient The gradient to remove.
    */
-  set fontSize(A) {
+  removeAsciiGradient(A) {
+    this.rendererManager.gradientManager.removeGradient(A);
+  }
+  /**
+   * Sets the font size for the ascii renderers.
+   * @param fontSize The font size to set.
+   * @throws {@link P5AsciifyError} - If the font size is out of bounds.
+   */
+  fontSize(A) {
     if (A < d.MIN || A > d.MAX)
       throw new g(`Font size ${A} is out of bounds. It should be between ${d.MIN} and ${d.MAX}.`);
-    this._fontSize = A, this.p._setupDone && (this.asciiFontTextureAtlas.setFontSize(A), this.grid.resizeCellPixelDimensions(
+    this._fontSize = A, this._p._setupDone && (this.asciiFontTextureAtlas.setFontSize(A), this.grid.resizeCellPixelDimensions(
       this.asciiFontTextureAtlas.maxGlyphDimensions.width,
       this.asciiFontTextureAtlas.maxGlyphDimensions.height
     ), this.rendererManager.resetRendererDimensions());
   }
   /**
    * Sets the font for the ascii renderers.
-   * @param font The font to set.
+   * @param font The font to use. Can be a path, base64 string, or p5.Font object.
+   * @throws {@link P5AsciifyError} - If the font parameter is invalid or the font fails to load.
    */
-  set font(A) {
+  loadFont(A) {
     if (typeof A != "string" && !(A instanceof n.Font))
       throw new g("Invalid font parameter. Expected a path, base64 string, or p5.Font object.");
-    typeof A == "string" ? this.p.loadFont(
+    typeof A == "string" ? this._p.loadFont(
       A,
       (e) => {
-        this._font = e, this.p._decrementPreload();
+        this._font = e, this._p._decrementPreload();
       },
       () => {
         throw new g(`Failed to load font from path: '${A}'`);
       }
-    ) : this._font = A, this.p._setupDone && (this.asciiFontTextureAtlas.setFontObject(A), this.rendererManager.renderers.forEach((e) => e.characterSet.reset()), this.grid.resizeCellPixelDimensions(
+    ) : this._font = A, this._p._setupDone && (this.asciiFontTextureAtlas.setFontObject(A), this.rendererManager.renderers.forEach((e) => e.characterSet.reset()), this.grid.resizeCellPixelDimensions(
       this.asciiFontTextureAtlas.maxGlyphDimensions.width,
       this.asciiFontTextureAtlas.maxGlyphDimensions.height
     ));
   }
   /**
-   * Sets the border color for the ascii renderers.
-   * @param color The color to set.
-   * @throws {P5AsciifyError} If the color is not a string, array or p5.Color.
+   * Sets the background color for the ascii renderers. 
+   * 
+   * Covers the empty space on the edges of the canvas, which potentially is not occupied by the centered ASCII grid.
+   * @param color The color to set. Needs to be a valid type to pass to the `background()` function provided by p5.js.
+   * @throws {@link P5AsciifyError} - If the color is not a string, array or p5.Color.
    */
-  set borderColor(A) {
+  background(A) {
     if (typeof A != "string" && !Array.isArray(A) && !(A instanceof n.Color))
       throw new g(`Invalid color type: ${typeof A}. Expected string, array or p5.Color.`);
-    this._borderColor = A;
-  }
-  // Getters
-  get fontSize() {
-    return this._fontSize;
-  }
-  get font() {
-    return this._font;
-  }
-  get borderColor() {
-    return this._borderColor;
+    this._backgroundColor = A;
   }
 }
 function BA(t) {
@@ -999,7 +1070,7 @@ n.prototype.setupAsciify = function() {
 n.prototype.drawAsciify = function() {
 };
 n.prototype.registerMethod("init", function() {
-  l.instance(this, !1), this._incrementPreload(), l.font = QA;
+  l.instance(this, !1), this._incrementPreload(), l.loadFont(QA);
 });
 n.prototype.registerMethod("afterSetup", function() {
   BA(this), l.setup(), this.setupAsciify();
@@ -1008,7 +1079,7 @@ n.prototype.registerMethod("pre", function() {
   l.sketchFramebuffer.begin(), this.clear(), this.push();
 });
 n.prototype.registerMethod("post", function() {
-  this.pop(), l.sketchFramebuffer.end(), l.rendererManager.render(l.sketchFramebuffer, l.borderColor), this.drawAsciify();
+  this.pop(), l.sketchFramebuffer.end(), l.asciify(), this.drawAsciify();
 });
 export {
   w as ACCURATE_OPTIONS,
@@ -1019,7 +1090,7 @@ export {
   d as FONT_SIZE_LIMITS,
   W as GRADIENT_OPTIONS,
   gA as P5Asciifier,
-  k as P5AsciifyAccurateRenderer,
+  z as P5AsciifyAccurateRenderer,
   Y as P5AsciifyBrightnessRenderer,
   c as P5AsciifyCharacterSet,
   b as P5AsciifyColorPalette,

@@ -6,9 +6,10 @@
 
 # Class: P5AsciifyGrid
 
-Defined in: [Grid.ts:6](https://github.com/humanbydefinition/p5-asciify/blob/8b9754061a259b1877278d671905c17115a4d58b/src/lib/Grid.ts#L6)
+Defined in: [Grid.ts:7](https://github.com/humanbydefinition/p5-asciify/blob/d304087d1ede08ec5b6ebc19263567aad6425656/src/lib/Grid.ts#L7)
 
-Represents a 2D grid, handling the dimensions and resizing of the grid.
+Represents a 2D grid, where each cell has a fixed width and height.
+Based on the current canvas dimensions, the grid is resized to fit the maximum number of cells.
 
 ## Constructors
 
@@ -16,15 +17,17 @@ Represents a 2D grid, handling the dimensions and resizing of the grid.
 
 > **new P5AsciifyGrid**(`p`, `_cellWidth`, `_cellHeight`): [`P5AsciifyGrid`](P5AsciifyGrid.md)
 
-Defined in: [Grid.ts:19](https://github.com/humanbydefinition/p5-asciify/blob/8b9754061a259b1877278d671905c17115a4d58b/src/lib/Grid.ts#L19)
+Defined in: [Grid.ts:44](https://github.com/humanbydefinition/p5-asciify/blob/d304087d1ede08ec5b6ebc19263567aad6425656/src/lib/Grid.ts#L44)
+
+Create a new grid instance.
 
 #### Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `p` | `__module` |
-| `_cellWidth` | `number` |
-| `_cellHeight` | `number` |
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `p` | `__module` | The p5 instance. |
+| `_cellWidth` | `number` | The width of each cell in the grid. |
+| `_cellHeight` | `number` | The height of each cell in the grid. |
 
 #### Returns
 
@@ -34,15 +37,15 @@ Defined in: [Grid.ts:19](https://github.com/humanbydefinition/p5-asciify/blob/8b
 
 | Property | Modifier | Type | Description | Defined in |
 | ------ | ------ | ------ | ------ | ------ |
-| <a id="_cellheight-1"></a> `_cellHeight` | `private` | `number` | - | [Grid.ts:22](https://github.com/humanbydefinition/p5-asciify/blob/8b9754061a259b1877278d671905c17115a4d58b/src/lib/Grid.ts#L22) |
-| <a id="_cellwidth-1"></a> `_cellWidth` | `private` | `number` | - | [Grid.ts:21](https://github.com/humanbydefinition/p5-asciify/blob/8b9754061a259b1877278d671905c17115a4d58b/src/lib/Grid.ts#L21) |
-| <a id="_cols"></a> `_cols` | `private` | `number` | The number of columns in the grid. | [Grid.ts:10](https://github.com/humanbydefinition/p5-asciify/blob/8b9754061a259b1877278d671905c17115a4d58b/src/lib/Grid.ts#L10) |
-| <a id="_height"></a> `_height` | `private` | `number` | - | [Grid.ts:15](https://github.com/humanbydefinition/p5-asciify/blob/8b9754061a259b1877278d671905c17115a4d58b/src/lib/Grid.ts#L15) |
-| <a id="_offsetx"></a> `_offsetX` | `private` | `number` | - | [Grid.ts:16](https://github.com/humanbydefinition/p5-asciify/blob/8b9754061a259b1877278d671905c17115a4d58b/src/lib/Grid.ts#L16) |
-| <a id="_offsety"></a> `_offsetY` | `private` | `number` | - | [Grid.ts:17](https://github.com/humanbydefinition/p5-asciify/blob/8b9754061a259b1877278d671905c17115a4d58b/src/lib/Grid.ts#L17) |
-| <a id="_rows"></a> `_rows` | `private` | `number` | - | [Grid.ts:13](https://github.com/humanbydefinition/p5-asciify/blob/8b9754061a259b1877278d671905c17115a4d58b/src/lib/Grid.ts#L13) |
-| <a id="_width"></a> `_width` | `private` | `number` | - | [Grid.ts:14](https://github.com/humanbydefinition/p5-asciify/blob/8b9754061a259b1877278d671905c17115a4d58b/src/lib/Grid.ts#L14) |
-| <a id="p-1"></a> `p` | `private` | `__module` | - | [Grid.ts:20](https://github.com/humanbydefinition/p5-asciify/blob/8b9754061a259b1877278d671905c17115a4d58b/src/lib/Grid.ts#L20) |
+| <a id="_cellheight-1"></a> `_cellHeight` | `private` | `number` | The height of each cell in the grid. | [Grid.ts:47](https://github.com/humanbydefinition/p5-asciify/blob/d304087d1ede08ec5b6ebc19263567aad6425656/src/lib/Grid.ts#L47) |
+| <a id="_cellwidth-1"></a> `_cellWidth` | `private` | `number` | The width of each cell in the grid. | [Grid.ts:46](https://github.com/humanbydefinition/p5-asciify/blob/d304087d1ede08ec5b6ebc19263567aad6425656/src/lib/Grid.ts#L46) |
+| <a id="_cols"></a> `_cols` | `private` | `number` | The number of columns in the grid. | [Grid.ts:11](https://github.com/humanbydefinition/p5-asciify/blob/d304087d1ede08ec5b6ebc19263567aad6425656/src/lib/Grid.ts#L11) |
+| <a id="_height"></a> `_height` | `private` | `number` | The total height of the grid in pixels. | [Grid.ts:26](https://github.com/humanbydefinition/p5-asciify/blob/d304087d1ede08ec5b6ebc19263567aad6425656/src/lib/Grid.ts#L26) |
+| <a id="_offsetx"></a> `_offsetX` | `private` | `number` | The offset to the outer canvas on the x-axis when centering the grid. | [Grid.ts:31](https://github.com/humanbydefinition/p5-asciify/blob/d304087d1ede08ec5b6ebc19263567aad6425656/src/lib/Grid.ts#L31) |
+| <a id="_offsety"></a> `_offsetY` | `private` | `number` | The offset to the outer canvas on the y-axis when centering the grid. | [Grid.ts:36](https://github.com/humanbydefinition/p5-asciify/blob/d304087d1ede08ec5b6ebc19263567aad6425656/src/lib/Grid.ts#L36) |
+| <a id="_rows"></a> `_rows` | `private` | `number` | The number of rows in the grid. | [Grid.ts:16](https://github.com/humanbydefinition/p5-asciify/blob/d304087d1ede08ec5b6ebc19263567aad6425656/src/lib/Grid.ts#L16) |
+| <a id="_width"></a> `_width` | `private` | `number` | The total width of the grid in pixels. | [Grid.ts:21](https://github.com/humanbydefinition/p5-asciify/blob/d304087d1ede08ec5b6ebc19263567aad6425656/src/lib/Grid.ts#L21) |
+| <a id="p-1"></a> `p` | `private` | `__module` | The p5 instance. | [Grid.ts:45](https://github.com/humanbydefinition/p5-asciify/blob/d304087d1ede08ec5b6ebc19263567aad6425656/src/lib/Grid.ts#L45) |
 
 ## Accessors
 
@@ -52,7 +55,7 @@ Defined in: [Grid.ts:19](https://github.com/humanbydefinition/p5-asciify/blob/8b
 
 > **get** **cellHeight**(): `number`
 
-Defined in: [Grid.ts:68](https://github.com/humanbydefinition/p5-asciify/blob/8b9754061a259b1877278d671905c17115a4d58b/src/lib/Grid.ts#L68)
+Defined in: [Grid.ts:82](https://github.com/humanbydefinition/p5-asciify/blob/d304087d1ede08ec5b6ebc19263567aad6425656/src/lib/Grid.ts#L82)
 
 ##### Returns
 
@@ -66,7 +69,7 @@ Defined in: [Grid.ts:68](https://github.com/humanbydefinition/p5-asciify/blob/8b
 
 > **get** **cellWidth**(): `number`
 
-Defined in: [Grid.ts:67](https://github.com/humanbydefinition/p5-asciify/blob/8b9754061a259b1877278d671905c17115a4d58b/src/lib/Grid.ts#L67)
+Defined in: [Grid.ts:81](https://github.com/humanbydefinition/p5-asciify/blob/d304087d1ede08ec5b6ebc19263567aad6425656/src/lib/Grid.ts#L81)
 
 ##### Returns
 
@@ -80,7 +83,7 @@ Defined in: [Grid.ts:67](https://github.com/humanbydefinition/p5-asciify/blob/8b
 
 > **get** **cols**(): `number`
 
-Defined in: [Grid.ts:69](https://github.com/humanbydefinition/p5-asciify/blob/8b9754061a259b1877278d671905c17115a4d58b/src/lib/Grid.ts#L69)
+Defined in: [Grid.ts:83](https://github.com/humanbydefinition/p5-asciify/blob/d304087d1ede08ec5b6ebc19263567aad6425656/src/lib/Grid.ts#L83)
 
 ##### Returns
 
@@ -94,7 +97,7 @@ Defined in: [Grid.ts:69](https://github.com/humanbydefinition/p5-asciify/blob/8b
 
 > **get** **height**(): `number`
 
-Defined in: [Grid.ts:72](https://github.com/humanbydefinition/p5-asciify/blob/8b9754061a259b1877278d671905c17115a4d58b/src/lib/Grid.ts#L72)
+Defined in: [Grid.ts:86](https://github.com/humanbydefinition/p5-asciify/blob/d304087d1ede08ec5b6ebc19263567aad6425656/src/lib/Grid.ts#L86)
 
 ##### Returns
 
@@ -108,7 +111,7 @@ Defined in: [Grid.ts:72](https://github.com/humanbydefinition/p5-asciify/blob/8b
 
 > **get** **offsetX**(): `number`
 
-Defined in: [Grid.ts:73](https://github.com/humanbydefinition/p5-asciify/blob/8b9754061a259b1877278d671905c17115a4d58b/src/lib/Grid.ts#L73)
+Defined in: [Grid.ts:87](https://github.com/humanbydefinition/p5-asciify/blob/d304087d1ede08ec5b6ebc19263567aad6425656/src/lib/Grid.ts#L87)
 
 ##### Returns
 
@@ -122,7 +125,7 @@ Defined in: [Grid.ts:73](https://github.com/humanbydefinition/p5-asciify/blob/8b
 
 > **get** **offsetY**(): `number`
 
-Defined in: [Grid.ts:74](https://github.com/humanbydefinition/p5-asciify/blob/8b9754061a259b1877278d671905c17115a4d58b/src/lib/Grid.ts#L74)
+Defined in: [Grid.ts:88](https://github.com/humanbydefinition/p5-asciify/blob/d304087d1ede08ec5b6ebc19263567aad6425656/src/lib/Grid.ts#L88)
 
 ##### Returns
 
@@ -136,7 +139,7 @@ Defined in: [Grid.ts:74](https://github.com/humanbydefinition/p5-asciify/blob/8b
 
 > **get** **rows**(): `number`
 
-Defined in: [Grid.ts:70](https://github.com/humanbydefinition/p5-asciify/blob/8b9754061a259b1877278d671905c17115a4d58b/src/lib/Grid.ts#L70)
+Defined in: [Grid.ts:84](https://github.com/humanbydefinition/p5-asciify/blob/d304087d1ede08ec5b6ebc19263567aad6425656/src/lib/Grid.ts#L84)
 
 ##### Returns
 
@@ -150,7 +153,7 @@ Defined in: [Grid.ts:70](https://github.com/humanbydefinition/p5-asciify/blob/8b
 
 > **get** **width**(): `number`
 
-Defined in: [Grid.ts:71](https://github.com/humanbydefinition/p5-asciify/blob/8b9754061a259b1877278d671905c17115a4d58b/src/lib/Grid.ts#L71)
+Defined in: [Grid.ts:85](https://github.com/humanbydefinition/p5-asciify/blob/d304087d1ede08ec5b6ebc19263567aad6425656/src/lib/Grid.ts#L85)
 
 ##### Returns
 
@@ -158,29 +161,13 @@ Defined in: [Grid.ts:71](https://github.com/humanbydefinition/p5-asciify/blob/8b
 
 ## Methods
 
-### \_calculateGridSize()
-
-> `private` **\_calculateGridSize**(): \[`number`, `number`\]
-
-Defined in: [Grid.ts:49](https://github.com/humanbydefinition/p5-asciify/blob/8b9754061a259b1877278d671905c17115a4d58b/src/lib/Grid.ts#L49)
-
-Calculate the number of columns and rows in the grid based on the current canvas and cell dimensions.
-
-#### Returns
-
-\[`number`, `number`\]
-
-The number of columns and rows in the grid.
-
-***
-
 ### \_resizeGrid()
 
 > `private` **\_resizeGrid**(): `void`
 
-Defined in: [Grid.ts:38](https://github.com/humanbydefinition/p5-asciify/blob/8b9754061a259b1877278d671905c17115a4d58b/src/lib/Grid.ts#L38)
+Defined in: [Grid.ts:63](https://github.com/humanbydefinition/p5-asciify/blob/d304087d1ede08ec5b6ebc19263567aad6425656/src/lib/Grid.ts#L63)
 
-Reset the total grid width/height and the offset to the outer canvas.
+Reset the total grid width & height, and the offset to the outer canvas.
 
 #### Returns
 
@@ -192,9 +179,9 @@ Reset the total grid width/height and the offset to the outer canvas.
 
 > **reset**(): `void`
 
-Defined in: [Grid.ts:30](https://github.com/humanbydefinition/p5-asciify/blob/8b9754061a259b1877278d671905c17115a4d58b/src/lib/Grid.ts#L30)
+Defined in: [Grid.ts:55](https://github.com/humanbydefinition/p5-asciify/blob/d304087d1ede08ec5b6ebc19263567aad6425656/src/lib/Grid.ts#L55)
 
-Reset the grid to the default number of columns and rows based on the current canvas and cell dimensions.
+Reset the grid to the default number of columns and rows based on the current canvas and `_cellWidth` and `_cellHeight`.
 
 #### Returns
 
@@ -206,7 +193,7 @@ Reset the grid to the default number of columns and rows based on the current ca
 
 > **resizeCellPixelDimensions**(`newCellWidth`, `newCellHeight`): `void`
 
-Defined in: [Grid.ts:61](https://github.com/humanbydefinition/p5-asciify/blob/8b9754061a259b1877278d671905c17115a4d58b/src/lib/Grid.ts#L61)
+Defined in: [Grid.ts:75](https://github.com/humanbydefinition/p5-asciify/blob/d304087d1ede08ec5b6ebc19263567aad6425656/src/lib/Grid.ts#L75)
 
 Re-assign the grid cell dimensions and reset the grid.
 
