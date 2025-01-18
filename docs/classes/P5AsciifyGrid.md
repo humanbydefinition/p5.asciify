@@ -6,7 +6,7 @@
 
 # Class: P5AsciifyGrid
 
-Defined in: [Grid.ts:6](https://github.com/humanbydefinition/p5-asciify/blob/97a886fbd6773eeef25eaef50ed7335671b5702c/src/lib/Grid.ts#L6)
+Defined in: [Grid.ts:6](https://github.com/humanbydefinition/p5-asciify/blob/be2b98873e2017ae3a206c7e437ab1668175b540/src/lib/Grid.ts#L6)
 
 Represents a 2D grid, handling the dimensions and resizing of the grid.
 
@@ -16,7 +16,7 @@ Represents a 2D grid, handling the dimensions and resizing of the grid.
 
 > **new P5AsciifyGrid**(`p`, `_cellWidth`, `_cellHeight`): [`P5AsciifyGrid`](P5AsciifyGrid.md)
 
-Defined in: [Grid.ts:14](https://github.com/humanbydefinition/p5-asciify/blob/97a886fbd6773eeef25eaef50ed7335671b5702c/src/lib/Grid.ts#L14)
+Defined in: [Grid.ts:14](https://github.com/humanbydefinition/p5-asciify/blob/be2b98873e2017ae3a206c7e437ab1668175b540/src/lib/Grid.ts#L14)
 
 #### Parameters
 
@@ -34,15 +34,15 @@ Defined in: [Grid.ts:14](https://github.com/humanbydefinition/p5-asciify/blob/97
 
 | Property | Modifier | Type | Default value | Defined in |
 | ------ | ------ | ------ | ------ | ------ |
-| <a id="_cellheight-1"></a> `_cellHeight` | `private` | `number` | `undefined` | [Grid.ts:17](https://github.com/humanbydefinition/p5-asciify/blob/97a886fbd6773eeef25eaef50ed7335671b5702c/src/lib/Grid.ts#L17) |
-| <a id="_cellwidth-1"></a> `_cellWidth` | `private` | `number` | `undefined` | [Grid.ts:16](https://github.com/humanbydefinition/p5-asciify/blob/97a886fbd6773eeef25eaef50ed7335671b5702c/src/lib/Grid.ts#L16) |
-| <a id="_cols"></a> `_cols` | `private` | `number` | `0` | [Grid.ts:7](https://github.com/humanbydefinition/p5-asciify/blob/97a886fbd6773eeef25eaef50ed7335671b5702c/src/lib/Grid.ts#L7) |
-| <a id="_height"></a> `_height` | `private` | `number` | `0` | [Grid.ts:10](https://github.com/humanbydefinition/p5-asciify/blob/97a886fbd6773eeef25eaef50ed7335671b5702c/src/lib/Grid.ts#L10) |
-| <a id="_offsetx"></a> `_offsetX` | `private` | `number` | `0` | [Grid.ts:11](https://github.com/humanbydefinition/p5-asciify/blob/97a886fbd6773eeef25eaef50ed7335671b5702c/src/lib/Grid.ts#L11) |
-| <a id="_offsety"></a> `_offsetY` | `private` | `number` | `0` | [Grid.ts:12](https://github.com/humanbydefinition/p5-asciify/blob/97a886fbd6773eeef25eaef50ed7335671b5702c/src/lib/Grid.ts#L12) |
-| <a id="_rows"></a> `_rows` | `private` | `number` | `0` | [Grid.ts:8](https://github.com/humanbydefinition/p5-asciify/blob/97a886fbd6773eeef25eaef50ed7335671b5702c/src/lib/Grid.ts#L8) |
-| <a id="_width"></a> `_width` | `private` | `number` | `0` | [Grid.ts:9](https://github.com/humanbydefinition/p5-asciify/blob/97a886fbd6773eeef25eaef50ed7335671b5702c/src/lib/Grid.ts#L9) |
-| <a id="p-1"></a> `p` | `private` | `__module` | `undefined` | [Grid.ts:15](https://github.com/humanbydefinition/p5-asciify/blob/97a886fbd6773eeef25eaef50ed7335671b5702c/src/lib/Grid.ts#L15) |
+| <a id="_cellheight-1"></a> `_cellHeight` | `private` | `number` | `undefined` | [Grid.ts:17](https://github.com/humanbydefinition/p5-asciify/blob/be2b98873e2017ae3a206c7e437ab1668175b540/src/lib/Grid.ts#L17) |
+| <a id="_cellwidth-1"></a> `_cellWidth` | `private` | `number` | `undefined` | [Grid.ts:16](https://github.com/humanbydefinition/p5-asciify/blob/be2b98873e2017ae3a206c7e437ab1668175b540/src/lib/Grid.ts#L16) |
+| <a id="_cols"></a> `_cols` | `private` | `number` | `0` | [Grid.ts:7](https://github.com/humanbydefinition/p5-asciify/blob/be2b98873e2017ae3a206c7e437ab1668175b540/src/lib/Grid.ts#L7) |
+| <a id="_height"></a> `_height` | `private` | `number` | `0` | [Grid.ts:10](https://github.com/humanbydefinition/p5-asciify/blob/be2b98873e2017ae3a206c7e437ab1668175b540/src/lib/Grid.ts#L10) |
+| <a id="_offsetx"></a> `_offsetX` | `private` | `number` | `0` | [Grid.ts:11](https://github.com/humanbydefinition/p5-asciify/blob/be2b98873e2017ae3a206c7e437ab1668175b540/src/lib/Grid.ts#L11) |
+| <a id="_offsety"></a> `_offsetY` | `private` | `number` | `0` | [Grid.ts:12](https://github.com/humanbydefinition/p5-asciify/blob/be2b98873e2017ae3a206c7e437ab1668175b540/src/lib/Grid.ts#L12) |
+| <a id="_rows"></a> `_rows` | `private` | `number` | `0` | [Grid.ts:8](https://github.com/humanbydefinition/p5-asciify/blob/be2b98873e2017ae3a206c7e437ab1668175b540/src/lib/Grid.ts#L8) |
+| <a id="_width"></a> `_width` | `private` | `number` | `0` | [Grid.ts:9](https://github.com/humanbydefinition/p5-asciify/blob/be2b98873e2017ae3a206c7e437ab1668175b540/src/lib/Grid.ts#L9) |
+| <a id="p-1"></a> `p` | `private` | `__module` | `undefined` | [Grid.ts:15](https://github.com/humanbydefinition/p5-asciify/blob/be2b98873e2017ae3a206c7e437ab1668175b540/src/lib/Grid.ts#L15) |
 
 ## Accessors
 
@@ -52,7 +52,7 @@ Defined in: [Grid.ts:14](https://github.com/humanbydefinition/p5-asciify/blob/97
 
 > **get** **cellHeight**(): `number`
 
-Defined in: [Grid.ts:63](https://github.com/humanbydefinition/p5-asciify/blob/97a886fbd6773eeef25eaef50ed7335671b5702c/src/lib/Grid.ts#L63)
+Defined in: [Grid.ts:63](https://github.com/humanbydefinition/p5-asciify/blob/be2b98873e2017ae3a206c7e437ab1668175b540/src/lib/Grid.ts#L63)
 
 ##### Returns
 
@@ -66,7 +66,7 @@ Defined in: [Grid.ts:63](https://github.com/humanbydefinition/p5-asciify/blob/97
 
 > **get** **cellWidth**(): `number`
 
-Defined in: [Grid.ts:62](https://github.com/humanbydefinition/p5-asciify/blob/97a886fbd6773eeef25eaef50ed7335671b5702c/src/lib/Grid.ts#L62)
+Defined in: [Grid.ts:62](https://github.com/humanbydefinition/p5-asciify/blob/be2b98873e2017ae3a206c7e437ab1668175b540/src/lib/Grid.ts#L62)
 
 ##### Returns
 
@@ -80,7 +80,7 @@ Defined in: [Grid.ts:62](https://github.com/humanbydefinition/p5-asciify/blob/97
 
 > **get** **cols**(): `number`
 
-Defined in: [Grid.ts:64](https://github.com/humanbydefinition/p5-asciify/blob/97a886fbd6773eeef25eaef50ed7335671b5702c/src/lib/Grid.ts#L64)
+Defined in: [Grid.ts:64](https://github.com/humanbydefinition/p5-asciify/blob/be2b98873e2017ae3a206c7e437ab1668175b540/src/lib/Grid.ts#L64)
 
 ##### Returns
 
@@ -94,7 +94,7 @@ Defined in: [Grid.ts:64](https://github.com/humanbydefinition/p5-asciify/blob/97
 
 > **get** **height**(): `number`
 
-Defined in: [Grid.ts:67](https://github.com/humanbydefinition/p5-asciify/blob/97a886fbd6773eeef25eaef50ed7335671b5702c/src/lib/Grid.ts#L67)
+Defined in: [Grid.ts:67](https://github.com/humanbydefinition/p5-asciify/blob/be2b98873e2017ae3a206c7e437ab1668175b540/src/lib/Grid.ts#L67)
 
 ##### Returns
 
@@ -108,7 +108,7 @@ Defined in: [Grid.ts:67](https://github.com/humanbydefinition/p5-asciify/blob/97
 
 > **get** **offsetX**(): `number`
 
-Defined in: [Grid.ts:68](https://github.com/humanbydefinition/p5-asciify/blob/97a886fbd6773eeef25eaef50ed7335671b5702c/src/lib/Grid.ts#L68)
+Defined in: [Grid.ts:68](https://github.com/humanbydefinition/p5-asciify/blob/be2b98873e2017ae3a206c7e437ab1668175b540/src/lib/Grid.ts#L68)
 
 ##### Returns
 
@@ -122,7 +122,7 @@ Defined in: [Grid.ts:68](https://github.com/humanbydefinition/p5-asciify/blob/97
 
 > **get** **offsetY**(): `number`
 
-Defined in: [Grid.ts:69](https://github.com/humanbydefinition/p5-asciify/blob/97a886fbd6773eeef25eaef50ed7335671b5702c/src/lib/Grid.ts#L69)
+Defined in: [Grid.ts:69](https://github.com/humanbydefinition/p5-asciify/blob/be2b98873e2017ae3a206c7e437ab1668175b540/src/lib/Grid.ts#L69)
 
 ##### Returns
 
@@ -136,7 +136,7 @@ Defined in: [Grid.ts:69](https://github.com/humanbydefinition/p5-asciify/blob/97
 
 > **get** **rows**(): `number`
 
-Defined in: [Grid.ts:65](https://github.com/humanbydefinition/p5-asciify/blob/97a886fbd6773eeef25eaef50ed7335671b5702c/src/lib/Grid.ts#L65)
+Defined in: [Grid.ts:65](https://github.com/humanbydefinition/p5-asciify/blob/be2b98873e2017ae3a206c7e437ab1668175b540/src/lib/Grid.ts#L65)
 
 ##### Returns
 
@@ -150,7 +150,7 @@ Defined in: [Grid.ts:65](https://github.com/humanbydefinition/p5-asciify/blob/97
 
 > **get** **width**(): `number`
 
-Defined in: [Grid.ts:66](https://github.com/humanbydefinition/p5-asciify/blob/97a886fbd6773eeef25eaef50ed7335671b5702c/src/lib/Grid.ts#L66)
+Defined in: [Grid.ts:66](https://github.com/humanbydefinition/p5-asciify/blob/be2b98873e2017ae3a206c7e437ab1668175b540/src/lib/Grid.ts#L66)
 
 ##### Returns
 
@@ -162,7 +162,7 @@ Defined in: [Grid.ts:66](https://github.com/humanbydefinition/p5-asciify/blob/97
 
 > `private` **\_calculateGridSize**(): \[`number`, `number`\]
 
-Defined in: [Grid.ts:44](https://github.com/humanbydefinition/p5-asciify/blob/97a886fbd6773eeef25eaef50ed7335671b5702c/src/lib/Grid.ts#L44)
+Defined in: [Grid.ts:44](https://github.com/humanbydefinition/p5-asciify/blob/be2b98873e2017ae3a206c7e437ab1668175b540/src/lib/Grid.ts#L44)
 
 Calculate the number of columns and rows in the grid based on the current canvas and cell dimensions.
 
@@ -178,7 +178,7 @@ The number of columns and rows in the grid.
 
 > `private` **\_resizeGrid**(): `void`
 
-Defined in: [Grid.ts:33](https://github.com/humanbydefinition/p5-asciify/blob/97a886fbd6773eeef25eaef50ed7335671b5702c/src/lib/Grid.ts#L33)
+Defined in: [Grid.ts:33](https://github.com/humanbydefinition/p5-asciify/blob/be2b98873e2017ae3a206c7e437ab1668175b540/src/lib/Grid.ts#L33)
 
 Reset the total grid width/height and the offset to the outer canvas.
 
@@ -192,7 +192,7 @@ Reset the total grid width/height and the offset to the outer canvas.
 
 > **reset**(): `void`
 
-Defined in: [Grid.ts:25](https://github.com/humanbydefinition/p5-asciify/blob/97a886fbd6773eeef25eaef50ed7335671b5702c/src/lib/Grid.ts#L25)
+Defined in: [Grid.ts:25](https://github.com/humanbydefinition/p5-asciify/blob/be2b98873e2017ae3a206c7e437ab1668175b540/src/lib/Grid.ts#L25)
 
 Reset the grid to the default number of columns and rows based on the current canvas and cell dimensions.
 
@@ -206,7 +206,7 @@ Reset the grid to the default number of columns and rows based on the current ca
 
 > **resizeCellPixelDimensions**(`newCellWidth`, `newCellHeight`): `void`
 
-Defined in: [Grid.ts:56](https://github.com/humanbydefinition/p5-asciify/blob/97a886fbd6773eeef25eaef50ed7335671b5702c/src/lib/Grid.ts#L56)
+Defined in: [Grid.ts:56](https://github.com/humanbydefinition/p5-asciify/blob/be2b98873e2017ae3a206c7e437ab1668175b540/src/lib/Grid.ts#L56)
 
 Re-assign the grid cell dimensions and reset the grid.
 

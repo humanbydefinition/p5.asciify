@@ -14,10 +14,14 @@ import { P5AsciifyGradient } from './gradients/Gradient';
  * This class is responsible for setting up the library, and managing its properties.
  * 
  * @remarks
- * 
  * The P5Asciifier class is initialized without any parameters.
- * Once the p5.js instance is available, the instance() method is called automatically to pass the p5 instance to the Asciifier.
- * After the users `setup()` function has finished, the Asciifier's `setup()` method is called automatically to fully initialize the library.
+ * 
+ * Once the p5.js instance is available, the instance() method is called automatically 
+ * to pass the p5 instance to the Asciifier.
+ * 
+ * After the users `setup()` function has finished, the Asciifier's `setup()` method 
+ * is called automatically to fully initialize the library.
+ * 
  * At this point, the p5.asciify is fully functional and ready to interact with.
  */
 export class P5Asciifier {
