@@ -8,6 +8,7 @@ export declare class P5AsciifyLinearGradient extends P5AsciifyGradient {
     direction: number;
     angle: number;
     speed: number;
+    zigzag: boolean;
     constructor(brightnessStart: number, brightnessEnd: number, characters: string, params: LinearGradientParams);
     setUniforms(framebuffer: p5.Framebuffer, referenceFramebuffer: p5.Framebuffer): void;
 }
