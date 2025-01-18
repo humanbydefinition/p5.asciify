@@ -1,0 +1,397 @@
+[**p5.asciify v0.6.3**](../README.md)
+
+***
+
+[p5.asciify](../globals.md) / P5AsciifyFontTextureAtlas
+
+# Class: P5AsciifyFontTextureAtlas
+
+Defined in: [FontTextureAtlas.ts:8](https://github.com/humanbydefinition/p5-asciify/blob/285fe9d8e61d90176fc179d1dcd530c5c14eed75/src/lib/FontTextureAtlas.ts#L8)
+
+Creates a texture atlas containing all characters in a font, and provides utility methods for working with the atlas.
+
+## Constructors
+
+### new P5AsciifyFontTextureAtlas()
+
+> **new P5AsciifyFontTextureAtlas**(`p`, `font`, `_fontSize`): [`P5AsciifyFontTextureAtlas`](P5AsciifyFontTextureAtlas.md)
+
+Defined in: [FontTextureAtlas.ts:16](https://github.com/humanbydefinition/p5-asciify/blob/285fe9d8e61d90176fc179d1dcd530c5c14eed75/src/lib/FontTextureAtlas.ts#L16)
+
+#### Parameters
+
+##### p
+
+`__module`
+
+##### font
+
+`Font`
+
+##### \_fontSize
+
+`number`
+
+#### Returns
+
+[`P5AsciifyFontTextureAtlas`](P5AsciifyFontTextureAtlas.md)
+
+## Properties
+
+### \_characterGlyphs
+
+> `private` **\_characterGlyphs**: `OpenTypeGlyph`[]
+
+Defined in: [FontTextureAtlas.ts:10](https://github.com/humanbydefinition/p5-asciify/blob/285fe9d8e61d90176fc179d1dcd530c5c14eed75/src/lib/FontTextureAtlas.ts#L10)
+
+***
+
+### \_characters
+
+> `private` **\_characters**: `string`[]
+
+Defined in: [FontTextureAtlas.ts:9](https://github.com/humanbydefinition/p5-asciify/blob/285fe9d8e61d90176fc179d1dcd530c5c14eed75/src/lib/FontTextureAtlas.ts#L9)
+
+***
+
+### \_charsetCols
+
+> `private` **\_charsetCols**: `number` = `0`
+
+Defined in: [FontTextureAtlas.ts:13](https://github.com/humanbydefinition/p5-asciify/blob/285fe9d8e61d90176fc179d1dcd530c5c14eed75/src/lib/FontTextureAtlas.ts#L13)
+
+***
+
+### \_charsetRows
+
+> `private` **\_charsetRows**: `number` = `0`
+
+Defined in: [FontTextureAtlas.ts:14](https://github.com/humanbydefinition/p5-asciify/blob/285fe9d8e61d90176fc179d1dcd530c5c14eed75/src/lib/FontTextureAtlas.ts#L14)
+
+***
+
+### \_fontSize
+
+> `private` **\_fontSize**: `number`
+
+Defined in: [FontTextureAtlas.ts:19](https://github.com/humanbydefinition/p5-asciify/blob/285fe9d8e61d90176fc179d1dcd530c5c14eed75/src/lib/FontTextureAtlas.ts#L19)
+
+***
+
+### \_maxGlyphDimensions
+
+> `private` **\_maxGlyphDimensions**: `object`
+
+Defined in: [FontTextureAtlas.ts:11](https://github.com/humanbydefinition/p5-asciify/blob/285fe9d8e61d90176fc179d1dcd530c5c14eed75/src/lib/FontTextureAtlas.ts#L11)
+
+#### height
+
+> **height**: `number`
+
+#### width
+
+> **width**: `number`
+
+***
+
+### \_texture
+
+> `private` **\_texture**: `Framebuffer`
+
+Defined in: [FontTextureAtlas.ts:12](https://github.com/humanbydefinition/p5-asciify/blob/285fe9d8e61d90176fc179d1dcd530c5c14eed75/src/lib/FontTextureAtlas.ts#L12)
+
+***
+
+### font
+
+> `private` **font**: `Font`
+
+Defined in: [FontTextureAtlas.ts:18](https://github.com/humanbydefinition/p5-asciify/blob/285fe9d8e61d90176fc179d1dcd530c5c14eed75/src/lib/FontTextureAtlas.ts#L18)
+
+***
+
+### p
+
+> `private` **p**: `__module`
+
+Defined in: [FontTextureAtlas.ts:17](https://github.com/humanbydefinition/p5-asciify/blob/285fe9d8e61d90176fc179d1dcd530c5c14eed75/src/lib/FontTextureAtlas.ts#L17)
+
+## Accessors
+
+### characters
+
+#### Get Signature
+
+> **get** **characters**(): `string`[]
+
+Defined in: [FontTextureAtlas.ts:178](https://github.com/humanbydefinition/p5-asciify/blob/285fe9d8e61d90176fc179d1dcd530c5c14eed75/src/lib/FontTextureAtlas.ts#L178)
+
+##### Returns
+
+`string`[]
+
+***
+
+### charsetCols
+
+#### Get Signature
+
+> **get** **charsetCols**(): `number`
+
+Defined in: [FontTextureAtlas.ts:179](https://github.com/humanbydefinition/p5-asciify/blob/285fe9d8e61d90176fc179d1dcd530c5c14eed75/src/lib/FontTextureAtlas.ts#L179)
+
+##### Returns
+
+`number`
+
+***
+
+### charsetRows
+
+#### Get Signature
+
+> **get** **charsetRows**(): `number`
+
+Defined in: [FontTextureAtlas.ts:180](https://github.com/humanbydefinition/p5-asciify/blob/285fe9d8e61d90176fc179d1dcd530c5c14eed75/src/lib/FontTextureAtlas.ts#L180)
+
+##### Returns
+
+`number`
+
+***
+
+### fontSize
+
+#### Get Signature
+
+> **get** **fontSize**(): `number`
+
+Defined in: [FontTextureAtlas.ts:181](https://github.com/humanbydefinition/p5-asciify/blob/285fe9d8e61d90176fc179d1dcd530c5c14eed75/src/lib/FontTextureAtlas.ts#L181)
+
+##### Returns
+
+`number`
+
+***
+
+### maxGlyphDimensions
+
+#### Get Signature
+
+> **get** **maxGlyphDimensions**(): `object`
+
+Defined in: [FontTextureAtlas.ts:176](https://github.com/humanbydefinition/p5-asciify/blob/285fe9d8e61d90176fc179d1dcd530c5c14eed75/src/lib/FontTextureAtlas.ts#L176)
+
+##### Returns
+
+`object`
+
+###### height
+
+> **height**: `number`
+
+###### width
+
+> **width**: `number`
+
+***
+
+### texture
+
+#### Get Signature
+
+> **get** **texture**(): `Framebuffer`
+
+Defined in: [FontTextureAtlas.ts:177](https://github.com/humanbydefinition/p5-asciify/blob/285fe9d8e61d90176fc179d1dcd530c5c14eed75/src/lib/FontTextureAtlas.ts#L177)
+
+##### Returns
+
+`Framebuffer`
+
+## Methods
+
+### \_createTexture()
+
+> `private` **\_createTexture**(`fontSize`): `void`
+
+Defined in: [FontTextureAtlas.ts:93](https://github.com/humanbydefinition/p5-asciify/blob/285fe9d8e61d90176fc179d1dcd530c5c14eed75/src/lib/FontTextureAtlas.ts#L93)
+
+Creates a texture containing all characters in the font, arranged in a 2d grid that is as square as possible.
+
+#### Parameters
+
+##### fontSize
+
+`number`
+
+The font size to use for creating the texture.
+
+#### Returns
+
+`void`
+
+***
+
+### \_getMaxGlyphDimensions()
+
+> `private` **\_getMaxGlyphDimensions**(`fontSize`): `object`
+
+Defined in: [FontTextureAtlas.ts:51](https://github.com/humanbydefinition/p5-asciify/blob/285fe9d8e61d90176fc179d1dcd530c5c14eed75/src/lib/FontTextureAtlas.ts#L51)
+
+Calculates the maximum width and height of the glyphs in the font.
+
+#### Parameters
+
+##### fontSize
+
+`number`
+
+The font size to use for calculations.
+
+#### Returns
+
+`object`
+
+An object containing the maximum width and height of the glyphs.
+
+##### height
+
+> **height**: `number`
+
+##### width
+
+> **width**: `number`
+
+***
+
+### \_loadCharacterGlyphs()
+
+> `private` **\_loadCharacterGlyphs**(): `OpenTypeGlyph`[]
+
+Defined in: [FontTextureAtlas.ts:35](https://github.com/humanbydefinition/p5-asciify/blob/285fe9d8e61d90176fc179d1dcd530c5c14eed75/src/lib/FontTextureAtlas.ts#L35)
+
+Loads all glyphs with unicode values from the font and assigns colors to them.
+
+#### Returns
+
+`OpenTypeGlyph`[]
+
+An array of opentype.js glyphs, extended with r, g, and b properties for color.
+
+***
+
+### drawCharacters()
+
+> `private` **drawCharacters**(`fontSize`): `void`
+
+Defined in: [FontTextureAtlas.ts:118](https://github.com/humanbydefinition/p5-asciify/blob/285fe9d8e61d90176fc179d1dcd530c5c14eed75/src/lib/FontTextureAtlas.ts#L118)
+
+Draws characters onto the texture.
+
+#### Parameters
+
+##### fontSize
+
+`number`
+
+The font size to use for drawing the characters on the texture.
+
+#### Returns
+
+`void`
+
+***
+
+### getCharsetColorArray()
+
+> **getCharsetColorArray**(`input`): \[`number`, `number`, `number`\][]
+
+Defined in: [FontTextureAtlas.ts:141](https://github.com/humanbydefinition/p5-asciify/blob/285fe9d8e61d90176fc179d1dcd530c5c14eed75/src/lib/FontTextureAtlas.ts#L141)
+
+Gets an array of RGB colors for a given string or array of characters.
+
+#### Parameters
+
+##### input
+
+Either a string or array of characters
+
+`string` | `string`[]
+
+#### Returns
+
+\[`number`, `number`, `number`\][]
+
+Array of RGB color values
+
+#### Throws
+
+P5AsciifyError If a character is not found in the texture atlas
+
+***
+
+### getUnsupportedCharacters()
+
+> **getUnsupportedCharacters**(`characters`): `string`[]
+
+Defined in: [FontTextureAtlas.ts:162](https://github.com/humanbydefinition/p5-asciify/blob/285fe9d8e61d90176fc179d1dcd530c5c14eed75/src/lib/FontTextureAtlas.ts#L162)
+
+Returns an array of characters that are not supported by the current font.
+
+#### Parameters
+
+##### characters
+
+`string`
+
+The string of characters to check.
+
+#### Returns
+
+`string`[]
+
+An array of unsupported characters.List is empty if all characters are supported.
+
+***
+
+### setFontObject()
+
+> **setFontObject**(`font`): `void`
+
+Defined in: [FontTextureAtlas.ts:68](https://github.com/humanbydefinition/p5-asciify/blob/285fe9d8e61d90176fc179d1dcd530c5c14eed75/src/lib/FontTextureAtlas.ts#L68)
+
+Sets the font object and resets the whole atlas.
+
+#### Parameters
+
+##### font
+
+`Font`
+
+The new font object.
+
+#### Returns
+
+`void`
+
+***
+
+### setFontSize()
+
+> **setFontSize**(`fontSize`): `void`
+
+Defined in: [FontTextureAtlas.ts:83](https://github.com/humanbydefinition/p5-asciify/blob/285fe9d8e61d90176fc179d1dcd530c5c14eed75/src/lib/FontTextureAtlas.ts#L83)
+
+Sets the font size, recalculates the maximum glyph dimensions, and recreates the texture.
+
+#### Parameters
+
+##### fontSize
+
+`number`
+
+The new font size.
+
+#### Returns
+
+`void`
