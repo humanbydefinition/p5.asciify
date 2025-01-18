@@ -2,7 +2,6 @@ import { P5Asciifier } from './Asciifier';
 
 import { registerSetupMethods } from './modules/setup';
 import { registerFontMethods } from './modules/fonts';
-import { registerGradientMethods } from './modules/gradients';
 import { registerRenderingMethods } from './modules/rendering';
 
 /**
