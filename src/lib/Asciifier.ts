@@ -27,44 +27,28 @@ import { P5AsciifyGradient } from './gradients/Gradient';
  * At this point, the `p5.asciify` is fully functional and ready to interact with.
  */
 export class P5Asciifier {
-    /**
-     * Contains texture with all glyphs of a given font.
-     */
+    /** Contains texture with all glyphs of a given font.*/
     public asciiFontTextureAtlas!: P5AsciifyFontTextureAtlas;
 
-    /**
-     * Contains the grid dimensions and offsets to create a perfect grid based on the canvas and font size.
-     */
+    /** Contains the grid dimensions and offsets to create a perfect grid based on the canvas and font size. */
     public grid!: P5AsciifyGrid;
 
-    /**
-     * Wraps around the user's `draw()` function to capture it's output for the ascii renderers.
-     */
+    /** Wraps around the user's `draw()` function to capture it's output for the ascii renderers. */
     public sketchFramebuffer!: p5.Framebuffer;
 
-    /**
-     * Manages the available ASCII renderers and handles rendering the ASCII output to the canvas.
-     */
+    /** Manages the available ASCII renderers and handles rendering the ASCII output to the canvas. */
     public rendererManager!: P5AsciifyRendererManager;
 
-    /**
-     * The p5 instance.
-     */
+    /** The p5 instance. */
     private _p!: p5;
 
-    /**
-     * The font to use for the ASCII rendering.
-     */
+    /** The font to use for the ASCII rendering. */
     private _font!: p5.Font;
 
-    /**
-     * The background color to use for the ASCII rendering for the offset space, not occupied by the centered ASCII grid.
-     */
+    /** The background color to use for the ASCII rendering for the offset space, not occupied by the centered ASCII grid. */
     private _backgroundColor: string | p5.Color | [number, number?, number?, number?] = "#000000";
 
-    /**
-     * The font size to use for the ASCII rendering.
-     */
+    /** The font size to use for the ASCII rendering. */
     private _fontSize: number = 16;
 
 

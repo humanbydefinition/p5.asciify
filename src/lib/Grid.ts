@@ -6,34 +6,22 @@ import p5 from 'p5';
  * Based on the current canvas dimensions, the grid is resized to fit the maximum number of cells.
  */
 export class P5AsciifyGrid {
-    /**
-     * The number of columns in the grid.
-     */
+    /** The number of columns in the grid. */
     private _cols!: number;
 
-    /**
-     * The number of rows in the grid.
-     */
+    /** The number of rows in the grid. */
     private _rows!: number;
 
-    /**
-     * The total width of the grid in pixels.
-     */
+    /** The total width of the grid in pixels. */
     private _width!: number;
 
-    /**
-     * The total height of the grid in pixels.
-     */
+    /** The total height of the grid in pixels. */
     private _height!: number;
 
-    /**
-     * The offset to the outer canvas on the x-axis when centering the grid.
-     */
+    /** The offset to the outer canvas on the x-axis when centering the grid. */
     private _offsetX!: number;
 
-    /**
-     * The offset to the outer canvas on the y-axis when centering the grid.
-     */
+    /** The offset to the outer canvas on the y-axis when centering the grid. */
     private _offsetY!: number;
 
     /**
