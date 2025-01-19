@@ -112,7 +112,9 @@ export class P5AsciifyGradientRenderer extends P5AsciifyRenderer {
         this._asciiCharacterFramebuffer.begin();
         this.p.clear();
         this.p.shader(this.asciiCharacterShader);
-        this.asciiCharacterShader.setUniform('u_prevAsciiCharacterTexture', previousAsciiRenderer.asciiCharacterFramebuffer);
+        if (previousAsciiRenderer !== this) {
+            this.asciiCharacterShader.setUniform('u_prevAsciiCharacterTexture', previousAsciiRenderer.asciiCharacterFramebuffer);
+        }
         this.asciiCharacterShader.setUniform('u_prevGradientTexture', this.grayscaleFramebuffer);
         this.asciiCharacterShader.setUniform('u_nextGradientTexture', this.nextAsciiGradientFramebuffer);
         this.asciiCharacterShader.setUniform('u_resolution', [this.grid.cols, this.grid.rows]);
@@ -124,7 +126,9 @@ export class P5AsciifyGradientRenderer extends P5AsciifyRenderer {
         this.p.clear();
         this.p.shader(this.colorSampleShader);
         this.colorSampleShader.setUniform('u_sketchTexture', inputFramebuffer);
-        this.colorSampleShader.setUniform('u_previousColorTexture', previousAsciiRenderer.primaryColorSampleFramebuffer);
+        if (previousAsciiRenderer !== this) {
+            this.colorSampleShader.setUniform('u_previousColorTexture', previousAsciiRenderer.primaryColorSampleFramebuffer);
+        }
         this.colorSampleShader.setUniform('u_sampleTexture', this.nextAsciiGradientFramebuffer);
         this.colorSampleShader.setUniform('u_sampleReferenceTexture', this.grayscaleFramebuffer);
         this.colorSampleShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
@@ -137,7 +141,9 @@ export class P5AsciifyGradientRenderer extends P5AsciifyRenderer {
         this.p.clear();
         this.p.shader(this.colorSampleShader);
         this.colorSampleShader.setUniform('u_sketchTexture', inputFramebuffer);
-        this.colorSampleShader.setUniform('u_previousColorTexture', previousAsciiRenderer.secondaryColorSampleFramebuffer);
+        if (previousAsciiRenderer !== this) {
+            this.colorSampleShader.setUniform('u_previousColorTexture', previousAsciiRenderer.secondaryColorSampleFramebuffer);
+        }
         this.colorSampleShader.setUniform('u_sampleTexture', this.nextAsciiGradientFramebuffer);
         this.colorSampleShader.setUniform('u_sampleReferenceTexture', this.grayscaleFramebuffer);
         this.colorSampleShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
@@ -154,10 +160,12 @@ export class P5AsciifyGradientRenderer extends P5AsciifyRenderer {
         this.inversionShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
         this.inversionShader.setUniform('u_sampleTexture', this.nextAsciiGradientFramebuffer);
         this.inversionShader.setUniform('u_sampleReferenceTexture', this.grayscaleFramebuffer);
-        this.inversionShader.setUniform('u_previousInversionTexture', previousAsciiRenderer.inversionFramebuffer);
+        if (previousAsciiRenderer !== this) {
+            this.inversionShader.setUniform('u_previousInversionTexture', previousAsciiRenderer.inversionFramebuffer);
+        }
         this.p.rect(0, 0, this.p.width, this.p.height);
         this._inversionFramebuffer.end();
-        
+
 
         super.render(inputFramebuffer, previousAsciiRenderer);
     }
