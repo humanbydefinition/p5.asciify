@@ -6,6 +6,7 @@ uniform vec2 u_charsetDimensions;
 
 uniform sampler2D u_primaryColorTexture;
 uniform sampler2D u_secondaryColorTexture;
+uniform sampler2D u_inversionTexture;
 uniform sampler2D u_asciiCharacterTexture;
 
 uniform vec2 u_gridCellDimensions;
@@ -13,8 +14,6 @@ uniform vec2 u_gridPixelDimensions;
 uniform vec2 u_gridOffsetDimensions;
 
 uniform float u_rotationAngle;
-
-uniform bool u_invertMode;
 
 uniform vec2 u_resolution;
 uniform float u_pixelRatio; // Added uniform for pixel ratio
@@ -35,6 +34,12 @@ void main() {
     // Adjusted coordinate in logical pixel space
     vec2 adjustedCoord = (logicalFragCoord - u_gridOffsetDimensions) / u_gridPixelDimensions;
 
+    // Check if the adjusted coordinate is outside the valid range
+    if(adjustedCoord.x < 0.0 || adjustedCoord.x > 1.0 || adjustedCoord.y < 0.0 || adjustedCoord.y > 1.0) {
+        gl_FragColor = vec4(0);
+        return;
+    }
+
     // Calculate the grid coordinate
     vec2 gridCoord = adjustedCoord * u_gridCellDimensions;
     vec2 cellCoord = floor(gridCoord);
@@ -42,17 +47,14 @@ void main() {
     // Texture coordinate for sampling character indices
     vec2 charIndexTexCoord = (cellCoord + vec2(0.5)) / u_gridCellDimensions;
 
+    // Sample primary color (foreground color)
+    vec4 primaryColor = texture2D(u_primaryColorTexture, charIndexTexCoord);
+
     // Sample secondary color (background color)
     vec4 secondaryColor = texture2D(u_secondaryColorTexture, charIndexTexCoord);
 
-    // Check if the adjusted coordinate is outside the valid range
-    if(adjustedCoord.x < 0.0 || adjustedCoord.x > 1.0 || adjustedCoord.y < 0.0 || adjustedCoord.y > 1.0) {
-        gl_FragColor = vec4(0);
-        return;
-    }
-
-    // Sample primary color (foreground color)
-    vec4 primaryColor = texture2D(u_primaryColorTexture, charIndexTexCoord);
+    // Sample inversion texture
+    vec4 inversionColor = texture2D(u_inversionTexture, charIndexTexCoord);
 
     // Sample the character index from the ASCII character texture
     vec4 encodedIndexVec = texture2D(u_asciiCharacterTexture, charIndexTexCoord);
@@ -89,7 +91,7 @@ void main() {
     vec4 charColor = outsideBounds ? secondaryColor : texture2D(u_characterTexture, texCoord);
 
     // If the inversion mode is enabled, invert the character color
-    if(u_invertMode) {
+    if(inversionColor == vec4(1.0)) {
         charColor.a = 1.0 - charColor.a;
         charColor.rgb = vec3(1.0);
     }
@@ -102,6 +104,6 @@ void main() {
 
     // Override final color with background color for out-of-bounds areas due to rotation
     if(outsideBounds) {
-        gl_FragColor = u_invertMode ? primaryColor : secondaryColor;
+        gl_FragColor = inversionColor == vec4(1.0) ? primaryColor : secondaryColor;
     }
 }

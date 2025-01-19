@@ -51,7 +51,7 @@ const sketch = (p) => {
             enabled: true,
             characterColorMode: 1,
             characterColor: "#ff0000",
-            invertMode: false,
+            invertMode: true,
         });
 
         p5asciify.renderer("brightness").updateOptions({

@@ -65,6 +65,16 @@ export class P5AsciifyBrightnessRenderer extends P5AsciifyRenderer {
         }
         this._secondaryColorSampleFramebuffer.end();
 
+        this._inversionFramebuffer.begin();
+        this.p.clear();
+
+        if(this._options.invertMode) {
+            this.p.background(255);
+        } else {
+            this.p.background(0);
+        }
+        this._inversionFramebuffer.end();
+
         this._asciiCharacterFramebuffer.begin();
         this.p.clear();
         this.p.shader(this.asciiCharacterShader);

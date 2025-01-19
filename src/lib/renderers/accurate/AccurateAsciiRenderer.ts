@@ -112,6 +112,16 @@ export class P5AsciifyAccurateRenderer extends P5AsciifyRenderer {
         }
         this._secondaryColorSampleFramebuffer.end();
 
+        this._inversionFramebuffer.begin();
+        this.p.clear();
+
+        if(this._options.invertMode) {
+            this.p.background(255);
+        } else {
+            this.p.background(0);
+        }
+        this._inversionFramebuffer.end();
+
         // ASCII character pass
         this._asciiCharacterFramebuffer.begin();
         this.p.clear();

@@ -16,6 +16,7 @@ export class P5AsciifyRenderer<T extends AsciiRendererOptions = AsciiRendererOpt
     protected _primaryColorSampleFramebuffer: p5.Framebuffer;
     protected _secondaryColorSampleFramebuffer: p5.Framebuffer;
     protected _asciiCharacterFramebuffer: p5.Framebuffer;
+    protected _inversionFramebuffer: p5.Framebuffer;
     protected _outputFramebuffer: p5.Framebuffer;
     protected _shader: p5.Shader;
 
@@ -42,6 +43,15 @@ export class P5AsciifyRenderer<T extends AsciiRendererOptions = AsciiRendererOpt
         });
 
         this._secondaryColorSampleFramebuffer = this.p.createFramebuffer({
+            density: 1,
+            antialias: false,
+            width: this.grid.cols,
+            height: this.grid.rows,
+            depthFormat: this.p.UNSIGNED_INT,
+            textureFiltering: this.p.NEAREST
+        });
+
+        this._inversionFramebuffer = this.p.createFramebuffer({
             density: 1,
             antialias: false,
             width: this.grid.cols,
@@ -126,6 +136,7 @@ export class P5AsciifyRenderer<T extends AsciiRendererOptions = AsciiRendererOpt
         this._shader.setUniform('u_charsetDimensions', [this.characterSet.asciiFontTextureAtlas.charsetCols, this.characterSet.asciiFontTextureAtlas.charsetRows]);
         this._shader.setUniform('u_primaryColorTexture', this._primaryColorSampleFramebuffer);
         this._shader.setUniform('u_secondaryColorTexture', this._secondaryColorSampleFramebuffer);
+        this._shader.setUniform('u_inversionTexture', this._inversionFramebuffer);
         this._shader.setUniform('u_asciiCharacterTexture', this._asciiCharacterFramebuffer);
         if (previousAsciiRenderer !== this) {
             this._shader.setUniform('u_prevAsciiTexture', previousAsciiRenderer.outputFramebuffer);
@@ -133,7 +144,6 @@ export class P5AsciifyRenderer<T extends AsciiRendererOptions = AsciiRendererOpt
         this._shader.setUniform('u_gridPixelDimensions', [this.grid.width, this.grid.height]);
         this._shader.setUniform('u_gridOffsetDimensions', [this.grid.offsetX, this.grid.offsetY]);
         this._shader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
-        this._shader.setUniform('u_invertMode', this._options.invertMode);
         this._shader.setUniform('u_rotationAngle', this.p.radians(this._options.rotationAngle));
         this.p.rect(0, 0, this.p.width, this.p.height);
         this._outputFramebuffer.end();
@@ -144,5 +154,6 @@ export class P5AsciifyRenderer<T extends AsciiRendererOptions = AsciiRendererOpt
     get options() { return this._options; }
     get primaryColorSampleFramebuffer() { return this._primaryColorSampleFramebuffer; }
     get secondaryColorSampleFramebuffer() { return this._secondaryColorSampleFramebuffer; }
+    get inversionFramebuffer() { return this._inversionFramebuffer; }
     get asciiCharacterFramebuffer() { return this._asciiCharacterFramebuffer; }
 }

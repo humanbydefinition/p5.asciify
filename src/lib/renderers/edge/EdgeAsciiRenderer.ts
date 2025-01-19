@@ -8,6 +8,7 @@ import { AsciiRendererOptions } from '../types';
 
 import vertexShader from '../../assets/shaders/vert/shader.vert';
 import colorSampleShader from './shaders/colorSample.frag';
+import inversionShader from './shaders/gridCellInversion.frag';
 import asciiCharacterShader from './shaders/asciiCharacter.frag';
 import sobelShader from './shaders/sobel.frag';
 
@@ -22,6 +23,7 @@ export class P5AsciifyEdgeRenderer extends P5AsciifyRenderer<AsciiRendererOption
     private sobelShader: p5.Shader;
     private sampleShader: p5.Shader;
     private colorSampleShader: p5.Shader;
+    private inversionShader: p5.Shader;
     private asciiCharacterShader: p5.Shader;
     private sobelFramebuffer: p5.Framebuffer;
     private sampleFramebuffer: p5.Framebuffer;
@@ -32,6 +34,7 @@ export class P5AsciifyEdgeRenderer extends P5AsciifyRenderer<AsciiRendererOption
         this.sobelShader = this.p.createShader(vertexShader, sobelShader);
         this.sampleShader = this.p.createShader(vertexShader, generateSampleShader(16, this.grid.cellHeight, this.grid.cellWidth));
         this.colorSampleShader = this.p.createShader(vertexShader, colorSampleShader);
+        this.inversionShader = this.p.createShader(vertexShader, inversionShader);
         this.asciiCharacterShader = this.p.createShader(vertexShader, asciiCharacterShader);
 
         this.sobelFramebuffer = this.p.createFramebuffer({ 
@@ -113,6 +116,18 @@ export class P5AsciifyEdgeRenderer extends P5AsciifyRenderer<AsciiRendererOption
         this.colorSampleShader.setUniform('u_staticColor', (this._options.backgroundColor as p5.Color)._array);
         this.p.rect(0, 0, this.p.width, this.p.height);
         this._secondaryColorSampleFramebuffer.end();
+
+        // Inversion pass
+        this._inversionFramebuffer.begin();
+        this.p.clear();
+        this.p.shader(this.inversionShader);
+        this.inversionShader.setUniform('u_invert', this.options.invertMode);
+        this.inversionShader.setUniform('u_sampleTexture', this.sampleFramebuffer);
+        this.inversionShader.setUniform('u_previousInversionTexture', previousAsciiRenderer.inversionFramebuffer);
+        this.inversionShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
+        this.p.rect(0, 0, this.p.width, this.p.height);
+
+        this._inversionFramebuffer.end();
 
         // ASCII character pass
         this._asciiCharacterFramebuffer.begin();
