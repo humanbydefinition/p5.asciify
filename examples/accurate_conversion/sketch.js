@@ -19,11 +19,11 @@ const sketch = (p) => {
     };
 
     p.setupAsciify = () => {
-        p5asciify.renderer("brightness").updateOptions({
+        p5asciify.renderers().get("brightness").updateOptions({
             enabled: false,
         });
 
-        p5asciify.renderer("accurate").updateOptions({
+        p5asciify.renderers().get("accurate").updateOptions({
             enabled: true,
             characters: ` .‼╨\`',-_ú:░+;╘╙╤╥!"/=\^i~±âñ◘─├┬┴()*<>l|ÖÜèë←↑→↓♪?fr{}°²¶ÄÅÆÉíüƒΘΦφⁿ₧∙∞┌┘╒╓╪╫■□♀LT[]cjptvxzÑ∟7qyä│┤║╕╖╡╢╣Feo«»½απ↨≤≥╗☼1au•↔4CIYZks┼╔╚╞╟╩▄█▌▐$3gn£à▬◙%2EJSmw¡ª¼↕≈╜╝▲►◄♂59hå♠♦PVXbd¥6@GKç♣8ADOUÇáéó▀▒♫ê⌂#0HR§ºBQ═╠╦╬¢¬µ¿ï÷⌐&MNW♥ìîτ└▼ε∩╧▓☺☻ÿùûòöæô≡ßΓΣσ⌠⌡┐╛○·Ωδ√`,
             renderMode: renderMode,

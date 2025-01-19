@@ -47,21 +47,21 @@ const sketch = (p) => {
             speed: 0.01,
         });
 
-        p5asciify.renderer("gradient").updateOptions({
+        p5asciify.renderers().get("gradient").updateOptions({
             enabled: true,
             characterColorMode: 1,
             characterColor: "#ff0000",
             invertMode: true,
         });
 
-        p5asciify.renderer("brightness").updateOptions({
+        p5asciify.renderers().get("brightness").updateOptions({
             enabled: true,
             characterColorMode: 0,
             characters: ".",
             invertMode: true,
         });
 
-        p5asciify.renderer("edge").updateOptions({
+        p5asciify.renderers().get("edge").updateOptions({
             enabled: true,
             characterColorMode: 1,
             sobelThreshold: 0.1,
@@ -71,7 +71,13 @@ const sketch = (p) => {
             backgroundColorMode: 1,
         });
 
-        p5asciify.swap("gradient", "edge");
+        p5asciify.renderers().swap("gradient", "edge");
+        p5asciify.renderers().swap("brightness", "edge");
+        p5asciify.renderers().moveDown("brightness");
+        p5asciify.renderers().moveDown("brightness");
+        //p5asciify.renderers().remove("brightness");
+
+        console.log(p5asciify.renderers().toString());
     };
 
     p.draw = () => {

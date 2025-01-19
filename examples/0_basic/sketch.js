@@ -29,7 +29,7 @@ export const createSketch = (options = {}) => {
         p5asciify.fontSize(finalOptions.fontSize);
       }
 
-      p5asciify.renderer("brightness").updateOptions({
+      p5asciify.renderers().get("brightness").updateOptions({
         enabled: finalOptions.enabled,
         characters: finalOptions.characters,
         characterColor: finalOptions.characterColor,

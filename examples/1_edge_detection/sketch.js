@@ -52,7 +52,7 @@ const sketch = (p) => {
     p.setupAsciify = () => {
         p5asciify.fontSize(8);
 
-        p5asciify.renderer("edge").updateOptions({
+        p5asciify.renderers().get("edge").updateOptions({
             enabled: true,
             characters: "-/|\\-/|\\",
             characterColor: "#ffffff",

@@ -105,12 +105,12 @@ export class P5AsciifyRendererManager {
      * @param name The name of the renderer to get.
      * @returns The ASCII renderer instance with the given name.
      */
-    public getRendererByName(name: string): P5AsciifyRenderer {
-        const renderer = this._renderers.find(r => r.name === name)?.renderer;
+    public get(rendererName: string): P5AsciifyRenderer {
+        const renderer = this._renderers.find(r => r.name === rendererName)?.renderer;
         
         if (!renderer) {
             throw new P5AsciifyError(
-                `Renderer '${name}' not found. Available renderers: ${this._renderers.map(r => r.name).join(', ')}`
+                `Renderer '${rendererName}' not found. Available renderers: ${this._renderers.map(r => r.name).join(', ')}`
             );
         }
 
@@ -118,26 +118,76 @@ export class P5AsciifyRendererManager {
     }
 
     /**
-     * Swaps the positions of two renderers in the renderer list.
-     * @param renderer1 
-     * @param renderer2 
+     * Moves a renderer up in the list of renderers.
+     * @param renderer The renderer to move up in the list.
      */
-    public swapRenderers(renderer1: string | P5AsciifyRenderer, renderer2: string | P5AsciifyRenderer): void {
-        const renderer1Instance = typeof renderer1 === 'string' ? this.getRendererByName(renderer1) : renderer1;
-        const renderer2Instance = typeof renderer2 === 'string' ? this.getRendererByName(renderer2) : renderer2;
-
-        const renderer1Index = this._renderers.findIndex(r => r.renderer === renderer1Instance);
-        const renderer2Index = this._renderers.findIndex(r => r.renderer === renderer2Instance);
-
-        if (renderer1Index === -1 || renderer2Index === -1) {
-            throw new P5AsciifyError(`One or more renderers not found.`);
-        }
-
-        const temp = this._renderers[renderer1Index];
-        this._renderers[renderer1Index] = this._renderers[renderer2Index];
-        this._renderers[renderer2Index] = temp;
+    public moveDown(renderer: string | P5AsciifyRenderer): void {
+        const index = this.getRendererIndex(renderer);
+        if (index <= 0) return;
+        this.swap(renderer, this._renderers[index - 1].renderer);
+    }
+    
+    /**
+     * Moves a renderer down in the list of renderers.
+     * @param renderer The renderer to move down in the list.
+     */
+    public moveUp(renderer: string | P5AsciifyRenderer): void {
+        const index = this.getRendererIndex(renderer);
+        if (index === -1 || index >= this._renderers.length - 1) return;
+        this.swap(renderer, this._renderers[index + 1].renderer);
     }
 
-    // Getters and setters
+    /**
+     * Removes a renderer from the list of renderers.
+     * @param renderer The name of the renderer or the renderer instance itself.
+     */
+    public remove(renderer: string | P5AsciifyRenderer): void {
+        const index = this.getRendererIndex(renderer);
+        if (index === -1) {
+            throw new P5AsciifyError(`Renderer not found.`);
+        }
+        this._renderers.splice(index, 1);
+    }
+
+    /**
+     * Clears the list of renderers.
+     */
+    public clear() {
+        this._renderers = [];
+    }
+    
+    /**
+     * Swaps the positions of two renderers in the renderer list.
+     * @param renderer1 The name of the first renderer or the renderer instance itself.
+     * @param renderer2 The name of the second renderer or the renderer instance itself.
+     */
+    public swap(renderer1: string | P5AsciifyRenderer, renderer2: string | P5AsciifyRenderer): void {
+        const index1 = this.getRendererIndex(renderer1);
+        const index2 = this.getRendererIndex(renderer2);
+    
+        if (index1 === -1 || index2 === -1) {
+            throw new P5AsciifyError(`One or more renderers not found.`);
+        }
+    
+        const temp = this._renderers[index1];
+        this._renderers[index1] = this._renderers[index2];
+        this._renderers[index2] = temp;
+    
+        this.lastRenderer = this._renderers[0].renderer;
+    }
+
+    /**
+     * Gets the index of a renderer in the list of renderers.
+     * @param renderer The renderer to get the index of.
+     * @returns The index of the renderer in the list of renderers. Returns -1 if the renderer is not found.
+     */
+    private getRendererIndex(renderer: string | P5AsciifyRenderer): number {
+        if (typeof renderer === 'string') {
+            return this._renderers.findIndex(r => r.name === renderer);
+        }
+        return this._renderers.findIndex(r => r.renderer === renderer);
+    }
+
+    // Getters
     get renderers(): { name: string, renderer: P5AsciifyRenderer }[] { return this._renderers; }
 }

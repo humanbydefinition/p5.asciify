@@ -190,18 +190,8 @@ export class P5Asciifier {
         }
     }
 
-    /**
-     * Returns the renderer with the given name.
-     * @param rendererName The name of the renderer to get.
-     * @returns The renderer with the given name.
-     * @throws {@link P5AsciifyError} - If the renderer with the given name does not exist.
-     */
-    public renderer(rendererName: string): P5AsciifyRenderer {
-        return this.rendererManager.getRendererByName(rendererName);
-    }
-
-    public swap(renderer1: string | P5AsciifyRenderer, renderer2: string | P5AsciifyRenderer): void {
-        this.rendererManager.swapRenderers(renderer1, renderer2);
+    public renderers(): P5AsciifyRendererManager {
+        return this.rendererManager;
     }
 
     /**
