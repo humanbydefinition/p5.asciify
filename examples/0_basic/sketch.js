@@ -29,7 +29,7 @@ export const createSketch = (options = {}) => {
         p5asciify.fontSize(finalOptions.fontSize);
       }
 
-      p5asciify.rendererManager.renderers[0].updateOptions({
+      p5asciify.renderer("brightness").updateOptions({
         enabled: finalOptions.enabled,
         characters: finalOptions.characters,
         characterColor: finalOptions.characterColor,
@@ -39,6 +39,7 @@ export const createSketch = (options = {}) => {
         invertMode: finalOptions.invertMode,
         rotationAngle: finalOptions.rotationAngle
       });
+
     };
 
     p.draw = () => {

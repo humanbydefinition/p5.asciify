@@ -47,25 +47,31 @@ const sketch = (p) => {
             speed: 0.01,
         });
 
-        p5asciify.rendererManager.renderers[2].updateOptions({
+        p5asciify.renderer("gradient").updateOptions({
             enabled: true,
             characterColorMode: 1,
             characterColor: "#ff0000",
-            invertMode: true,
+            invertMode: false,
         });
 
-        p5asciify.rendererManager.renderers[0].updateOptions({
+        p5asciify.renderer("brightness").updateOptions({
             enabled: true,
             characterColorMode: 0,
             characters: ".",
+            invertMode: true,
         });
 
-        p5asciify.rendererManager.renderers[3].updateOptions({
+        p5asciify.renderer("edge").updateOptions({
             enabled: true,
             characterColorMode: 1,
             sobelThreshold: 0.1,
             sampleThreshold: 16,
+            invertMode: false,
+            backgroundColor: "#000000",
+            backgroundColorMode: 1,
         });
+
+        p5asciify.swap("gradient", "edge");
     };
 
     p.draw = () => {

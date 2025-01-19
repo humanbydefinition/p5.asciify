@@ -19,11 +19,11 @@ const sketch = (p) => {
     };
 
     p.setupAsciify = () => {
-        p5asciify.rendererManager.renderers[0].updateOptions({
+        p5asciify.renderer("brightness").updateOptions({
             enabled: false,
         });
 
-        p5asciify.rendererManager.renderers[1].updateOptions({
+        p5asciify.renderer("accurate").updateOptions({
             enabled: true,
             characters: ` .‼╨\`',-_ú:░+;╘╙╤╥!"/=\^i~±âñ◘─├┬┴()*<>l|ÖÜèë←↑→↓♪?fr{}°²¶ÄÅÆÉíüƒΘΦφⁿ₧∙∞┌┘╒╓╪╫■□♀LT[]cjptvxzÑ∟7qyä│┤║╕╖╡╢╣Feo«»½απ↨≤≥╗☼1au•↔4CIYZks┼╔╚╞╟╩▄█▌▐$3gn£à▬◙%2EJSmw¡ª¼↕≈╜╝▲►◄♂59hå♠♦PVXbd¥6@GKç♣8ADOUÇáéó▀▒♫ê⌂#0HR§ºBQ═╠╦╬¢¬µ¿ï÷⌐&MNW♥ìîτ└▼ε∩╧▓☺☻ÿùûòöæô≡ßΓΣσ⌠⌡┐╛○·Ωδ√`,
             renderMode: renderMode,
@@ -44,20 +44,6 @@ const sketch = (p) => {
         p.directionalLight(255, 255, 255, 0, 0, -1);
         p.box(600, 80, 80);
         p.pop();
-
-        /**
-        if (p.frameCount % 120 === 0) {
-            currentModeIndex = (currentModeIndex + 1) % renderModes.length;
-            renderMode = renderModes[currentModeIndex];
-            p.setAsciiOptions({ ascii: { renderMode } });
-
-            if (renderMode === 'brightness') {
-                p.setAsciiOptions({ ascii: { backgroundColorMode: 1 } });
-            } else {
-                p.setAsciiOptions({ ascii: { backgroundColorMode: 0 } });
-            }
-        }
-        **/
     };
 
     p.windowResized = () => {

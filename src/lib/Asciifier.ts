@@ -10,6 +10,7 @@ import { validateGradientParams } from './validators/GradientValidator';
 import { P5AsciifyGradient } from './gradients/Gradient';
 
 import { DEFAULT_FONT_SIZE, DEFAULT_BACKGROUND_COLOR } from './defaults';
+import { P5AsciifyRenderer } from './renderers/AsciiRenderer';
 
 /**
  * The main class for the `p5.asciify` library. 
@@ -190,6 +191,20 @@ export class P5Asciifier {
     }
 
     /**
+     * Returns the renderer with the given name.
+     * @param rendererName The name of the renderer to get.
+     * @returns The renderer with the given name.
+     * @throws {@link P5AsciifyError} - If the renderer with the given name does not exist.
+     */
+    public renderer(rendererName: string): P5AsciifyRenderer {
+        return this.rendererManager.getRendererByName(rendererName);
+    }
+
+    public swap(renderer1: string | P5AsciifyRenderer, renderer2: string | P5AsciifyRenderer): void {
+        this.rendererManager.swapRenderers(renderer1, renderer2);
+    }
+
+    /**
      * Sets the font for the ascii renderers.
      * @param font The font to use. Can be a path, base64 string, or p5.Font object.
      * @throws {@link P5AsciifyError} - If the font parameter is invalid or the font fails to load.
@@ -214,7 +229,7 @@ export class P5Asciifier {
 
         if (this._p._setupDone) {
             this.asciiFontTextureAtlas.setFontObject(font as p5.Font);
-            this.rendererManager.renderers.forEach(renderer => renderer.characterSet.reset());
+            this.rendererManager.renderers.forEach(renderer => renderer.renderer.characterSet.reset());
 
             this.grid.resizeCellPixelDimensions(
                 this.asciiFontTextureAtlas.maxGlyphDimensions.width,
