@@ -62,13 +62,14 @@ export declare class P5AsciifyFontTextureAtlas {
      * @returns Array of RGB color values.
      * @throws {@link P5AsciifyError} If a character is not found in the texture atlas.
      */
-    getCharsetColorArray(characters: string): Array<[number, number, number]>;
+    getCharsetColorArray(characters?: string): Array<[number, number, number]>;
     /**
      * Returns an array of characters that are not supported by the current font.
      * @param characters The string of characters to check.
      * @returns An array of unsupported characters. List is empty if all characters are supported.
      */
     getUnsupportedCharacters(characters: string): string[];
+    validateCharacters(characters: string): void;
     get maxGlyphDimensions(): {
         width: number;
         height: number;

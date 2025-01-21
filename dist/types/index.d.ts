@@ -5,7 +5,6 @@ import { P5Asciifier } from './Asciifier';
 export declare const p5asciify: P5Asciifier;
 export { P5Asciifier } from './Asciifier';
 export { P5AsciifyError } from './AsciifyError';
-export { P5AsciifyCharacterSet } from './CharacterSet';
 export { P5AsciifyColorPalette } from './ColorPalette';
 export { P5AsciifyFontTextureAtlas } from './FontTextureAtlas';
 export { P5AsciifyGrid } from './Grid';

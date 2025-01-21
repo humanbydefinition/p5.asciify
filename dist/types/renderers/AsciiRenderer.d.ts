@@ -1,8 +1,8 @@
 import p5 from 'p5';
 import { P5AsciifyGrid } from '../Grid';
-import { P5AsciifyCharacterSet } from '../CharacterSet';
-import { AsciiRendererOptions, AsciiRendererUserOptions } from './types';
+import { P5AsciifyColorPalette } from '../ColorPalette';
 import { P5AsciifyFontTextureAtlas } from '../FontTextureAtlas';
+import { AsciiRendererOptions, AsciiRendererUserOptions } from './types';
 /**
  * Abstract class for shader-based ASCII Renderers.
  */
@@ -11,7 +11,7 @@ export declare class P5AsciifyRenderer {
     protected grid: P5AsciifyGrid;
     protected fontTextureAtlas: P5AsciifyFontTextureAtlas;
     protected _options: AsciiRendererOptions;
-    characterSet: P5AsciifyCharacterSet;
+    characterColorPalette: P5AsciifyColorPalette;
     protected _primaryColorSampleFramebuffer: p5.Framebuffer;
     protected _secondaryColorSampleFramebuffer: p5.Framebuffer;
     protected _asciiCharacterFramebuffer: p5.Framebuffer;
@@ -43,7 +43,7 @@ export declare class P5AsciifyRenderer {
      * @param characters The characters to set for the character set.
      * @throws {P5AsciifyError} If characters is not a string.
      */
-    characters(characters: string): void;
+    characters(characters?: string): void;
     /**
      * Invert the colors of the ASCII character and cell background colors.
      * @param invert Whether to swap the colors.

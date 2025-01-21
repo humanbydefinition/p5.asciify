@@ -11,7 +11,6 @@
 | [P5Asciifier](classes/P5Asciifier.md) | The main class for the `p5.asciify` library. |
 | [P5AsciifyAccurateRenderer](classes/P5AsciifyAccurateRenderer.md) | An ASCII renderer that attempts to accurately represent the input sketch using the available ASCII characters. |
 | [P5AsciifyBrightnessRenderer](classes/P5AsciifyBrightnessRenderer.md) | ASCII Renderer that uses brightness to determine the ASCII characters to use from the 1D character set. |
-| [P5AsciifyCharacterSet](classes/P5AsciifyCharacterSet.md) | Represents a set of characters to be used by an ASCII renderer. |
 | [P5AsciifyColorPalette](classes/P5AsciifyColorPalette.md) | A 1D color palette for use with the `p5.asciify` library. |
 | [P5AsciifyConicalGradient](classes/P5AsciifyConicalGradient.md) | A conical gradient that moves in a conical pattern across the screen. |
 | [P5AsciifyEdgeRenderer](classes/P5AsciifyEdgeRenderer.md) | An ASCII renderer that applies ASCII edges to the input sketch by using edge detection. |
