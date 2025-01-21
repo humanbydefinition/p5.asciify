@@ -8,13 +8,12 @@ export declare abstract class P5AsciifyGradient {
     protected p: p5;
     protected _fontTextureAtlas: P5AsciifyFontTextureAtlas;
     protected _shader: p5.Shader;
-    private _characters;
     protected _brightnessStart: number;
     protected _brightnessEnd: number;
     enabled: boolean;
     protected _onPaletteChangeCallback?: (gradient: P5AsciifyGradient, value: string[]) => void;
     protected _palette: P5AsciifyColorPalette;
-    constructor(p: p5, _fontTextureAtlas: P5AsciifyFontTextureAtlas, _shader: p5.Shader, brightnessStart: number, brightnessEnd: number, _characters: string);
+    constructor(p: p5, _fontTextureAtlas: P5AsciifyFontTextureAtlas, _shader: p5.Shader, brightnessStart: number, brightnessEnd: number, characters: string);
     /**
      * Sets the uniforms for the gradient shader.
      * @param framebuffer - The framebuffer to use.
@@ -39,7 +38,6 @@ export declare abstract class P5AsciifyGradient {
      * @throws P5AsciifyError If the string does contain characters that are not available in the font texture atlas.
      */
     set characters(value: string);
-    get characters(): string;
     get shader(): p5.Shader;
     get palette(): P5AsciifyColorPalette;
     get brightnessEnd(): number;

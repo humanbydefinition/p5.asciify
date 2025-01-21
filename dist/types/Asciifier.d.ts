@@ -89,6 +89,7 @@ export declare class P5Asciifier {
      * @throws {@link P5AsciifyError} - If the font size is out of bounds.
      */
     fontSize(fontSize: number): void;
+    renderers(): P5AsciifyRendererManager;
     /**
      * Sets the font for the ascii renderers.
      * @param font The font to use. Can be a path, base64 string, or p5.Font object.

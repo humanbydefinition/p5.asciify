@@ -19,7 +19,7 @@ export declare class P5AsciifyCharacterSet {
      * @param asciiFontTextureAtlas The font texture atlas to reference for character colors.
      * @param characters The characters to use in the character set.
      */
-    constructor(p: p5, asciiFontTextureAtlas: P5AsciifyFontTextureAtlas, characters: string);
+    constructor(p: p5, asciiFontTextureAtlas: P5AsciifyFontTextureAtlas, characters?: string);
     /**
      * Validates the characters to ensure they are supported by the current font.
      * @param characters The characters to validate.
@@ -36,5 +36,5 @@ export declare class P5AsciifyCharacterSet {
      * Resets the character set colors. Gets called when the font atlas is updated with a new font.
      */
     reset(): void;
-    get characters(): string[];
+    get characters(): string;
 }

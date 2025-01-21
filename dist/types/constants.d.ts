@@ -5,5 +5,3 @@ export declare const FONT_SIZE_LIMITS: {
     /** Maximum allowed font size in pixels */
     readonly MAX: 128;
 };
-/** Number of characters used in edge detection renderer's character set */
-export declare const EDGE_CHARACTER_LENGTH = 8;

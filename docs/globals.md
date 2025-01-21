@@ -36,7 +36,6 @@
 | [CUSTOM\_DEFAULT\_OPTIONS](variables/CUSTOM_DEFAULT_OPTIONS.md) | Default configuration options for custom ASCII renderer |
 | [DEFAULT\_BACKGROUND\_COLOR](variables/DEFAULT_BACKGROUND_COLOR.md) | Default background color behind the ASCII grid |
 | [DEFAULT\_FONT\_SIZE](variables/DEFAULT_FONT_SIZE.md) | Default font size for the ASCII rendering |
-| [EDGE\_CHARACTER\_LENGTH](variables/EDGE_CHARACTER_LENGTH.md) | Number of characters used in edge detection renderer's character set |
 | [EDGE\_DEFAULT\_OPTIONS](variables/EDGE_DEFAULT_OPTIONS.md) | Default configuration options for edge detection ASCII renderer |
 | [FONT\_SIZE\_LIMITS](variables/FONT_SIZE_LIMITS.md) | Font size constraints for ASCII rendering |
 | [GRADIENT\_DEFAULT\_OPTIONS](variables/GRADIENT_DEFAULT_OPTIONS.md) | Default configuration options for gradient-based ASCII renderer |
