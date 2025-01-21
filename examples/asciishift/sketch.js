@@ -104,7 +104,7 @@ const sketch = (p) => {
 		asciiCharacterFramebuffer = p5asciify.renderers().get("custom").asciiCharacterFramebuffer;
 
 		p5asciify.borderColor = p.color(0);
-		p5asciify.renderers().get("custom").updateOptions({ enabled: true });
+		p5asciify.renderers().get("custom").update({ enabled: true });
 
 		charsetColorPalette = p5asciify.asciiFontTextureAtlas.getCharsetColorArray(charset);
 		charsetColorPaletteFramebuffer.loadPixels();

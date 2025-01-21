@@ -2,7 +2,7 @@ import p5 from 'p5';
 
 import { P5AsciifyRenderer } from '../AsciiRenderer';
 import { P5AsciifyGrid } from '../../Grid';
-import { P5AsciifyCharacterSet } from '../../CharacterSet';
+import { P5AsciifyFontTextureAtlas } from '../../FontTextureAtlas';
 
 import { AsciiRendererOptions } from '../types';
 
@@ -18,8 +18,8 @@ export class P5AsciifyBrightnessRenderer extends P5AsciifyRenderer {
     private asciiCharacterShader: p5.Shader;
     private colorSampleFramebuffer: p5.Framebuffer;
 
-    constructor(p5Instance: p5, grid: P5AsciifyGrid, characterSet: P5AsciifyCharacterSet, options: AsciiRendererOptions) {
-        super(p5Instance, grid, characterSet, options);
+    constructor(p5Instance: p5, grid: P5AsciifyGrid, fontTextureAtlas: P5AsciifyFontTextureAtlas,  options: AsciiRendererOptions) {
+        super(p5Instance, grid, fontTextureAtlas, options);
 
         this.colorSampleShader = this.p.createShader(vertexShader, colorSampleShader);
         this.asciiCharacterShader = this.p.createShader(vertexShader, asciiCharacterShader);
@@ -68,7 +68,7 @@ export class P5AsciifyBrightnessRenderer extends P5AsciifyRenderer {
         this._inversionFramebuffer.begin();
         this.p.clear();
 
-        if(this._options.invertMode) {
+        if (this._options.invertMode) {
             this.p.background(255);
         } else {
             this.p.background(0);

@@ -1,10 +1,10 @@
 import p5 from 'p5';
 import { P5AsciifyRenderer } from '../AsciiRenderer';
 import { P5AsciifyGrid } from '../../Grid';
-import { P5AsciifyCharacterSet } from '../../CharacterSet';
 import { P5AsciifyError } from '../../AsciifyError';
+import { P5AsciifyFontTextureAtlas } from '../../FontTextureAtlas';
 
-import { AsciiRendererOptions } from '../types';
+import { AsciiRendererOptions, AsciiRendererUserOptions } from '../types';
 
 import vertexShader from '../../assets/shaders/vert/shader.vert';
 import colorSampleShader from './shaders/colorSample.frag';
@@ -14,12 +14,10 @@ import sobelShader from './shaders/sobel.frag';
 
 import { generateSampleShader } from './shaders/shaderGenerators.min';
 
-import { EDGE_CHARACTER_LENGTH } from '../../constants';
-
 /**
  * An ASCII renderer that applies ASCII edges to the input sketch by using edge detection.
  */
-export class P5AsciifyEdgeRenderer extends P5AsciifyRenderer<AsciiRendererOptions> {
+export class P5AsciifyEdgeRenderer extends P5AsciifyRenderer {
     private sobelShader: p5.Shader;
     private sampleShader: p5.Shader;
     private colorSampleShader: p5.Shader;
@@ -28,8 +26,8 @@ export class P5AsciifyEdgeRenderer extends P5AsciifyRenderer<AsciiRendererOption
     private sobelFramebuffer: p5.Framebuffer;
     private sampleFramebuffer: p5.Framebuffer;
 
-    constructor(p5Instance: p5, grid: P5AsciifyGrid, characterSet: P5AsciifyCharacterSet, options: AsciiRendererOptions) {
-        super(p5Instance, grid, characterSet, options);
+    constructor(p5Instance: p5, grid: P5AsciifyGrid, fontTextureAtlas: P5AsciifyFontTextureAtlas, options: AsciiRendererOptions) {
+        super(p5Instance, grid, fontTextureAtlas, options);
 
         this.sobelShader = this.p.createShader(vertexShader, sobelShader);
         this.sampleShader = this.p.createShader(vertexShader, generateSampleShader(16, this.grid.cellHeight, this.grid.cellWidth));
@@ -59,13 +57,49 @@ export class P5AsciifyEdgeRenderer extends P5AsciifyRenderer<AsciiRendererOption
         this.sampleShader = this.p.createShader(vertexShader, generateSampleShader(16, this.grid.cellHeight, this.grid.cellWidth));
     }
 
-    public updateOptions(newOptions: Partial<AsciiRendererOptions>): void {
-        // Call the base method to handle the rest of the validations and updates
-        super.updateOptions(newOptions);
+    /**
+     * Set the threshold value for the Sobel edge detection algorithm.
+     * @param value The threshold value for the Sobel edge detection algorithm.
+     * @throws {P5AsciifyError} If the value is not a valid number between 0 and 1.
+     */
+    sobelThreshold(value: number): void {
+        if (typeof value !== 'number' || Number.isNaN(value) || !Number.isFinite(value)) {
+            throw new P5AsciifyError('Sobel threshold must be a valid number');
+        }
 
-        // Specific check for EdgeAsciiRenderer: characters string must have length 8
-        if (newOptions?.characters && newOptions.characters.length !== EDGE_CHARACTER_LENGTH) {
-            throw new P5AsciifyError(`For EdgeAsciiRenderer, 'characters' must be a string of length ${EDGE_CHARACTER_LENGTH}.`);
+        if (value < 0 || value > 1) {
+            throw new P5AsciifyError('Sobel threshold must be between 0 and 1');
+        }
+    
+        this._options.sobelThreshold = value;
+    }
+
+    /**
+     * Set the sample threshold value for the edge detection algorithm.
+     * @param value The sample threshold value for the edge detection algorithm.
+     * @throws {P5AsciifyError} If the value is not a valid number greater than or equal to 0.
+     */
+    sampleThreshold(value: number): void {
+        if (typeof value !== 'number' || Number.isNaN(value) || !Number.isFinite(value)) {
+            throw new P5AsciifyError('Sample threshold must be a valid number');
+        }
+
+        if (value < 0) {
+            throw new P5AsciifyError('Sample threshold must be greater than or equal to 0');
+        }
+    
+        this._options.sampleThreshold = value;
+    }
+
+    public update(newOptions: Partial<AsciiRendererUserOptions>): void {
+        super.update(newOptions);
+
+        if (newOptions.sobelThreshold !== undefined) {
+            this.sobelThreshold(newOptions.sobelThreshold as number);
+        }
+
+        if (newOptions.sampleThreshold !== undefined) {
+            this.sampleThreshold(newOptions.sampleThreshold as number);
         }
     }
 
@@ -76,7 +110,7 @@ export class P5AsciifyEdgeRenderer extends P5AsciifyRenderer<AsciiRendererOption
         this.p.shader(this.sobelShader);
         this.sobelShader.setUniform('u_texture', inputFramebuffer);
         this.sobelShader.setUniform('u_textureSize', [this.p.width, this.p.height]);
-        this.sobelShader.setUniform('u_threshold', this.options.sobelThreshold as number);
+        this.sobelShader.setUniform('u_threshold', this._options.sobelThreshold as number);
         this.p.rect(0, 0, this.p.width, this.p.height);
         this.sobelFramebuffer.end();
 

@@ -152,14 +152,12 @@ export class P5AsciifyFontTextureAtlas {
 
     /**
      * Gets an array of RGB colors for a given string or array of characters.
-     * @param input - Either a string or array of characters.
+     * @param characters - A string of characters.
      * @returns Array of RGB color values.
      * @throws {@link P5AsciifyError} If a character is not found in the texture atlas.
      */
-    public getCharsetColorArray(input: string[]): Array<[number, number, number]> {
-        const chars: string[] = Array.isArray(input) ? input : Array.from(input);
-
-        return chars.map((char: string) => {
+    public getCharsetColorArray(characters: string): Array<[number, number, number]> {
+        return Array.from(characters).map((char: string) => {
             const glyph = this._characterGlyphs.find(
                 (glyph: OpenTypeGlyph) => glyph.unicodes.includes(char.codePointAt(0) as number)
             );

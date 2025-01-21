@@ -6,9 +6,9 @@ export const DEFAULT_OPTIONS = {
   enabled: true,
   characters: '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
   characterColor: '#ffffff',
-  characterColorMode: 1,
+  characterColorMode: "fixed",
   backgroundColor: '#000000',
-  backgroundColorMode: 1,
+  backgroundColorMode: "fixed",
   invertMode: false,
   fontSize: 32
 };
@@ -48,7 +48,7 @@ export const createSketch = (options = {}) => {
         p5asciify.fontSize(finalOptions.fontSize);
       }
 
-      p5asciify.renderers().get("brightness").updateOptions({
+      p5asciify.renderers().get("brightness").update({
         enabled: finalOptions.enabled,
         characters: finalOptions.characters,
         characterColor: finalOptions.characterColor,

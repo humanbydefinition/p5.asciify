@@ -2,13 +2,13 @@ import p5 from 'p5';
 
 import { P5AsciifyRenderer } from '../AsciiRenderer';
 import { P5AsciifyGrid } from '../../Grid';
-import { P5AsciifyCharacterSet } from '../../CharacterSet';
 
 import { AsciiRendererOptions } from '../types';
 
 import { generateCharacterSelectionShader, generateBrightnessSampleShader, generateColorSampleShader } from './shaders/shaderGenerators.min';
 import brightnessSplitShader from './shaders/brightnessSplit.frag';
 import vertexShader from '../../assets/shaders/vert/shader.vert';
+import { P5AsciifyFontTextureAtlas } from '../../FontTextureAtlas';
 
 /**
  * An ASCII renderer that attempts to accurately represent the input sketch using the available ASCII characters.
@@ -21,10 +21,10 @@ export class P5AsciifyAccurateRenderer extends P5AsciifyRenderer {
     private brightnessSampleFramebuffer: p5.Framebuffer;
     private brightnessSplitFramebuffer: p5.Framebuffer;
 
-    constructor(p5Instance: p5, grid: P5AsciifyGrid, characterSet: P5AsciifyCharacterSet, options: AsciiRendererOptions) {
-        super(p5Instance, grid, characterSet, options);
+    constructor(p5Instance: p5,  grid: P5AsciifyGrid, fontTextureAtlas: P5AsciifyFontTextureAtlas, options: AsciiRendererOptions) {
+        super(p5Instance, grid, fontTextureAtlas, options);
 
-        this.characterSelectionShader = this.p.createShader(vertexShader, generateCharacterSelectionShader(this.characterSet.asciiFontTextureAtlas.fontSize));
+        this.characterSelectionShader = this.p.createShader(vertexShader, generateCharacterSelectionShader(this.fontTextureAtlas.fontSize));
         this.brightnessSampleShader = this.p.createShader(vertexShader, generateBrightnessSampleShader(this.grid.cellHeight, this.grid.cellWidth));
         this.colorSampleShader = this.p.createShader(vertexShader, generateColorSampleShader(16, this.grid.cellHeight, this.grid.cellWidth));
         this.brightnessSplitShader = this.p.createShader(vertexShader, brightnessSplitShader);
@@ -48,7 +48,7 @@ export class P5AsciifyAccurateRenderer extends P5AsciifyRenderer {
     }
 
     resetShaders(): void {
-        this.characterSelectionShader = this.p.createShader(vertexShader, generateCharacterSelectionShader(this.characterSet.asciiFontTextureAtlas.fontSize));
+        this.characterSelectionShader = this.p.createShader(vertexShader, generateCharacterSelectionShader(this.fontTextureAtlas.fontSize));
         this.brightnessSampleShader = this.p.createShader(vertexShader, generateBrightnessSampleShader(this.grid.cellHeight, this.grid.cellWidth));
         this.colorSampleShader = this.p.createShader(vertexShader, generateColorSampleShader(16, this.grid.cellHeight, this.grid.cellWidth));
     }
@@ -126,9 +126,9 @@ export class P5AsciifyAccurateRenderer extends P5AsciifyRenderer {
         this._asciiCharacterFramebuffer.begin();
         this.p.clear();
         this.p.shader(this.characterSelectionShader);
-        this.characterSelectionShader.setUniform('u_characterTexture', this.characterSet.asciiFontTextureAtlas.texture);
-        this.characterSelectionShader.setUniform('u_charsetCols', this.characterSet.asciiFontTextureAtlas.charsetCols);
-        this.characterSelectionShader.setUniform('u_charsetRows', this.characterSet.asciiFontTextureAtlas.charsetRows);
+        this.characterSelectionShader.setUniform('u_characterTexture', this.fontTextureAtlas.texture);
+        this.characterSelectionShader.setUniform('u_charsetCols', this.fontTextureAtlas.charsetCols);
+        this.characterSelectionShader.setUniform('u_charsetRows', this.fontTextureAtlas.charsetRows);
         this.characterSelectionShader.setUniform('u_charPaletteTexture', this.characterSet.characterColorPalette.framebuffer);
         this.characterSelectionShader.setUniform('u_charPaletteSize', [this.characterSet.characterColorPalette.colors.length, 1]);
         this.characterSelectionShader.setUniform('u_sketchTexture', this.brightnessSplitFramebuffer);

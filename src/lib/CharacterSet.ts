@@ -15,7 +15,7 @@ export class P5AsciifyCharacterSet {
     public characterColorPalette: P5AsciifyColorPalette;
 
     /** The list of individual characters in the character set. */
-    private _characters: string[];
+    private _characters: string;
 
     /**
      * Create a new character set instance.
@@ -26,7 +26,7 @@ export class P5AsciifyCharacterSet {
     constructor(
         private p: p5,
         public asciiFontTextureAtlas: P5AsciifyFontTextureAtlas,
-        characters: string
+        characters: string = ""
     ) {
         this._characters = this.validateCharacters(characters);
         this.characterColorPalette = new P5AsciifyColorPalette(this.p, this.asciiFontTextureAtlas.getCharsetColorArray(this._characters));
@@ -38,12 +38,12 @@ export class P5AsciifyCharacterSet {
      * @returns The validated characters as a list of individual characters.
      * @throws {@link P5AsciifyError} If any characters are not supported by the set font.
      */
-    private validateCharacters(characters: string): string[] {
+    private validateCharacters(characters: string): string {
         const unsupportedChars: string[] = this.asciiFontTextureAtlas.getUnsupportedCharacters(characters);
         if (unsupportedChars.length > 0) {
             throw new P5AsciifyError(`The following characters are not supported by the current font: [${unsupportedChars.join(', ')}].`);
         }
-        return Array.from(characters);
+        return characters;
     }
 
     /**

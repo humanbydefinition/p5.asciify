@@ -52,13 +52,13 @@ const sketch = (p) => {
     p.setupAsciify = () => {
         p5asciify.fontSize(8);
 
-        p5asciify.renderers().get("edge").updateOptions({
+        p5asciify.renderers().get("edge").update({
             enabled: true,
             characters: "-/|\\-/|\\",
             characterColor: "#ffffff",
-            characterColorMode: 1,
+            characterColorMode: "fixed",
             backgroundColor: "#000000",
-            backgroundColorMode: 1,
+            backgroundColorMode: "fixed",
             invertMode: false,
             sobelThreshold: 0.01,
             sampleThreshold: 16,

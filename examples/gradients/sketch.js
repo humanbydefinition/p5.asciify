@@ -47,28 +47,28 @@ const sketch = (p) => {
             speed: 0.01,
         });
 
-        p5asciify.renderers().get("gradient").updateOptions({
+        p5asciify.renderers().get("gradient").update({
             enabled: true,
-            characterColorMode: 1,
+            characterColorMode: "fixed",
             characterColor: "#ff0000",
             invertMode: true,
         });
 
-        p5asciify.renderers().get("brightness").updateOptions({
+        p5asciify.renderers().get("brightness").update({
             enabled: true,
-            characterColorMode: 0,
+            characterColorMode: "sampled",
             characters: ".",
             invertMode: true,
         });
 
-        p5asciify.renderers().get("edge").updateOptions({
+        p5asciify.renderers().get("edge").update({
             enabled: true,
-            characterColorMode: 1,
+            characterColorMode: "fixed",
             sobelThreshold: 0.1,
             sampleThreshold: 16,
             invertMode: false,
             backgroundColor: "#000000",
-            backgroundColorMode: 1,
+            backgroundColorMode: "fixed",
         });
 
         p5asciify.renderers().swap("gradient", "edge");

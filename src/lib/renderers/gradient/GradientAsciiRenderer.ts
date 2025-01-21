@@ -2,7 +2,6 @@ import p5 from 'p5';
 
 import { P5AsciifyRenderer } from '../AsciiRenderer';
 import { P5AsciifyGrid } from '../../Grid';
-import { P5AsciifyCharacterSet } from '../../CharacterSet';
 import { P5AsciifyGradientManager } from '../../gradients/GradientManager';
 
 import { AsciiRendererOptions } from '../types';
@@ -12,6 +11,7 @@ import colorSampleShader from './shaders/colorSample.frag';
 import inversionShader from './shaders/gridCellInversion.frag';
 import asciiCharacterShader from './shaders/asciiCharacter.frag';
 import vertexShader from '../../assets/shaders/vert/shader.vert';
+import { P5AsciifyFontTextureAtlas } from '../../FontTextureAtlas';
 
 /**
  * An ASCII renderer that applies all defined ASCII gradients/patterns to the input framebuffer.
@@ -29,11 +29,11 @@ export class P5AsciifyGradientRenderer extends P5AsciifyRenderer {
     constructor(
         p5Instance: p5,
         grid: P5AsciifyGrid,
-        characterSet: P5AsciifyCharacterSet,
+        fontTextureAtlas: P5AsciifyFontTextureAtlas,
         gradientManager: P5AsciifyGradientManager,
         options: AsciiRendererOptions
     ) {
-        super(p5Instance, grid, characterSet, options);
+        super(p5Instance, grid, fontTextureAtlas, options);
 
         this.gradientManager = gradientManager;
 

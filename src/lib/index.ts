@@ -99,5 +99,4 @@ export {
 
 export {
   FONT_SIZE_LIMITS,
-  EDGE_CHARACTER_LENGTH
 } from './constants';

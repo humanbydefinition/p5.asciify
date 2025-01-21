@@ -5,9 +5,9 @@ export const DEFAULT_OPTIONS = {
   enabled: true,
   characters: " .:-=+*#%@",
   characterColor: "#ffffff",
-  characterColorMode: 0,
+  characterColorMode: 'fixed',
   backgroundColor: "#000000",
-  backgroundColorMode: 1,
+  backgroundColorMode: 'fixed',
   invertMode: true,
   fontSize: 16,
   rotationAngle: 0
@@ -29,7 +29,7 @@ export const createSketch = (options = {}) => {
         p5asciify.fontSize(finalOptions.fontSize);
       }
 
-      p5asciify.renderers().get("brightness").updateOptions({
+      p5asciify.renderers().get("brightness").update({
         enabled: finalOptions.enabled,
         characters: finalOptions.characters,
         characterColor: finalOptions.characterColor,
@@ -50,6 +50,12 @@ export const createSketch = (options = {}) => {
       p.rotateZ(p.radians(p.frameCount));
       p.directionalLight(255, 255, 255, 0, 0, -1);
       p.box(800, 100, 100);
+
+      if (p.frameCount === 100) {
+        p5asciify.renderers().get("brightness").characters("test");
+        //p5asciify.renderers().get("brightness").rotation(180);
+      }
+
     };
 
     p.windowResized = () => {
