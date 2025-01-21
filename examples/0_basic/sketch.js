@@ -5,10 +5,10 @@ export const DEFAULT_OPTIONS = {
   enabled: true,
   characters: " .:-=+*#%@",
   characterColor: "#ffffff",
-  characterColorMode: 'fixed',
+  characterColorMode: 'sampled',
   backgroundColor: "#000000",
   backgroundColorMode: 'fixed',
-  invertMode: true,
+  invertMode: false,
   fontSize: 16,
   rotationAngle: 0
 };
