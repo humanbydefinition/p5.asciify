@@ -4,7 +4,6 @@ import { P5AsciifyCharacterSet } from '../CharacterSet';
 import { P5AsciifyError } from '../AsciifyError';
 
 import { AsciiRendererOptions, AsciiRendererUserOptions } from './types';
-import { validateRendererOptions } from '../validators/RendererOptionsValidator';
 
 import vertexShader from '../assets/shaders/vert/shader.vert';
 import asciiConversionShader from './_common_shaders/asciiConversion.frag';

@@ -22,7 +22,7 @@ export abstract class P5AsciifyGradient {
         brightnessEnd: number,
         characters: string
     ) {
-        this._palette = new P5AsciifyColorPalette(this.p, this._fontTextureAtlas.getCharsetColorArray(Array.from(characters)));
+        this._palette = new P5AsciifyColorPalette(this.p, this._fontTextureAtlas.getCharsetColorArray(characters));
 
         // Normalize brightness values to [0, 1]
         this._brightnessStart = Math.floor((brightnessStart / 255) * 100) / 100;
@@ -72,7 +72,7 @@ export abstract class P5AsciifyGradient {
      */
     set characters(value: string) {
         if (this.p._setupDone) {
-            this.palette.setColors(this._fontTextureAtlas.getCharsetColorArray(Array.from(value)));
+            this.palette.setColors(this._fontTextureAtlas.getCharsetColorArray(value));
         }
     }
 
