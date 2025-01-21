@@ -14,7 +14,7 @@ import { P5AsciifyFontTextureAtlas } from '../FontTextureAtlas';
  */
 export class P5AsciifyRenderer {
 
-    protected characterSet: P5AsciifyCharacterSet;
+    public characterSet: P5AsciifyCharacterSet;
     protected _primaryColorSampleFramebuffer: p5.Framebuffer;
     protected _secondaryColorSampleFramebuffer: p5.Framebuffer;
     protected _asciiCharacterFramebuffer: p5.Framebuffer;
