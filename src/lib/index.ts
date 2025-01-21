@@ -68,7 +68,6 @@ p5.prototype.registerMethod("post", function (this: p5): void {
 // Class exports
 export { P5Asciifier } from './Asciifier';
 export { P5AsciifyError } from './AsciifyError';
-export { P5AsciifyCharacterSet } from './CharacterSet';
 export { P5AsciifyColorPalette } from './ColorPalette';
 export { P5AsciifyFontTextureAtlas } from './FontTextureAtlas';
 export { P5AsciifyGrid } from './Grid';

@@ -156,7 +156,7 @@ export class P5AsciifyFontTextureAtlas {
      * @returns Array of RGB color values.
      * @throws {@link P5AsciifyError} If a character is not found in the texture atlas.
      */
-    public getCharsetColorArray(characters: string): Array<[number, number, number]> {
+    public getCharsetColorArray(characters: string = ""): Array<[number, number, number]> {
         return Array.from(characters).map((char: string) => {
             const glyph = this._characterGlyphs.find(
                 (glyph: OpenTypeGlyph) => glyph.unicodes.includes(char.codePointAt(0) as number)
@@ -186,6 +186,13 @@ export class P5AsciifyFontTextureAtlas {
                 )
             )
         );
+    }
+
+    public validateCharacters(characters: string): void {
+        const unsupportedChars: string[] = this.getUnsupportedCharacters(characters);
+        if (unsupportedChars.length > 0) {
+            throw new P5AsciifyError(`The following characters are not supported by the current font: [${unsupportedChars.join(', ')}].`);
+        }
     }
 
     // Getters

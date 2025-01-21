@@ -35,6 +35,8 @@ export class P5AsciifyEdgeRenderer extends P5AsciifyRenderer {
         this.inversionShader = this.p.createShader(vertexShader, inversionShader);
         this.asciiCharacterShader = this.p.createShader(vertexShader, asciiCharacterShader);
 
+        console.log("characters", this._options.characters);
+
         this.sobelFramebuffer = this.p.createFramebuffer({
             depthFormat: this.p.UNSIGNED_INT,
             textureFiltering: this.p.NEAREST
@@ -174,12 +176,12 @@ export class P5AsciifyEdgeRenderer extends P5AsciifyRenderer {
         this.p.clear();
         this.p.shader(this.asciiCharacterShader);
         this.asciiCharacterShader.setUniform('u_sketchTexture', this.sampleFramebuffer);
-        this.asciiCharacterShader.setUniform('u_colorPaletteTexture', this.characterSet.characterColorPalette.framebuffer);
+        this.asciiCharacterShader.setUniform('u_colorPaletteTexture', this.characterColorPalette.framebuffer);
         if (previousAsciiRenderer !== this) {
             this.asciiCharacterShader.setUniform('u_previousAsciiCharacterTexture', previousAsciiRenderer.asciiCharacterFramebuffer);
         }
         this.asciiCharacterShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
-        this.asciiCharacterShader.setUniform('u_totalChars', this.characterSet.characters.length);
+        this.asciiCharacterShader.setUniform('u_totalChars', this._options.characters!.length);
         this.p.rect(0, 0, this.p.width, this.p.height);
         this._asciiCharacterFramebuffer.end();
 

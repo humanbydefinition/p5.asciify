@@ -80,8 +80,8 @@ export class P5AsciifyBrightnessRenderer extends P5AsciifyRenderer {
         this.p.shader(this.asciiCharacterShader);
         this.asciiCharacterShader.setUniform('u_textureSize', [this.grid.cols, this.grid.rows]);
         this.asciiCharacterShader.setUniform('u_colorSampleFramebuffer', this.colorSampleFramebuffer);
-        this.asciiCharacterShader.setUniform('u_charPaletteTexture', this.characterSet.characterColorPalette.framebuffer);
-        this.asciiCharacterShader.setUniform('u_charPaletteSize', [this.characterSet.characterColorPalette.colors.length, 1]);
+        this.asciiCharacterShader.setUniform('u_charPaletteTexture', this.characterColorPalette.framebuffer);
+        this.asciiCharacterShader.setUniform('u_charPaletteSize', [this.characterColorPalette.colors.length, 1]);
 
         this.p.rect(0, 0, this.p.width, this.p.height);
         this._asciiCharacterFramebuffer.end();

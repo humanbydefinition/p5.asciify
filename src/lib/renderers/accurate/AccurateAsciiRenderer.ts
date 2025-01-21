@@ -129,8 +129,8 @@ export class P5AsciifyAccurateRenderer extends P5AsciifyRenderer {
         this.characterSelectionShader.setUniform('u_characterTexture', this.fontTextureAtlas.texture);
         this.characterSelectionShader.setUniform('u_charsetCols', this.fontTextureAtlas.charsetCols);
         this.characterSelectionShader.setUniform('u_charsetRows', this.fontTextureAtlas.charsetRows);
-        this.characterSelectionShader.setUniform('u_charPaletteTexture', this.characterSet.characterColorPalette.framebuffer);
-        this.characterSelectionShader.setUniform('u_charPaletteSize', [this.characterSet.characterColorPalette.colors.length, 1]);
+        this.characterSelectionShader.setUniform('u_charPaletteTexture', this.characterColorPalette.framebuffer);
+        this.characterSelectionShader.setUniform('u_charPaletteSize', [this.characterColorPalette.colors.length, 1]);
         this.characterSelectionShader.setUniform('u_sketchTexture', this.brightnessSplitFramebuffer);
         this.characterSelectionShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
         this.characterSelectionShader.setUniform('u_gridPixelDimensions', [this.grid.width, this.grid.height]);

@@ -1,20 +1,21 @@
 import p5 from 'p5';
 import { P5AsciifyGrid } from '../Grid';
-import { P5AsciifyCharacterSet } from '../CharacterSet';
 import { P5AsciifyError } from '../AsciifyError';
+import { P5AsciifyColorPalette } from '../ColorPalette';
+import { P5AsciifyFontTextureAtlas } from '../FontTextureAtlas';
 
 import { AsciiRendererOptions, AsciiRendererUserOptions } from './types';
 
 import vertexShader from '../assets/shaders/vert/shader.vert';
 import asciiConversionShader from './_common_shaders/asciiConversion.frag';
-import { P5AsciifyFontTextureAtlas } from '../FontTextureAtlas';
+
 
 /**
  * Abstract class for shader-based ASCII Renderers.
  */
 export class P5AsciifyRenderer {
-
-    public characterSet: P5AsciifyCharacterSet;
+    
+    public characterColorPalette: P5AsciifyColorPalette;
     protected _primaryColorSampleFramebuffer: p5.Framebuffer;
     protected _secondaryColorSampleFramebuffer: p5.Framebuffer;
     protected _asciiCharacterFramebuffer: p5.Framebuffer;
@@ -35,7 +36,7 @@ export class P5AsciifyRenderer {
             this._options.backgroundColor = this.p.color(this._options.backgroundColor as string);
         }
 
-        this.characterSet = new P5AsciifyCharacterSet(this.p, this.fontTextureAtlas, this._options.characters);
+        this.characterColorPalette = new P5AsciifyColorPalette(this.p, this.fontTextureAtlas.getCharsetColorArray(this._options.characters));
 
         this._primaryColorSampleFramebuffer = this.p.createFramebuffer({
             density: 1,
@@ -115,23 +116,23 @@ export class P5AsciifyRenderer {
             this.backgroundColor(newOptions.backgroundColor as p5.Color);
         }
 
-        if(newOptions?.characters !== undefined) {
+        if (newOptions?.characters !== undefined) {
             this.characters(newOptions.characters);
         }
 
-        if(newOptions?.invertMode !== undefined) {
+        if (newOptions?.invertMode !== undefined) {
             this.invert(newOptions.invertMode);
         }
 
-        if(newOptions?.rotationAngle !== undefined) {
+        if (newOptions?.rotationAngle !== undefined) {
             this.rotation(newOptions.rotationAngle);
         }
 
-        if(newOptions?.characterColorMode !== undefined) {
+        if (newOptions?.characterColorMode !== undefined) {
             this.characterColorMode(newOptions.characterColorMode as string);
         }
 
-        if(newOptions?.backgroundColorMode !== undefined) {
+        if (newOptions?.backgroundColorMode !== undefined) {
             this.backgroundColorMode(newOptions.backgroundColorMode as string);
         }
     }
@@ -169,16 +170,17 @@ export class P5AsciifyRenderer {
      * @param characters The characters to set for the character set.
      * @throws {P5AsciifyError} If characters is not a string.
      */
-    public characters(characters: string): void {
+    public characters(characters: string = ""): void {
         if (typeof characters !== 'string') {
             throw new P5AsciifyError('Characters must be a string.');
         }
 
-        // Only update if characters are different
-        if (this.characterSet.characters !== characters) {
-            this.characterSet.setCharacterSet(characters);
-            this.resetShaders();
-        }
+        this.fontTextureAtlas.validateCharacters(characters);
+
+        this.characterColorPalette.setColors(this.fontTextureAtlas.getCharsetColorArray(characters));
+        this.resetShaders();
+
+        this._options.characters = characters;
     }
 
     /**
