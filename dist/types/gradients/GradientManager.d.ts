@@ -20,10 +20,10 @@ export declare class P5AsciifyGradientManager {
      * @param brightnessStart The start brightness of the gradient.
      * @param brightnessEnd The end brightness of the gradient.
      * @param characters The characters to use for the gradient.
-     * @param params The parameters for the gradient.
+     * @param options The parameters for the gradient.
      * @returns The gradient instance.
      */
-    addGradient(gradientName: GradientType, brightnessStart: number, brightnessEnd: number, characters: string, params: Partial<GradientParams[typeof gradientName]>): P5AsciifyGradient;
+    add(gradientName: GradientType, characters: string, brightnessStart: number, brightnessEnd: number, options: Partial<GradientParams[typeof gradientName]>): P5AsciifyGradient;
     /**
      * Remove a gradient from the gradient manager.
      * @param gradient The gradient to remove.

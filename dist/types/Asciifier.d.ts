@@ -2,8 +2,6 @@ import p5 from 'p5';
 import { P5AsciifyFontTextureAtlas } from './FontTextureAtlas';
 import { P5AsciifyGrid } from './Grid';
 import { P5AsciifyRendererManager } from './renderers/RendererManager';
-import { GradientType } from './gradients/types';
-import { P5AsciifyGradient } from './gradients/Gradient';
 /**
  * The main class for the `p5.asciify` library.
  *
@@ -69,20 +67,6 @@ export declare class P5Asciifier {
      * Is called automatically every time the user's `draw()` function has finished.
      */
     asciify(): void;
-    /**
-     * Adds a new gradient to the renderer managers gradient manager, which will be rendered by the `GradientAsciiRenderer`.
-     * @param gradientName The name of the gradient.
-     * @param brightnessStart The brightness value at which the gradient starts.
-     * @param brightnessEnd The brightness value at which the gradient ends.
-     * @param characters The characters to use for the gradient.
-     * @param userParams Optional parameters to pass to the gradient.
-     */
-    addAsciiGradient(gradientName: GradientType, brightnessStart: number, brightnessEnd: number, characters: string, userParams?: Record<string, any>): P5AsciifyGradient;
-    /**
-     * Removes a gradient from the renderer managers gradient manager.
-     * @param gradient The gradient to remove.
-     */
-    removeAsciiGradient(gradient: P5AsciifyGradient): void;
     /**
      * Sets the font size for the ascii renderers.
      * @param fontSize The font size to set.

@@ -2,7 +2,6 @@ import p5 from 'p5';
 import { P5AsciifyRenderer } from './AsciiRenderer';
 import { P5AsciifyGrid } from '../Grid';
 import { P5AsciifyFontTextureAtlas } from '../FontTextureAtlas';
-import { P5AsciifyGradientManager } from '../gradients/GradientManager';
 import { AsciiRendererOptions } from './types';
 /**
  * Manages the available ASCII renderers and handles rendering the ASCII output to the canvas.
@@ -13,7 +12,6 @@ export declare class P5AsciifyRendererManager {
     private fontTextureAtlas;
     private currentCanvasDimensions;
     private _renderers;
-    gradientManager: P5AsciifyGradientManager;
     lastRenderer: P5AsciifyRenderer;
     constructor(p: p5, grid: P5AsciifyGrid, fontTextureAtlas: P5AsciifyFontTextureAtlas);
     /**
