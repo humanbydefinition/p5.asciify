@@ -8,8 +8,8 @@
 
 | Namespace | Description |
 | ------ | ------ |
-| [gradients](namespaces/gradients/README.md) | - |
-| [renderers](namespaces/renderers/README.md) | - |
+| [gradients](namespaces/gradients/README.md) | Contains functionality relevant to the ASCII gradients, which are used by the ASCII gradient renderer. |
+| [renderers](namespaces/renderers/README.md) | Contains functionality relevant to the ASCII rendering. |
 
 ## Classes
 

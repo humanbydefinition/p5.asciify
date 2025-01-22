@@ -77,7 +77,10 @@ p5.prototype.registerMethod("post", function (this: p5): void {
   this.drawAsciify();
 });
 
+/** Contains functionality relevant to the ASCII rendering. */
 export * as renderers from './renderers';
+
+/** Contains functionality relevant to the ASCII gradients, which are used by the ASCII gradient renderer. */
 export * as gradients from './gradients';
 
 export { P5Asciifier } from './Asciifier';

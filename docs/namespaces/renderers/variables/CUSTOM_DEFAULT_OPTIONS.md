@@ -8,12 +8,12 @@
 
 > `const` **CUSTOM\_DEFAULT\_OPTIONS**: `object`
 
-Defined in: [renderers/AsciiRenderer.ts:12](https://github.com/humanbydefinition/p5-asciify/blob/85ece03d79020f41f143d875767f8fa05495057c/src/lib/renderers/AsciiRenderer.ts#L12)
+Defined in: [renderers/AsciiRenderer.ts:12](https://github.com/humanbydefinition/p5-asciify/blob/a7f21099f1ebfb0144144b513e73b3d6ec4d2c09/src/lib/renderers/AsciiRenderer.ts#L12)
 
 ## Type declaration
 
 | Name | Type | Default value | Description | Defined in |
 | ------ | ------ | ------ | ------ | ------ |
-| <a id="enabled"></a> `enabled` | `boolean` | false | Enable/disable the renderer | [renderers/AsciiRenderer.ts:14](https://github.com/humanbydefinition/p5-asciify/blob/85ece03d79020f41f143d875767f8fa05495057c/src/lib/renderers/AsciiRenderer.ts#L14) |
-| <a id="invertmode"></a> `invertMode` | `boolean` | false | Swap the cells ASCII character colors with it's cell background colors | [renderers/AsciiRenderer.ts:16](https://github.com/humanbydefinition/p5-asciify/blob/85ece03d79020f41f143d875767f8fa05495057c/src/lib/renderers/AsciiRenderer.ts#L16) |
-| <a id="rotationangle"></a> `rotationAngle` | `number` | 0 | Rotation angle of all characters in the grid in degrees | [renderers/AsciiRenderer.ts:18](https://github.com/humanbydefinition/p5-asciify/blob/85ece03d79020f41f143d875767f8fa05495057c/src/lib/renderers/AsciiRenderer.ts#L18) |
+| <a id="enabled"></a> `enabled` | `boolean` | false | Enable/disable the renderer | [renderers/AsciiRenderer.ts:14](https://github.com/humanbydefinition/p5-asciify/blob/a7f21099f1ebfb0144144b513e73b3d6ec4d2c09/src/lib/renderers/AsciiRenderer.ts#L14) |
+| <a id="invertmode"></a> `invertMode` | `boolean` | false | Swap the cells ASCII character colors with it's cell background colors | [renderers/AsciiRenderer.ts:16](https://github.com/humanbydefinition/p5-asciify/blob/a7f21099f1ebfb0144144b513e73b3d6ec4d2c09/src/lib/renderers/AsciiRenderer.ts#L16) |
+| <a id="rotationangle"></a> `rotationAngle` | `number` | 0 | Rotation angle of all characters in the grid in degrees | [renderers/AsciiRenderer.ts:18](https://github.com/humanbydefinition/p5-asciify/blob/a7f21099f1ebfb0144144b513e73b3d6ec4d2c09/src/lib/renderers/AsciiRenderer.ts#L18) |

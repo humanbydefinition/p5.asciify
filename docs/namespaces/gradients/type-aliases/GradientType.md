@@ -8,4 +8,4 @@
 
 > **GradientType**: `"linear"` \| `"spiral"` \| `"radial"` \| `"conical"`
 
-Defined in: [gradients/types.ts:5](https://github.com/humanbydefinition/p5-asciify/blob/85ece03d79020f41f143d875767f8fa05495057c/src/lib/gradients/types.ts#L5)
+Defined in: [gradients/types.ts:5](https://github.com/humanbydefinition/p5-asciify/blob/a7f21099f1ebfb0144144b513e73b3d6ec4d2c09/src/lib/gradients/types.ts#L5)

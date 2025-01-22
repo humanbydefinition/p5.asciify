@@ -6,6 +6,8 @@
 
 # renderers
 
+Contains functionality relevant to the ASCII rendering.
+
 ## Classes
 
 | Class | Description |

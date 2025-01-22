@@ -6,6 +6,8 @@
 
 # gradients
 
+Contains functionality relevant to the ASCII gradients, which are used by the ASCII gradient renderer.
+
 ## Classes
 
 | Class | Description |
