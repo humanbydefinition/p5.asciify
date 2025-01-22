@@ -5,9 +5,6 @@ import { P5AsciifyGrid } from './Grid';
 import { P5AsciifyRendererManager } from './renderers/RendererManager';
 import { P5AsciifyError } from './AsciifyError';
 import { FONT_SIZE_LIMITS } from './constants';
-import { GradientType } from './gradients/types';
-import { validateGradientParams } from './validators/GradientValidator';
-import { P5AsciifyGradient } from './gradients/Gradient';
 
 import { DEFAULT_FONT_SIZE, DEFAULT_BACKGROUND_COLOR } from './defaults';
 
@@ -74,7 +71,6 @@ export class P5Asciifier {
      */
     public instance(p: p5, addDummyPreloadFunction: boolean = true): void {
         this._p = p;
-        this._p.p5asciify = this;
 
         if (!p.preload && addDummyPreloadFunction) {
             p.preload = () => { };
@@ -122,47 +118,6 @@ export class P5Asciifier {
         this._p.clear();
         this._p.background(this._backgroundColor as p5.Color);
         this._p.image(this.rendererManager.lastRenderer.outputFramebuffer, -this._p.width / 2, -this._p.height / 2);
-    }
-
-    /**
-     * Adds a new gradient to the renderer managers gradient manager, which will be rendered by the `GradientAsciiRenderer`.
-     * @param gradientName The name of the gradient.
-     * @param brightnessStart The brightness value at which the gradient starts.
-     * @param brightnessEnd The brightness value at which the gradient ends.
-     * @param characters The characters to use for the gradient.
-     * @param userParams Optional parameters to pass to the gradient.
-     */
-    public addAsciiGradient(
-        gradientName: GradientType,
-        brightnessStart: number,
-        brightnessEnd: number,
-        characters: string,
-        userParams: Record<string, any> = {}
-    ): P5AsciifyGradient {
-        validateGradientParams(
-            this.rendererManager.gradientManager,
-            gradientName,
-            brightnessStart,
-            brightnessEnd,
-            characters,
-            userParams
-        );
-
-        return this.rendererManager.gradientManager.addGradient(
-            gradientName,
-            brightnessStart,
-            brightnessEnd,
-            characters,
-            userParams
-        );
-    }
-
-    /**
-     * Removes a gradient from the renderer managers gradient manager.
-     * @param gradient The gradient to remove.
-     */
-    public removeAsciiGradient(gradient: P5AsciifyGradient): void {
-        this.rendererManager.gradientManager.removeGradient(gradient);
     }
 
     /**

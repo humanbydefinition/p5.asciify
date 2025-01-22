@@ -13,15 +13,15 @@ export class P5AsciifyRadialGradient extends P5AsciifyGradient {
     public radius: number;
 
     constructor(
-        protected p: p5,
-        protected _fontTextureAtlas: P5AsciifyFontTextureAtlas,
-        protected _shader: p5.Shader,
-        brightnessStart: number,
-        brightnessEnd: number,
-        characters: string,
-        params: RadialGradientParams
-    ) {
-        super(p, _fontTextureAtlas, _shader, brightnessStart, brightnessEnd, characters);
+            protected p: p5,
+            protected _fontTextureAtlas: P5AsciifyFontTextureAtlas,
+            protected _shader: p5.Shader,
+            protected _characters: string,
+            brightnessStart: number,
+            brightnessEnd: number,
+            params: RadialGradientParams
+        ) {
+            super(p, _fontTextureAtlas, _shader, _characters, brightnessStart, brightnessEnd,);
         this.direction = params.direction;
         this.centerX = params.centerX;
         this.centerY = params.centerY;

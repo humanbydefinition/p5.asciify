@@ -12,6 +12,8 @@ import inversionShader from './shaders/gridCellInversion.frag';
 import asciiCharacterShader from './shaders/asciiCharacter.frag';
 import vertexShader from '../../assets/shaders/vert/shader.vert';
 import { P5AsciifyFontTextureAtlas } from '../../FontTextureAtlas';
+import { P5AsciifyGradient } from '../../gradients/Gradient';
+import { GradientType } from '../../gradients/types';
 
 /**
  * An ASCII renderer that applies all defined ASCII gradients/patterns to the input framebuffer.
@@ -30,12 +32,11 @@ export class P5AsciifyGradientRenderer extends P5AsciifyRenderer {
         p5Instance: p5,
         grid: P5AsciifyGrid,
         fontTextureAtlas: P5AsciifyFontTextureAtlas,
-        gradientManager: P5AsciifyGradientManager,
         options: AsciiRendererOptions
     ) {
         super(p5Instance, grid, fontTextureAtlas, options);
 
-        this.gradientManager = gradientManager;
+        this.gradientManager = new P5AsciifyGradientManager(this.p, this.fontTextureAtlas);
 
         this.grayscaleShader = this.p.createShader(vertexShader, grayscaleShader);
         this.colorSampleShader = this.p.createShader(vertexShader, colorSampleShader);
@@ -72,6 +73,14 @@ export class P5AsciifyGradientRenderer extends P5AsciifyRenderer {
         this.grayscaleFramebuffer.resize(this.grid.cols, this.grid.rows);
         this.prevAsciiGradientFramebuffer.resize(this.grid.cols, this.grid.rows);
         this.nextAsciiGradientFramebuffer.resize(this.grid.cols, this.grid.rows);
+    }
+
+    add(gradientName: GradientType,
+        brightnessStart: number,
+        brightnessEnd: number,
+        characters: string,
+        options: any = {}): P5AsciifyGradient {
+        return this.gradientManager.add(gradientName, characters, brightnessStart, brightnessEnd, options);
     }
 
     render(inputFramebuffer: p5.Framebuffer, previousAsciiRenderer: P5AsciifyRenderer): void {

@@ -15,12 +15,12 @@ export class P5AsciifyConicalGradient extends P5AsciifyGradient {
         protected p: p5,
         protected _fontTextureAtlas: P5AsciifyFontTextureAtlas,
         protected _shader: p5.Shader,
+        protected _characters: string,
         brightnessStart: number,
         brightnessEnd: number,
-        characters: string,
         params: ConicalGradientParams
     ) {
-        super(p, _fontTextureAtlas, _shader, brightnessStart, brightnessEnd, characters);
+        super(p, _fontTextureAtlas, _shader, _characters, brightnessStart, brightnessEnd, );
         this.centerX = params.centerX;
         this.centerY = params.centerY;
         this.speed = params.speed;

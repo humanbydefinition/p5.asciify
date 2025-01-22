@@ -35,8 +35,6 @@ export class P5AsciifyEdgeRenderer extends P5AsciifyRenderer {
         this.inversionShader = this.p.createShader(vertexShader, inversionShader);
         this.asciiCharacterShader = this.p.createShader(vertexShader, asciiCharacterShader);
 
-        console.log("characters", this._options.characters);
-
         this.sobelFramebuffer = this.p.createFramebuffer({
             depthFormat: this.p.UNSIGNED_INT,
             textureFiltering: this.p.NEAREST

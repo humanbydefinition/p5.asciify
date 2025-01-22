@@ -1,7 +1,8 @@
 import p5 from 'p5';
 import { P5Asciifier } from './Asciifier';
-import { validateSetup } from './validators/SetupValidator';
 import URSAFONT_BASE64 from './assets/fonts/ursafont_base64.txt?raw';
+import { P5AsciifyError } from './AsciifyError';
+import { compareVersions } from './utils';
 
 /**
  * The main instance of the p5.asciify library, which is used to access all of the library's functionality.
@@ -40,7 +41,18 @@ p5.prototype.registerMethod('init', function (this: p5) {
  * After the user's setup function is finished, run the p5.asciify setup
  */
 p5.prototype.registerMethod('afterSetup', function (this: p5) {
-  validateSetup(this);
+
+  // Ensure WebGL renderer is used
+  if (!(this._renderer.drawingContext instanceof WebGLRenderingContext ||
+    this._renderer.drawingContext instanceof WebGL2RenderingContext)) {
+    throw new P5AsciifyError("WebGL renderer is required for p5.asciify to run.");
+  }
+
+  // Ensure p5.js version is 1.8.0 or higher
+  if (compareVersions(this.VERSION, "1.8.0") < 0) {
+    throw new P5AsciifyError("p5.asciify requires p5.js v1.8.0 or higher to run.");
+  }
+
   p5asciify.setup();
   this.setupAsciify();
 });

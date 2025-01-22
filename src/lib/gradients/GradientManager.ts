@@ -14,6 +14,8 @@ import linearGradientShader from "../gradients/linear/linear.frag";
 import spiralGradientShader from "../gradients/spiral/spiral.frag";
 import radialGradientShader from "../gradients/radial/radial.frag";
 import conicalGradientShader from "../gradients/conical/conical.frag";
+import { P5AsciifyError } from '../AsciifyError';
+import { validateNumberInRange } from '../utils';
 
 /**
  * Manages the creation and removal of gradients for the gradient ascii renderer.
@@ -36,14 +38,14 @@ export class P5AsciifyGradientManager {
     private _gradientShaders: Partial<Record<GradientType, p5.Shader>> = {};
 
     private _gradientConstructors: GradientConstructorMap = {
-        linear: (p, fontTextureAtlas, shader, brightnessStart, brightnessEnd, characters, params) =>
-            new P5AsciifyLinearGradient(p, fontTextureAtlas, shader, brightnessStart, brightnessEnd, characters, params),
-        spiral: (p, fontTextureAtlas, shader, brightnessStart, brightnessEnd, characters, params) =>
-            new P5AsciifySpiralGradient(p, fontTextureAtlas, shader, brightnessStart, brightnessEnd, characters, params),
-        radial: (p, fontTextureAtlas, shader, brightnessStart, brightnessEnd, characters, params) =>
-            new P5AsciifyRadialGradient(p, fontTextureAtlas, shader, brightnessStart, brightnessEnd, characters, params),
-        conical: (p, fontTextureAtlas, shader, brightnessStart, brightnessEnd, characters, params) =>
-            new P5AsciifyConicalGradient(p, fontTextureAtlas, shader, brightnessStart, brightnessEnd, characters, params),
+        linear: (p, fontTextureAtlas, shader, characters, brightnessStart, brightnessEnd, params) =>
+            new P5AsciifyLinearGradient(p, fontTextureAtlas, shader, characters, brightnessStart, brightnessEnd, params),
+        spiral: (p, fontTextureAtlas, shader, characters, brightnessStart, brightnessEnd, params) =>
+            new P5AsciifySpiralGradient(p, fontTextureAtlas, shader, characters, brightnessStart, brightnessEnd, params),
+        radial: (p, fontTextureAtlas, shader, characters, brightnessStart, brightnessEnd, params) =>
+            new P5AsciifyRadialGradient(p, fontTextureAtlas, shader, characters, brightnessStart, brightnessEnd, params),
+        conical: (p, fontTextureAtlas, shader, characters, brightnessStart, brightnessEnd, params) =>
+            new P5AsciifyConicalGradient(p, fontTextureAtlas, shader, characters, brightnessStart, brightnessEnd, params),
     };
 
     private _gradients: P5AsciifyGradient[] = [];
@@ -65,25 +67,67 @@ export class P5AsciifyGradientManager {
      * @param brightnessStart The start brightness of the gradient.
      * @param brightnessEnd The end brightness of the gradient.
      * @param characters The characters to use for the gradient.
-     * @param params The parameters for the gradient.
+     * @param options The parameters for the gradient.
      * @returns The gradient instance.
      */
-    addGradient(
+    add(
         gradientName: GradientType,
+        characters: string,
         brightnessStart: number,
         brightnessEnd: number,
-        characters: string,
-        params: Partial<GradientParams[typeof gradientName]>
+        options: Partial<GradientParams[typeof gradientName]>
     ): P5AsciifyGradient {
+
+        // Validate gradient name type and existence
+        if (typeof gradientName !== 'string') {
+            throw new P5AsciifyError('Gradient name must be a string');
+        }
+        if (!this.gradientConstructors[gradientName]) {
+            throw new P5AsciifyError(
+                `Gradient '${gradientName}' does not exist! Available gradients: ${Object.keys(this.gradientConstructors).join(", ")}`
+            );
+        }
+
+        // Validate brightness types and ranges
+        if (typeof brightnessStart !== 'number') {
+            throw new P5AsciifyError('Brightness start value must be a number');
+        }
+        if (typeof brightnessEnd !== 'number') {
+            throw new P5AsciifyError('Brightness end value must be a number');
+        }
+        validateNumberInRange(brightnessStart, 0, 255, 'brightness start');
+        validateNumberInRange(brightnessEnd, 0, 255, 'brightness end');
+
+        // Validate characters
+        if (typeof characters !== 'string') {
+            throw new P5AsciifyError('Characters must be a string');
+        }
+        if (characters.length === 0) {
+            throw new P5AsciifyError('Characters string cannot be empty');
+        }
+
+        // Validate userParams
+        if (!options || typeof options !== 'object' || Array.isArray(options)) {
+            throw new P5AsciifyError('User parameters must be an object');
+        }
+
+        // Validate userParams keys
+        const validParams = Object.keys(this.gradientParams[gradientName]);
+        const invalidKeys = Object.keys(options).filter(key => !validParams.includes(key));
+        if (invalidKeys.length > 0) {
+            throw new P5AsciifyError(
+                `Invalid parameter(s) for gradient '${gradientName}': ${invalidKeys.join(", ")}\nValid parameters are: ${validParams.join(", ")}`
+            );
+        }
 
         const gradient = this._gradientConstructors[gradientName](
             this._p,
             this._fontTextureAtlas,
             this._gradientShaders[gradientName] as p5.Shader,
+            characters,
             brightnessStart,
             brightnessEnd,
-            characters,
-            { ...this._gradientParams[gradientName], ...params }
+            { ...this._gradientParams[gradientName], ...options }
         );
 
         this._gradients.push(gradient);

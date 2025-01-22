@@ -19,8 +19,6 @@ import {
     CUSTOM_DEFAULT_OPTIONS,
 } from '../defaults';
 
-import { P5AsciifyGradientManager } from '../gradients/GradientManager';
-
 import { AsciiRendererOptions } from './types';
 
 /**
@@ -29,7 +27,6 @@ import { AsciiRendererOptions } from './types';
 export class P5AsciifyRendererManager {
     private currentCanvasDimensions: { width: number, height: number };
     private _renderers: { name: string, renderer: P5AsciifyRenderer }[];
-    public gradientManager: P5AsciifyGradientManager;
     public lastRenderer: P5AsciifyRenderer;
 
     constructor(
@@ -42,12 +39,10 @@ export class P5AsciifyRendererManager {
             height: this.p.height
         };
 
-        this.gradientManager = new P5AsciifyGradientManager(p, this.fontTextureAtlas);
-
         this._renderers = [
             { name: "brightness", renderer: new P5AsciifyBrightnessRenderer(this.p, this.grid, fontTextureAtlas, BRIGHTNESS_DEFAULT_OPTIONS) },
             { name: "accurate", renderer: new P5AsciifyAccurateRenderer(this.p, this.grid, fontTextureAtlas, ACCURATE_DEFAULT_OPTIONS) },
-            { name: "gradient", renderer: new P5AsciifyGradientRenderer(this.p, this.grid, fontTextureAtlas, this.gradientManager, GRADIENT_DEFAULT_OPTIONS) },
+            { name: "gradient", renderer: new P5AsciifyGradientRenderer(this.p, this.grid, fontTextureAtlas, GRADIENT_DEFAULT_OPTIONS) },
             { name: "edge", renderer: new P5AsciifyEdgeRenderer(this.p, this.grid, fontTextureAtlas, EDGE_DEFAULT_OPTIONS) },
             { name: "custom", renderer: new P5AsciifyRenderer(this.p, this.grid, fontTextureAtlas, CUSTOM_DEFAULT_OPTIONS) },
         ];
@@ -116,7 +111,7 @@ export class P5AsciifyRendererManager {
                 this._renderers.push({ name, renderer: new P5AsciifyAccurateRenderer(this.p, this.grid, this.fontTextureAtlas, options) });
                 break;
             case "gradient":
-                this._renderers.push({ name, renderer: new P5AsciifyGradientRenderer(this.p, this.grid, this.fontTextureAtlas, this.gradientManager, options) });
+                this._renderers.push({ name, renderer: new P5AsciifyGradientRenderer(this.p, this.grid, this.fontTextureAtlas, options) });
                 break;
             case "edge":
                 this._renderers.push({ name, renderer: new P5AsciifyEdgeRenderer(this.p, this.grid, this.fontTextureAtlas, options) });
