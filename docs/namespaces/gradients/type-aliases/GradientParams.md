@@ -8,13 +8,13 @@
 
 > **GradientParams**: `object`
 
-Defined in: [gradients/types.ts:47](https://github.com/humanbydefinition/p5-asciify/blob/a7f21099f1ebfb0144144b513e73b3d6ec4d2c09/src/lib/gradients/types.ts#L47)
+Defined in: [gradients/types.ts:47](https://github.com/humanbydefinition/p5-asciify/blob/669a218206271de7b0767d42afcabf18f6c432ab/src/lib/gradients/types.ts#L47)
 
 ## Type declaration
 
 | Name | Type | Defined in |
 | ------ | ------ | ------ |
-| <a id="conical"></a> `conical` | [`ConicalGradientParams`](ConicalGradientParams.md) | [gradients/types.ts:51](https://github.com/humanbydefinition/p5-asciify/blob/a7f21099f1ebfb0144144b513e73b3d6ec4d2c09/src/lib/gradients/types.ts#L51) |
-| <a id="linear"></a> `linear` | [`LinearGradientParams`](LinearGradientParams.md) | [gradients/types.ts:48](https://github.com/humanbydefinition/p5-asciify/blob/a7f21099f1ebfb0144144b513e73b3d6ec4d2c09/src/lib/gradients/types.ts#L48) |
-| <a id="radial"></a> `radial` | [`RadialGradientParams`](RadialGradientParams.md) | [gradients/types.ts:50](https://github.com/humanbydefinition/p5-asciify/blob/a7f21099f1ebfb0144144b513e73b3d6ec4d2c09/src/lib/gradients/types.ts#L50) |
-| <a id="spiral"></a> `spiral` | [`SpiralGradientParams`](SpiralGradientParams.md) | [gradients/types.ts:49](https://github.com/humanbydefinition/p5-asciify/blob/a7f21099f1ebfb0144144b513e73b3d6ec4d2c09/src/lib/gradients/types.ts#L49) |
+| <a id="conical"></a> `conical` | [`ConicalGradientParams`](ConicalGradientParams.md) | [gradients/types.ts:51](https://github.com/humanbydefinition/p5-asciify/blob/669a218206271de7b0767d42afcabf18f6c432ab/src/lib/gradients/types.ts#L51) |
+| <a id="linear"></a> `linear` | [`LinearGradientParams`](LinearGradientParams.md) | [gradients/types.ts:48](https://github.com/humanbydefinition/p5-asciify/blob/669a218206271de7b0767d42afcabf18f6c432ab/src/lib/gradients/types.ts#L48) |
+| <a id="radial"></a> `radial` | [`RadialGradientParams`](RadialGradientParams.md) | [gradients/types.ts:50](https://github.com/humanbydefinition/p5-asciify/blob/669a218206271de7b0767d42afcabf18f6c432ab/src/lib/gradients/types.ts#L50) |
+| <a id="spiral"></a> `spiral` | [`SpiralGradientParams`](SpiralGradientParams.md) | [gradients/types.ts:49](https://github.com/humanbydefinition/p5-asciify/blob/669a218206271de7b0767d42afcabf18f6c432ab/src/lib/gradients/types.ts#L49) |

@@ -19,7 +19,7 @@ export const CUSTOM_DEFAULT_OPTIONS = {
 };
 
 /**
- * Abstract class for shader-based ASCII Renderers.
+ * Class for shader-based ASCII Renderers.
  */
 export class P5AsciifyRenderer {
     

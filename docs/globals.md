@@ -8,24 +8,18 @@
 
 | Namespace | Description |
 | ------ | ------ |
-| [gradients](namespaces/gradients/README.md) | Contains functionality relevant to the ASCII gradients, which are used by the ASCII gradient renderer. |
+| [gradients](namespaces/gradients/README.md) | Contains functionality relevant to the ASCII gradients, which are used exclusively by the P5AsciifyGradientRenderer. |
 | [renderers](namespaces/renderers/README.md) | Contains functionality relevant to the ASCII rendering. |
 
 ## Classes
 
 | Class | Description |
 | ------ | ------ |
-| [P5Asciifier](classes/P5Asciifier.md) | The main class for the `p5.asciify` library. |
+| [P5Asciifier](classes/P5Asciifier.md) | The main class for the `p5.asciify` library, responsible for setting up the library, managing its properties, and providing an interface for interacting with the library. |
 | [P5AsciifyColorPalette](classes/P5AsciifyColorPalette.md) | A 1D color palette for use with the `p5.asciify` library. |
 | [P5AsciifyError](classes/P5AsciifyError.md) | Custom error class for the P5Asciify library. |
-| [P5AsciifyFontTextureAtlas](classes/P5AsciifyFontTextureAtlas.md) | Creates a texture atlas containing all characters in a font, and provides utility methods for working with the atlas. |
+| [P5AsciifyFontTextureAtlas](classes/P5AsciifyFontTextureAtlas.md) | A texture atlas containing all characters in a font, providing a way to access the colors of the characters. |
 | [P5AsciifyGrid](classes/P5AsciifyGrid.md) | Represents a 2D grid, where each cell has a fixed width and height. |
-
-## Type Aliases
-
-| Type alias | Description |
-| ------ | ------ |
-| [OpenTypeGlyph](type-aliases/OpenTypeGlyph.md) | Extends the opentype.js `Glyph` class with r, g, and b properties for color. Currently doesn't actually `extend` the class, but rather defines a new interface, since there is no typing provided for the opentype.js library. |
 
 ## Variables
 

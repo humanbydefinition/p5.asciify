@@ -6,9 +6,8 @@ import { P5AsciifyRendererManager } from './renderers/RendererManager';
 import { P5AsciifyError } from './AsciifyError';
 
 /**
- * The main class for the `p5.asciify` library. 
- * 
- * Responsible for setting up the library, managing its properties, and providing an interface for interacting with the library.
+ * The main class for the `p5.asciify` library, 
+ * responsible for setting up the library, managing its properties, and providing an interface for interacting with the library.
  * 
  * @remarks
  * The `P5Asciifier` class is initialized without any parameters.

@@ -80,7 +80,7 @@ p5.prototype.registerMethod("post", function (this: p5): void {
 /** Contains functionality relevant to the ASCII rendering. */
 export * as renderers from './renderers';
 
-/** Contains functionality relevant to the ASCII gradients, which are used by the ASCII gradient renderer. */
+/** Contains functionality relevant to the ASCII gradients, which are used exclusively by the {@link P5AsciifyGradientRenderer}. */
 export * as gradients from './gradients';
 
 export { P5Asciifier } from './Asciifier';
@@ -89,6 +89,5 @@ export { P5AsciifyColorPalette } from './ColorPalette';
 export { P5AsciifyFontTextureAtlas } from './FontTextureAtlas';
 export { P5AsciifyGrid } from './Grid';
 export * from './utils';
-export * from './types';
 
 

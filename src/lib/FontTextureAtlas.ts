@@ -3,7 +3,7 @@ import { P5AsciifyError } from './AsciifyError';
 import { OpenTypeGlyph } from './types';
 
 /**
- * Creates a texture atlas containing all characters in a font, and provides utility methods for working with the atlas.
+ * A texture atlas containing all characters in a font, providing a way to access the colors of the characters.
  */
 export class P5AsciifyFontTextureAtlas {
 

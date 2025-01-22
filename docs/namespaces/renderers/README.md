@@ -16,7 +16,7 @@ Contains functionality relevant to the ASCII rendering.
 | [P5AsciifyBrightnessRenderer](classes/P5AsciifyBrightnessRenderer.md) | ASCII Renderer that uses brightness to determine the ASCII characters to use from the 1D character set. |
 | [P5AsciifyEdgeRenderer](classes/P5AsciifyEdgeRenderer.md) | An ASCII renderer that applies ASCII edges to the input sketch by using edge detection. |
 | [P5AsciifyGradientRenderer](classes/P5AsciifyGradientRenderer.md) | An ASCII renderer that applies all defined ASCII gradients/patterns to the input framebuffer. |
-| [P5AsciifyRenderer](classes/P5AsciifyRenderer.md) | Abstract class for shader-based ASCII Renderers. |
+| [P5AsciifyRenderer](classes/P5AsciifyRenderer.md) | Class for shader-based ASCII Renderers. |
 | [P5AsciifyRendererManager](classes/P5AsciifyRendererManager.md) | Manages the available ASCII renderers and handles rendering the ASCII output to the canvas. |
 
 ## Interfaces
