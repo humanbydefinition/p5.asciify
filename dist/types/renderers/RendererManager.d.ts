@@ -1,8 +1,20 @@
 import p5 from 'p5';
+import { P5AsciifyBrightnessRenderer } from './brightness/BrightnessAsciiRenderer';
+import { P5AsciifyAccurateRenderer } from './accurate/AccurateAsciiRenderer';
+import { P5AsciifyEdgeRenderer } from './edge/EdgeAsciiRenderer';
+import { P5AsciifyGradientRenderer } from './gradient/GradientAsciiRenderer';
 import { P5AsciifyRenderer } from './AsciiRenderer';
 import { P5AsciifyGrid } from '../Grid';
 import { P5AsciifyFontTextureAtlas } from '../FontTextureAtlas';
 import { AsciiRendererOptions } from './types';
+declare const RENDERER_TYPES: {
+    readonly brightness: typeof P5AsciifyBrightnessRenderer;
+    readonly accurate: typeof P5AsciifyAccurateRenderer;
+    readonly gradient: typeof P5AsciifyGradientRenderer;
+    readonly edge: typeof P5AsciifyEdgeRenderer;
+    readonly custom: typeof P5AsciifyRenderer;
+};
+type RendererType = keyof typeof RENDERER_TYPES;
 /**
  * Manages the available ASCII renderers and handles rendering the ASCII output to the canvas.
  */
@@ -35,7 +47,7 @@ export declare class P5AsciifyRendererManager {
      * @param type The type of the renderer to add.
      * @param options The options to use for the renderer.
      */
-    add(name: string, type: string, options: AsciiRendererOptions): void;
+    add(name: string, type: RendererType, options: AsciiRendererOptions): void;
     /**
      * Gets the ASCII renderer instance with the given name.
      * @param name The name of the renderer to get.
@@ -78,3 +90,4 @@ export declare class P5AsciifyRendererManager {
         renderer: P5AsciifyRenderer;
     }[];
 }
+export {};

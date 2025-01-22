@@ -9,6 +9,14 @@ import { AsciiRendererOptions } from './types';
 import vertexShader from '../assets/shaders/vert/shader.vert';
 import asciiConversionShader from './_common_shaders/asciiConversion.frag';
 
+export const CUSTOM_DEFAULT_OPTIONS = {
+    /** Enable/disable the renderer */
+    enabled: false,
+    /** Swap the cells ASCII character colors with it's cell background colors */
+    invertMode: false,
+    /** Rotation angle of all characters in the grid in degrees */
+    rotationAngle: 0,
+};
 
 /**
  * Abstract class for shader-based ASCII Renderers.
@@ -27,7 +35,7 @@ export class P5AsciifyRenderer {
         protected p: p5,
         protected grid: P5AsciifyGrid,
         protected fontTextureAtlas: P5AsciifyFontTextureAtlas,
-        protected _options: AsciiRendererOptions
+        protected _options: AsciiRendererOptions = CUSTOM_DEFAULT_OPTIONS
     ) {
         if (this._options.characterColor) {
             this._options.characterColor = this.p.color(this._options.characterColor as string);

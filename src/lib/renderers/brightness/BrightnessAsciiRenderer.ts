@@ -10,6 +10,26 @@ import vertexShader from '../../assets/shaders/vert/shader.vert';
 import colorSampleShader from './shaders/colorSample.frag';
 import asciiCharacterShader from './shaders/asciiCharacter.frag';
 
+/** Default configuration options for brightness-based ASCII renderer */
+export const BRIGHTNESS_DEFAULT_OPTIONS = {
+    /** Enable/disable the renderer */
+    enabled: true,
+    /** Characters used for brightness mapping (from darkest to brightest) */
+    characters: "0123456789",
+    /** Color of the ASCII characters. Only used when `characterColorMode` is set to `1` */
+    characterColor: "#FFFFFF",
+    /** Character color mode (0: `sampled`, 1: `fixed`) */
+    characterColorMode: 0,
+    /** Cell background color. Only used when `characterColorMode` is set to `1` */
+    backgroundColor: "#000000",
+    /** Background color mode (0: `sampled`, 1: `fixed`) */
+    backgroundColorMode: 1,
+    /** Swap the cells ASCII character colors with it's cell background colors */
+    invertMode: false,
+    /** Rotation angle of all characters in the grid in degrees */
+    rotationAngle: 0,
+};
+
 /**
  * ASCII Renderer that uses brightness to determine the ASCII characters to use from the 1D character set.
  */
@@ -18,7 +38,7 @@ export class P5AsciifyBrightnessRenderer extends P5AsciifyRenderer {
     private asciiCharacterShader: p5.Shader;
     private colorSampleFramebuffer: p5.Framebuffer;
 
-    constructor(p5Instance: p5, grid: P5AsciifyGrid, fontTextureAtlas: P5AsciifyFontTextureAtlas,  options: AsciiRendererOptions) {
+    constructor(p5Instance: p5, grid: P5AsciifyGrid, fontTextureAtlas: P5AsciifyFontTextureAtlas,  options: AsciiRendererOptions = BRIGHTNESS_DEFAULT_OPTIONS) {
         super(p5Instance, grid, fontTextureAtlas, options);
 
         this.colorSampleShader = this.p.createShader(vertexShader, colorSampleShader);

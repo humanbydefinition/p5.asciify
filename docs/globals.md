@@ -26,16 +26,39 @@
 | [P5AsciifyRendererManager](classes/P5AsciifyRendererManager.md) | Manages the available ASCII renderers and handles rendering the ASCII output to the canvas. |
 | [P5AsciifySpiralGradient](classes/P5AsciifySpiralGradient.md) | A spiral gradient that moves in a spiral pattern across the screen. |
 
+## Interfaces
+
+| Interface | Description |
+| ------ | ------ |
+| [AsciiRendererOptions](interfaces/AsciiRendererOptions.md) | - |
+
+## Type Aliases
+
+| Type alias | Description |
+| ------ | ------ |
+| [ConicalGradientParams](type-aliases/ConicalGradientParams.md) | - |
+| [GradientConstructorMap](type-aliases/GradientConstructorMap.md) | - |
+| [GradientParams](type-aliases/GradientParams.md) | - |
+| [GradientType](type-aliases/GradientType.md) | - |
+| [LinearGradientParams](type-aliases/LinearGradientParams.md) | - |
+| [OpenTypeGlyph](type-aliases/OpenTypeGlyph.md) | Extends the opentype.js `Glyph` class with r, g, and b properties for color. Currently doesn't actually `extend` the class, but rather defines a new interface, since there is no typing provided for the opentype.js library. |
+| [RadialGradientParams](type-aliases/RadialGradientParams.md) | - |
+| [SpiralGradientParams](type-aliases/SpiralGradientParams.md) | - |
+
 ## Variables
 
 | Variable | Description |
 | ------ | ------ |
 | [ACCURATE\_DEFAULT\_OPTIONS](variables/ACCURATE_DEFAULT_OPTIONS.md) | Default configuration options for accurate ASCII renderer |
 | [BRIGHTNESS\_DEFAULT\_OPTIONS](variables/BRIGHTNESS_DEFAULT_OPTIONS.md) | Default configuration options for brightness-based ASCII renderer |
-| [CUSTOM\_DEFAULT\_OPTIONS](variables/CUSTOM_DEFAULT_OPTIONS.md) | Default configuration options for custom ASCII renderer |
-| [DEFAULT\_BACKGROUND\_COLOR](variables/DEFAULT_BACKGROUND_COLOR.md) | Default background color behind the ASCII grid |
-| [DEFAULT\_FONT\_SIZE](variables/DEFAULT_FONT_SIZE.md) | Default font size for the ASCII rendering |
+| [CUSTOM\_DEFAULT\_OPTIONS](variables/CUSTOM_DEFAULT_OPTIONS.md) | - |
 | [EDGE\_DEFAULT\_OPTIONS](variables/EDGE_DEFAULT_OPTIONS.md) | Default configuration options for edge detection ASCII renderer |
-| [FONT\_SIZE\_LIMITS](variables/FONT_SIZE_LIMITS.md) | Font size constraints for ASCII rendering |
 | [GRADIENT\_DEFAULT\_OPTIONS](variables/GRADIENT_DEFAULT_OPTIONS.md) | Default configuration options for gradient-based ASCII renderer |
 | [p5asciify](variables/p5asciify.md) | The main instance of the p5.asciify library, which is used to access all of the library's functionality. |
+
+## Functions
+
+| Function | Description |
+| ------ | ------ |
+| [compareVersions](functions/compareVersions.md) | Compares two version strings. |
+| [validateNumberInRange](functions/validateNumberInRange.md) | Validates a number is within a specified range. |

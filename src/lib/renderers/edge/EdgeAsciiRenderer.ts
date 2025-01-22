@@ -4,7 +4,7 @@ import { P5AsciifyGrid } from '../../Grid';
 import { P5AsciifyError } from '../../AsciifyError';
 import { P5AsciifyFontTextureAtlas } from '../../FontTextureAtlas';
 
-import { EdgeAsciiRendererOptions } from '../types';
+import { AsciiRendererOptions } from '../types';
 
 import vertexShader from '../../assets/shaders/vert/shader.vert';
 import colorSampleShader from './shaders/colorSample.frag';
@@ -13,6 +13,30 @@ import asciiCharacterShader from './shaders/asciiCharacter.frag';
 import sobelShader from './shaders/sobel.frag';
 
 import { generateSampleShader } from './shaders/shaderGenerators.min';
+
+/** Default configuration options for edge detection ASCII renderer */
+export const EDGE_DEFAULT_OPTIONS = {
+    /** Enable/disable the renderer */
+    enabled: false,
+    /** Characters used for edge representation (8 characters for different angles) */
+    characters: "-/|\\-/|\\",
+    /** Color of the ASCII characters. Only used when `characterColorMode` is set to `1` */
+    characterColor: "#FFFFFF",
+    /** Character color mode (0: `sampled`, 1: `fixed`) */
+    characterColorMode: 0,
+    /** Cell background color. Only used when `characterColorMode` is set to `1` */
+    backgroundColor: "#000000",
+    /** Background color mode (0: `sampled`, 1: `fixed`) */
+    backgroundColorMode: 1,
+    /** Swap the cells ASCII character colors with it's cell background colors */
+    invertMode: false,
+    /** Threshold for Sobel edge detection. Responsible for edge detection sensitivity */
+    sobelThreshold: 0.5,
+    /** Sampling threshold for edge detection. In this case, 16 pixels in a grid cell need to contain an edge to render it */
+    sampleThreshold: 16,
+    /** Rotation angle of all characters in the grid in degrees */
+    rotationAngle: 0,
+};
 
 /**
  * An ASCII renderer that applies ASCII edges to the input sketch by using edge detection.
@@ -25,9 +49,8 @@ export class P5AsciifyEdgeRenderer extends P5AsciifyRenderer {
     private asciiCharacterShader: p5.Shader;
     private sobelFramebuffer: p5.Framebuffer;
     private sampleFramebuffer: p5.Framebuffer;
-    protected declare _options: EdgeAsciiRendererOptions;
 
-    constructor(p5Instance: p5, grid: P5AsciifyGrid, fontTextureAtlas: P5AsciifyFontTextureAtlas, options: EdgeAsciiRendererOptions) {
+    constructor(p5Instance: p5, grid: P5AsciifyGrid, fontTextureAtlas: P5AsciifyFontTextureAtlas, options: AsciiRendererOptions = EDGE_DEFAULT_OPTIONS) {
         super(p5Instance, grid, fontTextureAtlas, options);
 
         this.sobelShader = this.p.createShader(vertexShader, sobelShader);
@@ -71,7 +94,7 @@ export class P5AsciifyEdgeRenderer extends P5AsciifyRenderer {
         if (value < 0 || value > 1) {
             throw new P5AsciifyError('Sobel threshold must be between 0 and 1');
         }
-    
+
         this._options.sobelThreshold = value;
     }
 
@@ -88,11 +111,11 @@ export class P5AsciifyEdgeRenderer extends P5AsciifyRenderer {
         if (value < 0) {
             throw new P5AsciifyError('Sample threshold must be greater than or equal to 0');
         }
-    
+
         this._options.sampleThreshold = value;
     }
 
-    public update(newOptions: Partial<EdgeAsciiRendererOptions>): void {
+    public update(newOptions: Partial<AsciiRendererOptions>): void {
         super.update(newOptions);
 
         if (newOptions.sobelThreshold !== undefined) {

@@ -5,8 +5,6 @@ import { P5AsciifyGrid } from './Grid';
 import { P5AsciifyRendererManager } from './renderers/RendererManager';
 import { P5AsciifyError } from './AsciifyError';
 
-import { DEFAULT_FONT_SIZE, DEFAULT_BACKGROUND_COLOR } from './defaults';
-
 /**
  * The main class for the `p5.asciify` library. 
  * 
@@ -44,10 +42,10 @@ export class P5Asciifier {
     private _font!: p5.Font;
 
     /** The background color to use for the ASCII rendering for the offset space, not occupied by the centered ASCII grid. */
-    private _backgroundColor: string | p5.Color | [number, number?, number?, number?] = DEFAULT_BACKGROUND_COLOR;
+    private _backgroundColor: string | p5.Color | [number, number?, number?, number?] = "#000000";
 
     /** The font size to use for the ASCII rendering. */
-    private _fontSize: number = DEFAULT_FONT_SIZE;
+    private _fontSize: number = 16;
 
 
     /**

@@ -25,7 +25,6 @@ declare module 'p5' {
         updatePixels(): void;
     }
     interface p5InstanceExtensions {
-        p5asciify: P5Asciifier;
         loadAsciiFont(font: string | Font, callback?: () => void): void;
         setupAsciify(): void;
         drawAsciify(): void;

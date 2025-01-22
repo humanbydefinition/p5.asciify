@@ -28,7 +28,7 @@ export declare class P5AsciifyGradientManager {
      * Remove a gradient from the gradient manager.
      * @param gradient The gradient to remove.
      */
-    removeGradient(gradient: P5AsciifyGradient): void;
+    remove(gradient: P5AsciifyGradient): void;
     get gradientParams(): GradientParams;
     get gradients(): P5AsciifyGradient[];
     get gradientConstructors(): GradientConstructorMap;

@@ -11,14 +11,6 @@ import { P5AsciifyFontTextureAtlas } from '../FontTextureAtlas';
 
 import { P5AsciifyError } from '../AsciifyError';
 
-import {
-    BRIGHTNESS_DEFAULT_OPTIONS,
-    ACCURATE_DEFAULT_OPTIONS,
-    GRADIENT_DEFAULT_OPTIONS,
-    EDGE_DEFAULT_OPTIONS,
-    CUSTOM_DEFAULT_OPTIONS,
-} from '../defaults';
-
 import { AsciiRendererOptions } from './types';
 
 const RENDERER_TYPES = {
@@ -50,11 +42,11 @@ export class P5AsciifyRendererManager {
         };
 
         this._renderers = [
-            { name: "brightness", renderer: new P5AsciifyBrightnessRenderer(this.p, this.grid, fontTextureAtlas, BRIGHTNESS_DEFAULT_OPTIONS) },
-            { name: "accurate", renderer: new P5AsciifyAccurateRenderer(this.p, this.grid, fontTextureAtlas, ACCURATE_DEFAULT_OPTIONS) },
-            { name: "gradient", renderer: new P5AsciifyGradientRenderer(this.p, this.grid, fontTextureAtlas, GRADIENT_DEFAULT_OPTIONS) },
-            { name: "edge", renderer: new P5AsciifyEdgeRenderer(this.p, this.grid, fontTextureAtlas, EDGE_DEFAULT_OPTIONS) },
-            { name: "custom", renderer: new P5AsciifyRenderer(this.p, this.grid, fontTextureAtlas, CUSTOM_DEFAULT_OPTIONS) },
+            { name: "brightness", renderer: new P5AsciifyBrightnessRenderer(this.p, this.grid, fontTextureAtlas) },
+            { name: "accurate", renderer: new P5AsciifyAccurateRenderer(this.p, this.grid, fontTextureAtlas) },
+            { name: "gradient", renderer: new P5AsciifyGradientRenderer(this.p, this.grid, fontTextureAtlas) },
+            { name: "edge", renderer: new P5AsciifyEdgeRenderer(this.p, this.grid, fontTextureAtlas) },
+            { name: "custom", renderer: new P5AsciifyRenderer(this.p, this.grid, fontTextureAtlas) },
         ];
 
         this.lastRenderer = this._renderers[0].renderer;
@@ -63,7 +55,6 @@ export class P5AsciifyRendererManager {
     /**
      * Renders the ASCII output to the canvas.
      * @param inputFramebuffer The input framebuffer to transform into ASCII.
-     * @param borderColor The border color of the canvas, which is not occupied by the centered ASCII grid.
      */
     public render(inputFramebuffer: any): void {
         let asciiOutput = inputFramebuffer;
@@ -112,27 +103,31 @@ export class P5AsciifyRendererManager {
      * @param type The type of the renderer to add.
      * @param options The options to use for the renderer.
      */
-    public add(name: string, type: RendererType, options: AsciiRendererOptions): void {
+    public add(
+        name: string,
+        type: RendererType,
+        options: AsciiRendererOptions
+    ): void {
         if (typeof name !== 'string' || name.trim() === '') {
             throw new P5AsciifyError('Renderer name must be a non-empty string');
         }
-    
-        const AsciiRendererClass = RENDERER_TYPES[type];
-        if (!AsciiRendererClass) {
+
+        const RendererClass = RENDERER_TYPES[type];
+        if (!RendererClass) {
             throw new P5AsciifyError(
                 `Invalid renderer type: ${type}. Valid types are: ${Object.keys(RENDERER_TYPES).join(', ')}`
             );
         }
-    
+
         this._renderers.push({
             name,
-            renderer: new AsciiRendererClass(this.p, this.grid, this.fontTextureAtlas, options)
+            renderer: new RendererClass(this.p, this.grid, this.fontTextureAtlas, options)
         });
     }
 
     /**
      * Gets the ASCII renderer instance with the given name.
-     * @param name The name of the renderer to get.
+     * @param rendererName The name of the renderer to get.
      * @returns The ASCII renderer instance with the given name.
      */
     public get(rendererName: string): P5AsciifyRenderer {

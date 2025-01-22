@@ -2,7 +2,15 @@ import p5 from 'p5';
 import { P5AsciifyGrid } from '../Grid';
 import { P5AsciifyColorPalette } from '../ColorPalette';
 import { P5AsciifyFontTextureAtlas } from '../FontTextureAtlas';
-import { AsciiRendererOptions, AsciiRendererUserOptions } from './types';
+import { AsciiRendererOptions } from './types';
+export declare const CUSTOM_DEFAULT_OPTIONS: {
+    /** Enable/disable the renderer */
+    enabled: boolean;
+    /** Swap the cells ASCII character colors with it's cell background colors */
+    invertMode: boolean;
+    /** Rotation angle of all characters in the grid in degrees */
+    rotationAngle: number;
+};
 /**
  * Abstract class for shader-based ASCII Renderers.
  */
@@ -18,7 +26,7 @@ export declare class P5AsciifyRenderer {
     protected _inversionFramebuffer: p5.Framebuffer;
     protected _outputFramebuffer: p5.Framebuffer;
     protected _shader: p5.Shader;
-    constructor(p: p5, grid: P5AsciifyGrid, fontTextureAtlas: P5AsciifyFontTextureAtlas, _options: AsciiRendererOptions);
+    constructor(p: p5, grid: P5AsciifyGrid, fontTextureAtlas: P5AsciifyFontTextureAtlas, _options?: AsciiRendererOptions);
     /**
      * Resizes all framebuffers based on the grid dimensions.
      */
@@ -31,7 +39,7 @@ export declare class P5AsciifyRenderer {
      * Updates renderer options.
      * @param newOptions - The new options to update.
      */
-    update(newOptions: Partial<AsciiRendererUserOptions>): void;
+    update(newOptions: Partial<AsciiRendererOptions>): void;
     /**
      * Convert and render the input framebuffer to ASCII.
      * @param inputFramebuffer - The input framebuffer to convert to ASCII.

@@ -15,6 +15,24 @@ import { P5AsciifyFontTextureAtlas } from '../../FontTextureAtlas';
 import { P5AsciifyGradient } from '../../gradients/Gradient';
 import { GradientType } from '../../gradients/types';
 
+/** Default configuration options for gradient-based ASCII renderer */
+export const GRADIENT_DEFAULT_OPTIONS = {
+    /** Enable/disable the renderer */
+    enabled: false,
+    /** Color of the ASCII characters. Only used when `characterColorMode` is set to `1` */
+    characterColor: "#FFFFFF",
+    /** Character color mode (0: `sampled`, 1: `fixed`) */
+    characterColorMode: 0,
+    /** Cell background color. Only used when `characterColorMode` is set to `1` */
+    backgroundColor: "#000000",
+    /** Background color mode (0: `sampled`, 1: `fixed`) */
+    backgroundColorMode: 1,
+    /** Swap the cells ASCII character colors with it's cell background colors */
+    invertMode: false,
+    /** Rotation angle of all characters in the grid in degrees */
+    rotationAngle: 0,
+};
+
 /**
  * An ASCII renderer that applies all defined ASCII gradients/patterns to the input framebuffer.
  */
@@ -32,7 +50,7 @@ export class P5AsciifyGradientRenderer extends P5AsciifyRenderer {
         p5Instance: p5,
         grid: P5AsciifyGrid,
         fontTextureAtlas: P5AsciifyFontTextureAtlas,
-        options: AsciiRendererOptions
+        options: AsciiRendererOptions = GRADIENT_DEFAULT_OPTIONS
     ) {
         super(p5Instance, grid, fontTextureAtlas, options);
 

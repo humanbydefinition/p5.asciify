@@ -2,16 +2,13 @@ import p5 from 'p5';
 
 export interface AsciiRendererOptions {
     enabled: boolean;
-    characters: string;
+    characters?: string;
+    characterColor?: string | [number, number, number] | p5.Color;
+    characterColorMode?: number | string;
+    backgroundColor?: string | [number, number, number] | p5.Color;
+    backgroundColorMode?: number | string;
     invertMode: boolean;
     rotationAngle: number;
-    characterColor: string | [number, number, number] | p5.Color;
-    characterColorMode: number | string;
-    backgroundColor: string | [number, number, number] | p5.Color;
-    backgroundColorMode: number | string;
-}
-
-export interface EdgeAsciiRendererOptions extends AsciiRendererOptions {
-    sobelThreshold: number;
-    sampleThreshold: number;
+    sobelThreshold?: number;
+    sampleThreshold?: number;
 }

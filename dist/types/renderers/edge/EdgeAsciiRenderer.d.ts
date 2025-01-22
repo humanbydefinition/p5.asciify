@@ -2,7 +2,30 @@ import p5 from 'p5';
 import { P5AsciifyRenderer } from '../AsciiRenderer';
 import { P5AsciifyGrid } from '../../Grid';
 import { P5AsciifyFontTextureAtlas } from '../../FontTextureAtlas';
-import { AsciiRendererOptions, AsciiRendererUserOptions } from '../types';
+import { AsciiRendererOptions } from '../types';
+/** Default configuration options for edge detection ASCII renderer */
+export declare const EDGE_DEFAULT_OPTIONS: {
+    /** Enable/disable the renderer */
+    enabled: boolean;
+    /** Characters used for edge representation (8 characters for different angles) */
+    characters: string;
+    /** Color of the ASCII characters. Only used when `characterColorMode` is set to `1` */
+    characterColor: string;
+    /** Character color mode (0: `sampled`, 1: `fixed`) */
+    characterColorMode: number;
+    /** Cell background color. Only used when `characterColorMode` is set to `1` */
+    backgroundColor: string;
+    /** Background color mode (0: `sampled`, 1: `fixed`) */
+    backgroundColorMode: number;
+    /** Swap the cells ASCII character colors with it's cell background colors */
+    invertMode: boolean;
+    /** Threshold for Sobel edge detection. Responsible for edge detection sensitivity */
+    sobelThreshold: number;
+    /** Sampling threshold for edge detection. In this case, 16 pixels in a grid cell need to contain an edge to render it */
+    sampleThreshold: number;
+    /** Rotation angle of all characters in the grid in degrees */
+    rotationAngle: number;
+};
 /**
  * An ASCII renderer that applies ASCII edges to the input sketch by using edge detection.
  */
@@ -14,7 +37,7 @@ export declare class P5AsciifyEdgeRenderer extends P5AsciifyRenderer {
     private asciiCharacterShader;
     private sobelFramebuffer;
     private sampleFramebuffer;
-    constructor(p5Instance: p5, grid: P5AsciifyGrid, fontTextureAtlas: P5AsciifyFontTextureAtlas, options: AsciiRendererOptions);
+    constructor(p5Instance: p5, grid: P5AsciifyGrid, fontTextureAtlas: P5AsciifyFontTextureAtlas, options?: AsciiRendererOptions);
     resizeFramebuffers(): void;
     resetShaders(): void;
     /**
@@ -29,6 +52,6 @@ export declare class P5AsciifyEdgeRenderer extends P5AsciifyRenderer {
      * @throws {P5AsciifyError} If the value is not a valid number greater than or equal to 0.
      */
     sampleThreshold(value: number): void;
-    update(newOptions: Partial<AsciiRendererUserOptions>): void;
+    update(newOptions: Partial<AsciiRendererOptions>): void;
     render(inputFramebuffer: p5.Framebuffer, previousAsciiRenderer: P5AsciifyRenderer): void;
 }
