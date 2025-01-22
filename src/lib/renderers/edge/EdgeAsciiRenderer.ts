@@ -4,7 +4,7 @@ import { P5AsciifyGrid } from '../../Grid';
 import { P5AsciifyError } from '../../AsciifyError';
 import { P5AsciifyFontTextureAtlas } from '../../FontTextureAtlas';
 
-import { AsciiRendererOptions, AsciiRendererUserOptions } from '../types';
+import { EdgeAsciiRendererOptions } from '../types';
 
 import vertexShader from '../../assets/shaders/vert/shader.vert';
 import colorSampleShader from './shaders/colorSample.frag';
@@ -25,8 +25,9 @@ export class P5AsciifyEdgeRenderer extends P5AsciifyRenderer {
     private asciiCharacterShader: p5.Shader;
     private sobelFramebuffer: p5.Framebuffer;
     private sampleFramebuffer: p5.Framebuffer;
+    protected declare _options: EdgeAsciiRendererOptions;
 
-    constructor(p5Instance: p5, grid: P5AsciifyGrid, fontTextureAtlas: P5AsciifyFontTextureAtlas, options: AsciiRendererOptions) {
+    constructor(p5Instance: p5, grid: P5AsciifyGrid, fontTextureAtlas: P5AsciifyFontTextureAtlas, options: EdgeAsciiRendererOptions) {
         super(p5Instance, grid, fontTextureAtlas, options);
 
         this.sobelShader = this.p.createShader(vertexShader, sobelShader);
@@ -91,7 +92,7 @@ export class P5AsciifyEdgeRenderer extends P5AsciifyRenderer {
         this._options.sampleThreshold = value;
     }
 
-    public update(newOptions: Partial<AsciiRendererUserOptions>): void {
+    public update(newOptions: Partial<EdgeAsciiRendererOptions>): void {
         super.update(newOptions);
 
         if (newOptions.sobelThreshold !== undefined) {
@@ -121,7 +122,7 @@ export class P5AsciifyEdgeRenderer extends P5AsciifyRenderer {
         this.sampleShader.setUniform('u_imageSize', [this.p.width, this.p.height]);
         this.sampleShader.setUniform('u_image', this.sobelFramebuffer);
         this.sampleShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
-        this.sampleShader.setUniform('u_threshold', this.options.sampleThreshold as number);
+        this.sampleShader.setUniform('u_threshold', this._options.sampleThreshold as number);
         this.p.rect(0, 0, this.p.width, this.p.height);
         this.sampleFramebuffer.end();
 
@@ -159,7 +160,7 @@ export class P5AsciifyEdgeRenderer extends P5AsciifyRenderer {
         this._inversionFramebuffer.begin();
         this.p.clear();
         this.p.shader(this.inversionShader);
-        this.inversionShader.setUniform('u_invert', this.options.invertMode);
+        this.inversionShader.setUniform('u_invert', this._options.invertMode);
         this.inversionShader.setUniform('u_sampleTexture', this.sampleFramebuffer);
         if (previousAsciiRenderer !== this) {
             this.inversionShader.setUniform('u_previousInversionTexture', previousAsciiRenderer.inversionFramebuffer);

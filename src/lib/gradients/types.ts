@@ -5,7 +5,15 @@ import { P5AsciifyFontTextureAtlas } from '../FontTextureAtlas';
 export type GradientType = 'linear' | 'spiral' | 'radial' | 'conical';
 
 export type GradientConstructorMap = Record<GradientType,
-    (p: p5, fontTextureAtlas: P5AsciifyFontTextureAtlas, shader: p5.Shader, characters: string, brightnessStart: number, brightnessEnd: number, params: any) => P5AsciifyGradient
+    (
+        p: p5,
+        fontTextureAtlas: P5AsciifyFontTextureAtlas,
+        shader: p5.Shader,
+        characters: string,
+        brightnessStart: number,
+        brightnessEnd: number,
+        params: any
+    ) => P5AsciifyGradient
 >;
 
 export type ConicalGradientParams = {

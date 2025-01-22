@@ -107,7 +107,3 @@ export {
   DEFAULT_FONT_SIZE,
   DEFAULT_BACKGROUND_COLOR
 } from './defaults';
-
-export {
-  FONT_SIZE_LIMITS,
-} from './constants';

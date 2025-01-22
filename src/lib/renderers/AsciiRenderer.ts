@@ -4,7 +4,7 @@ import { P5AsciifyError } from '../AsciifyError';
 import { P5AsciifyColorPalette } from '../ColorPalette';
 import { P5AsciifyFontTextureAtlas } from '../FontTextureAtlas';
 
-import { AsciiRendererOptions, AsciiRendererUserOptions } from './types';
+import { AsciiRendererOptions } from './types';
 
 import vertexShader from '../assets/shaders/vert/shader.vert';
 import asciiConversionShader from './_common_shaders/asciiConversion.frag';
@@ -101,7 +101,7 @@ export class P5AsciifyRenderer {
      * Updates renderer options.
      * @param newOptions - The new options to update.
      */
-    public update(newOptions: Partial<AsciiRendererUserOptions>): void {
+    public update(newOptions: Partial<AsciiRendererOptions>): void {
         if (newOptions?.enabled !== undefined) {
             this.enabled(newOptions.enabled);
         }

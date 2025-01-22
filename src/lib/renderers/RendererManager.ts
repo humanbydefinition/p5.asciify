@@ -21,6 +21,16 @@ import {
 
 import { AsciiRendererOptions } from './types';
 
+const RENDERER_TYPES = {
+    'brightness': P5AsciifyBrightnessRenderer,
+    'accurate': P5AsciifyAccurateRenderer,
+    'gradient': P5AsciifyGradientRenderer,
+    'edge': P5AsciifyEdgeRenderer,
+    'custom': P5AsciifyRenderer
+} as const;
+
+type RendererType = keyof typeof RENDERER_TYPES;
+
 /**
  * Manages the available ASCII renderers and handles rendering the ASCII output to the canvas.
  */
@@ -102,26 +112,22 @@ export class P5AsciifyRendererManager {
      * @param type The type of the renderer to add.
      * @param options The options to use for the renderer.
      */
-    public add(name: string, type: string, options: AsciiRendererOptions): void {
-        switch (type) {
-            case "brightness":
-                this._renderers.push({ name, renderer: new P5AsciifyBrightnessRenderer(this.p, this.grid, this.fontTextureAtlas, options) });
-                break;
-            case "accurate":
-                this._renderers.push({ name, renderer: new P5AsciifyAccurateRenderer(this.p, this.grid, this.fontTextureAtlas, options) });
-                break;
-            case "gradient":
-                this._renderers.push({ name, renderer: new P5AsciifyGradientRenderer(this.p, this.grid, this.fontTextureAtlas, options) });
-                break;
-            case "edge":
-                this._renderers.push({ name, renderer: new P5AsciifyEdgeRenderer(this.p, this.grid, this.fontTextureAtlas, options) });
-                break;
-            case "custom":
-                this._renderers.push({ name, renderer: new P5AsciifyRenderer(this.p, this.grid, this.fontTextureAtlas, options) });
-                break;
-            default:
-                throw new P5AsciifyError(`Invalid renderer type: ${type}`);
+    public add(name: string, type: RendererType, options: AsciiRendererOptions): void {
+        if (typeof name !== 'string' || name.trim() === '') {
+            throw new P5AsciifyError('Renderer name must be a non-empty string');
         }
+    
+        const AsciiRendererClass = RENDERER_TYPES[type];
+        if (!AsciiRendererClass) {
+            throw new P5AsciifyError(
+                `Invalid renderer type: ${type}. Valid types are: ${Object.keys(RENDERER_TYPES).join(', ')}`
+            );
+        }
+    
+        this._renderers.push({
+            name,
+            renderer: new AsciiRendererClass(this.p, this.grid, this.fontTextureAtlas, options)
+        });
     }
 
     /**

@@ -34,7 +34,6 @@ declare module 'p5' {
 
     interface p5InstanceExtensions {
         // Extended properties relevant to the p5.asciify library
-        p5asciify: P5Asciifier;
         loadAsciiFont(font: string | Font, callback?: () => void): void;
         setupAsciify(): void;
         drawAsciify(): void;

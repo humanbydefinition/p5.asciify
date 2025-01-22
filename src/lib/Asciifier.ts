@@ -4,7 +4,6 @@ import { P5AsciifyFontTextureAtlas } from './FontTextureAtlas';
 import { P5AsciifyGrid } from './Grid';
 import { P5AsciifyRendererManager } from './renderers/RendererManager';
 import { P5AsciifyError } from './AsciifyError';
-import { FONT_SIZE_LIMITS } from './constants';
 
 import { DEFAULT_FONT_SIZE, DEFAULT_BACKGROUND_COLOR } from './defaults';
 
@@ -127,8 +126,8 @@ export class P5Asciifier {
      */
     public fontSize(fontSize: number): void {
 
-        if (fontSize < FONT_SIZE_LIMITS.MIN || fontSize > FONT_SIZE_LIMITS.MAX) {
-            throw new P5AsciifyError(`Font size ${fontSize} is out of bounds. It should be between ${FONT_SIZE_LIMITS.MIN} and ${FONT_SIZE_LIMITS.MAX}.`);
+        if (fontSize < 1 || fontSize > 128) {
+            throw new P5AsciifyError(`Font size ${fontSize} is out of bounds. It should be between 1 and 128.`);
         }
 
         this._fontSize = fontSize;
