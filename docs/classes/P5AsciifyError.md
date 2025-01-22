@@ -6,7 +6,7 @@
 
 # Class: P5AsciifyError
 
-Defined in: [AsciifyError.ts:6](https://github.com/humanbydefinition/p5-asciify/blob/e5bd0bdb193d5c7e333d8222e5239ed4033224f2/src/lib/AsciifyError.ts#L6)
+Defined in: [AsciifyError.ts:6](https://github.com/humanbydefinition/p5-asciify/blob/85ece03d79020f41f143d875767f8fa05495057c/src/lib/AsciifyError.ts#L6)
 
 Custom error class for the P5Asciify library.
 
@@ -22,7 +22,7 @@ Represents errors specific to the P5Asciify library.
 
 > **new P5AsciifyError**(`message`): [`P5AsciifyError`](P5AsciifyError.md)
 
-Defined in: [AsciifyError.ts:12](https://github.com/humanbydefinition/p5-asciify/blob/e5bd0bdb193d5c7e333d8222e5239ed4033224f2/src/lib/AsciifyError.ts#L12)
+Defined in: [AsciifyError.ts:12](https://github.com/humanbydefinition/p5-asciify/blob/85ece03d79020f41f143d875767f8fa05495057c/src/lib/AsciifyError.ts#L12)
 
 Create a new P5AsciifyError instance.
 

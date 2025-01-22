@@ -1,5 +1,8 @@
 import p5 from 'p5';
 
+import { P5AsciifyRenderer } from './renderers/AsciiRenderer';
+import { P5AsciifyGradient } from './gradients/Gradient';
+
 /**
  * A 1D color palette for use with the `p5.asciify` library.
  * 

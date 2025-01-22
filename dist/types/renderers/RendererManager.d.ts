@@ -29,7 +29,6 @@ export declare class P5AsciifyRendererManager {
     /**
      * Renders the ASCII output to the canvas.
      * @param inputFramebuffer The input framebuffer to transform into ASCII.
-     * @param borderColor The border color of the canvas, which is not occupied by the centered ASCII grid.
      */
     render(inputFramebuffer: any): void;
     /**
@@ -50,7 +49,7 @@ export declare class P5AsciifyRendererManager {
     add(name: string, type: RendererType, options: AsciiRendererOptions): void;
     /**
      * Gets the ASCII renderer instance with the given name.
-     * @param name The name of the renderer to get.
+     * @param rendererName The name of the renderer to get.
      * @returns The ASCII renderer instance with the given name.
      */
     get(rendererName: string): P5AsciifyRenderer;
