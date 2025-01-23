@@ -59,7 +59,7 @@ declare module 'p5' {
 /**
  * Extends the `opentype.js` `Glyph` class with r, g, and b properties for color.
  * Currently doesn't actually `extend` the class, but rather defines a new interface, 
- * since there is no typing provided for the `opentype.js` library.
+ * since there is no typing provided by the `opentype.js` library.
  * 
  * @remarks
  * The `p5.js` `p5.Font` object contains a property `font` which is an instance of the `opentype.js` `Font` class,
