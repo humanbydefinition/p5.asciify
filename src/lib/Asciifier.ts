@@ -109,11 +109,16 @@ export class P5Asciifier {
      * Is called automatically every time the user's `draw()` function has finished.
      */
     public asciify(): void {
-        this.rendererManager.render(this.sketchFramebuffer);
-
         this._p.clear();
-        this._p.background(this._backgroundColor as p5.Color);
-        this._p.image(this.rendererManager.lastRenderer.outputFramebuffer, -this._p.width / 2, -this._p.height / 2);
+
+        if (this.rendererManager.renderers.length > 0) {
+            this.rendererManager.render(this.sketchFramebuffer);
+
+            this._p.background(this._backgroundColor as p5.Color);
+            this._p.image(this.rendererManager.lastRenderer.outputFramebuffer, -this._p.width / 2, -this._p.height / 2);
+        } else {
+            this._p.image(this.sketchFramebuffer, -this._p.width / 2, -this._p.height / 2);
+        }
     }
 
     /**
