@@ -89,5 +89,6 @@ export { P5AsciifyColorPalette } from './ColorPalette';
 export { P5AsciifyFontTextureAtlas } from './FontTextureAtlas';
 export { P5AsciifyGrid } from './Grid';
 export * from './utils';
+export * from './types';
 
 
