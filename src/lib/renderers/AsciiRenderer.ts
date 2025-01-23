@@ -37,12 +37,8 @@ export class P5AsciifyRenderer {
         protected fontTextureAtlas: P5AsciifyFontTextureAtlas,
         protected _options: AsciiRendererOptions = CUSTOM_DEFAULT_OPTIONS
     ) {
-        if (this._options.characterColor) {
-            this._options.characterColor = this.p.color(this._options.characterColor as string);
-        }
-        if (this._options.backgroundColor) {
-            this._options.backgroundColor = this.p.color(this._options.backgroundColor as string);
-        }
+
+        this._options = { ...CUSTOM_DEFAULT_OPTIONS, ..._options };
 
         this.characterColorPalette = new P5AsciifyColorPalette(this.p, this.fontTextureAtlas.getCharsetColorArray(this._options.characters));
 
@@ -88,6 +84,8 @@ export class P5AsciifyRenderer {
         });
 
         this._shader = this.p.createShader(vertexShader, asciiConversionShader);
+
+        this.update(this._options);
     }
 
     /**

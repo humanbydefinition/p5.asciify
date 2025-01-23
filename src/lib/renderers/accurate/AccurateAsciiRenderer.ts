@@ -16,14 +16,14 @@ export const ACCURATE_DEFAULT_OPTIONS = {
     enabled: false,
     /** Characters used for pattern matching */
     characters: "0123456789",
-    /** Color of the ASCII characters. Only used when `characterColorMode` is set to `1` */
+    /** Color of the ASCII characters. Only used when `characterColorMode` is set to `fixed` */
     characterColor: "#FFFFFF",
-    /** Character color mode (0: `sampled`, 1: `fixed`) */
-    characterColorMode: 0,
-    /** Cell background color. Only used when `characterColorMode` is set to `1` */
+    /** Character color mode */
+    characterColorMode: "sampled",
+    /** Cell background color. Only used when `characterColorMode` is set to `fixed` */
     backgroundColor: "#000000",
-    /** Background color mode (0: `sampled`, 1: `fixed`) */
-    backgroundColorMode: 1,
+    /** Background color mode */
+    backgroundColorMode: "fixed",
     /** Swap the cells ASCII character colors with it's cell background colors */
     invertMode: false,
     /** Rotation angle of all characters in the grid in degrees */
@@ -41,24 +41,25 @@ export class P5AsciifyAccurateRenderer extends P5AsciifyRenderer {
     private brightnessSampleFramebuffer: p5.Framebuffer;
     private brightnessSplitFramebuffer: p5.Framebuffer;
 
-    constructor(p5Instance: p5,  grid: P5AsciifyGrid, fontTextureAtlas: P5AsciifyFontTextureAtlas, options: AsciiRendererOptions = ACCURATE_DEFAULT_OPTIONS) {
-        super(p5Instance, grid, fontTextureAtlas, options);
+    constructor(p5Instance: p5, grid: P5AsciifyGrid, fontTextureAtlas: P5AsciifyFontTextureAtlas, options: AsciiRendererOptions = ACCURATE_DEFAULT_OPTIONS) {
+        const mergedOptions = { ...ACCURATE_DEFAULT_OPTIONS, ...options };
+        super(p5Instance, grid, fontTextureAtlas, mergedOptions);
 
         this.characterSelectionShader = this.p.createShader(vertexShader, generateCharacterSelectionShader(this.fontTextureAtlas.fontSize));
         this.brightnessSampleShader = this.p.createShader(vertexShader, generateBrightnessSampleShader(this.grid.cellHeight, this.grid.cellWidth));
         this.colorSampleShader = this.p.createShader(vertexShader, generateColorSampleShader(16, this.grid.cellHeight, this.grid.cellWidth));
         this.brightnessSplitShader = this.p.createShader(vertexShader, brightnessSplitShader);
 
-        this.brightnessSampleFramebuffer = this.p.createFramebuffer({ 
-            density: 1, 
-            width: this.grid.cols, 
-            height: this.grid.rows, 
-            depthFormat: this.p.UNSIGNED_INT, 
-            textureFiltering: this.p.NEAREST 
+        this.brightnessSampleFramebuffer = this.p.createFramebuffer({
+            density: 1,
+            width: this.grid.cols,
+            height: this.grid.rows,
+            depthFormat: this.p.UNSIGNED_INT,
+            textureFiltering: this.p.NEAREST
         });
-        this.brightnessSplitFramebuffer = this.p.createFramebuffer({ 
-            depthFormat: this.p.UNSIGNED_INT, 
-            textureFiltering: this.p.NEAREST 
+        this.brightnessSplitFramebuffer = this.p.createFramebuffer({
+            depthFormat: this.p.UNSIGNED_INT,
+            textureFiltering: this.p.NEAREST
         });
     }
 
@@ -135,7 +136,7 @@ export class P5AsciifyAccurateRenderer extends P5AsciifyRenderer {
         this._inversionFramebuffer.begin();
         this.p.clear();
 
-        if(this._options.invertMode) {
+        if (this._options.invertMode) {
             this.p.background(255);
         } else {
             this.p.background(0);

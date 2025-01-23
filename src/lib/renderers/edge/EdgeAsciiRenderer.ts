@@ -20,14 +20,14 @@ export const EDGE_DEFAULT_OPTIONS = {
     enabled: false,
     /** Characters used for edge representation (8 characters for different angles) */
     characters: "-/|\\-/|\\",
-    /** Color of the ASCII characters. Only used when `characterColorMode` is set to `1` */
+    /** Color of the ASCII characters. Only used when `characterColorMode` is set to `fixed` */
     characterColor: "#FFFFFF",
-    /** Character color mode (0: `sampled`, 1: `fixed`) */
-    characterColorMode: 0,
-    /** Cell background color. Only used when `characterColorMode` is set to `1` */
+    /** Character color mode */
+    characterColorMode:"sampled",
+    /** Cell background color. Only used when `characterColorMode` is set to `fixed` */
     backgroundColor: "#000000",
-    /** Background color mode (0: `sampled`, 1: `fixed`) */
-    backgroundColorMode: 1,
+    /** Background color mode */
+    backgroundColorMode: "fixed",
     /** Swap the cells ASCII character colors with it's cell background colors */
     invertMode: false,
     /** Threshold for Sobel edge detection. Responsible for edge detection sensitivity */
@@ -50,8 +50,14 @@ export class P5AsciifyEdgeRenderer extends P5AsciifyRenderer {
     private sobelFramebuffer: p5.Framebuffer;
     private sampleFramebuffer: p5.Framebuffer;
 
-    constructor(p5Instance: p5, grid: P5AsciifyGrid, fontTextureAtlas: P5AsciifyFontTextureAtlas, options: AsciiRendererOptions = EDGE_DEFAULT_OPTIONS) {
-        super(p5Instance, grid, fontTextureAtlas, options);
+    constructor(
+        p5Instance: p5,
+        grid: P5AsciifyGrid,
+        fontTextureAtlas: P5AsciifyFontTextureAtlas,
+        options: AsciiRendererOptions = EDGE_DEFAULT_OPTIONS
+    ) {
+        const mergedOptions = { ...EDGE_DEFAULT_OPTIONS, ...options };
+        super(p5Instance, grid, fontTextureAtlas, mergedOptions);
 
         this.sobelShader = this.p.createShader(vertexShader, sobelShader);
         this.sampleShader = this.p.createShader(vertexShader, generateSampleShader(16, this.grid.cellHeight, this.grid.cellWidth));

@@ -19,14 +19,14 @@ import { GradientType } from '../../gradients/types';
 export const GRADIENT_DEFAULT_OPTIONS = {
     /** Enable/disable the renderer */
     enabled: false,
-    /** Color of the ASCII characters. Only used when `characterColorMode` is set to `1` */
+    /** Color of the ASCII characters. Only used when `characterColorMode` is set to `fixed` */
     characterColor: "#FFFFFF",
-    /** Character color mode (0: `sampled`, 1: `fixed`) */
-    characterColorMode: 0,
-    /** Cell background color. Only used when `characterColorMode` is set to `1` */
+    /** Character color mode */
+    characterColorMode: "sampled",
+    /** Cell background color. Only used when `characterColorMode` is set to `fixed` */
     backgroundColor: "#000000",
-    /** Background color mode (0: `sampled`, 1: `fixed`) */
-    backgroundColorMode: 1,
+    /** Background color mode */
+    backgroundColorMode: "fixed",
     /** Swap the cells ASCII character colors with it's cell background colors */
     invertMode: false,
     /** Rotation angle of all characters in the grid in degrees */
@@ -52,7 +52,8 @@ export class P5AsciifyGradientRenderer extends P5AsciifyRenderer {
         fontTextureAtlas: P5AsciifyFontTextureAtlas,
         options: AsciiRendererOptions = GRADIENT_DEFAULT_OPTIONS
     ) {
-        super(p5Instance, grid, fontTextureAtlas, options);
+        const mergedOptions = { ...GRADIENT_DEFAULT_OPTIONS, ...options };
+        super(p5Instance, grid, fontTextureAtlas, mergedOptions);
 
         this.gradientManager = new P5AsciifyGradientManager(this.p, this.fontTextureAtlas);
 
@@ -99,6 +100,10 @@ export class P5AsciifyGradientRenderer extends P5AsciifyRenderer {
         characters: string,
         options: any = {}): P5AsciifyGradient {
         return this.gradientManager.add(gradientName, characters, brightnessStart, brightnessEnd, options);
+    }
+
+    remove(gradientInstance: P5AsciifyGradient): void {
+        this.gradientManager.remove(gradientInstance);
     }
 
     render(inputFramebuffer: p5.Framebuffer, previousAsciiRenderer: P5AsciifyRenderer): void {

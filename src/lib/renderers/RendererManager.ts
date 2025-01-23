@@ -58,6 +58,7 @@ export class P5AsciifyRendererManager {
      */
     public render(inputFramebuffer: any): void {
         let asciiOutput = inputFramebuffer;
+
         let currentRenderer = this._renderers[0].renderer;
 
         for (const renderer of this._renderers) {
@@ -107,7 +108,7 @@ export class P5AsciifyRendererManager {
         name: string,
         type: RendererType,
         options: AsciiRendererOptions
-    ): void {
+    ): P5AsciifyRenderer {
         if (typeof name !== 'string' || name.trim() === '') {
             throw new P5AsciifyError('Renderer name must be a non-empty string');
         }
@@ -119,10 +120,11 @@ export class P5AsciifyRendererManager {
             );
         }
 
-        this._renderers.push({
-            name,
-            renderer: new RendererClass(this.p, this.grid, this.fontTextureAtlas, options)
-        });
+        const renderer = new RendererClass(this.p, this.grid, this.fontTextureAtlas, options);
+
+        this._renderers.push({ name, renderer });
+
+        return renderer;
     }
 
     /**
