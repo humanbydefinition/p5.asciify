@@ -25,7 +25,7 @@
 
 | Type alias | Description |
 | ------ | ------ |
-| [OpenTypeGlyph](type-aliases/OpenTypeGlyph.md) | Extends the `opentype.js` `Glyph` class with r, g, and b properties for color. Currently doesn't actually `extend` the class, but rather defines a new interface, since there is no typing provided for the `opentype.js` library. |
+| [OpenTypeGlyph](type-aliases/OpenTypeGlyph.md) | Extends the `opentype.js` `Glyph` class with r, g, and b properties for color. Currently doesn't actually `extend` the class, but rather defines a new interface, since there is no typing provided by the `opentype.js` library. |
 
 ## Variables
 
@@ -37,5 +37,5 @@
 
 | Function | Description |
 | ------ | ------ |
-| [compareVersions](functions/compareVersions.md) | Compares two version strings. |
-| [validateNumberInRange](functions/validateNumberInRange.md) | Validates a number is within a specified range. |
+| [compareVersions](functions/compareVersions.md) | Compares two version strings like '1.8.0' and '1.11.3'. |
+| [validateNumberInRange](functions/validateNumberInRange.md) | Validates if a number is within a specified range. |

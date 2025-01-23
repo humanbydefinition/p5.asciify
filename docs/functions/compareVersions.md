@@ -8,9 +8,9 @@
 
 > **compareVersions**(`v1`, `v2`): `number`
 
-Defined in: [utils.ts:24](https://github.com/humanbydefinition/p5-asciify/blob/529a159e489b63e659b0059fde6d4e5ace5c2f9e/src/lib/utils.ts#L24)
+Defined in: [utils.ts:25](https://github.com/humanbydefinition/p5-asciify/blob/59ed5778928b6bd3b07654da74314fe6afa1ddc9/src/lib/utils.ts#L25)
 
-Compares two version strings.
+Compares two version strings like '1.8.0' and '1.11.3'.
 
 ## Parameters
 

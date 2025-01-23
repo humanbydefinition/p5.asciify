@@ -8,9 +8,9 @@
 
 > **validateNumberInRange**(`value`, `min`, `max`, `name`): `void`
 
-Defined in: [utils.ts:10](https://github.com/humanbydefinition/p5-asciify/blob/529a159e489b63e659b0059fde6d4e5ace5c2f9e/src/lib/utils.ts#L10)
+Defined in: [utils.ts:11](https://github.com/humanbydefinition/p5-asciify/blob/59ed5778928b6bd3b07654da74314fe6afa1ddc9/src/lib/utils.ts#L11)
 
-Validates a number is within a specified range.
+Validates if a number is within a specified range.
 
 ## Parameters
 
@@ -19,8 +19,12 @@ Validates a number is within a specified range.
 | `value` | `number` | The value to validate. |
 | `min` | `number` | The minimum value. |
 | `max` | `number` | The maximum value. |
-| `name` | `string` | The name of the value. (Is used in the error message if validation fails.) |
+| `name` | `string` | The name of the value. (Used in potential error message.) |
 
 ## Returns
 
 `void`
+
+## Throws
+
+[P5AsciifyError](../classes/P5AsciifyError.md) If the value is not a number or is outside the specified range.
