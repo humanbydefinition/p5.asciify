@@ -40,7 +40,7 @@ Download the latest version of `p5.asciify` from the [**GitHub releases page**](
 
 ```html
 <!-- Import p5.js before p5.asciify -->
-  <script src="https://cdn.jsdelivr.net/npm/p5@1.11.1/lib/p5.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/p5@1.11.1/lib/p5.js"></script>
 
 <!-- Import p5.asciify after p5.js -->
 <script src="path/to/library/p5.asciify.min.js"></script>
@@ -51,7 +51,7 @@ Alternatively, the library can be imported directly from a CDN like [**jsDelivr*
 
 ```html	
 <!-- Import p5.js before p5.asciify -->
-  <script src="https://cdn.jsdelivr.net/npm/p5@1.11.1/lib/p5.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/p5@1.11.1/lib/p5.js"></script>
 
 <!-- Import p5.asciify after p5.js -->
 <script src="https://cdn.jsdelivr.net/npm/p5.asciify@0.6.3/dist/p5.asciify.min.js"></script>
@@ -78,39 +78,38 @@ At this point, when imported correctly, the [`p5.js`](https://p5js.org/) canvas 
 Since v0.2.0, `p5.asciify` officially supports both global and instance mode. To use the library in instance mode, you need to load it in a specific way:
 
 ```javascript
+import p5 from 'p5';
+import { p5asciify } from 'p5.asciify';
+
 const theSketch = (sketch) => {
 
     // Pass the p5 instance to the p5asciify library before setup
     p5asciify.instance(sketch); 
 
     sketch.setup = () => {
-        sketch.createCanvas(800, 800, sketch.WEBGL);
+      sketch.createCanvas(sketch.windowWidth, sketch.windowHeight, sketch.WEBGL);
+    };
 
-        // All functions provided by p5.asciify are now available through the p5 instance
-        sketch.setAsciiOptions({ 
-            common: {
-                fontSize: 16,
-            },
-            brightness: {
-                enabled: true,
-                invertMode: true,
-            },
-            edge: {
-                enabled: true,
-                invertMode: true
-            }
-        });
+    // Setup function specific to the p5.asciify library, which is executed after the p5.js setup function
+    sketch.setupAsciify = () => {
+        // Set the font size for all ASCII renderers of the library
+        p5asciify.fontSize(finalOptions.fontSize);
+
+      p5asciify.renderers().get("brightness").update({
+        characters: " .,:;i1tfLCG08@", // ASCII characters used for rendering
+        invertMode: true, // Swap the ASCII character colors with it's cell background colors.
+      });
+
     };
 
     sketch.draw = () => {
-        sketch.push();
-        sketch.background(0);
-        sketch.fill(255);
-        sketch.rotateX(sketch.radians(sketch.frameCount * 3));
-        sketch.rotateZ(sketch.radians(sketch.frameCount));
-        sketch.directionalLight(255, 255, 255, 0, 0, -1);
-        sketch.box(800, 100, 100);
-        sketch.pop();
+      sketch.clear();
+      sketch.background(0);
+      sketch.fill(255);
+      sketch.rotateX(sketch.radians(sketch.frameCount * 3));
+      sketch.rotateZ(sketch.radians(sketch.frameCount));
+      sketch.directionalLight(255, 255, 255, 0, 0, -1);
+      sketch.box(800, 100, 100);
     };
 };
 

@@ -23,18 +23,18 @@ import { P5AsciifyError } from './AsciifyError';
  */
 export class P5Asciifier {
     /** Contains texture with all glyphs of a given font.*/
-    public asciiFontTextureAtlas!: P5AsciifyFontTextureAtlas;
+    private _fontTextureAtlas!: P5AsciifyFontTextureAtlas;
 
-    /** Contains the grid dimensions and offsets to create a perfect grid based on the canvas and font size. */
-    public grid!: P5AsciifyGrid;
+    /** Contains the grid dimensions and offsets to create a perfect grid based on the canvas and font glyph dimensions. */
+    private _grid!: P5AsciifyGrid;
 
     /** Wraps around the user's `draw()` function to capture it's output for the ascii renderers. */
-    public sketchFramebuffer!: p5.Framebuffer;
+    private _sketchFramebuffer!: p5.Framebuffer;
 
     /** Manages the available ASCII renderers and handles rendering the ASCII output to the canvas. */
-    public rendererManager!: P5AsciifyRendererManager;
+    private _rendererManager!: P5AsciifyRendererManager;
 
-    /** The p5 instance. */
+    /** The `p5.js` instance. */
     private _p!: p5;
 
     /** The font to use for the ASCII rendering. */
@@ -79,25 +79,25 @@ export class P5Asciifier {
      * Is called automatically after the user's `setup()` function has finished.
      */
     public setup(): void {
-        this.asciiFontTextureAtlas = new P5AsciifyFontTextureAtlas(
+        this._fontTextureAtlas = new P5AsciifyFontTextureAtlas(
             this._p,
             this._font,
             this._fontSize
         );
 
-        this.grid = new P5AsciifyGrid(
+        this._grid = new P5AsciifyGrid(
             this._p,
-            this.asciiFontTextureAtlas.maxGlyphDimensions.width,
-            this.asciiFontTextureAtlas.maxGlyphDimensions.height
+            this._fontTextureAtlas.maxGlyphDimensions.width,
+            this._fontTextureAtlas.maxGlyphDimensions.height
         );
 
-        this.rendererManager = new P5AsciifyRendererManager(
+        this._rendererManager = new P5AsciifyRendererManager(
             this._p,
-            this.grid,
-            this.asciiFontTextureAtlas
+            this._grid,
+            this._fontTextureAtlas
         );
 
-        this.sketchFramebuffer = this._p.createFramebuffer({
+        this._sketchFramebuffer = this._p.createFramebuffer({
             depthFormat: this._p.UNSIGNED_INT,
             textureFiltering: this._p.NEAREST
         });
@@ -111,18 +111,18 @@ export class P5Asciifier {
     public asciify(): void {
         this._p.clear();
 
-        if (this.rendererManager.renderers.length > 0) {
-            this.rendererManager.render(this.sketchFramebuffer);
+        if (this._rendererManager.renderers.length > 0) {
+            this._rendererManager.render(this._sketchFramebuffer);
 
             this._p.background(this._backgroundColor as p5.Color);
-            this._p.image(this.rendererManager.lastRenderer.outputFramebuffer, -this._p.width / 2, -this._p.height / 2);
+            this._p.image(this._rendererManager.lastRenderer.outputFramebuffer, -this._p.width / 2, -this._p.height / 2);
         } else {
-            this._p.image(this.sketchFramebuffer, -this._p.width / 2, -this._p.height / 2);
+            this._p.image(this._sketchFramebuffer, -this._p.width / 2, -this._p.height / 2);
         }
     }
 
     /**
-     * Sets the font size for the ascii renderers.
+     * Sets the font size for the ASCII renderers.
      * @param fontSize The font size to set.
      * @throws {@link P5AsciifyError} - If the font size is out of bounds.
      */
@@ -135,13 +135,13 @@ export class P5Asciifier {
         this._fontSize = fontSize;
 
         if (this._p._setupDone) {
-            this.asciiFontTextureAtlas.setFontSize(fontSize);
-            this.grid.resizeCellPixelDimensions(
-                this.asciiFontTextureAtlas.maxGlyphDimensions.width,
-                this.asciiFontTextureAtlas.maxGlyphDimensions.height
+            this._fontTextureAtlas.setFontSize(fontSize);
+            this._grid.resizeCellPixelDimensions(
+                this._fontTextureAtlas.maxGlyphDimensions.width,
+                this._fontTextureAtlas.maxGlyphDimensions.height
             );
 
-            this.rendererManager.resetRendererDimensions();
+            this._rendererManager.resetRendererDimensions();
         }
     }
 
@@ -150,7 +150,7 @@ export class P5Asciifier {
      * @returns The renderer manager.
      */
     public renderers(): P5AsciifyRendererManager {
-        return this.rendererManager;
+        return this._rendererManager;
     }
 
     /**
@@ -177,12 +177,12 @@ export class P5Asciifier {
         }
 
         if (this._p._setupDone) {
-            this.asciiFontTextureAtlas.setFontObject(font as p5.Font);
-            this.rendererManager.renderers.forEach(renderer => renderer.renderer.characters(renderer.renderer.options.characters as string));
+            this._fontTextureAtlas.setFontObject(font as p5.Font);
+            this._rendererManager.renderers.forEach(renderer => renderer.renderer.characters(renderer.renderer.options.characters as string));
 
-            this.grid.resizeCellPixelDimensions(
-                this.asciiFontTextureAtlas.maxGlyphDimensions.width,
-                this.asciiFontTextureAtlas.maxGlyphDimensions.height
+            this._grid.resizeCellPixelDimensions(
+                this._fontTextureAtlas.maxGlyphDimensions.width,
+                this._fontTextureAtlas.maxGlyphDimensions.height
             );
         }
     }
@@ -201,4 +201,7 @@ export class P5Asciifier {
 
         this._backgroundColor = color;
     }
+
+    // Getter
+    get sketchFramebuffer(): p5.Framebuffer { return this._sketchFramebuffer; }
 }
