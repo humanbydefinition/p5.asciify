@@ -27,7 +27,7 @@ I would love to see your creations using `p5.asciify`! Feel free to tag me on so
 
 ```javascript
 function setup() {
-  createCanvas(windowWidth, windowHeight, WEBGL);
+  createCanvas(800, 800, WEBGL);
 }
 ```
 
@@ -90,7 +90,7 @@ const theSketch = (sketch) => {
     p5asciify.instance(sketch); 
 
     sketch.setup = () => {
-      sketch.createCanvas(sketch.windowWidth, sketch.windowHeight, sketch.WEBGL);
+      sketch.createCanvas(800, 800, sketch.WEBGL);
     };
 
     // Setup function specific to the p5.asciify library, 
