@@ -1,7 +1,7 @@
 import p5 from 'p5';
 
 /**
- * Represents a 2D grid, where each cell has a fixed width and height.
+ * Manages the grid dimensions for the ASCII renderer.
  * 
  * Based on the current canvas dimensions, the grid is resized to fit the maximum number of cells.
  */

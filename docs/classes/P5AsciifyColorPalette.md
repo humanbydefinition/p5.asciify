@@ -6,18 +6,9 @@
 
 # Class: P5AsciifyColorPalette
 
-Defined in: [ColorPalette.ts:17](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/ColorPalette.ts#L17)
+Defined in: [ColorPalette.ts:6](https://github.com/humanbydefinition/p5-asciify/blob/42e99513382e844286f3364f6843f9187e0d7c3d/src/lib/ColorPalette.ts#L6)
 
-A 1D color palette for use with the `p5.asciify` library.
-
-The color palette is stored in a framebuffer, which is used to pass the colors to various shaders in the library.
-
-## Remarks
-
-Used in the [P5AsciifyRenderer](../namespaces/renderers/classes/P5AsciifyRenderer.md) classes to store the colors of the characters in the character set,
-which are then passed to the shaders for rendering and decoding the pixel colors to ASCII characters.
-
-Also used by the [P5AsciifyGradient](../namespaces/gradients/classes/P5AsciifyGradient.md) classes to store the colors of the gradient character sets for the same purpose.
+A 1D color palette stored in a framebuffer, which can be used to pass colors to shaders.
 
 ## Constructors
 
@@ -25,7 +16,7 @@ Also used by the [P5AsciifyGradient](../namespaces/gradients/classes/P5AsciifyGr
 
 > **new P5AsciifyColorPalette**(`p`, `_colors`): [`P5AsciifyColorPalette`](P5AsciifyColorPalette.md)
 
-Defined in: [ColorPalette.ts:27](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/ColorPalette.ts#L27)
+Defined in: [ColorPalette.ts:16](https://github.com/humanbydefinition/p5-asciify/blob/42e99513382e844286f3364f6843f9187e0d7c3d/src/lib/ColorPalette.ts#L16)
 
 Create a new color palette instance.
 
@@ -44,9 +35,9 @@ Create a new color palette instance.
 
 | Property | Modifier | Type | Description | Defined in |
 | ------ | ------ | ------ | ------ | ------ |
-| <a id="_colors-1"></a> `_colors` | `private` | \[`number`, `number`, `number`\][] | The colors to store in the palette. | [ColorPalette.ts:29](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/ColorPalette.ts#L29) |
-| <a id="framebuffer"></a> `framebuffer` | `public` | `Framebuffer` | The framebuffer used to store the color palette. | [ColorPalette.ts:20](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/ColorPalette.ts#L20) |
-| <a id="p-1"></a> `p` | `private` | `__module` | The p5 instance. | [ColorPalette.ts:28](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/ColorPalette.ts#L28) |
+| <a id="_colors-1"></a> `_colors` | `private` | \[`number`, `number`, `number`\][] | The colors to store in the palette. | [ColorPalette.ts:18](https://github.com/humanbydefinition/p5-asciify/blob/42e99513382e844286f3364f6843f9187e0d7c3d/src/lib/ColorPalette.ts#L18) |
+| <a id="framebuffer"></a> `framebuffer` | `public` | `Framebuffer` | The framebuffer used to store the color palette. | [ColorPalette.ts:9](https://github.com/humanbydefinition/p5-asciify/blob/42e99513382e844286f3364f6843f9187e0d7c3d/src/lib/ColorPalette.ts#L9) |
+| <a id="p-1"></a> `p` | `private` | `__module` | The p5 instance. | [ColorPalette.ts:17](https://github.com/humanbydefinition/p5-asciify/blob/42e99513382e844286f3364f6843f9187e0d7c3d/src/lib/ColorPalette.ts#L17) |
 
 ## Accessors
 
@@ -56,7 +47,7 @@ Create a new color palette instance.
 
 > **get** **colors**(): \[`number`, `number`, `number`\][]
 
-Defined in: [ColorPalette.ts:77](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/ColorPalette.ts#L77)
+Defined in: [ColorPalette.ts:66](https://github.com/humanbydefinition/p5-asciify/blob/42e99513382e844286f3364f6843f9187e0d7c3d/src/lib/ColorPalette.ts#L66)
 
 ##### Returns
 
@@ -68,7 +59,7 @@ Defined in: [ColorPalette.ts:77](https://github.com/humanbydefinition/p5-asciify
 
 > **setColors**(`newColors`): `void`
 
-Defined in: [ColorPalette.ts:71](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/ColorPalette.ts#L71)
+Defined in: [ColorPalette.ts:60](https://github.com/humanbydefinition/p5-asciify/blob/42e99513382e844286f3364f6843f9187e0d7c3d/src/lib/ColorPalette.ts#L60)
 
 Set the colors of the palette and update the framebuffer.
 
@@ -88,7 +79,7 @@ Set the colors of the palette and update the framebuffer.
 
 > **updateFramebuffer**(): `void`
 
-Defined in: [ColorPalette.ts:45](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/ColorPalette.ts#L45)
+Defined in: [ColorPalette.ts:34](https://github.com/humanbydefinition/p5-asciify/blob/42e99513382e844286f3364f6843f9187e0d7c3d/src/lib/ColorPalette.ts#L34)
 
 Update the framebuffer with the currently selected colors.
 

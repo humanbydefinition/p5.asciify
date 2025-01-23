@@ -6,7 +6,7 @@
 
 # Class: P5AsciifyEdgeRenderer
 
-Defined in: [renderers/edge/EdgeAsciiRenderer.ts:44](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/renderers/edge/EdgeAsciiRenderer.ts#L44)
+Defined in: [renderers/edge/EdgeAsciiRenderer.ts:44](https://github.com/humanbydefinition/p5-asciify/blob/42e99513382e844286f3364f6843f9187e0d7c3d/src/lib/renderers/edge/EdgeAsciiRenderer.ts#L44)
 
 An ASCII renderer that applies ASCII edges to the input sketch by using edge detection.
 
@@ -20,7 +20,7 @@ An ASCII renderer that applies ASCII edges to the input sketch by using edge det
 
 > **new P5AsciifyEdgeRenderer**(`p5Instance`, `grid`, `fontTextureAtlas`, `options`): [`P5AsciifyEdgeRenderer`](P5AsciifyEdgeRenderer.md)
 
-Defined in: [renderers/edge/EdgeAsciiRenderer.ts:53](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/renderers/edge/EdgeAsciiRenderer.ts#L53)
+Defined in: [renderers/edge/EdgeAsciiRenderer.ts:53](https://github.com/humanbydefinition/p5-asciify/blob/42e99513382e844286f3364f6843f9187e0d7c3d/src/lib/renderers/edge/EdgeAsciiRenderer.ts#L53)
 
 #### Parameters
 
@@ -43,24 +43,24 @@ Defined in: [renderers/edge/EdgeAsciiRenderer.ts:53](https://github.com/humanbyd
 
 | Property | Modifier | Type | Default value | Inherited from | Defined in |
 | ------ | ------ | ------ | ------ | ------ | ------ |
-| <a id="_asciicharacterframebuffer"></a> `_asciiCharacterFramebuffer` | `protected` | `Framebuffer` | `undefined` | [`P5AsciifyRenderer`](P5AsciifyRenderer.md).[`_asciiCharacterFramebuffer`](P5AsciifyRenderer.md#_asciicharacterframebuffer) | [renderers/AsciiRenderer.ts:29](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/renderers/AsciiRenderer.ts#L29) |
-| <a id="_inversionframebuffer"></a> `_inversionFramebuffer` | `protected` | `Framebuffer` | `undefined` | [`P5AsciifyRenderer`](P5AsciifyRenderer.md).[`_inversionFramebuffer`](P5AsciifyRenderer.md#_inversionframebuffer) | [renderers/AsciiRenderer.ts:30](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/renderers/AsciiRenderer.ts#L30) |
-| <a id="_options"></a> `_options` | `protected` | [`AsciiRendererOptions`](../interfaces/AsciiRendererOptions.md) | `CUSTOM_DEFAULT_OPTIONS` | [`P5AsciifyRenderer`](P5AsciifyRenderer.md).[`_options`](P5AsciifyRenderer.md#_options-1) | [renderers/AsciiRenderer.ts:38](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/renderers/AsciiRenderer.ts#L38) |
-| <a id="_outputframebuffer"></a> `_outputFramebuffer` | `protected` | `Framebuffer` | `undefined` | [`P5AsciifyRenderer`](P5AsciifyRenderer.md).[`_outputFramebuffer`](P5AsciifyRenderer.md#_outputframebuffer) | [renderers/AsciiRenderer.ts:31](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/renderers/AsciiRenderer.ts#L31) |
-| <a id="_primarycolorsampleframebuffer"></a> `_primaryColorSampleFramebuffer` | `protected` | `Framebuffer` | `undefined` | [`P5AsciifyRenderer`](P5AsciifyRenderer.md).[`_primaryColorSampleFramebuffer`](P5AsciifyRenderer.md#_primarycolorsampleframebuffer) | [renderers/AsciiRenderer.ts:27](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/renderers/AsciiRenderer.ts#L27) |
-| <a id="_secondarycolorsampleframebuffer"></a> `_secondaryColorSampleFramebuffer` | `protected` | `Framebuffer` | `undefined` | [`P5AsciifyRenderer`](P5AsciifyRenderer.md).[`_secondaryColorSampleFramebuffer`](P5AsciifyRenderer.md#_secondarycolorsampleframebuffer) | [renderers/AsciiRenderer.ts:28](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/renderers/AsciiRenderer.ts#L28) |
-| <a id="_shader"></a> `_shader` | `protected` | `Shader` | `undefined` | [`P5AsciifyRenderer`](P5AsciifyRenderer.md).[`_shader`](P5AsciifyRenderer.md#_shader) | [renderers/AsciiRenderer.ts:32](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/renderers/AsciiRenderer.ts#L32) |
-| <a id="asciicharactershader"></a> `asciiCharacterShader` | `private` | `Shader` | `undefined` | - | [renderers/edge/EdgeAsciiRenderer.ts:49](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/renderers/edge/EdgeAsciiRenderer.ts#L49) |
-| <a id="charactercolorpalette"></a> `characterColorPalette` | `public` | [`P5AsciifyColorPalette`](../../../classes/P5AsciifyColorPalette.md) | `undefined` | [`P5AsciifyRenderer`](P5AsciifyRenderer.md).[`characterColorPalette`](P5AsciifyRenderer.md#charactercolorpalette) | [renderers/AsciiRenderer.ts:26](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/renderers/AsciiRenderer.ts#L26) |
-| <a id="colorsampleshader"></a> `colorSampleShader` | `private` | `Shader` | `undefined` | - | [renderers/edge/EdgeAsciiRenderer.ts:47](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/renderers/edge/EdgeAsciiRenderer.ts#L47) |
-| <a id="fonttextureatlas-1"></a> `fontTextureAtlas` | `protected` | [`P5AsciifyFontTextureAtlas`](../../../classes/P5AsciifyFontTextureAtlas.md) | `undefined` | [`P5AsciifyRenderer`](P5AsciifyRenderer.md).[`fontTextureAtlas`](P5AsciifyRenderer.md#fonttextureatlas-1) | [renderers/AsciiRenderer.ts:37](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/renderers/AsciiRenderer.ts#L37) |
-| <a id="grid-1"></a> `grid` | `protected` | [`P5AsciifyGrid`](../../../classes/P5AsciifyGrid.md) | `undefined` | [`P5AsciifyRenderer`](P5AsciifyRenderer.md).[`grid`](P5AsciifyRenderer.md#grid-1) | [renderers/AsciiRenderer.ts:36](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/renderers/AsciiRenderer.ts#L36) |
-| <a id="inversionshader"></a> `inversionShader` | `private` | `Shader` | `undefined` | - | [renderers/edge/EdgeAsciiRenderer.ts:48](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/renderers/edge/EdgeAsciiRenderer.ts#L48) |
-| <a id="p"></a> `p` | `protected` | `__module` | `undefined` | [`P5AsciifyRenderer`](P5AsciifyRenderer.md).[`p`](P5AsciifyRenderer.md#p-1) | [renderers/AsciiRenderer.ts:35](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/renderers/AsciiRenderer.ts#L35) |
-| <a id="sampleframebuffer"></a> `sampleFramebuffer` | `private` | `Framebuffer` | `undefined` | - | [renderers/edge/EdgeAsciiRenderer.ts:51](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/renderers/edge/EdgeAsciiRenderer.ts#L51) |
-| <a id="sampleshader"></a> `sampleShader` | `private` | `Shader` | `undefined` | - | [renderers/edge/EdgeAsciiRenderer.ts:46](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/renderers/edge/EdgeAsciiRenderer.ts#L46) |
-| <a id="sobelframebuffer"></a> `sobelFramebuffer` | `private` | `Framebuffer` | `undefined` | - | [renderers/edge/EdgeAsciiRenderer.ts:50](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/renderers/edge/EdgeAsciiRenderer.ts#L50) |
-| <a id="sobelshader"></a> `sobelShader` | `private` | `Shader` | `undefined` | - | [renderers/edge/EdgeAsciiRenderer.ts:45](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/renderers/edge/EdgeAsciiRenderer.ts#L45) |
+| <a id="_asciicharacterframebuffer"></a> `_asciiCharacterFramebuffer` | `protected` | `Framebuffer` | `undefined` | [`P5AsciifyRenderer`](P5AsciifyRenderer.md).[`_asciiCharacterFramebuffer`](P5AsciifyRenderer.md#_asciicharacterframebuffer) | [renderers/AsciiRenderer.ts:29](https://github.com/humanbydefinition/p5-asciify/blob/42e99513382e844286f3364f6843f9187e0d7c3d/src/lib/renderers/AsciiRenderer.ts#L29) |
+| <a id="_inversionframebuffer"></a> `_inversionFramebuffer` | `protected` | `Framebuffer` | `undefined` | [`P5AsciifyRenderer`](P5AsciifyRenderer.md).[`_inversionFramebuffer`](P5AsciifyRenderer.md#_inversionframebuffer) | [renderers/AsciiRenderer.ts:30](https://github.com/humanbydefinition/p5-asciify/blob/42e99513382e844286f3364f6843f9187e0d7c3d/src/lib/renderers/AsciiRenderer.ts#L30) |
+| <a id="_options"></a> `_options` | `protected` | [`AsciiRendererOptions`](../interfaces/AsciiRendererOptions.md) | `CUSTOM_DEFAULT_OPTIONS` | [`P5AsciifyRenderer`](P5AsciifyRenderer.md).[`_options`](P5AsciifyRenderer.md#_options-1) | [renderers/AsciiRenderer.ts:38](https://github.com/humanbydefinition/p5-asciify/blob/42e99513382e844286f3364f6843f9187e0d7c3d/src/lib/renderers/AsciiRenderer.ts#L38) |
+| <a id="_outputframebuffer"></a> `_outputFramebuffer` | `protected` | `Framebuffer` | `undefined` | [`P5AsciifyRenderer`](P5AsciifyRenderer.md).[`_outputFramebuffer`](P5AsciifyRenderer.md#_outputframebuffer) | [renderers/AsciiRenderer.ts:31](https://github.com/humanbydefinition/p5-asciify/blob/42e99513382e844286f3364f6843f9187e0d7c3d/src/lib/renderers/AsciiRenderer.ts#L31) |
+| <a id="_primarycolorsampleframebuffer"></a> `_primaryColorSampleFramebuffer` | `protected` | `Framebuffer` | `undefined` | [`P5AsciifyRenderer`](P5AsciifyRenderer.md).[`_primaryColorSampleFramebuffer`](P5AsciifyRenderer.md#_primarycolorsampleframebuffer) | [renderers/AsciiRenderer.ts:27](https://github.com/humanbydefinition/p5-asciify/blob/42e99513382e844286f3364f6843f9187e0d7c3d/src/lib/renderers/AsciiRenderer.ts#L27) |
+| <a id="_secondarycolorsampleframebuffer"></a> `_secondaryColorSampleFramebuffer` | `protected` | `Framebuffer` | `undefined` | [`P5AsciifyRenderer`](P5AsciifyRenderer.md).[`_secondaryColorSampleFramebuffer`](P5AsciifyRenderer.md#_secondarycolorsampleframebuffer) | [renderers/AsciiRenderer.ts:28](https://github.com/humanbydefinition/p5-asciify/blob/42e99513382e844286f3364f6843f9187e0d7c3d/src/lib/renderers/AsciiRenderer.ts#L28) |
+| <a id="_shader"></a> `_shader` | `protected` | `Shader` | `undefined` | [`P5AsciifyRenderer`](P5AsciifyRenderer.md).[`_shader`](P5AsciifyRenderer.md#_shader) | [renderers/AsciiRenderer.ts:32](https://github.com/humanbydefinition/p5-asciify/blob/42e99513382e844286f3364f6843f9187e0d7c3d/src/lib/renderers/AsciiRenderer.ts#L32) |
+| <a id="asciicharactershader"></a> `asciiCharacterShader` | `private` | `Shader` | `undefined` | - | [renderers/edge/EdgeAsciiRenderer.ts:49](https://github.com/humanbydefinition/p5-asciify/blob/42e99513382e844286f3364f6843f9187e0d7c3d/src/lib/renderers/edge/EdgeAsciiRenderer.ts#L49) |
+| <a id="charactercolorpalette"></a> `characterColorPalette` | `public` | [`P5AsciifyColorPalette`](../../../classes/P5AsciifyColorPalette.md) | `undefined` | [`P5AsciifyRenderer`](P5AsciifyRenderer.md).[`characterColorPalette`](P5AsciifyRenderer.md#charactercolorpalette) | [renderers/AsciiRenderer.ts:26](https://github.com/humanbydefinition/p5-asciify/blob/42e99513382e844286f3364f6843f9187e0d7c3d/src/lib/renderers/AsciiRenderer.ts#L26) |
+| <a id="colorsampleshader"></a> `colorSampleShader` | `private` | `Shader` | `undefined` | - | [renderers/edge/EdgeAsciiRenderer.ts:47](https://github.com/humanbydefinition/p5-asciify/blob/42e99513382e844286f3364f6843f9187e0d7c3d/src/lib/renderers/edge/EdgeAsciiRenderer.ts#L47) |
+| <a id="fonttextureatlas-1"></a> `fontTextureAtlas` | `protected` | [`P5AsciifyFontTextureAtlas`](../../../classes/P5AsciifyFontTextureAtlas.md) | `undefined` | [`P5AsciifyRenderer`](P5AsciifyRenderer.md).[`fontTextureAtlas`](P5AsciifyRenderer.md#fonttextureatlas-1) | [renderers/AsciiRenderer.ts:37](https://github.com/humanbydefinition/p5-asciify/blob/42e99513382e844286f3364f6843f9187e0d7c3d/src/lib/renderers/AsciiRenderer.ts#L37) |
+| <a id="grid-1"></a> `grid` | `protected` | [`P5AsciifyGrid`](../../../classes/P5AsciifyGrid.md) | `undefined` | [`P5AsciifyRenderer`](P5AsciifyRenderer.md).[`grid`](P5AsciifyRenderer.md#grid-1) | [renderers/AsciiRenderer.ts:36](https://github.com/humanbydefinition/p5-asciify/blob/42e99513382e844286f3364f6843f9187e0d7c3d/src/lib/renderers/AsciiRenderer.ts#L36) |
+| <a id="inversionshader"></a> `inversionShader` | `private` | `Shader` | `undefined` | - | [renderers/edge/EdgeAsciiRenderer.ts:48](https://github.com/humanbydefinition/p5-asciify/blob/42e99513382e844286f3364f6843f9187e0d7c3d/src/lib/renderers/edge/EdgeAsciiRenderer.ts#L48) |
+| <a id="p"></a> `p` | `protected` | `__module` | `undefined` | [`P5AsciifyRenderer`](P5AsciifyRenderer.md).[`p`](P5AsciifyRenderer.md#p-1) | [renderers/AsciiRenderer.ts:35](https://github.com/humanbydefinition/p5-asciify/blob/42e99513382e844286f3364f6843f9187e0d7c3d/src/lib/renderers/AsciiRenderer.ts#L35) |
+| <a id="sampleframebuffer"></a> `sampleFramebuffer` | `private` | `Framebuffer` | `undefined` | - | [renderers/edge/EdgeAsciiRenderer.ts:51](https://github.com/humanbydefinition/p5-asciify/blob/42e99513382e844286f3364f6843f9187e0d7c3d/src/lib/renderers/edge/EdgeAsciiRenderer.ts#L51) |
+| <a id="sampleshader"></a> `sampleShader` | `private` | `Shader` | `undefined` | - | [renderers/edge/EdgeAsciiRenderer.ts:46](https://github.com/humanbydefinition/p5-asciify/blob/42e99513382e844286f3364f6843f9187e0d7c3d/src/lib/renderers/edge/EdgeAsciiRenderer.ts#L46) |
+| <a id="sobelframebuffer"></a> `sobelFramebuffer` | `private` | `Framebuffer` | `undefined` | - | [renderers/edge/EdgeAsciiRenderer.ts:50](https://github.com/humanbydefinition/p5-asciify/blob/42e99513382e844286f3364f6843f9187e0d7c3d/src/lib/renderers/edge/EdgeAsciiRenderer.ts#L50) |
+| <a id="sobelshader"></a> `sobelShader` | `private` | `Shader` | `undefined` | - | [renderers/edge/EdgeAsciiRenderer.ts:45](https://github.com/humanbydefinition/p5-asciify/blob/42e99513382e844286f3364f6843f9187e0d7c3d/src/lib/renderers/edge/EdgeAsciiRenderer.ts#L45) |
 
 ## Accessors
 
@@ -70,7 +70,7 @@ Defined in: [renderers/edge/EdgeAsciiRenderer.ts:53](https://github.com/humanbyd
 
 > **get** **asciiCharacterFramebuffer**(): `Framebuffer`
 
-Defined in: [renderers/AsciiRenderer.ts:322](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/renderers/AsciiRenderer.ts#L322)
+Defined in: [renderers/AsciiRenderer.ts:322](https://github.com/humanbydefinition/p5-asciify/blob/42e99513382e844286f3364f6843f9187e0d7c3d/src/lib/renderers/AsciiRenderer.ts#L322)
 
 ##### Returns
 
@@ -88,7 +88,7 @@ Defined in: [renderers/AsciiRenderer.ts:322](https://github.com/humanbydefinitio
 
 > **get** **inversionFramebuffer**(): `Framebuffer`
 
-Defined in: [renderers/AsciiRenderer.ts:321](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/renderers/AsciiRenderer.ts#L321)
+Defined in: [renderers/AsciiRenderer.ts:321](https://github.com/humanbydefinition/p5-asciify/blob/42e99513382e844286f3364f6843f9187e0d7c3d/src/lib/renderers/AsciiRenderer.ts#L321)
 
 ##### Returns
 
@@ -106,7 +106,7 @@ Defined in: [renderers/AsciiRenderer.ts:321](https://github.com/humanbydefinitio
 
 > **get** **options**(): [`AsciiRendererOptions`](../interfaces/AsciiRendererOptions.md)
 
-Defined in: [renderers/AsciiRenderer.ts:318](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/renderers/AsciiRenderer.ts#L318)
+Defined in: [renderers/AsciiRenderer.ts:318](https://github.com/humanbydefinition/p5-asciify/blob/42e99513382e844286f3364f6843f9187e0d7c3d/src/lib/renderers/AsciiRenderer.ts#L318)
 
 ##### Returns
 
@@ -124,7 +124,7 @@ Defined in: [renderers/AsciiRenderer.ts:318](https://github.com/humanbydefinitio
 
 > **get** **outputFramebuffer**(): `Framebuffer`
 
-Defined in: [renderers/AsciiRenderer.ts:317](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/renderers/AsciiRenderer.ts#L317)
+Defined in: [renderers/AsciiRenderer.ts:317](https://github.com/humanbydefinition/p5-asciify/blob/42e99513382e844286f3364f6843f9187e0d7c3d/src/lib/renderers/AsciiRenderer.ts#L317)
 
 ##### Returns
 
@@ -142,7 +142,7 @@ Defined in: [renderers/AsciiRenderer.ts:317](https://github.com/humanbydefinitio
 
 > **get** **primaryColorSampleFramebuffer**(): `Framebuffer`
 
-Defined in: [renderers/AsciiRenderer.ts:319](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/renderers/AsciiRenderer.ts#L319)
+Defined in: [renderers/AsciiRenderer.ts:319](https://github.com/humanbydefinition/p5-asciify/blob/42e99513382e844286f3364f6843f9187e0d7c3d/src/lib/renderers/AsciiRenderer.ts#L319)
 
 ##### Returns
 
@@ -160,7 +160,7 @@ Defined in: [renderers/AsciiRenderer.ts:319](https://github.com/humanbydefinitio
 
 > **get** **secondaryColorSampleFramebuffer**(): `Framebuffer`
 
-Defined in: [renderers/AsciiRenderer.ts:320](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/renderers/AsciiRenderer.ts#L320)
+Defined in: [renderers/AsciiRenderer.ts:320](https://github.com/humanbydefinition/p5-asciify/blob/42e99513382e844286f3364f6843f9187e0d7c3d/src/lib/renderers/AsciiRenderer.ts#L320)
 
 ##### Returns
 
@@ -176,7 +176,7 @@ Defined in: [renderers/AsciiRenderer.ts:320](https://github.com/humanbydefinitio
 
 > **backgroundColor**(`color`): `void`
 
-Defined in: [renderers/AsciiRenderer.ts:239](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/renderers/AsciiRenderer.ts#L239)
+Defined in: [renderers/AsciiRenderer.ts:239](https://github.com/humanbydefinition/p5-asciify/blob/42e99513382e844286f3364f6843f9187e0d7c3d/src/lib/renderers/AsciiRenderer.ts#L239)
 
 Set the background color of the ASCII characters, used in the fixed color mode.
 
@@ -200,7 +200,7 @@ Set the background color of the ASCII characters, used in the fixed color mode.
 
 > **backgroundColorMode**(`mode`): `void`
 
-Defined in: [renderers/AsciiRenderer.ts:273](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/renderers/AsciiRenderer.ts#L273)
+Defined in: [renderers/AsciiRenderer.ts:273](https://github.com/humanbydefinition/p5-asciify/blob/42e99513382e844286f3364f6843f9187e0d7c3d/src/lib/renderers/AsciiRenderer.ts#L273)
 
 Sets the color mode for the grid cell background.
 
@@ -228,7 +228,7 @@ If mode is not a string or not one of the allowed values ('sampled' or 'fixed')
 
 > **characterColor**(`color`): `void`
 
-Defined in: [renderers/AsciiRenderer.ts:227](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/renderers/AsciiRenderer.ts#L227)
+Defined in: [renderers/AsciiRenderer.ts:227](https://github.com/humanbydefinition/p5-asciify/blob/42e99513382e844286f3364f6843f9187e0d7c3d/src/lib/renderers/AsciiRenderer.ts#L227)
 
 Set the color of the ASCII characters, used in the fixed color mode.
 
@@ -256,7 +256,7 @@ If color is not a p5.Color object.
 
 > **characterColorMode**(`mode`): `void`
 
-Defined in: [renderers/AsciiRenderer.ts:252](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/renderers/AsciiRenderer.ts#L252)
+Defined in: [renderers/AsciiRenderer.ts:252](https://github.com/humanbydefinition/p5-asciify/blob/42e99513382e844286f3364f6843f9187e0d7c3d/src/lib/renderers/AsciiRenderer.ts#L252)
 
 Sets the color mode for ASCII characters.
 
@@ -284,7 +284,7 @@ If mode is not a string or not one of the allowed values ('sampled' or 'fixed')
 
 > **characters**(`characters`): `void`
 
-Defined in: [renderers/AsciiRenderer.ts:179](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/renderers/AsciiRenderer.ts#L179)
+Defined in: [renderers/AsciiRenderer.ts:179](https://github.com/humanbydefinition/p5-asciify/blob/42e99513382e844286f3364f6843f9187e0d7c3d/src/lib/renderers/AsciiRenderer.ts#L179)
 
 Set the characters for the character set.
 
@@ -312,7 +312,7 @@ If characters is not a string.
 
 > **disable**(): `void`
 
-Defined in: [renderers/AsciiRenderer.ts:312](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/renderers/AsciiRenderer.ts#L312)
+Defined in: [renderers/AsciiRenderer.ts:312](https://github.com/humanbydefinition/p5-asciify/blob/42e99513382e844286f3364f6843f9187e0d7c3d/src/lib/renderers/AsciiRenderer.ts#L312)
 
 Disable the renderer.
 
@@ -330,7 +330,7 @@ Disable the renderer.
 
 > **enable**(): `void`
 
-Defined in: [renderers/AsciiRenderer.ts:305](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/renderers/AsciiRenderer.ts#L305)
+Defined in: [renderers/AsciiRenderer.ts:305](https://github.com/humanbydefinition/p5-asciify/blob/42e99513382e844286f3364f6843f9187e0d7c3d/src/lib/renderers/AsciiRenderer.ts#L305)
 
 Enable the renderer.
 
@@ -348,7 +348,7 @@ Enable the renderer.
 
 > **enabled**(`enabled`): `void`
 
-Defined in: [renderers/AsciiRenderer.ts:294](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/renderers/AsciiRenderer.ts#L294)
+Defined in: [renderers/AsciiRenderer.ts:294](https://github.com/humanbydefinition/p5-asciify/blob/42e99513382e844286f3364f6843f9187e0d7c3d/src/lib/renderers/AsciiRenderer.ts#L294)
 
 Enable or disable the renderer.
 
@@ -376,7 +376,7 @@ If enabled is not a boolean.
 
 > **invert**(`invert`): `void`
 
-Defined in: [renderers/AsciiRenderer.ts:197](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/renderers/AsciiRenderer.ts#L197)
+Defined in: [renderers/AsciiRenderer.ts:197](https://github.com/humanbydefinition/p5-asciify/blob/42e99513382e844286f3364f6843f9187e0d7c3d/src/lib/renderers/AsciiRenderer.ts#L197)
 
 Invert the colors of the ASCII character and cell background colors.
 
@@ -404,7 +404,7 @@ If invert is not a boolean.
 
 > **render**(`inputFramebuffer`, `previousAsciiRenderer`): `void`
 
-Defined in: [renderers/edge/EdgeAsciiRenderer.ts:136](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/renderers/edge/EdgeAsciiRenderer.ts#L136)
+Defined in: [renderers/edge/EdgeAsciiRenderer.ts:136](https://github.com/humanbydefinition/p5-asciify/blob/42e99513382e844286f3364f6843f9187e0d7c3d/src/lib/renderers/edge/EdgeAsciiRenderer.ts#L136)
 
 Convert and render the input framebuffer to ASCII.
 
@@ -429,7 +429,7 @@ Convert and render the input framebuffer to ASCII.
 
 > **resetShaders**(): `void`
 
-Defined in: [renderers/edge/EdgeAsciiRenderer.ts:86](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/renderers/edge/EdgeAsciiRenderer.ts#L86)
+Defined in: [renderers/edge/EdgeAsciiRenderer.ts:86](https://github.com/humanbydefinition/p5-asciify/blob/42e99513382e844286f3364f6843f9187e0d7c3d/src/lib/renderers/edge/EdgeAsciiRenderer.ts#L86)
 
 Resets the shaders for the renderer.
 
@@ -447,7 +447,7 @@ Resets the shaders for the renderer.
 
 > **resizeFramebuffers**(): `void`
 
-Defined in: [renderers/edge/EdgeAsciiRenderer.ts:81](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/renderers/edge/EdgeAsciiRenderer.ts#L81)
+Defined in: [renderers/edge/EdgeAsciiRenderer.ts:81](https://github.com/humanbydefinition/p5-asciify/blob/42e99513382e844286f3364f6843f9187e0d7c3d/src/lib/renderers/edge/EdgeAsciiRenderer.ts#L81)
 
 Resizes all framebuffers based on the grid dimensions.
 
@@ -465,7 +465,7 @@ Resizes all framebuffers based on the grid dimensions.
 
 > **rotation**(`angle`): `void`
 
-Defined in: [renderers/AsciiRenderer.ts:214](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/renderers/AsciiRenderer.ts#L214)
+Defined in: [renderers/AsciiRenderer.ts:214](https://github.com/humanbydefinition/p5-asciify/blob/42e99513382e844286f3364f6843f9187e0d7c3d/src/lib/renderers/AsciiRenderer.ts#L214)
 
 Define the rotation angle of all characters in the grid in degrees.
 
@@ -497,7 +497,7 @@ If angle is not a number.
 
 > **sampleThreshold**(`value`): `void`
 
-Defined in: [renderers/edge/EdgeAsciiRenderer.ts:112](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/renderers/edge/EdgeAsciiRenderer.ts#L112)
+Defined in: [renderers/edge/EdgeAsciiRenderer.ts:112](https://github.com/humanbydefinition/p5-asciify/blob/42e99513382e844286f3364f6843f9187e0d7c3d/src/lib/renderers/edge/EdgeAsciiRenderer.ts#L112)
 
 Set the sample threshold value for the edge detection algorithm.
 
@@ -521,7 +521,7 @@ If the value is not a valid number greater than or equal to 0.
 
 > **sobelThreshold**(`value`): `void`
 
-Defined in: [renderers/edge/EdgeAsciiRenderer.ts:95](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/renderers/edge/EdgeAsciiRenderer.ts#L95)
+Defined in: [renderers/edge/EdgeAsciiRenderer.ts:95](https://github.com/humanbydefinition/p5-asciify/blob/42e99513382e844286f3364f6843f9187e0d7c3d/src/lib/renderers/edge/EdgeAsciiRenderer.ts#L95)
 
 Set the threshold value for the Sobel edge detection algorithm.
 
@@ -545,7 +545,7 @@ If the value is not a valid number between 0 and 1.
 
 > **update**(`newOptions`): `void`
 
-Defined in: [renderers/edge/EdgeAsciiRenderer.ts:124](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/renderers/edge/EdgeAsciiRenderer.ts#L124)
+Defined in: [renderers/edge/EdgeAsciiRenderer.ts:124](https://github.com/humanbydefinition/p5-asciify/blob/42e99513382e844286f3364f6843f9187e0d7c3d/src/lib/renderers/edge/EdgeAsciiRenderer.ts#L124)
 
 Updates renderer options.
 

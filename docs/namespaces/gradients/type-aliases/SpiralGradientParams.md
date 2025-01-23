@@ -8,14 +8,14 @@
 
 > **SpiralGradientParams**: `object`
 
-Defined in: [gradients/types.ts:39](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/gradients/types.ts#L39)
+Defined in: [gradients/types.ts:39](https://github.com/humanbydefinition/p5-asciify/blob/42e99513382e844286f3364f6843f9187e0d7c3d/src/lib/gradients/types.ts#L39)
 
 ## Type declaration
 
 | Name | Type | Defined in |
 | ------ | ------ | ------ |
-| <a id="centerx"></a> `centerX` | `number` | [gradients/types.ts:41](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/gradients/types.ts#L41) |
-| <a id="centery"></a> `centerY` | `number` | [gradients/types.ts:42](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/gradients/types.ts#L42) |
-| <a id="density"></a> `density` | `number` | [gradients/types.ts:44](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/gradients/types.ts#L44) |
-| <a id="direction"></a> `direction` | `number` | [gradients/types.ts:40](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/gradients/types.ts#L40) |
-| <a id="speed"></a> `speed` | `number` | [gradients/types.ts:43](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/gradients/types.ts#L43) |
+| <a id="centerx"></a> `centerX` | `number` | [gradients/types.ts:41](https://github.com/humanbydefinition/p5-asciify/blob/42e99513382e844286f3364f6843f9187e0d7c3d/src/lib/gradients/types.ts#L41) |
+| <a id="centery"></a> `centerY` | `number` | [gradients/types.ts:42](https://github.com/humanbydefinition/p5-asciify/blob/42e99513382e844286f3364f6843f9187e0d7c3d/src/lib/gradients/types.ts#L42) |
+| <a id="density"></a> `density` | `number` | [gradients/types.ts:44](https://github.com/humanbydefinition/p5-asciify/blob/42e99513382e844286f3364f6843f9187e0d7c3d/src/lib/gradients/types.ts#L44) |
+| <a id="direction"></a> `direction` | `number` | [gradients/types.ts:40](https://github.com/humanbydefinition/p5-asciify/blob/42e99513382e844286f3364f6843f9187e0d7c3d/src/lib/gradients/types.ts#L40) |
+| <a id="speed"></a> `speed` | `number` | [gradients/types.ts:43](https://github.com/humanbydefinition/p5-asciify/blob/42e99513382e844286f3364f6843f9187e0d7c3d/src/lib/gradients/types.ts#L43) |

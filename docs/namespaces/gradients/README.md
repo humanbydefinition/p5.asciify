@@ -6,7 +6,7 @@
 
 # gradients
 
-Contains functionality relevant to the ASCII gradients, which are used exclusively by the P5AsciifyGradientRenderer.
+Contains functionality relevant to the ASCII gradients, which are used exclusively by the [P5AsciifyGradientRenderer](../renderers/classes/P5AsciifyGradientRenderer.md).
 
 ## Classes
 

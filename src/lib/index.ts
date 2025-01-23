@@ -3,6 +3,7 @@ import { P5Asciifier } from './Asciifier';
 import URSAFONT_BASE64 from './assets/fonts/ursafont_base64.txt?raw';
 import { P5AsciifyError } from './AsciifyError';
 import { compareVersions } from './utils';
+import { P5AsciifyGradientRenderer } from './renderers/gradient/GradientAsciiRenderer';
 
 /**
  * The main instance of the p5.asciify library, which is used to access all of the library's functionality.

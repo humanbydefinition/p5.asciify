@@ -1,18 +1,7 @@
 import p5 from 'p5';
 
-import { P5AsciifyRenderer } from './renderers/AsciiRenderer';
-import { P5AsciifyGradient } from './gradients/Gradient';
-
 /**
- * A 1D color palette for use with the `p5.asciify` library.
- * 
- * The color palette is stored in a framebuffer, which is used to pass the colors to various shaders in the library.
- * 
- * @remarks
- * Used in the {@link P5AsciifyRenderer} classes to store the colors of the characters in the character set,
- * which are then passed to the shaders for rendering and decoding the pixel colors to ASCII characters.
- * 
- * Also used by the {@link P5AsciifyGradient} classes to store the colors of the gradient character sets for the same purpose.
+ * A 1D color palette stored in a framebuffer, which can be used to pass colors to shaders.
  */
 export class P5AsciifyColorPalette {
 
