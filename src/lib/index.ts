@@ -19,7 +19,6 @@ if (typeof window !== 'undefined') {
 /**
  * Add `setupAsciify` function to p5 instance, which can be overridden by the user.
  * This function is called after the p5.asciify setup has been completed.
- * @see p5.setupAsciify
  */
 p5.prototype.setupAsciify = function (): void { };
 
@@ -90,7 +89,6 @@ export { P5AsciifyError } from './AsciifyError';
 export { P5AsciifyColorPalette } from './ColorPalette';
 export { P5AsciifyFontTextureAtlas } from './FontTextureAtlas';
 export { P5AsciifyGrid } from './Grid';
-export * from './utils';
 export * from './types';
 
 

@@ -32,10 +32,3 @@
 | Variable | Description |
 | ------ | ------ |
 | [p5asciify](variables/p5asciify.md) | The main instance of the p5.asciify library, which is used to access all of the library's functionality. |
-
-## Functions
-
-| Function | Description |
-| ------ | ------ |
-| [compareVersions](functions/compareVersions.md) | Compares two version strings like `'1.8.0'` and `'1.11.3'`. |
-| [validateNumberInRange](functions/validateNumberInRange.md) | Validates if a number is within a specified range. |
