@@ -1,5 +1,3 @@
-Similar to [`p5.js`](https://p5js.org/), `p5.asciify` provides global functions that can be used within the sketches `preload()`, `setup()`, and `draw()` functions to customize the ASCII conversion and apply various effects during setup or runtime.
-
 > [!NOTE]
 > All examples given here use p5.js global mode, but can be applied to instance mode as well. 
 >
@@ -7,11 +5,29 @@ Similar to [`p5.js`](https://p5js.org/), `p5.asciify` provides global functions 
 
 <hr/>
 
-### `loadAsciiFont()`
+## `setupAsciify()`
 
-`loadAsciiFont(fontPath): void`
+Similar to the `setup()` function in `p5.js`, the `setupAsciify()` function is specific to the `p5.asciify` library, and is executed automatically after the setup of `p5.asciify` is finished. This function is used to modify the default ASCII rendering pipeline and it's renderers, or to create an entirely custom pipeline. All settings and modifications made here can also be changed during runtime throughout the `draw()` loop.
 
-Loads a custom font for the ASCII conversion. The font can be either a [`p5.Font`](https://p5js.org/reference/#/p5.Font) object or a path to a font file.
+## `drawAsciify()`
+
+Similar to the `draw()` function in `p5.js`, the `drawAsciify()` function is specific to the `p5.asciify` library, and is executed automatically after ASCII conversion has been applied to the canvas. This function can be used to apply additional post-processing steps on top of the ASCII conversion, like applying a CRT filter.
+
+## The `p5asciify` object
+
+The globally accessible `p5asciify` object of type `P5Asciifier` is the main interface for interacting with the `p5.asciify` library, providing all the necessary functions to customize the ASCII conversion of the `WebGL` canvas.
+
+### `.fontSize(fontSize: number): void`
+
+Sets the size of the font used throughout the whole ASCII rendering pipeline. Allowed values range from `1` *L(° O °L)* to `128`. Font sizes that are a power of 2, such as 2, 4, 8, 16, 32, 64, etc., tend to work best.
+
+This function can be called at any time, also in `preload()` or `setup()`.
+
+### `.loadFont(font: string | p5.Font): void`
+
+Loads a custom font for the ASCII conversion, which is used throughout the whole ASCII rendering pipeline. The font can be either a `p5.Font` object, a path to a font file, or a `base64` encoded font string. Allowed formats are `.ttf` and `.otf`.
+
+This function can be called at any time, also in `preload()` or `setup()`.
 
 > [!TIP]
 > For a list of free and awesome textmode/pixel fonts that have been tested to work well with `p5.asciify`, check out the `Resources` section.
@@ -19,214 +35,40 @@ Loads a custom font for the ASCII conversion. The font can be either a [`p5.Font
 > [!NOTE]
 > You can use any font you prefer, but be aware that not all fonts are fully compatible with `p5.asciify`. Some fonts may cause poor ASCII conversion due to overlapping characters in the generated texture that contains all the selected characters.
 
-#### Parameters
-- **fontPath**: `string` - A path to a font file.
+### `.background(color: string | p5.Color | number[]): void`
 
-#### Usage Context
+Sets the background color of the potentially empty space, which is not covered by the centered grid of ASCII characters, which attempts to fill the whole canvas. The parameter accepts any type you would usually pass to the `background()` function in `p5.js`.
 
-| Function  | Usable? |
-|-----------|-----------|
-| `preload()` | ✓       |
-| `setup()`   | ✓       |
-| `draw()`    | ✓       |
+This function can be called at any time, also in `preload()` or `setup()`.
 
-#### Example
+### `.renderers(): P5AsciifyRendererManager`
 
-```javascript
-function preload() {
-  loadAsciiFont('path/to/awesome/font.ttf');
-}
+Returns the classes `P5AsciifyRendererManager` object, which provides access to all renderers in the ASCII rendering pipeline and allows modification of the pipeline through adding, swapping, or removing renderers.
 
-function setup() {
-  createCanvas(800, 800, WEBGL);
-}
+**This function should only be called either within `setupAsciify()` or after the setup is complete during runtime.**
 
-function draw() {
-  background(0);
-  noStroke();
-  rotateX(radians(frameCount * 3));
-  rotateY(radians(frameCount));
-  directionalLight(255, 255, 255, 0, 0, -1);
-  torus(200, 50);
-}
-```
-[`run inside the p5.js web editor`](https://editor.p5js.org/humanbydefinition/sketches/bic5vh15-)
+## The `P5AsciifyRendererManager` object
 
-<hr/>
+Provided through the `renderers()` function of the `p5asciify` object, the `P5AsciifyRendererManager` object is the main interface for interacting with the ASCII rendering pipeline.
 
-### `setAsciiOptions()`
+By default, without any modifications, the ASCII rendering pipeline consists of the following predefined renderers in the given order:
+- `{ name: "brightness", renderer: P5AsciifyBrightnessRenderer }`
+- `{ name: "accurate", renderer: P5AsciifyAccurateRenderer }`
+- `{ name: "gradient", renderer: P5AsciifyGradientRenderer }`
+- `{ name: "edge", renderer: P5AsciifyEdgeRenderer }`
+- `{ name: "custom", renderer: P5AsciifyRenderer }`
 
-`setAsciiOptions(options): void`
+The default configurations for each of those predefined renderers can be found here: TODO
 
-Sets the global options for the ASCII conversion.
+### `.add(name: string, type: RendererType, options: AsciiRendererOptions): P5AsciifyRenderer`
 
-#### Parameters
+Adds an additional renderer of a given type to the end of the ASCII rendering pipeline. The `name` parameter is used to identify the renderer via the manager's `get()` function, if the returning instance is not stored in a variable. It's highly recommended to store the returned renderer instance in a variable for later access and modification though.
 
-- **options**: `Object` - An object containing the global options for the ASCII conversion. The object can contain the following properties:
+### `.get(name: string): P5AsciifyRenderer`
 
-  - **`common`**: `Object` - Shared settings for all layers of the ASCII conversion.
-  - **`ascii`**: `Object` - Settings for the brightness/accurate-based ASCII conversion.
-  - **`gradient`**: `Object` - Settings for the gradient/pattern-based ASCII conversion.
-  - **`edge`**: `Object` - Settings for the edge-based ASCII conversion.
-  - **`text`**: `Object` - Settings for the text-based ASCII conversion.
-
-#### Usage Context
-
-| Function  | Usable? |
-|-----------|-----------|
-| `preload()` | ✓       |
-| `setup()`   | ✓       |
-| `draw()`    | ✓       |
-
-
-#### **`common` options**
-Shared settings for both edge- and brightness-based ASCII conversion.
-
-| Option                | Type    | Default | Description                                                                                                                                                                                                 |
-|-----------------------|---------|----------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `fontSize`            | `number`  | `16`       | The size of the font used for the ASCII conversion. Allowed values range from `1` *L(° O °L)* to `128`. It is recommended to use a font size that is a power of 2, such as 2, 4, 8, 16, 32, 64, etc. |
-| `gridDimensions`            | `list`  | `[0, 0]`       | The number of grid cells used for the ASCII conversion. The default value `[0, 0]` will automatically calculate the grid dimensions based on the canvas size and the font size. |
-
-#### **`ascii` options**
-| Option                | Type    | Default  | Description                                                                                                                                                                                                 |
-|-----------------------|---------|----------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `renderMode`          | `string`  | `brightness`        | The method used for the ASCII conversion. Allowed values are `brightness` and `accurate`. <br/> - `brightness`: The brightness-based conversion uses the brightness of the pixels to determine the ASCII character. <br/> - `accurate`: The accurate ASCII conversion attempts to recreate the image as accurately as possible using the given set of characters. <br/> - `custom`: The custom ASCII conversion requires advanced knowledge about `p5.asciify`, utilizing exposed framebuffers by the library to create custom ASCII conversion algorithms. **Not documented in detail yet!** |
-| `enabled`             | `boolean` | `true`     | A boolean value indicating whether the ASCII conversion should be enabled.                                                                                                      |
-| `characters`          | `string`  | `'0123456789'` | A string containing the characters to be used for the ASCII conversion. The characters are used in order of appearance, with the first character representing the darkest colors and the last character representing the brightest colors. |
-| `characterColorMode`  | `number`  | `0`        | The mode used for the color of the characters used for the ASCII conversion. Allowed values are `0` *(sampled)* and `1` *(fixed)*. <br/> - `0` *(sampled)*: The color of a character is determined by sampling the central pixel of the cell it occupies on the canvas. <br/> - `1` *(fixed)*: The color of a character is determined by the `characterColor` property. |
-| `characterColor`      | `string`  | `'#ffffff'` | The color of the characters used for the ASCII conversion. Only used if the `characterColorMode` is set to `1` *(fixed)*.                                                     |
-| `backgroundColorMode` | `number`  | `1`        | The mode used for the color of the background of a cell, not covered by the character. Allowed values are `0` *(sampled)* and `1` *(fixed)*. <br/> - `0` *(sampled)*: The color of a character is determined by sampling the central pixel of the cell it occupies on the canvas. <br/> - `1` *(fixed)*: The color of a character is determined by the `backgroundColor` property. |
-| `backgroundColor`     | `string`  | `'#000000'` | The color of the background of a cell, not covered by the character. Only used if the `backgroundColorMode` is set to `1` *(fixed)*.                                          |
-| `invertMode`          | `boolean` | `false`    | A boolean value indicating whether the background and character color should swap.                                                                                                    |
-| `rotationAngle`       | `number`  | `0`        | The angle of rotation in degrees, which is applied to all characters from the ASCII conversion.                                                                                                    |
-
-#### **`gradient` options**
-| Option                | Type    | Default  | Description                                                                                                                                                                                                 |
-|-----------------------|---------|----------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `enabled`             | `boolean` | `true`     | A boolean value indicating whether the ASCII conversion should be enabled.                                                                                                      |
-| `characterColorMode`  | `number`  | `0`        | The mode used for the color of the characters used for the ASCII conversion. Allowed values are `0` *(sampled)* and `1` *(fixed)*. <br/> - `0` *(sampled)*: The color of a character is determined by sampling the central pixel of the cell it occupies on the canvas. <br/> - `1` *(fixed)*: The color of a character is determined by the `characterColor` property. |
-| `characterColor`      | `string`  | `'#ffffff'` | The color of the characters used for the ASCII conversion. Only used if the `characterColorMode` is set to `1` *(fixed)*.                                                     |
-| `backgroundColorMode` | `number`  | `1`        | The mode used for the color of the background of a cell, not covered by the character. Allowed values are `0` *(sampled)* and `1` *(fixed)*. <br/> - `0` *(sampled)*: The color of a character is determined by sampling the central pixel of the cell it occupies on the canvas. <br/> - `1` *(fixed)*: The color of a character is determined by the `backgroundColor` property. |
-| `backgroundColor`     | `string`  | `'#000000'` | The color of the background of a cell, not covered by the character. Only used if the `backgroundColorMode` is set to `1` *(fixed)*.                                          |
-| `invertMode`          | `boolean` | `false`    | A boolean value indicating whether the background and character color should swap.                                                                                                    |
-| `rotationAngle`       | `number`  | `0`        | The angle of rotation in degrees, which is applied to all characters from the ASCII conversion.                                                                                                    |
-
-#### **`edge` options**  
-| Option                | Type    | Default | Description                                                                                                                                                                                                 |
-|-----------------------|---------|----------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `enabled`             | `boolean` | `false`     | A boolean value indicating whether the ASCII conversion should be enabled.                                                                                                      |
-| `characters`          | `string`  | `'-/\|\-/\|\'` | A string containing exactly 8 characters to be used for the edge-based ASCII conversion. |
-| `characterColorMode`  | `number`  | `0`        | The mode used for the color of the characters used for the ASCII conversion. Allowed values are `0` *(sampled)* and `1` *(fixed)*. <br/> - `0` *(sampled)*: The color of a character is determined by sampling the central pixel of the cell it occupies on the canvas. <br/> - `1` *(fixed)*: The color of a character is determined by the `characterColor` property. |
-| `characterColor`      | `string`  | `'#ffffff'` | The color of the characters used for the ASCII conversion. Only used if the `characterColorMode` is set to `1` *(fixed)*.                                                     |
-| `backgroundColorMode` | `number`  | `1`        | The mode used for the color of the background of a cell, not covered by the character. Allowed values are `0` *(sampled)* and `1` *(fixed)*. <br/> - `0` *(sampled)*: The color of a character is determined by sampling the central pixel of the cell it occupies on the canvas. <br/> - `1` *(fixed)*: The color of a character is determined by the `backgroundColor` property. |
-| `backgroundColor`     | `string`  | `'#000000'` | The color of the background of a cell, not covered by the character. Only used if the `backgroundColorMode` is set to `1` *(fixed)*.                                          |
-| `invertMode`          | `boolean` | `false`    | A boolean value indicating whether the background and character color should swap.                                                                                                    |
-| `rotationAngle`       | `number`  | `0`        | The angle of rotation in degrees, which is applied to all characters from the ASCII conversion.                                                                                                    |
-| `sobelThreshold`      | `number`  | `0.5`      | The threshold value used for the Sobel edge detection algorithm.                                                                                                    |
-| `sampleThreshold`     | `number`  | `16`      | The threshold value used when downscaling the sobel framebuffer to the grid size.                                                                                                    |
-
-#### **`text` options**
-| Option                | Type    | Default | Description                                                                                                                                                                                                 |
-|-----------------------|---------|----------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `enabled`             | `boolean` | `false`     | A boolean value indicating whether the ASCII conversion should be enabled.                                                                                                      |
-| `characterColor`      | `string`  | `'#ffffff'` | The color of the characters used for the ASCII conversion.                                                     |
-| `characterColorMode` | `number`  | `0`        | The mode used for the color of the characters used for the ASCII conversion. Allowed values are `0` *(sampled)* and `1` *(fixed)*. <br/> - `0` *(sampled)*: Sampled from one of the previous conversion layers, based on the input texture colors. <br/> - `1` *(fixed)*: The color of a character is determined by the `characterColor` property. |
-| `backgroundColor`     | `string`  | `'#000000'` | The color of the background of a cell, not covered by the character.                                          |
-| `invertMode`          | `boolean` | `false`    | A boolean value indicating whether the background and character color should swap.                                                                                                    |
-
-#### Example
-
-```javascript
-function setup() {
-  createCanvas(800, 800, WEBGL);
-  
-  // Passing an options object that contains only a subset of possible options is also valid!
-  setAsciiOptions({ 
-    common: {
-        fontSize: 8,
-    },
-    ascii: {
-        renderMode: "brightness",
-        enabled: true,
-        characters: "0123456789",
-        characterColor: "#ffffff",
-        characterColorMode: 0,
-        backgroundColor: "#000000",
-        backgroundColorMode: 1,
-        invertMode: false,
-        rotationAngle: 0,
-    },
-    edge: {
-        enabled: true,
-        characters: "-/|\\-/|\\",
-        characterColor: '#ffffff',
-        characterColorMode: 1,
-        backgroundColor: '#000000',
-        backgroundColorMode: 1,
-        invertMode: false,
-        rotationAngle: 0,
-        sobelThreshold: 0.15,
-        sampleThreshold: 16,
-    }
-});
-}
-
-function draw() {
-  background(0);
-  noStroke();
-  rotateX(radians(frameCount * 3));
-  rotateY(radians(frameCount));
-  directionalLight(255, 255, 255, 0, 0, -1);
-  torus(200, 50);
-}
-```
-[`run inside the p5.js web editor`](https://editor.p5js.org/humanbydefinition/sketches/N6N33RIZe)
+Returns the renderer instance with the given name, which was previously added to the ASCII rendering pipeline. Should mainly be used to access the pre-defined renderers by the `p5.asciify` library. The pre-defined renderer names to fetch the renderer instances from can be found above. It's best to store the renderer instances in variables during setup for later access and modification during runtime without having to search for them in the list of renderers constantly.
 
 <hr/>
-
-### `setAsciifyPostSetupFunction()`
-
-`setAsciifyPostSetupFunction(postSetupFunction: Function): void`
-
-Sets a custom function to be executed once after `p5.asciify` has been set up.
-
-Can be useful in more advanced scenarios where you need to perform additional setup steps after the library has been set up, like fetching calculated grid dimensions or other internal data.
-
-#### Parameters
-
-- **postSetupFunction**: `Function` - A custom function to be executed
-
-#### Usage Context
-
-| Function  | Usable? |
-|-----------|-----------|
-| `preload()` | ✓       |
-| `setup()`   | ✓       |
-| `draw()`    | ✗       |
-
-
-
-<hr />
-
-### `setAsciifyPostDrawFunction()`
-
-`setAsciifyPostDrawFunction(postDrawFunction: Function): void`
-
-Sets a custom function to be executed every frame after the libraries `draw()` function has been executed, allowing for additional post-processing steps to be performed on top of the ASCII conversion.
-
-#### Parameters
-
-- **postDrawFunction**: `Function` - A custom function to be executed
-
-#### Usage Context
-
-| Function  | Usable? |
-|-----------|-----------|
-| `preload()` | ✓       |
-| `setup()`   | ✓       |
-| `draw()`    | ✓       |
-
-<hr />
 
 ### `addAsciiGradient()`
 
