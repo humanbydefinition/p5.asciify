@@ -19,6 +19,7 @@ if (typeof window !== 'undefined') {
 /**
  * Add `setupAsciify` function to p5 instance, which can be overridden by the user.
  * This function is called after the p5.asciify setup has been completed.
+ * @see p5.setupAsciify
  */
 p5.prototype.setupAsciify = function (): void { };
 

@@ -8,4 +8,4 @@
 
 > **GradientConstructorMap**: `Record`\<[`GradientType`](GradientType.md), (`p`, `fontTextureAtlas`, `shader`, `characters`, `brightnessStart`, `brightnessEnd`, `params`) => [`P5AsciifyGradient`](../classes/P5AsciifyGradient.md)\>
 
-Defined in: [gradients/types.ts:7](https://github.com/humanbydefinition/p5-asciify/blob/59ed5778928b6bd3b07654da74314fe6afa1ddc9/src/lib/gradients/types.ts#L7)
+Defined in: [gradients/types.ts:7](https://github.com/humanbydefinition/p5-asciify/blob/7c3eabf90074b598e8c066f34c74bf18f66d26d4/src/lib/gradients/types.ts#L7)

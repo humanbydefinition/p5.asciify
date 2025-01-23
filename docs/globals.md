@@ -37,5 +37,5 @@
 
 | Function | Description |
 | ------ | ------ |
-| [compareVersions](functions/compareVersions.md) | Compares two version strings like '1.8.0' and '1.11.3'. |
+| [compareVersions](functions/compareVersions.md) | Compares two version strings like `'1.8.0'` and `'1.11.3'`. |
 | [validateNumberInRange](functions/validateNumberInRange.md) | Validates if a number is within a specified range. |
