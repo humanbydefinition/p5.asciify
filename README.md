@@ -4,12 +4,11 @@
   <img src="https://github.com/humanbydefinition/p5.asciify/raw/main/repo_assets/p5.asciify.animated-logo.gif" />
 </p>
 
-`p5.asciify` is a [`p5.js`](https://p5js.org/) add-on library for converting the main canvas in [`WEBGL`](https://p5js.org/reference/p5/WEBGL/) mode into a grid of ASCII characters in real-time, allowing you to bring a retro, text-based aesthetic to your visualizations, adding a unique touch to your creative coding projects.
+`p5.asciify` is a [`p5.js`](https://p5js.org/) add-on library for converting the main canvas in [`WEBGL`](https://p5js.org/reference/p5/WEBGL/) mode into a grid of ASCII characters in real-time, allowing you to bring text-based aesthetics to your visualizations.
 
-The main goal of `p5.asciify` is to provide an easy-to-use, customizable solution for converting the main [`p5.js`](https://p5js.org/) canvas into a grid of ASCII characters, offering a wide range of settings and effects to adjust the appearance of the ASCII grid to specific needs and artistic vision.
+The main goal of `p5.asciify` is to provide an easy-to-use, customizable solution for converting the main [`p5.js`](https://p5js.org/) canvas into a grid of ASCII characters, offering a wide range of settings to adjust the ASCII rendering to specific needs and artistic vision.
 
-To see `p5.asciify` in action, check out the example and tested sketches in the provided collections on the [p5.js web editor](https://editor.p5js.org/): 
-[`p5.asciify examples`](https://editor.p5js.org/humanbydefinition/collections/DUa3pcJqn), [`p5.asciify tests`](https://editor.p5js.org/humanbydefinition/collections/TBDjbneJv).
+To see `p5.asciify` in action, check out [`textmode.art`](https://textmode.art/), which is an ASCII/textmode editor powered by this library.
 
 `p5.asciify` is actively developed and maintained by [**@humanbydefinition**](https://github.com/humanbydefinition), with new features and improvements being added regularly. The library is open-source and available here, where you can contribute to its development, report issues, or suggest new features. I highly value your feedback and contributions, so feel free to reach out!
 
@@ -75,7 +74,11 @@ At this point, when imported correctly, the [`p5.js`](https://p5js.org/) canvas 
 
 ### Instance mode
 
-Since v0.2.0, `p5.asciify` officially supports both global and instance mode. To use the library in instance mode, you need to load it in a specific way:
+`p5.asciify` supports both global and instance mode. To use the library in instance mode *(through `npm` for example)*, you need to load the library in a specific way:
+
+```bash
+npm install p5.asciify
+```
 
 ```javascript
 import p5 from 'p5';
@@ -90,16 +93,17 @@ const theSketch = (sketch) => {
       sketch.createCanvas(sketch.windowWidth, sketch.windowHeight, sketch.WEBGL);
     };
 
-    // Setup function specific to the p5.asciify library, which is executed after the p5.js setup function
+    // Setup function specific to the p5.asciify library, 
+    // which is executed automatically after the p5.js setup function is finished
     sketch.setupAsciify = () => {
-        // Set the font size for all ASCII renderers of the library
-        p5asciify.fontSize(finalOptions.fontSize);
+
+      // Set the font size for all ASCII renderers of the library
+      p5asciify.fontSize(finalOptions.fontSize);
 
       p5asciify.renderers().get("brightness").update({
         characters: " .,:;i1tfLCG08@", // ASCII characters used for rendering
-        invertMode: true, // Swap the ASCII character colors with it's cell background colors.
+        invertMode: true, // Swap the ASCII character colors with it's cell background colors
       });
-
     };
 
     sketch.draw = () => {
@@ -118,7 +122,7 @@ let myp5 = new p5(theSketch);
 > [!NOTE]
 > All examples and explanations in the [`Wiki`](https://github.com/humanbydefinition/p5.asciify/wiki) are given in global mode. To use them in instance mode, you need to adjust the code accordingly, as shown in the example above.
 >
-> Essentially, you need to pass the p5 instance to the `p5asciify` library using the `p5asciify.instance(sketch)` function before setup, as well as using the p5 instance to call the functions provided by the library.
+> Essentially, besides importing `p5.asciify`, you need to initially pass the `p5` instance to the library using the `p5asciify.instance(sketch)` before preload/setup, as well as using the `p5` instance to call the functions provided by the library, like `sketch.setupAsciify()` in the example above to modify the default rendering settings.
 
 
 # Usage
