@@ -3,9 +3,8 @@ import { P5AsciifyFontTextureAtlas } from './FontTextureAtlas';
 import { P5AsciifyGrid } from './Grid';
 import { P5AsciifyRendererManager } from './renderers/RendererManager';
 /**
- * The main class for the `p5.asciify` library.
- *
- * Responsible for setting up the library, managing its properties, and providing an interface for interacting with the library.
+ * The main class for the `p5.asciify` library,
+ * responsible for setting up the library, managing its properties, and providing an interface for interacting with the library.
  *
  * @remarks
  * The `P5Asciifier` class is initialized without any parameters.

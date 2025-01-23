@@ -76,6 +76,9 @@ const sketch = (p) => {
         p5asciify.renderers().moveDown("brightness");
         p5asciify.renderers().moveDown("brightness");
         //p5asciify.renderers().remove("brightness");
+        p5asciify.renderers().clear();
+
+        p5asciify.renderers().add("brightness", "brightness", {characters: 0})
     };
 
     p.draw = () => {

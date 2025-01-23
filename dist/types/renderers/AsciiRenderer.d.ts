@@ -12,7 +12,7 @@ export declare const CUSTOM_DEFAULT_OPTIONS: {
     rotationAngle: number;
 };
 /**
- * Abstract class for shader-based ASCII Renderers.
+ * Class for shader-based ASCII Renderers.
  */
 export declare class P5AsciifyRenderer {
     protected p: p5;

@@ -46,7 +46,7 @@ export declare class P5AsciifyRendererManager {
      * @param type The type of the renderer to add.
      * @param options The options to use for the renderer.
      */
-    add(name: string, type: RendererType, options: AsciiRendererOptions): void;
+    add(name: string, type: RendererType, options: AsciiRendererOptions): P5AsciifyRenderer;
     /**
      * Gets the ASCII renderer instance with the given name.
      * @param rendererName The name of the renderer to get.

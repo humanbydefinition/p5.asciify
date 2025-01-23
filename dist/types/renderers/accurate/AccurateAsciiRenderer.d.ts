@@ -9,14 +9,14 @@ export declare const ACCURATE_DEFAULT_OPTIONS: {
     enabled: boolean;
     /** Characters used for pattern matching */
     characters: string;
-    /** Color of the ASCII characters. Only used when `characterColorMode` is set to `1` */
+    /** Color of the ASCII characters. Only used when `characterColorMode` is set to `fixed` */
     characterColor: string;
-    /** Character color mode (0: `sampled`, 1: `fixed`) */
-    characterColorMode: number;
-    /** Cell background color. Only used when `characterColorMode` is set to `1` */
+    /** Character color mode */
+    characterColorMode: string;
+    /** Cell background color. Only used when `characterColorMode` is set to `fixed` */
     backgroundColor: string;
-    /** Background color mode (0: `sampled`, 1: `fixed`) */
-    backgroundColorMode: number;
+    /** Background color mode */
+    backgroundColorMode: string;
     /** Swap the cells ASCII character colors with it's cell background colors */
     invertMode: boolean;
     /** Rotation angle of all characters in the grid in degrees */

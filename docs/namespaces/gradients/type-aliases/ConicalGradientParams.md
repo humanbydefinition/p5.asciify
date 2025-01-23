@@ -8,12 +8,12 @@
 
 > **ConicalGradientParams**: `object`
 
-Defined in: [gradients/types.ts:19](https://github.com/humanbydefinition/p5-asciify/blob/669a218206271de7b0767d42afcabf18f6c432ab/src/lib/gradients/types.ts#L19)
+Defined in: [gradients/types.ts:19](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/gradients/types.ts#L19)
 
 ## Type declaration
 
 | Name | Type | Defined in |
 | ------ | ------ | ------ |
-| <a id="centerx"></a> `centerX` | `number` | [gradients/types.ts:20](https://github.com/humanbydefinition/p5-asciify/blob/669a218206271de7b0767d42afcabf18f6c432ab/src/lib/gradients/types.ts#L20) |
-| <a id="centery"></a> `centerY` | `number` | [gradients/types.ts:21](https://github.com/humanbydefinition/p5-asciify/blob/669a218206271de7b0767d42afcabf18f6c432ab/src/lib/gradients/types.ts#L21) |
-| <a id="speed"></a> `speed` | `number` | [gradients/types.ts:22](https://github.com/humanbydefinition/p5-asciify/blob/669a218206271de7b0767d42afcabf18f6c432ab/src/lib/gradients/types.ts#L22) |
+| <a id="centerx"></a> `centerX` | `number` | [gradients/types.ts:20](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/gradients/types.ts#L20) |
+| <a id="centery"></a> `centerY` | `number` | [gradients/types.ts:21](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/gradients/types.ts#L21) |
+| <a id="speed"></a> `speed` | `number` | [gradients/types.ts:22](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/gradients/types.ts#L22) |

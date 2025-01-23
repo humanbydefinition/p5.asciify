@@ -21,6 +21,12 @@
 | [P5AsciifyFontTextureAtlas](classes/P5AsciifyFontTextureAtlas.md) | A texture atlas containing all characters in a font, providing a way to access the colors of the characters. |
 | [P5AsciifyGrid](classes/P5AsciifyGrid.md) | Represents a 2D grid, where each cell has a fixed width and height. |
 
+## Type Aliases
+
+| Type alias | Description |
+| ------ | ------ |
+| [OpenTypeGlyph](type-aliases/OpenTypeGlyph.md) | Extends the opentype.js `Glyph` class with r, g, and b properties for color. Currently doesn't actually `extend` the class, but rather defines a new interface, since there is no typing provided for the opentype.js library. |
+
 ## Variables
 
 | Variable | Description |

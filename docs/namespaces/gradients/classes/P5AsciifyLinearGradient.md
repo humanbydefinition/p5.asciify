@@ -6,7 +6,7 @@
 
 # Class: P5AsciifyLinearGradient
 
-Defined in: [gradients/linear/Linear.ts:9](https://github.com/humanbydefinition/p5-asciify/blob/669a218206271de7b0767d42afcabf18f6c432ab/src/lib/gradients/linear/Linear.ts#L9)
+Defined in: [gradients/linear/Linear.ts:9](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/gradients/linear/Linear.ts#L9)
 
 A linear gradient that moves in a linear pattern across the screen.
 
@@ -20,7 +20,7 @@ A linear gradient that moves in a linear pattern across the screen.
 
 > **new P5AsciifyLinearGradient**(`p`, `_fontTextureAtlas`, `_shader`, `_characters`, `brightnessStart`, `brightnessEnd`, `params`): [`P5AsciifyLinearGradient`](P5AsciifyLinearGradient.md)
 
-Defined in: [gradients/linear/Linear.ts:15](https://github.com/humanbydefinition/p5-asciify/blob/669a218206271de7b0767d42afcabf18f6c432ab/src/lib/gradients/linear/Linear.ts#L15)
+Defined in: [gradients/linear/Linear.ts:15](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/gradients/linear/Linear.ts#L15)
 
 #### Parameters
 
@@ -46,19 +46,19 @@ Defined in: [gradients/linear/Linear.ts:15](https://github.com/humanbydefinition
 
 | Property | Modifier | Type | Inherited from | Defined in |
 | ------ | ------ | ------ | ------ | ------ |
-| <a id="_brightnessend"></a> `_brightnessEnd` | `protected` | `number` | [`P5AsciifyGradient`](P5AsciifyGradient.md).[`_brightnessEnd`](P5AsciifyGradient.md#_brightnessend) | [gradients/Gradient.ts:13](https://github.com/humanbydefinition/p5-asciify/blob/669a218206271de7b0767d42afcabf18f6c432ab/src/lib/gradients/Gradient.ts#L13) |
-| <a id="_brightnessstart"></a> `_brightnessStart` | `protected` | `number` | [`P5AsciifyGradient`](P5AsciifyGradient.md).[`_brightnessStart`](P5AsciifyGradient.md#_brightnessstart) | [gradients/Gradient.ts:12](https://github.com/humanbydefinition/p5-asciify/blob/669a218206271de7b0767d42afcabf18f6c432ab/src/lib/gradients/Gradient.ts#L12) |
-| <a id="_characters-1"></a> `_characters` | `protected` | `string` | [`P5AsciifyGradient`](P5AsciifyGradient.md).[`_characters`](P5AsciifyGradient.md#_characters-1) | [gradients/linear/Linear.ts:19](https://github.com/humanbydefinition/p5-asciify/blob/669a218206271de7b0767d42afcabf18f6c432ab/src/lib/gradients/linear/Linear.ts#L19) |
-| <a id="_fonttextureatlas-1"></a> `_fontTextureAtlas` | `protected` | [`P5AsciifyFontTextureAtlas`](../../../classes/P5AsciifyFontTextureAtlas.md) | [`P5AsciifyGradient`](P5AsciifyGradient.md).[`_fontTextureAtlas`](P5AsciifyGradient.md#_fonttextureatlas-1) | [gradients/linear/Linear.ts:17](https://github.com/humanbydefinition/p5-asciify/blob/669a218206271de7b0767d42afcabf18f6c432ab/src/lib/gradients/linear/Linear.ts#L17) |
-| <a id="_onpalettechangecallback"></a> `_onPaletteChangeCallback?` | `protected` | (`gradient`: [`P5AsciifyGradient`](P5AsciifyGradient.md), `value`: `string`[]) => `void` | [`P5AsciifyGradient`](P5AsciifyGradient.md).[`_onPaletteChangeCallback`](P5AsciifyGradient.md#_onpalettechangecallback) | [gradients/Gradient.ts:15](https://github.com/humanbydefinition/p5-asciify/blob/669a218206271de7b0767d42afcabf18f6c432ab/src/lib/gradients/Gradient.ts#L15) |
-| <a id="_palette"></a> `_palette` | `protected` | [`P5AsciifyColorPalette`](../../../classes/P5AsciifyColorPalette.md) | [`P5AsciifyGradient`](P5AsciifyGradient.md).[`_palette`](P5AsciifyGradient.md#_palette) | [gradients/Gradient.ts:16](https://github.com/humanbydefinition/p5-asciify/blob/669a218206271de7b0767d42afcabf18f6c432ab/src/lib/gradients/Gradient.ts#L16) |
-| <a id="_shader-1"></a> `_shader` | `protected` | `Shader` | [`P5AsciifyGradient`](P5AsciifyGradient.md).[`_shader`](P5AsciifyGradient.md#_shader-1) | [gradients/linear/Linear.ts:18](https://github.com/humanbydefinition/p5-asciify/blob/669a218206271de7b0767d42afcabf18f6c432ab/src/lib/gradients/linear/Linear.ts#L18) |
-| <a id="angle"></a> `angle` | `public` | `number` | - | [gradients/linear/Linear.ts:11](https://github.com/humanbydefinition/p5-asciify/blob/669a218206271de7b0767d42afcabf18f6c432ab/src/lib/gradients/linear/Linear.ts#L11) |
-| <a id="direction"></a> `direction` | `public` | `number` | - | [gradients/linear/Linear.ts:10](https://github.com/humanbydefinition/p5-asciify/blob/669a218206271de7b0767d42afcabf18f6c432ab/src/lib/gradients/linear/Linear.ts#L10) |
-| <a id="enabled"></a> `enabled` | `public` | `boolean` | [`P5AsciifyGradient`](P5AsciifyGradient.md).[`enabled`](P5AsciifyGradient.md#enabled) | [gradients/Gradient.ts:14](https://github.com/humanbydefinition/p5-asciify/blob/669a218206271de7b0767d42afcabf18f6c432ab/src/lib/gradients/Gradient.ts#L14) |
-| <a id="p-1"></a> `p` | `protected` | `__module` | [`P5AsciifyGradient`](P5AsciifyGradient.md).[`p`](P5AsciifyGradient.md#p-1) | [gradients/linear/Linear.ts:16](https://github.com/humanbydefinition/p5-asciify/blob/669a218206271de7b0767d42afcabf18f6c432ab/src/lib/gradients/linear/Linear.ts#L16) |
-| <a id="speed"></a> `speed` | `public` | `number` | - | [gradients/linear/Linear.ts:12](https://github.com/humanbydefinition/p5-asciify/blob/669a218206271de7b0767d42afcabf18f6c432ab/src/lib/gradients/linear/Linear.ts#L12) |
-| <a id="zigzag"></a> `zigzag` | `public` | `boolean` | - | [gradients/linear/Linear.ts:13](https://github.com/humanbydefinition/p5-asciify/blob/669a218206271de7b0767d42afcabf18f6c432ab/src/lib/gradients/linear/Linear.ts#L13) |
+| <a id="_brightnessend"></a> `_brightnessEnd` | `protected` | `number` | [`P5AsciifyGradient`](P5AsciifyGradient.md).[`_brightnessEnd`](P5AsciifyGradient.md#_brightnessend) | [gradients/Gradient.ts:13](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/gradients/Gradient.ts#L13) |
+| <a id="_brightnessstart"></a> `_brightnessStart` | `protected` | `number` | [`P5AsciifyGradient`](P5AsciifyGradient.md).[`_brightnessStart`](P5AsciifyGradient.md#_brightnessstart) | [gradients/Gradient.ts:12](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/gradients/Gradient.ts#L12) |
+| <a id="_characters-1"></a> `_characters` | `protected` | `string` | [`P5AsciifyGradient`](P5AsciifyGradient.md).[`_characters`](P5AsciifyGradient.md#_characters-1) | [gradients/linear/Linear.ts:19](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/gradients/linear/Linear.ts#L19) |
+| <a id="_fonttextureatlas-1"></a> `_fontTextureAtlas` | `protected` | [`P5AsciifyFontTextureAtlas`](../../../classes/P5AsciifyFontTextureAtlas.md) | [`P5AsciifyGradient`](P5AsciifyGradient.md).[`_fontTextureAtlas`](P5AsciifyGradient.md#_fonttextureatlas-1) | [gradients/linear/Linear.ts:17](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/gradients/linear/Linear.ts#L17) |
+| <a id="_onpalettechangecallback"></a> `_onPaletteChangeCallback?` | `protected` | (`gradient`: [`P5AsciifyGradient`](P5AsciifyGradient.md), `value`: `string`[]) => `void` | [`P5AsciifyGradient`](P5AsciifyGradient.md).[`_onPaletteChangeCallback`](P5AsciifyGradient.md#_onpalettechangecallback) | [gradients/Gradient.ts:15](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/gradients/Gradient.ts#L15) |
+| <a id="_palette"></a> `_palette` | `protected` | [`P5AsciifyColorPalette`](../../../classes/P5AsciifyColorPalette.md) | [`P5AsciifyGradient`](P5AsciifyGradient.md).[`_palette`](P5AsciifyGradient.md#_palette) | [gradients/Gradient.ts:16](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/gradients/Gradient.ts#L16) |
+| <a id="_shader-1"></a> `_shader` | `protected` | `Shader` | [`P5AsciifyGradient`](P5AsciifyGradient.md).[`_shader`](P5AsciifyGradient.md#_shader-1) | [gradients/linear/Linear.ts:18](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/gradients/linear/Linear.ts#L18) |
+| <a id="angle"></a> `angle` | `public` | `number` | - | [gradients/linear/Linear.ts:11](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/gradients/linear/Linear.ts#L11) |
+| <a id="direction"></a> `direction` | `public` | `number` | - | [gradients/linear/Linear.ts:10](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/gradients/linear/Linear.ts#L10) |
+| <a id="enabled"></a> `enabled` | `public` | `boolean` | [`P5AsciifyGradient`](P5AsciifyGradient.md).[`enabled`](P5AsciifyGradient.md#enabled) | [gradients/Gradient.ts:14](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/gradients/Gradient.ts#L14) |
+| <a id="p-1"></a> `p` | `protected` | `__module` | [`P5AsciifyGradient`](P5AsciifyGradient.md).[`p`](P5AsciifyGradient.md#p-1) | [gradients/linear/Linear.ts:16](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/gradients/linear/Linear.ts#L16) |
+| <a id="speed"></a> `speed` | `public` | `number` | - | [gradients/linear/Linear.ts:12](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/gradients/linear/Linear.ts#L12) |
+| <a id="zigzag"></a> `zigzag` | `public` | `boolean` | - | [gradients/linear/Linear.ts:13](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/gradients/linear/Linear.ts#L13) |
 
 ## Accessors
 
@@ -68,7 +68,7 @@ Defined in: [gradients/linear/Linear.ts:15](https://github.com/humanbydefinition
 
 > **get** **palette**(): [`P5AsciifyColorPalette`](../../../classes/P5AsciifyColorPalette.md)
 
-Defined in: [gradients/Gradient.ts:97](https://github.com/humanbydefinition/p5-asciify/blob/669a218206271de7b0767d42afcabf18f6c432ab/src/lib/gradients/Gradient.ts#L97)
+Defined in: [gradients/Gradient.ts:97](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/gradients/Gradient.ts#L97)
 
 ##### Returns
 
@@ -86,7 +86,7 @@ Defined in: [gradients/Gradient.ts:97](https://github.com/humanbydefinition/p5-a
 
 > **get** **shader**(): `Shader`
 
-Defined in: [gradients/Gradient.ts:96](https://github.com/humanbydefinition/p5-asciify/blob/669a218206271de7b0767d42afcabf18f6c432ab/src/lib/gradients/Gradient.ts#L96)
+Defined in: [gradients/Gradient.ts:96](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/gradients/Gradient.ts#L96)
 
 ##### Returns
 
@@ -102,7 +102,7 @@ Defined in: [gradients/Gradient.ts:96](https://github.com/humanbydefinition/p5-a
 
 > **brightnessEnd**(`value`): `void`
 
-Defined in: [gradients/Gradient.ts:65](https://github.com/humanbydefinition/p5-asciify/blob/669a218206271de7b0767d42afcabf18f6c432ab/src/lib/gradients/Gradient.ts#L65)
+Defined in: [gradients/Gradient.ts:65](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/gradients/Gradient.ts#L65)
 
 Sets the end brightness value.
 
@@ -130,7 +130,7 @@ P5AsciifyError If the value is not a number or is not within the range [0, 255].
 
 > **brightnessRange**(`start`, `end`): `void`
 
-Defined in: [gradients/Gradient.ts:76](https://github.com/humanbydefinition/p5-asciify/blob/669a218206271de7b0767d42afcabf18f6c432ab/src/lib/gradients/Gradient.ts#L76)
+Defined in: [gradients/Gradient.ts:76](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/gradients/Gradient.ts#L76)
 
 Sets the brightness range.
 
@@ -159,7 +159,7 @@ P5AsciifyError If the start or end value is not a number or is not within the ra
 
 > **brightnessStart**(`value`): `void`
 
-Defined in: [gradients/Gradient.ts:55](https://github.com/humanbydefinition/p5-asciify/blob/669a218206271de7b0767d42afcabf18f6c432ab/src/lib/gradients/Gradient.ts#L55)
+Defined in: [gradients/Gradient.ts:55](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/gradients/Gradient.ts#L55)
 
 Sets the start brightness value.
 
@@ -187,7 +187,7 @@ P5AsciifyError If the value is not a number or is not within the range [0, 255].
 
 > **characters**(`value`): `void`
 
-Defined in: [gradients/Gradient.ts:86](https://github.com/humanbydefinition/p5-asciify/blob/669a218206271de7b0767d42afcabf18f6c432ab/src/lib/gradients/Gradient.ts#L86)
+Defined in: [gradients/Gradient.ts:86](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/gradients/Gradient.ts#L86)
 
 Sets the characters to use for the gradient.
 
@@ -215,7 +215,7 @@ P5AsciifyError If the string does contain characters that are not available in t
 
 > **setUniforms**(`framebuffer`, `referenceFramebuffer`): `void`
 
-Defined in: [gradients/linear/Linear.ts:31](https://github.com/humanbydefinition/p5-asciify/blob/669a218206271de7b0767d42afcabf18f6c432ab/src/lib/gradients/linear/Linear.ts#L31)
+Defined in: [gradients/linear/Linear.ts:31](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/gradients/linear/Linear.ts#L31)
 
 Sets the uniforms for the gradient shader.
 

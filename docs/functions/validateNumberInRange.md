@@ -8,7 +8,7 @@
 
 > **validateNumberInRange**(`value`, `min`, `max`, `name`): `void`
 
-Defined in: [utils.ts:10](https://github.com/humanbydefinition/p5-asciify/blob/669a218206271de7b0767d42afcabf18f6c432ab/src/lib/utils.ts#L10)
+Defined in: [utils.ts:10](https://github.com/humanbydefinition/p5-asciify/blob/43b7b0b0d976fb53040ff3a56f702a43d4eee882/src/lib/utils.ts#L10)
 
 Validates a number is within a specified range.
 
