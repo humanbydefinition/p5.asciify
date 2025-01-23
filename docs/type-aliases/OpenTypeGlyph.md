@@ -8,19 +8,24 @@
 
 > **OpenTypeGlyph**: `object`
 
-Defined in: [types.ts:63](https://github.com/humanbydefinition/p5-asciify/blob/42e99513382e844286f3364f6843f9187e0d7c3d/src/lib/types.ts#L63)
+Defined in: [types.ts:68](https://github.com/humanbydefinition/p5-asciify/blob/529a159e489b63e659b0059fde6d4e5ace5c2f9e/src/lib/types.ts#L68)
 
-Extends the opentype.js `Glyph` class with r, g, and b properties for color.
+Extends the `opentype.js` `Glyph` class with r, g, and b properties for color.
 Currently doesn't actually `extend` the class, but rather defines a new interface, 
-since there is no typing provided for the opentype.js library.
+since there is no typing provided for the `opentype.js` library.
 
 ## Type declaration
 
 | Name | Type | Defined in |
 | ------ | ------ | ------ |
-| <a id="b"></a> `b`? | `number` | [types.ts:71](https://github.com/humanbydefinition/p5-asciify/blob/42e99513382e844286f3364f6843f9187e0d7c3d/src/lib/types.ts#L71) |
-| <a id="g"></a> `g`? | `number` | [types.ts:70](https://github.com/humanbydefinition/p5-asciify/blob/42e99513382e844286f3364f6843f9187e0d7c3d/src/lib/types.ts#L70) |
-| <a id="r"></a> `r`? | `number` | [types.ts:69](https://github.com/humanbydefinition/p5-asciify/blob/42e99513382e844286f3364f6843f9187e0d7c3d/src/lib/types.ts#L69) |
-| <a id="unicode"></a> `unicode` | `number` | [types.ts:64](https://github.com/humanbydefinition/p5-asciify/blob/42e99513382e844286f3364f6843f9187e0d7c3d/src/lib/types.ts#L64) |
-| <a id="unicodes"></a> `unicodes` | `number`[] | [types.ts:65](https://github.com/humanbydefinition/p5-asciify/blob/42e99513382e844286f3364f6843f9187e0d7c3d/src/lib/types.ts#L65) |
-| <a id="getpath"></a> `getPath()` | `object` | [types.ts:66](https://github.com/humanbydefinition/p5-asciify/blob/42e99513382e844286f3364f6843f9187e0d7c3d/src/lib/types.ts#L66) |
+| <a id="b"></a> `b`? | `number` | [types.ts:76](https://github.com/humanbydefinition/p5-asciify/blob/529a159e489b63e659b0059fde6d4e5ace5c2f9e/src/lib/types.ts#L76) |
+| <a id="g"></a> `g`? | `number` | [types.ts:75](https://github.com/humanbydefinition/p5-asciify/blob/529a159e489b63e659b0059fde6d4e5ace5c2f9e/src/lib/types.ts#L75) |
+| <a id="r"></a> `r`? | `number` | [types.ts:74](https://github.com/humanbydefinition/p5-asciify/blob/529a159e489b63e659b0059fde6d4e5ace5c2f9e/src/lib/types.ts#L74) |
+| <a id="unicode"></a> `unicode` | `number` | [types.ts:69](https://github.com/humanbydefinition/p5-asciify/blob/529a159e489b63e659b0059fde6d4e5ace5c2f9e/src/lib/types.ts#L69) |
+| <a id="unicodes"></a> `unicodes` | `number`[] | [types.ts:70](https://github.com/humanbydefinition/p5-asciify/blob/529a159e489b63e659b0059fde6d4e5ace5c2f9e/src/lib/types.ts#L70) |
+| <a id="getpath"></a> `getPath()` | `object` | [types.ts:71](https://github.com/humanbydefinition/p5-asciify/blob/529a159e489b63e659b0059fde6d4e5ace5c2f9e/src/lib/types.ts#L71) |
+
+## Remarks
+
+The `p5.js` `p5.Font` object contains a property `font` which is an instance of the `opentype.js` `Font` class,
+which is used for extracting glyph information in the [P5AsciifyFontTextureAtlas](../classes/P5AsciifyFontTextureAtlas.md) class.
