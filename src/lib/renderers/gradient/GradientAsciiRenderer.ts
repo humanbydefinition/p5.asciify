@@ -55,43 +55,43 @@ export class P5AsciifyGradientRenderer extends P5AsciifyRenderer {
         const mergedOptions = { ...GRADIENT_DEFAULT_OPTIONS, ...options };
         super(p5Instance, grid, fontTextureAtlas, mergedOptions);
 
-        this.gradientManager = new P5AsciifyGradientManager(this.p, this.fontTextureAtlas);
+        this.gradientManager = new P5AsciifyGradientManager(this._p, this._fontTextureAtlas);
 
-        this.grayscaleShader = this.p.createShader(vertexShader, grayscaleShader);
-        this.colorSampleShader = this.p.createShader(vertexShader, colorSampleShader);
-        this.inversionShader = this.p.createShader(vertexShader, inversionShader);
-        this.asciiCharacterShader = this.p.createShader(vertexShader, asciiCharacterShader);
+        this.grayscaleShader = this._p.createShader(vertexShader, grayscaleShader);
+        this.colorSampleShader = this._p.createShader(vertexShader, colorSampleShader);
+        this.inversionShader = this._p.createShader(vertexShader, inversionShader);
+        this.asciiCharacterShader = this._p.createShader(vertexShader, asciiCharacterShader);
 
-        this.grayscaleFramebuffer = this.p.createFramebuffer({
+        this.grayscaleFramebuffer = this._p.createFramebuffer({
             density: 1,
-            width: this.grid.cols,
-            height: this.grid.rows,
-            depthFormat: this.p.UNSIGNED_INT,
-            textureFiltering: this.p.NEAREST
+            width: this._grid.cols,
+            height: this._grid.rows,
+            depthFormat: this._p.UNSIGNED_INT,
+            textureFiltering: this._p.NEAREST
         });
 
-        this.prevAsciiGradientFramebuffer = this.p.createFramebuffer({
+        this.prevAsciiGradientFramebuffer = this._p.createFramebuffer({
             density: 1,
-            width: this.grid.cols,
-            height: this.grid.rows,
-            depthFormat: this.p.UNSIGNED_INT,
-            textureFiltering: this.p.NEAREST
+            width: this._grid.cols,
+            height: this._grid.rows,
+            depthFormat: this._p.UNSIGNED_INT,
+            textureFiltering: this._p.NEAREST
         });
 
-        this.nextAsciiGradientFramebuffer = this.p.createFramebuffer({
+        this.nextAsciiGradientFramebuffer = this._p.createFramebuffer({
             density: 1,
-            width: this.grid.cols,
-            height: this.grid.rows,
-            depthFormat: this.p.UNSIGNED_INT,
-            textureFiltering: this.p.NEAREST
+            width: this._grid.cols,
+            height: this._grid.rows,
+            depthFormat: this._p.UNSIGNED_INT,
+            textureFiltering: this._p.NEAREST
         });
     }
 
     resizeFramebuffers(): void {
         super.resizeFramebuffers();
-        this.grayscaleFramebuffer.resize(this.grid.cols, this.grid.rows);
-        this.prevAsciiGradientFramebuffer.resize(this.grid.cols, this.grid.rows);
-        this.nextAsciiGradientFramebuffer.resize(this.grid.cols, this.grid.rows);
+        this.grayscaleFramebuffer.resize(this._grid.cols, this._grid.rows);
+        this.prevAsciiGradientFramebuffer.resize(this._grid.cols, this._grid.rows);
+        this.nextAsciiGradientFramebuffer.resize(this._grid.cols, this._grid.rows);
     }
 
     add(gradientName: GradientType,
@@ -109,21 +109,21 @@ export class P5AsciifyGradientRenderer extends P5AsciifyRenderer {
     render(inputFramebuffer: p5.Framebuffer, previousAsciiRenderer: P5AsciifyRenderer): void {
         // Grayscale pass
         this.grayscaleFramebuffer.begin();
-        this.p.clear();
-        this.p.shader(this.grayscaleShader);
+        this._p.clear();
+        this._p.shader(this.grayscaleShader);
         this.grayscaleShader.setUniform('u_image', inputFramebuffer);
-        this.p.rect(0, 0, this.p.width, this.p.height);
+        this._p.rect(0, 0, this._p.width, this._p.height);
         this.grayscaleFramebuffer.end();
 
         // Initial ASCII character setup
         this.prevAsciiGradientFramebuffer.begin();
-        this.p.clear();
-        this.p.image(this.grayscaleFramebuffer, -this.grid.cols / 2, -this.grid.rows / 2);
+        this._p.clear();
+        this._p.image(this.grayscaleFramebuffer, -this._grid.cols / 2, -this._grid.rows / 2);
         this.prevAsciiGradientFramebuffer.end();
 
         this.nextAsciiGradientFramebuffer.begin();
-        this.p.clear();
-        this.p.image(this.grayscaleFramebuffer, -this.grid.cols / 2, -this.grid.rows / 2);
+        this._p.clear();
+        this._p.image(this.grayscaleFramebuffer, -this._grid.cols / 2, -this._grid.rows / 2);
         this.nextAsciiGradientFramebuffer.end();
 
         // Gradient passes
@@ -132,70 +132,70 @@ export class P5AsciifyGradientRenderer extends P5AsciifyRenderer {
                 [this.prevAsciiGradientFramebuffer, this.nextAsciiGradientFramebuffer] = [this.nextAsciiGradientFramebuffer, this.prevAsciiGradientFramebuffer];
 
                 this.nextAsciiGradientFramebuffer.begin();
-                this.p.clear();
-                this.p.shader(gradient.shader);
+                this._p.clear();
+                this._p.shader(gradient.shader);
                 gradient.setUniforms(this.prevAsciiGradientFramebuffer, this.grayscaleFramebuffer);
-                this.p.rect(0, 0, this.grid.cols, this.grid.rows);
+                this._p.rect(0, 0, this._grid.cols, this._grid.rows);
                 this.nextAsciiGradientFramebuffer.end();
             }
         }
 
         // Ascii character conversion pass
         this._characterFramebuffer.begin();
-        this.p.clear();
-        this.p.shader(this.asciiCharacterShader);
+        this._p.clear();
+        this._p.shader(this.asciiCharacterShader);
         if (previousAsciiRenderer !== this) {
             this.asciiCharacterShader.setUniform('u_prevAsciiCharacterTexture', previousAsciiRenderer.characterFramebuffer);
         }
         this.asciiCharacterShader.setUniform('u_prevGradientTexture', this.grayscaleFramebuffer);
         this.asciiCharacterShader.setUniform('u_nextGradientTexture', this.nextAsciiGradientFramebuffer);
-        this.asciiCharacterShader.setUniform('u_resolution', [this.grid.cols, this.grid.rows]);
-        this.p.rect(0, 0, this.grid.cols, this.grid.rows);
+        this.asciiCharacterShader.setUniform('u_resolution', [this._grid.cols, this._grid.rows]);
+        this._p.rect(0, 0, this._grid.cols, this._grid.rows);
         this._characterFramebuffer.end();
 
         // Color sample passes
         this._primaryColorFramebuffer.begin();
-        this.p.clear();
-        this.p.shader(this.colorSampleShader);
+        this._p.clear();
+        this._p.shader(this.colorSampleShader);
         this.colorSampleShader.setUniform('u_sketchTexture', inputFramebuffer);
         if (previousAsciiRenderer !== this) {
             this.colorSampleShader.setUniform('u_previousColorTexture', previousAsciiRenderer.primaryColorFramebuffer);
         }
         this.colorSampleShader.setUniform('u_sampleTexture', this.nextAsciiGradientFramebuffer);
         this.colorSampleShader.setUniform('u_sampleReferenceTexture', this.grayscaleFramebuffer);
-        this.colorSampleShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
+        this.colorSampleShader.setUniform('u_gridCellDimensions', [this._grid.cols, this._grid.rows]);
         this.colorSampleShader.setUniform('u_sampleMode', this._options.characterColorMode as number);
         this.colorSampleShader.setUniform('u_staticColor', (this._options.characterColor as p5.Color)._array);
-        this.p.rect(0, 0, this.p.width, this.p.height);
+        this._p.rect(0, 0, this._p.width, this._p.height);
         this._primaryColorFramebuffer.end();
 
         this._secondaryColorFramebuffer.begin();
-        this.p.clear();
-        this.p.shader(this.colorSampleShader);
+        this._p.clear();
+        this._p.shader(this.colorSampleShader);
         this.colorSampleShader.setUniform('u_sketchTexture', inputFramebuffer);
         if (previousAsciiRenderer !== this) {
             this.colorSampleShader.setUniform('u_previousColorTexture', previousAsciiRenderer.secondaryColorFramebuffer);
         }
         this.colorSampleShader.setUniform('u_sampleTexture', this.nextAsciiGradientFramebuffer);
         this.colorSampleShader.setUniform('u_sampleReferenceTexture', this.grayscaleFramebuffer);
-        this.colorSampleShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
+        this.colorSampleShader.setUniform('u_gridCellDimensions', [this._grid.cols, this._grid.rows]);
         this.colorSampleShader.setUniform('u_sampleMode', this._options.backgroundColorMode as number);
         this.colorSampleShader.setUniform('u_staticColor', (this._options.backgroundColor as p5.Color)._array);
-        this.p.rect(0, 0, this.p.width, this.p.height);
+        this._p.rect(0, 0, this._p.width, this._p.height);
         this._secondaryColorFramebuffer.end();
 
         // Inversion pass
         this._inversionFramebuffer.begin();
-        this.p.clear();
-        this.p.shader(this.inversionShader);
+        this._p.clear();
+        this._p.shader(this.inversionShader);
         this.inversionShader.setUniform('u_invert', this._options.invertMode);
-        this.inversionShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
+        this.inversionShader.setUniform('u_gridCellDimensions', [this._grid.cols, this._grid.rows]);
         this.inversionShader.setUniform('u_sampleTexture', this.nextAsciiGradientFramebuffer);
         this.inversionShader.setUniform('u_sampleReferenceTexture', this.grayscaleFramebuffer);
         if (previousAsciiRenderer !== this) {
             this.inversionShader.setUniform('u_previousInversionTexture', previousAsciiRenderer.inversionFramebuffer);
         }
-        this.p.rect(0, 0, this.p.width, this.p.height);
+        this._p.rect(0, 0, this._p.width, this._p.height);
         this._inversionFramebuffer.end();
 
 

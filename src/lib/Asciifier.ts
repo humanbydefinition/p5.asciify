@@ -204,4 +204,6 @@ export class P5Asciifier {
 
     // Getter
     get sketchFramebuffer(): p5.Framebuffer { return this._sketchFramebuffer; }
+    get grid(): P5AsciifyGrid { return this._grid; }
+    get fontTextureAtlas(): P5AsciifyFontTextureAtlas { return this._fontTextureAtlas; }
 }

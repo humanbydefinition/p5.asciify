@@ -1,9 +1,9 @@
 import p5 from 'p5';
 
 /**
- * Manages the grid dimensions for the ASCII renderer.
+ * Manages the grid dimensions for the ASCII renderers.
  * 
- * Based on the current canvas dimensions, the grid is resized to fit the maximum number of cells.
+ * Based on the current canvas and font glyph dimensions, the grid is sized to fit the maximum number of cells.
  */
 export class P5AsciifyGrid {
     /** The number of columns in the grid. */
@@ -39,7 +39,7 @@ export class P5AsciifyGrid {
     }
 
     /**
-     * Reset the grid to the default number of columns and rows based on the current canvas, and `_cellWidth` and `_cellHeight`.
+     * Reset the grid to the default number of columns and rows based on the current canvas dimensions, and `_cellWidth` and `_cellHeight`.
      */
     public reset(): void {
         [this._cols, this._rows] = [Math.floor(this._p.width / this._cellWidth), Math.floor(this._p.height / this._cellHeight)];

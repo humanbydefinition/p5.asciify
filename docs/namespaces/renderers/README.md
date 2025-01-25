@@ -19,11 +19,11 @@ Contains functionality relevant to the ASCII rendering.
 | [P5AsciifyRenderer](classes/P5AsciifyRenderer.md) | Class for shader-based ASCII Renderers. |
 | [P5AsciifyRendererManager](classes/P5AsciifyRendererManager.md) | Manages the available ASCII renderers and handles rendering the ASCII output to the canvas. |
 
-## Interfaces
+## Type Aliases
 
-| Interface | Description |
+| Type alias | Description |
 | ------ | ------ |
-| [AsciiRendererOptions](interfaces/AsciiRendererOptions.md) | - |
+| [AsciiRendererOptions](type-aliases/AsciiRendererOptions.md) | The options for the ASCII renderers. |
 
 ## Variables
 
@@ -31,6 +31,6 @@ Contains functionality relevant to the ASCII rendering.
 | ------ | ------ |
 | [ACCURATE\_DEFAULT\_OPTIONS](variables/ACCURATE_DEFAULT_OPTIONS.md) | Default configuration options for accurate ASCII renderer |
 | [BRIGHTNESS\_DEFAULT\_OPTIONS](variables/BRIGHTNESS_DEFAULT_OPTIONS.md) | Default configuration options for brightness-based ASCII renderer |
-| [CUSTOM\_DEFAULT\_OPTIONS](variables/CUSTOM_DEFAULT_OPTIONS.md) | - |
+| [CUSTOM\_DEFAULT\_OPTIONS](variables/CUSTOM_DEFAULT_OPTIONS.md) | Default configuration options for custom ASCII renderer |
 | [EDGE\_DEFAULT\_OPTIONS](variables/EDGE_DEFAULT_OPTIONS.md) | Default configuration options for edge detection ASCII renderer |
 | [GRADIENT\_DEFAULT\_OPTIONS](variables/GRADIENT_DEFAULT_OPTIONS.md) | Default configuration options for gradient-based ASCII renderer |
