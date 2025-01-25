@@ -11,7 +11,7 @@ Similar to the `setup()` function in `p5.js`, the `setupAsciify()` function is s
 
 ## `drawAsciify()`
 
-Similar to the `draw()` function in `p5.js`, the `drawAsciify()` function is specific to the `p5.asciify` library, and is executed automatically after ASCII conversion has been applied to the canvas. This function can be used to apply additional post-processing steps on top of the ASCII conversion, like applying a CRT filter.
+Similar to the `draw()` function in `p5.js`, the `drawAsciify()` function is specific to the `p5.asciify` library, and is executed automatically after ASCII conversion has been applied to the canvas, which happens every time the users `draw()` function has finished executing. This function can be used to apply additional post-processing steps on top of the ASCII conversion, like applying a CRT filter for example.
 
 ## The `p5asciify` object
 
@@ -43,7 +43,7 @@ This function can be called at any time, also in `preload()` or `setup()`.
 
 ### `.renderers(): P5AsciifyRendererManager`
 
-Returns the classes `P5AsciifyRendererManager` object, which provides access to all renderers in the ASCII rendering pipeline and allows modification of the pipeline through adding, swapping, or removing renderers.
+Returns the classes `P5AsciifyRendererManager` object, which provides access to all renderers in the ASCII rendering pipeline and allows modification of the pipeline through adding, swapping, removing or modifying renderers.
 
 **This function should only be called either within `setupAsciify()` or after the setup is complete during runtime.**
 
@@ -52,189 +52,171 @@ Returns the classes `P5AsciifyRendererManager` object, which provides access to 
 Provided through the `renderers()` function of the `p5asciify` object, the `P5AsciifyRendererManager` object is the main interface for interacting with the ASCII rendering pipeline.
 
 By default, without any modifications, the ASCII rendering pipeline consists of the following predefined renderers in the given order:
-- `{ name: "brightness", renderer: P5AsciifyBrightnessRenderer }`
-- `{ name: "accurate", renderer: P5AsciifyAccurateRenderer }`
-- `{ name: "gradient", renderer: P5AsciifyGradientRenderer }`
-- `{ name: "edge", renderer: P5AsciifyEdgeRenderer }`
 - `{ name: "custom", renderer: P5AsciifyRenderer }`
+- `{ name: "edge", renderer: P5AsciifyEdgeRenderer }`
+- `{ name: "gradient", renderer: P5AsciifyGradientRenderer }`
+- `{ name: "accurate", renderer: P5AsciifyAccurateRenderer }`
+- `{ name: "brightness", renderer: P5AsciifyBrightnessRenderer }`
+
+This pipeline is executed in opposite order, starting with the last renderer in the list and ending with the first renderer in the list.
 
 The default configurations for each of those predefined renderers can be found here: TODO
 
 ### `.add(name: string, type: RendererType, options: AsciiRendererOptions): P5AsciifyRenderer`
 
-Adds an additional renderer of a given type to the end of the ASCII rendering pipeline. The `name` parameter is used to identify the renderer via the manager's `get()` function, if the returning instance is not stored in a variable. It's highly recommended to store the returned renderer instance in a variable for later access and modification though.
+Adds an additional renderer of a given type to the end of the ASCII rendering pipeline. The `name` parameter is used to return the renderer via the manager's `get()` function, if the returning instance is not stored in a variable. It's highly recommended to store the returned renderer instance in a variable for later access and modification though.
 
 ### `.get(name: string): P5AsciifyRenderer`
 
 Returns the renderer instance with the given name, which was previously added to the ASCII rendering pipeline. Should mainly be used to access the pre-defined renderers by the `p5.asciify` library. The pre-defined renderer names to fetch the renderer instances from can be found above. It's best to store the renderer instances in variables during setup for later access and modification during runtime without having to search for them in the list of renderers constantly.
 
-<hr/>
+### `.moveDown(renderer: string | P5AsciifyRenderer): void`
 
-### `addAsciiGradient()`
+Moves the renderer with the given name or the given renderer instance one position down in the ASCII rendering pipeline. The renderer will be executed earlier in the pipeline.
 
-`addAsciiGradient(gradientType, brightnessStart, brightnessEnd, characters, params): P5AsciifyGradient`
+### `.moveUp(renderer: string | P5AsciifyRenderer): void`
 
-Adds a gradient/pattern-based ASCII conversion layer to the rendering pipeline.
+Moves the renderer with the given name or the given renderer instance one position up in the ASCII rendering pipeline. The renderer will be executed later in the pipeline.
 
-#### Parameters
+### `.remove(renderer: string | P5AsciifyRenderer): void`
 
-- **gradientType**: `string` - The type of gradient to use. A list of available gradient types can be found below.
-- **brightnessStart**: `number` - The brightness value at which the gradient starts. Allowed values range from `0` to `255`.
-- **brightnessEnd**: `number` - The brightness value at which the gradient ends. Allowed values range from `0` to `255`.
-- **characters**: `string` - A string containing the characters to be used for the ASCII conversion, that will be mapped to the gradient.
-- **params**: `Object` - An object containing the parameters for the gradient/pattern. The parameters are specific to each gradient type. The available parameters can be found below.
+Removes the renderer with the given name or the given renderer instance from the ASCII rendering pipeline.
 
-#### Returns
+### `.clear(): void`
 
-- `P5AsciifyGradient` - The gradient object that was added to the rendering pipeline. The object can be used to adjust the gradient's parameters during runtime.
+Removes **all** renderers from the ASCII rendering pipeline.
 
-#### Usage Context
+### `.swap(renderer1: string | P5AsciifyRenderer, renderer2: string | P5AsciifyRenderer): void`
 
-| Function  | Usable? |
-|-----------|-----------|
-| `preload()` | ✓       |
-| `setup()`   | ✓       |
-| `draw()`    | ✓       |
+Swaps the positions of the two given renderers in the ASCII rendering pipeline.
 
-#### Available gradients and parameters
+## The `P5AsciifyRenderer` object and its subclasses
 
-| gradientType                | params                                                                                          |
-|-----------------------|-------------------------------------------------------------------------------------------------|
-| **`'linear'`**        | `direction` (number): The direction of the gradient in degrees. The default value is `1`. <br/> `angle` (number): The angle of the gradient in degrees. The default value is `0`. <br/> `speed` (number): The speed of the gradient. The default value is `0.01`. |
-| **`'radial'`**        | `direction` (number): The direction of the gradient in degrees. The default value is `1`. <br/> `centerX` (number): The x-coordinate of the center of the gradient. The default value is `0.5`. <br/> `centerY` (number): The y-coordinate of the center of the gradient. The default value is `0.5`. <br/> `radius` (number): The radius of the gradient. The default value is `0.5`. |
-| **`'zigzag'`**       | `direction` (number): The direction of the gradient in degrees. The default value is `1`. <br/> `angle` (number): The angle of the gradient in degrees. The default value is `0`. <br/> `speed` (number): The speed of the gradient. The default value is `0.01`. |
-| **`'spiral'`**      | `direction` (number): The direction of the gradient in degrees. The default value is `1`. <br/> `centerX` (number): The x-coordinate of the center of the gradient. The default value is `0.5`. <br/> `centerY` (number): The y-coordinate of the center of the gradient. The default value is `0.5`. <br/> `speed` (number): The speed of the gradient. The default value is `0.01`. <br/> `density` (number): The density of the spiral. The default value is `0.01`. |
-| **`'conical'`**    | `centerX` (number): The x-coordinate of the center of the gradient. The default value is `0.5`. <br/> `centerY` (number): The y-coordinate of the center of the gradient. The default value is `0.5`. <br/> `speed` (number): The speed of the gradient. The default value is `0.01`. |
-| **`'noise'`**     | `noiseScale` (number): The scale of the noise. The default value is `0.1`. <br/> `speed` (number): The speed of the gradient. The default value is `0.01`. <br/> `direction` (number): The direction of the gradient in degrees. The default value is `1`. |
+When adding a renderer to the ASCII rendering pipeline through the `P5AsciifyRendererManager` via the `add()` function, or by getting the pre-defined renderers through the `get()` function, the returned object is of type `P5AsciifyRenderer` or one of its subclasses, depending on the type of renderer added.
 
-> [!TIP]
-> All gradients/patterns can be added multiple times to the rendering pipeline with varying parameters, allowing for the creation of complex visual effects by combining multiple gradients. 
+This super class can be used as a custom renderer where the ASCII conversion is fully controlled by the user. Through its exposed framebuffers, and ideally conforming to the internal logic of the `p5.asciify` library in regards to the ASCII conversion, the user can create custom ASCII conversion logic. All the framebuffers dimensions match the columns and rows of the grid at all times, and there is no manual resizing needed. The framebuffers should only be accessed and drawn to on the super class level, as the subclasses have their own logic.
 
-> [!NOTE]
-> All gradients/patterns added have a common property called `enabled`, which is set to `true` by default. This property can be used to enable or disable the gradient/pattern while keeping it in the rendering pipeline. This feature is useful for creating interactive sketches where gradients/patterns are toggled on and off based on user input.
+The super class `P5AsciifyRenderer` provides the following properties and functions, which are shared by all subclasses:
 
-#### Example
+#### Properties
 
-```javascript
-let linearGradient;
-let zigzagGradient;
+### `primaryColorFramebuffer: p5.Framebuffer`
 
-function setup() {
-  createCanvas(windowWidth, windowHeight, WEBGL);
+The framebuffer containing the colors which are used to define the ASCII character colors in the grid.
 
-  setAsciiOptions({
-    ascii: {
-      renderMode: "brightness",
-      characters: " .:-=+*#%@",
-    },
-    edge: {
-      enabled: true,
-      characterColorMode: 1,
-      sobelThreshold: 0.1,
-      sampleThreshold: 16,
-    },
-  });
+### `secondaryColorFramebuffer: p5.Framebuffer`
 
-  linearGradient = addAsciiGradient("linear", 0, 127, "p5.asciify  ", {
-    direction: 1,
-    angle: 0,
-    speed: 0.1,
-  });
-  zigzagGradient = addAsciiGradient("zigzag", 128, 255, "humanbydefinition ", {
-    direction: 1,
-    speed: 0.1,
-  });
-}
+The framebuffer containing the colors which are used to define the ASCII character colors in the grid.
 
-function draw() {
-  background(150, 0, 0);
-  noStroke();
-  rotateX(radians(frameCount * 3));
-  rotateY(radians(frameCount));
-  directionalLight(255, 255, 255, 0, 0, -1);
-  torus(200, 50);
+### `inversionFramebuffer: p5.Framebuffer`
 
-  linearGradient.angle += 0.5;
+The framebuffer containing color information whether the character and background color of a given cell should swap or not.
+`#000000` means no inversion, `#ffffff` means inversion.
 
-  if (frameCount % 180 == 0) {
-    zigzagGradient.enabled = !zigzagGradient.enabled;
-  }
-}
+### `characterFramebuffer: p5.Framebuffer`
 
-function windowResized() {
-  resizeCanvas(windowWidth, windowHeight);
-}
-```
-[`run inside the p5.js web editor`](https://editor.p5js.org/humanbydefinition/sketches/5giwV1wuk)
+The framebuffer containing color information, which is translated to the ASCII characters to render on the grid. Proper documentation on how to use this effectively will *(hopefully)* be provided in the future.
+
+#### Functions
+
+### `.update(options: Partial<AsciiRendererOptions>): void`
+
+Updates the renderer with the given options. The options are the same as the ones passed to the `add()` function of the `P5AsciifyRendererManager`.
+
+### `.characters(characters: string): void`
+
+Sets the characters used for the ASCII conversion of the renderer. 
+
+This function and the corresponding property is only relevant for the `P5AsciifyAccurateRenderer`, the `P5AsciifyBrightnessRenderer`, and the `P5AsciifyEdgeRenderer`. The `P5AsciifyGradientRenderer` and the super class `P5AsciifyRenderer` have their own way of defining the characters used for the ASCII conversion.
+
+### `.invert(invert: boolean): void`
+
+Sets whether the ASCII characters and their background colors should swap or not. This function is only relevant to the sub classes, as the super class has its own way of defining the inversion. If `true`, all the grid cells affected by a given renderer will have their character and background colors swapped.
+
+### `.rotation(rotation: number): void`
+
+Sets the rotation of the ASCII grid in degrees *(in the future, it should be based on the defined `angleMode()` provided by `p5.js`)*. Currently, this is a global property which actually affects all renderers and grid cells in the pipeline, but in the future, there will be a separate framebuffer with the rotation information for each renderer.
+
+### `.characterColor(characterColor: p5.Color): void`
+
+Sets the color of the ASCII characters. This function is only relevant to the sub classes, as the super class has its own way of defining the character color. Additionally, this `fixed` color passed is only used on all the grid cells a given renderer covers, if the `characterColorMode()` is set to `"fixed"`.
+
+### `.characterColorMode(characterColorMode: "fixed" | "sampled"): void`
+
+Sets the mode of the ASCII character color. If set to `"fixed"`, the color set by the `characterColor()` function is used. If set to `"sampled"`, the color is sampled from the `primaryColorSampleFramebuffer`.
+
+### `.backgroundColor(backgroundCharacterColor: p5.Color): void`
+
+Sets the color of the grid cell backgrounds. This function is only relevant to the sub classes, as the super class has its own way of defining the background color. Additionally, this `fixed` color passed is only used on all the grid cells a given renderer covers, if the `backgroundColorMode()` is set to `"fixed"`.
+
+### `.backgroundColorMode(backgroundColorMode: "fixed" | "sampled"): void`
+
+Sets the mode of the grid cell background color. If set to `"fixed"`, the color set by the `backgroundColor()` function is used. If set to `"sampled"`, the color is sampled from the `secondaryColorSampleFramebuffer`.
+
+### `.enabled(enabled: boolean): void`
+
+Sets whether the renderer should be executed or not. If set to `false`, the renderer will not be executed, but will still be part of the ASCII rendering pipeline.
+
+### `.enable(): void`
+
+Enabled the renderer, so it will be executed during the ASCII conversion.
+
+### `.disable(): void`
+
+Disables the renderer, so it will not be executed during the ASCII conversion.
 
 <hr/>
 
-### `removeAsciiGradient()`
+### The `P5AsciifyBrightnessRenderer` object
 
-`removeAsciiGradient(gradientInstance: P5AsciifyGradient): void`
-
-Removes a gradient/pattern-based ASCII conversion layer from the rendering pipeline.
-
-#### Parameters
-
-- **gradientInstance**: `P5AsciifyGradient` - The gradient object to remove from the rendering pipeline.
-
-#### Usage Context
-
-| Function  | Usable? |
-|-----------|-----------|
-| `preload()` | ✓       |
-| `setup()`   | ✓       |
-| `draw()`    | ✓       |
-
-#### Example
-
-```javascript
-let linearGradient;
-let zigzagGradient;
-
-function setup() {
-  createCanvas(windowWidth, windowHeight, WEBGL);
-
-  setAsciiOptions({
-    ascii: {
-      renderMode: "brightness",
-      characters: " .:-=+*#%@",
-    },
-  });
-
-  linearGradient = addAsciiGradient("linear", 0, 255, "p5.asciify  ", {
-    direction: 1,
-    angle: 0,
-    speed: 0.1,
-  });
-}
-
-function draw() {
-  background(0);
-  noStroke();
-  rotateX(radians(frameCount * 3));
-  rotateY(radians(frameCount));
-  directionalLight(255, 255, 255, 0, 0, -1);
-  torus(200, 50);
-
-  linearGradient.angle += 0.5;
-
-  if (frameCount === 240) {
-    removeAsciiGradient(linearGradient);
-  }
-}
-
-function windowResized() {
-  resizeCanvas(windowWidth, windowHeight);
-}
-```
-[`run inside the p5.js web editor`](https://editor.p5js.org/humanbydefinition/sketches/HH8PjXSTY)	
+The `P5AsciifyBrightnessRenderer` object is a subclass of the `P5AsciifyRenderer` object, and is used to convert the brightness of the colors in the main canvas to ASCII characters from the 1D character set. The brightness of the colors is calculated using the formula `0.299 * red + 0.587 * green + 0.114 * blue`. The sampling on the main canvas is being done at the center of each grid cell.
 
 <hr/>
 
-Congratulations! You've mastered the basics of `p5.asciify`! Now you're ready to create your own intricate visualizations using a dynamic grid of ASCII characters.  
+### The `P5AsciifyAccurateRenderer` object
+
+The `P5AsciifyAccurateRenderer` object is a subclass of the `P5AsciifyRenderer` object, and attempts to create an accurate ASCII representation of the main canvas, limited by the available characters defined in the character set. The sampling process is more complex and won't be explained here. This renderer works best with smaller font sizes up to `16`. With larger font sizes, the performance will decrease significantly, potentially crashing `WebGL`. Probably won't reach 60 frames per second on most older hardware.
+
+<hr/>
+
+### The `P5AsciifyEdgeRenderer` object
+
+The `P5AsciifyEdgeRenderer` object is a subclass of the `P5AsciifyRenderer` object, and is used to detect edges in the main canvas and convert them to ASCII characters on the grid. The edge detection is done using a Sobel filter and the whole renderer is inspired by the following YouTube video by [`Acerola`](https://github.com/GarrettGunnell): [`I Tried Turning Games Into Text`](https://www.youtube.com/watch?v=gg40RWiaHRY)
+
+For this renderer, you ideally define a character set that has exactly 8 characters, which represent the different edge directions. The default character set is `"-/|\\-/|\\"`. If more or less characters are defined, there will be unexpected behavior.
+
+Similar, but not as bad as the `P5AsciifyAccurateRenderer`, this renderer works best with smaller font sizes, and the performance will decrease with larger font sizes.
+
+Additionally, this sub class provides two extra functions:
+
+### `.sobelThreshold(sobelThreshold: number): void`
+
+Sets the threshold for the edge detection. The default value is `0.5`. The higher the value, the more edges will be detected. Should be a value between `0` and `1`.
+
+### `.sampleThreshold(sampleThreshold: number): void`
+
+Sets the threshold for the sampling process. The default value is `16`. This value corresponds to `"How many pixels in a grid cell need to be marked as an edge to be considered in the ASCII edge conversion?"`. The higher the value, the less edges will be detected.
+
+<hr/>
+
+### The `P5AsciifyGradientRenderer` object
+
+The `P5AsciifyGradientRenderer` object is a subclass of the `P5AsciifyRenderer` object, and can be used to apply a set of modifyable gradients/patterns to the ASCII conversion. The gradients/patterns are defined by the user and can be added multiple times to this renderer. A gradient/pattern is applied to a certain brightness range.
+
+If a canvas contains 50% white and 50% black, and a gradient is defined from 0 to 255, the gradient will be applied to the whole canvas. If the gradient is defined from 0 to 127, the gradient will only be applied to the black part of the canvas.
+
+#### Functions
+
+### `.add(GradientName: "linear" | "radial" | "spiral" | "conical", brightnessStart: number, brightnessEnd: number, characters: string, params: Object): P5AsciifyGradient`
+
+Adds a gradient/pattern to the instance of the `P5AsciifyGradientRenderer` object.
+
+### `.remove(gradientInstance: P5AsciifyGradient): void`
+
+Removes a gradient/pattern from the instance of the `P5AsciifyGradientRenderer` object.
+
+<hr/>
+
+Congratulations! Those are the basics of `p5.asciify`! Now you're ready to create your own ASCII art with `p5.js`.
+
 Happy coding! (｡◕‿‿◕｡)
-
-> [!TIP]
-> To get started with some awesome free textmode/pixel fonts that work well with `p5.asciify`, make sure to check out the [`Resources`](https://github.com/humanbydefinition/p5.asciify/wiki/03_Resources) section for a list of recommended fonts.
