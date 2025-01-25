@@ -42,11 +42,11 @@ export class P5AsciifyRendererManager {
         };
 
         this._renderers = [
-            { name: "brightness", renderer: new P5AsciifyBrightnessRenderer(this.p, this.grid, fontTextureAtlas) },
-            { name: "accurate", renderer: new P5AsciifyAccurateRenderer(this.p, this.grid, fontTextureAtlas) },
-            { name: "gradient", renderer: new P5AsciifyGradientRenderer(this.p, this.grid, fontTextureAtlas) },
-            { name: "edge", renderer: new P5AsciifyEdgeRenderer(this.p, this.grid, fontTextureAtlas) },
             { name: "custom", renderer: new P5AsciifyRenderer(this.p, this.grid, fontTextureAtlas) },
+            { name: "edge", renderer: new P5AsciifyEdgeRenderer(this.p, this.grid, fontTextureAtlas) },
+            { name: "gradient", renderer: new P5AsciifyGradientRenderer(this.p, this.grid, fontTextureAtlas) },
+            { name: "accurate", renderer: new P5AsciifyAccurateRenderer(this.p, this.grid, fontTextureAtlas) },
+            { name: "brightness", renderer: new P5AsciifyBrightnessRenderer(this.p, this.grid, fontTextureAtlas) },
         ];
 
         this.lastRenderer = this._renderers[0].renderer;
@@ -61,7 +61,8 @@ export class P5AsciifyRendererManager {
 
         let currentRenderer = this._renderers[0].renderer;
 
-        for (const renderer of this._renderers) {
+        for (let i = this._renderers.length - 1; i >= 0; i--) {
+            const renderer = this._renderers[i];
             if (renderer.renderer.options.enabled) {
                 renderer.renderer.render(inputFramebuffer, currentRenderer);
                 asciiOutput = renderer.renderer.outputFramebuffer;
@@ -151,7 +152,7 @@ export class P5AsciifyRendererManager {
     public moveDown(renderer: string | P5AsciifyRenderer): void {
         const index = this.getRendererIndex(renderer);
         if (index <= 0) return;
-        this.swap(renderer, this._renderers[index - 1].renderer);
+        this.swap(renderer, this._renderers[index + 1].renderer);
     }
 
     /**
@@ -161,7 +162,7 @@ export class P5AsciifyRendererManager {
     public moveUp(renderer: string | P5AsciifyRenderer): void {
         const index = this.getRendererIndex(renderer);
         if (index === -1 || index >= this._renderers.length - 1) return;
-        this.swap(renderer, this._renderers[index + 1].renderer);
+        this.swap(renderer, this._renderers[index - 1].renderer);
     }
 
     /**
