@@ -99,14 +99,14 @@ const sketch = (p) => {
 	p.setupAsciify = () => {
 		p5asciify.fontSize(16);
 
-		primaryColorSampleFramebuffer = p5asciify.renderers().get("custom").primaryColorSampleFramebuffer;
-		secondaryColorSampleFramebuffer = p5asciify.renderers().get("custom").secondaryColorSampleFramebuffer;
-		asciiCharacterFramebuffer = p5asciify.renderers().get("custom").asciiCharacterFramebuffer;
+		primaryColorSampleFramebuffer = p5asciify.renderers().get("custom").primaryColorFramebuffer;
+		secondaryColorSampleFramebuffer = p5asciify.renderers().get("custom").secondaryColorFramebuffer;
+		asciiCharacterFramebuffer = p5asciify.renderers().get("custom").characterFramebuffer;
 
 		p5asciify.borderColor = p.color(0);
 		p5asciify.renderers().get("custom").update({ enabled: true });
 
-		charsetColorPalette = p5asciify.asciiFontTextureAtlas.getCharsetColorArray(charset);
+		charsetColorPalette = p5asciify.fontTextureAtlas.getCharsetColorArray(charset);
 		charsetColorPaletteFramebuffer.loadPixels();
 		for (let i = 0; i < charset.length; i++) {
 			let c = charsetColorPalette[i];
