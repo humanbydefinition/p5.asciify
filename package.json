@@ -3,6 +3,7 @@
   "version": "0.7.0",
   "description": "Apply real-time ASCII conversion to your favourite p5.js sketches instantly.",
   "type": "module",
+  "types": "./dist/index.d.ts",
   "main": "./dist/p5.asciify.umd.js",
   "module": "./dist/p5.asciify.esm.js",
   "exports": {
