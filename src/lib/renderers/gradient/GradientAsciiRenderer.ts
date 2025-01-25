@@ -128,7 +128,7 @@ export class P5AsciifyGradientRenderer extends P5AsciifyRenderer {
 
         // Gradient passes
         for (const gradient of this.gradientManager.gradients) {
-            if (gradient.enabled) {
+            if (gradient.isEnabled) {
                 [this.prevAsciiGradientFramebuffer, this.nextAsciiGradientFramebuffer] = [this.nextAsciiGradientFramebuffer, this.prevAsciiGradientFramebuffer];
 
                 this.nextAsciiGradientFramebuffer.begin();

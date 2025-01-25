@@ -19,13 +19,25 @@ type RendererType = keyof typeof RENDERER_TYPES;
  * Manages the available ASCII renderers and handles rendering the ASCII output to the canvas.
  */
 export declare class P5AsciifyRendererManager {
-    private p;
-    private grid;
-    private fontTextureAtlas;
-    private currentCanvasDimensions;
+    /** The p5 instance. */
+    private _p;
+    /** The grid instance. */
+    private _grid;
+    /** The font texture atlas instance. */
+    private _fontTextureAtlas;
+    /** The current dimensions of the canvas. If the dimensions change, the grid is reset and the renderers are resized. */
+    private _currentCanvasDimensions;
+    /** The list of available renderers. */
     private _renderers;
+    /** The last renderer used in the rendering loop. */
     lastRenderer: P5AsciifyRenderer;
-    constructor(p: p5, grid: P5AsciifyGrid, fontTextureAtlas: P5AsciifyFontTextureAtlas);
+    constructor(
+    /** The p5 instance. */
+    _p: p5, 
+    /** The grid instance. */
+    _grid: P5AsciifyGrid, 
+    /** The font texture atlas instance. */
+    _fontTextureAtlas: P5AsciifyFontTextureAtlas);
     /**
      * Renders the ASCII output to the canvas.
      * @param inputFramebuffer The input framebuffer to transform into ASCII.
@@ -83,7 +95,7 @@ export declare class P5AsciifyRendererManager {
      * @param renderer The renderer to get the index of.
      * @returns The index of the renderer in the list of renderers. Returns -1 if the renderer is not found.
      */
-    private getRendererIndex;
+    private _getRendererIndex;
     get renderers(): {
         name: string;
         renderer: P5AsciifyRenderer;

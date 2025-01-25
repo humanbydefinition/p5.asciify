@@ -2,19 +2,21 @@
 
 ***
 
-[p5.asciify](../../../globals.md) / [gradients](../README.md) / GradientParams
+[p5.asciify](../../../README.md) / [gradients](../README.md) / GradientParams
 
 # Type Alias: GradientParams
 
 > **GradientParams**: `object`
 
-Defined in: [gradients/types.ts:47](https://github.com/humanbydefinition/p5-asciify/blob/8cd5bfe7cd7ddc9c2a99adb8f2c6b062ad6f770a/src/lib/gradients/types.ts#L47)
+Defined in: [gradients/types.ts:86](https://github.com/humanbydefinition/p5-asciify/blob/10002e5b44822cb907b50597a894bf5528f31cb6/src/lib/gradients/types.ts#L86)
+
+The available gradient parameters.
 
 ## Type declaration
 
-| Name | Type | Defined in |
-| ------ | ------ | ------ |
-| <a id="conical"></a> `conical` | [`ConicalGradientParams`](ConicalGradientParams.md) | [gradients/types.ts:51](https://github.com/humanbydefinition/p5-asciify/blob/8cd5bfe7cd7ddc9c2a99adb8f2c6b062ad6f770a/src/lib/gradients/types.ts#L51) |
-| <a id="linear"></a> `linear` | [`LinearGradientParams`](LinearGradientParams.md) | [gradients/types.ts:48](https://github.com/humanbydefinition/p5-asciify/blob/8cd5bfe7cd7ddc9c2a99adb8f2c6b062ad6f770a/src/lib/gradients/types.ts#L48) |
-| <a id="radial"></a> `radial` | [`RadialGradientParams`](RadialGradientParams.md) | [gradients/types.ts:50](https://github.com/humanbydefinition/p5-asciify/blob/8cd5bfe7cd7ddc9c2a99adb8f2c6b062ad6f770a/src/lib/gradients/types.ts#L50) |
-| <a id="spiral"></a> `spiral` | [`SpiralGradientParams`](SpiralGradientParams.md) | [gradients/types.ts:49](https://github.com/humanbydefinition/p5-asciify/blob/8cd5bfe7cd7ddc9c2a99adb8f2c6b062ad6f770a/src/lib/gradients/types.ts#L49) |
+| Name | Type | Description | Defined in |
+| ------ | ------ | ------ | ------ |
+| <a id="conical"></a> `conical` | [`ConicalGradientParams`](ConicalGradientParams.md) | The parameters for the `"conical"` gradient type. | [gradients/types.ts:97](https://github.com/humanbydefinition/p5-asciify/blob/10002e5b44822cb907b50597a894bf5528f31cb6/src/lib/gradients/types.ts#L97) |
+| <a id="linear"></a> `linear` | [`LinearGradientParams`](LinearGradientParams.md) | The parameters for the `"linear"` gradient type. | [gradients/types.ts:88](https://github.com/humanbydefinition/p5-asciify/blob/10002e5b44822cb907b50597a894bf5528f31cb6/src/lib/gradients/types.ts#L88) |
+| <a id="radial"></a> `radial` | [`RadialGradientParams`](RadialGradientParams.md) | The parameters for the `"radial"` gradient type. | [gradients/types.ts:94](https://github.com/humanbydefinition/p5-asciify/blob/10002e5b44822cb907b50597a894bf5528f31cb6/src/lib/gradients/types.ts#L94) |
+| <a id="spiral"></a> `spiral` | [`SpiralGradientParams`](SpiralGradientParams.md) | The parameters for the `"spiral"` gradient type. | [gradients/types.ts:91](https://github.com/humanbydefinition/p5-asciify/blob/10002e5b44822cb907b50597a894bf5528f31cb6/src/lib/gradients/types.ts#L91) |

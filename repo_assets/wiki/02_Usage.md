@@ -1,4 +1,7 @@
 > [!NOTE]
+> This page has been completely reworked and updated for the `v0.7.0` release of `p5.asciify`, which introduces a new and more flexible way of interacting with the ASCII rendering pipeline. The new API is more powerful and allows for more customization than ever before. This page is still a work in progess and will be updated with more information in the future, especially links to mentioned resources.
+
+> [!NOTE]
 > All examples given here use p5.js global mode, but can be applied to instance mode as well. 
 >
 > Check out the `Instance mode` section in the [`README`](https://github.com/humanbydefinition/p5.asciify/tree/main?tab=readme-ov-file#instance-mode) or the [`Getting Started`](https://github.com/humanbydefinition/p5.asciify/wiki/01_Getting-Started#instance-mode) page of the Wiki to learn how to apply the functionality provided by `p5.asciify` to instance mode.
@@ -9,9 +12,48 @@
 
 Similar to the `setup()` function in `p5.js`, the `setupAsciify()` function is specific to the `p5.asciify` library, and is executed automatically after the setup of `p5.asciify` is finished. This function is used to modify the default ASCII rendering pipeline and it's renderers, or to create an entirely custom pipeline. All settings and modifications made here can also be changed during runtime throughout the `draw()` loop.
 
+```javascript
+function setup() {
+  createCanvas(800, 800, WEBGL); // Create a WebGL canvas
+}
+
+function setupAsciify() {
+  // Optionally apply additional setup logic for the ASCII conversion
+}
+
+function draw() {
+  background(0); // Set the background color to black
+  // Draw something on the canvas to asciify...
+}
+```
+
 ## `drawAsciify()`
 
 Similar to the `draw()` function in `p5.js`, the `drawAsciify()` function is specific to the `p5.asciify` library, and is executed automatically after ASCII conversion has been applied to the canvas, which happens every time the users `draw()` function has finished executing. This function can be used to apply additional post-processing steps on top of the ASCII conversion, like applying a CRT filter for example.
+
+```javascript
+function setup() {
+  createCanvas(800, 800, WEBGL); // Create a WebGL canvas
+}
+
+function setupAsciify() {
+  p5asciify.fontSize(8); // Set the font size to 8
+  p5asciify.background("#000000"); // Set the background color to black
+
+  // Swap the character and background colors in the brightness renderer
+  p5asciify.renderers().get("brightness").invert(true); 
+}
+
+function draw() {
+  background(0); // Set the background color to black
+  // Draw something on the canvas to asciify...
+}
+
+function drawAsciify() {
+  // Apply a CRT filter to the ASCII conversion, draw an FPS counter on top, etc..
+}
+```
+
 
 ## The `p5asciify` object
 
@@ -23,11 +65,23 @@ Sets the size of the font used throughout the whole ASCII rendering pipeline. Al
 
 This function can be called at any time, also in `preload()` or `setup()`.
 
+```javascript
+function setupAsciify() {
+  p5asciify.fontSize(8); // Set the font size to 8
+}
+```
+
 ### `.loadFont(font: string | p5.Font): void`
 
 Loads a custom font for the ASCII conversion, which is used throughout the whole ASCII rendering pipeline. The font can be either a `p5.Font` object, a path to a font file, or a `base64` encoded font string. Allowed formats are `.ttf` and `.otf`.
 
 This function can be called at any time, also in `preload()` or `setup()`.
+
+```javascript
+function preload() {
+  p5asciify.loadFont("path/to/font.ttf"); // Load a custom font for the ASCII conversion
+}
+```
 
 > [!TIP]
 > For a list of free and awesome textmode/pixel fonts that have been tested to work well with `p5.asciify`, check out the `Resources` section.
@@ -41,11 +95,24 @@ Sets the background color of the potentially empty space, which is not covered b
 
 This function can be called at any time, also in `preload()` or `setup()`.
 
+```javascript
+function setupAsciify() {
+  p5asciify.background("#000000"); // Set the background color to black
+}
+```
+
 ### `.renderers(): P5AsciifyRendererManager`
 
 Returns the classes `P5AsciifyRendererManager` object, which provides access to all renderers in the ASCII rendering pipeline and allows modification of the pipeline through adding, swapping, removing or modifying renderers.
 
 **This function should only be called either within `setupAsciify()` or after the setup is complete during runtime.**
+
+```javascript
+function setupAsciify() {
+  // Access the ASCII rendering pipeline, which will be described in more detail below
+  console.log(p5asciify.renderers()); 
+}
+```
 
 ## The `P5AsciifyRendererManager` object
 
@@ -66,29 +133,82 @@ The default configurations for each of those predefined renderers can be found h
 
 Adds an additional renderer of a given type to the end of the ASCII rendering pipeline. The `name` parameter is used to return the renderer via the manager's `get()` function, if the returning instance is not stored in a variable. It's highly recommended to store the returned renderer instance in a variable for later access and modification though.
 
+```javascript
+let asciiBrightnessRenderer;
+
+function setupAsciify() {
+    p5asciify.renderers.clear() // Remove all default renderers
+
+  asciiBrightnessRenderer = p5asciify.renderers().add("br1ghtness", "brightness", {
+    characters: " .:-=+*#%@",
+    invert: false,
+    // Add additional options here... If missing, the default options are used
+  });
+}
+```
+
 ### `.get(name: string): P5AsciifyRenderer`
 
 Returns the renderer instance with the given name, which was previously added to the ASCII rendering pipeline. Should mainly be used to access the pre-defined renderers by the `p5.asciify` library. The pre-defined renderer names to fetch the renderer instances from can be found above. It's best to store the renderer instances in variables during setup for later access and modification during runtime without having to search for them in the list of renderers constantly.
+
+```javascript
+let asciiBrightnessRenderer;
+
+function setupAsciify() {
+  asciiBrightnessRenderer = p5asciify.renderers().get("brightness");
+  console.log(asciiBrightnessRenderer); // Access the default brightness renderer
+}
+```
 
 ### `.moveDown(renderer: string | P5AsciifyRenderer): void`
 
 Moves the renderer with the given name or the given renderer instance one position down in the ASCII rendering pipeline. The renderer will be executed earlier in the pipeline.
 
+```javascript
+function setupAsciify() {
+  p5asciify.renderers().moveDown("edge"); // Move the edge renderer one position down
+}
+```
+
 ### `.moveUp(renderer: string | P5AsciifyRenderer): void`
 
 Moves the renderer with the given name or the given renderer instance one position up in the ASCII rendering pipeline. The renderer will be executed later in the pipeline.
+
+```javascript
+function setupAsciify() {
+  p5asciify.renderers().moveUp("brightness"); // Move the brightness renderer one position up
+}
+```
 
 ### `.remove(renderer: string | P5AsciifyRenderer): void`
 
 Removes the renderer with the given name or the given renderer instance from the ASCII rendering pipeline.
 
+```javascript
+function setupAsciify() {
+  p5asciify.renderers().remove("gradient"); // Remove the gradient renderer
+}
+```
+
 ### `.clear(): void`
 
 Removes **all** renderers from the ASCII rendering pipeline.
 
+```javascript
+function setupAsciify() {
+  p5asciify.renderers().clear(); // Remove all renderers
+}
+```
+
 ### `.swap(renderer1: string | P5AsciifyRenderer, renderer2: string | P5AsciifyRenderer): void`
 
 Swaps the positions of the two given renderers in the ASCII rendering pipeline.
+
+```javascript
+function setupAsciify() {
+  p5asciify.renderers().swap("edge", "gradient"); // Swap the edge and gradient renderers
+}
+```
 
 ## The `P5AsciifyRenderer` object and its subclasses
 
@@ -123,47 +243,127 @@ The framebuffer containing color information, which is translated to the ASCII c
 
 Updates the renderer with the given options. The options are the same as the ones passed to the `add()` function of the `P5AsciifyRendererManager`.
 
+```javascript
+function setupAsciify() {
+  p5asciify.renderers().get("brightness").update({
+    characters: " .:-=+*#%@",
+    invert: false,
+    // Add additional options here if needed...
+  });
+}
+```
+
 ### `.characters(characters: string): void`
 
 Sets the characters used for the ASCII conversion of the renderer. 
 
 This function and the corresponding property is only relevant for the `P5AsciifyAccurateRenderer`, the `P5AsciifyBrightnessRenderer`, and the `P5AsciifyEdgeRenderer`. The `P5AsciifyGradientRenderer` and the super class `P5AsciifyRenderer` have their own way of defining the characters used for the ASCII conversion.
 
+```javascript
+function setupAsciify() {
+  // Set the characters for the brightness renderer
+  p5asciify.renderers().get("brightness").characters(" .:-=+*#%@"); 
+}
+```
+
 ### `.invert(invert: boolean): void`
 
 Sets whether the ASCII characters and their background colors should swap or not. This function is only relevant to the sub classes, as the super class has its own way of defining the inversion. If `true`, all the grid cells affected by a given renderer will have their character and background colors swapped.
+
+```javascript
+function setupAsciify() {
+  // Swap the character and background colors in the brightness renderer
+  p5asciify.renderers().get("brightness").invert(true); 
+}
+```
 
 ### `.rotation(rotation: number): void`
 
 Sets the rotation of the ASCII grid in degrees *(in the future, it should be based on the defined `angleMode()` provided by `p5.js`)*. Currently, this is a global property which actually affects all renderers and grid cells in the pipeline, but in the future, there will be a separate framebuffer with the rotation information for each renderer.
 
+```javascript
+function setupAsciify() {
+  // Rotate all characters in the grid by 180 degrees
+  p5asciify.renderers().get("brightness").rotation(180); 
+}
+```
+
 ### `.characterColor(characterColor: p5.Color): void`
 
 Sets the color of the ASCII characters. This function is only relevant to the sub classes, as the super class has its own way of defining the character color. Additionally, this `fixed` color passed is only used on all the grid cells a given renderer covers, if the `characterColorMode()` is set to `"fixed"`.
+
+```javascript
+function setupAsciify() {
+  // Set the color of the ASCII characters in the brightness renderer
+  p5asciify.renderers().get("brightness").characterColor(color("#ffffff")); 
+}
+```
 
 ### `.characterColorMode(characterColorMode: "fixed" | "sampled"): void`
 
 Sets the mode of the ASCII character color. If set to `"fixed"`, the color set by the `characterColor()` function is used. If set to `"sampled"`, the color is sampled from the `primaryColorSampleFramebuffer`.
 
+```javascript
+function setupAsciify() {
+  // Set the mode of the ASCII character color to "sampled"
+  p5asciify.renderers().get("brightness").characterColorMode("sampled"); 
+}
+```
+
 ### `.backgroundColor(backgroundCharacterColor: p5.Color): void`
 
 Sets the color of the grid cell backgrounds. This function is only relevant to the sub classes, as the super class has its own way of defining the background color. Additionally, this `fixed` color passed is only used on all the grid cells a given renderer covers, if the `backgroundColorMode()` is set to `"fixed"`.
+
+```javascript
+function setupAsciify() {
+  // Set the color of the grid cell backgrounds in the brightness renderer
+  p5asciify.renderers().get("brightness").backgroundColor(color("#000000")); 
+}
+```
 
 ### `.backgroundColorMode(backgroundColorMode: "fixed" | "sampled"): void`
 
 Sets the mode of the grid cell background color. If set to `"fixed"`, the color set by the `backgroundColor()` function is used. If set to `"sampled"`, the color is sampled from the `secondaryColorSampleFramebuffer`.
 
+```javascript
+function setupAsciify() {
+  // Set the mode of the grid cell background color to "fixed"
+  p5asciify.renderers().get("brightness").backgroundColorMode("fixed"); 
+}
+```
+
 ### `.enabled(enabled: boolean): void`
 
 Sets whether the renderer should be executed or not. If set to `false`, the renderer will not be executed, but will still be part of the ASCII rendering pipeline.
+
+```javascript
+function setupAsciify() {
+  // Disable the brightness renderer
+  p5asciify.renderers().get("brightness").enabled(false); 
+}
+```
 
 ### `.enable(): void`
 
 Enabled the renderer, so it will be executed during the ASCII conversion.
 
+```javascript
+function setupAsciify() {
+  // Enable the brightness renderer
+  p5asciify.renderers().get("brightness").enable(); 
+}
+```
+
 ### `.disable(): void`
 
 Disables the renderer, so it will not be executed during the ASCII conversion.
+
+```javascript
+function setupAsciify() {
+  // Disable the brightness renderer
+  p5asciify.renderers().get("brightness").disable(); 
+}
+```
 
 <hr/>
 
@@ -193,9 +393,23 @@ Additionally, this sub class provides two extra functions:
 
 Sets the threshold for the edge detection. The default value is `0.5`. The higher the value, the more edges will be detected. Should be a value between `0` and `1`.
 
+```javascript
+function setupAsciify() {
+  // Set the threshold for the edge detection to 0.5
+  p5asciify.renderers().get("edge").sobelThreshold(0.5); 
+}
+```
+
 ### `.sampleThreshold(sampleThreshold: number): void`
 
 Sets the threshold for the sampling process. The default value is `16`. This value corresponds to `"How many pixels in a grid cell need to be marked as an edge to be considered in the ASCII edge conversion?"`. The higher the value, the less edges will be detected.
+
+```javascript
+function setupAsciify() {
+  // Set the threshold for the sampling process to 16
+  p5asciify.renderers().get("edge").sampleThreshold(16); 
+}
+```
 
 <hr/>
 
@@ -211,9 +425,309 @@ If a canvas contains 50% white and 50% black, and a gradient is defined from 0 t
 
 Adds a gradient/pattern to the instance of the `P5AsciifyGradientRenderer` object.
 
+```javascript
+let gradientInstance;
+
+function setupAsciify() {
+  gradientInstance = p5asciify.renderers().get("gradient").add("linear", 0, 255, " .:-=+*#%@",
+    {
+      direction: 1,
+      angle: 0,
+      speed: 0.01,
+      // Add additional parameters here, otherwise the default parameters are used
+    }
+  );
+}
+```
+
 ### `.remove(gradientInstance: P5AsciifyGradient): void`
 
 Removes a gradient/pattern from the instance of the `P5AsciifyGradientRenderer` object.
+
+```javascript
+let gradientRenderer;
+let gradientInstance;
+
+function setupAsciify() {
+
+  gradientRenderer = p5asciify.renderers().get("gradient");
+
+  gradientInstance = gradientRenderer.add("linear", 0, 255, " .:-=+*#%@",
+    {
+      direction: 1,
+      angle: 0,
+      speed: 0.01,
+      // Add additional parameters here, otherwise the default parameters are used
+    }
+  );
+
+  // Remove the gradient/pattern from the gradient renderer
+  p5asciify.renderers().get("gradient").remove(gradientInstance);
+}
+```
+
+<hr/>
+
+## The `P5AsciifyGradient` object and its subclasses
+
+When adding a gradient/pattern to the `P5AsciifyGradientRenderer` object through the `add()` function, the returned object is a concrete implementation of the abstract `P5AsciifyGradient` class. The specific subclass type (`P5AsciifyLinearGradient`, `P5AsciifyRadialGradient`, `P5AsciifySpiralGradient`, or `P5AsciifyConicalGradient`) depends on the gradient type specified in the `add()` function.
+
+### `.brightnessStart(brightnessStart: number): void`
+
+Sets the start of the brightness range the gradient/pattern is applied to. The value should be between `0` and `255`.
+
+```javascript
+let gradientInstance;
+
+function setupAsciify() {
+  // Add a gradient/pattern to the gradient renderer
+  gradientInstance = p5asciify.renderers().get("gradient").add("linear", 0, 255, " .:-=+*#%@",
+    {
+    direction: 1,
+    angle: 0,
+    speed: 0.01,
+    // Add additional parameters here, otherwise the default parameters are used
+    }
+  );
+
+  // Set the start of the brightness range to 127
+  gradientInstance.brightnessStart(127); 
+}
+```
+
+### `.brightnessEnd(brightnessEnd: number): void`
+
+Sets the end of the brightness range the gradient/pattern is applied to. The value should be between `0` and `255`.
+
+```javascript
+let gradientInstance;
+
+function setupAsciify() {
+  // Add a gradient/pattern to the gradient renderer
+  gradientInstance = p5asciify.renderers().get("gradient").add("linear", 0, 255, " .:-=+*#%@",
+    {
+    direction: 1,
+    angle: 0,
+    speed: 0.01,
+    // Add additional parameters here, otherwise the default parameters are used
+    }
+  );
+
+  // Set the end of the brightness range to 127
+  gradientInstance.brightnessEnd(127); 
+}
+```
+
+### `.brightnessRange(brightnessStart: number, brightnessEnd: number): void`
+
+Sets the brightness range the gradient/pattern is applied to. The values should be between `0` and `255`.
+
+```javascript
+let gradientInstance;
+
+function setupAsciify() {
+  // Add a gradient/pattern to the gradient renderer
+  gradientInstance = p5asciify.renderers().get("gradient").add("linear", 0, 255, " .:-=+*#%@",
+    {
+    direction: 1,
+    angle: 0,
+    speed: 0.01,
+    // Add additional parameters here, otherwise the default parameters are used
+    }
+  );
+
+  // Set the brightness range to 100 and 200
+  gradientInstance.brightnessRange(100, 200); 
+}
+```
+
+### `.characters(characters: string): void`
+
+Sets the characters used for the gradient/pattern. 
+
+```javascript
+let gradientInstance;
+
+function setupAsciify() {
+  // Add a gradient/pattern to the gradient renderer
+  gradientInstance = p5asciify.renderers().get("gradient").add("linear", 0, 255, " .:-=+*#%@",
+    {
+    direction: 1,
+    angle: 0,
+    speed: 0.01,
+    // Add additional parameters here, otherwise the default parameters are used
+    }
+  );
+
+  // Set the characters for the gradient/pattern
+  gradientInstance.characters("0123456789"); 
+}
+```
+
+### `.enabled(enabled: boolean): void`
+
+Sets whether the gradient/pattern should be executed or not. If set to `false`, the gradient/pattern will not be executed, but will still be part of the gradient renderer.
+
+```javascript
+let gradientInstance;
+
+function setupAsciify() {
+  // Add a gradient/pattern to the gradient renderer
+  gradientInstance = p5asciify.renderers().get("gradient").add("linear", 0, 255, " .:-=+*#%@",
+    {
+    direction: 1,
+    angle: 0,
+    speed: 0.01,
+    // Add additional parameters here, otherwise the default parameters are used
+    }
+  );
+
+  // Disable the gradient/pattern
+  gradientInstance.enabled(false); 
+}
+```
+
+### `.enable(): void`
+
+Enabled the gradient/pattern, so it will be executed during the ASCII conversion.
+
+```javascript
+let gradientInstance;
+
+function setupAsciify() {
+  // Add a gradient/pattern to the gradient renderer
+  gradientInstance = p5asciify.renderers().get("gradient").add("linear", 0, 255, " .:-=+*#%@",
+    {
+    direction: 1,
+    angle: 0,
+    speed: 0.01,
+    // Add additional parameters here, otherwise the default parameters are used
+    }
+  );
+
+  // Enable the gradient/pattern
+  gradientInstance.enable(); 
+}
+```
+
+### `.disable(): void`
+
+Disables the gradient/pattern, so it will not be executed during the ASCII conversion.
+
+```javascript
+let gradientInstance;
+
+function setupAsciify() {
+  // Add a gradient/pattern to the gradient renderer
+  gradientInstance = p5asciify.renderers().get("gradient").add("linear", 0, 255, " .:-=+*#%@",
+    {
+    direction: 1,
+    angle: 0,
+    speed: 0.01,
+    // Add additional parameters here, otherwise the default parameters are used
+    }
+  );
+
+  // Disable the gradient/pattern
+  gradientInstance.disable(); 
+}
+```
+
+<hr/>
+
+### The `P5AsciifyLinearGradient` object
+
+The `P5AsciifyLinearGradient` object is a subclass of the `P5AsciifyGradient` object, and is used to apply a linear gradient/pattern to the ASCII conversion. It's properties are public and can be modified at any time.
+
+#### Properties
+
+### `direction: number`
+
+The direction of the linear gradient. The value should be between `-1` and `1`. The default value is `1`.
+
+### `angle: number`
+
+The angle of the linear gradient in degrees. The value should be between `0` and `360`. The default value is `0`.
+
+### `speed: number`
+
+The speed of the linear gradient. The value should be between `0` and `1`. The default value is `0.01`.
+
+### `zigzag: boolean`
+
+Whether the linear gradient should be a zigzag pattern or not. The default value is `false`.
+
+<hr/>
+
+### The `P5AsciifyRadialGradient` object
+
+The `P5AsciifyRadialGradient` object is a subclass of the `P5AsciifyGradient` object, and is used to apply a radial gradient/pattern to the ASCII conversion. It's properties are public and can be modified at any time.
+
+#### Properties
+
+### `direction: number`
+
+The direction of the radial gradient. The value should be between `-1` and `1`. The default value is `1`.
+
+### `centerX: number`
+
+The x-coordinate of the center of the radial gradient. The value should be between `0` and `1`. The default value is `0.5`.
+
+### `centerY: number`
+
+The y-coordinate of the center of the radial gradient. The value should be between `0` and `1`. The default value is `0.5`.
+
+### `radius: number`
+
+The radius of the radial gradient. The value should be between `0` and `1`. The default value is `0.5`.
+
+<hr/>
+
+### The `P5AsciifySpiralGradient` object
+
+The `P5AsciifySpiralGradient` object is a subclass of the `P5AsciifyGradient` object, and is used to apply a spiral gradient/pattern to the ASCII conversion. It's properties are public and can be modified at any time.
+
+#### Properties
+
+### `direction: number`
+
+The direction of the spiral gradient. The value should be between `-1` and `1`. The default value is `1`.
+
+### `centerX: number`
+
+The x-coordinate of the center of the spiral gradient. The value should be between `0` and `1`. The default value is `0.5`.
+
+### `centerY: number`
+
+The y-coordinate of the center of the spiral gradient. The value should be between `0` and `1`. The default value is `0.5`.
+
+### `speed: number`
+
+The speed of the spiral gradient. The value should be between `0` and `1`. The default value is `0.01`.
+
+### `density: number`
+
+The density of the spiral gradient. The value should be between `0` and `1`. The default value is `0.01`.
+
+<hr/>
+
+### The `P5AsciifyConicalGradient` object
+
+The `P5AsciifyConicalGradient` object is a subclass of the `P5AsciifyGradient` object, and is used to apply a conical gradient/pattern to the ASCII conversion. It's properties are public and can be modified at any time.
+
+#### Properties
+
+### `centerX: number`
+
+The x-coordinate of the center of the conical gradient. The value should be between `0` and `1`. The default value is `0.5`.
+
+### `centerY: number`
+
+The y-coordinate of the center of the conical gradient. The value should be between `0` and `1`. The default value is `0.5`.
+
+### `speed: number`
+
+The speed of the conical gradient. The value should be between `0` and `1`. The default value is `0.01`.
 
 <hr/>
 

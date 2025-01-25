@@ -26,12 +26,12 @@ export declare const ACCURATE_DEFAULT_OPTIONS: {
  * An ASCII renderer that attempts to accurately represent the input sketch using the available ASCII characters.
  */
 export declare class P5AsciifyAccurateRenderer extends P5AsciifyRenderer {
-    private characterSelectionShader;
-    private brightnessSampleShader;
-    private colorSampleShader;
-    private brightnessSplitShader;
-    private brightnessSampleFramebuffer;
-    private brightnessSplitFramebuffer;
+    private _characterSelectionShader;
+    private _brightnessSampleShader;
+    private _colorSampleShader;
+    private _brightnessSplitShader;
+    private _brightnessSampleFramebuffer;
+    private _brightnessSplitFramebuffer;
     constructor(p5Instance: p5, grid: P5AsciifyGrid, fontTextureAtlas: P5AsciifyFontTextureAtlas, options?: AsciiRendererOptions);
     resizeFramebuffers(): void;
     resetShaders(): void;

@@ -21,6 +21,8 @@ import { validateNumberInRange } from '../utils';
  * Manages the creation and removal of gradients for the gradient ascii renderer.
  */
 export class P5AsciifyGradientManager {
+
+    /** The default parameters for each gradient type. */
     private _gradientParams: GradientParams = {
         linear: { direction: 1, angle: 0, speed: 0.01, zigzag: false },
         spiral: { direction: 1, centerX: 0.5, centerY: 0.5, speed: 0.01, density: 0.01 },
@@ -28,6 +30,7 @@ export class P5AsciifyGradientManager {
         conical: { centerX: 0.5, centerY: 0.5, speed: 0.01 },
     };
 
+    /** The shader sources for each gradient type. */
     private _gradientShaderSources: Record<GradientType, string> = {
         linear: linearGradientShader,
         spiral: spiralGradientShader,
@@ -35,8 +38,10 @@ export class P5AsciifyGradientManager {
         conical: conicalGradientShader,
     };
 
+    /** The gradient shaders. */
     private _gradientShaders: Partial<Record<GradientType, p5.Shader>> = {};
 
+    /** The gradient constructors. */
     private _gradientConstructors: GradientConstructorMap = {
         linear: (p, fontTextureAtlas, shader, characters, brightnessStart, brightnessEnd, params) =>
             new P5AsciifyLinearGradient(p, fontTextureAtlas, shader, characters, brightnessStart, brightnessEnd, params),
@@ -48,10 +53,14 @@ export class P5AsciifyGradientManager {
             new P5AsciifyConicalGradient(p, fontTextureAtlas, shader, characters, brightnessStart, brightnessEnd, params),
     };
 
+    /** The list of gradients to render on the gradient ascii renderer. */
     private _gradients: P5AsciifyGradient[] = [];
 
     constructor(
+        /** The p5 instance. */
         private _p: p5,
+
+        /** The font texture atlas instance. */
         private _fontTextureAtlas: P5AsciifyFontTextureAtlas
     ) {
         // Initialize the shaders for the gradients.

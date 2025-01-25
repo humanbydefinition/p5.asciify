@@ -2,7 +2,7 @@
 
 ***
 
-[p5.asciify](../../globals.md) / gradients
+[p5.asciify](../../README.md) / gradients
 
 # gradients
 
@@ -23,10 +23,10 @@ Contains functionality relevant to the ASCII gradients, which are used exclusive
 
 | Type alias | Description |
 | ------ | ------ |
-| [ConicalGradientParams](type-aliases/ConicalGradientParams.md) | - |
-| [GradientConstructorMap](type-aliases/GradientConstructorMap.md) | - |
-| [GradientParams](type-aliases/GradientParams.md) | - |
-| [GradientType](type-aliases/GradientType.md) | - |
-| [LinearGradientParams](type-aliases/LinearGradientParams.md) | - |
-| [RadialGradientParams](type-aliases/RadialGradientParams.md) | - |
-| [SpiralGradientParams](type-aliases/SpiralGradientParams.md) | - |
+| [ConicalGradientParams](type-aliases/ConicalGradientParams.md) | The available gradient options for the `"conical"` gradient type. |
+| [GradientConstructorMap](type-aliases/GradientConstructorMap.md) | Gradient constructor type. |
+| [GradientParams](type-aliases/GradientParams.md) | The available gradient parameters. |
+| [GradientType](type-aliases/GradientType.md) | The available gradient types. |
+| [LinearGradientParams](type-aliases/LinearGradientParams.md) | The available gradient options for the `"linear"` gradient type. |
+| [RadialGradientParams](type-aliases/RadialGradientParams.md) | The available gradient options for the `"radial"` gradient type. |
+| [SpiralGradientParams](type-aliases/SpiralGradientParams.md) | The available gradient options for the `"spiral"` gradient type. |

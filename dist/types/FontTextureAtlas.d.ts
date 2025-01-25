@@ -3,10 +3,10 @@ import p5 from 'p5';
  * Manages a texture atlas for font rendering in the ASCII rendering process.
  */
 export declare class P5AsciifyFontTextureAtlas {
-    private p;
-    private font;
+    private _p;
+    private _font;
     private _fontSize;
-    /** Array of characters in the font. */
+    /** Array of all characters in the font. */
     private _characters;
     /** Array of `opentype.js` glyphs with unicode values, extended with r, g, and b properties for color. */
     private _characterGlyphs;
@@ -20,18 +20,18 @@ export declare class P5AsciifyFontTextureAtlas {
     private _charsetRows;
     /**
      * Creates a new `P5AsciifyFontTextureAtlas` instance.
-     * @param p The p5 instance.
-     * @param font The font object to use for the texture atlas.
+     * @param _p The p5 instance.
+     * @param _font The font object to use for the texture atlas.
      * @param _fontSize The font size to use for the texture atlas.
      */
-    constructor(p: p5, font: p5.Font, _fontSize: number);
+    constructor(_p: p5, _font: p5.Font, _fontSize?: number);
     /**
      * Loads all glyphs with unicode values from the font and assigns colors to them.
      * @returns An array of opentype.js glyphs, extended with r, g, and b properties for color.
      */
     private _loadCharacterGlyphs;
     /**
-     * Calculates the maximum width and height of the glyphs in the font.
+     * Calculates the maximum width and height of all the glyphs in the font.
      * @param fontSize - The font size to use for calculations.
      * @returns An object containing the maximum width and height of the glyphs.
      */
@@ -55,7 +55,7 @@ export declare class P5AsciifyFontTextureAtlas {
      * Draws characters onto the texture.
      * @param fontSize - The font size to use for drawing the characters on the texture.
      */
-    private drawCharacters;
+    private _drawCharacters;
     /**
      * Gets an array of RGB colors for a given string or array of characters.
      * @param characters - A string of characters.
@@ -69,6 +69,11 @@ export declare class P5AsciifyFontTextureAtlas {
      * @returns An array of unsupported characters. List is empty if all characters are supported.
      */
     getUnsupportedCharacters(characters: string): string[];
+    /**
+     * Validates a string of characters against the current font.
+     * @param characters The string of characters to validate.
+     * @throws {@link P5AsciifyError} If any characters are not supported by the current font.
+     */
     validateCharacters(characters: string): void;
     get maxGlyphDimensions(): {
         width: number;

@@ -2,18 +2,20 @@
 
 ***
 
-[p5.asciify](../../../globals.md) / [gradients](../README.md) / ConicalGradientParams
+[p5.asciify](../../../README.md) / [gradients](../README.md) / ConicalGradientParams
 
 # Type Alias: ConicalGradientParams
 
 > **ConicalGradientParams**: `object`
 
-Defined in: [gradients/types.ts:19](https://github.com/humanbydefinition/p5-asciify/blob/8cd5bfe7cd7ddc9c2a99adb8f2c6b062ad6f770a/src/lib/gradients/types.ts#L19)
+Defined in: [gradients/types.ts:22](https://github.com/humanbydefinition/p5-asciify/blob/10002e5b44822cb907b50597a894bf5528f31cb6/src/lib/gradients/types.ts#L22)
+
+The available gradient options for the `"conical"` gradient type.
 
 ## Type declaration
 
-| Name | Type | Defined in |
-| ------ | ------ | ------ |
-| <a id="centerx"></a> `centerX` | `number` | [gradients/types.ts:20](https://github.com/humanbydefinition/p5-asciify/blob/8cd5bfe7cd7ddc9c2a99adb8f2c6b062ad6f770a/src/lib/gradients/types.ts#L20) |
-| <a id="centery"></a> `centerY` | `number` | [gradients/types.ts:21](https://github.com/humanbydefinition/p5-asciify/blob/8cd5bfe7cd7ddc9c2a99adb8f2c6b062ad6f770a/src/lib/gradients/types.ts#L21) |
-| <a id="speed"></a> `speed` | `number` | [gradients/types.ts:22](https://github.com/humanbydefinition/p5-asciify/blob/8cd5bfe7cd7ddc9c2a99adb8f2c6b062ad6f770a/src/lib/gradients/types.ts#L22) |
+| Name | Type | Description | Defined in |
+| ------ | ------ | ------ | ------ |
+| <a id="centerx"></a> `centerX` | `number` | The center X position of the gradient. Should be a value between 0 and 1. | [gradients/types.ts:25](https://github.com/humanbydefinition/p5-asciify/blob/10002e5b44822cb907b50597a894bf5528f31cb6/src/lib/gradients/types.ts#L25) |
+| <a id="centery"></a> `centerY` | `number` | The center Y position of the gradient. Should be a value between 0 and 1. | [gradients/types.ts:28](https://github.com/humanbydefinition/p5-asciify/blob/10002e5b44822cb907b50597a894bf5528f31cb6/src/lib/gradients/types.ts#L28) |
+| <a id="speed"></a> `speed` | `number` | The speed of the gradient. | [gradients/types.ts:31](https://github.com/humanbydefinition/p5-asciify/blob/10002e5b44822cb907b50597a894bf5528f31cb6/src/lib/gradients/types.ts#L31) |

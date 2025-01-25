@@ -9,28 +9,45 @@ import { P5AsciifyError } from '../AsciifyError';
  * Represents a gradient that can be applied to the gradient ascii renderer.
  */
 export abstract class P5AsciifyGradient {
+
+    /** The start brightness value of the gradient. Should be a value between 0 and 255. */
     protected _brightnessStart: number;
+
+    /** The end brightness value of the gradient. Should be a value between 0 and 255. */
     protected _brightnessEnd: number;
-    public enabled: boolean;
-    protected _onPaletteChangeCallback?: (gradient: P5AsciifyGradient, value: string[]) => void;
+
+    /** Whether the gradient is enabled. */
+    private _enabled: boolean;
+
+    /** The color palette for the gradient, corresponding to the characters. */
     protected _palette!: P5AsciifyColorPalette;
 
     constructor(
+        /** The p5 instance. */
         protected p: p5,
+
+        /** The font texture atlas instance. */
         protected _fontTextureAtlas: P5AsciifyFontTextureAtlas,
+
+        /** The gradient shader to use. */
         protected _shader: p5.Shader,
+
+        /** The characters to use for the gradient. */
         protected _characters: string,
+
         brightnessStart: number,
         brightnessEnd: number,
-        
     ) {
-        this._palette = new P5AsciifyColorPalette(this.p, this._fontTextureAtlas.getCharsetColorArray(this._characters));
+        this._palette = new P5AsciifyColorPalette(
+            this.p,
+            this._fontTextureAtlas.getCharsetColorArray(this._characters)
+        );
 
         // Normalize brightness values to [0, 1]
         this._brightnessStart = Math.floor((brightnessStart / 255) * 100) / 100;
         this._brightnessEnd = Math.ceil((brightnessEnd / 255) * 100) / 100;
 
-        this.enabled = true;
+        this._enabled = true;
     }
 
     /**
@@ -92,7 +109,30 @@ export abstract class P5AsciifyGradient {
         this.palette.setColors(this._fontTextureAtlas.getCharsetColorArray(value));
     }
 
+    /**
+     * Enables or disables the gradient.
+     * @param value Whether to enable or disable the gradient.
+     */
+    public enabled(value: boolean) {
+        this._enabled = value;
+    }
+
+    /**
+     * Enables the gradient.
+     */
+    public enable() {
+        this.enabled(true);
+    }
+
+    /**
+     * Disables the gradient.
+     */
+    public disable() {
+        this.enabled(false);
+    }
+
     // Getters
     get shader(): p5.Shader { return this._shader; }
     get palette(): P5AsciifyColorPalette { return this._palette; }
+    get isEnabled(): boolean { return this._enabled; }
 }

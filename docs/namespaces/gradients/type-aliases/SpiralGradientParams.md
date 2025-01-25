@@ -2,20 +2,22 @@
 
 ***
 
-[p5.asciify](../../../globals.md) / [gradients](../README.md) / SpiralGradientParams
+[p5.asciify](../../../README.md) / [gradients](../README.md) / SpiralGradientParams
 
 # Type Alias: SpiralGradientParams
 
 > **SpiralGradientParams**: `object`
 
-Defined in: [gradients/types.ts:39](https://github.com/humanbydefinition/p5-asciify/blob/8cd5bfe7cd7ddc9c2a99adb8f2c6b062ad6f770a/src/lib/gradients/types.ts#L39)
+Defined in: [gradients/types.ts:67](https://github.com/humanbydefinition/p5-asciify/blob/10002e5b44822cb907b50597a894bf5528f31cb6/src/lib/gradients/types.ts#L67)
+
+The available gradient options for the `"spiral"` gradient type.
 
 ## Type declaration
 
-| Name | Type | Defined in |
-| ------ | ------ | ------ |
-| <a id="centerx"></a> `centerX` | `number` | [gradients/types.ts:41](https://github.com/humanbydefinition/p5-asciify/blob/8cd5bfe7cd7ddc9c2a99adb8f2c6b062ad6f770a/src/lib/gradients/types.ts#L41) |
-| <a id="centery"></a> `centerY` | `number` | [gradients/types.ts:42](https://github.com/humanbydefinition/p5-asciify/blob/8cd5bfe7cd7ddc9c2a99adb8f2c6b062ad6f770a/src/lib/gradients/types.ts#L42) |
-| <a id="density"></a> `density` | `number` | [gradients/types.ts:44](https://github.com/humanbydefinition/p5-asciify/blob/8cd5bfe7cd7ddc9c2a99adb8f2c6b062ad6f770a/src/lib/gradients/types.ts#L44) |
-| <a id="direction"></a> `direction` | `number` | [gradients/types.ts:40](https://github.com/humanbydefinition/p5-asciify/blob/8cd5bfe7cd7ddc9c2a99adb8f2c6b062ad6f770a/src/lib/gradients/types.ts#L40) |
-| <a id="speed"></a> `speed` | `number` | [gradients/types.ts:43](https://github.com/humanbydefinition/p5-asciify/blob/8cd5bfe7cd7ddc9c2a99adb8f2c6b062ad6f770a/src/lib/gradients/types.ts#L43) |
+| Name | Type | Description | Defined in |
+| ------ | ------ | ------ | ------ |
+| <a id="centerx"></a> `centerX` | `number` | The center X position of the gradient. Should be a value between 0 and 1. | [gradients/types.ts:73](https://github.com/humanbydefinition/p5-asciify/blob/10002e5b44822cb907b50597a894bf5528f31cb6/src/lib/gradients/types.ts#L73) |
+| <a id="centery"></a> `centerY` | `number` | The center Y position of the gradient. Should be a value between 0 and 1. | [gradients/types.ts:76](https://github.com/humanbydefinition/p5-asciify/blob/10002e5b44822cb907b50597a894bf5528f31cb6/src/lib/gradients/types.ts#L76) |
+| <a id="density"></a> `density` | `number` | The density of the gradient. | [gradients/types.ts:82](https://github.com/humanbydefinition/p5-asciify/blob/10002e5b44822cb907b50597a894bf5528f31cb6/src/lib/gradients/types.ts#L82) |
+| <a id="direction"></a> `direction` | `number` | The direction of the gradient. Should be a value between -1 and 1. | [gradients/types.ts:70](https://github.com/humanbydefinition/p5-asciify/blob/10002e5b44822cb907b50597a894bf5528f31cb6/src/lib/gradients/types.ts#L70) |
+| <a id="speed"></a> `speed` | `number` | The speed of the gradient. | [gradients/types.ts:79](https://github.com/humanbydefinition/p5-asciify/blob/10002e5b44822cb907b50597a894bf5528f31cb6/src/lib/gradients/types.ts#L79) |

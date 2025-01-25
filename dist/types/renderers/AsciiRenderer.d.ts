@@ -3,6 +3,7 @@ import { P5AsciifyGrid } from '../Grid';
 import { P5AsciifyColorPalette } from '../ColorPalette';
 import { P5AsciifyFontTextureAtlas } from '../FontTextureAtlas';
 import { AsciiRendererOptions } from './types';
+/** Default configuration options for custom ASCII renderer */
 export declare const CUSTOM_DEFAULT_OPTIONS: {
     /** Enable/disable the renderer */
     enabled: boolean;
@@ -15,18 +16,37 @@ export declare const CUSTOM_DEFAULT_OPTIONS: {
  * Class for shader-based ASCII Renderers.
  */
 export declare class P5AsciifyRenderer {
-    protected p: p5;
-    protected grid: P5AsciifyGrid;
-    protected fontTextureAtlas: P5AsciifyFontTextureAtlas;
+    /** The p5 instance. */
+    protected _p: p5;
+    /** The grid to render the ASCII characters on. */
+    protected _grid: P5AsciifyGrid;
+    /** The font texture atlas containing the ASCII characters texture. */
+    protected _fontTextureAtlas: P5AsciifyFontTextureAtlas;
+    /** The options for the ASCII renderer. */
     protected _options: AsciiRendererOptions;
-    characterColorPalette: P5AsciifyColorPalette;
+    /** The color palette containing colors that correspond to the defined character set. */
+    protected _characterColorPalette: P5AsciifyColorPalette;
+    /** The primary color framebuffer, whose pixels define the character colors of the grid cells. */
     protected _primaryColorFramebuffer: p5.Framebuffer;
+    /** The secondary color framebuffer, whose pixels define the background colors of the grid cells. */
     protected _secondaryColorFramebuffer: p5.Framebuffer;
+    /** The character framebuffer, whose pixels define the ASCII characters to use in the grid cells. */
     protected _characterFramebuffer: p5.Framebuffer;
+    /** The inversion framebuffer, whose pixels define whether to swap the character and background colors. */
     protected _inversionFramebuffer: p5.Framebuffer;
+    /** The output framebuffer, where the final ASCII conversion is rendered. */
     protected _outputFramebuffer: p5.Framebuffer;
+    /** The shader used for the ASCII conversion. */
     protected _shader: p5.Shader;
-    constructor(p: p5, grid: P5AsciifyGrid, fontTextureAtlas: P5AsciifyFontTextureAtlas, _options?: AsciiRendererOptions);
+    constructor(
+    /** The p5 instance. */
+    _p: p5, 
+    /** The grid to render the ASCII characters on. */
+    _grid: P5AsciifyGrid, 
+    /** The font texture atlas containing the ASCII characters texture. */
+    _fontTextureAtlas: P5AsciifyFontTextureAtlas, 
+    /** The options for the ASCII renderer. */
+    _options?: AsciiRendererOptions);
     /**
      * Resizes all framebuffers based on the grid dimensions.
      */
@@ -105,6 +125,7 @@ export declare class P5AsciifyRenderer {
      * Disable the renderer.
      */
     disable(): void;
+    get characterColorPalette(): P5AsciifyColorPalette;
     get outputFramebuffer(): p5.Framebuffer;
     get options(): AsciiRendererOptions;
     get primaryColorFramebuffer(): p5.Framebuffer;

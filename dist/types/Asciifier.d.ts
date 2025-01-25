@@ -1,4 +1,6 @@
 import p5 from 'p5';
+import { P5AsciifyFontTextureAtlas } from './FontTextureAtlas';
+import { P5AsciifyGrid } from './Grid';
 import { P5AsciifyRendererManager } from './renderers/RendererManager';
 /**
  * The main class for the `p5.asciify` library,
@@ -90,4 +92,6 @@ export declare class P5Asciifier {
      */
     background(color: string | p5.Color | [number, number?, number?, number?]): void;
     get sketchFramebuffer(): p5.Framebuffer;
+    get grid(): P5AsciifyGrid;
+    get fontTextureAtlas(): P5AsciifyFontTextureAtlas;
 }

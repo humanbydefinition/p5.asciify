@@ -2,19 +2,21 @@
 
 ***
 
-[p5.asciify](../../../globals.md) / [gradients](../README.md) / LinearGradientParams
+[p5.asciify](../../../README.md) / [gradients](../README.md) / LinearGradientParams
 
 # Type Alias: LinearGradientParams
 
 > **LinearGradientParams**: `object`
 
-Defined in: [gradients/types.ts:25](https://github.com/humanbydefinition/p5-asciify/blob/8cd5bfe7cd7ddc9c2a99adb8f2c6b062ad6f770a/src/lib/gradients/types.ts#L25)
+Defined in: [gradients/types.ts:35](https://github.com/humanbydefinition/p5-asciify/blob/10002e5b44822cb907b50597a894bf5528f31cb6/src/lib/gradients/types.ts#L35)
+
+The available gradient options for the `"linear"` gradient type.
 
 ## Type declaration
 
-| Name | Type | Defined in |
-| ------ | ------ | ------ |
-| <a id="angle"></a> `angle` | `number` | [gradients/types.ts:27](https://github.com/humanbydefinition/p5-asciify/blob/8cd5bfe7cd7ddc9c2a99adb8f2c6b062ad6f770a/src/lib/gradients/types.ts#L27) |
-| <a id="direction"></a> `direction` | `number` | [gradients/types.ts:26](https://github.com/humanbydefinition/p5-asciify/blob/8cd5bfe7cd7ddc9c2a99adb8f2c6b062ad6f770a/src/lib/gradients/types.ts#L26) |
-| <a id="speed"></a> `speed` | `number` | [gradients/types.ts:28](https://github.com/humanbydefinition/p5-asciify/blob/8cd5bfe7cd7ddc9c2a99adb8f2c6b062ad6f770a/src/lib/gradients/types.ts#L28) |
-| <a id="zigzag"></a> `zigzag` | `boolean` | [gradients/types.ts:29](https://github.com/humanbydefinition/p5-asciify/blob/8cd5bfe7cd7ddc9c2a99adb8f2c6b062ad6f770a/src/lib/gradients/types.ts#L29) |
+| Name | Type | Description | Defined in |
+| ------ | ------ | ------ | ------ |
+| <a id="angle"></a> `angle` | `number` | The angle of the gradient in degrees. | [gradients/types.ts:41](https://github.com/humanbydefinition/p5-asciify/blob/10002e5b44822cb907b50597a894bf5528f31cb6/src/lib/gradients/types.ts#L41) |
+| <a id="direction"></a> `direction` | `number` | The direction of the gradient. Should be a value between -1 and 1. | [gradients/types.ts:38](https://github.com/humanbydefinition/p5-asciify/blob/10002e5b44822cb907b50597a894bf5528f31cb6/src/lib/gradients/types.ts#L38) |
+| <a id="speed"></a> `speed` | `number` | The speed of the gradient. | [gradients/types.ts:44](https://github.com/humanbydefinition/p5-asciify/blob/10002e5b44822cb907b50597a894bf5528f31cb6/src/lib/gradients/types.ts#L44) |
+| <a id="zigzag"></a> `zigzag` | `boolean` | Whether the gradient direction should alternate each row. | [gradients/types.ts:47](https://github.com/humanbydefinition/p5-asciify/blob/10002e5b44822cb907b50597a894bf5528f31cb6/src/lib/gradients/types.ts#L47) |

@@ -2,7 +2,7 @@
 
 ***
 
-[p5.asciify](../../globals.md) / renderers
+[p5.asciify](../../README.md) / renderers
 
 # renderers
 

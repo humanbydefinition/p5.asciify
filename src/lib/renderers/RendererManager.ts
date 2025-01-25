@@ -27,26 +27,37 @@ type RendererType = keyof typeof RENDERER_TYPES;
  * Manages the available ASCII renderers and handles rendering the ASCII output to the canvas.
  */
 export class P5AsciifyRendererManager {
-    private currentCanvasDimensions: { width: number, height: number };
+
+    /** The current dimensions of the canvas. If the dimensions change, the grid is reset and the renderers are resized. */
+    private _currentCanvasDimensions: { width: number, height: number };
+
+    /** The list of available renderers. */
     private _renderers: { name: string, renderer: P5AsciifyRenderer }[];
+
+    /** The last renderer used in the rendering loop. */
     public lastRenderer: P5AsciifyRenderer;
 
     constructor(
-        private p: p5,
-        private grid: P5AsciifyGrid,
-        private fontTextureAtlas: P5AsciifyFontTextureAtlas
+        /** The p5 instance. */
+        private _p: p5,
+
+        /** The grid instance. */
+        private _grid: P5AsciifyGrid,
+
+        /** The font texture atlas instance. */
+        private _fontTextureAtlas: P5AsciifyFontTextureAtlas
     ) {
-        this.currentCanvasDimensions = {
-            width: this.p.width,
-            height: this.p.height
+        this._currentCanvasDimensions = {
+            width: this._p.width,
+            height: this._p.height
         };
 
         this._renderers = [
-            { name: "custom", renderer: new P5AsciifyRenderer(this.p, this.grid, fontTextureAtlas) },
-            { name: "edge", renderer: new P5AsciifyEdgeRenderer(this.p, this.grid, fontTextureAtlas) },
-            { name: "gradient", renderer: new P5AsciifyGradientRenderer(this.p, this.grid, fontTextureAtlas) },
-            { name: "accurate", renderer: new P5AsciifyAccurateRenderer(this.p, this.grid, fontTextureAtlas) },
-            { name: "brightness", renderer: new P5AsciifyBrightnessRenderer(this.p, this.grid, fontTextureAtlas) },
+            { name: "custom", renderer: new P5AsciifyRenderer(this._p, this._grid, _fontTextureAtlas) },
+            { name: "edge", renderer: new P5AsciifyEdgeRenderer(this._p, this._grid, _fontTextureAtlas) },
+            { name: "gradient", renderer: new P5AsciifyGradientRenderer(this._p, this._grid, _fontTextureAtlas) },
+            { name: "accurate", renderer: new P5AsciifyAccurateRenderer(this._p, this._grid, _fontTextureAtlas) },
+            { name: "brightness", renderer: new P5AsciifyBrightnessRenderer(this._p, this._grid, _fontTextureAtlas) },
         ];
 
         this.lastRenderer = this._renderers[0].renderer;
@@ -79,11 +90,11 @@ export class P5AsciifyRendererManager {
      * If they have, the grid is reset and the renderers are resized.
      */
     private checkCanvasDimensions(): void {
-        if (this.currentCanvasDimensions.width !== this.p.width || this.currentCanvasDimensions.height !== this.p.height) {
-            this.currentCanvasDimensions.width = this.p.width;
-            this.currentCanvasDimensions.height = this.p.height;
+        if (this._currentCanvasDimensions.width !== this._p.width || this._currentCanvasDimensions.height !== this._p.height) {
+            this._currentCanvasDimensions.width = this._p.width;
+            this._currentCanvasDimensions.height = this._p.height;
 
-            this.grid.reset();
+            this._grid.reset();
 
             this.resetRendererDimensions();
         }
@@ -121,7 +132,7 @@ export class P5AsciifyRendererManager {
             );
         }
 
-        const renderer = new RendererClass(this.p, this.grid, this.fontTextureAtlas, options);
+        const renderer = new RendererClass(this._p, this._grid, this._fontTextureAtlas, options);
 
         this._renderers.push({ name, renderer });
 
@@ -150,7 +161,7 @@ export class P5AsciifyRendererManager {
      * @param renderer The renderer to move up in the list.
      */
     public moveDown(renderer: string | P5AsciifyRenderer): void {
-        const index = this.getRendererIndex(renderer);
+        const index = this._getRendererIndex(renderer);
         if (index <= 0) return;
         this.swap(renderer, this._renderers[index + 1].renderer);
     }
@@ -160,7 +171,7 @@ export class P5AsciifyRendererManager {
      * @param renderer The renderer to move down in the list.
      */
     public moveUp(renderer: string | P5AsciifyRenderer): void {
-        const index = this.getRendererIndex(renderer);
+        const index = this._getRendererIndex(renderer);
         if (index === -1 || index >= this._renderers.length - 1) return;
         this.swap(renderer, this._renderers[index - 1].renderer);
     }
@@ -170,7 +181,7 @@ export class P5AsciifyRendererManager {
      * @param renderer The name of the renderer or the renderer instance itself.
      */
     public remove(renderer: string | P5AsciifyRenderer): void {
-        const index = this.getRendererIndex(renderer);
+        const index = this._getRendererIndex(renderer);
         if (index === -1) {
             throw new P5AsciifyError(`Renderer not found.`);
         }
@@ -190,8 +201,8 @@ export class P5AsciifyRendererManager {
      * @param renderer2 The name of the second renderer or the renderer instance itself.
      */
     public swap(renderer1: string | P5AsciifyRenderer, renderer2: string | P5AsciifyRenderer): void {
-        const index1 = this.getRendererIndex(renderer1);
-        const index2 = this.getRendererIndex(renderer2);
+        const index1 = this._getRendererIndex(renderer1);
+        const index2 = this._getRendererIndex(renderer2);
 
         if (index1 === -1 || index2 === -1) {
             throw new P5AsciifyError(`One or more renderers not found.`);
@@ -209,7 +220,7 @@ export class P5AsciifyRendererManager {
      * @param renderer The renderer to get the index of.
      * @returns The index of the renderer in the list of renderers. Returns -1 if the renderer is not found.
      */
-    private getRendererIndex(renderer: string | P5AsciifyRenderer): number {
+    private _getRendererIndex(renderer: string | P5AsciifyRenderer): number {
         if (typeof renderer === 'string') {
             return this._renderers.findIndex(r => r.name === renderer);
         }

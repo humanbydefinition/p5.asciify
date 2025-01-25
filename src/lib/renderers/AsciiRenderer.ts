@@ -46,12 +46,18 @@ export class P5AsciifyRenderer {
     protected _shader: p5.Shader;
 
     constructor(
+        /** The p5 instance. */
         protected _p: p5,
+
+        /** The grid to render the ASCII characters on. */
         protected _grid: P5AsciifyGrid,
+
+        /** The font texture atlas containing the ASCII characters texture. */
         protected _fontTextureAtlas: P5AsciifyFontTextureAtlas,
+
+        /** The options for the ASCII renderer. */
         protected _options: AsciiRendererOptions = CUSTOM_DEFAULT_OPTIONS
     ) {
-
         this._options = { ...CUSTOM_DEFAULT_OPTIONS, ..._options };
 
         this._characterColorPalette = new P5AsciifyColorPalette(this._p, this._fontTextureAtlas.getCharsetColorArray(this._options.characters));
