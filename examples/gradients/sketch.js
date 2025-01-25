@@ -29,21 +29,21 @@ const sketch = (p) => {
             angle: 0,
             speed: 0.1,
         });
-        spiralGradient = p5asciify.renderers().get("gradient").add("spiral", 160, 160, "are  ", {
+        spiralGradient = p5asciify.renderers().get("gradient").add("spiral", 160, 160, "now  ", {
             direction: 1,
             speed: 0.01,
             density: 0.5,
         });
-        radialGradient = p5asciify.renderers().get("gradient").add("radial", 170, 170, "now ", {
+        radialGradient = p5asciify.renderers().get("gradient").add("radial", 170, 170, "available ", {
             direction: -1,
             radius: 1.0,
         });
-        zigzagGradient = p5asciify.renderers().get("gradient").add("linear", 180, 180, "available ", {
+        zigzagGradient = p5asciify.renderers().get("gradient").add("linear", 180, 180, "in ", {
             direction: 1,
             speed: 0.2,
             zigzag: true,
         });
-        conicalGradient = p5asciify.renderers().get("gradient").add("conical", 190, 190, "in ", {
+        conicalGradient = p5asciify.renderers().get("gradient").add("conical", 190, 190, "p5.asciify ", {
             speed: 0.01,
         });
 
