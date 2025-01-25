@@ -1,7 +1,5 @@
 /**
- * Custom error class for the P5Asciify library.
- *
- * Represents errors specific to the P5Asciify library.
+ * Simple error class, representing errors specific to `p5.asciify`.
  */
 export declare class P5AsciifyError extends Error {
     /**

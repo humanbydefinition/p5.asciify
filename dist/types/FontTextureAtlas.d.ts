@@ -1,6 +1,6 @@
 import p5 from 'p5';
 /**
- * A texture atlas containing all characters in a font, providing a way to access the colors of the characters.
+ * Manages a texture atlas for font rendering in the ASCII rendering process.
  */
 export declare class P5AsciifyFontTextureAtlas {
     private p;

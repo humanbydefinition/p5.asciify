@@ -1,6 +1,4 @@
 import p5 from 'p5';
-import { P5AsciifyFontTextureAtlas } from './FontTextureAtlas';
-import { P5AsciifyGrid } from './Grid';
 import { P5AsciifyRendererManager } from './renderers/RendererManager';
 /**
  * The main class for the `p5.asciify` library,
@@ -20,14 +18,14 @@ import { P5AsciifyRendererManager } from './renderers/RendererManager';
  */
 export declare class P5Asciifier {
     /** Contains texture with all glyphs of a given font.*/
-    asciiFontTextureAtlas: P5AsciifyFontTextureAtlas;
-    /** Contains the grid dimensions and offsets to create a perfect grid based on the canvas and font size. */
-    grid: P5AsciifyGrid;
+    private _fontTextureAtlas;
+    /** Contains the grid dimensions and offsets to create a perfect grid based on the canvas and font glyph dimensions. */
+    private _grid;
     /** Wraps around the user's `draw()` function to capture it's output for the ascii renderers. */
-    sketchFramebuffer: p5.Framebuffer;
+    private _sketchFramebuffer;
     /** Manages the available ASCII renderers and handles rendering the ASCII output to the canvas. */
-    rendererManager: P5AsciifyRendererManager;
-    /** The p5 instance. */
+    private _rendererManager;
+    /** The `p5.js` instance. */
     private _p;
     /** The font to use for the ASCII rendering. */
     private _font;
@@ -67,7 +65,7 @@ export declare class P5Asciifier {
      */
     asciify(): void;
     /**
-     * Sets the font size for the ascii renderers.
+     * Sets the font size for the ASCII renderers.
      * @param fontSize The font size to set.
      * @throws {@link P5AsciifyError} - If the font size is out of bounds.
      */
@@ -91,4 +89,5 @@ export declare class P5Asciifier {
      * @throws {@link P5AsciifyError} - If the color is not a string, array or p5.Color.
      */
     background(color: string | p5.Color | [number, number?, number?, number?]): void;
+    get sketchFramebuffer(): p5.Framebuffer;
 }

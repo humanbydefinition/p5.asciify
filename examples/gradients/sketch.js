@@ -71,10 +71,10 @@ const sketch = (p) => {
             backgroundColorMode: "fixed",
         });
 
-        p5asciify.renderers().swap("gradient", "edge");
-        p5asciify.renderers().swap("brightness", "edge");
-        p5asciify.renderers().moveDown("brightness");
-        p5asciify.renderers().moveDown("brightness");
+        //p5asciify.renderers().swap("gradient", "edge");
+        //p5asciify.renderers().swap("brightness", "edge");
+        //p5asciify.renderers().moveDown("brightness");
+        //p5asciify.renderers().moveDown("brightness");
         //p5asciify.renderers().remove("brightness");
     };
 

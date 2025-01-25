@@ -20,9 +20,9 @@ export declare class P5AsciifyRenderer {
     protected fontTextureAtlas: P5AsciifyFontTextureAtlas;
     protected _options: AsciiRendererOptions;
     characterColorPalette: P5AsciifyColorPalette;
-    protected _primaryColorSampleFramebuffer: p5.Framebuffer;
-    protected _secondaryColorSampleFramebuffer: p5.Framebuffer;
-    protected _asciiCharacterFramebuffer: p5.Framebuffer;
+    protected _primaryColorFramebuffer: p5.Framebuffer;
+    protected _secondaryColorFramebuffer: p5.Framebuffer;
+    protected _characterFramebuffer: p5.Framebuffer;
     protected _inversionFramebuffer: p5.Framebuffer;
     protected _outputFramebuffer: p5.Framebuffer;
     protected _shader: p5.Shader;
@@ -107,8 +107,8 @@ export declare class P5AsciifyRenderer {
     disable(): void;
     get outputFramebuffer(): p5.Framebuffer;
     get options(): AsciiRendererOptions;
-    get primaryColorSampleFramebuffer(): p5.Framebuffer;
-    get secondaryColorSampleFramebuffer(): p5.Framebuffer;
+    get primaryColorFramebuffer(): p5.Framebuffer;
+    get secondaryColorFramebuffer(): p5.Framebuffer;
     get inversionFramebuffer(): p5.Framebuffer;
-    get asciiCharacterFramebuffer(): p5.Framebuffer;
+    get characterFramebuffer(): p5.Framebuffer;
 }
