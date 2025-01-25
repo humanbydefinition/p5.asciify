@@ -32,6 +32,20 @@ nvm use 22.11.0
 > [!NOTE]
 > The `.nvmrc` file in the project root specifies the required Node.js version. Simply run `nvm use` in the project directory to use the correct version.
 
+### npm
+
+This project uses npm for package management. Verify that npm `v10.9.0` is installed by running the following command:
+
+```bash
+npm --version
+```
+
+You can install a specific version of npm using the following command:
+
+```bash
+npm install -g npm@10.9.0
+```
+
 ## Setting up the development environment
 
 To set up the development environment for `p5.asciify`, follow these steps:
@@ -111,6 +125,8 @@ npm run dev-docs
 ```
 
 `typedoc` generates the documentation in the `docs` directory as `.md` files. As of now, there is definitely room for improvement in some areas, so all contributions to the documentation are welcome! There are also some settings that need to be adjusted to generate a more comprehensive documentation. 
+
+Besides the automated documentation, the `.md` files in `./repo_assets/wiki/` are manually maintained and pasted into the GitHub wiki when changes are made.
 
 ## Submitting a pull request
 

@@ -3,7 +3,7 @@ import { p5asciify } from '../../src/lib/index';
 
 const sketch = (p) => {
     let linearGradient, spiralGradient, radialGradient,
-        zigzagGradient, conicalGradient, noiseGradient;
+        zigzagGradient, conicalGradient;
 
     let gridRows = 3;
     let gridCols = 3;

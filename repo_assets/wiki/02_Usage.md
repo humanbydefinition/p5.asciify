@@ -1,10 +1,16 @@
-> [!NOTE]
-> This page has been completely reworked and updated for the `v0.7.0` release of `p5.asciify`, which introduces a new and more flexible way of interacting with the ASCII rendering pipeline. The new API is more powerful and allows for more customization than ever before. This page is still a work in progess and will be updated with more information in the future, especially links to mentioned resources.
+> [!NOTE]  
+> This page documents the `v0.7.0` release of `p5.asciify`, introducing a new flexible ASCII rendering pipeline. The API enables greater customization and power. Documentation is still in progress, and more detailed explanations will be provided in the future. If you want to contribute to the documentation, feel free to do so by following the steps outlined in the [`Contributing`](https://github.com/humanbydefinition/p5.asciify/wiki/04_Contributing) page of the Wiki.
+>
+> #### Code examples for the new API:
+> - **Local**: Find `instance mode` implementations in the `examples` folder
+> - **Online**: See [`p5.js web editor collection`](https://editor.p5js.org/humanbydefinition/collections/VAws0yqLW) for `global mode` versions
+>
+> Both example sets demonstrate identical functionality, implemented for different p5.js usage modes.
 
 > [!NOTE]
 > All examples given here use p5.js global mode, but can be applied to instance mode as well. 
 >
-> Check out the `Instance mode` section in the [`README`](https://github.com/humanbydefinition/p5.asciify/tree/main?tab=readme-ov-file#instance-mode) or the [`Getting Started`](https://github.com/humanbydefinition/p5.asciify/wiki/01_Getting-Started#instance-mode) page of the Wiki to learn how to apply the functionality provided by `p5.asciify` to instance mode.
+> Check out the `Instance mode` section in the [`README`](https://github.com/humanbydefinition/p5.asciify/tree/main?tab=readme-ov-file#instance-mode) or the [`Getting Started`](https://github.com/humanbydefinition/p5.asciify/wiki/01_Getting-Started#instance-mode) page of the Wiki to learn how to apply the functionality provided by `p5.asciify` to instance mode. Alternatively, you can explore the `examples` folder in the repository for more `instance mode` implementations.
 
 <hr/>
 

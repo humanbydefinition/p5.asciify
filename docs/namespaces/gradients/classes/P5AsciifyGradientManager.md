@@ -6,7 +6,7 @@
 
 # Class: P5AsciifyGradientManager
 
-Defined in: [gradients/GradientManager.ts:23](https://github.com/humanbydefinition/p5-asciify/blob/10002e5b44822cb907b50597a894bf5528f31cb6/src/lib/gradients/GradientManager.ts#L23)
+Defined in: [gradients/GradientManager.ts:23](https://github.com/humanbydefinition/p5-asciify/blob/b2e2acf40c3dc8f3fd384fd8c87e98bcbf502f21/src/lib/gradients/GradientManager.ts#L23)
 
 Manages the creation and removal of gradients for the gradient ascii renderer.
 
@@ -16,7 +16,7 @@ Manages the creation and removal of gradients for the gradient ascii renderer.
 
 > **new P5AsciifyGradientManager**(`_p`, `_fontTextureAtlas`): [`P5AsciifyGradientManager`](P5AsciifyGradientManager.md)
 
-Defined in: [gradients/GradientManager.ts:59](https://github.com/humanbydefinition/p5-asciify/blob/10002e5b44822cb907b50597a894bf5528f31cb6/src/lib/gradients/GradientManager.ts#L59)
+Defined in: [gradients/GradientManager.ts:59](https://github.com/humanbydefinition/p5-asciify/blob/b2e2acf40c3dc8f3fd384fd8c87e98bcbf502f21/src/lib/gradients/GradientManager.ts#L59)
 
 #### Parameters
 
@@ -33,13 +33,13 @@ Defined in: [gradients/GradientManager.ts:59](https://github.com/humanbydefiniti
 
 | Property | Modifier | Type | Default value | Description | Defined in |
 | ------ | ------ | ------ | ------ | ------ | ------ |
-| <a id="_fonttextureatlas-1"></a> `_fontTextureAtlas` | `private` | [`P5AsciifyFontTextureAtlas`](../../../classes/P5AsciifyFontTextureAtlas.md) | `undefined` | The font texture atlas instance. | [gradients/GradientManager.ts:64](https://github.com/humanbydefinition/p5-asciify/blob/10002e5b44822cb907b50597a894bf5528f31cb6/src/lib/gradients/GradientManager.ts#L64) |
-| <a id="_gradientconstructors"></a> `_gradientConstructors` | `private` | [`GradientConstructorMap`](../type-aliases/GradientConstructorMap.md) | `undefined` | The gradient constructors. | [gradients/GradientManager.ts:45](https://github.com/humanbydefinition/p5-asciify/blob/10002e5b44822cb907b50597a894bf5528f31cb6/src/lib/gradients/GradientManager.ts#L45) |
-| <a id="_gradientparams"></a> `_gradientParams` | `private` | [`GradientParams`](../type-aliases/GradientParams.md) | `undefined` | The default parameters for each gradient type. | [gradients/GradientManager.ts:26](https://github.com/humanbydefinition/p5-asciify/blob/10002e5b44822cb907b50597a894bf5528f31cb6/src/lib/gradients/GradientManager.ts#L26) |
-| <a id="_gradients"></a> `_gradients` | `private` | [`P5AsciifyGradient`](P5AsciifyGradient.md)[] | `[]` | The list of gradients to render on the gradient ascii renderer. | [gradients/GradientManager.ts:57](https://github.com/humanbydefinition/p5-asciify/blob/10002e5b44822cb907b50597a894bf5528f31cb6/src/lib/gradients/GradientManager.ts#L57) |
-| <a id="_gradientshaders"></a> `_gradientShaders` | `private` | `Partial`\<`Record`\<[`GradientType`](../type-aliases/GradientType.md), `Shader`\>\> | `{}` | The gradient shaders. | [gradients/GradientManager.ts:42](https://github.com/humanbydefinition/p5-asciify/blob/10002e5b44822cb907b50597a894bf5528f31cb6/src/lib/gradients/GradientManager.ts#L42) |
-| <a id="_gradientshadersources"></a> `_gradientShaderSources` | `private` | `Record`\<[`GradientType`](../type-aliases/GradientType.md), `string`\> | `undefined` | The shader sources for each gradient type. | [gradients/GradientManager.ts:34](https://github.com/humanbydefinition/p5-asciify/blob/10002e5b44822cb907b50597a894bf5528f31cb6/src/lib/gradients/GradientManager.ts#L34) |
-| <a id="_p-1"></a> `_p` | `private` | `__module` | `undefined` | The p5 instance. | [gradients/GradientManager.ts:61](https://github.com/humanbydefinition/p5-asciify/blob/10002e5b44822cb907b50597a894bf5528f31cb6/src/lib/gradients/GradientManager.ts#L61) |
+| <a id="_fonttextureatlas-1"></a> `_fontTextureAtlas` | `private` | [`P5AsciifyFontTextureAtlas`](../../../classes/P5AsciifyFontTextureAtlas.md) | `undefined` | The font texture atlas instance. | [gradients/GradientManager.ts:64](https://github.com/humanbydefinition/p5-asciify/blob/b2e2acf40c3dc8f3fd384fd8c87e98bcbf502f21/src/lib/gradients/GradientManager.ts#L64) |
+| <a id="_gradientconstructors"></a> `_gradientConstructors` | `private` | [`GradientConstructorMap`](../type-aliases/GradientConstructorMap.md) | `undefined` | The gradient constructors. | [gradients/GradientManager.ts:45](https://github.com/humanbydefinition/p5-asciify/blob/b2e2acf40c3dc8f3fd384fd8c87e98bcbf502f21/src/lib/gradients/GradientManager.ts#L45) |
+| <a id="_gradientparams"></a> `_gradientParams` | `private` | [`GradientParams`](../type-aliases/GradientParams.md) | `undefined` | The default parameters for each gradient type. | [gradients/GradientManager.ts:26](https://github.com/humanbydefinition/p5-asciify/blob/b2e2acf40c3dc8f3fd384fd8c87e98bcbf502f21/src/lib/gradients/GradientManager.ts#L26) |
+| <a id="_gradients"></a> `_gradients` | `private` | [`P5AsciifyGradient`](P5AsciifyGradient.md)[] | `[]` | The list of gradients to render on the gradient ascii renderer. | [gradients/GradientManager.ts:57](https://github.com/humanbydefinition/p5-asciify/blob/b2e2acf40c3dc8f3fd384fd8c87e98bcbf502f21/src/lib/gradients/GradientManager.ts#L57) |
+| <a id="_gradientshaders"></a> `_gradientShaders` | `private` | `Partial`\<`Record`\<[`GradientType`](../type-aliases/GradientType.md), `Shader`\>\> | `{}` | The gradient shaders. | [gradients/GradientManager.ts:42](https://github.com/humanbydefinition/p5-asciify/blob/b2e2acf40c3dc8f3fd384fd8c87e98bcbf502f21/src/lib/gradients/GradientManager.ts#L42) |
+| <a id="_gradientshadersources"></a> `_gradientShaderSources` | `private` | `Record`\<[`GradientType`](../type-aliases/GradientType.md), `string`\> | `undefined` | The shader sources for each gradient type. | [gradients/GradientManager.ts:34](https://github.com/humanbydefinition/p5-asciify/blob/b2e2acf40c3dc8f3fd384fd8c87e98bcbf502f21/src/lib/gradients/GradientManager.ts#L34) |
+| <a id="_p-1"></a> `_p` | `private` | `__module` | `undefined` | The p5 instance. | [gradients/GradientManager.ts:61](https://github.com/humanbydefinition/p5-asciify/blob/b2e2acf40c3dc8f3fd384fd8c87e98bcbf502f21/src/lib/gradients/GradientManager.ts#L61) |
 
 ## Accessors
 
@@ -49,7 +49,7 @@ Defined in: [gradients/GradientManager.ts:59](https://github.com/humanbydefiniti
 
 > **get** **gradientConstructors**(): [`GradientConstructorMap`](../type-aliases/GradientConstructorMap.md)
 
-Defined in: [gradients/GradientManager.ts:161](https://github.com/humanbydefinition/p5-asciify/blob/10002e5b44822cb907b50597a894bf5528f31cb6/src/lib/gradients/GradientManager.ts#L161)
+Defined in: [gradients/GradientManager.ts:161](https://github.com/humanbydefinition/p5-asciify/blob/b2e2acf40c3dc8f3fd384fd8c87e98bcbf502f21/src/lib/gradients/GradientManager.ts#L161)
 
 ##### Returns
 
@@ -63,7 +63,7 @@ Defined in: [gradients/GradientManager.ts:161](https://github.com/humanbydefinit
 
 > **get** **gradientParams**(): [`GradientParams`](../type-aliases/GradientParams.md)
 
-Defined in: [gradients/GradientManager.ts:159](https://github.com/humanbydefinition/p5-asciify/blob/10002e5b44822cb907b50597a894bf5528f31cb6/src/lib/gradients/GradientManager.ts#L159)
+Defined in: [gradients/GradientManager.ts:159](https://github.com/humanbydefinition/p5-asciify/blob/b2e2acf40c3dc8f3fd384fd8c87e98bcbf502f21/src/lib/gradients/GradientManager.ts#L159)
 
 ##### Returns
 
@@ -77,7 +77,7 @@ Defined in: [gradients/GradientManager.ts:159](https://github.com/humanbydefinit
 
 > **get** **gradients**(): [`P5AsciifyGradient`](P5AsciifyGradient.md)[]
 
-Defined in: [gradients/GradientManager.ts:160](https://github.com/humanbydefinition/p5-asciify/blob/10002e5b44822cb907b50597a894bf5528f31cb6/src/lib/gradients/GradientManager.ts#L160)
+Defined in: [gradients/GradientManager.ts:160](https://github.com/humanbydefinition/p5-asciify/blob/b2e2acf40c3dc8f3fd384fd8c87e98bcbf502f21/src/lib/gradients/GradientManager.ts#L160)
 
 ##### Returns
 
@@ -89,7 +89,7 @@ Defined in: [gradients/GradientManager.ts:160](https://github.com/humanbydefinit
 
 > **add**(`gradientName`, `characters`, `brightnessStart`, `brightnessEnd`, `options`): [`P5AsciifyGradient`](P5AsciifyGradient.md)
 
-Defined in: [gradients/GradientManager.ts:82](https://github.com/humanbydefinition/p5-asciify/blob/10002e5b44822cb907b50597a894bf5528f31cb6/src/lib/gradients/GradientManager.ts#L82)
+Defined in: [gradients/GradientManager.ts:82](https://github.com/humanbydefinition/p5-asciify/blob/b2e2acf40c3dc8f3fd384fd8c87e98bcbf502f21/src/lib/gradients/GradientManager.ts#L82)
 
 Add a gradient to the gradient manager.
 
@@ -115,7 +115,7 @@ The gradient instance.
 
 > **remove**(`gradient`): `void`
 
-Defined in: [gradients/GradientManager.ts:151](https://github.com/humanbydefinition/p5-asciify/blob/10002e5b44822cb907b50597a894bf5528f31cb6/src/lib/gradients/GradientManager.ts#L151)
+Defined in: [gradients/GradientManager.ts:151](https://github.com/humanbydefinition/p5-asciify/blob/b2e2acf40c3dc8f3fd384fd8c87e98bcbf502f21/src/lib/gradients/GradientManager.ts#L151)
 
 Remove a gradient from the gradient manager.
 

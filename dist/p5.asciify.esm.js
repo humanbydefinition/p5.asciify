@@ -1277,10 +1277,6 @@ const gA = `data:text/javascript;base64,AAEAAAAKAIAAAwAgT1MvMs+QEyQAAAEoAAAAYGNt
 }, Symbol.toStringTag, { value: "Module" })), h = new oA();
 typeof window < "u" && (window.preload = function() {
 }, window.p5asciify = h);
-n.prototype.setupAsciify = function() {
-};
-n.prototype.drawAsciify = function() {
-};
 n.prototype.registerMethod("init", function() {
   h.instance(this, !1), this._incrementPreload(), h.loadFont(gA);
 });
@@ -1289,13 +1285,13 @@ n.prototype.registerMethod("afterSetup", function() {
     throw new g("WebGL renderer is required for p5.asciify to run.");
   if (Z(this.VERSION, "1.8.0") < 0)
     throw new g("p5.asciify requires p5.js v1.8.0 or higher to run.");
-  h.setup(), this.setupAsciify();
+  h.setup(), this.setupAsciify && this.setupAsciify();
 });
 n.prototype.registerMethod("pre", function() {
   h.sketchFramebuffer.begin(), this.clear(), this.push();
 });
 n.prototype.registerMethod("post", function() {
-  this.pop(), h.sketchFramebuffer.end(), h.asciify(), this.drawAsciify();
+  this.pop(), h.sketchFramebuffer.end(), h.asciify(), this.drawAsciify && this.drawAsciify();
 });
 export {
   oA as P5Asciifier,
