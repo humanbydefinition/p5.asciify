@@ -1,8 +1,8 @@
-**p5.asciify v0.7.0**
+**p5.asciify v0.7.1**
 
 ***
 
-# p5.asciify v0.7.0
+# p5.asciify v0.7.1
 
 ## Namespaces
 
