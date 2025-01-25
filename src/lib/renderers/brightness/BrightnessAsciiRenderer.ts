@@ -68,23 +68,23 @@ export class P5AsciifyBrightnessRenderer extends P5AsciifyRenderer {
         this.p.rect(0, 0, this.p.width, this.p.height);
         this.colorSampleFramebuffer.end();
 
-        this._primaryColorSampleFramebuffer.begin();
+        this._primaryColorFramebuffer.begin();
         if (this._options.characterColorMode === 1) {
             this.p.background(this._options.characterColor as p5.Color);
         } else {
             this.p.clear();
             this.p.image(this.colorSampleFramebuffer, -this.grid.cols / 2, -this.grid.rows / 2, this.grid.cols, this.grid.rows);
         }
-        this._primaryColorSampleFramebuffer.end();
+        this._primaryColorFramebuffer.end();
 
-        this._secondaryColorSampleFramebuffer.begin();
+        this._secondaryColorFramebuffer.begin();
         if (this._options.backgroundColorMode === 1) {
             this.p.background(this._options.backgroundColor as p5.Color);
         } else {
             this.p.clear();
             this.p.image(this.colorSampleFramebuffer, -this.grid.cols / 2, -this.grid.rows / 2, this.grid.cols, this.grid.rows);
         }
-        this._secondaryColorSampleFramebuffer.end();
+        this._secondaryColorFramebuffer.end();
 
         this._inversionFramebuffer.begin();
         this.p.clear();
@@ -96,7 +96,7 @@ export class P5AsciifyBrightnessRenderer extends P5AsciifyRenderer {
         }
         this._inversionFramebuffer.end();
 
-        this._asciiCharacterFramebuffer.begin();
+        this._characterFramebuffer.begin();
         this.p.clear();
         this.p.shader(this.asciiCharacterShader);
         this.asciiCharacterShader.setUniform('u_textureSize', [this.grid.cols, this.grid.rows]);
@@ -105,7 +105,7 @@ export class P5AsciifyBrightnessRenderer extends P5AsciifyRenderer {
         this.asciiCharacterShader.setUniform('u_charPaletteSize', [this.characterColorPalette.colors.length, 1]);
 
         this.p.rect(0, 0, this.p.width, this.p.height);
-        this._asciiCharacterFramebuffer.end();
+        this._characterFramebuffer.end();
 
         super.render(inputFramebuffer, previousAsciiRenderer);
     }

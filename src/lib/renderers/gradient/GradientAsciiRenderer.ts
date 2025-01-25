@@ -141,25 +141,25 @@ export class P5AsciifyGradientRenderer extends P5AsciifyRenderer {
         }
 
         // Ascii character conversion pass
-        this._asciiCharacterFramebuffer.begin();
+        this._characterFramebuffer.begin();
         this.p.clear();
         this.p.shader(this.asciiCharacterShader);
         if (previousAsciiRenderer !== this) {
-            this.asciiCharacterShader.setUniform('u_prevAsciiCharacterTexture', previousAsciiRenderer.asciiCharacterFramebuffer);
+            this.asciiCharacterShader.setUniform('u_prevAsciiCharacterTexture', previousAsciiRenderer.characterFramebuffer);
         }
         this.asciiCharacterShader.setUniform('u_prevGradientTexture', this.grayscaleFramebuffer);
         this.asciiCharacterShader.setUniform('u_nextGradientTexture', this.nextAsciiGradientFramebuffer);
         this.asciiCharacterShader.setUniform('u_resolution', [this.grid.cols, this.grid.rows]);
         this.p.rect(0, 0, this.grid.cols, this.grid.rows);
-        this._asciiCharacterFramebuffer.end();
+        this._characterFramebuffer.end();
 
         // Color sample passes
-        this._primaryColorSampleFramebuffer.begin();
+        this._primaryColorFramebuffer.begin();
         this.p.clear();
         this.p.shader(this.colorSampleShader);
         this.colorSampleShader.setUniform('u_sketchTexture', inputFramebuffer);
         if (previousAsciiRenderer !== this) {
-            this.colorSampleShader.setUniform('u_previousColorTexture', previousAsciiRenderer.primaryColorSampleFramebuffer);
+            this.colorSampleShader.setUniform('u_previousColorTexture', previousAsciiRenderer.primaryColorFramebuffer);
         }
         this.colorSampleShader.setUniform('u_sampleTexture', this.nextAsciiGradientFramebuffer);
         this.colorSampleShader.setUniform('u_sampleReferenceTexture', this.grayscaleFramebuffer);
@@ -167,14 +167,14 @@ export class P5AsciifyGradientRenderer extends P5AsciifyRenderer {
         this.colorSampleShader.setUniform('u_sampleMode', this._options.characterColorMode as number);
         this.colorSampleShader.setUniform('u_staticColor', (this._options.characterColor as p5.Color)._array);
         this.p.rect(0, 0, this.p.width, this.p.height);
-        this._primaryColorSampleFramebuffer.end();
+        this._primaryColorFramebuffer.end();
 
-        this._secondaryColorSampleFramebuffer.begin();
+        this._secondaryColorFramebuffer.begin();
         this.p.clear();
         this.p.shader(this.colorSampleShader);
         this.colorSampleShader.setUniform('u_sketchTexture', inputFramebuffer);
         if (previousAsciiRenderer !== this) {
-            this.colorSampleShader.setUniform('u_previousColorTexture', previousAsciiRenderer.secondaryColorSampleFramebuffer);
+            this.colorSampleShader.setUniform('u_previousColorTexture', previousAsciiRenderer.secondaryColorFramebuffer);
         }
         this.colorSampleShader.setUniform('u_sampleTexture', this.nextAsciiGradientFramebuffer);
         this.colorSampleShader.setUniform('u_sampleReferenceTexture', this.grayscaleFramebuffer);
@@ -182,7 +182,7 @@ export class P5AsciifyGradientRenderer extends P5AsciifyRenderer {
         this.colorSampleShader.setUniform('u_sampleMode', this._options.backgroundColorMode as number);
         this.colorSampleShader.setUniform('u_staticColor', (this._options.backgroundColor as p5.Color)._array);
         this.p.rect(0, 0, this.p.width, this.p.height);
-        this._secondaryColorSampleFramebuffer.end();
+        this._secondaryColorFramebuffer.end();
 
         // Inversion pass
         this._inversionFramebuffer.begin();

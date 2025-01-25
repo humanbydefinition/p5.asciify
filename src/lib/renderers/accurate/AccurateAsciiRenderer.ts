@@ -100,7 +100,7 @@ export class P5AsciifyAccurateRenderer extends P5AsciifyRenderer {
         this.brightnessSplitFramebuffer.end();
 
         // Primary color sample pass
-        this._primaryColorSampleFramebuffer.begin();
+        this._primaryColorFramebuffer.begin();
         if (this._options.characterColorMode === 1) {
             this.p.background(this._options.characterColor as p5.Color);
         } else {
@@ -114,10 +114,10 @@ export class P5AsciifyAccurateRenderer extends P5AsciifyRenderer {
             this.colorSampleShader.setUniform('u_colorRank', 1);
             this.p.rect(0, 0, this.p.width, this.p.height);
         }
-        this._primaryColorSampleFramebuffer.end();
+        this._primaryColorFramebuffer.end();
 
         // Secondary color sample pass
-        this._secondaryColorSampleFramebuffer.begin();
+        this._secondaryColorFramebuffer.begin();
         if (this._options.backgroundColorMode === 1) {
             this.p.background(this._options.backgroundColor as p5.Color);
         } else {
@@ -131,7 +131,7 @@ export class P5AsciifyAccurateRenderer extends P5AsciifyRenderer {
             this.colorSampleShader.setUniform('u_colorRank', 2);
             this.p.rect(0, 0, this.p.width, this.p.height);
         }
-        this._secondaryColorSampleFramebuffer.end();
+        this._secondaryColorFramebuffer.end();
 
         this._inversionFramebuffer.begin();
         this.p.clear();
@@ -144,7 +144,7 @@ export class P5AsciifyAccurateRenderer extends P5AsciifyRenderer {
         this._inversionFramebuffer.end();
 
         // ASCII character pass
-        this._asciiCharacterFramebuffer.begin();
+        this._characterFramebuffer.begin();
         this.p.clear();
         this.p.shader(this.characterSelectionShader);
         this.characterSelectionShader.setUniform('u_characterTexture', this.fontTextureAtlas.texture);
@@ -156,7 +156,7 @@ export class P5AsciifyAccurateRenderer extends P5AsciifyRenderer {
         this.characterSelectionShader.setUniform('u_gridCellDimensions', [this.grid.cols, this.grid.rows]);
         this.characterSelectionShader.setUniform('u_gridPixelDimensions', [this.grid.width, this.grid.height]);
         this.p.rect(0, 0, this.p.width, this.p.height);
-        this._asciiCharacterFramebuffer.end();
+        this._characterFramebuffer.end();
 
         super.render(inputFramebuffer, previousAsciiRenderer);
     }

@@ -24,9 +24,9 @@ export const CUSTOM_DEFAULT_OPTIONS = {
 export class P5AsciifyRenderer {
     
     public characterColorPalette: P5AsciifyColorPalette;
-    protected _primaryColorSampleFramebuffer: p5.Framebuffer;
-    protected _secondaryColorSampleFramebuffer: p5.Framebuffer;
-    protected _asciiCharacterFramebuffer: p5.Framebuffer;
+    protected _primaryColorFramebuffer: p5.Framebuffer;
+    protected _secondaryColorFramebuffer: p5.Framebuffer;
+    protected _characterFramebuffer: p5.Framebuffer;
     protected _inversionFramebuffer: p5.Framebuffer;
     protected _outputFramebuffer: p5.Framebuffer;
     protected _shader: p5.Shader;
@@ -42,7 +42,7 @@ export class P5AsciifyRenderer {
 
         this.characterColorPalette = new P5AsciifyColorPalette(this.p, this.fontTextureAtlas.getCharsetColorArray(this._options.characters));
 
-        this._primaryColorSampleFramebuffer = this.p.createFramebuffer({
+        this._primaryColorFramebuffer = this.p.createFramebuffer({
             density: 1,
             antialias: false,
             width: this.grid.cols,
@@ -51,7 +51,7 @@ export class P5AsciifyRenderer {
             textureFiltering: this.p.NEAREST
         });
 
-        this._secondaryColorSampleFramebuffer = this.p.createFramebuffer({
+        this._secondaryColorFramebuffer = this.p.createFramebuffer({
             density: 1,
             antialias: false,
             width: this.grid.cols,
@@ -69,7 +69,7 @@ export class P5AsciifyRenderer {
             textureFiltering: this.p.NEAREST
         });
 
-        this._asciiCharacterFramebuffer = this.p.createFramebuffer({
+        this._characterFramebuffer = this.p.createFramebuffer({
             density: 1,
             antialias: false,
             width: this.grid.cols,
@@ -92,10 +92,10 @@ export class P5AsciifyRenderer {
      * Resizes all framebuffers based on the grid dimensions.
      */
     public resizeFramebuffers(): void {
-        this._primaryColorSampleFramebuffer.resize(this.grid.cols, this.grid.rows);
-        this._secondaryColorSampleFramebuffer.resize(this.grid.cols, this.grid.rows);
+        this._primaryColorFramebuffer.resize(this.grid.cols, this.grid.rows);
+        this._secondaryColorFramebuffer.resize(this.grid.cols, this.grid.rows);
         this._inversionFramebuffer.resize(this.grid.cols, this.grid.rows);
-        this._asciiCharacterFramebuffer.resize(this.grid.cols, this.grid.rows);
+        this._characterFramebuffer.resize(this.grid.cols, this.grid.rows);
     }
 
     /**
@@ -156,10 +156,10 @@ export class P5AsciifyRenderer {
         this._shader.setUniform('u_resolution', [this.p.width, this.p.height]);
         this._shader.setUniform('u_characterTexture', this.fontTextureAtlas.texture);
         this._shader.setUniform('u_charsetDimensions', [this.fontTextureAtlas.charsetCols, this.fontTextureAtlas.charsetRows]);
-        this._shader.setUniform('u_primaryColorTexture', this._primaryColorSampleFramebuffer);
-        this._shader.setUniform('u_secondaryColorTexture', this._secondaryColorSampleFramebuffer);
+        this._shader.setUniform('u_primaryColorTexture', this._primaryColorFramebuffer);
+        this._shader.setUniform('u_secondaryColorTexture', this._secondaryColorFramebuffer);
         this._shader.setUniform('u_inversionTexture', this._inversionFramebuffer);
-        this._shader.setUniform('u_asciiCharacterTexture', this._asciiCharacterFramebuffer);
+        this._shader.setUniform('u_asciiCharacterTexture', this._characterFramebuffer);
         if (previousAsciiRenderer !== this) {
             this._shader.setUniform('u_prevAsciiTexture', previousAsciiRenderer.outputFramebuffer);
         }
@@ -316,8 +316,8 @@ export class P5AsciifyRenderer {
     // Getters
     get outputFramebuffer() { return this._outputFramebuffer; }
     get options() { return this._options; }
-    get primaryColorSampleFramebuffer() { return this._primaryColorSampleFramebuffer; }
-    get secondaryColorSampleFramebuffer() { return this._secondaryColorSampleFramebuffer; }
+    get primaryColorFramebuffer() { return this._primaryColorFramebuffer; }
+    get secondaryColorFramebuffer() { return this._secondaryColorFramebuffer; }
     get inversionFramebuffer() { return this._inversionFramebuffer; }
-    get asciiCharacterFramebuffer() { return this._asciiCharacterFramebuffer; }
+    get characterFramebuffer() { return this._characterFramebuffer; }
 }
