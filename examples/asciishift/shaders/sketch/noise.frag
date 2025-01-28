@@ -1,4 +1,4 @@
-precision mediump float;
+precision highp float;
 
 varying vec2 v_texCoord;
 
@@ -40,7 +40,7 @@ void main() {
         float redValue = redIndex / 255.0;
 
         // Assign the quantized red value with full opacity
-        gl_FragColor = vec4(redValue, 0.0, 0.0, 1.0);
+        gl_FragColor = vec4(redValue, redValue, redValue, 1.0);
     } else {
         // Non-boundary pixels are rendered as black
         gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
