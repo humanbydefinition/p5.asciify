@@ -34,6 +34,7 @@ export declare class P5AsciifyRenderer {
     protected _characterFramebuffer: p5.Framebuffer;
     /** The inversion framebuffer, whose pixels define whether to swap the character and background colors. */
     protected _inversionFramebuffer: p5.Framebuffer;
+    protected _rotationFramebuffer: p5.Framebuffer;
     /** The output framebuffer, where the final ASCII conversion is rendered. */
     protected _outputFramebuffer: p5.Framebuffer;
     /** The shader used for the ASCII conversion. */
@@ -131,5 +132,6 @@ export declare class P5AsciifyRenderer {
     get primaryColorFramebuffer(): p5.Framebuffer;
     get secondaryColorFramebuffer(): p5.Framebuffer;
     get inversionFramebuffer(): p5.Framebuffer;
+    get rotationFramebuffer(): p5.Framebuffer;
     get characterFramebuffer(): p5.Framebuffer;
 }

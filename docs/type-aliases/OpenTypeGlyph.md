@@ -8,7 +8,7 @@
 
 > **OpenTypeGlyph**: `object`
 
-Defined in: [types.ts:68](https://github.com/humanbydefinition/p5-asciify/blob/74676f4db3015ac640595dd75ed3e2367cf4cb62/src/lib/types.ts#L68)
+Defined in: [types.ts:70](https://github.com/humanbydefinition/p5-asciify/blob/f508211b91e4e5fce76de2e41a19937662a36543/src/lib/types.ts#L70)
 
 Extends the `opentype.js` `Glyph` class with r, g, and b properties for color.
 Currently doesn't actually `extend` the class, but rather defines a new interface, 
@@ -18,12 +18,12 @@ since there is no typing provided by the `opentype.js` library.
 
 | Name | Type | Defined in |
 | ------ | ------ | ------ |
-| <a id="b"></a> `b`? | `number` | [types.ts:76](https://github.com/humanbydefinition/p5-asciify/blob/74676f4db3015ac640595dd75ed3e2367cf4cb62/src/lib/types.ts#L76) |
-| <a id="g"></a> `g`? | `number` | [types.ts:75](https://github.com/humanbydefinition/p5-asciify/blob/74676f4db3015ac640595dd75ed3e2367cf4cb62/src/lib/types.ts#L75) |
-| <a id="r"></a> `r`? | `number` | [types.ts:74](https://github.com/humanbydefinition/p5-asciify/blob/74676f4db3015ac640595dd75ed3e2367cf4cb62/src/lib/types.ts#L74) |
-| <a id="unicode"></a> `unicode` | `number` | [types.ts:69](https://github.com/humanbydefinition/p5-asciify/blob/74676f4db3015ac640595dd75ed3e2367cf4cb62/src/lib/types.ts#L69) |
-| <a id="unicodes"></a> `unicodes` | `number`[] | [types.ts:70](https://github.com/humanbydefinition/p5-asciify/blob/74676f4db3015ac640595dd75ed3e2367cf4cb62/src/lib/types.ts#L70) |
-| <a id="getpath"></a> `getPath()` | `object` | [types.ts:71](https://github.com/humanbydefinition/p5-asciify/blob/74676f4db3015ac640595dd75ed3e2367cf4cb62/src/lib/types.ts#L71) |
+| <a id="b"></a> `b`? | `number` | [types.ts:78](https://github.com/humanbydefinition/p5-asciify/blob/f508211b91e4e5fce76de2e41a19937662a36543/src/lib/types.ts#L78) |
+| <a id="g"></a> `g`? | `number` | [types.ts:77](https://github.com/humanbydefinition/p5-asciify/blob/f508211b91e4e5fce76de2e41a19937662a36543/src/lib/types.ts#L77) |
+| <a id="r"></a> `r`? | `number` | [types.ts:76](https://github.com/humanbydefinition/p5-asciify/blob/f508211b91e4e5fce76de2e41a19937662a36543/src/lib/types.ts#L76) |
+| <a id="unicode"></a> `unicode` | `number` | [types.ts:71](https://github.com/humanbydefinition/p5-asciify/blob/f508211b91e4e5fce76de2e41a19937662a36543/src/lib/types.ts#L71) |
+| <a id="unicodes"></a> `unicodes` | `number`[] | [types.ts:72](https://github.com/humanbydefinition/p5-asciify/blob/f508211b91e4e5fce76de2e41a19937662a36543/src/lib/types.ts#L72) |
+| <a id="getpath"></a> `getPath()` | `object` | [types.ts:73](https://github.com/humanbydefinition/p5-asciify/blob/f508211b91e4e5fce76de2e41a19937662a36543/src/lib/types.ts#L73) |
 
 ## Remarks
 

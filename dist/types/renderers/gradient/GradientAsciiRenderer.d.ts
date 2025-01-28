@@ -30,6 +30,7 @@ export declare class P5AsciifyGradientRenderer extends P5AsciifyRenderer {
     private colorSampleShader;
     private grayscaleFramebuffer;
     private inversionShader;
+    private rotationShader;
     private asciiCharacterShader;
     private prevAsciiGradientFramebuffer;
     private nextAsciiGradientFramebuffer;

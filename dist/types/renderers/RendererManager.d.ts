@@ -31,6 +31,9 @@ export declare class P5AsciifyRendererManager {
     private _renderers;
     /** The last renderer used in the rendering loop. */
     lastRenderer: P5AsciifyRenderer;
+    /** The background color to use for the ASCII rendering for the offset space, not occupied by the centered ASCII grid. */
+    private _backgroundColor;
+    private _resultFramebuffer;
     constructor(
     /** The p5 instance. */
     _p: p5, 
@@ -42,7 +45,7 @@ export declare class P5AsciifyRendererManager {
      * Renders the ASCII output to the canvas.
      * @param inputFramebuffer The input framebuffer to transform into ASCII.
      */
-    render(inputFramebuffer: any): void;
+    render(inputFramebuffer: p5.Framebuffer): void;
     /**
      * Continuously checks if the canvas dimensions have changed.
      * If they have, the grid is reset and the renderers are resized.
@@ -91,6 +94,14 @@ export declare class P5AsciifyRendererManager {
      */
     swap(renderer1: string | P5AsciifyRenderer, renderer2: string | P5AsciifyRenderer): void;
     /**
+     * Sets the background color for the ascii renderers.
+     *
+     * Covers the empty space on the edges of the canvas, which potentially is not occupied by the centered ASCII grid.
+     * @param color The color to set. Needs to be a valid type to pass to the `background()` function provided by p5.js.
+     * @throws {@link P5AsciifyError} - If the color is not a string, array or p5.Color.
+     */
+    background(color: string | p5.Color | [number, number?, number?, number?]): void;
+    /**
      * Gets the index of a renderer in the list of renderers.
      * @param renderer The renderer to get the index of.
      * @returns The index of the renderer in the list of renderers. Returns -1 if the renderer is not found.
@@ -100,5 +111,6 @@ export declare class P5AsciifyRendererManager {
         name: string;
         renderer: P5AsciifyRenderer;
     }[];
+    get resultFramebuffer(): p5.Framebuffer;
 }
 export {};

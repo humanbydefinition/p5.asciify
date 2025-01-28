@@ -24,6 +24,7 @@ declare module 'p5' {
         loadPixels(): void;
         updatePixels(): void;
     }
+    let RendererGL: any;
     interface p5InstanceExtensions {
         loadAsciiFont(font: string | Font, callback?: () => void): void;
         setupAsciify(): void;

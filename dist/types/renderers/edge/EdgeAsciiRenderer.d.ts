@@ -34,6 +34,7 @@ export declare class P5AsciifyEdgeRenderer extends P5AsciifyRenderer {
     private sampleShader;
     private colorSampleShader;
     private inversionShader;
+    private rotationShader;
     private asciiCharacterShader;
     private sobelFramebuffer;
     private sampleFramebuffer;

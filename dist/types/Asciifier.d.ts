@@ -31,10 +31,21 @@ export declare class P5Asciifier {
     private _p;
     /** The font to use for the ASCII rendering. */
     private _font;
-    /** The background color to use for the ASCII rendering for the offset space, not occupied by the centered ASCII grid. */
-    private _backgroundColor;
     /** The font size to use for the ASCII rendering. */
     private _fontSize;
+    /**
+     * Creates a new instance of the `P5Asciifier` class.
+     *
+     * By default, `p5.asciify` creates an initial instance without any parameters,
+     * since this instance is special, capturing whatever is being drawn to the p5.js canvas through hooks.
+     *
+     * If the user wants to an instance of this class to apply to a given framebuffer,
+     * all parameters must be provided to the constructor.
+     * @param p
+     * @param sketchFramebuffer
+     * @param font
+     */
+    constructor(p?: p5, sketchFramebuffer?: p5.Framebuffer, font?: p5.Font);
     /**
      * Used to pass the p5 instance to the `p5.asciify` library.
      *
@@ -91,7 +102,18 @@ export declare class P5Asciifier {
      * @throws {@link P5AsciifyError} - If the color is not a string, array or p5.Color.
      */
     background(color: string | p5.Color | [number, number?, number?, number?]): void;
+    /**
+     * Saves the ASCII output to a text file.
+     * @param filename The filename to save the text file as. If not provided, a default filename is generated.
+     * @throws {@link P5AsciifyError} - If no renderer is available to save ASCII output.
+     */
+    saveTxt(filename: string): void;
     get sketchFramebuffer(): p5.Framebuffer;
     get grid(): P5AsciifyGrid;
     get fontTextureAtlas(): P5AsciifyFontTextureAtlas;
+    /**
+     * Returns the ASCII output texture as a p5.Framebuffer, which can be used for further processing or rendering.
+     * Can also be used via the `texture()` method.
+     */
+    get texture(): p5.Framebuffer;
 }
