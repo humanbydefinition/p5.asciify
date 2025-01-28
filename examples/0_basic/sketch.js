@@ -50,12 +50,6 @@ export const createSketch = (options = {}) => {
       p.rotateZ(p.radians(p.frameCount));
       p.directionalLight(255, 255, 255, 0, 0, -1);
       p.box(800, 100, 100);
-
-      if (p.frameCount === 100) {
-        p5asciify.renderers().get("brightness").characters("test");
-        //p5asciify.renderers().get("brightness").rotation(180);
-      }
-
     };
 
     p.windowResized = () => {
