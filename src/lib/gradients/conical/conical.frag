@@ -19,8 +19,9 @@ void main() {
     vec4 texColor = texture2D(textureID, flippedTexCoord);
     vec4 originalTexColor = texture2D(originalTextureID, flippedTexCoord);
 
-    // Check if the pixel color in the original texture matches the target color within the tolerance
-    if(originalTexColor.r >= u_brightnessRange[0] && originalTexColor.r <= u_brightnessRange[1]) {
+    if(originalTexColor.a >= 0.01 &&
+        originalTexColor.r >= u_brightnessRange[0] &&
+        originalTexColor.r <= u_brightnessRange[1]) {
 
         // Calculate relative position from the gradient center
         vec2 relativePosition = flippedTexCoord - vec2(u_centerX, u_centerY);
