@@ -30,16 +30,13 @@ export const createSketch = (options = {}) => {
 
   // Define the p5 sketch
   const sketch = (p) => {
-    let sketchFramebuffer;
+
 
     // Initialize p5asciify with this p5 instance
     p5asciify.instance(p);
 
     p.setup = () => {
       p.createCanvas(p.windowWidth, p.windowHeight, p.WEBGL);
-
-      // Create a framebuffer to draw your brightness test
-      sketchFramebuffer = p.createFramebuffer({ format: p.FLOAT });
     };
 
     p.setupAsciify = () => {
