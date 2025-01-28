@@ -18,7 +18,7 @@ const RENDERER_TYPES = {
     'accurate': P5AsciifyAccurateRenderer,
     'gradient': P5AsciifyGradientRenderer,
     'edge': P5AsciifyEdgeRenderer,
-    'custom': P5AsciifyRenderer
+    'custom': P5AsciifyRenderer,
 } as const;
 
 type RendererType = keyof typeof RENDERER_TYPES;
@@ -36,6 +36,11 @@ export class P5AsciifyRendererManager {
 
     /** The last renderer used in the rendering loop. */
     public lastRenderer: P5AsciifyRenderer;
+
+    /** The background color to use for the ASCII rendering for the offset space, not occupied by the centered ASCII grid. */
+    private _backgroundColor: string | p5.Color | [number, number?, number?, number?] = "#000000";
+
+    private _resultFramebuffer: p5.Framebuffer;
 
     constructor(
         /** The p5 instance. */
@@ -60,6 +65,11 @@ export class P5AsciifyRendererManager {
             { name: "brightness", renderer: new P5AsciifyBrightnessRenderer(this._p, this._grid, _fontTextureAtlas) },
         ];
 
+        this._resultFramebuffer = this._p.createFramebuffer({
+            depthFormat: this._p.UNSIGNED_INT,
+            textureFiltering: this._p.NEAREST
+        });
+
         this.lastRenderer = this._renderers[0].renderer;
     }
 
@@ -67,11 +77,14 @@ export class P5AsciifyRendererManager {
      * Renders the ASCII output to the canvas.
      * @param inputFramebuffer The input framebuffer to transform into ASCII.
      */
-    public render(inputFramebuffer: any): void {
+    public render(inputFramebuffer: p5.Framebuffer): void {
         let asciiOutput = inputFramebuffer;
 
         let currentRenderer = this._renderers[0].renderer;
 
+        this._resultFramebuffer.begin();
+        this._p.clear();
+        this._p.background(this._backgroundColor as p5.Color);
         for (let i = this._renderers.length - 1; i >= 0; i--) {
             const renderer = this._renderers[i];
             if (renderer.renderer.options.enabled) {
@@ -81,6 +94,9 @@ export class P5AsciifyRendererManager {
                 this.lastRenderer = renderer.renderer;
             }
         }
+
+        this._p.image(asciiOutput, -this._p.width / 2, -this._p.height / 2);
+        this._resultFramebuffer.end();
 
         this.checkCanvasDimensions();
     }
@@ -216,6 +232,21 @@ export class P5AsciifyRendererManager {
     }
 
     /**
+     * Sets the background color for the ascii renderers. 
+     * 
+     * Covers the empty space on the edges of the canvas, which potentially is not occupied by the centered ASCII grid.
+     * @param color The color to set. Needs to be a valid type to pass to the `background()` function provided by p5.js.
+     * @throws {@link P5AsciifyError} - If the color is not a string, array or p5.Color.
+     */
+    public background(color: string | p5.Color | [number, number?, number?, number?]) {
+        if (typeof color !== "string" && !Array.isArray(color) && !(color instanceof p5.Color)) {
+            throw new P5AsciifyError(`Invalid color type: ${typeof color}. Expected string, array or p5.Color.`);
+        }
+
+        this._backgroundColor = color;
+    }
+
+    /**
      * Gets the index of a renderer in the list of renderers.
      * @param renderer The renderer to get the index of.
      * @returns The index of the renderer in the list of renderers. Returns -1 if the renderer is not found.
@@ -229,4 +260,5 @@ export class P5AsciifyRendererManager {
 
     // Getters
     get renderers(): { name: string, renderer: P5AsciifyRenderer }[] { return this._renderers; }
+    get resultFramebuffer(): p5.Framebuffer { return this._resultFramebuffer; }
 }
