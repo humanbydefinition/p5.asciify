@@ -139,7 +139,6 @@ export class P5AsciifyFontTextureAtlas {
      * @param fontSize - The font size to use for drawing the characters on the texture.
      */
     private _drawCharacters(fontSize: number): void {
-        this._p.clear();
         this._p.textFont(this._font);
         this._p.fill(255);
         this._p.textSize(fontSize);
