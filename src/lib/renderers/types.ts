@@ -24,7 +24,7 @@ export type AsciiRendererOptions = {
     invertMode: boolean;
 
     /** The rotation angle of all characters in the grid in degrees. */
-    rotationAngle: number;
+    rotationAngle: number | p5.Color;
 
     /** The threshold for the Sobel edge detection algorithm. (only used in the `"edge"` renderer) */
     sobelThreshold?: number;

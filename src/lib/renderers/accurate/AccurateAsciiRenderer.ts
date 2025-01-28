@@ -42,9 +42,9 @@ export class P5AsciifyAccurateRenderer extends P5AsciifyRenderer {
     private _brightnessSplitFramebuffer: p5.Framebuffer;
 
     constructor(
-        p5Instance: p5, 
-        grid: P5AsciifyGrid, 
-        fontTextureAtlas: P5AsciifyFontTextureAtlas, 
+        p5Instance: p5,
+        grid: P5AsciifyGrid,
+        fontTextureAtlas: P5AsciifyFontTextureAtlas,
         options: AsciiRendererOptions = ACCURATE_DEFAULT_OPTIONS
     ) {
         const mergedOptions = { ...ACCURATE_DEFAULT_OPTIONS, ...options };
@@ -147,6 +147,11 @@ export class P5AsciifyAccurateRenderer extends P5AsciifyRenderer {
             this._p.background(0);
         }
         this._inversionFramebuffer.end();
+
+        this._rotationFramebuffer.begin();
+        this._p.clear();
+        this._p.background(this._options.rotationAngle as p5.Color);
+        this._rotationFramebuffer.end();
 
         // ASCII character pass
         this._characterFramebuffer.begin();
