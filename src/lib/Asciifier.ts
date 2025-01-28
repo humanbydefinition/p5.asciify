@@ -40,12 +40,50 @@ export class P5Asciifier {
     /** The font to use for the ASCII rendering. */
     private _font!: p5.Font;
 
-    /** The background color to use for the ASCII rendering for the offset space, not occupied by the centered ASCII grid. */
-    private _backgroundColor: string | p5.Color | [number, number?, number?, number?] = "#000000";
-
     /** The font size to use for the ASCII rendering. */
     private _fontSize: number = 16;
 
+    /**
+     * Creates a new instance of the `P5Asciifier` class.
+     * 
+     * By default, `p5.asciify` creates an initial instance without any parameters, 
+     * since this instance is special, capturing whatever is being drawn to the p5.js canvas through hooks.
+     * 
+     * If the user wants to an instance of this class to apply to a given framebuffer,
+     * all parameters must be provided to the constructor.
+     * @param p 
+     * @param sketchFramebuffer 
+     * @param font 
+     */
+    constructor(p?: p5, sketchFramebuffer?: p5.Framebuffer, font?: p5.Font) {
+        if (p !== undefined && !(p instanceof p5)) {
+            throw new P5AsciifyError('First parameter must be a p5 instance');
+        }
+
+        if (sketchFramebuffer !== undefined && !(sketchFramebuffer instanceof p5.Framebuffer)) {
+            throw new P5AsciifyError('Second parameter must be a p5.Framebuffer instance');
+        }
+
+        if (font !== undefined && !(font instanceof p5.Font)) {
+            throw new P5AsciifyError('Third parameter must be a p5.Font instance');
+        }
+
+        if (p) {
+            this.instance(p, false);
+        }
+
+        if (sketchFramebuffer) {
+            this._sketchFramebuffer = sketchFramebuffer;
+        }
+
+        if (font) {
+            this._font = font;
+        }
+
+        if (p && sketchFramebuffer && font) {
+            this.setup();
+        }
+    }
 
     /**
      * Used to pass the p5 instance to the `p5.asciify` library. 
@@ -79,6 +117,7 @@ export class P5Asciifier {
      * Is called automatically after the user's `setup()` function has finished.
      */
     public setup(): void {
+
         this._fontTextureAtlas = new P5AsciifyFontTextureAtlas(
             this._p,
             this._font,
@@ -97,10 +136,12 @@ export class P5Asciifier {
             this._fontTextureAtlas
         );
 
-        this._sketchFramebuffer = this._p.createFramebuffer({
-            depthFormat: this._p.UNSIGNED_INT,
-            textureFiltering: this._p.NEAREST
-        });
+        if (!this._sketchFramebuffer) {
+            this._sketchFramebuffer = this._p.createFramebuffer({
+                depthFormat: this._p.UNSIGNED_INT,
+                textureFiltering: this._p.NEAREST
+            });
+        }
     }
 
     /**
@@ -113,9 +154,7 @@ export class P5Asciifier {
 
         if (this._rendererManager.renderers.length > 0) {
             this._rendererManager.render(this._sketchFramebuffer);
-
-            this._p.background(this._backgroundColor as p5.Color);
-            this._p.image(this._rendererManager.lastRenderer.outputFramebuffer, -this._p.width / 2, -this._p.height / 2);
+            this._p.image(this._rendererManager.resultFramebuffer, -this._p.width / 2, -this._p.height / 2);
         } else {
             this._p.image(this._sketchFramebuffer, -this._p.width / 2, -this._p.height / 2);
         }
@@ -195,15 +234,75 @@ export class P5Asciifier {
      * @throws {@link P5AsciifyError} - If the color is not a string, array or p5.Color.
      */
     public background(color: string | p5.Color | [number, number?, number?, number?]) {
-        if (typeof color !== "string" && !Array.isArray(color) && !(color instanceof p5.Color)) {
-            throw new P5AsciifyError(`Invalid color type: ${typeof color}. Expected string, array or p5.Color.`);
+        this._rendererManager.background(color as p5.Color);
+    }
+
+    /**
+     * Saves the ASCII output to a text file.
+     * @param filename The filename to save the text file as. If not provided, a default filename is generated.
+     * @throws {@link P5AsciifyError} - If no renderer is available to save ASCII output.
+     */
+    public saveTxt(filename: string): void {
+        const lastRenderer = this._rendererManager.lastRenderer;
+        if (!lastRenderer) {
+            throw new P5AsciifyError('No renderer available to save ASCII output');
         }
 
-        this._backgroundColor = color;
+        if (!filename) {
+            const now = new Date();
+            const date = now.toISOString().split('T')[0];
+            const time = now.toTimeString().split(' ')[0].replace(/:/g, '-');
+            filename = `asciify_output_${date}_${time}`;
+        }
+    
+        // Load pixels from character framebuffer
+        lastRenderer.characterFramebuffer.loadPixels();
+        const asciiPixels = lastRenderer.characterFramebuffer.pixels;
+        
+        // Get grid dimensions
+        const w = this._grid.cols;
+        const h = this._grid.rows;
+        
+        // Get characters array from font texture atlas
+        const chars = this._fontTextureAtlas.characters;
+        
+        // Build text content
+        const lines: string[] = [];
+        let idx = 0;
+        
+        for (let y = 0; y < h; y++) {
+            let line = '';
+            for (let x = 0; x < w; x++) {
+                const pixelIdx = idx * 4;
+                
+                // Get character index from red and green channels
+                const r = asciiPixels[pixelIdx];
+                const g = asciiPixels[pixelIdx + 1];
+                let charIndex = r + (g << 8);
+                
+                // Clamp character index
+                if (charIndex >= chars.length) {
+                    charIndex = chars.length - 1;
+                }
+                
+                line += chars[charIndex];
+                idx++;
+            }
+            lines.push(line);
+        }
+        
+        // Save to file
+        this._p.saveStrings(lines, `${filename}.txt`);
     }
 
     // Getter
     get sketchFramebuffer(): p5.Framebuffer { return this._sketchFramebuffer; }
     get grid(): P5AsciifyGrid { return this._grid; }
     get fontTextureAtlas(): P5AsciifyFontTextureAtlas { return this._fontTextureAtlas; }
+
+    /**
+     * Returns the ASCII output texture as a p5.Framebuffer, which can be used for further processing or rendering.
+     * Can also be used via the `texture()` method.
+     */
+    get texture(): p5.Framebuffer { return this._rendererManager.resultFramebuffer; }
 }
