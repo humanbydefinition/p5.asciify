@@ -23,10 +23,12 @@ import { P5AsciifyError } from './AsciifyError';
  * At this point, the `p5.asciify` is fully functional and ready to interact with.
  */
 export class P5Asciifier {
+
+    /** Manages the font and provides methods to access font properties. */
+    private _fontManager!: P5AsciifyFontManager;
+
     /** Contains texture with all glyphs of a given font.*/
     private _fontTextureAtlas!: P5AsciifyFontTextureAtlas;
-
-    private _fontManager!: P5AsciifyFontManager;
 
     /** Contains the grid dimensions and offsets to create a perfect grid based on the canvas and font glyph dimensions. */
     private _grid!: P5AsciifyGrid;
@@ -40,12 +42,6 @@ export class P5Asciifier {
     /** The `p5.js` instance. */
     private _p!: p5;
 
-    /** The font to use for the ASCII rendering. */
-    private _font!: p5.Font;
-
-    /** The font size to use for the ASCII rendering. */
-    private _fontSize: number = 16;
-
     /**
      * Creates a new instance of the `P5Asciifier` class.
      * 
@@ -58,7 +54,7 @@ export class P5Asciifier {
      * @param sketchFramebuffer 
      * @param font 
      */
-    constructor(p?: p5, sketchFramebuffer?: p5.Framebuffer, font?: p5.Font) {
+    constructor(p?: p5, sketchFramebuffer?: p5.Framebuffer, font?: p5.Font, fontSize: number = 16) {
         if (p !== undefined && !(p instanceof p5)) {
             throw new P5AsciifyError('First parameter must be a p5 instance');
         }
@@ -84,7 +80,7 @@ export class P5Asciifier {
         }
 
         if (p && sketchFramebuffer && font) {
-            this.setup();
+            this.setup(fontSize);
         }
     }
 
@@ -124,12 +120,11 @@ export class P5Asciifier {
      * 
      * Is called automatically after the user's `setup()` function has finished.
      */
-    public setup(): void {
-
+    public setup(fontSize: number = 16): void {
         this._fontTextureAtlas = new P5AsciifyFontTextureAtlas(
             this._p,
             this._fontManager,
-            this._fontSize
+            fontSize
         );
 
         this._grid = new P5AsciifyGrid(
@@ -171,16 +166,8 @@ export class P5Asciifier {
     /**
      * Sets the font size for the ASCII renderers.
      * @param fontSize The font size to set.
-     * @throws {@link P5AsciifyError} - If the font size is out of bounds.
      */
     public fontSize(fontSize: number): void {
-
-        if (fontSize < 1 || fontSize > 128) {
-            throw new P5AsciifyError(`Font size ${fontSize} is out of bounds. It should be between 1 and 128.`);
-        }
-
-        this._fontSize = fontSize;
-
         if (this._p._setupDone) {
             this._fontTextureAtlas.setFontSize(fontSize);
             this._grid.resizeCellPixelDimensions(
@@ -335,10 +322,11 @@ export class P5Asciifier {
     get sketchFramebuffer(): p5.Framebuffer { return this._sketchFramebuffer; }
     get grid(): P5AsciifyGrid { return this._grid; }
     get fontTextureAtlas(): P5AsciifyFontTextureAtlas { return this._fontTextureAtlas; }
+    get fontManager(): P5AsciifyFontManager { return this._fontManager; }
 
     /**
      * Returns the ASCII output texture as a p5.Framebuffer, which can be used for further processing or rendering.
-     * Can also be used via the `texture()` method.
+     * Can also be used via the p5.js `texture()` function.
      */
     get texture(): p5.Framebuffer { return this._rendererManager.resultFramebuffer; }
 }
