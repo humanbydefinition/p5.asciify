@@ -62,7 +62,7 @@ export class P5AsciifyRenderer {
     ) {
         this._options = { ...CUSTOM_DEFAULT_OPTIONS, ..._options };
 
-        this._characterColorPalette = new P5AsciifyColorPalette(this._p, this._fontTextureAtlas.fontManager.getCharsetColorArray(this._options.characters));
+        this._characterColorPalette = new P5AsciifyColorPalette(this._p, this._fontTextureAtlas.fontManager.glyphColors(this._options.characters));
 
         this._primaryColorFramebuffer = this._p.createFramebuffer({
             density: 1,
@@ -218,7 +218,7 @@ export class P5AsciifyRenderer {
 
         this._fontTextureAtlas.fontManager.validateCharacters(characters);
 
-        this._characterColorPalette.setColors(this._fontTextureAtlas.fontManager.getCharsetColorArray(characters));
+        this._characterColorPalette.setColors(this._fontTextureAtlas.fontManager.glyphColors(characters));
         this.resetShaders();
 
         this._options.characters = characters;
