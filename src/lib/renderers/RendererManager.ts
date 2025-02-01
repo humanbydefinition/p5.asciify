@@ -246,6 +246,18 @@ export class P5AsciifyRendererManager {
         this._backgroundColor = color;
     }
 
+    public enable() {
+        this._renderers.forEach(renderer => renderer.renderer.enabled(true));
+    }
+
+    public disable() {
+        this._renderers.forEach(renderer => renderer.renderer.enabled(false));
+    }
+
+    public enabled(enabled: boolean) {
+        enabled ? this.enable() : this.disable();
+    }
+
     /**
      * Gets the index of a renderer in the list of renderers.
      * @param renderer The renderer to get the index of.
