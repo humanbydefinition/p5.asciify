@@ -21,7 +21,7 @@ if (typeof window !== 'undefined') {
  */
 p5.prototype.registerMethod('init', function (this: p5) {
   this._incrementPreload();
-  p5asciify.init(this, false, URSAFONT_BASE64);
+  p5asciify.init(this,  URSAFONT_BASE64);
 });
 
 /**
