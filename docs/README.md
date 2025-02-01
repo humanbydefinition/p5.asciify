@@ -18,6 +18,7 @@
 | [P5Asciifier](classes/P5Asciifier.md) | The main class for the `p5.asciify` library, responsible for setting up the library, managing its properties, and providing an interface for interacting with the library. |
 | [P5AsciifyColorPalette](classes/P5AsciifyColorPalette.md) | A 1D color palette stored in a framebuffer, which is used to pass colors to shaders. |
 | [P5AsciifyError](classes/P5AsciifyError.md) | Simple error class, representing errors specific to `p5.asciify`. |
+| [P5AsciifyFontManager](classes/P5AsciifyFontManager.md) | Manages a texture atlas for font rendering in the ASCII rendering process. |
 | [P5AsciifyFontTextureAtlas](classes/P5AsciifyFontTextureAtlas.md) | Manages a texture atlas for font rendering in the ASCII rendering process. |
 | [P5AsciifyGrid](classes/P5AsciifyGrid.md) | Manages the grid dimensions for the ASCII renderers. |
 

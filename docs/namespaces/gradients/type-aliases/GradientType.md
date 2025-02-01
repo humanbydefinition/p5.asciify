@@ -8,6 +8,6 @@
 
 > **GradientType**: `"linear"` \| `"spiral"` \| `"radial"` \| `"conical"`
 
-Defined in: [gradients/types.ts:6](https://github.com/humanbydefinition/p5-asciify/blob/e247792661fdf21646cc212e4bf1e6a1bf198b53/src/lib/gradients/types.ts#L6)
+Defined in: [gradients/types.ts:6](https://github.com/humanbydefinition/p5-asciify/blob/8048ed2591f1c8ea5ae855965762fa34a05b3fdc/src/lib/gradients/types.ts#L6)
 
 The available gradient types.

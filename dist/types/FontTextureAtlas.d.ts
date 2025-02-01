@@ -18,7 +18,7 @@ export declare class P5AsciifyFontTextureAtlas {
     /**
      * Creates a new `P5AsciifyFontTextureAtlas` instance.
      * @param _p The p5 instance.
-     * @param _font The font object to use for the texture atlas.
+     * @param _fontManager The font manager to use for the texture atlas.
      * @param _fontSize The font size to use for the texture atlas.
      */
     constructor(_p: p5, _fontManager: P5AsciifyFontManager, _fontSize?: number);
@@ -29,8 +29,7 @@ export declare class P5AsciifyFontTextureAtlas {
      */
     private _getMaxGlyphDimensions;
     /**
-     * Sets the font object and resets the whole atlas.
-     * @param font - The new font object.
+     * Resets the texture atlas by recalculating the maximum glyph dimensions and recreating the texture.
      */
     reset(): void;
     /**

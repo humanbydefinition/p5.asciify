@@ -1,23 +1,23 @@
 var K = Object.defineProperty;
 var W = (o, A, e) => A in o ? K(o, A, { enumerable: !0, configurable: !0, writable: !0, value: e }) : o[A] = e;
-var t = (o, A, e) => W(o, typeof A != "symbol" ? A + "" : A, e);
+var i = (o, A, e) => W(o, typeof A != "symbol" ? A + "" : A, e);
 import Q from "p5";
 class V {
   /**
    * Creates a new `P5AsciifyFontTextureAtlas` instance.
    * @param _p The p5 instance.
-   * @param _font The font object to use for the texture atlas.
+   * @param _fontManager The font manager to use for the texture atlas.
    * @param _fontSize The font size to use for the texture atlas.
    */
   constructor(A, e, r = 16) {
     /** Maximum width and height of the glyphs in the font. */
-    t(this, "_maxGlyphDimensions");
+    i(this, "_maxGlyphDimensions");
     /** Texture containing all characters in the font. As square as possible. */
-    t(this, "_texture");
+    i(this, "_texture");
     /** Number of columns in the texture. */
-    t(this, "_charsetCols");
+    i(this, "_charsetCols");
     /** Number of rows in the texture. */
-    t(this, "_charsetRows");
+    i(this, "_charsetRows");
     this._p = A, this._fontManager = e, this._fontSize = r, this.reset();
   }
   /**
@@ -28,18 +28,17 @@ class V {
   _getMaxGlyphDimensions(A) {
     return this._fontManager.characterGlyphs.reduce(
       (e, r) => {
-        const i = r.getPath(0, 0, A).getBoundingBox();
+        const t = r.getPath(0, 0, A).getBoundingBox();
         return {
-          width: Math.ceil(Math.max(e.width, i.x2 - i.x1)),
-          height: Math.ceil(Math.max(e.height, i.y2 - i.y1))
+          width: Math.ceil(Math.max(e.width, t.x2 - t.x1)),
+          height: Math.ceil(Math.max(e.height, t.y2 - t.y1))
         };
       },
       { width: 0, height: 0 }
     );
   }
   /**
-   * Sets the font object and resets the whole atlas.
-   * @param font - The new font object.
+   * Resets the texture atlas by recalculating the maximum glyph dimensions and recreating the texture.
    */
   reset() {
     this._maxGlyphDimensions = this._getMaxGlyphDimensions(this._fontSize), this._createTexture(this._fontSize);
@@ -70,7 +69,7 @@ class V {
   _drawCharacters(A) {
     this._p.textFont(this._fontManager.font), this._p.fill(255), this._p.textSize(A), this._p.textAlign(this._p.LEFT, this._p.TOP), this._p.noStroke();
     for (let e = 0; e < this._fontManager.characterGlyphs.length; e++) {
-      const r = e % this._charsetCols, i = Math.floor(e / this._charsetCols), s = this._maxGlyphDimensions.width * r - this._maxGlyphDimensions.width * this._charsetCols / 2, g = this._maxGlyphDimensions.height * i - this._maxGlyphDimensions.height * this._charsetRows / 2;
+      const r = e % this._charsetCols, t = Math.floor(e / this._charsetCols), s = this._maxGlyphDimensions.width * r - this._maxGlyphDimensions.width * this._charsetCols / 2, g = this._maxGlyphDimensions.height * t - this._maxGlyphDimensions.height * this._charsetRows / 2;
       this._p.text(String.fromCharCode(this._fontManager.characterGlyphs[e].unicode), s, g);
     }
   }
@@ -103,17 +102,17 @@ class Z {
    */
   constructor(A, e, r) {
     /** The number of columns in the grid. */
-    t(this, "_cols");
+    i(this, "_cols");
     /** The number of rows in the grid. */
-    t(this, "_rows");
+    i(this, "_rows");
     /** The total width of the grid in pixels. */
-    t(this, "_width");
+    i(this, "_width");
     /** The total height of the grid in pixels. */
-    t(this, "_height");
+    i(this, "_height");
     /** The offset to the outer canvas on the x-axis when centering the grid. */
-    t(this, "_offsetX");
+    i(this, "_offsetX");
     /** The offset to the outer canvas on the y-axis when centering the grid. */
-    t(this, "_offsetY");
+    i(this, "_offsetY");
     this._p = A, this._cellWidth = e, this._cellHeight = r, this.reset();
   }
   /**
@@ -173,10 +172,10 @@ class a extends Error {
 }
 class F {
   constructor(A, e) {
-    t(this, "_p");
-    t(this, "_font");
-    t(this, "_characters", []);
-    t(this, "_characterGlyphs", []);
+    i(this, "_p");
+    i(this, "_font");
+    i(this, "_characters", []);
+    i(this, "_characterGlyphs", []);
     this._p = A, e && this.loadFont(e);
   }
   _initializeGlyphsAndCharacters() {
@@ -251,7 +250,7 @@ class F {
   getCharsetColorArray(A = "") {
     return Array.from(A).map((e) => {
       const r = this._characterGlyphs.find(
-        (i) => i.unicodes.includes(e.codePointAt(0))
+        (t) => t.unicodes.includes(e.codePointAt(0))
       );
       if (!r)
         throw new a(`Could not find character in character set: ${e}`);
@@ -276,7 +275,7 @@ class Y {
    */
   constructor(A, e) {
     /** The framebuffer used to store the color palette. */
-    t(this, "_framebuffer");
+    i(this, "_framebuffer");
     this._p = A, this._colors = e;
     const r = Math.max(this._colors.length, 1);
     this._framebuffer = this._p.createFramebuffer({
@@ -295,8 +294,8 @@ class Y {
     const A = Math.max(this._colors.length, 1);
     this._framebuffer.resize(A, 1), this._framebuffer.loadPixels();
     for (let r = 0; r < A; r++) {
-      const i = r < this._colors.length ? this._p.color(this._colors[r]) : this._p.color(0, 0, 0, 0), s = 4 * r;
-      this._framebuffer.pixels[s] = this._p.red(i), this._framebuffer.pixels[s + 1] = this._p.green(i), this._framebuffer.pixels[s + 2] = this._p.blue(i), this._framebuffer.pixels[s + 3] = this._p.alpha(i);
+      const t = r < this._colors.length ? this._p.color(this._colors[r]) : this._p.color(0, 0, 0, 0), s = 4 * r;
+      this._framebuffer.pixels[s] = this._p.red(t), this._framebuffer.pixels[s + 1] = this._p.green(t), this._framebuffer.pixels[s + 2] = this._p.blue(t), this._framebuffer.pixels[s + 3] = this._p.alpha(t);
     }
     this._framebuffer.updatePixels();
   }
@@ -325,23 +324,23 @@ const _ = {
   rotationAngle: 0
 };
 class E {
-  constructor(A, e, r, i = _) {
+  constructor(A, e, r, t = _) {
     /** The color palette containing colors that correspond to the defined character set. */
-    t(this, "_characterColorPalette");
+    i(this, "_characterColorPalette");
     /** The primary color framebuffer, whose pixels define the character colors of the grid cells. */
-    t(this, "_primaryColorFramebuffer");
+    i(this, "_primaryColorFramebuffer");
     /** The secondary color framebuffer, whose pixels define the background colors of the grid cells. */
-    t(this, "_secondaryColorFramebuffer");
+    i(this, "_secondaryColorFramebuffer");
     /** The character framebuffer, whose pixels define the ASCII characters to use in the grid cells. */
-    t(this, "_characterFramebuffer");
+    i(this, "_characterFramebuffer");
     /** The inversion framebuffer, whose pixels define whether to swap the character and background colors. */
-    t(this, "_inversionFramebuffer");
-    t(this, "_rotationFramebuffer");
+    i(this, "_inversionFramebuffer");
+    i(this, "_rotationFramebuffer");
     /** The output framebuffer, where the final ASCII conversion is rendered. */
-    t(this, "_outputFramebuffer");
+    i(this, "_outputFramebuffer");
     /** The shader used for the ASCII conversion. */
-    t(this, "_shader");
-    this._p = A, this._grid = e, this._fontTextureAtlas = r, this._options = i, this._options = { ..._, ...i }, this._characterColorPalette = new Y(this._p, this._fontTextureAtlas.fontManager.getCharsetColorArray(this._options.characters)), this._primaryColorFramebuffer = this._p.createFramebuffer({
+    i(this, "_shader");
+    this._p = A, this._grid = e, this._fontTextureAtlas = r, this._options = t, this._options = { ..._, ...t }, this._characterColorPalette = new Y(this._p, this._fontTextureAtlas.fontManager.getCharsetColorArray(this._options.characters)), this._primaryColorFramebuffer = this._p.createFramebuffer({
       density: 1,
       antialias: !1,
       width: this._grid.cols,
@@ -565,12 +564,12 @@ const C = {
   rotationAngle: 0
 };
 class I extends E {
-  constructor(e, r, i, s = C) {
+  constructor(e, r, t, s = C) {
     const g = { ...C, ...s };
-    super(e, r, i, g);
-    t(this, "colorSampleShader");
-    t(this, "asciiCharacterShader");
-    t(this, "colorSampleFramebuffer");
+    super(e, r, t, g);
+    i(this, "colorSampleShader");
+    i(this, "asciiCharacterShader");
+    i(this, "colorSampleFramebuffer");
     this.colorSampleShader = this._p.createShader(B, P), this.asciiCharacterShader = this._p.createShader(B, q), this.colorSampleFramebuffer = this._p.createFramebuffer({
       density: 1,
       width: this._grid.cols,
@@ -613,15 +612,15 @@ const D = {
   rotationAngle: 0
 };
 class w extends E {
-  constructor(e, r, i, s = D) {
+  constructor(e, r, t, s = D) {
     const g = { ...D, ...s };
-    super(e, r, i, g);
-    t(this, "_characterSelectionShader");
-    t(this, "_brightnessSampleShader");
-    t(this, "_colorSampleShader");
-    t(this, "_brightnessSplitShader");
-    t(this, "_brightnessSampleFramebuffer");
-    t(this, "_brightnessSplitFramebuffer");
+    super(e, r, t, g);
+    i(this, "_characterSelectionShader");
+    i(this, "_brightnessSampleShader");
+    i(this, "_colorSampleShader");
+    i(this, "_brightnessSplitShader");
+    i(this, "_brightnessSampleFramebuffer");
+    i(this, "_brightnessSplitFramebuffer");
     this._characterSelectionShader = this._p.createShader(B, T(this._fontTextureAtlas.fontSize)), this._brightnessSampleShader = this._p.createShader(B, y(this._grid.cellHeight, this._grid.cellWidth)), this._colorSampleShader = this._p.createShader(B, G(16, this._grid.cellHeight, this._grid.cellWidth)), this._brightnessSplitShader = this._p.createShader(B, AA), this._brightnessSampleFramebuffer = this._p.createFramebuffer({
       density: 1,
       width: this._grid.cols,
@@ -669,17 +668,17 @@ precision mediump float;uniform sampler2D u_image;uniform vec2 u_imageSize,u_gri
   rotationAngle: 0
 };
 class x extends E {
-  constructor(e, r, i, s = m) {
+  constructor(e, r, t, s = m) {
     const g = { ...m, ...s };
-    super(e, r, i, g);
-    t(this, "sobelShader");
-    t(this, "sampleShader");
-    t(this, "colorSampleShader");
-    t(this, "inversionShader");
-    t(this, "rotationShader");
-    t(this, "asciiCharacterShader");
-    t(this, "sobelFramebuffer");
-    t(this, "sampleFramebuffer");
+    super(e, r, t, g);
+    i(this, "sobelShader");
+    i(this, "sampleShader");
+    i(this, "colorSampleShader");
+    i(this, "inversionShader");
+    i(this, "rotationShader");
+    i(this, "asciiCharacterShader");
+    i(this, "sobelFramebuffer");
+    i(this, "sampleFramebuffer");
     this.sobelShader = this._p.createShader(B, rA), this.sampleShader = this._p.createShader(B, M(16, this._grid.cellHeight, this._grid.cellWidth)), this.colorSampleShader = this._p.createShader(B, P), this.inversionShader = this._p.createShader(B, k), this.rotationShader = this._p.createShader(B, z), this.asciiCharacterShader = this._p.createShader(B, eA), this.sobelFramebuffer = this._p.createFramebuffer({
       depthFormat: this._p.UNSIGNED_INT,
       textureFiltering: this._p.NEAREST
@@ -734,24 +733,24 @@ const u = (o, A, e, r) => {
       `Invalid ${r} value '${o}'. Expected a number between ${A} and ${e}.`
     );
 }, tA = (o, A) => {
-  const [e, r] = [o, A].map((i) => i.split(".").map(Number));
-  for (let i = 0; i < Math.max(e.length, r.length); i++) {
-    const s = e[i] ?? 0, g = r[i] ?? 0;
+  const [e, r] = [o, A].map((t) => t.split(".").map(Number));
+  for (let t = 0; t < Math.max(e.length, r.length); t++) {
+    const s = e[t] ?? 0, g = r[t] ?? 0;
     if (s !== g) return s > g ? 1 : -1;
   }
   return 0;
 };
 class d {
-  constructor(A, e, r, i, s, g) {
+  constructor(A, e, r, t, s, g) {
     /** The start brightness value of the gradient. Should be a value between 0 and 255. */
-    t(this, "_brightnessStart");
+    i(this, "_brightnessStart");
     /** The end brightness value of the gradient. Should be a value between 0 and 255. */
-    t(this, "_brightnessEnd");
+    i(this, "_brightnessEnd");
     /** Whether the gradient is enabled. */
-    t(this, "_enabled");
+    i(this, "_enabled");
     /** The color palette for the gradient, corresponding to the characters. */
-    t(this, "_palette");
-    this.p = A, this._fontTextureAtlas = e, this._shader = r, this._characters = i, this._palette = new Y(
+    i(this, "_palette");
+    this.p = A, this._fontTextureAtlas = e, this._shader = r, this._characters = t, this._palette = new Y(
       this.p,
       this._fontTextureAtlas.fontManager.getCharsetColorArray(this._characters)
     ), this._brightnessStart = Math.floor(s / 255 * 100) / 100, this._brightnessEnd = Math.ceil(g / 255 * 100) / 100, this._enabled = !0;
@@ -830,52 +829,52 @@ class d {
   }
 }
 class R extends d {
-  constructor(e, r, i, s, g, h, n) {
-    super(e, r, i, s, g, h);
-    t(this, "direction");
-    t(this, "angle");
-    t(this, "speed");
-    t(this, "zigzag");
-    this.p = e, this._fontTextureAtlas = r, this._shader = i, this._characters = s, this.direction = n.direction, this.angle = n.angle, this.speed = n.speed, this.zigzag = n.zigzag;
+  constructor(e, r, t, s, g, h, n) {
+    super(e, r, t, s, g, h);
+    i(this, "direction");
+    i(this, "angle");
+    i(this, "speed");
+    i(this, "zigzag");
+    this.p = e, this._fontTextureAtlas = r, this._shader = t, this._characters = s, this.direction = n.direction, this.angle = n.angle, this.speed = n.speed, this.zigzag = n.zigzag;
   }
   setUniforms(e, r) {
     super.setUniforms(e, r), this._shader.setUniform("u_gradientDirection", this.direction), this._shader.setUniform("u_angle", this.angle * Math.PI / 180), this._shader.setUniform("u_speed", this.speed), this._shader.setUniform("u_zigzag", this.zigzag);
   }
 }
 class N extends d {
-  constructor(e, r, i, s, g, h, n) {
-    super(e, r, i, s, g, h);
-    t(this, "direction");
-    t(this, "centerX");
-    t(this, "centerY");
-    t(this, "speed");
-    t(this, "density");
-    this.p = e, this._fontTextureAtlas = r, this._shader = i, this._characters = s, this.direction = n.direction, this.centerX = n.centerX, this.centerY = n.centerY, this.speed = n.speed, this.density = n.density;
+  constructor(e, r, t, s, g, h, n) {
+    super(e, r, t, s, g, h);
+    i(this, "direction");
+    i(this, "centerX");
+    i(this, "centerY");
+    i(this, "speed");
+    i(this, "density");
+    this.p = e, this._fontTextureAtlas = r, this._shader = t, this._characters = s, this.direction = n.direction, this.centerX = n.centerX, this.centerY = n.centerY, this.speed = n.speed, this.density = n.density;
   }
   setUniforms(e, r) {
     super.setUniforms(e, r), this._shader.setUniform("u_gradientDirection", this.direction), this._shader.setUniform("u_centerX", this.centerX), this._shader.setUniform("u_centerY", this.centerY), this._shader.setUniform("u_speed", this.speed), this._shader.setUniform("u_density", this.density);
   }
 }
 class H extends d {
-  constructor(e, r, i, s, g, h, n) {
-    super(e, r, i, s, g, h);
-    t(this, "direction");
-    t(this, "centerX");
-    t(this, "centerY");
-    t(this, "radius");
-    this.p = e, this._fontTextureAtlas = r, this._shader = i, this._characters = s, this.direction = n.direction, this.centerX = n.centerX, this.centerY = n.centerY, this.radius = n.radius;
+  constructor(e, r, t, s, g, h, n) {
+    super(e, r, t, s, g, h);
+    i(this, "direction");
+    i(this, "centerX");
+    i(this, "centerY");
+    i(this, "radius");
+    this.p = e, this._fontTextureAtlas = r, this._shader = t, this._characters = s, this.direction = n.direction, this.centerX = n.centerX, this.centerY = n.centerY, this.radius = n.radius;
   }
   setUniforms(e, r) {
     super.setUniforms(e, r), this._shader.setUniform("u_gradientDirection", this.direction), this._shader.setUniform("u_centerX", this.centerX), this._shader.setUniform("u_centerY", this.centerY), this._shader.setUniform("u_radius", this.radius);
   }
 }
 class X extends d {
-  constructor(e, r, i, s, g, h, n) {
-    super(e, r, i, s, g, h);
-    t(this, "centerX");
-    t(this, "centerY");
-    t(this, "speed");
-    this.p = e, this._fontTextureAtlas = r, this._shader = i, this._characters = s, this.centerX = n.centerX, this.centerY = n.centerY, this.speed = n.speed;
+  constructor(e, r, t, s, g, h, n) {
+    super(e, r, t, s, g, h);
+    i(this, "centerX");
+    i(this, "centerY");
+    i(this, "speed");
+    this.p = e, this._fontTextureAtlas = r, this._shader = t, this._characters = s, this.centerX = n.centerX, this.centerY = n.centerY, this.speed = n.speed;
   }
   setUniforms(e, r) {
     super.setUniforms(e, r), this._shader.setUniform("u_centerX", this.centerX), this._shader.setUniform("u_centerY", this.centerY), this._shader.setUniform("u_speed", this.speed);
@@ -885,34 +884,34 @@ var iA = "precision mediump float;varying vec2 v_texCoord;uniform bool u_zigzag;
 class J {
   constructor(A, e) {
     /** The default parameters for each gradient type. */
-    t(this, "_gradientParams", {
+    i(this, "_gradientParams", {
       linear: { direction: 1, angle: 0, speed: 0.01, zigzag: !1 },
       spiral: { direction: 1, centerX: 0.5, centerY: 0.5, speed: 0.01, density: 0.01 },
       radial: { direction: 1, centerX: 0.5, centerY: 0.5, radius: 0.5 },
       conical: { centerX: 0.5, centerY: 0.5, speed: 0.01 }
     });
     /** The shader sources for each gradient type. */
-    t(this, "_gradientShaderSources", {
+    i(this, "_gradientShaderSources", {
       linear: iA,
       spiral: sA,
       radial: oA,
       conical: aA
     });
     /** The gradient shaders. */
-    t(this, "_gradientShaders", {});
+    i(this, "_gradientShaders", {});
     /** The gradient constructors. */
-    t(this, "_gradientConstructors", {
-      linear: (A, e, r, i, s, g, h) => new R(A, e, r, i, s, g, h),
-      spiral: (A, e, r, i, s, g, h) => new N(A, e, r, i, s, g, h),
-      radial: (A, e, r, i, s, g, h) => new H(A, e, r, i, s, g, h),
-      conical: (A, e, r, i, s, g, h) => new X(A, e, r, i, s, g, h)
+    i(this, "_gradientConstructors", {
+      linear: (A, e, r, t, s, g, h) => new R(A, e, r, t, s, g, h),
+      spiral: (A, e, r, t, s, g, h) => new N(A, e, r, t, s, g, h),
+      radial: (A, e, r, t, s, g, h) => new H(A, e, r, t, s, g, h),
+      conical: (A, e, r, t, s, g, h) => new X(A, e, r, t, s, g, h)
     });
     /** The list of gradients to render on the gradient ascii renderer. */
-    t(this, "_gradients", []);
+    i(this, "_gradients", []);
     this._p = A, this._fontTextureAtlas = e;
     for (const r of Object.keys(this._gradientShaderSources)) {
-      const i = this._gradientShaderSources[r];
-      this._gradientShaders[r] = this._p.createShader(B, i);
+      const t = this._gradientShaderSources[r];
+      this._gradientShaders[r] = this._p.createShader(B, t);
     }
   }
   /**
@@ -924,7 +923,7 @@ class J {
    * @param options The parameters for the gradient.
    * @returns The gradient instance.
    */
-  add(A, e, r, i, s) {
+  add(A, e, r, t, s) {
     if (typeof A != "string")
       throw new a("Gradient name must be a string");
     if (!this.gradientConstructors[A])
@@ -933,9 +932,9 @@ class J {
       );
     if (typeof r != "number")
       throw new a("Brightness start value must be a number");
-    if (typeof i != "number")
+    if (typeof t != "number")
       throw new a("Brightness end value must be a number");
-    if (u(r, 0, 255, "brightness start"), u(i, 0, 255, "brightness end"), typeof e != "string")
+    if (u(r, 0, 255, "brightness start"), u(t, 0, 255, "brightness end"), typeof e != "string")
       throw new a("Characters must be a string");
     if (e.length === 0)
       throw new a("Characters string cannot be empty");
@@ -953,7 +952,7 @@ Valid parameters are: ${g.join(", ")}`
       this._gradientShaders[A],
       e,
       r,
-      i,
+      t,
       { ...this._gradientParams[A], ...s }
     );
     return this._gradients.push(n), n;
@@ -995,18 +994,18 @@ const p = {
   rotationAngle: 0
 };
 class b extends E {
-  constructor(e, r, i, s = p) {
+  constructor(e, r, t, s = p) {
     const g = { ...p, ...s };
-    super(e, r, i, g);
-    t(this, "grayscaleShader");
-    t(this, "colorSampleShader");
-    t(this, "grayscaleFramebuffer");
-    t(this, "inversionShader");
-    t(this, "rotationShader");
-    t(this, "asciiCharacterShader");
-    t(this, "prevAsciiGradientFramebuffer");
-    t(this, "nextAsciiGradientFramebuffer");
-    t(this, "gradientManager");
+    super(e, r, t, g);
+    i(this, "grayscaleShader");
+    i(this, "colorSampleShader");
+    i(this, "grayscaleFramebuffer");
+    i(this, "inversionShader");
+    i(this, "rotationShader");
+    i(this, "asciiCharacterShader");
+    i(this, "prevAsciiGradientFramebuffer");
+    i(this, "nextAsciiGradientFramebuffer");
+    i(this, "gradientManager");
     this.gradientManager = new J(this._p, this._fontTextureAtlas), this.grayscaleShader = this._p.createShader(B, gA), this.colorSampleShader = this._p.createShader(B, P), this.inversionShader = this._p.createShader(B, k), this.rotationShader = this._p.createShader(B, z), this.asciiCharacterShader = this._p.createShader(B, nA), this.grayscaleFramebuffer = this._p.createFramebuffer({
       density: 1,
       width: this._grid.cols,
@@ -1030,16 +1029,16 @@ class b extends E {
   resizeFramebuffers() {
     super.resizeFramebuffers(), this.grayscaleFramebuffer.resize(this._grid.cols, this._grid.rows), this.prevAsciiGradientFramebuffer.resize(this._grid.cols, this._grid.rows), this.nextAsciiGradientFramebuffer.resize(this._grid.cols, this._grid.rows);
   }
-  add(e, r, i, s, g = {}) {
-    return this.gradientManager.add(e, s, r, i, g);
+  add(e, r, t, s, g = {}) {
+    return this.gradientManager.add(e, s, r, t, g);
   }
   remove(e) {
     this.gradientManager.remove(e);
   }
   render(e, r) {
     this.grayscaleFramebuffer.begin(), this._p.clear(), this._p.shader(this.grayscaleShader), this.grayscaleShader.setUniform("u_image", e), this._p.rect(0, 0, this._p.width, this._p.height), this.grayscaleFramebuffer.end(), this.prevAsciiGradientFramebuffer.begin(), this._p.clear(), this._p.image(this.grayscaleFramebuffer, -this._grid.cols / 2, -this._grid.rows / 2), this.prevAsciiGradientFramebuffer.end(), this.nextAsciiGradientFramebuffer.begin(), this._p.clear(), this._p.image(this.grayscaleFramebuffer, -this._grid.cols / 2, -this._grid.rows / 2), this.nextAsciiGradientFramebuffer.end();
-    for (const i of this.gradientManager.gradients)
-      i.isEnabled && ([this.prevAsciiGradientFramebuffer, this.nextAsciiGradientFramebuffer] = [this.nextAsciiGradientFramebuffer, this.prevAsciiGradientFramebuffer], this.nextAsciiGradientFramebuffer.begin(), this._p.clear(), this._p.shader(i.shader), i.setUniforms(this.prevAsciiGradientFramebuffer, this.grayscaleFramebuffer), this._p.rect(0, 0, this._grid.cols, this._grid.rows), this.nextAsciiGradientFramebuffer.end());
+    for (const t of this.gradientManager.gradients)
+      t.isEnabled && ([this.prevAsciiGradientFramebuffer, this.nextAsciiGradientFramebuffer] = [this.nextAsciiGradientFramebuffer, this.prevAsciiGradientFramebuffer], this.nextAsciiGradientFramebuffer.begin(), this._p.clear(), this._p.shader(t.shader), t.setUniforms(this.prevAsciiGradientFramebuffer, this.grayscaleFramebuffer), this._p.rect(0, 0, this._grid.cols, this._grid.rows), this.nextAsciiGradientFramebuffer.end());
     this._characterFramebuffer.begin(), this._p.clear(), this._p.shader(this.asciiCharacterShader), r !== this && this.asciiCharacterShader.setUniform("u_prevAsciiCharacterTexture", r.characterFramebuffer), this.asciiCharacterShader.setUniform("u_prevGradientTexture", this.grayscaleFramebuffer), this.asciiCharacterShader.setUniform("u_nextGradientTexture", this.nextAsciiGradientFramebuffer), this.asciiCharacterShader.setUniform("u_resolution", [this._grid.cols, this._grid.rows]), this._p.rect(0, 0, this._grid.cols, this._grid.rows), this._characterFramebuffer.end(), this._primaryColorFramebuffer.begin(), this._p.clear(), this._p.shader(this.colorSampleShader), this.colorSampleShader.setUniform("u_sketchTexture", e), r !== this && this.colorSampleShader.setUniform("u_previousColorTexture", r.primaryColorFramebuffer), this.colorSampleShader.setUniform("u_sampleTexture", this.nextAsciiGradientFramebuffer), this.colorSampleShader.setUniform("u_sampleReferenceTexture", this.grayscaleFramebuffer), this.colorSampleShader.setUniform("u_gridCellDimensions", [this._grid.cols, this._grid.rows]), this.colorSampleShader.setUniform("u_sampleMode", this._options.characterColorMode), this.colorSampleShader.setUniform("u_staticColor", this._options.characterColor._array), this.colorSampleShader.setUniform("u_shaderType", 1), this._p.rect(0, 0, this._p.width, this._p.height), this._primaryColorFramebuffer.end(), this._secondaryColorFramebuffer.begin(), this._p.clear(), this._p.shader(this.colorSampleShader), this.colorSampleShader.setUniform("u_sketchTexture", e), r !== this && this.colorSampleShader.setUniform("u_previousColorTexture", r.secondaryColorFramebuffer), this.colorSampleShader.setUniform("u_sampleTexture", this.nextAsciiGradientFramebuffer), this.colorSampleShader.setUniform("u_sampleReferenceTexture", this.grayscaleFramebuffer), this.colorSampleShader.setUniform("u_gridCellDimensions", [this._grid.cols, this._grid.rows]), this.colorSampleShader.setUniform("u_sampleMode", this._options.backgroundColorMode), this.colorSampleShader.setUniform("u_staticColor", this._options.backgroundColor._array), this.colorSampleShader.setUniform("u_shaderType", 1), this._p.rect(0, 0, this._p.width, this._p.height), this._secondaryColorFramebuffer.end(), this._inversionFramebuffer.begin(), this._p.clear(), this._p.shader(this.inversionShader), this.inversionShader.setUniform("u_invert", this._options.invertMode), this.inversionShader.setUniform("u_gridCellDimensions", [this._grid.cols, this._grid.rows]), this.inversionShader.setUniform("u_sampleTexture", this.nextAsciiGradientFramebuffer), this.inversionShader.setUniform("u_sampleReferenceTexture", this.grayscaleFramebuffer), this.inversionShader.setUniform("u_useReferenceMode", !0), r !== this && this.inversionShader.setUniform("u_previousInversionTexture", r.inversionFramebuffer), this._p.rect(0, 0, this._p.width, this._p.height), this._inversionFramebuffer.end(), this._rotationFramebuffer.begin(), this._p.clear(), this._p.shader(this.rotationShader), this.rotationShader.setUniform("u_rotationColor", this._options.rotationAngle._array), this.rotationShader.setUniform("u_gridCellDimensions", [this._grid.cols, this._grid.rows]), this.rotationShader.setUniform("u_sampleTexture", this.nextAsciiGradientFramebuffer), this.rotationShader.setUniform("u_sampleReferenceTexture", this.grayscaleFramebuffer), this.rotationShader.setUniform("u_useReferenceMode", !0), r !== this && this.rotationShader.setUniform("u_previousRotationTexture", r.rotationFramebuffer), this._p.rect(0, 0, this._p.width, this._p.height), this._rotationFramebuffer.end(), super.render(e, r);
   }
 }
@@ -1053,14 +1052,14 @@ const U = {
 class O {
   constructor(A, e, r) {
     /** The current dimensions of the canvas. If the dimensions change, the grid is reset and the renderers are resized. */
-    t(this, "_currentCanvasDimensions");
+    i(this, "_currentCanvasDimensions");
     /** The list of available renderers. */
-    t(this, "_renderers");
+    i(this, "_renderers");
     /** The last renderer used in the rendering loop. */
-    t(this, "lastRenderer");
+    i(this, "lastRenderer");
     /** The background color to use for the ASCII rendering for the offset space, not occupied by the centered ASCII grid. */
-    t(this, "_backgroundColor", "#000000");
-    t(this, "_resultFramebuffer");
+    i(this, "_backgroundColor", "#000000");
+    i(this, "_resultFramebuffer");
     this._p = A, this._grid = e, this._fontTextureAtlas = r, this._currentCanvasDimensions = {
       width: this._p.width,
       height: this._p.height
@@ -1082,8 +1081,8 @@ class O {
   render(A) {
     let e = A, r = this._renderers[0].renderer;
     this._resultFramebuffer.begin(), this._p.clear(), this._p.background(this._backgroundColor);
-    for (let i = this._renderers.length - 1; i >= 0; i--) {
-      const s = this._renderers[i];
+    for (let t = this._renderers.length - 1; t >= 0; t--) {
+      const s = this._renderers[t];
       s.renderer.options.enabled && (s.renderer.render(A, r), e = s.renderer.outputFramebuffer, r = s.renderer, this.lastRenderer = s.renderer);
     }
     this._p.image(e, -this._p.width / 2, -this._p.height / 2), this._resultFramebuffer.end(), this.checkCanvasDimensions();
@@ -1112,12 +1111,12 @@ class O {
   add(A, e, r) {
     if (typeof A != "string" || A.trim() === "")
       throw new a("Renderer name must be a non-empty string");
-    const i = U[e];
-    if (!i)
+    const t = U[e];
+    if (!t)
       throw new a(
         `Invalid renderer type: ${e}. Valid types are: ${Object.keys(U).join(", ")}`
       );
-    const s = new i(this._p, this._grid, this._fontTextureAtlas, r);
+    const s = new t(this._p, this._grid, this._fontTextureAtlas, r);
     return this._renderers.push({ name: A, renderer: s }), s;
   }
   /**
@@ -1127,10 +1126,10 @@ class O {
    */
   get(A) {
     var r;
-    const e = (r = this._renderers.find((i) => i.name === A)) == null ? void 0 : r.renderer;
+    const e = (r = this._renderers.find((t) => t.name === A)) == null ? void 0 : r.renderer;
     if (!e)
       throw new a(
-        `Renderer '${A}' not found. Available renderers: ${this._renderers.map((i) => i.name).join(", ")}`
+        `Renderer '${A}' not found. Available renderers: ${this._renderers.map((t) => t.name).join(", ")}`
       );
     return e;
   }
@@ -1172,11 +1171,11 @@ class O {
    * @param renderer2 The name of the second renderer or the renderer instance itself.
    */
   swap(A, e) {
-    const r = this._getRendererIndex(A), i = this._getRendererIndex(e);
-    if (r === -1 || i === -1)
+    const r = this._getRendererIndex(A), t = this._getRendererIndex(e);
+    if (r === -1 || t === -1)
       throw new a("One or more renderers not found.");
     const s = this._renderers[r];
-    this._renderers[r] = this._renderers[i], this._renderers[i] = s, this.lastRenderer = this._renderers[0].renderer;
+    this._renderers[r] = this._renderers[t], this._renderers[t] = s, this.lastRenderer = this._renderers[0].renderer;
   }
   /**
    * Sets the background color for the ascii renderers. 
@@ -1228,29 +1227,26 @@ class BA {
    * @param sketchFramebuffer 
    * @param font 
    */
-  constructor(A, e, r) {
+  constructor(A, e, r, t = 16) {
+    /** Manages the font and provides methods to access font properties. */
+    i(this, "_fontManager");
     /** Contains texture with all glyphs of a given font.*/
-    t(this, "_fontTextureAtlas");
-    t(this, "_fontManager");
+    i(this, "_fontTextureAtlas");
     /** Contains the grid dimensions and offsets to create a perfect grid based on the canvas and font glyph dimensions. */
-    t(this, "_grid");
+    i(this, "_grid");
     /** Wraps around the user's `draw()` function to capture it's output for the ascii renderers. */
-    t(this, "_sketchFramebuffer");
+    i(this, "_sketchFramebuffer");
     /** Manages the available ASCII renderers and handles rendering the ASCII output to the canvas. */
-    t(this, "_rendererManager");
+    i(this, "_rendererManager");
     /** The `p5.js` instance. */
-    t(this, "_p");
-    /** The font to use for the ASCII rendering. */
-    t(this, "_font");
-    /** The font size to use for the ASCII rendering. */
-    t(this, "_fontSize", 16);
+    i(this, "_p");
     if (A !== void 0 && !(A instanceof Q))
       throw new a("First parameter must be a p5 instance");
     if (e !== void 0 && !(e instanceof Q.Framebuffer))
       throw new a("Second parameter must be a p5.Framebuffer instance");
     if (r !== void 0 && !(r instanceof Q.Font))
       throw new a("Third parameter must be a p5.Font instance");
-    A && this.instance(A, !1), e && (this._sketchFramebuffer = e), r && (this._fontManager = new F(this._p, r)), A && e && r && this.setup();
+    A && this.instance(A, !1), e && (this._sketchFramebuffer = e), r && (this._fontManager = new F(this._p, r)), A && e && r && this.setup(t);
   }
   /**
    * Used to pass the p5 instance to the `p5.asciify` library. 
@@ -1282,11 +1278,11 @@ class BA {
    * 
    * Is called automatically after the user's `setup()` function has finished.
    */
-  setup() {
+  setup(A = 16) {
     this._fontTextureAtlas = new V(
       this._p,
       this._fontManager,
-      this._fontSize
+      A
     ), this._grid = new Z(
       this._p,
       this._fontTextureAtlas.maxGlyphDimensions.width,
@@ -1311,12 +1307,9 @@ class BA {
   /**
    * Sets the font size for the ASCII renderers.
    * @param fontSize The font size to set.
-   * @throws {@link P5AsciifyError} - If the font size is out of bounds.
    */
   fontSize(A) {
-    if (A < 1 || A > 128)
-      throw new a(`Font size ${A} is out of bounds. It should be between 1 and 128.`);
-    this._fontSize = A, this._p._setupDone && (this._fontTextureAtlas.setFontSize(A), this._grid.resizeCellPixelDimensions(
+    this._p._setupDone && (this._fontTextureAtlas.setFontSize(A), this._grid.resizeCellPixelDimensions(
       this._fontTextureAtlas.maxGlyphDimensions.width,
       this._fontTextureAtlas.maxGlyphDimensions.height
     ), this._rendererManager.resetRendererDimensions());
@@ -1339,7 +1332,7 @@ class BA {
         this._fontTextureAtlas.maxGlyphDimensions.width,
         this._fontTextureAtlas.maxGlyphDimensions.height
       ), e.updateCharacters && this._rendererManager.renderers.forEach(
-        (i) => i.renderer.characters(i.renderer.options.characters)
+        (t) => t.renderer.characters(t.renderer.options.characters)
       )), r == null || r();
     });
   }
@@ -1364,9 +1357,9 @@ class BA {
     if (!A)
       throw new a("No renderer available to generate ASCII output");
     A.characterFramebuffer.loadPixels();
-    const e = A.characterFramebuffer.pixels, r = this._grid.cols, i = this._grid.rows, s = this._fontManager.characters, g = [];
+    const e = A.characterFramebuffer.pixels, r = this._grid.cols, t = this._grid.rows, s = this._fontManager.characters, g = [];
     let h = 0;
-    for (let n = 0; n < i; n++) {
+    for (let n = 0; n < t; n++) {
       let c = "";
       for (let S = 0; S < r; S++) {
         const v = h * 4, j = e[v], L = e[v + 1];
@@ -1393,8 +1386,8 @@ class BA {
    */
   saveStrings(A) {
     if (!A) {
-      const e = /* @__PURE__ */ new Date(), r = e.toISOString().split("T")[0], i = e.toTimeString().split(" ")[0].replace(/:/g, "-");
-      A = `asciify_output_${r}_${i}`;
+      const e = /* @__PURE__ */ new Date(), r = e.toISOString().split("T")[0], t = e.toTimeString().split(" ")[0].replace(/:/g, "-");
+      A = `asciify_output_${r}_${t}`;
     }
     this._p.saveStrings(this._generateAsciiLines(), `${A}.txt`);
   }
@@ -1418,9 +1411,12 @@ class BA {
   get fontTextureAtlas() {
     return this._fontTextureAtlas;
   }
+  get fontManager() {
+    return this._fontManager;
+  }
   /**
    * Returns the ASCII output texture as a p5.Framebuffer, which can be used for further processing or rendering.
-   * Can also be used via the `texture()` method.
+   * Can also be used via the p5.js `texture()` function.
    */
   get texture() {
     return this._rendererManager.resultFramebuffer;
@@ -1491,6 +1487,7 @@ export {
   BA as P5Asciifier,
   Y as P5AsciifyColorPalette,
   a as P5AsciifyError,
+  F as P5AsciifyFontManager,
   V as P5AsciifyFontTextureAtlas,
   Z as P5AsciifyGrid,
   cA as gradients,

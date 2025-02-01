@@ -8,7 +8,7 @@
 
 > **RadialGradientParams**: `object`
 
-Defined in: [gradients/types.ts:51](https://github.com/humanbydefinition/p5-asciify/blob/e247792661fdf21646cc212e4bf1e6a1bf198b53/src/lib/gradients/types.ts#L51)
+Defined in: [gradients/types.ts:51](https://github.com/humanbydefinition/p5-asciify/blob/8048ed2591f1c8ea5ae855965762fa34a05b3fdc/src/lib/gradients/types.ts#L51)
 
 The available gradient options for the `"radial"` gradient type.
 
@@ -16,7 +16,7 @@ The available gradient options for the `"radial"` gradient type.
 
 | Name | Type | Description | Defined in |
 | ------ | ------ | ------ | ------ |
-| <a id="centerx"></a> `centerX` | `number` | The center X position of the gradient. Should be a value between 0 and 1. | [gradients/types.ts:57](https://github.com/humanbydefinition/p5-asciify/blob/e247792661fdf21646cc212e4bf1e6a1bf198b53/src/lib/gradients/types.ts#L57) |
-| <a id="centery"></a> `centerY` | `number` | The center Y position of the gradient. Should be a value between 0 and 1. | [gradients/types.ts:60](https://github.com/humanbydefinition/p5-asciify/blob/e247792661fdf21646cc212e4bf1e6a1bf198b53/src/lib/gradients/types.ts#L60) |
-| <a id="direction"></a> `direction` | `number` | The direction of the gradient. Should be a value between -1 and 1. | [gradients/types.ts:54](https://github.com/humanbydefinition/p5-asciify/blob/e247792661fdf21646cc212e4bf1e6a1bf198b53/src/lib/gradients/types.ts#L54) |
-| <a id="radius"></a> `radius` | `number` | The radius of the gradient. | [gradients/types.ts:63](https://github.com/humanbydefinition/p5-asciify/blob/e247792661fdf21646cc212e4bf1e6a1bf198b53/src/lib/gradients/types.ts#L63) |
+| <a id="centerx"></a> `centerX` | `number` | The center X position of the gradient. Should be a value between 0 and 1. | [gradients/types.ts:57](https://github.com/humanbydefinition/p5-asciify/blob/8048ed2591f1c8ea5ae855965762fa34a05b3fdc/src/lib/gradients/types.ts#L57) |
+| <a id="centery"></a> `centerY` | `number` | The center Y position of the gradient. Should be a value between 0 and 1. | [gradients/types.ts:60](https://github.com/humanbydefinition/p5-asciify/blob/8048ed2591f1c8ea5ae855965762fa34a05b3fdc/src/lib/gradients/types.ts#L60) |
+| <a id="direction"></a> `direction` | `number` | The direction of the gradient. Should be a value between -1 and 1. | [gradients/types.ts:54](https://github.com/humanbydefinition/p5-asciify/blob/8048ed2591f1c8ea5ae855965762fa34a05b3fdc/src/lib/gradients/types.ts#L54) |
+| <a id="radius"></a> `radius` | `number` | The radius of the gradient. | [gradients/types.ts:63](https://github.com/humanbydefinition/p5-asciify/blob/8048ed2591f1c8ea5ae855965762fa34a05b3fdc/src/lib/gradients/types.ts#L63) |
