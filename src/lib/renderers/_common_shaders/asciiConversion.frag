@@ -14,8 +14,6 @@ uniform vec2 u_gridCellDimensions;
 uniform vec2 u_gridPixelDimensions;
 uniform vec2 u_gridOffsetDimensions;
 
-uniform float u_rotationAngle;
-
 uniform vec2 u_resolution;
 uniform float u_pixelRatio; // Added uniform for pixel ratio
 
