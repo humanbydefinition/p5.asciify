@@ -20,10 +20,8 @@ if (typeof window !== 'undefined') {
  * Extend the p5.asciify instance to the p5 instance and run the p5.asciify init method
  */
 p5.prototype.registerMethod('init', function (this: p5) {
-  p5asciify.instance(this, false);
-
   this._incrementPreload();
-  p5asciify.loadFont(URSAFONT_BASE64);
+  p5asciify.init(this, false, URSAFONT_BASE64);
 });
 
 /**

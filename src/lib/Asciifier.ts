@@ -2,6 +2,7 @@ import p5 from 'p5';
 
 import { P5AsciifyFontTextureAtlas } from './FontTextureAtlas';
 import { P5AsciifyGrid } from './Grid';
+import { P5AsciifyFontManager } from './FontManager';
 import { P5AsciifyRendererManager } from './renderers/RendererManager';
 import { P5AsciifyError } from './AsciifyError';
 
@@ -24,6 +25,8 @@ import { P5AsciifyError } from './AsciifyError';
 export class P5Asciifier {
     /** Contains texture with all glyphs of a given font.*/
     private _fontTextureAtlas!: P5AsciifyFontTextureAtlas;
+
+    private _fontManager!: P5AsciifyFontManager;
 
     /** Contains the grid dimensions and offsets to create a perfect grid based on the canvas and font glyph dimensions. */
     private _grid!: P5AsciifyGrid;
@@ -77,7 +80,7 @@ export class P5Asciifier {
         }
 
         if (font) {
-            this._font = font;
+            this._fontManager = new P5AsciifyFontManager(this._p, font);
         }
 
         if (p && sketchFramebuffer && font) {
@@ -111,6 +114,11 @@ export class P5Asciifier {
         }
     }
 
+    public init(p: p5, addDummyPreloadFunction: boolean = true, fontBase64: string): void {
+        this.instance(p, addDummyPreloadFunction);
+        this._fontManager = new P5AsciifyFontManager(this._p, fontBase64);
+    }
+
     /**
      * Sets up the `p5.asciify` library by initializing the font texture atlas, grid, renderer manager, and sketch framebuffer.
      * 
@@ -120,7 +128,7 @@ export class P5Asciifier {
 
         this._fontTextureAtlas = new P5AsciifyFontTextureAtlas(
             this._p,
-            this._font,
+            this._fontManager,
             this._fontSize
         );
 
@@ -197,33 +205,32 @@ export class P5Asciifier {
      * @param font The font to use. Can be a path, base64 string, or p5.Font object.
      * @throws {@link P5AsciifyError} - If the font parameter is invalid or the font fails to load.
      */
-    public loadFont(font: string | p5.Font) {
-        if (typeof font !== 'string' && !(font instanceof p5.Font)) {
-            throw new P5AsciifyError('Invalid font parameter. Expected a path, base64 string, or p5.Font object.');
-        }
+    public loadFont(
+        font: string | p5.Font,
+        options: { "updateCharacters": true },
+        onSuccess?: () => void,
+    ): void {
+        this._fontManager.loadFont(font, () => {
 
-        if (typeof font === 'string') {
-            this._p.loadFont(
-                font,
-                (loadedFont: p5.Font) => {
-                    this._font = loadedFont;
-                    this._p._decrementPreload();
-                },
-                () => { throw new P5AsciifyError(`Failed to load font from path: '${font}'`); }
-            );
-        } else {
-            this._font = font;
-        }
+            if (this._p._setupDone) {
 
-        if (this._p._setupDone) {
-            this._fontTextureAtlas.setFontObject(font as p5.Font);
-            this._rendererManager.renderers.forEach(renderer => renderer.renderer.characters(renderer.renderer.options.characters as string));
+                this._fontTextureAtlas.reset();
 
-            this._grid.resizeCellPixelDimensions(
-                this._fontTextureAtlas.maxGlyphDimensions.width,
-                this._fontTextureAtlas.maxGlyphDimensions.height
-            );
-        }
+                this._grid.resizeCellPixelDimensions(
+                    this._fontTextureAtlas.maxGlyphDimensions.width,
+                    this._fontTextureAtlas.maxGlyphDimensions.height
+                );
+
+                // Only update characters if option is true
+                if (options.updateCharacters) {
+                    this._rendererManager.renderers.forEach(renderer =>
+                        renderer.renderer.characters(renderer.renderer.options.characters as string)
+                    );
+                }
+            }
+
+            onSuccess?.();
+        });
     }
 
     /**
@@ -238,61 +245,90 @@ export class P5Asciifier {
     }
 
     /**
+     * Generates ASCII art representation as string array
+     * @private
+     * @returns Array of strings representing ASCII art lines
+     * @throws {@link P5AsciifyError} - If no renderer is available
+     */
+    private _generateAsciiLines(): string[] {
+        const lastRenderer = this._rendererManager.lastRenderer;
+        if (!lastRenderer) {
+            throw new P5AsciifyError('No renderer available to generate ASCII output');
+        }
+
+        // Load pixels from character framebuffer
+        lastRenderer.characterFramebuffer.loadPixels();
+        const asciiPixels = lastRenderer.characterFramebuffer.pixels;
+
+        // Get grid dimensions
+        const w = this._grid.cols;
+        const h = this._grid.rows;
+
+        // Get characters array from font texture atlas
+        const chars = this._fontManager.characters;
+
+        // Build text content
+        const lines: string[] = [];
+        let idx = 0;
+
+        for (let y = 0; y < h; y++) {
+            let line = '';
+            for (let x = 0; x < w; x++) {
+                const pixelIdx = idx * 4;
+
+                // Get character index from red and green channels
+                const r = asciiPixels[pixelIdx];
+                const g = asciiPixels[pixelIdx + 1];
+                let charIndex = r + (g << 8);
+
+                // Clamp character index
+                if (charIndex >= chars.length) {
+                    charIndex = chars.length - 1;
+                }
+
+                line += chars[charIndex];
+                idx++;
+            }
+            lines.push(line);
+        }
+
+        return lines;
+    }
+
+    /**
+     * Returns the current ASCII output as a string
+     * @returns Multi-line string representation of the ASCII art
+     * @throws {@link P5AsciifyError} - If no renderer is available
+     */
+    public toString(): string {
+        return this._generateAsciiLines().join('\n');
+    }
+
+    /**
      * Saves the ASCII output to a text file.
      * @param filename The filename to save the text file as. If not provided, a default filename is generated.
      * @throws {@link P5AsciifyError} - If no renderer is available to save ASCII output.
      */
-    public saveTxt(filename: string): void {
-        const lastRenderer = this._rendererManager.lastRenderer;
-        if (!lastRenderer) {
-            throw new P5AsciifyError('No renderer available to save ASCII output');
-        }
-
+    public saveStrings(filename: string): void {
         if (!filename) {
             const now = new Date();
             const date = now.toISOString().split('T')[0];
             const time = now.toTimeString().split(' ')[0].replace(/:/g, '-');
             filename = `asciify_output_${date}_${time}`;
         }
-    
-        // Load pixels from character framebuffer
-        lastRenderer.characterFramebuffer.loadPixels();
-        const asciiPixels = lastRenderer.characterFramebuffer.pixels;
-        
-        // Get grid dimensions
-        const w = this._grid.cols;
-        const h = this._grid.rows;
-        
-        // Get characters array from font texture atlas
-        const chars = this._fontTextureAtlas.characters;
-        
-        // Build text content
-        const lines: string[] = [];
-        let idx = 0;
-        
-        for (let y = 0; y < h; y++) {
-            let line = '';
-            for (let x = 0; x < w; x++) {
-                const pixelIdx = idx * 4;
-                
-                // Get character index from red and green channels
-                const r = asciiPixels[pixelIdx];
-                const g = asciiPixels[pixelIdx + 1];
-                let charIndex = r + (g << 8);
-                
-                // Clamp character index
-                if (charIndex >= chars.length) {
-                    charIndex = chars.length - 1;
-                }
-                
-                line += chars[charIndex];
-                idx++;
-            }
-            lines.push(line);
-        }
-        
-        // Save to file
-        this._p.saveStrings(lines, `${filename}.txt`);
+
+        this._p.saveStrings(this._generateAsciiLines(), `${filename}.txt`);
+    }
+
+    /**
+     * Sets the p5.js fill color to the color of the given character in the font texture atlas.
+     * 
+     * This is useful when drawing to a renderers `characterFramebuffer`, which is used to generate the ASCII output.
+     * 
+     * @param character The character to get the color for.
+     */
+    fill(character: string): void {
+        this._p.fill(this._fontManager.glyphColor(character));
     }
 
     // Getter
