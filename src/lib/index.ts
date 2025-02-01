@@ -115,6 +115,7 @@ export { P5AsciifyError } from './AsciifyError';
 export { P5AsciifyColorPalette } from './ColorPalette';
 export { P5AsciifyFontTextureAtlas } from './FontTextureAtlas';
 export { P5AsciifyGrid } from './Grid';
+export { P5AsciifyFontManager } from './FontManager';
 export * from './types';
 
 
