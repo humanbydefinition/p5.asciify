@@ -62,7 +62,7 @@ export class P5AsciifyRenderer {
     ) {
         this._options = { ...CUSTOM_DEFAULT_OPTIONS, ..._options };
 
-        this._characterColorPalette = new P5AsciifyColorPalette(this._p, this._fontTextureAtlas.getCharsetColorArray(this._options.characters));
+        this._characterColorPalette = new P5AsciifyColorPalette(this._p, this._fontTextureAtlas.fontManager.getCharsetColorArray(this._options.characters));
 
         this._primaryColorFramebuffer = this._p.createFramebuffer({
             density: 1,
@@ -181,7 +181,7 @@ export class P5AsciifyRenderer {
      * @param previousAsciiRenderer - The previous ASCII renderer in the pipeline.
      */
     public render(inputFramebuffer: p5.Framebuffer, previousAsciiRenderer: P5AsciifyRenderer): void {
-        
+
         this._outputFramebuffer.begin();
         this._p.clear();
         this._p.shader(this._shader);
@@ -216,9 +216,9 @@ export class P5AsciifyRenderer {
             throw new P5AsciifyError('Characters must be a string.');
         }
 
-        this._fontTextureAtlas.validateCharacters(characters);
+        this._fontTextureAtlas.fontManager.validateCharacters(characters);
 
-        this._characterColorPalette.setColors(this._fontTextureAtlas.getCharsetColorArray(characters));
+        this._characterColorPalette.setColors(this._fontTextureAtlas.fontManager.getCharsetColorArray(characters));
         this.resetShaders();
 
         this._options.characters = characters;
@@ -340,6 +340,24 @@ export class P5AsciifyRenderer {
         }
 
         this._options.enabled = enabled;
+
+        if (!enabled) {
+            // Clear all framebuffers
+            const framebuffers = [
+                this._primaryColorFramebuffer,
+                this._secondaryColorFramebuffer,
+                this._inversionFramebuffer,
+                this._rotationFramebuffer,
+                this._characterFramebuffer,
+                this._outputFramebuffer
+            ]
+
+            for (const framebuffer of framebuffers) {
+                framebuffer.begin();
+                this._p.clear();
+                framebuffer.end();
+            }
+        }
     }
 
     /**
