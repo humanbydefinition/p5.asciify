@@ -3,18 +3,27 @@ import { P5AsciifyError } from './AsciifyError';
 import { OpenTypeGlyph } from './types';
 
 /**
- * Manages a texture atlas for font rendering in the ASCII rendering process.
+ * Manages the font used for ASCII rendering.
  */
 export class P5AsciifyFontManager {
 
+    /** The p5 instance. */
     private _p: p5;
 
+    /** The font to use for ASCII rendering. */
     private _font!: p5.Font;
 
+    /** An array of supported characters in the font. */
     private _characters: string[] = [];
 
+    /** An array of character glyphs with color assignments. */
     private _characterGlyphs: OpenTypeGlyph[] = [];
 
+    /**
+     * Creates a new `P5AsciifyFontManager` instance.
+     * @param p The p5 instance.
+     * @param fontSource The font source to use for ASCII rendering.
+     */
     constructor(
         p: p5,
         fontSource?: string | p5.Font,
@@ -26,6 +35,9 @@ export class P5AsciifyFontManager {
         }
     }
 
+    /**
+     * Initializes the character glyphs and characters array.
+     */
     private _initializeGlyphsAndCharacters(): void {
         const glyphs = Object.values(this._font.font.glyphs.glyphs) as OpenTypeGlyph[];
 
@@ -45,50 +57,65 @@ export class P5AsciifyFontManager {
             });
     }
 
-    loadFont(
+    /**
+     * Loads a font for ASCII rendering.
+     * @param font The font to load. Can be a path to a .ttf or .otf file, a base64 string, a blob URL, or a p5.Font object.
+     * @param onSuccess A callback function to call when the font is successfully loaded.
+     * @throws {@link P5AsciifyError} If the font parameter is invalid or the font fails to load.
+     */
+    public loadFont(
         font: string | p5.Font,
         onSuccess?: () => void,
     ): void {
-            if (typeof font !== 'string' && !(font instanceof p5.Font)) {
-                throw new P5AsciifyError('Invalid font parameter. Expected a path, base64 string, blob URL, or p5.Font object.');
+        if (typeof font !== 'string' && !(font instanceof p5.Font)) {
+            throw new P5AsciifyError('Invalid font parameter. Expected a path, base64 string, blob URL, or p5.Font object.');
+        }
+
+        // Handle font paths, base64 strings, and blob URLs
+        if (typeof font === 'string') {
+            if (!this._isValidFontString(font)) {
+                throw new P5AsciifyError('Invalid font parameter. Expected .ttf, .otf file, or blob URL or base64 string.');
             }
 
-            // Handle blob URLs and file paths
-            if (typeof font === 'string') {
-                if (!this._isValidFontPath(font)) {
-                    throw new P5AsciifyError('Invalid font parameter. Expected .ttf, .otf file, or blob URL or base64 string.');
+            this._p.loadFont(
+                font,
+                (loadedFont: p5.Font) => {
+                    this._font = loadedFont;
+                    this._initializeGlyphsAndCharacters();
+                    this._p._decrementPreload();
+                    onSuccess?.();
+                },
+                () => {
+                    throw new P5AsciifyError(`Failed to load font from: ${font}`);
                 }
+            );
+            return;
+        }
 
-                this._p.loadFont(
-                    font,
-                    (loadedFont: p5.Font) => {
-                            this._font = loadedFont;
-                            this._initializeGlyphsAndCharacters();
-                            this._p._decrementPreload();
-                            onSuccess?.();
-                    },
-                    () => {
-                        throw new P5AsciifyError(`Failed to load font from: ${font}`);
-                    }
-                );
-                return;
-            }
-
-            // Handle p5.Font objects
-            this._font = font;
-            this._initializeGlyphsAndCharacters();
-            onSuccess?.();
+        // Handle p5.Font objects
+        this._font = font;
+        this._initializeGlyphsAndCharacters();
+        onSuccess?.();
     }
 
-    private _isValidFontPath(path: string): boolean {
-        // Handle blob URLs
-        if (path.startsWith('blob:') || path.startsWith('data:')) {
+    /**
+     * Checks if a font string is valid.
+     * @param fontString The font string to check.
+     * @returns True if the font string is valid, false otherwise.
+     */
+    private _isValidFontString(fontString: string): boolean {
+        if (fontString.startsWith('blob:') || fontString.startsWith('data:')) {
             return true;
         }
-        const ext = path.toLowerCase().split('.').pop();
+        const ext = fontString.toLowerCase().split('.').pop();
         return ext === 'ttf' || ext === 'otf';
     }
 
+    /**
+     * Gets the color of a character in the font.
+     * @param char The character to get the color for.
+     * @returns An array containing the RGB color values for the character.
+     */
     public glyphColor(char: string): [number, number, number] {
         const glyph = this._characterGlyphs.find(
             (glyph: OpenTypeGlyph) => glyph.unicodes.includes(char.codePointAt(0) as number)
@@ -137,7 +164,7 @@ export class P5AsciifyFontManager {
      * @returns Array of RGB color values.
      * @throws {@link P5AsciifyError} If a character is not found in the texture atlas.
      */
-    public getCharsetColorArray(characters: string = ""): Array<[number, number, number]> {
+    public glyphColors(characters: string = ""): Array<[number, number, number]> {
         return Array.from(characters).map((char: string) => {
             const glyph = this._characterGlyphs.find(
                 (glyph: OpenTypeGlyph) => glyph.unicodes.includes(char.codePointAt(0) as number)
