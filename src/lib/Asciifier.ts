@@ -9,31 +9,19 @@ import { P5AsciifyError } from './AsciifyError';
 /**
  * The main class for the `p5.asciify` library, 
  * responsible for setting up the library, managing its properties, and providing an interface for interacting with the library.
- * 
- * @remarks
- * The `P5Asciifier` class is initialized without any parameters.
- * 
- * Once the `p5.js` instance is available, the `instance()` method is called automatically in `GLOBAL` mode to pass the `p5` instance to the library.
- * 
- * In `INSTANCE` mode, the `instance()` method must be called manually to pass the `p5` instance to the library.
- * 
- * After the users `setup()` function has finished, the Asciifier's `setup()` method 
- * is called automatically to fully initialize the library.
- * 
- * At this point, the `p5.asciify` is fully functional and ready to interact with.
  */
 export class P5Asciifier {
 
     /** Manages the font and provides methods to access font properties. */
     private _fontManager!: P5AsciifyFontManager;
 
-    /** Contains texture with all glyphs of a given font.*/
+    /** Contains texture with all glyphs of the font set in the font manager. */
     private _fontTextureAtlas!: P5AsciifyFontTextureAtlas;
 
     /** Contains the grid dimensions and offsets to create a perfect grid based on the canvas and font glyph dimensions. */
     private _grid!: P5AsciifyGrid;
 
-    /** Wraps around the user's `draw()` function to capture it's output for the ascii renderers. */
+    /** Wraps around the user's `draw()` function to capture it's output for the ascii renderers to asciify. */
     private _sketchFramebuffer!: p5.Framebuffer;
 
     /** Manages the available ASCII renderers and handles rendering the ASCII output to the canvas. */
@@ -43,75 +31,19 @@ export class P5Asciifier {
     private _p!: p5;
 
     /**
-     * Creates a new instance of the `P5Asciifier` class.
-     * 
-     * By default, `p5.asciify` creates an initial instance without any parameters, 
-     * since this instance is special, capturing whatever is being drawn to the p5.js canvas through hooks.
-     * 
-     * If the user wants to an instance of this class to apply to a given framebuffer,
-     * all parameters must be provided to the constructor.
-     * @param p 
-     * @param sketchFramebuffer 
-     * @param font 
-     */
-    constructor(p?: p5, sketchFramebuffer?: p5.Framebuffer, font?: p5.Font, fontSize: number = 16) {
-        if (p !== undefined && !(p instanceof p5)) {
-            throw new P5AsciifyError('First parameter must be a p5 instance');
-        }
-
-        if (sketchFramebuffer !== undefined && !(sketchFramebuffer instanceof p5.Framebuffer)) {
-            throw new P5AsciifyError('Second parameter must be a p5.Framebuffer instance');
-        }
-
-        if (font !== undefined && !(font instanceof p5.Font)) {
-            throw new P5AsciifyError('Third parameter must be a p5.Font instance');
-        }
-
-        if (p) {
-            this.instance(p, false);
-        }
-
-        if (sketchFramebuffer) {
-            this._sketchFramebuffer = sketchFramebuffer;
-        }
-
-        if (font) {
-            this._fontManager = new P5AsciifyFontManager(this._p, font);
-        }
-
-        if (p && sketchFramebuffer && font) {
-            this.setup(fontSize);
-        }
-    }
-
-    /**
-     * Used to pass the p5 instance to the `p5.asciify` library. 
-     * 
-     * @remarks
-     * This method is called automatically in `GLOBAL` mode. In `INSTANCE` mode, it must be called manually at the start of the sketch.
-     * 
-     * In `GLOBAL` mode, `addDummyPreloadFunction` is set to `false` to prevent the p5 instance from adding a dummy preload function,
-     * which is already added to `window` by the library.
-     * 
-     * In `INSTANCE` mode, `addDummyPreloadFunction` is set to `true` to add a dummy preload function to the p5 instance directly.
-     * 
-     * A dummy `preload` function is necessary in case the user does not provide one, since `p5.asciify` relies on the benefits of the `preload` function.
-     * 
-     * The implementation and difference with dummy `preload` definitions for `GLOBAL` and `INSTANCE` modes is questionable, but I haven't found a better solution yet.
-     * 
+     * Used to pass the p5 instance to the `p5.asciify` library in `INSTANCE` mode.
      * @param p The p5 instance
-     * @param addDummyPreloadFunction Whether to add a dummy preload function to the p5 instance
      */
-    public instance(p: p5, addDummyPreloadFunction: boolean = true): void {
+    public instance(p: p5): void {
         this._p = p;
 
-        if (!p.preload && addDummyPreloadFunction) {
+        if (!p.preload) {
             p.preload = () => { };
         }
     }
 
-    public init(p: p5, addDummyPreloadFunction: boolean = true, fontBase64: string): void {
-        this.instance(p, addDummyPreloadFunction);
+    public init(p: p5, fontBase64: string): void {
+        this._p = p;
         this._fontManager = new P5AsciifyFontManager(this._p, fontBase64);
     }
 
@@ -150,7 +82,8 @@ export class P5Asciifier {
     /**
      * Renders the ASCII output to the canvas.
      * 
-     * Is called automatically every time the user's `draw()` function has finished.
+     * Does not need to be called manually, 
+     * as the library automatically wraps the user's `draw()` function and calls this method.
      */
     public asciify(): void {
         this._p.clear();
@@ -190,6 +123,7 @@ export class P5Asciifier {
     /**
      * Sets the font for the ascii renderers.
      * @param font The font to use. Can be a path, base64 string, or p5.Font object.
+     * @param options An object containing options affecting what happens after the font is loaded.
      * @throws {@link P5AsciifyError} - If the font parameter is invalid or the font fails to load.
      */
     public loadFont(
@@ -223,7 +157,7 @@ export class P5Asciifier {
     /**
      * Sets the background color for the ascii renderers. 
      * 
-     * Covers the empty space on the edges of the canvas, which potentially is not occupied by the centered ASCII grid.
+     * Covers all the transparent space, including the edges of the canvas, which might not be covered by the grid of characters.
      * @param color The color to set. Needs to be a valid type to pass to the `background()` function provided by p5.js.
      * @throws {@link P5AsciifyError} - If the color is not a string, array or p5.Color.
      */
@@ -232,12 +166,11 @@ export class P5Asciifier {
     }
 
     /**
-     * Generates ASCII art representation as string array
-     * @private
-     * @returns Array of strings representing ASCII art lines
-     * @throws {@link P5AsciifyError} - If no renderer is available
+     * Generates the ASCII output as an array of string rows.
+     * @returns Array of strings representing ASCII output.
+     * @throws {@link P5AsciifyError} - If no renderer is available.
      */
-    private _generateAsciiLines(): string[] {
+    private _generateAsciiTextOutput(): string[] {
         const lastRenderer = this._rendererManager.lastRenderer;
         if (!lastRenderer) {
             throw new P5AsciifyError('No renderer available to generate ASCII output');
@@ -288,7 +221,7 @@ export class P5Asciifier {
      * @throws {@link P5AsciifyError} - If no renderer is available
      */
     public toString(): string {
-        return this._generateAsciiLines().join('\n');
+        return this._generateAsciiTextOutput().join('\n');
     }
 
     /**
@@ -304,13 +237,14 @@ export class P5Asciifier {
             filename = `asciify_output_${date}_${time}`;
         }
 
-        this._p.saveStrings(this._generateAsciiLines(), `${filename}.txt`);
+        this._p.saveStrings(this._generateAsciiTextOutput(), `${filename}.txt`);
     }
 
     /**
      * Sets the p5.js fill color to the color of the given character in the font texture atlas.
      * 
-     * This is useful when drawing to a renderers `characterFramebuffer`, which is used to generate the ASCII output.
+     * This is useful when drawing to a custom renderers `characterFramebuffer`, 
+     * which is used to convert the pixel data to ASCII characters.
      * 
      * @param character The character to get the color for.
      */
@@ -318,11 +252,25 @@ export class P5Asciifier {
         this._p.fill(this._fontManager.glyphColor(character));
     }
 
-    // Getter
-    get sketchFramebuffer(): p5.Framebuffer { return this._sketchFramebuffer; }
+    /**
+     * Returns the grid, which contains the dimensions and offsets to create a perfect grid based on the canvas and font glyph dimensions.
+     */
     get grid(): P5AsciifyGrid { return this._grid; }
+
+    /**
+     * Returns the font texture atlas, which contains the texture with all glyphs of the font set in the font manager.
+     */
     get fontTextureAtlas(): P5AsciifyFontTextureAtlas { return this._fontTextureAtlas; }
+
+    /**
+     * Returns the font manager, which manages the font and provides methods to access font properties
+     */
     get fontManager(): P5AsciifyFontManager { return this._fontManager; }
+
+    /**
+     * Returns the sketch framebuffer, which contains the output of the user's `draw()` function.
+     */
+    get sketchFramebuffer(): p5.Framebuffer { return this._sketchFramebuffer; }
 
     /**
      * Returns the ASCII output texture as a p5.Framebuffer, which can be used for further processing or rendering.
