@@ -1,6 +1,4 @@
 import p5 from 'p5';
-import { P5AsciifyError } from './AsciifyError';
-import { OpenTypeGlyph } from './types';
 import { P5AsciifyFontManager } from './FontManager';
 
 /**
@@ -28,7 +26,7 @@ export class P5AsciifyFontTextureAtlas {
     /**
      * Creates a new `P5AsciifyFontTextureAtlas` instance.
      * @param _p The p5 instance.
-     * @param _font The font object to use for the texture atlas.
+     * @param _fontManager The font manager to use for the texture atlas.
      * @param _fontSize The font size to use for the texture atlas.
      */
     constructor(
@@ -58,8 +56,7 @@ export class P5AsciifyFontTextureAtlas {
     }
 
     /**
-     * Sets the font object and resets the whole atlas.
-     * @param font - The new font object.
+     * Resets the texture atlas by recalculating the maximum glyph dimensions and recreating the texture.
      */
     public reset(): void {
         this._maxGlyphDimensions = this._getMaxGlyphDimensions(this._fontSize);
