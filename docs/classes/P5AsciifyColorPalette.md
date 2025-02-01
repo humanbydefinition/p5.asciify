@@ -6,7 +6,7 @@
 
 # Class: P5AsciifyColorPalette
 
-Defined in: [ColorPalette.ts:6](https://github.com/humanbydefinition/p5-asciify/blob/f508211b91e4e5fce76de2e41a19937662a36543/src/lib/ColorPalette.ts#L6)
+Defined in: [ColorPalette.ts:6](https://github.com/humanbydefinition/p5-asciify/blob/e247792661fdf21646cc212e4bf1e6a1bf198b53/src/lib/ColorPalette.ts#L6)
 
 A 1D color palette stored in a framebuffer, which is used to pass colors to shaders.
 
@@ -16,7 +16,7 @@ A 1D color palette stored in a framebuffer, which is used to pass colors to shad
 
 > **new P5AsciifyColorPalette**(`_p`, `_colors`): [`P5AsciifyColorPalette`](P5AsciifyColorPalette.md)
 
-Defined in: [ColorPalette.ts:16](https://github.com/humanbydefinition/p5-asciify/blob/f508211b91e4e5fce76de2e41a19937662a36543/src/lib/ColorPalette.ts#L16)
+Defined in: [ColorPalette.ts:16](https://github.com/humanbydefinition/p5-asciify/blob/e247792661fdf21646cc212e4bf1e6a1bf198b53/src/lib/ColorPalette.ts#L16)
 
 Create a new color palette instance.
 
@@ -35,9 +35,9 @@ Create a new color palette instance.
 
 | Property | Modifier | Type | Description | Defined in |
 | ------ | ------ | ------ | ------ | ------ |
-| <a id="_colors-1"></a> `_colors` | `private` | \[`number`, `number`, `number`\][] | The colors to store in the palette. | [ColorPalette.ts:18](https://github.com/humanbydefinition/p5-asciify/blob/f508211b91e4e5fce76de2e41a19937662a36543/src/lib/ColorPalette.ts#L18) |
-| <a id="_framebuffer"></a> `_framebuffer` | `private` | `Framebuffer` | The framebuffer used to store the color palette. | [ColorPalette.ts:9](https://github.com/humanbydefinition/p5-asciify/blob/f508211b91e4e5fce76de2e41a19937662a36543/src/lib/ColorPalette.ts#L9) |
-| <a id="_p-1"></a> `_p` | `private` | `__module` | The p5 instance. | [ColorPalette.ts:17](https://github.com/humanbydefinition/p5-asciify/blob/f508211b91e4e5fce76de2e41a19937662a36543/src/lib/ColorPalette.ts#L17) |
+| <a id="_colors-1"></a> `_colors` | `private` | \[`number`, `number`, `number`\][] | The colors to store in the palette. | [ColorPalette.ts:18](https://github.com/humanbydefinition/p5-asciify/blob/e247792661fdf21646cc212e4bf1e6a1bf198b53/src/lib/ColorPalette.ts#L18) |
+| <a id="_framebuffer"></a> `_framebuffer` | `private` | `Framebuffer` | The framebuffer used to store the color palette. | [ColorPalette.ts:9](https://github.com/humanbydefinition/p5-asciify/blob/e247792661fdf21646cc212e4bf1e6a1bf198b53/src/lib/ColorPalette.ts#L9) |
+| <a id="_p-1"></a> `_p` | `private` | `__module` | The p5 instance. | [ColorPalette.ts:17](https://github.com/humanbydefinition/p5-asciify/blob/e247792661fdf21646cc212e4bf1e6a1bf198b53/src/lib/ColorPalette.ts#L17) |
 
 ## Accessors
 
@@ -47,7 +47,7 @@ Create a new color palette instance.
 
 > **get** **colors**(): \[`number`, `number`, `number`\][]
 
-Defined in: [ColorPalette.ts:66](https://github.com/humanbydefinition/p5-asciify/blob/f508211b91e4e5fce76de2e41a19937662a36543/src/lib/ColorPalette.ts#L66)
+Defined in: [ColorPalette.ts:66](https://github.com/humanbydefinition/p5-asciify/blob/e247792661fdf21646cc212e4bf1e6a1bf198b53/src/lib/ColorPalette.ts#L66)
 
 ##### Returns
 
@@ -61,7 +61,7 @@ Defined in: [ColorPalette.ts:66](https://github.com/humanbydefinition/p5-asciify
 
 > **get** **framebuffer**(): `Framebuffer`
 
-Defined in: [ColorPalette.ts:67](https://github.com/humanbydefinition/p5-asciify/blob/f508211b91e4e5fce76de2e41a19937662a36543/src/lib/ColorPalette.ts#L67)
+Defined in: [ColorPalette.ts:67](https://github.com/humanbydefinition/p5-asciify/blob/e247792661fdf21646cc212e4bf1e6a1bf198b53/src/lib/ColorPalette.ts#L67)
 
 ##### Returns
 
@@ -73,7 +73,7 @@ Defined in: [ColorPalette.ts:67](https://github.com/humanbydefinition/p5-asciify
 
 > `private` **\_updateFramebuffer**(): `void`
 
-Defined in: [ColorPalette.ts:34](https://github.com/humanbydefinition/p5-asciify/blob/f508211b91e4e5fce76de2e41a19937662a36543/src/lib/ColorPalette.ts#L34)
+Defined in: [ColorPalette.ts:34](https://github.com/humanbydefinition/p5-asciify/blob/e247792661fdf21646cc212e4bf1e6a1bf198b53/src/lib/ColorPalette.ts#L34)
 
 Update the framebuffer with the currently selected colors.
 
@@ -87,7 +87,7 @@ Update the framebuffer with the currently selected colors.
 
 > **setColors**(`newColors`): `void`
 
-Defined in: [ColorPalette.ts:60](https://github.com/humanbydefinition/p5-asciify/blob/f508211b91e4e5fce76de2e41a19937662a36543/src/lib/ColorPalette.ts#L60)
+Defined in: [ColorPalette.ts:60](https://github.com/humanbydefinition/p5-asciify/blob/e247792661fdf21646cc212e4bf1e6a1bf198b53/src/lib/ColorPalette.ts#L60)
 
 Set the colors of the palette and update the framebuffer.
 

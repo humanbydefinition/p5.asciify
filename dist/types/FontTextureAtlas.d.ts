@@ -1,15 +1,12 @@
 import p5 from 'p5';
+import { P5AsciifyFontManager } from './FontManager';
 /**
  * Manages a texture atlas for font rendering in the ASCII rendering process.
  */
 export declare class P5AsciifyFontTextureAtlas {
     private _p;
-    private _font;
+    private _fontManager;
     private _fontSize;
-    /** Array of all characters in the font. */
-    private _characters;
-    /** Array of `opentype.js` glyphs with unicode values, extended with r, g, and b properties for color. */
-    private _characterGlyphs;
     /** Maximum width and height of the glyphs in the font. */
     private _maxGlyphDimensions;
     /** Texture containing all characters in the font. As square as possible. */
@@ -24,12 +21,7 @@ export declare class P5AsciifyFontTextureAtlas {
      * @param _font The font object to use for the texture atlas.
      * @param _fontSize The font size to use for the texture atlas.
      */
-    constructor(_p: p5, _font: p5.Font, _fontSize?: number);
-    /**
-     * Loads all glyphs with unicode values from the font and assigns colors to them.
-     * @returns An array of opentype.js glyphs, extended with r, g, and b properties for color.
-     */
-    private _loadCharacterGlyphs;
+    constructor(_p: p5, _fontManager: P5AsciifyFontManager, _fontSize?: number);
     /**
      * Calculates the maximum width and height of all the glyphs in the font.
      * @param fontSize - The font size to use for calculations.
@@ -40,7 +32,7 @@ export declare class P5AsciifyFontTextureAtlas {
      * Sets the font object and resets the whole atlas.
      * @param font - The new font object.
      */
-    setFontObject(font: p5.Font): void;
+    reset(): void;
     /**
      * Sets the font size, recalculates the maximum glyph dimensions, and recreates the texture.
      * @param fontSize - The new font size.
@@ -56,32 +48,13 @@ export declare class P5AsciifyFontTextureAtlas {
      * @param fontSize - The font size to use for drawing the characters on the texture.
      */
     private _drawCharacters;
-    /**
-     * Gets an array of RGB colors for a given string or array of characters.
-     * @param characters - A string of characters.
-     * @returns Array of RGB color values.
-     * @throws {@link P5AsciifyError} If a character is not found in the texture atlas.
-     */
-    getCharsetColorArray(characters?: string): Array<[number, number, number]>;
-    /**
-     * Returns an array of characters that are not supported by the current font.
-     * @param characters The string of characters to check.
-     * @returns An array of unsupported characters. List is empty if all characters are supported.
-     */
-    getUnsupportedCharacters(characters: string): string[];
-    /**
-     * Validates a string of characters against the current font.
-     * @param characters The string of characters to validate.
-     * @throws {@link P5AsciifyError} If any characters are not supported by the current font.
-     */
-    validateCharacters(characters: string): void;
     get maxGlyphDimensions(): {
         width: number;
         height: number;
     };
     get texture(): p5.Framebuffer;
-    get characters(): string[];
     get charsetCols(): number;
     get charsetRows(): number;
     get fontSize(): number;
+    get fontManager(): P5AsciifyFontManager;
 }

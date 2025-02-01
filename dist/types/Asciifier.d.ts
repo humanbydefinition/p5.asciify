@@ -21,6 +21,7 @@ import { P5AsciifyRendererManager } from './renderers/RendererManager';
 export declare class P5Asciifier {
     /** Contains texture with all glyphs of a given font.*/
     private _fontTextureAtlas;
+    private _fontManager;
     /** Contains the grid dimensions and offsets to create a perfect grid based on the canvas and font glyph dimensions. */
     private _grid;
     /** Wraps around the user's `draw()` function to capture it's output for the ascii renderers. */
@@ -65,6 +66,7 @@ export declare class P5Asciifier {
      * @param addDummyPreloadFunction Whether to add a dummy preload function to the p5 instance
      */
     instance(p: p5, addDummyPreloadFunction?: boolean): void;
+    init(p: p5, addDummyPreloadFunction: boolean | undefined, fontBase64: string): void;
     /**
      * Sets up the `p5.asciify` library by initializing the font texture atlas, grid, renderer manager, and sketch framebuffer.
      *
@@ -93,7 +95,9 @@ export declare class P5Asciifier {
      * @param font The font to use. Can be a path, base64 string, or p5.Font object.
      * @throws {@link P5AsciifyError} - If the font parameter is invalid or the font fails to load.
      */
-    loadFont(font: string | p5.Font): void;
+    loadFont(font: string | p5.Font, options: {
+        "updateCharacters": true;
+    }, onSuccess?: () => void): void;
     /**
      * Sets the background color for the ascii renderers.
      *
@@ -103,11 +107,32 @@ export declare class P5Asciifier {
      */
     background(color: string | p5.Color | [number, number?, number?, number?]): void;
     /**
+     * Generates ASCII art representation as string array
+     * @private
+     * @returns Array of strings representing ASCII art lines
+     * @throws {@link P5AsciifyError} - If no renderer is available
+     */
+    private _generateAsciiLines;
+    /**
+     * Returns the current ASCII output as a string
+     * @returns Multi-line string representation of the ASCII art
+     * @throws {@link P5AsciifyError} - If no renderer is available
+     */
+    toString(): string;
+    /**
      * Saves the ASCII output to a text file.
      * @param filename The filename to save the text file as. If not provided, a default filename is generated.
      * @throws {@link P5AsciifyError} - If no renderer is available to save ASCII output.
      */
-    saveTxt(filename: string): void;
+    saveStrings(filename: string): void;
+    /**
+     * Sets the p5.js fill color to the color of the given character in the font texture atlas.
+     *
+     * This is useful when drawing to a renderers `characterFramebuffer`, which is used to generate the ASCII output.
+     *
+     * @param character The character to get the color for.
+     */
+    fill(character: string): void;
     get sketchFramebuffer(): p5.Framebuffer;
     get grid(): P5AsciifyGrid;
     get fontTextureAtlas(): P5AsciifyFontTextureAtlas;

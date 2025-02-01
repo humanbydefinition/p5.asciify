@@ -6,7 +6,7 @@
 
 # Class: P5AsciifyRendererManager
 
-Defined in: [renderers/RendererManager.ts:29](https://github.com/humanbydefinition/p5-asciify/blob/f508211b91e4e5fce76de2e41a19937662a36543/src/lib/renderers/RendererManager.ts#L29)
+Defined in: [renderers/RendererManager.ts:29](https://github.com/humanbydefinition/p5-asciify/blob/e247792661fdf21646cc212e4bf1e6a1bf198b53/src/lib/renderers/RendererManager.ts#L29)
 
 Manages the available ASCII renderers and handles rendering the ASCII output to the canvas.
 
@@ -16,7 +16,7 @@ Manages the available ASCII renderers and handles rendering the ASCII output to 
 
 > **new P5AsciifyRendererManager**(`_p`, `_grid`, `_fontTextureAtlas`): [`P5AsciifyRendererManager`](P5AsciifyRendererManager.md)
 
-Defined in: [renderers/RendererManager.ts:45](https://github.com/humanbydefinition/p5-asciify/blob/f508211b91e4e5fce76de2e41a19937662a36543/src/lib/renderers/RendererManager.ts#L45)
+Defined in: [renderers/RendererManager.ts:45](https://github.com/humanbydefinition/p5-asciify/blob/e247792661fdf21646cc212e4bf1e6a1bf198b53/src/lib/renderers/RendererManager.ts#L45)
 
 #### Parameters
 
@@ -34,16 +34,16 @@ Defined in: [renderers/RendererManager.ts:45](https://github.com/humanbydefiniti
 
 | Property | Modifier | Type | Default value | Description | Defined in |
 | ------ | ------ | ------ | ------ | ------ | ------ |
-| <a id="_backgroundcolor"></a> `_backgroundColor` | `private` | `string` \| `Color` \| \[`number`, `number`?, `number`?, `number`?\] | `"#000000"` | The background color to use for the ASCII rendering for the offset space, not occupied by the centered ASCII grid. | [renderers/RendererManager.ts:41](https://github.com/humanbydefinition/p5-asciify/blob/f508211b91e4e5fce76de2e41a19937662a36543/src/lib/renderers/RendererManager.ts#L41) |
-| <a id="_currentcanvasdimensions"></a> `_currentCanvasDimensions` | `private` | `object` | `undefined` | The current dimensions of the canvas. If the dimensions change, the grid is reset and the renderers are resized. | [renderers/RendererManager.ts:32](https://github.com/humanbydefinition/p5-asciify/blob/f508211b91e4e5fce76de2e41a19937662a36543/src/lib/renderers/RendererManager.ts#L32) |
-| `_currentCanvasDimensions.height` | `public` | `number` | `undefined` | - | [renderers/RendererManager.ts:32](https://github.com/humanbydefinition/p5-asciify/blob/f508211b91e4e5fce76de2e41a19937662a36543/src/lib/renderers/RendererManager.ts#L32) |
-| `_currentCanvasDimensions.width` | `public` | `number` | `undefined` | - | [renderers/RendererManager.ts:32](https://github.com/humanbydefinition/p5-asciify/blob/f508211b91e4e5fce76de2e41a19937662a36543/src/lib/renderers/RendererManager.ts#L32) |
-| <a id="_fonttextureatlas-1"></a> `_fontTextureAtlas` | `private` | [`P5AsciifyFontTextureAtlas`](../../../classes/P5AsciifyFontTextureAtlas.md) | `undefined` | The font texture atlas instance. | [renderers/RendererManager.ts:53](https://github.com/humanbydefinition/p5-asciify/blob/f508211b91e4e5fce76de2e41a19937662a36543/src/lib/renderers/RendererManager.ts#L53) |
-| <a id="_grid-1"></a> `_grid` | `private` | [`P5AsciifyGrid`](../../../classes/P5AsciifyGrid.md) | `undefined` | The grid instance. | [renderers/RendererManager.ts:50](https://github.com/humanbydefinition/p5-asciify/blob/f508211b91e4e5fce76de2e41a19937662a36543/src/lib/renderers/RendererManager.ts#L50) |
-| <a id="_p-1"></a> `_p` | `private` | `__module` | `undefined` | The p5 instance. | [renderers/RendererManager.ts:47](https://github.com/humanbydefinition/p5-asciify/blob/f508211b91e4e5fce76de2e41a19937662a36543/src/lib/renderers/RendererManager.ts#L47) |
-| <a id="_renderers"></a> `_renderers` | `private` | `object`[] | `undefined` | The list of available renderers. | [renderers/RendererManager.ts:35](https://github.com/humanbydefinition/p5-asciify/blob/f508211b91e4e5fce76de2e41a19937662a36543/src/lib/renderers/RendererManager.ts#L35) |
-| <a id="_resultframebuffer"></a> `_resultFramebuffer` | `private` | `Framebuffer` | `undefined` | - | [renderers/RendererManager.ts:43](https://github.com/humanbydefinition/p5-asciify/blob/f508211b91e4e5fce76de2e41a19937662a36543/src/lib/renderers/RendererManager.ts#L43) |
-| <a id="lastrenderer"></a> `lastRenderer` | `public` | [`P5AsciifyRenderer`](P5AsciifyRenderer.md) | `undefined` | The last renderer used in the rendering loop. | [renderers/RendererManager.ts:38](https://github.com/humanbydefinition/p5-asciify/blob/f508211b91e4e5fce76de2e41a19937662a36543/src/lib/renderers/RendererManager.ts#L38) |
+| <a id="_backgroundcolor"></a> `_backgroundColor` | `private` | `string` \| `Color` \| \[`number`, `number`?, `number`?, `number`?\] | `"#000000"` | The background color to use for the ASCII rendering for the offset space, not occupied by the centered ASCII grid. | [renderers/RendererManager.ts:41](https://github.com/humanbydefinition/p5-asciify/blob/e247792661fdf21646cc212e4bf1e6a1bf198b53/src/lib/renderers/RendererManager.ts#L41) |
+| <a id="_currentcanvasdimensions"></a> `_currentCanvasDimensions` | `private` | `object` | `undefined` | The current dimensions of the canvas. If the dimensions change, the grid is reset and the renderers are resized. | [renderers/RendererManager.ts:32](https://github.com/humanbydefinition/p5-asciify/blob/e247792661fdf21646cc212e4bf1e6a1bf198b53/src/lib/renderers/RendererManager.ts#L32) |
+| `_currentCanvasDimensions.height` | `public` | `number` | `undefined` | - | [renderers/RendererManager.ts:32](https://github.com/humanbydefinition/p5-asciify/blob/e247792661fdf21646cc212e4bf1e6a1bf198b53/src/lib/renderers/RendererManager.ts#L32) |
+| `_currentCanvasDimensions.width` | `public` | `number` | `undefined` | - | [renderers/RendererManager.ts:32](https://github.com/humanbydefinition/p5-asciify/blob/e247792661fdf21646cc212e4bf1e6a1bf198b53/src/lib/renderers/RendererManager.ts#L32) |
+| <a id="_fonttextureatlas-1"></a> `_fontTextureAtlas` | `private` | [`P5AsciifyFontTextureAtlas`](../../../classes/P5AsciifyFontTextureAtlas.md) | `undefined` | The font texture atlas instance. | [renderers/RendererManager.ts:53](https://github.com/humanbydefinition/p5-asciify/blob/e247792661fdf21646cc212e4bf1e6a1bf198b53/src/lib/renderers/RendererManager.ts#L53) |
+| <a id="_grid-1"></a> `_grid` | `private` | [`P5AsciifyGrid`](../../../classes/P5AsciifyGrid.md) | `undefined` | The grid instance. | [renderers/RendererManager.ts:50](https://github.com/humanbydefinition/p5-asciify/blob/e247792661fdf21646cc212e4bf1e6a1bf198b53/src/lib/renderers/RendererManager.ts#L50) |
+| <a id="_p-1"></a> `_p` | `private` | `__module` | `undefined` | The p5 instance. | [renderers/RendererManager.ts:47](https://github.com/humanbydefinition/p5-asciify/blob/e247792661fdf21646cc212e4bf1e6a1bf198b53/src/lib/renderers/RendererManager.ts#L47) |
+| <a id="_renderers"></a> `_renderers` | `private` | `object`[] | `undefined` | The list of available renderers. | [renderers/RendererManager.ts:35](https://github.com/humanbydefinition/p5-asciify/blob/e247792661fdf21646cc212e4bf1e6a1bf198b53/src/lib/renderers/RendererManager.ts#L35) |
+| <a id="_resultframebuffer"></a> `_resultFramebuffer` | `private` | `Framebuffer` | `undefined` | - | [renderers/RendererManager.ts:43](https://github.com/humanbydefinition/p5-asciify/blob/e247792661fdf21646cc212e4bf1e6a1bf198b53/src/lib/renderers/RendererManager.ts#L43) |
+| <a id="lastrenderer"></a> `lastRenderer` | `public` | [`P5AsciifyRenderer`](P5AsciifyRenderer.md) | `undefined` | The last renderer used in the rendering loop. | [renderers/RendererManager.ts:38](https://github.com/humanbydefinition/p5-asciify/blob/e247792661fdf21646cc212e4bf1e6a1bf198b53/src/lib/renderers/RendererManager.ts#L38) |
 
 ## Accessors
 
@@ -53,7 +53,7 @@ Defined in: [renderers/RendererManager.ts:45](https://github.com/humanbydefiniti
 
 > **get** **renderers**(): `object`[]
 
-Defined in: [renderers/RendererManager.ts:262](https://github.com/humanbydefinition/p5-asciify/blob/f508211b91e4e5fce76de2e41a19937662a36543/src/lib/renderers/RendererManager.ts#L262)
+Defined in: [renderers/RendererManager.ts:274](https://github.com/humanbydefinition/p5-asciify/blob/e247792661fdf21646cc212e4bf1e6a1bf198b53/src/lib/renderers/RendererManager.ts#L274)
 
 ##### Returns
 
@@ -67,7 +67,7 @@ Defined in: [renderers/RendererManager.ts:262](https://github.com/humanbydefinit
 
 > **get** **resultFramebuffer**(): `Framebuffer`
 
-Defined in: [renderers/RendererManager.ts:263](https://github.com/humanbydefinition/p5-asciify/blob/f508211b91e4e5fce76de2e41a19937662a36543/src/lib/renderers/RendererManager.ts#L263)
+Defined in: [renderers/RendererManager.ts:275](https://github.com/humanbydefinition/p5-asciify/blob/e247792661fdf21646cc212e4bf1e6a1bf198b53/src/lib/renderers/RendererManager.ts#L275)
 
 ##### Returns
 
@@ -79,7 +79,7 @@ Defined in: [renderers/RendererManager.ts:263](https://github.com/humanbydefinit
 
 > `private` **\_getRendererIndex**(`renderer`): `number`
 
-Defined in: [renderers/RendererManager.ts:254](https://github.com/humanbydefinition/p5-asciify/blob/f508211b91e4e5fce76de2e41a19937662a36543/src/lib/renderers/RendererManager.ts#L254)
+Defined in: [renderers/RendererManager.ts:266](https://github.com/humanbydefinition/p5-asciify/blob/e247792661fdf21646cc212e4bf1e6a1bf198b53/src/lib/renderers/RendererManager.ts#L266)
 
 Gets the index of a renderer in the list of renderers.
 
@@ -101,7 +101,7 @@ The index of the renderer in the list of renderers. Returns -1 if the renderer i
 
 > **add**(`name`, `type`, `options`): [`P5AsciifyRenderer`](P5AsciifyRenderer.md)
 
-Defined in: [renderers/RendererManager.ts:135](https://github.com/humanbydefinition/p5-asciify/blob/f508211b91e4e5fce76de2e41a19937662a36543/src/lib/renderers/RendererManager.ts#L135)
+Defined in: [renderers/RendererManager.ts:135](https://github.com/humanbydefinition/p5-asciify/blob/e247792661fdf21646cc212e4bf1e6a1bf198b53/src/lib/renderers/RendererManager.ts#L135)
 
 Adds a new renderer to the list of renderers.
 
@@ -123,7 +123,7 @@ Adds a new renderer to the list of renderers.
 
 > **background**(`color`): `void`
 
-Defined in: [renderers/RendererManager.ts:241](https://github.com/humanbydefinition/p5-asciify/blob/f508211b91e4e5fce76de2e41a19937662a36543/src/lib/renderers/RendererManager.ts#L241)
+Defined in: [renderers/RendererManager.ts:241](https://github.com/humanbydefinition/p5-asciify/blob/e247792661fdf21646cc212e4bf1e6a1bf198b53/src/lib/renderers/RendererManager.ts#L241)
 
 Sets the background color for the ascii renderers. 
 
@@ -149,7 +149,7 @@ Covers the empty space on the edges of the canvas, which potentially is not occu
 
 > `private` **checkCanvasDimensions**(): `void`
 
-Defined in: [renderers/RendererManager.ts:108](https://github.com/humanbydefinition/p5-asciify/blob/f508211b91e4e5fce76de2e41a19937662a36543/src/lib/renderers/RendererManager.ts#L108)
+Defined in: [renderers/RendererManager.ts:108](https://github.com/humanbydefinition/p5-asciify/blob/e247792661fdf21646cc212e4bf1e6a1bf198b53/src/lib/renderers/RendererManager.ts#L108)
 
 Continuously checks if the canvas dimensions have changed.
 If they have, the grid is reset and the renderers are resized.
@@ -164,9 +164,51 @@ If they have, the grid is reset and the renderers are resized.
 
 > **clear**(): `void`
 
-Defined in: [renderers/RendererManager.ts:210](https://github.com/humanbydefinition/p5-asciify/blob/f508211b91e4e5fce76de2e41a19937662a36543/src/lib/renderers/RendererManager.ts#L210)
+Defined in: [renderers/RendererManager.ts:210](https://github.com/humanbydefinition/p5-asciify/blob/e247792661fdf21646cc212e4bf1e6a1bf198b53/src/lib/renderers/RendererManager.ts#L210)
 
 Clears the list of renderers.
+
+#### Returns
+
+`void`
+
+***
+
+### disable()
+
+> **disable**(): `void`
+
+Defined in: [renderers/RendererManager.ts:253](https://github.com/humanbydefinition/p5-asciify/blob/e247792661fdf21646cc212e4bf1e6a1bf198b53/src/lib/renderers/RendererManager.ts#L253)
+
+#### Returns
+
+`void`
+
+***
+
+### enable()
+
+> **enable**(): `void`
+
+Defined in: [renderers/RendererManager.ts:249](https://github.com/humanbydefinition/p5-asciify/blob/e247792661fdf21646cc212e4bf1e6a1bf198b53/src/lib/renderers/RendererManager.ts#L249)
+
+#### Returns
+
+`void`
+
+***
+
+### enabled()
+
+> **enabled**(`enabled`): `void`
+
+Defined in: [renderers/RendererManager.ts:257](https://github.com/humanbydefinition/p5-asciify/blob/e247792661fdf21646cc212e4bf1e6a1bf198b53/src/lib/renderers/RendererManager.ts#L257)
+
+#### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `enabled` | `boolean` |
 
 #### Returns
 
@@ -178,7 +220,7 @@ Clears the list of renderers.
 
 > **get**(`rendererName`): [`P5AsciifyRenderer`](P5AsciifyRenderer.md)
 
-Defined in: [renderers/RendererManager.ts:163](https://github.com/humanbydefinition/p5-asciify/blob/f508211b91e4e5fce76de2e41a19937662a36543/src/lib/renderers/RendererManager.ts#L163)
+Defined in: [renderers/RendererManager.ts:163](https://github.com/humanbydefinition/p5-asciify/blob/e247792661fdf21646cc212e4bf1e6a1bf198b53/src/lib/renderers/RendererManager.ts#L163)
 
 Gets the ASCII renderer instance with the given name.
 
@@ -200,7 +242,7 @@ The ASCII renderer instance with the given name.
 
 > **moveDown**(`renderer`): `void`
 
-Defined in: [renderers/RendererManager.ts:179](https://github.com/humanbydefinition/p5-asciify/blob/f508211b91e4e5fce76de2e41a19937662a36543/src/lib/renderers/RendererManager.ts#L179)
+Defined in: [renderers/RendererManager.ts:179](https://github.com/humanbydefinition/p5-asciify/blob/e247792661fdf21646cc212e4bf1e6a1bf198b53/src/lib/renderers/RendererManager.ts#L179)
 
 Moves a renderer up in the list of renderers.
 
@@ -220,7 +262,7 @@ Moves a renderer up in the list of renderers.
 
 > **moveUp**(`renderer`): `void`
 
-Defined in: [renderers/RendererManager.ts:189](https://github.com/humanbydefinition/p5-asciify/blob/f508211b91e4e5fce76de2e41a19937662a36543/src/lib/renderers/RendererManager.ts#L189)
+Defined in: [renderers/RendererManager.ts:189](https://github.com/humanbydefinition/p5-asciify/blob/e247792661fdf21646cc212e4bf1e6a1bf198b53/src/lib/renderers/RendererManager.ts#L189)
 
 Moves a renderer down in the list of renderers.
 
@@ -240,7 +282,7 @@ Moves a renderer down in the list of renderers.
 
 > **remove**(`renderer`): `void`
 
-Defined in: [renderers/RendererManager.ts:199](https://github.com/humanbydefinition/p5-asciify/blob/f508211b91e4e5fce76de2e41a19937662a36543/src/lib/renderers/RendererManager.ts#L199)
+Defined in: [renderers/RendererManager.ts:199](https://github.com/humanbydefinition/p5-asciify/blob/e247792661fdf21646cc212e4bf1e6a1bf198b53/src/lib/renderers/RendererManager.ts#L199)
 
 Removes a renderer from the list of renderers.
 
@@ -260,7 +302,7 @@ Removes a renderer from the list of renderers.
 
 > **render**(`inputFramebuffer`): `void`
 
-Defined in: [renderers/RendererManager.ts:80](https://github.com/humanbydefinition/p5-asciify/blob/f508211b91e4e5fce76de2e41a19937662a36543/src/lib/renderers/RendererManager.ts#L80)
+Defined in: [renderers/RendererManager.ts:80](https://github.com/humanbydefinition/p5-asciify/blob/e247792661fdf21646cc212e4bf1e6a1bf198b53/src/lib/renderers/RendererManager.ts#L80)
 
 Renders the ASCII output to the canvas.
 
@@ -280,7 +322,7 @@ Renders the ASCII output to the canvas.
 
 > **resetRendererDimensions**(): `void`
 
-Defined in: [renderers/RendererManager.ts:122](https://github.com/humanbydefinition/p5-asciify/blob/f508211b91e4e5fce76de2e41a19937662a36543/src/lib/renderers/RendererManager.ts#L122)
+Defined in: [renderers/RendererManager.ts:122](https://github.com/humanbydefinition/p5-asciify/blob/e247792661fdf21646cc212e4bf1e6a1bf198b53/src/lib/renderers/RendererManager.ts#L122)
 
 Resets the dimensions of all renderers.
 
@@ -294,7 +336,7 @@ Resets the dimensions of all renderers.
 
 > **swap**(`renderer1`, `renderer2`): `void`
 
-Defined in: [renderers/RendererManager.ts:219](https://github.com/humanbydefinition/p5-asciify/blob/f508211b91e4e5fce76de2e41a19937662a36543/src/lib/renderers/RendererManager.ts#L219)
+Defined in: [renderers/RendererManager.ts:219](https://github.com/humanbydefinition/p5-asciify/blob/e247792661fdf21646cc212e4bf1e6a1bf198b53/src/lib/renderers/RendererManager.ts#L219)
 
 Swaps the positions of two renderers in the renderer list.
 

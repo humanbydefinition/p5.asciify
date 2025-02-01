@@ -101,6 +101,9 @@ export declare class P5AsciifyRendererManager {
      * @throws {@link P5AsciifyError} - If the color is not a string, array or p5.Color.
      */
     background(color: string | p5.Color | [number, number?, number?, number?]): void;
+    enable(): void;
+    disable(): void;
+    enabled(enabled: boolean): void;
     /**
      * Gets the index of a renderer in the list of renderers.
      * @param renderer The renderer to get the index of.
