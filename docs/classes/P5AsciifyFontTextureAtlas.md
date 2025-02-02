@@ -1,4 +1,4 @@
-[**p5.asciify v0.7.3**](../README.md)
+[**p5.asciify v0.7.4**](../README.md)
 
 ***
 
@@ -6,7 +6,7 @@
 
 # Class: P5AsciifyFontTextureAtlas
 
-Defined in: [FontTextureAtlas.ts:12](https://github.com/humanbydefinition/p5.asciify/blob/799e83eb3a285fe5bbb187efe84893fd58ddd933/src/lib/FontTextureAtlas.ts#L12)
+Defined in: [FontTextureAtlas.ts:12](https://github.com/humanbydefinition/p5.asciify/blob/99ff78fc13b1ab2e7b69f99d4dfd8409113decf3/src/lib/FontTextureAtlas.ts#L12)
 
 Manages a texture atlas for font rendering in the ASCII rendering process.
 The atlas creates an optimized GPU-friendly texture containing all required glyphs
@@ -21,7 +21,7 @@ directly, as this ensures proper synchronization with dependent components.**
 
 > **new P5AsciifyFontTextureAtlas**(`_p`, `_fontManager`, `_fontSize`): [`P5AsciifyFontTextureAtlas`](P5AsciifyFontTextureAtlas.md)
 
-Defined in: [FontTextureAtlas.ts:37](https://github.com/humanbydefinition/p5.asciify/blob/799e83eb3a285fe5bbb187efe84893fd58ddd933/src/lib/FontTextureAtlas.ts#L37)
+Defined in: [FontTextureAtlas.ts:37](https://github.com/humanbydefinition/p5.asciify/blob/99ff78fc13b1ab2e7b69f99d4dfd8409113decf3/src/lib/FontTextureAtlas.ts#L37)
 
 Creates a new `P5AsciifyFontTextureAtlas` instance.
 
@@ -45,7 +45,7 @@ Creates a new `P5AsciifyFontTextureAtlas` instance.
 
 > **get** **charsetCols**(): `number`
 
-Defined in: [FontTextureAtlas.ts:139](https://github.com/humanbydefinition/p5.asciify/blob/799e83eb3a285fe5bbb187efe84893fd58ddd933/src/lib/FontTextureAtlas.ts#L139)
+Defined in: [FontTextureAtlas.ts:139](https://github.com/humanbydefinition/p5.asciify/blob/99ff78fc13b1ab2e7b69f99d4dfd8409113decf3/src/lib/FontTextureAtlas.ts#L139)
 
 Returns the number of columns in the texture containing all characters in the font.
 
@@ -61,7 +61,7 @@ Returns the number of columns in the texture containing all characters in the fo
 
 > **get** **charsetRows**(): `number`
 
-Defined in: [FontTextureAtlas.ts:144](https://github.com/humanbydefinition/p5.asciify/blob/799e83eb3a285fe5bbb187efe84893fd58ddd933/src/lib/FontTextureAtlas.ts#L144)
+Defined in: [FontTextureAtlas.ts:144](https://github.com/humanbydefinition/p5.asciify/blob/99ff78fc13b1ab2e7b69f99d4dfd8409113decf3/src/lib/FontTextureAtlas.ts#L144)
 
 Returns the number of rows in the texture containing all characters in the font.
 
@@ -77,7 +77,7 @@ Returns the number of rows in the texture containing all characters in the font.
 
 > **get** **fontManager**(): [`P5AsciifyFontManager`](P5AsciifyFontManager.md)
 
-Defined in: [FontTextureAtlas.ts:154](https://github.com/humanbydefinition/p5.asciify/blob/799e83eb3a285fe5bbb187efe84893fd58ddd933/src/lib/FontTextureAtlas.ts#L154)
+Defined in: [FontTextureAtlas.ts:154](https://github.com/humanbydefinition/p5.asciify/blob/99ff78fc13b1ab2e7b69f99d4dfd8409113decf3/src/lib/FontTextureAtlas.ts#L154)
 
 Returns the font manager used for the texture atlas.
 
@@ -93,7 +93,7 @@ Returns the font manager used for the texture atlas.
 
 > **get** **fontSize**(): `number`
 
-Defined in: [FontTextureAtlas.ts:149](https://github.com/humanbydefinition/p5.asciify/blob/799e83eb3a285fe5bbb187efe84893fd58ddd933/src/lib/FontTextureAtlas.ts#L149)
+Defined in: [FontTextureAtlas.ts:149](https://github.com/humanbydefinition/p5.asciify/blob/99ff78fc13b1ab2e7b69f99d4dfd8409113decf3/src/lib/FontTextureAtlas.ts#L149)
 
 Returns the font size used for the texture atlas.
 
@@ -109,7 +109,7 @@ Returns the font size used for the texture atlas.
 
 > **get** **maxGlyphDimensions**(): `object`
 
-Defined in: [FontTextureAtlas.ts:129](https://github.com/humanbydefinition/p5.asciify/blob/799e83eb3a285fe5bbb187efe84893fd58ddd933/src/lib/FontTextureAtlas.ts#L129)
+Defined in: [FontTextureAtlas.ts:129](https://github.com/humanbydefinition/p5.asciify/blob/99ff78fc13b1ab2e7b69f99d4dfd8409113decf3/src/lib/FontTextureAtlas.ts#L129)
 
 Returns the maximum width and height found for all the glyphs in the font.
 
@@ -119,8 +119,8 @@ Returns the maximum width and height found for all the glyphs in the font.
 
 | Name | Type | Defined in |
 | ------ | ------ | ------ |
-| <a id="height"></a> `height` | `number` | [FontTextureAtlas.ts:129](https://github.com/humanbydefinition/p5.asciify/blob/799e83eb3a285fe5bbb187efe84893fd58ddd933/src/lib/FontTextureAtlas.ts#L129) |
-| <a id="width"></a> `width` | `number` | [FontTextureAtlas.ts:129](https://github.com/humanbydefinition/p5.asciify/blob/799e83eb3a285fe5bbb187efe84893fd58ddd933/src/lib/FontTextureAtlas.ts#L129) |
+| <a id="height"></a> `height` | `number` | [FontTextureAtlas.ts:129](https://github.com/humanbydefinition/p5.asciify/blob/99ff78fc13b1ab2e7b69f99d4dfd8409113decf3/src/lib/FontTextureAtlas.ts#L129) |
+| <a id="width"></a> `width` | `number` | [FontTextureAtlas.ts:129](https://github.com/humanbydefinition/p5.asciify/blob/99ff78fc13b1ab2e7b69f99d4dfd8409113decf3/src/lib/FontTextureAtlas.ts#L129) |
 
 ***
 
@@ -130,7 +130,7 @@ Returns the maximum width and height found for all the glyphs in the font.
 
 > **get** **texture**(): `Framebuffer`
 
-Defined in: [FontTextureAtlas.ts:134](https://github.com/humanbydefinition/p5.asciify/blob/799e83eb3a285fe5bbb187efe84893fd58ddd933/src/lib/FontTextureAtlas.ts#L134)
+Defined in: [FontTextureAtlas.ts:134](https://github.com/humanbydefinition/p5.asciify/blob/99ff78fc13b1ab2e7b69f99d4dfd8409113decf3/src/lib/FontTextureAtlas.ts#L134)
 
 Returns the texture containing all characters in the font.
 
@@ -144,7 +144,7 @@ Returns the texture containing all characters in the font.
 
 > **reset**(): `void`
 
-Defined in: [FontTextureAtlas.ts:66](https://github.com/humanbydefinition/p5.asciify/blob/799e83eb3a285fe5bbb187efe84893fd58ddd933/src/lib/FontTextureAtlas.ts#L66)
+Defined in: [FontTextureAtlas.ts:66](https://github.com/humanbydefinition/p5.asciify/blob/99ff78fc13b1ab2e7b69f99d4dfd8409113decf3/src/lib/FontTextureAtlas.ts#L66)
 
 Resets the texture atlas by recalculating the maximum glyph dimensions and recreating the texture.
 
@@ -158,7 +158,7 @@ Resets the texture atlas by recalculating the maximum glyph dimensions and recre
 
 > **setFontSize**(`fontSize`): `void`
 
-Defined in: [FontTextureAtlas.ts:75](https://github.com/humanbydefinition/p5.asciify/blob/799e83eb3a285fe5bbb187efe84893fd58ddd933/src/lib/FontTextureAtlas.ts#L75)
+Defined in: [FontTextureAtlas.ts:75](https://github.com/humanbydefinition/p5.asciify/blob/99ff78fc13b1ab2e7b69f99d4dfd8409113decf3/src/lib/FontTextureAtlas.ts#L75)
 
 Sets the font size, recalculates the maximum glyph dimensions, and recreates the texture.
 

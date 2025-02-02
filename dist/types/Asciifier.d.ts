@@ -44,9 +44,22 @@ export declare class P5Asciifier {
      */
     setup(): void;
     /**
-     * Deprecated method to initialize p5.asciify with the p5.js instance manually in `INSTANCE` mode.
-     * Doesn't do anything now except logging a warning.
+     * Necessary to call in p5.js `INSTANCE` mode to ensure a `preload` function is defined.
+     * Otherwise an empty `preload` method is defined, so the preload loop is executed and the font provided by `p5.asciify` is loaded properly.
      * @param p The p5.js instance to use for the library.
+     *
+     * @example
+     * ```javascript
+     *  import p5 from 'p5';
+     *  import { p5asciify } from '../../src/lib/index';
+     *
+     *  const sketch = (p) => {
+     *      p5asciify.instance(p);
+     *
+     *      // ... your sketch code
+     *  }
+     *
+     * new p5(sketch);
      */
     instance(p: p5): void;
     /**
