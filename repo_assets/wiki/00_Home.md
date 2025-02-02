@@ -24,7 +24,7 @@ I would love to see your creations using `p5.asciify`! Feel free to tag me on so
 See `p5.asciify` in action at [`textmode.art`](https://textmode.art/) - an ASCII/textmode editor powered by this library.
 
 #### Example Code
-- **Local Examples**: Explore the `examples` folder for `instance mode` implementations
+- **Local Examples**: Explore the [`examples`](https://github.com/humanbydefinition/p5.asciify/tree/main/examples) folder for `instance mode` implementations
 - **Online Examples**: View [`p5.js web editor collection`](https://editor.p5js.org/humanbydefinition/collections/VAws0yqLW) for `global mode` versions
 
 > Both example sets demonstrate the same functionality, just implemented differently based on p5.js usage mode.
