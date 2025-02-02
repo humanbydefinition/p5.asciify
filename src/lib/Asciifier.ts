@@ -48,11 +48,6 @@ export class P5Asciifier {
      */
     public init(p: p5, fontBase64: string): void {
         this._p = p;
-
-        if (!p.preload) {
-            p.preload = () => { };
-        }
-
         this._fontManager = new P5AsciifyFontManager(this._p, fontBase64);
     }
 
@@ -90,12 +85,14 @@ export class P5Asciifier {
     }
 
     /**
-     * Deprecated method to initialize p5.asciify with the p5.js instance manually in `INSTANCE` mode.
-     * Doesn't do anything now except logging a warning.
+     * Necessary to call in p5.js `INSTANCE` mode to ensure a `preload` function is defined,
+     * otherwise defining a dummy `preload` function, so the preload loop is executed and the font provided by `p5.asciify` is loaded.
      * @param p The p5.js instance to use for the library.
      */
     public instance(p: p5): void {
-        console.warn(`[p5.asciify] 'instance()' method is deprecated and redundant to call with v0.7.2 and beyond - remove this call from your sketch.`);
+        if (!p.preload) {
+            p.preload = () => { };
+        }
     }
 
     /**
