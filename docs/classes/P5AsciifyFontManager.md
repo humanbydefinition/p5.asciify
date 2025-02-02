@@ -1,4 +1,4 @@
-[**p5.asciify v0.7.1**](../README.md)
+[**p5.asciify v0.7.3**](../README.md)
 
 ***
 
@@ -6,7 +6,7 @@
 
 # Class: P5AsciifyFontManager
 
-Defined in: [FontManager.ts:8](https://github.com/humanbydefinition/p5-asciify/blob/240f04ae8120d8b0eda0aa09e3fda1b41eb9a25b/src/lib/FontManager.ts#L8)
+Defined in: [FontManager.ts:8](https://github.com/humanbydefinition/p5.asciify/blob/799e83eb3a285fe5bbb187efe84893fd58ddd933/src/lib/FontManager.ts#L8)
 
 Manages the font used for the ASCII rendering pipeline and provides methods for working with the font.
 
@@ -16,7 +16,7 @@ Manages the font used for the ASCII rendering pipeline and provides methods for 
 
 > **new P5AsciifyFontManager**(`_p`, `fontSource`): [`P5AsciifyFontManager`](P5AsciifyFontManager.md)
 
-Defined in: [FontManager.ts:24](https://github.com/humanbydefinition/p5-asciify/blob/240f04ae8120d8b0eda0aa09e3fda1b41eb9a25b/src/lib/FontManager.ts#L24)
+Defined in: [FontManager.ts:24](https://github.com/humanbydefinition/p5.asciify/blob/799e83eb3a285fe5bbb187efe84893fd58ddd933/src/lib/FontManager.ts#L24)
 
 Creates a new `P5AsciifyFontManager` instance.
 
@@ -39,7 +39,7 @@ Creates a new `P5AsciifyFontManager` instance.
 
 > **get** **characterGlyphs**(): [`OpenTypeGlyph`](../type-aliases/OpenTypeGlyph.md)[]
 
-Defined in: [FontManager.ts:258](https://github.com/humanbydefinition/p5-asciify/blob/240f04ae8120d8b0eda0aa09e3fda1b41eb9a25b/src/lib/FontManager.ts#L258)
+Defined in: [FontManager.ts:258](https://github.com/humanbydefinition/p5.asciify/blob/799e83eb3a285fe5bbb187efe84893fd58ddd933/src/lib/FontManager.ts#L258)
 
 An array of character glyphs in the set font with color assignments.
 
@@ -64,7 +64,7 @@ An array of character glyphs in the set font with color assignments.
 
 > **get** **characters**(): `string`[]
 
-Defined in: [FontManager.ts:245](https://github.com/humanbydefinition/p5-asciify/blob/240f04ae8120d8b0eda0aa09e3fda1b41eb9a25b/src/lib/FontManager.ts#L245)
+Defined in: [FontManager.ts:245](https://github.com/humanbydefinition/p5.asciify/blob/799e83eb3a285fe5bbb187efe84893fd58ddd933/src/lib/FontManager.ts#L245)
 
 An array of supported characters in the set font.
 
@@ -89,7 +89,7 @@ An array of supported characters in the set font.
 
 > **get** **font**(): `Font`
 
-Defined in: [FontManager.ts:232](https://github.com/humanbydefinition/p5-asciify/blob/240f04ae8120d8b0eda0aa09e3fda1b41eb9a25b/src/lib/FontManager.ts#L232)
+Defined in: [FontManager.ts:232](https://github.com/humanbydefinition/p5.asciify/blob/799e83eb3a285fe5bbb187efe84893fd58ddd933/src/lib/FontManager.ts#L232)
 
 The `p5.Font` object used for ASCII rendering.
 
@@ -115,7 +115,7 @@ The `p5.Font` object used for ASCII rendering.
 
 > **getUnsupportedCharacters**(`characters`): `string`[]
 
-Defined in: [FontManager.ts:154](https://github.com/humanbydefinition/p5-asciify/blob/240f04ae8120d8b0eda0aa09e3fda1b41eb9a25b/src/lib/FontManager.ts#L154)
+Defined in: [FontManager.ts:154](https://github.com/humanbydefinition/p5.asciify/blob/799e83eb3a285fe5bbb187efe84893fd58ddd933/src/lib/FontManager.ts#L154)
 
 Returns an array of characters that are not supported by the current font.
 
@@ -146,7 +146,7 @@ An array of unsupported characters. List is empty if all characters are supporte
 
 > **glyphColor**(`char`): \[`number`, `number`, `number`\]
 
-Defined in: [FontManager.ts:129](https://github.com/humanbydefinition/p5-asciify/blob/240f04ae8120d8b0eda0aa09e3fda1b41eb9a25b/src/lib/FontManager.ts#L129)
+Defined in: [FontManager.ts:129](https://github.com/humanbydefinition/p5.asciify/blob/799e83eb3a285fe5bbb187efe84893fd58ddd933/src/lib/FontManager.ts#L129)
 
 Gets the color of a character in the font.
 
@@ -184,7 +184,7 @@ An array containing the RGB color values for the character,
 
 > **glyphColors**(`characters`): \[`number`, `number`, `number`\][]
 
-Defined in: [FontManager.ts:204](https://github.com/humanbydefinition/p5-asciify/blob/240f04ae8120d8b0eda0aa09e3fda1b41eb9a25b/src/lib/FontManager.ts#L204)
+Defined in: [FontManager.ts:204](https://github.com/humanbydefinition/p5.asciify/blob/799e83eb3a285fe5bbb187efe84893fd58ddd933/src/lib/FontManager.ts#L204)
 
 Gets an array of RGB colors for a given string of characters.
 
@@ -220,7 +220,7 @@ Array of RGB color values.
 
 > **loadFont**(`font`, `onSuccess`?): `void`
 
-Defined in: [FontManager.ts:64](https://github.com/humanbydefinition/p5-asciify/blob/240f04ae8120d8b0eda0aa09e3fda1b41eb9a25b/src/lib/FontManager.ts#L64)
+Defined in: [FontManager.ts:64](https://github.com/humanbydefinition/p5.asciify/blob/799e83eb3a285fe5bbb187efe84893fd58ddd933/src/lib/FontManager.ts#L64)
 
 Loads a font for ASCII rendering.
 
@@ -249,7 +249,7 @@ as other components won't be automatically updated.**
 
 > **validateCharacters**(`characters`): `void`
 
-Defined in: [FontManager.ts:182](https://github.com/humanbydefinition/p5-asciify/blob/240f04ae8120d8b0eda0aa09e3fda1b41eb9a25b/src/lib/FontManager.ts#L182)
+Defined in: [FontManager.ts:182](https://github.com/humanbydefinition/p5.asciify/blob/799e83eb3a285fe5bbb187efe84893fd58ddd933/src/lib/FontManager.ts#L182)
 
 Validates a string of characters against the current font.
 

@@ -1,4 +1,4 @@
-[**p5.asciify v0.7.1**](../../../README.md)
+[**p5.asciify v0.7.3**](../../../README.md)
 
 ***
 
@@ -6,7 +6,7 @@
 
 # Class: P5AsciifyBrightnessRenderer
 
-Defined in: [renderers/brightness/BrightnessAsciiRenderer.ts:36](https://github.com/humanbydefinition/p5-asciify/blob/240f04ae8120d8b0eda0aa09e3fda1b41eb9a25b/src/lib/renderers/brightness/BrightnessAsciiRenderer.ts#L36)
+Defined in: [renderers/brightness/BrightnessAsciiRenderer.ts:36](https://github.com/humanbydefinition/p5.asciify/blob/799e83eb3a285fe5bbb187efe84893fd58ddd933/src/lib/renderers/brightness/BrightnessAsciiRenderer.ts#L36)
 
 ASCII Renderer that uses brightness to determine the ASCII characters to use from the 1D character set.
 
@@ -20,7 +20,7 @@ ASCII Renderer that uses brightness to determine the ASCII characters to use fro
 
 > **new P5AsciifyBrightnessRenderer**(`p5Instance`, `grid`, `fontTextureAtlas`, `options`): [`P5AsciifyBrightnessRenderer`](P5AsciifyBrightnessRenderer.md)
 
-Defined in: [renderers/brightness/BrightnessAsciiRenderer.ts:41](https://github.com/humanbydefinition/p5-asciify/blob/240f04ae8120d8b0eda0aa09e3fda1b41eb9a25b/src/lib/renderers/brightness/BrightnessAsciiRenderer.ts#L41)
+Defined in: [renderers/brightness/BrightnessAsciiRenderer.ts:41](https://github.com/humanbydefinition/p5.asciify/blob/799e83eb3a285fe5bbb187efe84893fd58ddd933/src/lib/renderers/brightness/BrightnessAsciiRenderer.ts#L41)
 
 #### Parameters
 
@@ -47,7 +47,7 @@ Defined in: [renderers/brightness/BrightnessAsciiRenderer.ts:41](https://github.
 
 > **get** **characterColorPalette**(): [`P5AsciifyColorPalette`](../../../classes/P5AsciifyColorPalette.md)
 
-Defined in: [renderers/AsciiRenderer.ts:400](https://github.com/humanbydefinition/p5-asciify/blob/240f04ae8120d8b0eda0aa09e3fda1b41eb9a25b/src/lib/renderers/AsciiRenderer.ts#L400)
+Defined in: [renderers/AsciiRenderer.ts:400](https://github.com/humanbydefinition/p5.asciify/blob/799e83eb3a285fe5bbb187efe84893fd58ddd933/src/lib/renderers/AsciiRenderer.ts#L400)
 
 Get the color palette object containing colors that correspond to the defined character set.
 
@@ -71,7 +71,7 @@ which are then translated to ASCII characters.
 
 > **get** **characterFramebuffer**(): `Framebuffer`
 
-Defined in: [renderers/AsciiRenderer.ts:413](https://github.com/humanbydefinition/p5-asciify/blob/240f04ae8120d8b0eda0aa09e3fda1b41eb9a25b/src/lib/renderers/AsciiRenderer.ts#L413)
+Defined in: [renderers/AsciiRenderer.ts:413](https://github.com/humanbydefinition/p5.asciify/blob/799e83eb3a285fe5bbb187efe84893fd58ddd933/src/lib/renderers/AsciiRenderer.ts#L413)
 
 ##### Returns
 
@@ -89,7 +89,7 @@ Defined in: [renderers/AsciiRenderer.ts:413](https://github.com/humanbydefinitio
 
 > **get** **inversionFramebuffer**(): `Framebuffer`
 
-Defined in: [renderers/AsciiRenderer.ts:411](https://github.com/humanbydefinition/p5-asciify/blob/240f04ae8120d8b0eda0aa09e3fda1b41eb9a25b/src/lib/renderers/AsciiRenderer.ts#L411)
+Defined in: [renderers/AsciiRenderer.ts:411](https://github.com/humanbydefinition/p5.asciify/blob/799e83eb3a285fe5bbb187efe84893fd58ddd933/src/lib/renderers/AsciiRenderer.ts#L411)
 
 ##### Returns
 
@@ -107,7 +107,7 @@ Defined in: [renderers/AsciiRenderer.ts:411](https://github.com/humanbydefinitio
 
 > **get** **options**(): [`AsciiRendererOptions`](../type-aliases/AsciiRendererOptions.md)
 
-Defined in: [renderers/AsciiRenderer.ts:408](https://github.com/humanbydefinition/p5-asciify/blob/240f04ae8120d8b0eda0aa09e3fda1b41eb9a25b/src/lib/renderers/AsciiRenderer.ts#L408)
+Defined in: [renderers/AsciiRenderer.ts:408](https://github.com/humanbydefinition/p5.asciify/blob/799e83eb3a285fe5bbb187efe84893fd58ddd933/src/lib/renderers/AsciiRenderer.ts#L408)
 
 ##### Returns
 
@@ -125,7 +125,7 @@ Defined in: [renderers/AsciiRenderer.ts:408](https://github.com/humanbydefinitio
 
 > **get** **outputFramebuffer**(): `Framebuffer`
 
-Defined in: [renderers/AsciiRenderer.ts:407](https://github.com/humanbydefinition/p5-asciify/blob/240f04ae8120d8b0eda0aa09e3fda1b41eb9a25b/src/lib/renderers/AsciiRenderer.ts#L407)
+Defined in: [renderers/AsciiRenderer.ts:407](https://github.com/humanbydefinition/p5.asciify/blob/799e83eb3a285fe5bbb187efe84893fd58ddd933/src/lib/renderers/AsciiRenderer.ts#L407)
 
 Get the output framebuffer, where the final ASCII conversion is rendered.
 
@@ -147,7 +147,7 @@ Can also contain grid cells filled with ASCII characters by previous renderers.
 
 > **get** **primaryColorFramebuffer**(): `Framebuffer`
 
-Defined in: [renderers/AsciiRenderer.ts:409](https://github.com/humanbydefinition/p5-asciify/blob/240f04ae8120d8b0eda0aa09e3fda1b41eb9a25b/src/lib/renderers/AsciiRenderer.ts#L409)
+Defined in: [renderers/AsciiRenderer.ts:409](https://github.com/humanbydefinition/p5.asciify/blob/799e83eb3a285fe5bbb187efe84893fd58ddd933/src/lib/renderers/AsciiRenderer.ts#L409)
 
 ##### Returns
 
@@ -165,7 +165,7 @@ Defined in: [renderers/AsciiRenderer.ts:409](https://github.com/humanbydefinitio
 
 > **get** **rotationFramebuffer**(): `Framebuffer`
 
-Defined in: [renderers/AsciiRenderer.ts:412](https://github.com/humanbydefinition/p5-asciify/blob/240f04ae8120d8b0eda0aa09e3fda1b41eb9a25b/src/lib/renderers/AsciiRenderer.ts#L412)
+Defined in: [renderers/AsciiRenderer.ts:412](https://github.com/humanbydefinition/p5.asciify/blob/799e83eb3a285fe5bbb187efe84893fd58ddd933/src/lib/renderers/AsciiRenderer.ts#L412)
 
 ##### Returns
 
@@ -183,7 +183,7 @@ Defined in: [renderers/AsciiRenderer.ts:412](https://github.com/humanbydefinitio
 
 > **get** **secondaryColorFramebuffer**(): `Framebuffer`
 
-Defined in: [renderers/AsciiRenderer.ts:410](https://github.com/humanbydefinition/p5-asciify/blob/240f04ae8120d8b0eda0aa09e3fda1b41eb9a25b/src/lib/renderers/AsciiRenderer.ts#L410)
+Defined in: [renderers/AsciiRenderer.ts:410](https://github.com/humanbydefinition/p5.asciify/blob/799e83eb3a285fe5bbb187efe84893fd58ddd933/src/lib/renderers/AsciiRenderer.ts#L410)
 
 ##### Returns
 
@@ -199,7 +199,7 @@ Defined in: [renderers/AsciiRenderer.ts:410](https://github.com/humanbydefinitio
 
 > **backgroundColor**(`color`): `void`
 
-Defined in: [renderers/AsciiRenderer.ts:297](https://github.com/humanbydefinition/p5-asciify/blob/240f04ae8120d8b0eda0aa09e3fda1b41eb9a25b/src/lib/renderers/AsciiRenderer.ts#L297)
+Defined in: [renderers/AsciiRenderer.ts:297](https://github.com/humanbydefinition/p5.asciify/blob/799e83eb3a285fe5bbb187efe84893fd58ddd933/src/lib/renderers/AsciiRenderer.ts#L297)
 
 Set the background color of the ASCII characters, used in the fixed color mode.
 
@@ -223,7 +223,7 @@ Set the background color of the ASCII characters, used in the fixed color mode.
 
 > **backgroundColorMode**(`mode`): `void`
 
-Defined in: [renderers/AsciiRenderer.ts:331](https://github.com/humanbydefinition/p5-asciify/blob/240f04ae8120d8b0eda0aa09e3fda1b41eb9a25b/src/lib/renderers/AsciiRenderer.ts#L331)
+Defined in: [renderers/AsciiRenderer.ts:331](https://github.com/humanbydefinition/p5.asciify/blob/799e83eb3a285fe5bbb187efe84893fd58ddd933/src/lib/renderers/AsciiRenderer.ts#L331)
 
 Sets the color mode for the grid cell background.
 
@@ -251,7 +251,7 @@ If mode is not a string or not one of the allowed values ('sampled' or 'fixed')
 
 > **characterColor**(`color`): `void`
 
-Defined in: [renderers/AsciiRenderer.ts:285](https://github.com/humanbydefinition/p5-asciify/blob/240f04ae8120d8b0eda0aa09e3fda1b41eb9a25b/src/lib/renderers/AsciiRenderer.ts#L285)
+Defined in: [renderers/AsciiRenderer.ts:285](https://github.com/humanbydefinition/p5.asciify/blob/799e83eb3a285fe5bbb187efe84893fd58ddd933/src/lib/renderers/AsciiRenderer.ts#L285)
 
 Set the color of the ASCII characters, used in the fixed color mode.
 
@@ -279,7 +279,7 @@ If color is not a p5.Color object.
 
 > **characterColorMode**(`mode`): `void`
 
-Defined in: [renderers/AsciiRenderer.ts:310](https://github.com/humanbydefinition/p5-asciify/blob/240f04ae8120d8b0eda0aa09e3fda1b41eb9a25b/src/lib/renderers/AsciiRenderer.ts#L310)
+Defined in: [renderers/AsciiRenderer.ts:310](https://github.com/humanbydefinition/p5.asciify/blob/799e83eb3a285fe5bbb187efe84893fd58ddd933/src/lib/renderers/AsciiRenderer.ts#L310)
 
 Sets the color mode for ASCII characters.
 
@@ -307,7 +307,7 @@ If mode is not a string or not one of the allowed values ('sampled' or 'fixed')
 
 > **characters**(`characters`): `void`
 
-Defined in: [renderers/AsciiRenderer.ts:229](https://github.com/humanbydefinition/p5-asciify/blob/240f04ae8120d8b0eda0aa09e3fda1b41eb9a25b/src/lib/renderers/AsciiRenderer.ts#L229)
+Defined in: [renderers/AsciiRenderer.ts:229](https://github.com/humanbydefinition/p5.asciify/blob/799e83eb3a285fe5bbb187efe84893fd58ddd933/src/lib/renderers/AsciiRenderer.ts#L229)
 
 Set the characters for the character set.
 
@@ -335,7 +335,7 @@ If characters is not a string.
 
 > **disable**(): `void`
 
-Defined in: [renderers/AsciiRenderer.ts:388](https://github.com/humanbydefinition/p5-asciify/blob/240f04ae8120d8b0eda0aa09e3fda1b41eb9a25b/src/lib/renderers/AsciiRenderer.ts#L388)
+Defined in: [renderers/AsciiRenderer.ts:388](https://github.com/humanbydefinition/p5.asciify/blob/799e83eb3a285fe5bbb187efe84893fd58ddd933/src/lib/renderers/AsciiRenderer.ts#L388)
 
 Disable the renderer.
 
@@ -353,7 +353,7 @@ Disable the renderer.
 
 > **enable**(): `void`
 
-Defined in: [renderers/AsciiRenderer.ts:381](https://github.com/humanbydefinition/p5-asciify/blob/240f04ae8120d8b0eda0aa09e3fda1b41eb9a25b/src/lib/renderers/AsciiRenderer.ts#L381)
+Defined in: [renderers/AsciiRenderer.ts:381](https://github.com/humanbydefinition/p5.asciify/blob/799e83eb3a285fe5bbb187efe84893fd58ddd933/src/lib/renderers/AsciiRenderer.ts#L381)
 
 Enable the renderer.
 
@@ -371,7 +371,7 @@ Enable the renderer.
 
 > **enabled**(`enabled`): `void`
 
-Defined in: [renderers/AsciiRenderer.ts:352](https://github.com/humanbydefinition/p5-asciify/blob/240f04ae8120d8b0eda0aa09e3fda1b41eb9a25b/src/lib/renderers/AsciiRenderer.ts#L352)
+Defined in: [renderers/AsciiRenderer.ts:352](https://github.com/humanbydefinition/p5.asciify/blob/799e83eb3a285fe5bbb187efe84893fd58ddd933/src/lib/renderers/AsciiRenderer.ts#L352)
 
 Enable or disable the renderer.
 
@@ -399,7 +399,7 @@ If enabled is not a boolean.
 
 > **invert**(`invert`): `void`
 
-Defined in: [renderers/AsciiRenderer.ts:247](https://github.com/humanbydefinition/p5-asciify/blob/240f04ae8120d8b0eda0aa09e3fda1b41eb9a25b/src/lib/renderers/AsciiRenderer.ts#L247)
+Defined in: [renderers/AsciiRenderer.ts:247](https://github.com/humanbydefinition/p5.asciify/blob/799e83eb3a285fe5bbb187efe84893fd58ddd933/src/lib/renderers/AsciiRenderer.ts#L247)
 
 Invert the colors of the ASCII character and cell background colors.
 
@@ -427,7 +427,7 @@ If invert is not a boolean.
 
 > **render**(`inputFramebuffer`, `previousAsciiRenderer`): `void`
 
-Defined in: [renderers/brightness/BrightnessAsciiRenderer.ts:62](https://github.com/humanbydefinition/p5-asciify/blob/240f04ae8120d8b0eda0aa09e3fda1b41eb9a25b/src/lib/renderers/brightness/BrightnessAsciiRenderer.ts#L62)
+Defined in: [renderers/brightness/BrightnessAsciiRenderer.ts:62](https://github.com/humanbydefinition/p5.asciify/blob/799e83eb3a285fe5bbb187efe84893fd58ddd933/src/lib/renderers/brightness/BrightnessAsciiRenderer.ts#L62)
 
 Convert and render the input framebuffer to ASCII.
 
@@ -452,7 +452,7 @@ Convert and render the input framebuffer to ASCII.
 
 > **resetShaders**(): `void`
 
-Defined in: [renderers/AsciiRenderer.ts:151](https://github.com/humanbydefinition/p5-asciify/blob/240f04ae8120d8b0eda0aa09e3fda1b41eb9a25b/src/lib/renderers/AsciiRenderer.ts#L151)
+Defined in: [renderers/AsciiRenderer.ts:151](https://github.com/humanbydefinition/p5.asciify/blob/799e83eb3a285fe5bbb187efe84893fd58ddd933/src/lib/renderers/AsciiRenderer.ts#L151)
 
 Resets the shaders for the renderer.
 
@@ -470,7 +470,7 @@ Resets the shaders for the renderer.
 
 > **resizeFramebuffers**(): `void`
 
-Defined in: [renderers/brightness/BrightnessAsciiRenderer.ts:57](https://github.com/humanbydefinition/p5-asciify/blob/240f04ae8120d8b0eda0aa09e3fda1b41eb9a25b/src/lib/renderers/brightness/BrightnessAsciiRenderer.ts#L57)
+Defined in: [renderers/brightness/BrightnessAsciiRenderer.ts:57](https://github.com/humanbydefinition/p5.asciify/blob/799e83eb3a285fe5bbb187efe84893fd58ddd933/src/lib/renderers/brightness/BrightnessAsciiRenderer.ts#L57)
 
 Resizes all framebuffers based on the grid dimensions.
 
@@ -488,7 +488,7 @@ Resizes all framebuffers based on the grid dimensions.
 
 > **rotation**(`angle`): `void`
 
-Defined in: [renderers/AsciiRenderer.ts:264](https://github.com/humanbydefinition/p5-asciify/blob/240f04ae8120d8b0eda0aa09e3fda1b41eb9a25b/src/lib/renderers/AsciiRenderer.ts#L264)
+Defined in: [renderers/AsciiRenderer.ts:264](https://github.com/humanbydefinition/p5.asciify/blob/799e83eb3a285fe5bbb187efe84893fd58ddd933/src/lib/renderers/AsciiRenderer.ts#L264)
 
 Define the rotation angle of all characters in the grid in degrees.
 
@@ -520,7 +520,7 @@ If angle is not a number.
 
 > **update**(`newOptions`): `void`
 
-Defined in: [renderers/AsciiRenderer.ts:157](https://github.com/humanbydefinition/p5-asciify/blob/240f04ae8120d8b0eda0aa09e3fda1b41eb9a25b/src/lib/renderers/AsciiRenderer.ts#L157)
+Defined in: [renderers/AsciiRenderer.ts:157](https://github.com/humanbydefinition/p5.asciify/blob/799e83eb3a285fe5bbb187efe84893fd58ddd933/src/lib/renderers/AsciiRenderer.ts#L157)
 
 Updates renderer options.
 

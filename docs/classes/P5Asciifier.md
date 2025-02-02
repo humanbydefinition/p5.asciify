@@ -1,4 +1,4 @@
-[**p5.asciify v0.7.1**](../README.md)
+[**p5.asciify v0.7.3**](../README.md)
 
 ***
 
@@ -6,7 +6,7 @@
 
 # Class: P5Asciifier
 
-Defined in: [Asciifier.ts:17](https://github.com/humanbydefinition/p5-asciify/blob/240f04ae8120d8b0eda0aa09e3fda1b41eb9a25b/src/lib/Asciifier.ts#L17)
+Defined in: [Asciifier.ts:17](https://github.com/humanbydefinition/p5.asciify/blob/799e83eb3a285fe5bbb187efe84893fd58ddd933/src/lib/Asciifier.ts#L17)
 
 The main class for the `p5.asciify` library, 
 responsible for setting up the library, managing its properties, and providing an interface for interacting with the library.
@@ -33,7 +33,7 @@ Currently, this class is not designed to be instantiated by the user. Use the `p
 
 > **get** **fontManager**(): [`P5AsciifyFontManager`](P5AsciifyFontManager.md)
 
-Defined in: [Asciifier.ts:425](https://github.com/humanbydefinition/p5-asciify/blob/240f04ae8120d8b0eda0aa09e3fda1b41eb9a25b/src/lib/Asciifier.ts#L425)
+Defined in: [Asciifier.ts:435](https://github.com/humanbydefinition/p5.asciify/blob/799e83eb3a285fe5bbb187efe84893fd58ddd933/src/lib/Asciifier.ts#L435)
 
 Returns the font manager, which manages the font and provides methods to access font properties.
 
@@ -58,7 +58,7 @@ Returns the font manager, which manages the font and provides methods to access 
 
 > **get** **fontTextureAtlas**(): [`P5AsciifyFontTextureAtlas`](P5AsciifyFontTextureAtlas.md)
 
-Defined in: [Asciifier.ts:412](https://github.com/humanbydefinition/p5-asciify/blob/240f04ae8120d8b0eda0aa09e3fda1b41eb9a25b/src/lib/Asciifier.ts#L412)
+Defined in: [Asciifier.ts:422](https://github.com/humanbydefinition/p5.asciify/blob/799e83eb3a285fe5bbb187efe84893fd58ddd933/src/lib/Asciifier.ts#L422)
 
 Returns the font texture atlas, which contains the texture with all glyphs of the font set in the font manager.
 
@@ -84,7 +84,7 @@ Returns the font texture atlas, which contains the texture with all glyphs of th
 
 > **get** **grid**(): [`P5AsciifyGrid`](P5AsciifyGrid.md)
 
-Defined in: [Asciifier.ts:398](https://github.com/humanbydefinition/p5-asciify/blob/240f04ae8120d8b0eda0aa09e3fda1b41eb9a25b/src/lib/Asciifier.ts#L398)
+Defined in: [Asciifier.ts:408](https://github.com/humanbydefinition/p5.asciify/blob/799e83eb3a285fe5bbb187efe84893fd58ddd933/src/lib/Asciifier.ts#L408)
 
 Returns the grid, which contains the dimensions and offsets to create a perfect grid based on the canvas and font glyph dimensions.
 
@@ -111,7 +111,7 @@ function setupAsciify() {
 
 > **get** **sketchFramebuffer**(): `Framebuffer`
 
-Defined in: [Asciifier.ts:432](https://github.com/humanbydefinition/p5-asciify/blob/240f04ae8120d8b0eda0aa09e3fda1b41eb9a25b/src/lib/Asciifier.ts#L432)
+Defined in: [Asciifier.ts:442](https://github.com/humanbydefinition/p5.asciify/blob/799e83eb3a285fe5bbb187efe84893fd58ddd933/src/lib/Asciifier.ts#L442)
 
 Returns the sketch framebuffer, which contains the output of the user's `draw()` function to asciify.
 
@@ -129,7 +129,7 @@ There is no real reason to access this in a `p5.js` sketch, but I'm happy to be 
 
 > **get** **texture**(): `Framebuffer`
 
-Defined in: [Asciifier.ts:457](https://github.com/humanbydefinition/p5-asciify/blob/240f04ae8120d8b0eda0aa09e3fda1b41eb9a25b/src/lib/Asciifier.ts#L457)
+Defined in: [Asciifier.ts:467](https://github.com/humanbydefinition/p5.asciify/blob/799e83eb3a285fe5bbb187efe84893fd58ddd933/src/lib/Asciifier.ts#L467)
 
 Returns the ASCII output texture as a p5.Framebuffer, which can be used for further processing or rendering.
 Can also be used via the p5.js `texture()` function.
@@ -164,7 +164,7 @@ Can also be used via the p5.js `texture()` function.
 
 > **asciify**(): `void`
 
-Defined in: [Asciifier.ts:106](https://github.com/humanbydefinition/p5-asciify/blob/240f04ae8120d8b0eda0aa09e3fda1b41eb9a25b/src/lib/Asciifier.ts#L106)
+Defined in: [Asciifier.ts:116](https://github.com/humanbydefinition/p5.asciify/blob/799e83eb3a285fe5bbb187efe84893fd58ddd933/src/lib/Asciifier.ts#L116)
 
 Renders the ASCII output to the canvas.
 
@@ -180,7 +180,7 @@ Renders the ASCII output to the canvas.
 
 > **background**(`color`): `void`
 
-Defined in: [Asciifier.ts:235](https://github.com/humanbydefinition/p5-asciify/blob/240f04ae8120d8b0eda0aa09e3fda1b41eb9a25b/src/lib/Asciifier.ts#L235)
+Defined in: [Asciifier.ts:245](https://github.com/humanbydefinition/p5.asciify/blob/799e83eb3a285fe5bbb187efe84893fd58ddd933/src/lib/Asciifier.ts#L245)
 
 Sets the background color for the ascii renderering. 
 
@@ -215,7 +215,7 @@ Covers all the transparent space, including the edges of the canvas, which might
 
 > **fill**(`character`): `void`
 
-Defined in: [Asciifier.ts:381](https://github.com/humanbydefinition/p5-asciify/blob/240f04ae8120d8b0eda0aa09e3fda1b41eb9a25b/src/lib/Asciifier.ts#L381)
+Defined in: [Asciifier.ts:391](https://github.com/humanbydefinition/p5.asciify/blob/799e83eb3a285fe5bbb187efe84893fd58ddd933/src/lib/Asciifier.ts#L391)
 
 Sets the p5.js `fill()` color to the color of the given character in the font texture atlas.
 
@@ -279,7 +279,7 @@ which is used to convert the pixel data to ASCII characters.
 
 > **fontSize**(`fontSize`): `void`
 
-Defined in: [Asciifier.ts:129](https://github.com/humanbydefinition/p5-asciify/blob/240f04ae8120d8b0eda0aa09e3fda1b41eb9a25b/src/lib/Asciifier.ts#L129)
+Defined in: [Asciifier.ts:139](https://github.com/humanbydefinition/p5.asciify/blob/799e83eb3a285fe5bbb187efe84893fd58ddd933/src/lib/Asciifier.ts#L139)
 
 Sets the font size for the ASCII renderers.
 
@@ -308,7 +308,7 @@ Sets the font size for the ASCII renderers.
 
 > **init**(`p`, `fontBase64`): `void`
 
-Defined in: [Asciifier.ts:49](https://github.com/humanbydefinition/p5-asciify/blob/240f04ae8120d8b0eda0aa09e3fda1b41eb9a25b/src/lib/Asciifier.ts#L49)
+Defined in: [Asciifier.ts:49](https://github.com/humanbydefinition/p5.asciify/blob/799e83eb3a285fe5bbb187efe84893fd58ddd933/src/lib/Asciifier.ts#L49)
 
 Initializes the `p5.asciify` library by setting the `p5.js` instance and loading the font manager with the default font.
 
@@ -332,10 +332,10 @@ otherwise causing unexpected behavior.**
 
 > **instance**(`p`): `void`
 
-Defined in: [Asciifier.ts:97](https://github.com/humanbydefinition/p5-asciify/blob/240f04ae8120d8b0eda0aa09e3fda1b41eb9a25b/src/lib/Asciifier.ts#L97)
+Defined in: [Asciifier.ts:105](https://github.com/humanbydefinition/p5.asciify/blob/799e83eb3a285fe5bbb187efe84893fd58ddd933/src/lib/Asciifier.ts#L105)
 
-Deprecated method to initialize p5.asciify with the p5.js instance manually in `INSTANCE` mode.
-Doesn't do anything now except logging a warning.
+Necessary to call in p5.js `INSTANCE` mode to ensure a `preload` function is defined.
+Otherwise an empty `preload` method is defined, so the preload loop is executed and the font provided by `p5.asciify` is loaded properly.
 
 #### Parameters
 
@@ -347,13 +347,27 @@ Doesn't do anything now except logging a warning.
 
 `void`
 
+#### Example
+
+```javascript
+ import p5 from 'p5';
+ import { p5asciify } from '../../src/lib/index';
+
+ const sketch = (p) => {
+     p5asciify.instance(p);
+
+     // ... your sketch code
+ }
+
+new p5(sketch);
+
 ***
 
 ### loadFont()
 
 > **loadFont**(`font`, `options`, `onSuccess`?): `void`
 
-Defined in: [Asciifier.ts:190](https://github.com/humanbydefinition/p5-asciify/blob/240f04ae8120d8b0eda0aa09e3fda1b41eb9a25b/src/lib/Asciifier.ts#L190)
+Defined in: [Asciifier.ts:200](https://github.com/humanbydefinition/p5.asciify/blob/799e83eb3a285fe5bbb187efe84893fd58ddd933/src/lib/Asciifier.ts#L200)
 
 Sets the font for the ascii renderers.
 
@@ -396,7 +410,7 @@ Sets the font for the ascii renderers.
 
 > **renderers**(): [`P5AsciifyRendererManager`](../namespaces/renderers/classes/P5AsciifyRendererManager.md)
 
-Defined in: [Asciifier.ts:160](https://github.com/humanbydefinition/p5-asciify/blob/240f04ae8120d8b0eda0aa09e3fda1b41eb9a25b/src/lib/Asciifier.ts#L160)
+Defined in: [Asciifier.ts:170](https://github.com/humanbydefinition/p5.asciify/blob/799e83eb3a285fe5bbb187efe84893fd58ddd933/src/lib/Asciifier.ts#L170)
 
 Returns the renderer manager, containing all ASCII renderers in the rendering loop.
 
@@ -426,7 +440,7 @@ The renderer manager.
 
 > **saveStrings**(`filename`): `void`
 
-Defined in: [Asciifier.ts:322](https://github.com/humanbydefinition/p5-asciify/blob/240f04ae8120d8b0eda0aa09e3fda1b41eb9a25b/src/lib/Asciifier.ts#L322)
+Defined in: [Asciifier.ts:332](https://github.com/humanbydefinition/p5.asciify/blob/799e83eb3a285fe5bbb187efe84893fd58ddd933/src/lib/Asciifier.ts#L332)
 
 Saves the ASCII output to a text file.
 
@@ -461,7 +475,7 @@ function drawAsciify() {
 
 > **setup**(): `void`
 
-Defined in: [Asciifier.ts:65](https://github.com/humanbydefinition/p5-asciify/blob/240f04ae8120d8b0eda0aa09e3fda1b41eb9a25b/src/lib/Asciifier.ts#L65)
+Defined in: [Asciifier.ts:60](https://github.com/humanbydefinition/p5.asciify/blob/799e83eb3a285fe5bbb187efe84893fd58ddd933/src/lib/Asciifier.ts#L60)
 
 Sets up the `p5.asciify` library by initializing the font texture atlas, grid, renderer manager, and sketch framebuffer.
 
@@ -478,7 +492,7 @@ Calling this function manually would reset the library and previously made setti
 
 > **toString**(): `string`
 
-Defined in: [Asciifier.ts:303](https://github.com/humanbydefinition/p5-asciify/blob/240f04ae8120d8b0eda0aa09e3fda1b41eb9a25b/src/lib/Asciifier.ts#L303)
+Defined in: [Asciifier.ts:313](https://github.com/humanbydefinition/p5.asciify/blob/799e83eb3a285fe5bbb187efe84893fd58ddd933/src/lib/Asciifier.ts#L313)
 
 Returns the current ASCII output as a string.
 
