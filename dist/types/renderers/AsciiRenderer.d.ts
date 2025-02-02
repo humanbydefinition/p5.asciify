@@ -3,7 +3,7 @@ import { P5AsciifyGrid } from '../Grid';
 import { P5AsciifyColorPalette } from '../ColorPalette';
 import { P5AsciifyFontTextureAtlas } from '../FontTextureAtlas';
 import { AsciiRendererOptions } from './types';
-/** Default configuration options for custom ASCII renderer */
+/** Default configuration options for `"custom"` ASCII renderer */
 export declare const CUSTOM_DEFAULT_OPTIONS: {
     /** Enable/disable the renderer */
     enabled: boolean;
@@ -13,7 +13,7 @@ export declare const CUSTOM_DEFAULT_OPTIONS: {
     rotationAngle: number;
 };
 /**
- * Class for shader-based ASCII Renderers.
+ * Base ASCII renderer class for custom shader-based ASCII Renderers.
  */
 export declare class P5AsciifyRenderer {
     /** The p5 instance. */
@@ -34,10 +34,26 @@ export declare class P5AsciifyRenderer {
     protected _characterFramebuffer: p5.Framebuffer;
     /** The inversion framebuffer, whose pixels define whether to swap the character and background colors. */
     protected _inversionFramebuffer: p5.Framebuffer;
+    protected _rotationFramebuffer: p5.Framebuffer;
     /** The output framebuffer, where the final ASCII conversion is rendered. */
     protected _outputFramebuffer: p5.Framebuffer;
     /** The shader used for the ASCII conversion. */
     protected _shader: p5.Shader;
+    /**
+     * Creates a new ASCII renderer instance.
+     *
+     * @remarks
+     * This constructor is meant for internal use by the `p5.asciify` library.
+     *
+     * To create renderers, use `p5asciify.renderers().add()`.
+     * This will also return an instance of the renderer, which can be used to modify the renderer's properties.
+     * Additionally, the renderer will also be added to the end of the rendering pipeline automatically.
+     *
+     * @param _p The p5 instance.
+     * @param _grid Grid object containing the relevant grid information.
+     * @param _fontTextureAtlas The font texture atlas containing the ASCII characters texture.
+     * @param _options The options for the ASCII renderer.
+     */
     constructor(
     /** The p5 instance. */
     _p: p5, 
@@ -125,11 +141,24 @@ export declare class P5AsciifyRenderer {
      * Disable the renderer.
      */
     disable(): void;
+    /**
+     * Get the color palette object containing colors that correspond to the defined character set.
+     *
+     * Not relevant for this base class,
+     * but used in derived classes for mapping brightness values to those colors for example,
+     * which are then translated to ASCII characters.
+     */
     get characterColorPalette(): P5AsciifyColorPalette;
+    /**
+     * Get the output framebuffer, where the final ASCII conversion is rendered.
+     *
+     * Can also contain grid cells filled with ASCII characters by previous renderers.
+     */
     get outputFramebuffer(): p5.Framebuffer;
     get options(): AsciiRendererOptions;
     get primaryColorFramebuffer(): p5.Framebuffer;
     get secondaryColorFramebuffer(): p5.Framebuffer;
     get inversionFramebuffer(): p5.Framebuffer;
+    get rotationFramebuffer(): p5.Framebuffer;
     get characterFramebuffer(): p5.Framebuffer;
 }

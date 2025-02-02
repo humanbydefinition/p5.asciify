@@ -9,7 +9,7 @@ import { AsciiRendererOptions } from './types';
 import vertexShader from '../assets/shaders/vert/shader.vert';
 import asciiConversionShader from './_common_shaders/asciiConversion.frag';
 
-/** Default configuration options for custom ASCII renderer */
+/** Default configuration options for `"custom"` ASCII renderer */
 export const CUSTOM_DEFAULT_OPTIONS = {
     /** Enable/disable the renderer */
     enabled: false,
@@ -20,10 +20,10 @@ export const CUSTOM_DEFAULT_OPTIONS = {
 };
 
 /**
- * Class for shader-based ASCII Renderers.
+ * Base ASCII renderer class for custom shader-based ASCII Renderers.
  */
 export class P5AsciifyRenderer {
-    
+
     /** The color palette containing colors that correspond to the defined character set. */
     protected _characterColorPalette: P5AsciifyColorPalette;
 
@@ -39,12 +39,29 @@ export class P5AsciifyRenderer {
     /** The inversion framebuffer, whose pixels define whether to swap the character and background colors. */
     protected _inversionFramebuffer: p5.Framebuffer;
 
+    protected _rotationFramebuffer: p5.Framebuffer;
+
     /** The output framebuffer, where the final ASCII conversion is rendered. */
     protected _outputFramebuffer: p5.Framebuffer;
 
     /** The shader used for the ASCII conversion. */
     protected _shader: p5.Shader;
 
+    /**
+     * Creates a new ASCII renderer instance.
+     * 
+     * @remarks
+     * This constructor is meant for internal use by the `p5.asciify` library.
+     * 
+     * To create renderers, use `p5asciify.renderers().add()`.
+     * This will also return an instance of the renderer, which can be used to modify the renderer's properties.
+     * Additionally, the renderer will also be added to the end of the rendering pipeline automatically.
+     * 
+     * @param _p The p5 instance.
+     * @param _grid Grid object containing the relevant grid information.
+     * @param _fontTextureAtlas The font texture atlas containing the ASCII characters texture.
+     * @param _options The options for the ASCII renderer.
+     */
     constructor(
         /** The p5 instance. */
         protected _p: p5,
@@ -60,7 +77,7 @@ export class P5AsciifyRenderer {
     ) {
         this._options = { ...CUSTOM_DEFAULT_OPTIONS, ..._options };
 
-        this._characterColorPalette = new P5AsciifyColorPalette(this._p, this._fontTextureAtlas.getCharsetColorArray(this._options.characters));
+        this._characterColorPalette = new P5AsciifyColorPalette(this._p, this._fontTextureAtlas.fontManager.glyphColors(this._options.characters));
 
         this._primaryColorFramebuffer = this._p.createFramebuffer({
             density: 1,
@@ -98,6 +115,15 @@ export class P5AsciifyRenderer {
             textureFiltering: this._p.NEAREST
         });
 
+        this._rotationFramebuffer = this._p.createFramebuffer({
+            density: 1,
+            antialias: false,
+            width: this._grid.cols,
+            height: this._grid.rows,
+            depthFormat: this._p.UNSIGNED_INT,
+            textureFiltering: this._p.NEAREST
+        });
+
         this._outputFramebuffer = this._p.createFramebuffer({
             depthFormat: this._p.UNSIGNED_INT,
             textureFiltering: this._p.NEAREST
@@ -115,6 +141,7 @@ export class P5AsciifyRenderer {
         this._primaryColorFramebuffer.resize(this._grid.cols, this._grid.rows);
         this._secondaryColorFramebuffer.resize(this._grid.cols, this._grid.rows);
         this._inversionFramebuffer.resize(this._grid.cols, this._grid.rows);
+        this._rotationFramebuffer.resize(this._grid.cols, this._grid.rows);
         this._characterFramebuffer.resize(this._grid.cols, this._grid.rows);
     }
 
@@ -151,7 +178,7 @@ export class P5AsciifyRenderer {
         }
 
         if (newOptions?.rotationAngle !== undefined) {
-            this.rotation(newOptions.rotationAngle);
+            this.rotation(newOptions.rotationAngle as number);
         }
 
         if (newOptions?.characterColorMode !== undefined) {
@@ -169,6 +196,7 @@ export class P5AsciifyRenderer {
      * @param previousAsciiRenderer - The previous ASCII renderer in the pipeline.
      */
     public render(inputFramebuffer: p5.Framebuffer, previousAsciiRenderer: P5AsciifyRenderer): void {
+
         this._outputFramebuffer.begin();
         this._p.clear();
         this._p.shader(this._shader);
@@ -179,14 +207,16 @@ export class P5AsciifyRenderer {
         this._shader.setUniform('u_primaryColorTexture', this._primaryColorFramebuffer);
         this._shader.setUniform('u_secondaryColorTexture', this._secondaryColorFramebuffer);
         this._shader.setUniform('u_inversionTexture', this._inversionFramebuffer);
+        this._shader.setUniform('u_rotationTexture', this._rotationFramebuffer);
         this._shader.setUniform('u_asciiCharacterTexture', this._characterFramebuffer);
         if (previousAsciiRenderer !== this) {
             this._shader.setUniform('u_prevAsciiTexture', previousAsciiRenderer.outputFramebuffer);
+        } else {
+            this._shader.setUniform('u_prevAsciiTexture', inputFramebuffer);
         }
         this._shader.setUniform('u_gridPixelDimensions', [this._grid.width, this._grid.height]);
         this._shader.setUniform('u_gridOffsetDimensions', [this._grid.offsetX, this._grid.offsetY]);
         this._shader.setUniform('u_gridCellDimensions', [this._grid.cols, this._grid.rows]);
-        this._shader.setUniform('u_rotationAngle', this._p.radians(this._options.rotationAngle));
         this._p.rect(0, 0, this._p.width, this._p.height);
         this._outputFramebuffer.end();
     }
@@ -201,9 +231,9 @@ export class P5AsciifyRenderer {
             throw new P5AsciifyError('Characters must be a string.');
         }
 
-        this._fontTextureAtlas.validateCharacters(characters);
+        this._fontTextureAtlas.fontManager.validateCharacters(characters);
 
-        this._characterColorPalette.setColors(this._fontTextureAtlas.getCharsetColorArray(characters));
+        this._characterColorPalette.setColors(this._fontTextureAtlas.fontManager.glyphColors(characters));
         this.resetShaders();
 
         this._options.characters = characters;
@@ -233,10 +263,18 @@ export class P5AsciifyRenderer {
      */
     public rotation(angle: number): void {
         if (typeof angle !== 'number') {
-            throw new P5AsciifyError('Rotation angle must be a number.');
+            throw new P5AsciifyError('Rotation angle must be a number');
         }
 
-        this._options.rotationAngle = angle;
+        // Normalize angle to 0-360 range
+        angle = angle % 360;
+        if (angle < 0) angle += 360;
+
+        // Calculate red and green components
+        const red = Math.min(255, Math.floor(angle));
+        const green = angle > 255 ? Math.floor(angle - 255) : 0;
+
+        this._options.rotationAngle = this._p.color(red, green, 0);
     }
 
     /**
@@ -317,6 +355,24 @@ export class P5AsciifyRenderer {
         }
 
         this._options.enabled = enabled;
+
+        if (!enabled) {
+            // Clear all framebuffers
+            const framebuffers = [
+                this._primaryColorFramebuffer,
+                this._secondaryColorFramebuffer,
+                this._inversionFramebuffer,
+                this._rotationFramebuffer,
+                this._characterFramebuffer,
+                this._outputFramebuffer
+            ]
+
+            for (const framebuffer of framebuffers) {
+                framebuffer.begin();
+                this._p.clear();
+                framebuffer.end();
+            }
+        }
     }
 
     /**
@@ -333,12 +389,26 @@ export class P5AsciifyRenderer {
         this.enabled(false);
     }
 
-    // Getters
+
+    /**
+     * Get the color palette object containing colors that correspond to the defined character set.
+     * 
+     * Not relevant for this base class, 
+     * but used in derived classes for mapping brightness values to those colors for example, 
+     * which are then translated to ASCII characters.
+     */
     get characterColorPalette() { return this._characterColorPalette; }
+
+    /**
+     * Get the output framebuffer, where the final ASCII conversion is rendered.
+     * 
+     * Can also contain grid cells filled with ASCII characters by previous renderers.
+     */
     get outputFramebuffer() { return this._outputFramebuffer; }
     get options() { return this._options; }
     get primaryColorFramebuffer() { return this._primaryColorFramebuffer; }
     get secondaryColorFramebuffer() { return this._secondaryColorFramebuffer; }
     get inversionFramebuffer() { return this._inversionFramebuffer; }
+    get rotationFramebuffer() { return this._rotationFramebuffer; }
     get characterFramebuffer() { return this._characterFramebuffer; }
 }

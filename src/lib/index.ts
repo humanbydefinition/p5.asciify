@@ -6,7 +6,7 @@ import { compareVersions } from './utils';
 import { P5AsciifyGradientRenderer } from './renderers/gradient/GradientAsciiRenderer';
 
 /**
- * The main instance of the p5.asciify library, which is used to access all of the library's functionality.
+ * The main instance of the `p5.asciify` library, which is used to access all of the library's functionality.
  */
 export const p5asciify = new P5Asciifier();
 
@@ -20,10 +20,8 @@ if (typeof window !== 'undefined') {
  * Extend the p5.asciify instance to the p5 instance and run the p5.asciify init method
  */
 p5.prototype.registerMethod('init', function (this: p5) {
-  p5asciify.instance(this, false);
-
   this._incrementPreload();
-  p5asciify.loadFont(URSAFONT_BASE64);
+  p5asciify.init(this, URSAFONT_BASE64);
 });
 
 /**
@@ -72,6 +70,40 @@ p5.prototype.registerMethod("post", function (this: p5): void {
   }
 });
 
+/**
+ * A fix for the p5.js shaders to use highp precision instead of mediump.
+ * This is necessary for p5.asciify to work on Android devices.
+ * Generally, this is fixed in p5.js v1.11.3, but this is a workaround for older versions.
+ * As of now, p5.asciify supports p5.js v1.8.0 and higher.
+ */
+const shadersToReplace = [
+  ['_getImmediateModeShader', '_defaultImmediateModeShader'],
+  ['_getNormalShader', '_defaultNormalShader'],
+  ['_getColorShader', '_defaultColorShader'],
+  ['_getPointShader', '_defaultPointShader'],
+  ['_getLineShader', '_defaultLineShader'],
+  ['_getFontShader', '_defaultFontShader'],
+]
+
+for (const [method, cacheKey] of shadersToReplace) {
+  const prevMethod = p5.RendererGL.prototype[method]
+  p5.RendererGL.prototype[method] = function () {
+    if (!this[cacheKey]) {
+      this[cacheKey] = prevMethod.call(this)
+      this[cacheKey]._vertSrc = this[cacheKey]._vertSrc.replace(
+        /mediump/g,
+        'highp',
+      )
+      this[cacheKey]._fragSrc = this[cacheKey]._fragSrc.replace(
+        /mediump/g,
+        'highp',
+      )
+    }
+
+    return this[cacheKey]
+  }
+}
+
 /** Contains functionality relevant to the ASCII rendering. */
 export * as renderers from './renderers';
 
@@ -83,6 +115,7 @@ export { P5AsciifyError } from './AsciifyError';
 export { P5AsciifyColorPalette } from './ColorPalette';
 export { P5AsciifyFontTextureAtlas } from './FontTextureAtlas';
 export { P5AsciifyGrid } from './Grid';
+export { P5AsciifyFontManager } from './FontManager';
 export * from './types';
 
 

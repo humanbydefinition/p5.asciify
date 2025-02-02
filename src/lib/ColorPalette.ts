@@ -1,7 +1,11 @@
 import p5 from 'p5';
 
 /**
- * A 1D color palette stored in a framebuffer, which is used to pass colors to shaders.
+ * A 1D color palette stored in a framebuffer that is used to pass colors to shaders.
+ * 
+ * There is no need to modify instances of this class provided by the library, 
+ * as they are managed internally and can be modified more easily through classes managing them.
+ * But you technically could - *if you wanted to* - without breaking anything.
  */
 export class P5AsciifyColorPalette {
 
@@ -54,7 +58,7 @@ export class P5AsciifyColorPalette {
     }
 
     /**
-     * Set the colors of the palette and update the framebuffer.
+     * Sets the colors of the palette and updates the framebuffer.
      * @param newColors The new colors to set.
      */
     public setColors(newColors: [number, number, number][]): void {
@@ -62,7 +66,13 @@ export class P5AsciifyColorPalette {
         this._updateFramebuffer();
     }
 
-    // Getters
+    /**
+     * Get the colors of the palette.
+     */
     get colors(): [number, number, number][] { return this._colors; }
+
+    /**
+     * Get the framebuffer of the palette.
+     */
     get framebuffer(): p5.Framebuffer { return this._framebuffer; }
 }

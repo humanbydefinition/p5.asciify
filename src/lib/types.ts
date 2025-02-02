@@ -33,6 +33,8 @@ declare module 'p5' {
         updatePixels(): void;
     }
 
+    let RendererGL: any;
+
     interface p5InstanceExtensions {
         // Extended properties relevant to the p5.asciify library
         loadAsciiFont(font: string | Font, callback?: () => void): void;

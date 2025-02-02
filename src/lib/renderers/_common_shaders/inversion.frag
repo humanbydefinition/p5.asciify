@@ -2,9 +2,12 @@ precision mediump float;
 
 // Uniforms
 uniform sampler2D u_sampleTexture;
+uniform sampler2D u_sampleReferenceTexture;  // Used in reference mode
 uniform sampler2D u_previousInversionTexture;
 uniform vec2 u_gridCellDimensions;
 uniform bool u_invert;
+uniform bool u_useReferenceMode;
+uniform vec3 u_compareColor;
 
 void main() {
     // Get the cell coordinate (integer) using logical coordinates
@@ -16,14 +19,20 @@ void main() {
     // Compute the center coordinate of the cell in texture coordinates
     vec2 cellCenterTexCoord = (cellCoord + vec2(0.5)) * cellSizeInTexCoords;
     
-    if (!(texture2D(u_sampleTexture, cellCenterTexCoord).rgb == vec3(0.0))) {
-        if (u_invert) {
-            gl_FragColor = vec4(1.0);
-        } else {
-            gl_FragColor = vec4(vec3(0.0), 1.0);
-        }
+    bool shouldInvert;
+    if (u_useReferenceMode) {
+        // Reference texture comparison mode
+        shouldInvert = texture2D(u_sampleTexture, cellCenterTexCoord) != 
+                      texture2D(u_sampleReferenceTexture, cellCenterTexCoord);
+    } else {
+        // Color comparison mode
+        shouldInvert = texture2D(u_sampleTexture, cellCenterTexCoord).rgb != u_compareColor;
+    }
+
+    if (shouldInvert) {
+        gl_FragColor = u_invert ? vec4(1.0) : vec4(vec3(0.0), 1.0);
         return;
-    } else  {
+    } else {
         gl_FragColor = texture2D(u_previousInversionTexture, cellCenterTexCoord);
-    } 
+    }
 }

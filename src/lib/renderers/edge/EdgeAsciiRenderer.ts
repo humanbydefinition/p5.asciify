@@ -7,14 +7,15 @@ import { P5AsciifyFontTextureAtlas } from '../../FontTextureAtlas';
 import { AsciiRendererOptions } from '../types';
 
 import vertexShader from '../../assets/shaders/vert/shader.vert';
-import colorSampleShader from './shaders/colorSample.frag';
-import inversionShader from './shaders/gridCellInversion.frag';
+import colorSampleShader from '../_common_shaders/colorSample.frag';
+import inversionShader from '../_common_shaders/inversion.frag';
+import rotationShader from '../_common_shaders/rotation.frag';
 import asciiCharacterShader from './shaders/asciiCharacter.frag';
 import sobelShader from './shaders/sobel.frag';
 
 import { generateSampleShader } from './shaders/shaderGenerators.min';
 
-/** Default configuration options for edge detection ASCII renderer */
+/** Default configuration options for `"edge"` ASCII renderer */
 export const EDGE_DEFAULT_OPTIONS = {
     /** Enable/disable the renderer */
     enabled: false,
@@ -46,6 +47,7 @@ export class P5AsciifyEdgeRenderer extends P5AsciifyRenderer {
     private sampleShader: p5.Shader;
     private colorSampleShader: p5.Shader;
     private inversionShader: p5.Shader;
+    private rotationShader: p5.Shader;
     private asciiCharacterShader: p5.Shader;
     private sobelFramebuffer: p5.Framebuffer;
     private sampleFramebuffer: p5.Framebuffer;
@@ -63,6 +65,7 @@ export class P5AsciifyEdgeRenderer extends P5AsciifyRenderer {
         this.sampleShader = this._p.createShader(vertexShader, generateSampleShader(16, this._grid.cellHeight, this._grid.cellWidth));
         this.colorSampleShader = this._p.createShader(vertexShader, colorSampleShader);
         this.inversionShader = this._p.createShader(vertexShader, inversionShader);
+        this.rotationShader = this._p.createShader(vertexShader, rotationShader);
         this.asciiCharacterShader = this._p.createShader(vertexShader, asciiCharacterShader);
 
         this.sobelFramebuffer = this._p.createFramebuffer({
@@ -141,6 +144,8 @@ export class P5AsciifyEdgeRenderer extends P5AsciifyRenderer {
         this.sobelShader.setUniform('u_texture', inputFramebuffer);
         this.sobelShader.setUniform('u_textureSize', [this._p.width, this._p.height]);
         this.sobelShader.setUniform('u_threshold', this._options.sobelThreshold as number);
+        this.sobelShader.setUniform('u_colorPaletteTexture', this._characterColorPalette.framebuffer);
+        this.sobelShader.setUniform('u_totalChars', this._options.characters!.length);
         this._p.rect(0, 0, this._p.width, this._p.height);
         this.sobelFramebuffer.end();
 
@@ -167,6 +172,7 @@ export class P5AsciifyEdgeRenderer extends P5AsciifyRenderer {
         this.colorSampleShader.setUniform('u_gridCellDimensions', [this._grid.cols, this._grid.rows]);
         this.colorSampleShader.setUniform('u_sampleMode', this._options.characterColorMode as number);
         this.colorSampleShader.setUniform('u_staticColor', (this._options.characterColor as p5.Color)._array);
+        this.colorSampleShader.setUniform('u_shaderType', 2);
         this._p.rect(0, 0, this._p.width, this._p.height);
         this._primaryColorFramebuffer.end();
 
@@ -182,6 +188,7 @@ export class P5AsciifyEdgeRenderer extends P5AsciifyRenderer {
         this.colorSampleShader.setUniform('u_gridCellDimensions', [this._grid.cols, this._grid.rows]);
         this.colorSampleShader.setUniform('u_sampleMode', this._options.backgroundColorMode as number);
         this.colorSampleShader.setUniform('u_staticColor', (this._options.backgroundColor as p5.Color)._array);
+        this.colorSampleShader.setUniform('u_shaderType', 2);
         this._p.rect(0, 0, this._p.width, this._p.height);
         this._secondaryColorFramebuffer.end();
 
@@ -191,6 +198,8 @@ export class P5AsciifyEdgeRenderer extends P5AsciifyRenderer {
         this._p.shader(this.inversionShader);
         this.inversionShader.setUniform('u_invert', this._options.invertMode);
         this.inversionShader.setUniform('u_sampleTexture', this.sampleFramebuffer);
+        this.inversionShader.setUniform('u_useReferenceMode', false);
+        this.inversionShader.setUniform('u_compareColor', [0, 0, 0]);
         if (previousAsciiRenderer !== this) {
             this.inversionShader.setUniform('u_previousInversionTexture', previousAsciiRenderer.inversionFramebuffer);
         }
@@ -199,17 +208,29 @@ export class P5AsciifyEdgeRenderer extends P5AsciifyRenderer {
 
         this._inversionFramebuffer.end();
 
+        this._rotationFramebuffer.begin();
+        this._p.clear();
+        this._p.shader(this.rotationShader);
+        this.rotationShader.setUniform('u_rotationColor', (this._options.rotationAngle as p5.Color)._array);
+        this.rotationShader.setUniform('u_sampleTexture', this.sampleFramebuffer);
+        this.rotationShader.setUniform('u_useReferenceMode', false);
+        this.rotationShader.setUniform('u_compareColor', [0, 0, 0]);
+        if (previousAsciiRenderer !== this) {
+            this.rotationShader.setUniform('u_previousRotationTexture', previousAsciiRenderer.rotationFramebuffer);
+        }
+        this.rotationShader.setUniform('u_gridCellDimensions', [this._grid.cols, this._grid.rows]);
+        this._p.rect(0, 0, this._p.width, this._p.height);
+        this._rotationFramebuffer.end();
+
         // ASCII character pass
         this._characterFramebuffer.begin();
         this._p.clear();
         this._p.shader(this.asciiCharacterShader);
         this.asciiCharacterShader.setUniform('u_sketchTexture', this.sampleFramebuffer);
-        this.asciiCharacterShader.setUniform('u_colorPaletteTexture', this._characterColorPalette.framebuffer);
         if (previousAsciiRenderer !== this) {
             this.asciiCharacterShader.setUniform('u_previousAsciiCharacterTexture', previousAsciiRenderer.characterFramebuffer);
         }
         this.asciiCharacterShader.setUniform('u_gridCellDimensions', [this._grid.cols, this._grid.rows]);
-        this.asciiCharacterShader.setUniform('u_totalChars', this._options.characters!.length);
         this._p.rect(0, 0, this._p.width, this._p.height);
         this._characterFramebuffer.end();
 

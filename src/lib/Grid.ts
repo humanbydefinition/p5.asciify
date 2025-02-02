@@ -2,8 +2,13 @@ import p5 from 'p5';
 
 /**
  * Manages the grid dimensions for the ASCII renderers.
+ * The grid automatically sizes to fit the maximum number of cells based on 
+ * current canvas dimensions and font metrics.
  * 
- * Based on the current canvas and font glyph dimensions, the grid is sized to fit the maximum number of cells.
+ * While the grid properties are readable, avoid modifying them directly through this class's methods.
+ * Direct modifications can lead to synchronization issues between the grid and other components.
+ * Instead, use the methods provided by the `P5Asciifier` instance `p5asciify` to modify font properties, 
+ * which will properly propagate changes to the grid.
  */
 export class P5AsciifyGrid {
     /** The number of columns in the grid. */
@@ -39,7 +44,7 @@ export class P5AsciifyGrid {
     }
 
     /**
-     * Reset the grid to the default number of columns and rows based on the current canvas dimensions, and `_cellWidth` and `_cellHeight`.
+     * Reset the grid to the default number of columns and rows based on the current canvas dimensions, and the grid cell dimensions.
      */
     public reset(): void {
         [this._cols, this._rows] = [Math.floor(this._p.width / this._cellWidth), Math.floor(this._p.height / this._cellHeight)];
@@ -57,7 +62,7 @@ export class P5AsciifyGrid {
     }
 
     /**
-     * Re-assign the grid cell dimensions and reset the grid.
+     * Re-assign the grid cell dimensions and `reset()` the grid.
      * @param newCellWidth The new cell width.
      * @param newCellHeight The new cell height.
      */
@@ -66,13 +71,43 @@ export class P5AsciifyGrid {
         this.reset();
     }
 
-    // Getters
+    /**
+     * Returns the width of each cell in the grid.
+     */
     get cellWidth() { return this._cellWidth; }
+
+    /**
+     * Returns the height of each cell in the grid.
+     */
     get cellHeight() { return this._cellHeight; }
+
+    /**
+     * Returns the number of columns in the grid.
+     */
     get cols() { return this._cols; }
+
+    /**
+     * Returns the number of rows in the grid.
+     */
     get rows() { return this._rows; }
+
+    /**
+     * Returns the total width of the grid.
+     */
     get width() { return this._width; }
+
+    /**
+     * Returns the total height of the grid.
+     */
     get height() { return this._height; }
+
+    /**
+     * Returns the offset to the outer canvas borders on the x-axis when centering the grid.
+     */
     get offsetX() { return this._offsetX; }
+
+    /**
+     * Returns the offset to the outer canvas borders on the y-axis when centering the grid.
+     */
     get offsetY() { return this._offsetY; }
 }

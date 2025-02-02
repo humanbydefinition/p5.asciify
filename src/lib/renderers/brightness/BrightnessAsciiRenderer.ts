@@ -7,10 +7,10 @@ import { P5AsciifyFontTextureAtlas } from '../../FontTextureAtlas';
 import { AsciiRendererOptions } from '../types';
 
 import vertexShader from '../../assets/shaders/vert/shader.vert';
-import colorSampleShader from './shaders/colorSample.frag';
+import colorSampleShader from '../_common_shaders/colorSample.frag';
 import asciiCharacterShader from './shaders/asciiCharacter.frag';
 
-/** Default configuration options for brightness-based ASCII renderer */
+/** Default configuration options for `"brightness"` ASCII renderer */
 export const BRIGHTNESS_DEFAULT_OPTIONS = {
     /** Enable/disable the renderer */
     enabled: true,
@@ -38,7 +38,7 @@ export class P5AsciifyBrightnessRenderer extends P5AsciifyRenderer {
     private asciiCharacterShader: p5.Shader;
     private colorSampleFramebuffer: p5.Framebuffer;
 
-    constructor(p5Instance: p5, grid: P5AsciifyGrid, fontTextureAtlas: P5AsciifyFontTextureAtlas,  options: AsciiRendererOptions = BRIGHTNESS_DEFAULT_OPTIONS) {
+    constructor(p5Instance: p5, grid: P5AsciifyGrid, fontTextureAtlas: P5AsciifyFontTextureAtlas, options: AsciiRendererOptions = BRIGHTNESS_DEFAULT_OPTIONS) {
         const mergedOptions = { ...BRIGHTNESS_DEFAULT_OPTIONS, ...options };
         super(p5Instance, grid, fontTextureAtlas, mergedOptions);
 
@@ -65,6 +65,7 @@ export class P5AsciifyBrightnessRenderer extends P5AsciifyRenderer {
         this._p.shader(this.colorSampleShader);
         this.colorSampleShader.setUniform('u_sketchTexture', inputFramebuffer);
         this.colorSampleShader.setUniform('u_gridCellDimensions', [this._grid.cols, this._grid.rows]);
+        this.colorSampleShader.setUniform('u_shaderType', 0);
         this._p.rect(0, 0, this._p.width, this._p.height);
         this.colorSampleFramebuffer.end();
 
@@ -96,6 +97,11 @@ export class P5AsciifyBrightnessRenderer extends P5AsciifyRenderer {
         }
         this._inversionFramebuffer.end();
 
+        this._rotationFramebuffer.begin();
+        this._p.clear();
+        this._p.background(this._options.rotationAngle as p5.Color);
+        this._rotationFramebuffer.end();
+
         this._characterFramebuffer.begin();
         this._p.clear();
         this._p.shader(this.asciiCharacterShader);
@@ -103,7 +109,6 @@ export class P5AsciifyBrightnessRenderer extends P5AsciifyRenderer {
         this.asciiCharacterShader.setUniform('u_colorSampleFramebuffer', this.colorSampleFramebuffer);
         this.asciiCharacterShader.setUniform('u_charPaletteTexture', this._characterColorPalette.framebuffer);
         this.asciiCharacterShader.setUniform('u_charPaletteSize', [this._characterColorPalette.colors.length, 1]);
-
         this._p.rect(0, 0, this._p.width, this._p.height);
         this._characterFramebuffer.end();
 

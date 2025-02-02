@@ -3,7 +3,7 @@ import { P5AsciifyRenderer } from '../AsciiRenderer';
 import { P5AsciifyGrid } from '../../Grid';
 import { P5AsciifyFontTextureAtlas } from '../../FontTextureAtlas';
 import { AsciiRendererOptions } from '../types';
-/** Default configuration options for brightness-based ASCII renderer */
+/** Default configuration options for `"brightness"` ASCII renderer */
 export declare const BRIGHTNESS_DEFAULT_OPTIONS: {
     /** Enable/disable the renderer */
     enabled: boolean;

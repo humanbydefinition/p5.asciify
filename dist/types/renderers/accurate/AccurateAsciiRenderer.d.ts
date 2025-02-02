@@ -3,7 +3,7 @@ import { P5AsciifyRenderer } from '../AsciiRenderer';
 import { P5AsciifyGrid } from '../../Grid';
 import { AsciiRendererOptions } from '../types';
 import { P5AsciifyFontTextureAtlas } from '../../FontTextureAtlas';
-/** Default configuration options for accurate ASCII renderer */
+/** Default configuration options for `"accurate"` ASCII renderer */
 export declare const ACCURATE_DEFAULT_OPTIONS: {
     /** Enable/disable the renderer */
     enabled: boolean;

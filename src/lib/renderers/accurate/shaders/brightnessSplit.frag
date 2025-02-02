@@ -19,43 +19,31 @@ void main() {
     float cellWidth = u_inputImageSize.x / float(u_gridCols);
     float cellHeight = u_inputImageSize.y / float(u_gridRows);
 
-    // Determine the grid cell indices (gridX, gridY) for the current fragment
-    float gridX = floor(logicalFragCoord.x / cellWidth);
-    float gridY = floor(logicalFragCoord.y / cellHeight);
-
-    // Prevent grid indices from exceeding texture bounds
-    gridX = clamp(gridX, 0.0, float(u_gridCols - 1));
-    gridY = clamp(gridY, 0.0, float(u_gridRows - 1));
-
-    // Calculate normalized texture coordinates for the brightness texture
-    // Adding 0.5 to sample the center of the grid cell
-    vec2 brightnessTexCoord = (vec2(gridX, gridY) + 0.5) / vec2(float(u_gridCols), float(u_gridRows));
-
-    // Sample the average brightness for the current grid cell
-    float averageBrightness = texture2D(u_brightnessTexture, brightnessTexCoord).r;
-
     // Normalize fragment coordinates to [0, 1] for sampling the original image
     vec2 imageTexCoord = logicalFragCoord / u_inputImageSize;
 
     // Sample the original image color at the current fragment
     vec4 originalColor = texture2D(u_inputImage, imageTexCoord);
 
-    // Calculate brightness using the luminance formula
-    float fragmentBrightness = 0.299 * originalColor.r + 0.587 * originalColor.g + 0.114 * originalColor.b;
-
-    // Calculate the difference between fragment brightness and average brightness
-    float brightnessDifference = fragmentBrightness - averageBrightness;
-
-    // Determine the output color based on the brightness comparison with epsilon
-    float finalColorValue;
-    if (brightnessDifference < -EPSILON) {
-        // Fragment brightness is significantly less than average brightness
-        finalColorValue = 0.0; // Black
-    } else {
-        // Fragment brightness is approximately equal to or greater than average brightness
-        finalColorValue = 1.0; // White
+    // Early return if pixel is transparent
+    if (originalColor.a < EPSILON) {
+        gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0);
+        return;
     }
 
-    // Output the final color with full opacity
+    // Rest of the brightness processing for non-transparent pixels
+    float gridX = floor(logicalFragCoord.x / cellWidth);
+    float gridY = floor(logicalFragCoord.y / cellHeight);
+
+    gridX = clamp(gridX, 0.0, float(u_gridCols - 1));
+    gridY = clamp(gridY, 0.0, float(u_gridRows - 1));
+
+    vec2 brightnessTexCoord = (vec2(gridX, gridY) + 0.5) / vec2(float(u_gridCols), float(u_gridRows));
+    float averageBrightness = texture2D(u_brightnessTexture, brightnessTexCoord).r;
+
+    float fragmentBrightness = 0.299 * originalColor.r + 0.587 * originalColor.g + 0.114 * originalColor.b;
+    float brightnessDifference = fragmentBrightness - averageBrightness;
+
+    float finalColorValue = brightnessDifference < -EPSILON ? 0.0 : 1.0;
     gl_FragColor = vec4(vec3(finalColorValue), 1.0);
 }

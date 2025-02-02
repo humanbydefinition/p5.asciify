@@ -8,12 +8,11 @@ uniform sampler2D u_primaryColorTexture;
 uniform sampler2D u_secondaryColorTexture;
 uniform sampler2D u_inversionTexture;
 uniform sampler2D u_asciiCharacterTexture;
+uniform sampler2D u_rotationTexture;
 
 uniform vec2 u_gridCellDimensions;
 uniform vec2 u_gridPixelDimensions;
 uniform vec2 u_gridOffsetDimensions;
-
-uniform float u_rotationAngle;
 
 uniform vec2 u_resolution;
 uniform float u_pixelRatio; // Added uniform for pixel ratio
@@ -74,10 +73,18 @@ void main() {
     // Calculate the texture coordinate of the character in the charset texture
     vec2 charCoord = vec2(float(charCol) / u_charsetDimensions.x, float(charRow) / u_charsetDimensions.y);
 
+    // Sample rotation texture and decode angle
+    vec4 rotationColor = texture2D(u_rotationTexture, charIndexTexCoord);
+
+    // Direct mapping: red = base degrees (0-255)
+    // green = additional degrees (0-105)
+    float degrees = rotationColor.r * 255.0 + rotationColor.g * 255.0;
+    float rotationAngle = radians(degrees);
+
     // Calculate fractional part and apply rotation
-    vec2 fractionalPart = fract(gridCoord) - 0.5; // Center fractional part around (0,0) for rotation
-    fractionalPart = rotate2D(u_rotationAngle) * fractionalPart; // Rotate fractional part
-    fractionalPart += 0.5; // Move back to original coordinate space
+    vec2 fractionalPart = fract(gridCoord) - 0.5;
+    fractionalPart = rotate2D(rotationAngle) * fractionalPart;
+    fractionalPart += 0.5;
 
     // Calculate the texture coordinates
     vec2 cellMin = charCoord;

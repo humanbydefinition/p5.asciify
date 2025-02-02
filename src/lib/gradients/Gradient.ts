@@ -40,7 +40,7 @@ export abstract class P5AsciifyGradient {
     ) {
         this._palette = new P5AsciifyColorPalette(
             this.p,
-            this._fontTextureAtlas.getCharsetColorArray(this._characters)
+            this._fontTextureAtlas.fontManager.glyphColors(this._characters)
         );
 
         // Normalize brightness values to [0, 1]
@@ -105,8 +105,8 @@ export abstract class P5AsciifyGradient {
             throw new P5AsciifyError('Characters must be a string.');
         }
 
-        this._fontTextureAtlas.validateCharacters(value);
-        this.palette.setColors(this._fontTextureAtlas.getCharsetColorArray(value));
+        this._fontTextureAtlas.fontManager.validateCharacters(value);
+        this.palette.setColors(this._fontTextureAtlas.fontManager.glyphColors(value));
     }
 
     /**

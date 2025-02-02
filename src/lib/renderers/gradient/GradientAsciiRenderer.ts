@@ -7,15 +7,16 @@ import { P5AsciifyGradientManager } from '../../gradients/GradientManager';
 import { AsciiRendererOptions } from '../types';
 
 import grayscaleShader from './shaders/grayscale.frag';
-import colorSampleShader from './shaders/colorSample.frag';
-import inversionShader from './shaders/gridCellInversion.frag';
+import colorSampleShader from '../_common_shaders/colorSample.frag';
+import inversionShader from '../_common_shaders/inversion.frag';
+import rotationShader from '../_common_shaders/rotation.frag';
 import asciiCharacterShader from './shaders/asciiCharacter.frag';
 import vertexShader from '../../assets/shaders/vert/shader.vert';
 import { P5AsciifyFontTextureAtlas } from '../../FontTextureAtlas';
 import { P5AsciifyGradient } from '../../gradients/Gradient';
 import { GradientType } from '../../gradients/types';
 
-/** Default configuration options for gradient-based ASCII renderer */
+/** Default configuration options for `"gradient"` ASCII renderer */
 export const GRADIENT_DEFAULT_OPTIONS = {
     /** Enable/disable the renderer */
     enabled: false,
@@ -41,6 +42,7 @@ export class P5AsciifyGradientRenderer extends P5AsciifyRenderer {
     private colorSampleShader: p5.Shader;
     private grayscaleFramebuffer: p5.Framebuffer;
     private inversionShader: p5.Shader;
+    private rotationShader: p5.Shader;
     private asciiCharacterShader: p5.Shader;
     private prevAsciiGradientFramebuffer: p5.Framebuffer;
     private nextAsciiGradientFramebuffer: p5.Framebuffer;
@@ -60,6 +62,7 @@ export class P5AsciifyGradientRenderer extends P5AsciifyRenderer {
         this.grayscaleShader = this._p.createShader(vertexShader, grayscaleShader);
         this.colorSampleShader = this._p.createShader(vertexShader, colorSampleShader);
         this.inversionShader = this._p.createShader(vertexShader, inversionShader);
+        this.rotationShader = this._p.createShader(vertexShader, rotationShader);
         this.asciiCharacterShader = this._p.createShader(vertexShader, asciiCharacterShader);
 
         this.grayscaleFramebuffer = this._p.createFramebuffer({
@@ -166,6 +169,7 @@ export class P5AsciifyGradientRenderer extends P5AsciifyRenderer {
         this.colorSampleShader.setUniform('u_gridCellDimensions', [this._grid.cols, this._grid.rows]);
         this.colorSampleShader.setUniform('u_sampleMode', this._options.characterColorMode as number);
         this.colorSampleShader.setUniform('u_staticColor', (this._options.characterColor as p5.Color)._array);
+        this.colorSampleShader.setUniform('u_shaderType', 1);
         this._p.rect(0, 0, this._p.width, this._p.height);
         this._primaryColorFramebuffer.end();
 
@@ -181,6 +185,7 @@ export class P5AsciifyGradientRenderer extends P5AsciifyRenderer {
         this.colorSampleShader.setUniform('u_gridCellDimensions', [this._grid.cols, this._grid.rows]);
         this.colorSampleShader.setUniform('u_sampleMode', this._options.backgroundColorMode as number);
         this.colorSampleShader.setUniform('u_staticColor', (this._options.backgroundColor as p5.Color)._array);
+        this.colorSampleShader.setUniform('u_shaderType', 1);
         this._p.rect(0, 0, this._p.width, this._p.height);
         this._secondaryColorFramebuffer.end();
 
@@ -192,11 +197,26 @@ export class P5AsciifyGradientRenderer extends P5AsciifyRenderer {
         this.inversionShader.setUniform('u_gridCellDimensions', [this._grid.cols, this._grid.rows]);
         this.inversionShader.setUniform('u_sampleTexture', this.nextAsciiGradientFramebuffer);
         this.inversionShader.setUniform('u_sampleReferenceTexture', this.grayscaleFramebuffer);
+        this.inversionShader.setUniform('u_useReferenceMode', true);
         if (previousAsciiRenderer !== this) {
             this.inversionShader.setUniform('u_previousInversionTexture', previousAsciiRenderer.inversionFramebuffer);
         }
         this._p.rect(0, 0, this._p.width, this._p.height);
         this._inversionFramebuffer.end();
+
+        this._rotationFramebuffer.begin();
+        this._p.clear();
+        this._p.shader(this.rotationShader);
+        this.rotationShader.setUniform('u_rotationColor', (this._options.rotationAngle as p5.Color)._array);
+        this.rotationShader.setUniform('u_gridCellDimensions', [this._grid.cols, this._grid.rows]);
+        this.rotationShader.setUniform('u_sampleTexture', this.nextAsciiGradientFramebuffer);
+        this.rotationShader.setUniform('u_sampleReferenceTexture', this.grayscaleFramebuffer);
+        this.rotationShader.setUniform('u_useReferenceMode', true);
+        if (previousAsciiRenderer !== this) {
+            this.rotationShader.setUniform('u_previousRotationTexture', previousAsciiRenderer.rotationFramebuffer);
+        }
+        this._p.rect(0, 0, this._p.width, this._p.height);
+        this._rotationFramebuffer.end();
 
 
         super.render(inputFramebuffer, previousAsciiRenderer);

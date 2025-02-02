@@ -5,7 +5,7 @@ import { AsciiRendererOptions } from '../types';
 import { P5AsciifyFontTextureAtlas } from '../../FontTextureAtlas';
 import { P5AsciifyGradient } from '../../gradients/Gradient';
 import { GradientType } from '../../gradients/types';
-/** Default configuration options for gradient-based ASCII renderer */
+/** Default configuration options for `"gradient"` ASCII renderer */
 export declare const GRADIENT_DEFAULT_OPTIONS: {
     /** Enable/disable the renderer */
     enabled: boolean;
@@ -30,6 +30,7 @@ export declare class P5AsciifyGradientRenderer extends P5AsciifyRenderer {
     private colorSampleShader;
     private grayscaleFramebuffer;
     private inversionShader;
+    private rotationShader;
     private asciiCharacterShader;
     private prevAsciiGradientFramebuffer;
     private nextAsciiGradientFramebuffer;
