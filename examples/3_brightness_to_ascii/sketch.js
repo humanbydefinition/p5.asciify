@@ -13,14 +13,6 @@ export const DEFAULT_OPTIONS = {
   fontSize: 32
 };
 
-/**
- * createSketch(options = {})
- * 
- * Creates a brightness-to-ASCII p5 sketch. 
- * 
- * - If `options.container` is provided, the sketch will render inside that container (useful for Storybook).
- * - Otherwise, it creates its own container and returns it (useful for standalone usage).
- */
 export const createSketch = (options = {}) => {
   // Merge user options with our defaults
   const finalOptions = { ...DEFAULT_OPTIONS, ...options };
@@ -30,7 +22,6 @@ export const createSketch = (options = {}) => {
 
   // Define the p5 sketch
   const sketch = (p) => {
-
 
     // Initialize p5asciify with this p5 instance
     p5asciify.instance(p);

@@ -19,6 +19,8 @@ export const createSketch = (options = {}) => {
 
   const sketch = (p) => {
 
+    p5asciify.instance(p);
+
     p.setup = () => {
       p.createCanvas(p.windowWidth, p.windowHeight, p.WEBGL);
     };
