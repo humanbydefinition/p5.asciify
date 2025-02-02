@@ -6,7 +6,7 @@ import { compareVersions } from './utils';
 import { P5AsciifyGradientRenderer } from './renderers/gradient/GradientAsciiRenderer';
 
 /**
- * The main instance of the p5.asciify library, which is used to access all of the library's functionality.
+ * The main instance of the `p5.asciify` library, which is used to access all of the library's functionality.
  */
 export const p5asciify = new P5Asciifier();
 
@@ -21,7 +21,7 @@ if (typeof window !== 'undefined') {
  */
 p5.prototype.registerMethod('init', function (this: p5) {
   this._incrementPreload();
-  p5asciify.init(this,  URSAFONT_BASE64);
+  p5asciify.init(this, URSAFONT_BASE64);
 });
 
 /**

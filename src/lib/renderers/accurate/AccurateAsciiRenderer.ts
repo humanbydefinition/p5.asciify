@@ -10,7 +10,7 @@ import brightnessSplitShader from './shaders/brightnessSplit.frag';
 import vertexShader from '../../assets/shaders/vert/shader.vert';
 import { P5AsciifyFontTextureAtlas } from '../../FontTextureAtlas';
 
-/** Default configuration options for accurate ASCII renderer */
+/** Default configuration options for `"accurate"` ASCII renderer */
 export const ACCURATE_DEFAULT_OPTIONS = {
     /** Enable/disable the renderer */
     enabled: false,

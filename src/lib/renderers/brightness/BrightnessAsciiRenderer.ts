@@ -10,7 +10,7 @@ import vertexShader from '../../assets/shaders/vert/shader.vert';
 import colorSampleShader from '../_common_shaders/colorSample.frag';
 import asciiCharacterShader from './shaders/asciiCharacter.frag';
 
-/** Default configuration options for brightness-based ASCII renderer */
+/** Default configuration options for `"brightness"` ASCII renderer */
 export const BRIGHTNESS_DEFAULT_OPTIONS = {
     /** Enable/disable the renderer */
     enabled: true,

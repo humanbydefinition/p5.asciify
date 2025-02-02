@@ -15,7 +15,7 @@ import sobelShader from './shaders/sobel.frag';
 
 import { generateSampleShader } from './shaders/shaderGenerators.min';
 
-/** Default configuration options for edge detection ASCII renderer */
+/** Default configuration options for `"edge"` ASCII renderer */
 export const EDGE_DEFAULT_OPTIONS = {
     /** Enable/disable the renderer */
     enabled: false,

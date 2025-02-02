@@ -9,7 +9,7 @@ import { AsciiRendererOptions } from './types';
 import vertexShader from '../assets/shaders/vert/shader.vert';
 import asciiConversionShader from './_common_shaders/asciiConversion.frag';
 
-/** Default configuration options for custom ASCII renderer */
+/** Default configuration options for `"custom"` ASCII renderer */
 export const CUSTOM_DEFAULT_OPTIONS = {
     /** Enable/disable the renderer */
     enabled: false,
@@ -20,7 +20,7 @@ export const CUSTOM_DEFAULT_OPTIONS = {
 };
 
 /**
- * Class for shader-based ASCII Renderers.
+ * Base ASCII renderer class for custom shader-based ASCII Renderers.
  */
 export class P5AsciifyRenderer {
 
@@ -47,6 +47,21 @@ export class P5AsciifyRenderer {
     /** The shader used for the ASCII conversion. */
     protected _shader: p5.Shader;
 
+    /**
+     * Creates a new ASCII renderer instance.
+     * 
+     * @remarks
+     * This constructor is meant for internal use by the `p5.asciify` library.
+     * 
+     * To create renderers, use `p5asciify.renderers().add()`.
+     * This will also return an instance of the renderer, which can be used to modify the renderer's properties.
+     * Additionally, the renderer will also be added to the end of the rendering pipeline automatically.
+     * 
+     * @param _p The p5 instance.
+     * @param _grid Grid object containing the relevant grid information.
+     * @param _fontTextureAtlas The font texture atlas containing the ASCII characters texture.
+     * @param _options The options for the ASCII renderer.
+     */
     constructor(
         /** The p5 instance. */
         protected _p: p5,
@@ -374,8 +389,21 @@ export class P5AsciifyRenderer {
         this.enabled(false);
     }
 
-    // Getters
+
+    /**
+     * Get the color palette object containing colors that correspond to the defined character set.
+     * 
+     * Not relevant for this base class, 
+     * but used in derived classes for mapping brightness values to those colors for example, 
+     * which are then translated to ASCII characters.
+     */
     get characterColorPalette() { return this._characterColorPalette; }
+
+    /**
+     * Get the output framebuffer, where the final ASCII conversion is rendered.
+     * 
+     * Can also contain grid cells filled with ASCII characters by previous renderers.
+     */
     get outputFramebuffer() { return this._outputFramebuffer; }
     get options() { return this._options; }
     get primaryColorFramebuffer() { return this._primaryColorFramebuffer; }

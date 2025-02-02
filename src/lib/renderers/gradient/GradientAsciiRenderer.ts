@@ -16,7 +16,7 @@ import { P5AsciifyFontTextureAtlas } from '../../FontTextureAtlas';
 import { P5AsciifyGradient } from '../../gradients/Gradient';
 import { GradientType } from '../../gradients/types';
 
-/** Default configuration options for gradient-based ASCII renderer */
+/** Default configuration options for `"gradient"` ASCII renderer */
 export const GRADIENT_DEFAULT_OPTIONS = {
     /** Enable/disable the renderer */
     enabled: false,
