@@ -90,6 +90,15 @@ export class P5Asciifier {
     }
 
     /**
+     * Deprecated method to initialize p5.asciify with the p5.js instance manually in `INSTANCE` mode.
+     * Doesn't do anything now except logging a warning.
+     * @param p The p5.js instance to use for the library.
+     */
+    public instance(p: p5): void {
+        console.warn(`[p5.asciify] 'instance()' method is deprecated and redundant to call with v0.7.2 and beyond - remove this call from your sketch.`);
+    }
+
+    /**
      * Renders the ASCII output to the canvas.
      * 
      * **This method is called automatically every time the user's `draw()` function has finished. Calling it manually is redundant and only causes useless computation.**
