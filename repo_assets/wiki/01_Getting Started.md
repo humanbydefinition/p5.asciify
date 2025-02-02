@@ -36,7 +36,7 @@ Alternatively, the library can be imported directly from a CDN like [**jsDelivr*
 <script src="https://cdn.jsdelivr.net/npm/p5@1.11.1/lib/p5.js"></script>
 
 <!-- Import p5.asciify after p5.js -->
-<script src="https://cdn.jsdelivr.net/npm/p5.asciify@0.7.3/dist/p5.asciify.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/p5.asciify@0.7.4/dist/p5.asciify.umd.js"></script>
 ```
 
 > [!TIP]
@@ -47,7 +47,7 @@ Alternatively, the library can be imported directly from a CDN like [**jsDelivr*
 > <script src="https://cdn.jsdelivr.net/npm/p5@1.11.1/lib/p5.js"></script>
 >
 > <!-- Import p5.asciify after p5.js -->
-> <script src="https://cdn.jsdelivr.net/npm/p5.asciify@0.7.3/dist/p5.asciify.umd.js"></script>
+> <script src="https://cdn.jsdelivr.net/npm/p5.asciify@0.7.4/dist/p5.asciify.umd.js"></script>
 >
 > <!-- Import p5.capture after p5.asciify -->
 > <script src="https://cdn.jsdelivr.net/npm/p5.capture@1.4.1/dist/p5.capture.umd.min.js"></script>
