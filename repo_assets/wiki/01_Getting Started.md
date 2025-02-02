@@ -36,7 +36,7 @@ Alternatively, the library can be imported directly from a CDN like [**jsDelivr*
 <script src="https://cdn.jsdelivr.net/npm/p5@1.11.1/lib/p5.js"></script>
 
 <!-- Import p5.asciify after p5.js -->
-<script src="https://cdn.jsdelivr.net/npm/p5.asciify@0.7.1/dist/p5.asciify.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/p5.asciify@0.7.2/dist/p5.asciify.umd.js"></script>
 ```
 
 > [!TIP]
@@ -47,7 +47,7 @@ Alternatively, the library can be imported directly from a CDN like [**jsDelivr*
 > <script src="https://cdn.jsdelivr.net/npm/p5@1.11.1/lib/p5.js"></script>
 >
 > <!-- Import p5.asciify after p5.js -->
-> <script src="https://cdn.jsdelivr.net/npm/p5.asciify@0.7.1/dist/p5.asciify.umd.js"></script>
+> <script src="https://cdn.jsdelivr.net/npm/p5.asciify@0.7.2/dist/p5.asciify.umd.js"></script>
 >
 > <!-- Import p5.capture after p5.asciify -->
 > <script src="https://cdn.jsdelivr.net/npm/p5.capture@1.4.1/dist/p5.capture.umd.min.js"></script>
@@ -68,9 +68,6 @@ import p5 from 'p5';
 import { p5asciify } from 'p5.asciify';
 
 const theSketch = (sketch) => {
-
-    // Pass the p5 instance to the p5asciify library before setup
-    p5asciify.instance(sketch); 
 
     sketch.setup = () => {
       sketch.createCanvas(800, 800, sketch.WEBGL);
@@ -104,8 +101,6 @@ let myp5 = new p5(theSketch);
 ```
 > [!NOTE]
 > All examples and explanations in the [`Wiki`](https://github.com/humanbydefinition/p5.asciify/wiki) are given in global mode. To use them in instance mode, you need to adjust the code accordingly, as shown in the example above.
->
-> Essentially, besides importing `p5.asciify`, you need to initially pass the `p5` instance to the library using `p5asciify.instance(sketch)` before preload/setup.
 
 <hr />
 
