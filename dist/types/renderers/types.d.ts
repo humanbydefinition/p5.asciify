@@ -15,7 +15,7 @@ export type AsciiRendererOptions = {
     backgroundColorMode?: number | string;
     /** Swap the cells ASCII character colors with its cell background colors. */
     invertMode: boolean;
-    /** The rotation angle of all characters in the grid in degrees. */
+    /** The rotation angle of all characters affected by a given renderer. */
     rotationAngle: number | p5.Color;
     /** The threshold for the Sobel edge detection algorithm. (only used in the `"edge"` renderer) */
     sobelThreshold?: number;

@@ -2,6 +2,11 @@ import p5 from 'p5';
 import { P5AsciifyFontManager } from './FontManager';
 /**
  * Manages a texture atlas for font rendering in the ASCII rendering process.
+ * The atlas creates an optimized GPU-friendly texture containing all required glyphs
+ * arranged in a square grid layout.
+ *
+ * **Note: Modify font properties through the `p5asciify` instance methods rather than
+ * directly, as this ensures proper synchronization with dependent components.**
  */
 export declare class P5AsciifyFontTextureAtlas {
     private _p;
@@ -47,13 +52,31 @@ export declare class P5AsciifyFontTextureAtlas {
      * @param fontSize - The font size to use for drawing the characters on the texture.
      */
     private _drawCharacters;
+    /**
+     * Returns the maximum width and height found for all the glyphs in the font.
+     */
     get maxGlyphDimensions(): {
         width: number;
         height: number;
     };
+    /**
+     * Returns the texture containing all characters in the font.
+     */
     get texture(): p5.Framebuffer;
+    /**
+     * Returns the number of columns in the texture containing all characters in the font.
+     */
     get charsetCols(): number;
+    /**
+     * Returns the number of rows in the texture containing all characters in the font.
+     */
     get charsetRows(): number;
+    /**
+     * Returns the font size used for the texture atlas.
+     */
     get fontSize(): number;
+    /**
+     * Returns the font manager used for the texture atlas.
+     */
     get fontManager(): P5AsciifyFontManager;
 }
