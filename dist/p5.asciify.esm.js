@@ -466,7 +466,7 @@ class U {
   }
 }
 var B = "precision mediump float;attribute vec3 aPosition;attribute vec2 aTexCoord;varying vec2 v_texCoord;void main(){vec4 positionVec4=vec4(aPosition,1.0);positionVec4.xy=positionVec4.xy*2.0-1.0;gl_Position=positionVec4;v_texCoord=aTexCoord;}", $ = "precision mediump float;uniform sampler2D u_characterTexture;uniform vec2 u_charsetDimensions;uniform sampler2D u_primaryColorTexture;uniform sampler2D u_secondaryColorTexture;uniform sampler2D u_inversionTexture;uniform sampler2D u_asciiCharacterTexture;uniform sampler2D u_rotationTexture;uniform vec2 u_gridCellDimensions;uniform vec2 u_gridPixelDimensions;uniform vec2 u_gridOffsetDimensions;uniform vec2 u_resolution;uniform float u_pixelRatio;uniform sampler2D u_prevAsciiTexture;mat2 rotate2D(float angle){float s=sin(angle);float c=cos(angle);return mat2(c,-s,s,c);}void main(){vec2 logicalFragCoord=gl_FragCoord.xy/u_pixelRatio;vec2 adjustedCoord=(logicalFragCoord-u_gridOffsetDimensions)/u_gridPixelDimensions;if(adjustedCoord.x<0.0||adjustedCoord.x>1.0||adjustedCoord.y<0.0||adjustedCoord.y>1.0){gl_FragColor=vec4(0);return;}vec2 gridCoord=adjustedCoord*u_gridCellDimensions;vec2 cellCoord=floor(gridCoord);vec2 charIndexTexCoord=(cellCoord+vec2(0.5))/u_gridCellDimensions;vec4 primaryColor=texture2D(u_primaryColorTexture,charIndexTexCoord);vec4 secondaryColor=texture2D(u_secondaryColorTexture,charIndexTexCoord);vec4 inversionColor=texture2D(u_inversionTexture,charIndexTexCoord);vec4 encodedIndexVec=texture2D(u_asciiCharacterTexture,charIndexTexCoord);if(encodedIndexVec.rgba==vec4(0.0)){gl_FragColor=texture2D(u_prevAsciiTexture,logicalFragCoord/u_resolution);return;}int charIndex=int(encodedIndexVec.r*255.0+0.5)+int(encodedIndexVec.g*255.0+0.5)*256;int charCol=charIndex-(charIndex/int(u_charsetDimensions.x))*int(u_charsetDimensions.x);int charRow=charIndex/int(u_charsetDimensions.x);vec2 charCoord=vec2(float(charCol)/u_charsetDimensions.x,float(charRow)/u_charsetDimensions.y);vec4 rotationColor=texture2D(u_rotationTexture,charIndexTexCoord);float degrees=rotationColor.r*255.0+rotationColor.g*255.0;float rotationAngle=radians(degrees);vec2 fractionalPart=fract(gridCoord)-0.5;fractionalPart=rotate2D(rotationAngle)*fractionalPart;fractionalPart+=0.5;vec2 cellMin=charCoord;vec2 cellMax=charCoord+vec2(1.0/u_charsetDimensions.x,1.0/u_charsetDimensions.y);vec2 texCoord=charCoord+fractionalPart*vec2(1.0/u_charsetDimensions.x,1.0/u_charsetDimensions.y);bool outsideBounds=any(lessThan(texCoord,cellMin))||any(greaterThan(texCoord,cellMax));vec4 charColor=outsideBounds ? secondaryColor : texture2D(u_characterTexture,texCoord);if(inversionColor==vec4(1.0)){charColor.a=1.0-charColor.a;charColor.rgb=vec3(1.0);}vec4 finalColor=vec4(primaryColor.rgb*charColor.rgb,charColor.a);gl_FragColor=mix(secondaryColor,finalColor,charColor.a);if(outsideBounds){gl_FragColor=inversionColor==vec4(1.0)? primaryColor : secondaryColor;}}";
-const f = {
+const _ = {
   /** Enable/disable the renderer */
   enabled: !1,
   /** Swap the cells ASCII character colors with it's cell background colors */
@@ -490,7 +490,7 @@ class E {
    * @param _fontTextureAtlas The font texture atlas containing the ASCII characters texture.
    * @param _options The options for the ASCII renderer.
    */
-  constructor(A, e, r, t = f) {
+  constructor(A, e, r, t = _) {
     /** The color palette containing colors that correspond to the defined character set. */
     i(this, "_characterColorPalette");
     /** The primary color framebuffer, whose pixels define the character colors of the grid cells. */
@@ -506,7 +506,7 @@ class E {
     i(this, "_outputFramebuffer");
     /** The shader used for the ASCII conversion. */
     i(this, "_shader");
-    this._p = A, this._grid = e, this._fontTextureAtlas = r, this._options = t, this._options = { ...f, ...t }, this._characterColorPalette = new U(this._p, this._fontTextureAtlas.fontManager.glyphColors(this._options.characters)), this._primaryColorFramebuffer = this._p.createFramebuffer({
+    this._p = A, this._grid = e, this._fontTextureAtlas = r, this._options = t, this._options = { ..._, ...t }, this._characterColorPalette = new U(this._p, this._fontTextureAtlas.fontManager.glyphColors(this._options.characters)), this._primaryColorFramebuffer = this._p.createFramebuffer({
       density: 1,
       antialias: !1,
       width: this._grid.cols,
@@ -1596,6 +1596,14 @@ class BA {
     }));
   }
   /**
+   * Deprecated method to initialize p5.asciify with the p5.js instance manually in `INSTANCE` mode.
+   * Doesn't do anything now except logging a warning.
+   * @param p The p5.js instance to use for the library.
+   */
+  instance(A) {
+    console.warn("[p5.asciify] 'instance()' method is deprecated and redundant to call with v0.7.2 and beyond - remove this call from your sketch.");
+  }
+  /**
    * Renders the ASCII output to the canvas.
    * 
    * **This method is called automatically every time the user's `draw()` function has finished. Calling it manually is redundant and only causes useless computation.**
@@ -1711,8 +1719,8 @@ class BA {
       let c = "";
       for (let S = 0; S < r; S++) {
         const v = h * 4, O = e[v], j = e[v + 1];
-        let _ = O + (j << 8);
-        _ >= s.length && (_ = s.length - 1), c += s[_], h++;
+        let f = O + (j << 8);
+        f >= s.length && (f = s.length - 1), c += s[f], h++;
       }
       g.push(c);
     }
@@ -1894,7 +1902,7 @@ const hA = `data:font/truetype;charset=utf-8;base64,AAEAAAAKAIAAAwAgT1MvMs+QEyQA
   __proto__: null,
   ACCURATE_DEFAULT_OPTIONS: D,
   BRIGHTNESS_DEFAULT_OPTIONS: C,
-  CUSTOM_DEFAULT_OPTIONS: f,
+  CUSTOM_DEFAULT_OPTIONS: _,
   EDGE_DEFAULT_OPTIONS: m,
   GRADIENT_DEFAULT_OPTIONS: p,
   P5AsciifyAccurateRenderer: w,

@@ -44,6 +44,12 @@ export declare class P5Asciifier {
      */
     setup(): void;
     /**
+     * Deprecated method to initialize p5.asciify with the p5.js instance manually in `INSTANCE` mode.
+     * Doesn't do anything now except logging a warning.
+     * @param p The p5.js instance to use for the library.
+     */
+    instance(p: p5): void;
+    /**
      * Renders the ASCII output to the canvas.
      *
      * **This method is called automatically every time the user's `draw()` function has finished. Calling it manually is redundant and only causes useless computation.**

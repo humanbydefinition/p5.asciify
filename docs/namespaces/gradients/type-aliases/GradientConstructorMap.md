@@ -8,6 +8,6 @@
 
 > **GradientConstructorMap**: `Record`\<[`GradientType`](GradientType.md), (`p`, `fontTextureAtlas`, `shader`, `characters`, `brightnessStart`, `brightnessEnd`, `params`) => [`P5AsciifyGradient`](../classes/P5AsciifyGradient.md)\>
 
-Defined in: [gradients/types.ts:9](https://github.com/humanbydefinition/p5-asciify/blob/4734d27c518ba68f3f98eba448e4499dc8c97158/src/lib/gradients/types.ts#L9)
+Defined in: [gradients/types.ts:9](https://github.com/humanbydefinition/p5-asciify/blob/240f04ae8120d8b0eda0aa09e3fda1b41eb9a25b/src/lib/gradients/types.ts#L9)
 
 Gradient constructor type.

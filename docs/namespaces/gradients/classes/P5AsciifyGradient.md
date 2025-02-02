@@ -6,7 +6,7 @@
 
 # Class: `abstract` P5AsciifyGradient
 
-Defined in: [gradients/Gradient.ts:11](https://github.com/humanbydefinition/p5-asciify/blob/4734d27c518ba68f3f98eba448e4499dc8c97158/src/lib/gradients/Gradient.ts#L11)
+Defined in: [gradients/Gradient.ts:11](https://github.com/humanbydefinition/p5-asciify/blob/240f04ae8120d8b0eda0aa09e3fda1b41eb9a25b/src/lib/gradients/Gradient.ts#L11)
 
 Represents a gradient that can be applied to the gradient ascii renderer.
 
@@ -23,7 +23,7 @@ Represents a gradient that can be applied to the gradient ascii renderer.
 
 > **new P5AsciifyGradient**(`p`, `_fontTextureAtlas`, `_shader`, `_characters`, `brightnessStart`, `brightnessEnd`): [`P5AsciifyGradient`](P5AsciifyGradient.md)
 
-Defined in: [gradients/Gradient.ts:25](https://github.com/humanbydefinition/p5-asciify/blob/4734d27c518ba68f3f98eba448e4499dc8c97158/src/lib/gradients/Gradient.ts#L25)
+Defined in: [gradients/Gradient.ts:25](https://github.com/humanbydefinition/p5-asciify/blob/240f04ae8120d8b0eda0aa09e3fda1b41eb9a25b/src/lib/gradients/Gradient.ts#L25)
 
 #### Parameters
 
@@ -48,7 +48,7 @@ Defined in: [gradients/Gradient.ts:25](https://github.com/humanbydefinition/p5-a
 
 > **get** **isEnabled**(): `boolean`
 
-Defined in: [gradients/Gradient.ts:137](https://github.com/humanbydefinition/p5-asciify/blob/4734d27c518ba68f3f98eba448e4499dc8c97158/src/lib/gradients/Gradient.ts#L137)
+Defined in: [gradients/Gradient.ts:137](https://github.com/humanbydefinition/p5-asciify/blob/240f04ae8120d8b0eda0aa09e3fda1b41eb9a25b/src/lib/gradients/Gradient.ts#L137)
 
 ##### Returns
 
@@ -62,7 +62,7 @@ Defined in: [gradients/Gradient.ts:137](https://github.com/humanbydefinition/p5-
 
 > **get** **palette**(): [`P5AsciifyColorPalette`](../../../classes/P5AsciifyColorPalette.md)
 
-Defined in: [gradients/Gradient.ts:136](https://github.com/humanbydefinition/p5-asciify/blob/4734d27c518ba68f3f98eba448e4499dc8c97158/src/lib/gradients/Gradient.ts#L136)
+Defined in: [gradients/Gradient.ts:136](https://github.com/humanbydefinition/p5-asciify/blob/240f04ae8120d8b0eda0aa09e3fda1b41eb9a25b/src/lib/gradients/Gradient.ts#L136)
 
 ##### Returns
 
@@ -76,7 +76,7 @@ Defined in: [gradients/Gradient.ts:136](https://github.com/humanbydefinition/p5-
 
 > **get** **shader**(): `Shader`
 
-Defined in: [gradients/Gradient.ts:135](https://github.com/humanbydefinition/p5-asciify/blob/4734d27c518ba68f3f98eba448e4499dc8c97158/src/lib/gradients/Gradient.ts#L135)
+Defined in: [gradients/Gradient.ts:135](https://github.com/humanbydefinition/p5-asciify/blob/240f04ae8120d8b0eda0aa09e3fda1b41eb9a25b/src/lib/gradients/Gradient.ts#L135)
 
 ##### Returns
 
@@ -88,7 +88,7 @@ Defined in: [gradients/Gradient.ts:135](https://github.com/humanbydefinition/p5-
 
 > **brightnessEnd**(`value`): `void`
 
-Defined in: [gradients/Gradient.ts:82](https://github.com/humanbydefinition/p5-asciify/blob/4734d27c518ba68f3f98eba448e4499dc8c97158/src/lib/gradients/Gradient.ts#L82)
+Defined in: [gradients/Gradient.ts:82](https://github.com/humanbydefinition/p5-asciify/blob/240f04ae8120d8b0eda0aa09e3fda1b41eb9a25b/src/lib/gradients/Gradient.ts#L82)
 
 Sets the end brightness value.
 
@@ -112,7 +112,7 @@ P5AsciifyError If the value is not a number or is not within the range [0, 255].
 
 > **brightnessRange**(`start`, `end`): `void`
 
-Defined in: [gradients/Gradient.ts:93](https://github.com/humanbydefinition/p5-asciify/blob/4734d27c518ba68f3f98eba448e4499dc8c97158/src/lib/gradients/Gradient.ts#L93)
+Defined in: [gradients/Gradient.ts:93](https://github.com/humanbydefinition/p5-asciify/blob/240f04ae8120d8b0eda0aa09e3fda1b41eb9a25b/src/lib/gradients/Gradient.ts#L93)
 
 Sets the brightness range.
 
@@ -137,7 +137,7 @@ P5AsciifyError If the start or end value is not a number or is not within the ra
 
 > **brightnessStart**(`value`): `void`
 
-Defined in: [gradients/Gradient.ts:72](https://github.com/humanbydefinition/p5-asciify/blob/4734d27c518ba68f3f98eba448e4499dc8c97158/src/lib/gradients/Gradient.ts#L72)
+Defined in: [gradients/Gradient.ts:72](https://github.com/humanbydefinition/p5-asciify/blob/240f04ae8120d8b0eda0aa09e3fda1b41eb9a25b/src/lib/gradients/Gradient.ts#L72)
 
 Sets the start brightness value.
 
@@ -161,7 +161,7 @@ P5AsciifyError If the value is not a number or is not within the range [0, 255].
 
 > **characters**(`value`): `void`
 
-Defined in: [gradients/Gradient.ts:103](https://github.com/humanbydefinition/p5-asciify/blob/4734d27c518ba68f3f98eba448e4499dc8c97158/src/lib/gradients/Gradient.ts#L103)
+Defined in: [gradients/Gradient.ts:103](https://github.com/humanbydefinition/p5-asciify/blob/240f04ae8120d8b0eda0aa09e3fda1b41eb9a25b/src/lib/gradients/Gradient.ts#L103)
 
 Sets the characters to use for the gradient.
 
@@ -185,7 +185,7 @@ P5AsciifyError If the string does contain characters that are not available in t
 
 > **disable**(): `void`
 
-Defined in: [gradients/Gradient.ts:130](https://github.com/humanbydefinition/p5-asciify/blob/4734d27c518ba68f3f98eba448e4499dc8c97158/src/lib/gradients/Gradient.ts#L130)
+Defined in: [gradients/Gradient.ts:130](https://github.com/humanbydefinition/p5-asciify/blob/240f04ae8120d8b0eda0aa09e3fda1b41eb9a25b/src/lib/gradients/Gradient.ts#L130)
 
 Disables the gradient.
 
@@ -199,7 +199,7 @@ Disables the gradient.
 
 > **enable**(): `void`
 
-Defined in: [gradients/Gradient.ts:123](https://github.com/humanbydefinition/p5-asciify/blob/4734d27c518ba68f3f98eba448e4499dc8c97158/src/lib/gradients/Gradient.ts#L123)
+Defined in: [gradients/Gradient.ts:123](https://github.com/humanbydefinition/p5-asciify/blob/240f04ae8120d8b0eda0aa09e3fda1b41eb9a25b/src/lib/gradients/Gradient.ts#L123)
 
 Enables the gradient.
 
@@ -213,7 +213,7 @@ Enables the gradient.
 
 > **enabled**(`value`): `void`
 
-Defined in: [gradients/Gradient.ts:116](https://github.com/humanbydefinition/p5-asciify/blob/4734d27c518ba68f3f98eba448e4499dc8c97158/src/lib/gradients/Gradient.ts#L116)
+Defined in: [gradients/Gradient.ts:116](https://github.com/humanbydefinition/p5-asciify/blob/240f04ae8120d8b0eda0aa09e3fda1b41eb9a25b/src/lib/gradients/Gradient.ts#L116)
 
 Enables or disables the gradient.
 
@@ -233,7 +233,7 @@ Enables or disables the gradient.
 
 > **setUniforms**(`framebuffer`, `referenceFramebuffer`): `void`
 
-Defined in: [gradients/Gradient.ts:58](https://github.com/humanbydefinition/p5-asciify/blob/4734d27c518ba68f3f98eba448e4499dc8c97158/src/lib/gradients/Gradient.ts#L58)
+Defined in: [gradients/Gradient.ts:58](https://github.com/humanbydefinition/p5-asciify/blob/240f04ae8120d8b0eda0aa09e3fda1b41eb9a25b/src/lib/gradients/Gradient.ts#L58)
 
 Sets the uniforms for the gradient shader.
 
