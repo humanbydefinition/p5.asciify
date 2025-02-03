@@ -106,7 +106,7 @@ const sketch = (p) => {
 		p5asciify.borderColor = p.color(0);
 		p5asciify.renderers().get("custom").update({ enabled: true });
 
-		charsetColorPalette = p5asciify.fontTextureAtlas.getCharsetColorArray(charset);
+		charsetColorPalette = p5asciify.fontManager.glyphColors(charset);
 		charsetColorPaletteFramebuffer.loadPixels();
 		for (let i = 0; i < charset.length; i++) {
 			let c = charsetColorPalette[i];
