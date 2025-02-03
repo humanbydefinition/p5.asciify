@@ -53,7 +53,7 @@ export class P5AsciifyRenderer {
      * @remarks
      * This constructor is meant for internal use by the `p5.asciify` library.
      * 
-     * To create renderers, use `p5asciify.renderers().add()`.
+     * To create renderers, use `p5asciify.renderers().add();`.
      * This will also return an instance of the renderer, which can be used to modify the renderer's properties.
      * Additionally, the renderer will also be added to the end of the rendering pipeline automatically.
      * 
