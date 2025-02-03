@@ -8,7 +8,7 @@
 
 > `const` **CUSTOM\_DEFAULT\_OPTIONS**: `object`
 
-Defined in: [renderers/AsciiRenderer.ts:13](https://github.com/humanbydefinition/p5.asciify/blob/99ff78fc13b1ab2e7b69f99d4dfd8409113decf3/src/lib/renderers/AsciiRenderer.ts#L13)
+Defined in: [renderers/AsciiRenderer.ts:13](https://github.com/humanbydefinition/p5.asciify/blob/e0ae4eab8395513c6718e51c70d1cd76036899fb/src/lib/renderers/AsciiRenderer.ts#L13)
 
 Default configuration options for `"custom"` ASCII renderer
 
@@ -16,6 +16,6 @@ Default configuration options for `"custom"` ASCII renderer
 
 | Name | Type | Default value | Description | Defined in |
 | ------ | ------ | ------ | ------ | ------ |
-| <a id="enabled"></a> `enabled` | `boolean` | false | Enable/disable the renderer | [renderers/AsciiRenderer.ts:15](https://github.com/humanbydefinition/p5.asciify/blob/99ff78fc13b1ab2e7b69f99d4dfd8409113decf3/src/lib/renderers/AsciiRenderer.ts#L15) |
-| <a id="invertmode"></a> `invertMode` | `boolean` | false | Swap the cells ASCII character colors with it's cell background colors | [renderers/AsciiRenderer.ts:17](https://github.com/humanbydefinition/p5.asciify/blob/99ff78fc13b1ab2e7b69f99d4dfd8409113decf3/src/lib/renderers/AsciiRenderer.ts#L17) |
-| <a id="rotationangle"></a> `rotationAngle` | `number` | 0 | Rotation angle of all characters in the grid in degrees | [renderers/AsciiRenderer.ts:19](https://github.com/humanbydefinition/p5.asciify/blob/99ff78fc13b1ab2e7b69f99d4dfd8409113decf3/src/lib/renderers/AsciiRenderer.ts#L19) |
+| <a id="enabled"></a> `enabled` | `boolean` | false | Enable/disable the renderer | [renderers/AsciiRenderer.ts:15](https://github.com/humanbydefinition/p5.asciify/blob/e0ae4eab8395513c6718e51c70d1cd76036899fb/src/lib/renderers/AsciiRenderer.ts#L15) |
+| <a id="invertmode"></a> `invertMode` | `boolean` | false | Swap the cells ASCII character colors with it's cell background colors | [renderers/AsciiRenderer.ts:17](https://github.com/humanbydefinition/p5.asciify/blob/e0ae4eab8395513c6718e51c70d1cd76036899fb/src/lib/renderers/AsciiRenderer.ts#L17) |
+| <a id="rotationangle"></a> `rotationAngle` | `number` | 0 | Rotation angle of all characters in the grid in degrees | [renderers/AsciiRenderer.ts:19](https://github.com/humanbydefinition/p5.asciify/blob/e0ae4eab8395513c6718e51c70d1cd76036899fb/src/lib/renderers/AsciiRenderer.ts#L19) |

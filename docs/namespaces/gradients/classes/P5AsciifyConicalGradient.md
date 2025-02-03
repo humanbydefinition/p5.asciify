@@ -6,7 +6,7 @@
 
 # Class: P5AsciifyConicalGradient
 
-Defined in: [gradients/conical/Conical.ts:9](https://github.com/humanbydefinition/p5.asciify/blob/99ff78fc13b1ab2e7b69f99d4dfd8409113decf3/src/lib/gradients/conical/Conical.ts#L9)
+Defined in: [gradients/conical/Conical.ts:9](https://github.com/humanbydefinition/p5.asciify/blob/e0ae4eab8395513c6718e51c70d1cd76036899fb/src/lib/gradients/conical/Conical.ts#L9)
 
 A conical gradient that moves in a conical pattern across the screen.
 
@@ -20,7 +20,7 @@ A conical gradient that moves in a conical pattern across the screen.
 
 > **new P5AsciifyConicalGradient**(`p`, `_fontTextureAtlas`, `_shader`, `_characters`, `brightnessStart`, `brightnessEnd`, `params`): [`P5AsciifyConicalGradient`](P5AsciifyConicalGradient.md)
 
-Defined in: [gradients/conical/Conical.ts:14](https://github.com/humanbydefinition/p5.asciify/blob/99ff78fc13b1ab2e7b69f99d4dfd8409113decf3/src/lib/gradients/conical/Conical.ts#L14)
+Defined in: [gradients/conical/Conical.ts:14](https://github.com/humanbydefinition/p5.asciify/blob/e0ae4eab8395513c6718e51c70d1cd76036899fb/src/lib/gradients/conical/Conical.ts#L14)
 
 #### Parameters
 
@@ -46,9 +46,9 @@ Defined in: [gradients/conical/Conical.ts:14](https://github.com/humanbydefiniti
 
 | Property | Modifier | Type | Defined in |
 | ------ | ------ | ------ | ------ |
-| <a id="centerx"></a> `centerX` | `public` | `number` | [gradients/conical/Conical.ts:10](https://github.com/humanbydefinition/p5.asciify/blob/99ff78fc13b1ab2e7b69f99d4dfd8409113decf3/src/lib/gradients/conical/Conical.ts#L10) |
-| <a id="centery"></a> `centerY` | `public` | `number` | [gradients/conical/Conical.ts:11](https://github.com/humanbydefinition/p5.asciify/blob/99ff78fc13b1ab2e7b69f99d4dfd8409113decf3/src/lib/gradients/conical/Conical.ts#L11) |
-| <a id="speed"></a> `speed` | `public` | `number` | [gradients/conical/Conical.ts:12](https://github.com/humanbydefinition/p5.asciify/blob/99ff78fc13b1ab2e7b69f99d4dfd8409113decf3/src/lib/gradients/conical/Conical.ts#L12) |
+| <a id="centerx"></a> `centerX` | `public` | `number` | [gradients/conical/Conical.ts:10](https://github.com/humanbydefinition/p5.asciify/blob/e0ae4eab8395513c6718e51c70d1cd76036899fb/src/lib/gradients/conical/Conical.ts#L10) |
+| <a id="centery"></a> `centerY` | `public` | `number` | [gradients/conical/Conical.ts:11](https://github.com/humanbydefinition/p5.asciify/blob/e0ae4eab8395513c6718e51c70d1cd76036899fb/src/lib/gradients/conical/Conical.ts#L11) |
+| <a id="speed"></a> `speed` | `public` | `number` | [gradients/conical/Conical.ts:12](https://github.com/humanbydefinition/p5.asciify/blob/e0ae4eab8395513c6718e51c70d1cd76036899fb/src/lib/gradients/conical/Conical.ts#L12) |
 
 ## Accessors
 
@@ -58,7 +58,7 @@ Defined in: [gradients/conical/Conical.ts:14](https://github.com/humanbydefiniti
 
 > **get** **isEnabled**(): `boolean`
 
-Defined in: [gradients/Gradient.ts:137](https://github.com/humanbydefinition/p5.asciify/blob/99ff78fc13b1ab2e7b69f99d4dfd8409113decf3/src/lib/gradients/Gradient.ts#L137)
+Defined in: [gradients/Gradient.ts:137](https://github.com/humanbydefinition/p5.asciify/blob/e0ae4eab8395513c6718e51c70d1cd76036899fb/src/lib/gradients/Gradient.ts#L137)
 
 ##### Returns
 
@@ -76,7 +76,7 @@ Defined in: [gradients/Gradient.ts:137](https://github.com/humanbydefinition/p5.
 
 > **get** **palette**(): [`P5AsciifyColorPalette`](../../../classes/P5AsciifyColorPalette.md)
 
-Defined in: [gradients/Gradient.ts:136](https://github.com/humanbydefinition/p5.asciify/blob/99ff78fc13b1ab2e7b69f99d4dfd8409113decf3/src/lib/gradients/Gradient.ts#L136)
+Defined in: [gradients/Gradient.ts:136](https://github.com/humanbydefinition/p5.asciify/blob/e0ae4eab8395513c6718e51c70d1cd76036899fb/src/lib/gradients/Gradient.ts#L136)
 
 ##### Returns
 
@@ -94,7 +94,7 @@ Defined in: [gradients/Gradient.ts:136](https://github.com/humanbydefinition/p5.
 
 > **get** **shader**(): `Shader`
 
-Defined in: [gradients/Gradient.ts:135](https://github.com/humanbydefinition/p5.asciify/blob/99ff78fc13b1ab2e7b69f99d4dfd8409113decf3/src/lib/gradients/Gradient.ts#L135)
+Defined in: [gradients/Gradient.ts:135](https://github.com/humanbydefinition/p5.asciify/blob/e0ae4eab8395513c6718e51c70d1cd76036899fb/src/lib/gradients/Gradient.ts#L135)
 
 ##### Returns
 
@@ -110,7 +110,7 @@ Defined in: [gradients/Gradient.ts:135](https://github.com/humanbydefinition/p5.
 
 > **brightnessEnd**(`value`): `void`
 
-Defined in: [gradients/Gradient.ts:82](https://github.com/humanbydefinition/p5.asciify/blob/99ff78fc13b1ab2e7b69f99d4dfd8409113decf3/src/lib/gradients/Gradient.ts#L82)
+Defined in: [gradients/Gradient.ts:82](https://github.com/humanbydefinition/p5.asciify/blob/e0ae4eab8395513c6718e51c70d1cd76036899fb/src/lib/gradients/Gradient.ts#L82)
 
 Sets the end brightness value.
 
@@ -138,7 +138,7 @@ P5AsciifyError If the value is not a number or is not within the range [0, 255].
 
 > **brightnessRange**(`start`, `end`): `void`
 
-Defined in: [gradients/Gradient.ts:93](https://github.com/humanbydefinition/p5.asciify/blob/99ff78fc13b1ab2e7b69f99d4dfd8409113decf3/src/lib/gradients/Gradient.ts#L93)
+Defined in: [gradients/Gradient.ts:93](https://github.com/humanbydefinition/p5.asciify/blob/e0ae4eab8395513c6718e51c70d1cd76036899fb/src/lib/gradients/Gradient.ts#L93)
 
 Sets the brightness range.
 
@@ -167,7 +167,7 @@ P5AsciifyError If the start or end value is not a number or is not within the ra
 
 > **brightnessStart**(`value`): `void`
 
-Defined in: [gradients/Gradient.ts:72](https://github.com/humanbydefinition/p5.asciify/blob/99ff78fc13b1ab2e7b69f99d4dfd8409113decf3/src/lib/gradients/Gradient.ts#L72)
+Defined in: [gradients/Gradient.ts:72](https://github.com/humanbydefinition/p5.asciify/blob/e0ae4eab8395513c6718e51c70d1cd76036899fb/src/lib/gradients/Gradient.ts#L72)
 
 Sets the start brightness value.
 
@@ -195,7 +195,7 @@ P5AsciifyError If the value is not a number or is not within the range [0, 255].
 
 > **characters**(`value`): `void`
 
-Defined in: [gradients/Gradient.ts:103](https://github.com/humanbydefinition/p5.asciify/blob/99ff78fc13b1ab2e7b69f99d4dfd8409113decf3/src/lib/gradients/Gradient.ts#L103)
+Defined in: [gradients/Gradient.ts:103](https://github.com/humanbydefinition/p5.asciify/blob/e0ae4eab8395513c6718e51c70d1cd76036899fb/src/lib/gradients/Gradient.ts#L103)
 
 Sets the characters to use for the gradient.
 
@@ -223,7 +223,7 @@ P5AsciifyError If the string does contain characters that are not available in t
 
 > **disable**(): `void`
 
-Defined in: [gradients/Gradient.ts:130](https://github.com/humanbydefinition/p5.asciify/blob/99ff78fc13b1ab2e7b69f99d4dfd8409113decf3/src/lib/gradients/Gradient.ts#L130)
+Defined in: [gradients/Gradient.ts:130](https://github.com/humanbydefinition/p5.asciify/blob/e0ae4eab8395513c6718e51c70d1cd76036899fb/src/lib/gradients/Gradient.ts#L130)
 
 Disables the gradient.
 
@@ -241,7 +241,7 @@ Disables the gradient.
 
 > **enable**(): `void`
 
-Defined in: [gradients/Gradient.ts:123](https://github.com/humanbydefinition/p5.asciify/blob/99ff78fc13b1ab2e7b69f99d4dfd8409113decf3/src/lib/gradients/Gradient.ts#L123)
+Defined in: [gradients/Gradient.ts:123](https://github.com/humanbydefinition/p5.asciify/blob/e0ae4eab8395513c6718e51c70d1cd76036899fb/src/lib/gradients/Gradient.ts#L123)
 
 Enables the gradient.
 
@@ -259,7 +259,7 @@ Enables the gradient.
 
 > **enabled**(`value`): `void`
 
-Defined in: [gradients/Gradient.ts:116](https://github.com/humanbydefinition/p5.asciify/blob/99ff78fc13b1ab2e7b69f99d4dfd8409113decf3/src/lib/gradients/Gradient.ts#L116)
+Defined in: [gradients/Gradient.ts:116](https://github.com/humanbydefinition/p5.asciify/blob/e0ae4eab8395513c6718e51c70d1cd76036899fb/src/lib/gradients/Gradient.ts#L116)
 
 Enables or disables the gradient.
 
@@ -283,7 +283,7 @@ Enables or disables the gradient.
 
 > **setUniforms**(`framebuffer`, `referenceFramebuffer`): `void`
 
-Defined in: [gradients/conical/Conical.ts:29](https://github.com/humanbydefinition/p5.asciify/blob/99ff78fc13b1ab2e7b69f99d4dfd8409113decf3/src/lib/gradients/conical/Conical.ts#L29)
+Defined in: [gradients/conical/Conical.ts:29](https://github.com/humanbydefinition/p5.asciify/blob/e0ae4eab8395513c6718e51c70d1cd76036899fb/src/lib/gradients/conical/Conical.ts#L29)
 
 Sets the uniforms for the gradient shader.
 
