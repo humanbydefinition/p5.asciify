@@ -40,7 +40,7 @@ export declare class P5Asciifier {
      * Sets up the `p5.asciify` library by initializing the font texture atlas, grid, renderer manager, and sketch framebuffer.
      *
      * **This method called automatically after the user's `setup()` function has finished.
-     * Calling this function manually would reset the library and previously made settings, which is rather redundant.**
+     * Calling this function manually would reset to the library it's default state, which is rather redundant.**
      */
     setup(): void;
     /**
@@ -51,15 +51,20 @@ export declare class P5Asciifier {
      * @example
      * ```javascript
      *  import p5 from 'p5';
-     *  import { p5asciify } from '../../src/lib/index';
+     *  import { p5asciify } from 'p5.asciify';
      *
      *  const sketch = (p) => {
      *      p5asciify.instance(p);
      *
      *      // ... your sketch code
+     *      p.setup = () => { };
+     *      p.setupAsciify = () => { };
+     *      p.draw = () => { };
+     *      p.drawAsciify = () => { };
      *  }
      *
      * new p5(sketch);
+     * ```
      */
     instance(p: p5): void;
     /**
@@ -103,7 +108,7 @@ export declare class P5Asciifier {
      * Sets the font for the ascii renderers.
      * @param font The font to use. Can be a path, base64 string, or p5.Font object.
      * @param options An object containing options affecting what happens after the font is loaded.
-     * @param options.updateCharacters  If true, updates renderer character colors for ascii conversion with new font.
+     * @param options.updateCharacters  If `true`, updates renderer character colors for ascii conversion with new font.
      *                                  May throw an error if new font lacks set characters in renderers.
      *                                  If false, the character colors won't be updated,
      *                                  potentially leading to incorrect ASCII conversion when not updated manually afterwards.

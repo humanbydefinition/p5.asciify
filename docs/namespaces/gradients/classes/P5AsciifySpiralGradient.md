@@ -6,7 +6,7 @@
 
 # Class: P5AsciifySpiralGradient
 
-Defined in: [gradients/spiral/Spiral.ts:9](https://github.com/humanbydefinition/p5.asciify/blob/e0ae4eab8395513c6718e51c70d1cd76036899fb/src/lib/gradients/spiral/Spiral.ts#L9)
+Defined in: [gradients/spiral/Spiral.ts:9](https://github.com/humanbydefinition/p5.asciify/blob/6fefeaafef48319cd9c62f693034711261e84b1d/src/lib/gradients/spiral/Spiral.ts#L9)
 
 A spiral gradient that moves in a spiral pattern across the screen.
 
@@ -20,7 +20,7 @@ A spiral gradient that moves in a spiral pattern across the screen.
 
 > **new P5AsciifySpiralGradient**(`p`, `_fontTextureAtlas`, `_shader`, `_characters`, `brightnessStart`, `brightnessEnd`, `params`): [`P5AsciifySpiralGradient`](P5AsciifySpiralGradient.md)
 
-Defined in: [gradients/spiral/Spiral.ts:16](https://github.com/humanbydefinition/p5.asciify/blob/e0ae4eab8395513c6718e51c70d1cd76036899fb/src/lib/gradients/spiral/Spiral.ts#L16)
+Defined in: [gradients/spiral/Spiral.ts:16](https://github.com/humanbydefinition/p5.asciify/blob/6fefeaafef48319cd9c62f693034711261e84b1d/src/lib/gradients/spiral/Spiral.ts#L16)
 
 #### Parameters
 
@@ -46,11 +46,11 @@ Defined in: [gradients/spiral/Spiral.ts:16](https://github.com/humanbydefinition
 
 | Property | Modifier | Type | Defined in |
 | ------ | ------ | ------ | ------ |
-| <a id="centerx"></a> `centerX` | `public` | `number` | [gradients/spiral/Spiral.ts:11](https://github.com/humanbydefinition/p5.asciify/blob/e0ae4eab8395513c6718e51c70d1cd76036899fb/src/lib/gradients/spiral/Spiral.ts#L11) |
-| <a id="centery"></a> `centerY` | `public` | `number` | [gradients/spiral/Spiral.ts:12](https://github.com/humanbydefinition/p5.asciify/blob/e0ae4eab8395513c6718e51c70d1cd76036899fb/src/lib/gradients/spiral/Spiral.ts#L12) |
-| <a id="density"></a> `density` | `public` | `number` | [gradients/spiral/Spiral.ts:14](https://github.com/humanbydefinition/p5.asciify/blob/e0ae4eab8395513c6718e51c70d1cd76036899fb/src/lib/gradients/spiral/Spiral.ts#L14) |
-| <a id="direction"></a> `direction` | `public` | `number` | [gradients/spiral/Spiral.ts:10](https://github.com/humanbydefinition/p5.asciify/blob/e0ae4eab8395513c6718e51c70d1cd76036899fb/src/lib/gradients/spiral/Spiral.ts#L10) |
-| <a id="speed"></a> `speed` | `public` | `number` | [gradients/spiral/Spiral.ts:13](https://github.com/humanbydefinition/p5.asciify/blob/e0ae4eab8395513c6718e51c70d1cd76036899fb/src/lib/gradients/spiral/Spiral.ts#L13) |
+| <a id="centerx"></a> `centerX` | `public` | `number` | [gradients/spiral/Spiral.ts:11](https://github.com/humanbydefinition/p5.asciify/blob/6fefeaafef48319cd9c62f693034711261e84b1d/src/lib/gradients/spiral/Spiral.ts#L11) |
+| <a id="centery"></a> `centerY` | `public` | `number` | [gradients/spiral/Spiral.ts:12](https://github.com/humanbydefinition/p5.asciify/blob/6fefeaafef48319cd9c62f693034711261e84b1d/src/lib/gradients/spiral/Spiral.ts#L12) |
+| <a id="density"></a> `density` | `public` | `number` | [gradients/spiral/Spiral.ts:14](https://github.com/humanbydefinition/p5.asciify/blob/6fefeaafef48319cd9c62f693034711261e84b1d/src/lib/gradients/spiral/Spiral.ts#L14) |
+| <a id="direction"></a> `direction` | `public` | `number` | [gradients/spiral/Spiral.ts:10](https://github.com/humanbydefinition/p5.asciify/blob/6fefeaafef48319cd9c62f693034711261e84b1d/src/lib/gradients/spiral/Spiral.ts#L10) |
+| <a id="speed"></a> `speed` | `public` | `number` | [gradients/spiral/Spiral.ts:13](https://github.com/humanbydefinition/p5.asciify/blob/6fefeaafef48319cd9c62f693034711261e84b1d/src/lib/gradients/spiral/Spiral.ts#L13) |
 
 ## Accessors
 
@@ -60,7 +60,7 @@ Defined in: [gradients/spiral/Spiral.ts:16](https://github.com/humanbydefinition
 
 > **get** **isEnabled**(): `boolean`
 
-Defined in: [gradients/Gradient.ts:137](https://github.com/humanbydefinition/p5.asciify/blob/e0ae4eab8395513c6718e51c70d1cd76036899fb/src/lib/gradients/Gradient.ts#L137)
+Defined in: [gradients/Gradient.ts:137](https://github.com/humanbydefinition/p5.asciify/blob/6fefeaafef48319cd9c62f693034711261e84b1d/src/lib/gradients/Gradient.ts#L137)
 
 ##### Returns
 
@@ -78,7 +78,7 @@ Defined in: [gradients/Gradient.ts:137](https://github.com/humanbydefinition/p5.
 
 > **get** **palette**(): [`P5AsciifyColorPalette`](../../../classes/P5AsciifyColorPalette.md)
 
-Defined in: [gradients/Gradient.ts:136](https://github.com/humanbydefinition/p5.asciify/blob/e0ae4eab8395513c6718e51c70d1cd76036899fb/src/lib/gradients/Gradient.ts#L136)
+Defined in: [gradients/Gradient.ts:136](https://github.com/humanbydefinition/p5.asciify/blob/6fefeaafef48319cd9c62f693034711261e84b1d/src/lib/gradients/Gradient.ts#L136)
 
 ##### Returns
 
@@ -96,7 +96,7 @@ Defined in: [gradients/Gradient.ts:136](https://github.com/humanbydefinition/p5.
 
 > **get** **shader**(): `Shader`
 
-Defined in: [gradients/Gradient.ts:135](https://github.com/humanbydefinition/p5.asciify/blob/e0ae4eab8395513c6718e51c70d1cd76036899fb/src/lib/gradients/Gradient.ts#L135)
+Defined in: [gradients/Gradient.ts:135](https://github.com/humanbydefinition/p5.asciify/blob/6fefeaafef48319cd9c62f693034711261e84b1d/src/lib/gradients/Gradient.ts#L135)
 
 ##### Returns
 
@@ -112,7 +112,7 @@ Defined in: [gradients/Gradient.ts:135](https://github.com/humanbydefinition/p5.
 
 > **brightnessEnd**(`value`): `void`
 
-Defined in: [gradients/Gradient.ts:82](https://github.com/humanbydefinition/p5.asciify/blob/e0ae4eab8395513c6718e51c70d1cd76036899fb/src/lib/gradients/Gradient.ts#L82)
+Defined in: [gradients/Gradient.ts:82](https://github.com/humanbydefinition/p5.asciify/blob/6fefeaafef48319cd9c62f693034711261e84b1d/src/lib/gradients/Gradient.ts#L82)
 
 Sets the end brightness value.
 
@@ -140,7 +140,7 @@ P5AsciifyError If the value is not a number or is not within the range [0, 255].
 
 > **brightnessRange**(`start`, `end`): `void`
 
-Defined in: [gradients/Gradient.ts:93](https://github.com/humanbydefinition/p5.asciify/blob/e0ae4eab8395513c6718e51c70d1cd76036899fb/src/lib/gradients/Gradient.ts#L93)
+Defined in: [gradients/Gradient.ts:93](https://github.com/humanbydefinition/p5.asciify/blob/6fefeaafef48319cd9c62f693034711261e84b1d/src/lib/gradients/Gradient.ts#L93)
 
 Sets the brightness range.
 
@@ -169,7 +169,7 @@ P5AsciifyError If the start or end value is not a number or is not within the ra
 
 > **brightnessStart**(`value`): `void`
 
-Defined in: [gradients/Gradient.ts:72](https://github.com/humanbydefinition/p5.asciify/blob/e0ae4eab8395513c6718e51c70d1cd76036899fb/src/lib/gradients/Gradient.ts#L72)
+Defined in: [gradients/Gradient.ts:72](https://github.com/humanbydefinition/p5.asciify/blob/6fefeaafef48319cd9c62f693034711261e84b1d/src/lib/gradients/Gradient.ts#L72)
 
 Sets the start brightness value.
 
@@ -197,7 +197,7 @@ P5AsciifyError If the value is not a number or is not within the range [0, 255].
 
 > **characters**(`value`): `void`
 
-Defined in: [gradients/Gradient.ts:103](https://github.com/humanbydefinition/p5.asciify/blob/e0ae4eab8395513c6718e51c70d1cd76036899fb/src/lib/gradients/Gradient.ts#L103)
+Defined in: [gradients/Gradient.ts:103](https://github.com/humanbydefinition/p5.asciify/blob/6fefeaafef48319cd9c62f693034711261e84b1d/src/lib/gradients/Gradient.ts#L103)
 
 Sets the characters to use for the gradient.
 
@@ -225,7 +225,7 @@ P5AsciifyError If the string does contain characters that are not available in t
 
 > **disable**(): `void`
 
-Defined in: [gradients/Gradient.ts:130](https://github.com/humanbydefinition/p5.asciify/blob/e0ae4eab8395513c6718e51c70d1cd76036899fb/src/lib/gradients/Gradient.ts#L130)
+Defined in: [gradients/Gradient.ts:130](https://github.com/humanbydefinition/p5.asciify/blob/6fefeaafef48319cd9c62f693034711261e84b1d/src/lib/gradients/Gradient.ts#L130)
 
 Disables the gradient.
 
@@ -243,7 +243,7 @@ Disables the gradient.
 
 > **enable**(): `void`
 
-Defined in: [gradients/Gradient.ts:123](https://github.com/humanbydefinition/p5.asciify/blob/e0ae4eab8395513c6718e51c70d1cd76036899fb/src/lib/gradients/Gradient.ts#L123)
+Defined in: [gradients/Gradient.ts:123](https://github.com/humanbydefinition/p5.asciify/blob/6fefeaafef48319cd9c62f693034711261e84b1d/src/lib/gradients/Gradient.ts#L123)
 
 Enables the gradient.
 
@@ -261,7 +261,7 @@ Enables the gradient.
 
 > **enabled**(`value`): `void`
 
-Defined in: [gradients/Gradient.ts:116](https://github.com/humanbydefinition/p5.asciify/blob/e0ae4eab8395513c6718e51c70d1cd76036899fb/src/lib/gradients/Gradient.ts#L116)
+Defined in: [gradients/Gradient.ts:116](https://github.com/humanbydefinition/p5.asciify/blob/6fefeaafef48319cd9c62f693034711261e84b1d/src/lib/gradients/Gradient.ts#L116)
 
 Enables or disables the gradient.
 
@@ -285,7 +285,7 @@ Enables or disables the gradient.
 
 > **setUniforms**(`framebuffer`, `referenceFramebuffer`): `void`
 
-Defined in: [gradients/spiral/Spiral.ts:33](https://github.com/humanbydefinition/p5.asciify/blob/e0ae4eab8395513c6718e51c70d1cd76036899fb/src/lib/gradients/spiral/Spiral.ts#L33)
+Defined in: [gradients/spiral/Spiral.ts:33](https://github.com/humanbydefinition/p5.asciify/blob/6fefeaafef48319cd9c62f693034711261e84b1d/src/lib/gradients/spiral/Spiral.ts#L33)
 
 Sets the uniforms for the gradient shader.
 

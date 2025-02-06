@@ -48,6 +48,21 @@ export class P5AsciifyGradientRenderer extends P5AsciifyRenderer {
     private nextAsciiGradientFramebuffer: p5.Framebuffer;
     private gradientManager: P5AsciifyGradientManager;
 
+    /**
+     * Creates a new `"gradient"` ASCII renderer instance.
+     * 
+     * @remarks
+     * This constructor is meant for internal use by the `p5.asciify` library.
+     * 
+     * To create renderers, use `p5asciify.renderers().add("name", "gradient", { enabled: true });`.
+     * This will also return an instance of the renderer, which can be used to modify the renderer's properties.
+     * Additionally, the renderer will also be added to the end of the rendering pipeline automatically.
+     * 
+     * @param p5Instance The p5 instance.
+     * @param grid Grid object containing the relevant grid information.
+     * @param fontTextureAtlas The font texture atlas containing the ASCII characters texture.
+     * @param options The options for the ASCII renderer.
+     */
     constructor(
         p5Instance: p5,
         grid: P5AsciifyGrid,
@@ -97,6 +112,27 @@ export class P5AsciifyGradientRenderer extends P5AsciifyRenderer {
         this.nextAsciiGradientFramebuffer.resize(this._grid.cols, this._grid.rows);
     }
 
+    /**
+     * Adds a new gradient to the renderer.
+     * 
+     * @example
+     * ```javascript
+     *  function setupAsciify() {
+     *      // Enable the default gradient renderer
+     *      p5asciify.renderers().get("gradient").enable();
+     *      
+     *      // Add a new gradient to the renderer, covering the entire brightness range (the whole canvas)
+     *      p5asciify.renderers().get("gradient").add("linear", 0, 255, " .,:;i1tfLCG08@", { });
+     *  }
+     * ```
+     * 
+     * @param gradientName The name of the gradient to add. Must be a valid gradient name.
+     * @param brightnessStart The brightness value at which the gradient starts.
+     * @param brightnessEnd The brightness value at which the gradient ends.
+     * @param characters The characters to use for the gradient.
+     * @param options Additional options for the gradient.
+     * @returns The gradient instance that was added.
+     */
     add(gradientName: GradientType,
         brightnessStart: number,
         brightnessEnd: number,
@@ -105,6 +141,25 @@ export class P5AsciifyGradientRenderer extends P5AsciifyRenderer {
         return this.gradientManager.add(gradientName, characters, brightnessStart, brightnessEnd, options);
     }
 
+    /**
+     * Removes a gradient from the renderer.
+     * 
+     * @example
+     * ```javascript
+     *  function setupAsciify() {
+     *      // Enable the default gradient renderer
+     *      p5asciify.renderers().get("gradient").enable();
+     * 
+     *      // Add a new gradient to the renderer, covering the entire brightness range (the whole canvas)
+     *      const gradient = p5asciify.renderers().get("gradient").add("linear", 0, 255, " .,:;i1tfLCG08@", { });
+     * 
+     *      // Remove the gradient from the renderer
+     *      p5asciify.renderers().get("gradient").remove(gradient);
+     * }
+     * ```
+     * 
+     * @param gradientInstance The gradient instance to remove.
+     */
     remove(gradientInstance: P5AsciifyGradient): void {
         this.gradientManager.remove(gradientInstance);
     }
@@ -193,7 +248,7 @@ export class P5AsciifyGradientRenderer extends P5AsciifyRenderer {
         this._inversionFramebuffer.begin();
         this._p.clear();
         this._p.shader(this.inversionShader);
-        this.inversionShader.setUniform('u_invert', this._options.invertMode);
+        this.inversionShader.setUniform('u_invert', this._options.invertMode as boolean);
         this.inversionShader.setUniform('u_gridCellDimensions', [this._grid.cols, this._grid.rows]);
         this.inversionShader.setUniform('u_sampleTexture', this.nextAsciiGradientFramebuffer);
         this.inversionShader.setUniform('u_sampleReferenceTexture', this.grayscaleFramebuffer);

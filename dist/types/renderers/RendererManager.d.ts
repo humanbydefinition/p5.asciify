@@ -264,6 +264,11 @@ export declare class P5AsciifyRendererManager {
     }[];
     /**
      * Returns the result framebuffer, which contains the final ASCII output.
+     *
+     * `texture(p5asciify.texture);` and `texture(p5asciify.renderers().resultFramebuffer);` are equivalent,
+     * and can be useful interchangeably, e.g. for custom stuff in `drawAsciify()`.
+     *
+     * Generally, this texture is drawn to the canvas automatically by `p5.asciify` after `draw()` finishes, and before `drawAsciify()` is called.
      */
     get resultFramebuffer(): p5.Framebuffer;
 }

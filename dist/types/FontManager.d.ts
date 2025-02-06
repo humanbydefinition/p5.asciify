@@ -24,9 +24,9 @@ export declare class P5AsciifyFontManager {
     /**
      * Loads a font for ASCII rendering.
      *
-     * **Note: For proper library functionality, use `p5asciify.loadFont()` instead
+     * **Note: For proper library functionality, use `p5asciify.loadFont();` instead
      * of accessing this method directly. Direct access may lead to inconsistent state
-     * as other components won't be automatically updated.**
+     * as other dependent components won't be updated.**
      *
      * @param font The font to load. Can be a path to a .ttf or .otf file, a base64 string, a blob URL, or a p5.Font object.
      * @param onSuccess A callback function to call when the font is successfully loaded.
