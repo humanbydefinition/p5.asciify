@@ -41,6 +41,21 @@ export class P5AsciifyAccurateRenderer extends P5AsciifyRenderer {
     private _brightnessSampleFramebuffer: p5.Framebuffer;
     private _brightnessSplitFramebuffer: p5.Framebuffer;
 
+    /**
+     * Creates a new `"accurate"` ASCII renderer instance.
+     * 
+     * @remarks
+     * This constructor is meant for internal use by the `p5.asciify` library.
+     * 
+     * To create renderers, use `p5asciify.renderers().add("name", "accurate", { enabled: true });`.
+     * This will also return an instance of the renderer, which can be used to modify the renderer's properties.
+     * Additionally, the renderer will also be added to the end of the rendering pipeline automatically.
+     * 
+     * @param p5Instance The p5 instance.
+     * @param grid Grid object containing the relevant grid information.
+     * @param fontTextureAtlas The font texture atlas containing the ASCII characters texture.
+     * @param options The options for the ASCII renderer.
+     */
     constructor(
         p5Instance: p5,
         grid: P5AsciifyGrid,

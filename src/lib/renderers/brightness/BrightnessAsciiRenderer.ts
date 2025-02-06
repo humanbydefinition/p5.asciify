@@ -38,6 +38,21 @@ export class P5AsciifyBrightnessRenderer extends P5AsciifyRenderer {
     private asciiCharacterShader: p5.Shader;
     private colorSampleFramebuffer: p5.Framebuffer;
 
+    /**
+     * Creates a new `"brightness"` ASCII renderer instance.
+     * 
+     * @remarks
+     * This constructor is meant for internal use by the `p5.asciify` library.
+     * 
+     * To create renderers, use `p5asciify.renderers().add("name", "brightness", { enabled: true });`.
+     * This will also return an instance of the renderer, which can be used to modify the renderer's properties.
+     * Additionally, the renderer will also be added to the end of the rendering pipeline automatically.
+     * 
+     * @param p5Instance The p5 instance.
+     * @param grid Grid object containing the relevant grid information.
+     * @param fontTextureAtlas The font texture atlas containing the ASCII characters texture.
+     * @param options The options for the ASCII renderer.
+     */
     constructor(p5Instance: p5, grid: P5AsciifyGrid, fontTextureAtlas: P5AsciifyFontTextureAtlas, options: AsciiRendererOptions = BRIGHTNESS_DEFAULT_OPTIONS) {
         const mergedOptions = { ...BRIGHTNESS_DEFAULT_OPTIONS, ...options };
         super(p5Instance, grid, fontTextureAtlas, mergedOptions);

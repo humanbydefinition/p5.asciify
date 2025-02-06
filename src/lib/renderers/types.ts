@@ -3,7 +3,7 @@ import p5 from 'p5';
 /** The options for the ASCII renderers. */
 export type AsciiRendererOptions = {
     /** Whether the renderer is enabled. */
-    enabled: boolean;
+    enabled?: boolean;
 
     /** The character set to use for the ASCII renderer. (not used in the `"custom"` and `"gradient"` renderers) */
     characters?: string;
@@ -21,10 +21,10 @@ export type AsciiRendererOptions = {
     backgroundColorMode?: number | string;
 
     /** Swap the cells ASCII character colors with its cell background colors. */
-    invertMode: boolean;
+    invertMode?: boolean;
 
     /** The rotation angle of all characters affected by a given renderer. */
-    rotationAngle: number | p5.Color;
+    rotationAngle?: number | p5.Color;
 
     /** The threshold for the Sobel edge detection algorithm. (only used in the `"edge"` renderer) */
     sobelThreshold?: number;
