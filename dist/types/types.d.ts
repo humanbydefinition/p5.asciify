@@ -35,7 +35,6 @@ export interface P5AsciifyExtensions {
      *  }
      *
      *  function draw() {
-     *
      *      // Draw anything on the canvas to asciify.
      *      clear();
      *      fill(255);
@@ -52,12 +51,17 @@ export interface P5AsciifyExtensions {
      */
     setupAsciify(): void;
     /**
-     * Called once per frame after the `draw()` loop of `p5.asciify` is complete with the result being drawn to the canvas.
-     * Use this method to perform any additional drawing steps after the asciified content is drawn.
+     * Called once per frame after the `draw()` loop of `p5.asciify` is complete.
+     * Use this method to perform any additional drawing steps after the asciified content is rendered.
      *
      * @example
      * ```javascript
      *  let asciifier;
+     *
+     *  function setupAsciify() {
+     *      // Get the default asciifier instance.
+     *      asciifier = p5asciify.asciifier();
+     *  }
      *
      *  // Draw anything on the canvas to asciify.
      *  function draw() {
@@ -69,11 +73,6 @@ export interface P5AsciifyExtensions {
      *      box(800, 100, 100);
      *  }
      *
-     *  function setupAsciify() {
-     *      // Get the default asciifier instance.
-     *      asciifier = p5asciify.asciifier();
-     *  }
-     *
      *  // After the asciified content is drawn to the canvas, draw an FPS counter on top of it.
      *  function drawAsciify() {
      *      textFont(p5asciify.asciifier().fontManager.font);
@@ -82,7 +81,8 @@ export interface P5AsciifyExtensions {
      *      text("FPS:" + Math.min(Math.ceil(p.frameRate()), 60), -p.width / 2, p.height / 2);
      *
      *      // You can also access the framebuffer containing the asciified content
-     *      // to do additional processing through `asciifier.texture`.
+     *      // to do additional processing through `asciifier.texture`,
+     *      // like applying the asciified texture onto a 3D object.
      *  }
      * ```
      */

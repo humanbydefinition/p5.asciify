@@ -19,7 +19,7 @@ export class P5AsciifierManager {
     private _baseFont!: p5.Font;
 
     /** Defines whether the hooks are enabled or not. */
-    public hooksEnabled: boolean = true;
+    private _hooksEnabled: boolean = true;
 
     /**
      * Creates a new `P5AsciifierManager` instance.
@@ -31,9 +31,10 @@ export class P5AsciifierManager {
 
     /**
      * Unregisters all hooks so that the user can opt out of the automatic hook behavior.
+     * @ignore
      */
     public unregisterHooks(): void {
-        this.hooksEnabled = false;
+        this._hooksEnabled = false;
     }
 
     /**
@@ -73,14 +74,15 @@ export class P5AsciifierManager {
      * This method is called after the setup is complete.
      * 
      * @param p The p5 instance.
+     * @ignore
      */
     public registerDrawHooks(p: p5): void {
         // Check if hooks are enabled.
-        if (!this.hooksEnabled) return;
+        if (!this._hooksEnabled) return;
 
         // Register the pre-draw hook
         p.registerMethod("pre", () => {
-            if (!this.hooksEnabled) return;
+            if (!this._hooksEnabled) return;
             for (const asciifier of this.asciifiers) {
                 if (asciifier.canvasFlag) {
                     asciifier.captureFramebuffer.begin();
@@ -92,7 +94,7 @@ export class P5AsciifierManager {
 
         // Register the post-draw hook
         p.registerMethod("post", () => {
-            if (!this.hooksEnabled) return;
+            if (!this._hooksEnabled) return;
             for (const asciifier of this.asciifiers) {
                 if (asciifier.canvasFlag) {
                     p.pop();
@@ -164,20 +166,37 @@ export class P5AsciifierManager {
     }
 
     /**
-     * Removes the `P5Asciifier` instance at the specified index.
-     * @param index The index of the `P5Asciifier` instance to remove.
-     * @throws {@link P5AsciifyError} If the index is out of bounds.
+     * Removes a `P5Asciifier` instance.
+     * @param indexOrAsciifier The index of the `P5Asciifier` instance to remove, or the `P5Asciifier` instance itself.
+     * @throws {@link P5AsciifyError} If the index is out of bounds or the specified asciifier is not found.
      */
-    public remove(index: number): void {
-        if (index < 0 || index >= this._asciifiers.length) {
-            throw new P5AsciifyError(`Invalid asciifier index: ${index}.`);
+    public remove(indexOrAsciifier: number | P5Asciifier): void {
+        if (typeof indexOrAsciifier === 'number') {
+            // Handle removal by index
+            const index = indexOrAsciifier;
+            if (index < 0 || index >= this._asciifiers.length) {
+                throw new P5AsciifyError(`Invalid asciifier index: ${index}.`);
+            }
+            this._asciifiers.splice(index, 1);
+        } else {
+            // Handle removal by instance
+            const asciifier = indexOrAsciifier;
+            const index = this._asciifiers.indexOf(asciifier);
+            if (index === -1) {
+                throw new P5AsciifyError('The specified asciifier was not found.');
+            }
+            this._asciifiers.splice(index, 1);
         }
-
-        this._asciifiers.splice(index, 1);
     }
 
     /**
      * Returns the list of `P5Asciifier` instances managed by the library.
      */
     get asciifiers(): P5Asciifier[] { return this._asciifiers; }
+
+    /**
+     * Returns `true` if the hooks are enabled, `false` otherwise.
+     * @ignore
+     */
+    get hooksEnabled(): boolean { return this._hooksEnabled; }
 }

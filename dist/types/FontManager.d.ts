@@ -26,6 +26,12 @@ export declare class P5AsciifyFontManager {
      * @param _font The font to use for ASCII rendering.
      */
     constructor(_p: p5, _font: p5.Font);
+    /**
+     * Sets up the font manager with the specified font size
+     * and initializes the texture containing all characters in the font.
+     * @param fontSize The font size to use for the texture.
+     * @ignore
+     */
     setup(fontSize: number): void;
     /**
      * Initializes the character glyphs and characters array.
@@ -53,7 +59,7 @@ export declare class P5AsciifyFontManager {
      * @example
      * ```javascript
      *  function setupAsciify() {
-     *      // Get the color of the character 'A'
+     *      // Get the RGB color of the character 'A'
      *      const color = p5asciify.asciifier().fontManager.glyphColor('A');
      *      console.log(color);
      *  }
@@ -139,7 +145,7 @@ export declare class P5AsciifyFontManager {
      */
     get textureRows(): number;
     /**
-     * Returns the font size used for the texture atlas.
+     * Returns the font size used for the texture containing all characters in the font.
      */
     get fontSize(): number;
     /**

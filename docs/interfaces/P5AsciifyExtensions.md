@@ -6,7 +6,7 @@
 
 # Interface: P5AsciifyExtensions
 
-Defined in: [types.ts:18](https://github.com/humanbydefinition/p5.asciify/blob/9bc9e13422f8092690e25d564658494cfe17130e/src/lib/types.ts#L18)
+Defined in: [types.ts:18](https://github.com/humanbydefinition/p5.asciify/blob/a5793d54ad5f16eb2af7f0d7b3580e1b894087a2/src/lib/types.ts#L18)
 
 Interface for additional properties and methods added to the `p5.js` instance by the `p5.asciify` library.
 
@@ -16,10 +16,10 @@ Interface for additional properties and methods added to the `p5.js` instance by
 
 > **drawAsciify**(): `void`
 
-Defined in: [types.ts:93](https://github.com/humanbydefinition/p5.asciify/blob/9bc9e13422f8092690e25d564658494cfe17130e/src/lib/types.ts#L93)
+Defined in: [types.ts:93](https://github.com/humanbydefinition/p5.asciify/blob/a5793d54ad5f16eb2af7f0d7b3580e1b894087a2/src/lib/types.ts#L93)
 
-Called once per frame after the `draw()` loop of `p5.asciify` is complete with the result being drawn to the canvas.
-Use this method to perform any additional drawing steps after the asciified content is drawn.
+Called once per frame after the `draw()` loop of `p5.asciify` is complete.
+Use this method to perform any additional drawing steps after the asciified content is rendered.
 
 #### Returns
 
@@ -29,6 +29,11 @@ Use this method to perform any additional drawing steps after the asciified cont
 
 ```javascript
  let asciifier;
+
+ function setupAsciify() {
+     // Get the default asciifier instance.
+     asciifier = p5asciify.asciifier();
+ }
 
  // Draw anything on the canvas to asciify.
  function draw() {
@@ -40,11 +45,6 @@ Use this method to perform any additional drawing steps after the asciified cont
      box(800, 100, 100);
  }
 
- function setupAsciify() {
-     // Get the default asciifier instance.
-     asciifier = p5asciify.asciifier();
- }
-
  // After the asciified content is drawn to the canvas, draw an FPS counter on top of it.
  function drawAsciify() {
      textFont(p5asciify.asciifier().fontManager.font);
@@ -53,7 +53,8 @@ Use this method to perform any additional drawing steps after the asciified cont
      text("FPS:" + Math.min(Math.ceil(p.frameRate()), 60), -p.width / 2, p.height / 2);
 
      // You can also access the framebuffer containing the asciified content 
-     // to do additional processing through `asciifier.texture`.
+     // to do additional processing through `asciifier.texture`, 
+     // like applying the asciified texture onto a 3D object.
  }
 ```
 
@@ -63,7 +64,7 @@ Use this method to perform any additional drawing steps after the asciified cont
 
 > **setupAsciify**(): `void`
 
-Defined in: [types.ts:56](https://github.com/humanbydefinition/p5.asciify/blob/9bc9e13422f8092690e25d564658494cfe17130e/src/lib/types.ts#L56)
+Defined in: [types.ts:55](https://github.com/humanbydefinition/p5.asciify/blob/a5793d54ad5f16eb2af7f0d7b3580e1b894087a2/src/lib/types.ts#L55)
 
 Called once after the `setup()` of `p5.asciify` is complete.
 Use this method to perform any additional setup steps after the asciify setup is complete.
@@ -91,7 +92,6 @@ All properties can also be modified during run-time through the `draw()` loop be
  }
 
  function draw() {
-
      // Draw anything on the canvas to asciify.
      clear();
      fill(255);

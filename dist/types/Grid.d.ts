@@ -1,6 +1,6 @@
 import p5 from 'p5';
 /**
- * Manages the 3D grid for the ASCII rendering pipeline of an {@link P5Asciifier} instance.
+ * Manages the grid for the ASCII rendering pipeline of an {@link P5Asciifier} instance.
  */
 export declare class P5AsciifyGrid {
     private _p;
@@ -18,8 +18,8 @@ export declare class P5AsciifyGrid {
     private _offsetX;
     /** The offset to the outer canvas on the y-axis when centering the grid. */
     private _offsetY;
-    /** Whether the grid dimensions are fixed, or flexible based on the canvas dimensions. */
-    fixedDimensions: boolean;
+    /** Whether the grid dimensions are fixed, or responsive based on the canvas dimensions. */
+    private _fixedDimensions;
     /**
      * Create a new grid instance.
      * @param _p The p5 instance.
@@ -90,4 +90,14 @@ export declare class P5AsciifyGrid {
      * Returns the offset to the outer canvas borders on the y-axis when centering the grid.
      */
     get offsetY(): number;
+    /**
+     * Returns `true` if the grid dimensions *(columns and rows)* are fixed, or `false` if they are responsive based on the canvas dimensions.
+     */
+    get fixedDimensions(): boolean;
+    /**
+     * Sets whether the grid dimensions *(columns and rows)* are fixed or responsive based on the canvas dimensions.
+     * @param value `true` to make the grid dimensions fixed, or `false` to make them responsive.
+     * @ignore
+     */
+    set fixedDimensions(value: boolean);
 }

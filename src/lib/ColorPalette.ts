@@ -72,7 +72,7 @@ export class P5AsciifyColorPalette {
     get colors(): [number, number, number][] { return this._colors; }
 
     /**
-     * Get the framebuffer of the palette.
+     * Get the framebuffer containing the colors of the palette.
      */
     get framebuffer(): p5.Framebuffer { return this._framebuffer; }
 }

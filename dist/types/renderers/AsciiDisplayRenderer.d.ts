@@ -1,13 +1,13 @@
 import p5 from 'p5';
-import { P5AsciifyGrid } from '../../Grid';
-import { P5AsciifyFontManager } from '../../FontManager';
+import { P5AsciifyGrid } from '../Grid';
+import { P5AsciifyFontManager } from '../FontManager';
 /**
  * Handles the final rendering of the ASCII output based on the final textures from the rendering pipeline.
  *
  * @remarks
  * This class is managed by the {@link P5AsciifyRendererManager} class to render the final ASCII output.
  */
-export declare class P5AsciifyDisplayRenderer2D {
+export declare class P5AsciifyDisplayRenderer {
     private _p;
     private _grid;
     private _fontManager;

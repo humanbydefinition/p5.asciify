@@ -11,7 +11,7 @@ export declare class P5AsciifierManager {
     /** The base font used by the library. */
     private _baseFont;
     /** Defines whether the hooks are enabled or not. */
-    hooksEnabled: boolean;
+    private _hooksEnabled;
     /**
      * Creates a new `P5AsciifierManager` instance.
      * @ignore
@@ -19,6 +19,7 @@ export declare class P5AsciifierManager {
     constructor();
     /**
      * Unregisters all hooks so that the user can opt out of the automatic hook behavior.
+     * @ignore
      */
     unregisterHooks(): void;
     /**
@@ -42,6 +43,7 @@ export declare class P5AsciifierManager {
      * This method is called after the setup is complete.
      *
      * @param p The p5 instance.
+     * @ignore
      */
     registerDrawHooks(p: p5): void;
     /**
@@ -72,13 +74,18 @@ export declare class P5AsciifierManager {
      */
     add(framebuffer?: p5.Framebuffer): P5Asciifier;
     /**
-     * Removes the `P5Asciifier` instance at the specified index.
-     * @param index The index of the `P5Asciifier` instance to remove.
-     * @throws {@link P5AsciifyError} If the index is out of bounds.
+     * Removes a `P5Asciifier` instance.
+     * @param indexOrAsciifier The index of the `P5Asciifier` instance to remove, or the `P5Asciifier` instance itself.
+     * @throws {@link P5AsciifyError} If the index is out of bounds or the specified asciifier is not found.
      */
-    remove(index: number): void;
+    remove(indexOrAsciifier: number | P5Asciifier): void;
     /**
      * Returns the list of `P5Asciifier` instances managed by the library.
      */
     get asciifiers(): P5Asciifier[];
+    /**
+     * Returns `true` if the hooks are enabled, `false` otherwise.
+     * @ignore
+     */
+    get hooksEnabled(): boolean;
 }

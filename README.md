@@ -78,6 +78,10 @@ Download the latest `umd` version of `p5.asciify` from the [**GitHub releases pa
 
 <!-- Import p5.asciify after p5.js -->
 <script src="path/to/library/p5.asciify.umd.js"></script>
+
+<!-- Or import it directly from a CDN like jsDelivr
+<script src="https://cdn.jsdelivr.net/npm/p5.asciify@0.8.0/dist/p5.asciify.umd.min.js"></script> 
+-->
 ```
 
 #### Instance mode
@@ -93,9 +97,6 @@ import p5 from 'p5';
 import { p5asciify } from 'p5.asciify';
 
 const theSketch = (sketch) => {
-
-    // Pass the p5 instance to the p5asciify library before setup
-    p5asciify.instance(sketch); 
 
     sketch.setup = () => {
       sketch.createCanvas(800, 800, sketch.WEBGL);
@@ -114,12 +115,6 @@ const theSketch = (sketch) => {
 
 let myp5 = new p5(theSketch);
 ```
-
-> [!WARNING]
-> In `INSTANCE` mode, it is essential to call `p5asciify.instance(sketch);` during initialization only if you are **not** providing any `preload()` function to your sketch in order to avoid any potential issues with the library's initialization process. If you are using `preload()`, you can safely skip this step.
-> In `INSTANCE` mode, it is essential to call `p5asciify.instance(sketch);` during initialization only if you are **not** providing any `preload()` function to your sketch in order to avoid any potential issues with the library's initialization process. If you are using `preload()`, you can safely skip this step.
->
-> *(Note: This step is not required for `GLOBAL` mode sketches.)*
 
 <hr />
 
@@ -147,9 +142,9 @@ To effectively use `p5.asciify` in your projects, check out the following resour
 | **Contributor** | **Website** | **Socials** |
 |-----------------|-------------|------------|
 | [humanbydefinition](https://github.com/humanbydefinition) <br> Creator and active maintainer of `p5.asciify`. | [![Website](https://badgen.net/badge/Visit/website/blue?icon=chrome-web-store)](https://textmode.art) | [![Instagram](https://badgen.net/badge/Instagram/humanbydefinition/pink?icon=instagram)](https://instagram.com/humanbydefinition) <br> [![Mastodon](https://badgen.net/badge/Mastodon/@humanbydefinition/blue?icon=mastodon)](https://mastodon.social/@humanbydefinition) |
-| [davepagurek](https://github.com/davepagurek) <br> WebGL steward for [p5.js](https://p5js.org/) and a huge help bringing `p5.asciify` to life. | [![Website](https://badgen.net/badge/Visit/website/blue?icon=chrome-web-store)](https://www.davepagurek.com/) | [![Instagram](https://badgen.net/badge/Instagram/davepagurek/pink?icon=instagram)](https://instagram.com/davepagurek) <br> [![Mastodon](https://badgen.net/badge/Mastodon/@davepagurek/blue?icon=mastodon)](https://mastodon.online/@davepagurek@genart.social) |
+| [davepagurek](https://github.com/davepagurek) <br> Helped in a major way bringing `p5.asciify` to life thanks to his deep knowledge with `p5.js`. | [![Website](https://badgen.net/badge/Visit/website/blue?icon=chrome-web-store)](https://www.davepagurek.com/) | [![Instagram](https://badgen.net/badge/Instagram/davepagurek/pink?icon=instagram)](https://instagram.com/davepagurek) <br> [![Mastodon](https://badgen.net/badge/Mastodon/@davepagurek/blue?icon=mastodon)](https://mastodon.online/@davepagurek@genart.social) |
 | [gridsystem](https://github.com/gridsystem) <br> Provided valuable advice that greatly improved project accessibility. | *N/A* | *N/A* |
-| [flordefuego](https://github.com/flordefuego) <br> Provided examples and insights on combining Hydra, p5.js, and `p5.asciify`. | [![Website](https://badgen.net/badge/Visit/website/blue?icon=chrome-web-store)](https://flordefuego.xyz/) | [![Instagram](https://badgen.net/badge/Instagram/flordefuega/pink?icon=instagram)](https://instagram.com/flordefuega) <br> [![Mastodon](https://badgen.net/badge/Mastodon/@flordefuego/blue?icon=mastodon)](https://mastodon.social/@flordefuego@post.lurk.org) |
+| [flordefuego](https://github.com/flordefuego) <br> Provided a [code example](#) and insights on combining `Hydra`, `p5.js`, and `p5.asciify`. | [![Website](https://badgen.net/badge/Visit/website/blue?icon=chrome-web-store)](https://flordefuego.xyz/) | [![Instagram](https://badgen.net/badge/Instagram/flordefuega/pink?icon=instagram)](https://instagram.com/flordefuega) <br> [![Mastodon](https://badgen.net/badge/Mastodon/@flordefuego/blue?icon=mastodon)](https://mastodon.social/@flordefuego@post.lurk.org) |
 > [!NOTE]
 > If you have contributed in the past and would like to be featured here, please open an issue or create a pull request to add your information to the list.
 

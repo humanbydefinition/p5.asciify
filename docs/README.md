@@ -19,7 +19,7 @@
 | [P5AsciifyColorPalette](classes/P5AsciifyColorPalette.md) | A 1D color palette stored in a framebuffer that is used to pass colors to shaders. |
 | [P5AsciifyError](classes/P5AsciifyError.md) | Simple error class, representing errors specific to `p5.asciify`. |
 | [P5AsciifyFontManager](classes/P5AsciifyFontManager.md) | Manages the font used for the ASCII rendering pipeline and provides methods for working with the font. |
-| [P5AsciifyGrid](classes/P5AsciifyGrid.md) | Manages the 3D grid for the ASCII rendering pipeline of an [P5Asciifier](classes/P5Asciifier.md) instance. |
+| [P5AsciifyGrid](classes/P5AsciifyGrid.md) | Manages the grid for the ASCII rendering pipeline of an [P5Asciifier](classes/P5Asciifier.md) instance. |
 
 ## Interfaces
 

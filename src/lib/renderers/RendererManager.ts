@@ -6,7 +6,7 @@ import { AbstractFeatureRenderer2D } from './2d/feature/AbstractFeatureRenderer2
 import { P5AsciifyBrightnessRenderer } from './2d/feature/brightness/BrightnessAsciiRenderer';
 import { P5AsciifyAccurateRenderer } from './2d/feature/accurate/AccurateAsciiRenderer';
 import { P5AsciifyEdgeRenderer } from './2d/feature/edge/EdgeAsciiRenderer';
-import { P5AsciifyDisplayRenderer2D } from './2d/AsciiDisplayRenderer2D';
+import { P5AsciifyDisplayRenderer } from './AsciiDisplayRenderer';
 
 import { P5AsciifyGrid } from '../Grid';
 import { P5AsciifyFontManager } from '../FontManager';
@@ -43,7 +43,7 @@ export class P5AsciifyRendererManager {
     /** The rotation framebuffer, whose pixels define the rotation angle of the characters in the grid. */
     private _rotationFramebuffer: p5.Framebuffer;
 
-    private _asciiDisplayRenderer2D: P5AsciifyDisplayRenderer2D;
+    private _asciiDisplayRenderer2D: P5AsciifyDisplayRenderer;
 
     /** Whether any renderers are enabled. */
     private _hasEnabledRenderers: boolean = false;
@@ -122,7 +122,7 @@ export class P5AsciifyRendererManager {
             textureFiltering: this._p.NEAREST
         });
 
-        this._asciiDisplayRenderer2D = new P5AsciifyDisplayRenderer2D(this._p, this._grid, this._fontManager);
+        this._asciiDisplayRenderer2D = new P5AsciifyDisplayRenderer(this._p, this._grid, this._fontManager);
     }
 
     /**
@@ -494,9 +494,9 @@ export class P5AsciifyRendererManager {
     get renderers(): { name: string, renderer: P5AsciifyRenderer }[] { return this._renderers; }
 
     /**
-     * Returns the {@link P5AsciifyDisplayRenderer2D} instance which performs the final ASCII conversion.
+     * Returns the {@link P5AsciifyDisplayRenderer} instance which performs the final ASCII conversion.
      */
-    get asciiDisplayRenderer(): P5AsciifyDisplayRenderer2D { return this._asciiDisplayRenderer2D; }
+    get asciiDisplayRenderer(): P5AsciifyDisplayRenderer { return this._asciiDisplayRenderer2D; }
 
     /**
      * Returns the primary color framebuffer, 

@@ -1,7 +1,7 @@
 import p5 from 'p5';
 
 /**
- * Manages the 3D grid for the ASCII rendering pipeline of an {@link P5Asciifier} instance.
+ * Manages the grid for the ASCII rendering pipeline of an {@link P5Asciifier} instance.
  */
 export class P5AsciifyGrid {
     /** The number of columns in the grid. */
@@ -22,8 +22,8 @@ export class P5AsciifyGrid {
     /** The offset to the outer canvas on the y-axis when centering the grid. */
     private _offsetY!: number;
 
-    /** Whether the grid dimensions are fixed, or flexible based on the canvas dimensions. */
-    public fixedDimensions: boolean = false;
+    /** Whether the grid dimensions are fixed, or responsive based on the canvas dimensions. */
+    private _fixedDimensions: boolean = false;
 
     /**
      * Create a new grid instance.
@@ -45,7 +45,7 @@ export class P5AsciifyGrid {
      * @ignore
      */
     public reset(): void {
-        if (!this.fixedDimensions) {
+        if (!this._fixedDimensions) {
             [this._cols, this._rows] = [Math.floor(this._p.width / this._cellWidth), Math.floor(this._p.height / this._cellHeight)];
         }
 
@@ -82,7 +82,7 @@ export class P5AsciifyGrid {
      * @ignore
      */
     public resizeGridDimensions(newCols: number, newRows: number): void {
-        this.fixedDimensions = true;
+        this._fixedDimensions = true;
         [this._cols, this._rows] = [newCols, newRows];
         this._resizeGrid();
     }
@@ -92,7 +92,7 @@ export class P5AsciifyGrid {
      * @ignore
      */
     public resetGridDimensions(): void {
-        this.fixedDimensions = false;
+        this._fixedDimensions = false;
         this.reset();
     }
 
@@ -135,4 +135,16 @@ export class P5AsciifyGrid {
      * Returns the offset to the outer canvas borders on the y-axis when centering the grid.
      */
     get offsetY() { return this._offsetY; }
+
+    /** 
+     * Returns `true` if the grid dimensions *(columns and rows)* are fixed, or `false` if they are responsive based on the canvas dimensions.
+     */
+    get fixedDimensions() { return this._fixedDimensions; }
+
+    /**
+     * Sets whether the grid dimensions *(columns and rows)* are fixed or responsive based on the canvas dimensions.
+     * @param value `true` to make the grid dimensions fixed, or `false` to make them responsive.
+     * @ignore
+     */
+    set fixedDimensions(value: boolean) { this._fixedDimensions = value; }
 }

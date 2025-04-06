@@ -93,7 +93,7 @@ export declare class P5Asciifier {
      * @param font The `p5.Font` object to use for ASCII rendering.
      * @param options An object containing options affecting what happens after the font is loaded.
      * @param options.updateCharacters If `true` *(default)*, updates set character sets in pre-defined renderers like the brightness-based ASCII renderer.
-     *                                 This might throw an error if the new font does not contain the characters of the previous font.
+     *                                 This might throw an error if the new font does not contain the character sets used with the previous font.
      *                                 If `false`, those character sets are not updated, potentially leading to missing/different characters in the ASCII output if the mapping is not the same.
      * @throws {@link P5AsciifyError} - If the font parameter is invalid.
      *
@@ -102,12 +102,12 @@ export declare class P5Asciifier {
      *  let font;
      *
      *  function preload() {
-     *      // Load font during preload using p5.js loadFont function.
+     *      // Load font during preload using p5.js `loadFont` function.
      *      font = loadFont('path/to/font.ttf');
      *  }
      *
      *  function setupAsciify() {
-     *      // Set the font to the loaded font.
+     *      // Set the font to the default asciifier instance.
      *      p5asciify.asciifier().font(font);
      *  }
      * ```
@@ -116,7 +116,7 @@ export declare class P5Asciifier {
         updateCharacters: boolean;
     }): void;
     /**
-     * Sets the background color for the ascii renderers, occupying all the space not covered by voxels in the grid.
+     * Sets the background color for the ascii renderers, occupying all the space not covered by cells in the grid.
      * @param color The color to set. Needs to be a valid type to pass to the `background()` function provided by p5.js.
      * @throws {@link P5AsciifyError} - If the color is not a string, array or p5.Color.
      *
@@ -257,8 +257,7 @@ export declare class P5Asciifier {
      * let framebuffer;
      *
      * function setupAsciify() {
-     *      // Can also be useful to create a framebuffer with the same dimensions as the grid.
-     *
+     *      // Can be useful to create a framebuffer with the same dimensions as the grid.
      *      framebuffer = createFramebuffer({
      *          width: p5asciify.asciifier().grid.cols,
      *          height: p5asciify.asciifier().grid.rows
@@ -268,7 +267,8 @@ export declare class P5Asciifier {
      */
     get grid(): P5AsciifyGrid;
     /**
-     * Returns the font manager, which manages the font and provides methods to access font properties like available characters and their corresponding rgb values.
+     * Returns the font manager, which manages the font and provides methods to access font properties like available characters and their corresponding rgb values,
+     * and the texture containing all the characters in the font.
      *
      * @example
      * ```javascript
@@ -283,6 +283,8 @@ export declare class P5Asciifier {
      * Retrieves the framebuffer that contains the content to asciify.
      *
      * The returned framebuffer either contains everything drawn on the p5.js main canvas, or a custom framebuffer if set during initialization.
+     *
+     * @ignore
      */
     get captureFramebuffer(): p5.Framebuffer;
     /**
@@ -293,13 +295,15 @@ export declare class P5Asciifier {
      * ```javascript
      *  // Draw something on the canvas to asciify.
      *  function draw() {
+     *      background(0);
+     *      fill(255);
      *      box(100);
      *  }
      *
+     *  // Apply the asciified output as a texture to a 3D box.
      *  function drawAsciify() {
      *      orbitControl();
      *
-     *      // Apply the asciified output as a texture to a 3D box.
      *      clear();
      *      texture(p5asciify.asciifier().texture);
      *      rotateX(frameCount * 0.01);
@@ -310,10 +314,11 @@ export declare class P5Asciifier {
      */
     get texture(): p5.Framebuffer;
     /**
-     * Returns the flag to determine if the p5.js canvas is being recorded into a framebuffer to asciify,
-     * or if a custom framebuffer is being used instead.
+     * Returns the flag to determine if the `p5.js` canvas is used to asciify, or if a passed framebuffer is used to asciify instead.
      *
      * Returns `true` if the p5.js canvas is used, otherwise `false`.
+     *
+     * @ignore
      */
     get canvasFlag(): boolean;
 }

@@ -1,6 +1,6 @@
 import p5 from 'p5';
 import { P5AsciifyRenderer } from './AsciiRenderer';
-import { P5AsciifyDisplayRenderer2D } from './2d/AsciiDisplayRenderer2D';
+import { P5AsciifyDisplayRenderer } from './AsciiDisplayRenderer';
 import { P5AsciifyGrid } from '../Grid';
 import { P5AsciifyFontManager } from '../FontManager';
 import { AsciiRendererOptions } from './types';
@@ -256,9 +256,9 @@ export declare class P5AsciifyRendererManager {
         renderer: P5AsciifyRenderer;
     }[];
     /**
-     * Returns the {@link P5AsciifyDisplayRenderer2D} instance which performs the final ASCII conversion.
+     * Returns the {@link P5AsciifyDisplayRenderer} instance which performs the final ASCII conversion.
      */
-    get asciiDisplayRenderer(): P5AsciifyDisplayRenderer2D;
+    get asciiDisplayRenderer(): P5AsciifyDisplayRenderer;
     /**
      * Returns the primary color framebuffer,
      * which contains the primary color framebuffers of all renderers in the pipeline stacked on top of each other.

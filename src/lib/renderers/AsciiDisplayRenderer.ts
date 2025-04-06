@@ -1,9 +1,9 @@
 import p5 from 'p5';
-import { P5AsciifyGrid } from '../../Grid';
-import { P5AsciifyFontManager } from '../../FontManager';
-import vertexShader from '../../assets/shaders/vert/shader.vert';
-import asciiConversionShader2D from './asciiConversion2D.frag';
-import { P5AsciifyError } from '../../AsciifyError';
+import { P5AsciifyGrid } from '../Grid';
+import { P5AsciifyFontManager } from '../FontManager';
+import vertexShader from '../assets/shaders/vert/shader.vert';
+import asciiConversionShader from './asciiConversion.frag';
+import { P5AsciifyError } from '../AsciifyError';
 
 /**
  * Handles the final rendering of the ASCII output based on the final textures from the rendering pipeline.
@@ -11,7 +11,7 @@ import { P5AsciifyError } from '../../AsciifyError';
  * @remarks
  * This class is managed by the {@link P5AsciifyRendererManager} class to render the final ASCII output.
  */
-export class P5AsciifyDisplayRenderer2D {
+export class P5AsciifyDisplayRenderer {
 
     /** The asciified texture */
     private _resultFramebuffer: p5.Framebuffer;
@@ -34,7 +34,7 @@ export class P5AsciifyDisplayRenderer2D {
         private _grid: P5AsciifyGrid,
         private _fontManager: P5AsciifyFontManager,
     ) {
-        this._shader = this._p.createShader(vertexShader, asciiConversionShader2D);
+        this._shader = this._p.createShader(vertexShader, asciiConversionShader);
 
         this._resultFramebuffer = this._p.createFramebuffer({
             depthFormat: this._p.UNSIGNED_INT,

@@ -18,6 +18,7 @@ Contains functionality relevant to the ASCII rendering.
 
 | Class | Description |
 | ------ | ------ |
+| [P5AsciifyDisplayRenderer](classes/P5AsciifyDisplayRenderer.md) | Handles the final rendering of the ASCII output based on the final textures from the rendering pipeline. |
 | [P5AsciifyRenderer](classes/P5AsciifyRenderer.md) | Abstract ASCII renderer base class that all custom and pre-built ASCII renderers extend from. |
 | [P5AsciifyRendererManager](classes/P5AsciifyRendererManager.md) | Manages the whole ASCII rendering pipeline. |
 
