@@ -30,14 +30,6 @@ export class P5AsciifierManager {
     }
 
     /**
-     * Unregisters all hooks so that the user can opt out of the automatic hook behavior.
-     * @ignore
-     */
-    public unregisterHooks(): void {
-        this._hooksEnabled = false;
-    }
-
-    /**
      * Initializes the `p5.asciify` library by setting the `p5.js` instance.
      * 
      * For the provided {@link p5asciify} object this method is called automatically when the library is imported.
@@ -64,49 +56,6 @@ export class P5AsciifierManager {
     public setup(): void {
         this._asciifiers.forEach((asciifier) => {
             asciifier.setup();
-        });
-    }
-
-    // Add this method to the P5AsciifierManager class in AsciifierManager.ts
-
-    /**
-     * Registers the pre-draw and post-draw hooks with p5.js.
-     * This method is called after the setup is complete.
-     * 
-     * @param p The p5 instance.
-     * @ignore
-     */
-    public registerDrawHooks(p: p5): void {
-        // Check if hooks are enabled.
-        if (!this._hooksEnabled) return;
-
-        // Register the pre-draw hook
-        p.registerMethod("pre", () => {
-            if (!this._hooksEnabled) return;
-            for (const asciifier of this.asciifiers) {
-                if (asciifier.canvasFlag) {
-                    asciifier.captureFramebuffer.begin();
-                    p.clear();
-                    p.push();
-                }
-            }
-        });
-
-        // Register the post-draw hook
-        p.registerMethod("post", () => {
-            if (!this._hooksEnabled) return;
-            for (const asciifier of this.asciifiers) {
-                if (asciifier.canvasFlag) {
-                    p.pop();
-                    asciifier.captureFramebuffer.end();
-                }
-            }
-
-            this.asciify();
-
-            if (p.drawAsciify) {
-                p.drawAsciify();
-            }
         });
     }
 
@@ -187,6 +136,17 @@ export class P5AsciifierManager {
             }
             this._asciifiers.splice(index, 1);
         }
+    }
+
+    /**
+     * Sets hooks status. This method should be called if you need to manually 
+     * enable or disable the automatic pre/post draw hooks.
+     * 
+     * @param enabled Whether the hooks should be enabled
+     * @ignore
+     */
+    public setHooksEnabled(enabled: boolean): void {
+        this._hooksEnabled = enabled;
     }
 
     /**

@@ -50,9 +50,6 @@ export const afterSetupHook = (p: p5) => {
     }
 
     p5asciify.setup();
-    
-    // Register pre and post draw hooks only after setup is complete
-    p5asciify.registerDrawHooks(p);
 
     if (p.setupAsciify) {
       p.setupAsciify();
@@ -105,6 +102,17 @@ export const postDrawHook = (p: p5) => {
     p.drawAsciify();
   }
 };
+
+// Register the pre and post draw hooks
+p5.prototype.registerMethod('pre', function(this: p5) { 
+  if (!p5asciify.hooksEnabled) return;
+  preDrawHook(this); 
+});
+
+p5.prototype.registerMethod('post', function(this: p5) { 
+  if (!p5asciify.hooksEnabled) return;
+  postDrawHook(this); 
+});
 
 /**
  * A fix for the p5.js shaders to use highp precision instead of mediump.
