@@ -2,10 +2,8 @@
 
 <p align="center">
   <img src="./repo_assets/images/p5.asciify.animated-logo.gif" />
-  <img src="./repo_assets/images/p5.asciify.animated-logo.gif" />
 </p>
 
-`p5.asciify` is a powerful add-on library for [`p5.js`](https://p5js.org/) that transforms your canvas and offcanvas textures into dynamic ASCII/textmode representations on a 3D grid in real time, allowing you to create intricate 2D and 3D ASCII/textmode art and much more with ease.
 `p5.asciify` is a powerful add-on library for [`p5.js`](https://p5js.org/) that transforms your canvas and offcanvas textures into dynamic ASCII/textmode representations on a 3D grid in real time, allowing you to create intricate 2D and 3D ASCII/textmode art and much more with ease.
 
 ## Table of Contents
@@ -26,16 +24,14 @@
 
 ## Features
 
-`p5.asciify` is the most advanced ASCII conversion library, offering a wide range of tools for crafting intricate ASCII art and building complex, multi-layered rendering pipelines.
+`p5.asciify` is the most advanced ASCII conversion library, offering a wide range of tools for crafting intricate ASCII art and building complex rendering pipelines.
 
 - **Renderer management**: Create and manage multiple ASCII renderers with different settings to create a unique rendering pipeline.
-- **Pre-built renderers (2D)**: Add pre-built renderers, like `'brightness'`- or `'edge'`-based ASCII converters, to your pipeline.
-- **Custom renderers**: Add your own custom 2D or 3D ASCII renderers to the pipeline to create unique effects by controlling each cell's ASCII character, character color, background color, and more individually.
+- **Pre-built renderers**: Add pre-built renderers, like `'brightness'`- or `'edge'`-based ASCII converters, to your pipeline.
+- **Custom renderers**: Add your own custom 2D ASCII renderers to the pipeline through code to create unique effects by controlling each cell's ASCII character, character color, background color, and more individually.
 - **Asciifier management**: Create and manage multiple asciifiers to apply different ASCII rendering pipelines to different textures or canvases in parallel.
-- **Camera modes**: Choose between `'orthogonal'` and `'perspective'` camera modes to adjust the ASCII grid's appearance of an asciifier.
-- **Grid transformations**: Rotate, scale, and translate the ASCII grid in 3D space to create dynamic and interactive 2D/3D ASCII art.
 - **Font management**: Set the font and font size for all ASCII renderers in the pipeline of an asciifier.
-- **Grid management**: Apply a perfect and responsive grid based on the canvas/texture dimensions, font size, and font metrics, or create a custom grid with a specific number of rows, columns, and depth.
+- **Grid management**: Apply a perfect and responsive grid based on the canvas/texture dimensions, font size, and font metrics, or create a custom grid with a specific number of rows, columns.
 - **WebGL1/WebGL2 support**: All shader code provided by `p5.asciify` is written in GLSL ES 1.0, making it compatible with both WebGL1 and WebGL2 contexts, allowing for a wide range of devices to run your ASCII projects.
 
 With `p5.asciify`, you can effortlessly create stunning ASCII art, textmode games, interactive ASCII experiences, and much more. The library is designed to be flexible, efficient, and easy to use, offering a comprehensive range of tools to help you develop unique and engaging ASCII projects.
@@ -48,8 +44,7 @@ With `p5.asciify`, you can effortlessly create stunning ASCII art, textmode game
 
 ### Tools
 - [`textmode.art`](https://textmode.art/) - An ASCII/textmode editor powered by `p5.asciify`.
-
-### ...and more to come!
+- [`place.textmode.art`](https://place.textmode.art/) - An ASCII/textmode version of the popular [`/r/place`](https://www.reddit.com/r/place/) project, where you can collaborate with others to create a massive ASCII art piece.
 
 ### ...and more to come!
 
