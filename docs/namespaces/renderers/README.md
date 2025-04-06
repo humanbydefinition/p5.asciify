@@ -1,4 +1,4 @@
-[**p5.asciify v0.7.4**](../../README.md)
+[**p5.asciify v0.8.0**](../../README.md)
 
 ***
 
