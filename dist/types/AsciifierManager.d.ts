@@ -18,11 +18,6 @@ export declare class P5AsciifierManager {
      */
     constructor();
     /**
-     * Unregisters all hooks so that the user can opt out of the automatic hook behavior.
-     * @ignore
-     */
-    unregisterHooks(): void;
-    /**
      * Initializes the `p5.asciify` library by setting the `p5.js` instance.
      *
      * For the provided {@link p5asciify} object this method is called automatically when the library is imported.
@@ -38,14 +33,6 @@ export declare class P5AsciifierManager {
      * @ignore
      */
     setup(): void;
-    /**
-     * Registers the pre-draw and post-draw hooks with p5.js.
-     * This method is called after the setup is complete.
-     *
-     * @param p The p5 instance.
-     * @ignore
-     */
-    registerDrawHooks(p: p5): void;
     /**
      * Executes the ASCII conversion rendering pipelines for each `P5Asciifier` instance managed by the library.
      *
@@ -79,6 +66,14 @@ export declare class P5AsciifierManager {
      * @throws {@link P5AsciifyError} If the index is out of bounds or the specified asciifier is not found.
      */
     remove(indexOrAsciifier: number | P5Asciifier): void;
+    /**
+     * Sets hooks status. This method should be called if you need to manually
+     * enable or disable the automatic pre/post draw hooks.
+     *
+     * @param enabled Whether the hooks should be enabled
+     * @ignore
+     */
+    setHooksEnabled(enabled: boolean): void;
     /**
      * Returns the list of `P5Asciifier` instances managed by the library.
      */
