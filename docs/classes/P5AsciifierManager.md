@@ -1,4 +1,4 @@
-[**p5.asciify v0.8.0**](../README.md)
+[**p5.asciify v0.8.0-beta.2**](../README.md)
 
 ***
 
@@ -6,7 +6,7 @@
 
 # Class: P5AsciifierManager
 
-Defined in: [AsciifierManager.ts:10](https://github.com/humanbydefinition/p5.asciify/blob/fdebed7c72d75cce6dd7b0ecdffb972f57772a4c/src/lib/AsciifierManager.ts#L10)
+Defined in: [AsciifierManager.ts:10](https://github.com/humanbydefinition/p5.asciify/blob/74cffcf930697a5f633b5e35f91777ec8f4d62e4/src/lib/AsciifierManager.ts#L10)
 
 Manages the `p5.asciify` library by handling one or more `P5Asciifier` instances through the exposed [p5asciify](../variables/p5asciify.md) object, which is an instance of this class.
 
@@ -18,7 +18,7 @@ Manages the `p5.asciify` library by handling one or more `P5Asciifier` instances
 
 > **get** **asciifiers**(): [`P5Asciifier`](P5Asciifier.md)[]
 
-Defined in: [AsciifierManager.ts:195](https://github.com/humanbydefinition/p5.asciify/blob/fdebed7c72d75cce6dd7b0ecdffb972f57772a4c/src/lib/AsciifierManager.ts#L195)
+Defined in: [AsciifierManager.ts:155](https://github.com/humanbydefinition/p5.asciify/blob/74cffcf930697a5f633b5e35f91777ec8f4d62e4/src/lib/AsciifierManager.ts#L155)
 
 Returns the list of `P5Asciifier` instances managed by the library.
 
@@ -32,7 +32,7 @@ Returns the list of `P5Asciifier` instances managed by the library.
 
 > **add**(`framebuffer`?): [`P5Asciifier`](P5Asciifier.md)
 
-Defined in: [AsciifierManager.ts:151](https://github.com/humanbydefinition/p5.asciify/blob/fdebed7c72d75cce6dd7b0ecdffb972f57772a4c/src/lib/AsciifierManager.ts#L151)
+Defined in: [AsciifierManager.ts:100](https://github.com/humanbydefinition/p5.asciify/blob/74cffcf930697a5f633b5e35f91777ec8f4d62e4/src/lib/AsciifierManager.ts#L100)
 
 Adds a new `P5Asciifier` instance to the library.
 
@@ -58,7 +58,7 @@ The newly created `P5Asciifier` instance.
 
 > **asciifier**(`index`): [`P5Asciifier`](P5Asciifier.md)
 
-Defined in: [AsciifierManager.ts:136](https://github.com/humanbydefinition/p5.asciify/blob/fdebed7c72d75cce6dd7b0ecdffb972f57772a4c/src/lib/AsciifierManager.ts#L136)
+Defined in: [AsciifierManager.ts:85](https://github.com/humanbydefinition/p5.asciify/blob/74cffcf930697a5f633b5e35f91777ec8f4d62e4/src/lib/AsciifierManager.ts#L85)
 
 Returns the `P5Asciifier` instance at the specified index.
 
@@ -87,7 +87,7 @@ The `P5Asciifier` instance at the specified index.
 
 > **remove**(`indexOrAsciifier`): `void`
 
-Defined in: [AsciifierManager.ts:173](https://github.com/humanbydefinition/p5.asciify/blob/fdebed7c72d75cce6dd7b0ecdffb972f57772a4c/src/lib/AsciifierManager.ts#L173)
+Defined in: [AsciifierManager.ts:122](https://github.com/humanbydefinition/p5.asciify/blob/74cffcf930697a5f633b5e35f91777ec8f4d62e4/src/lib/AsciifierManager.ts#L122)
 
 Removes a `P5Asciifier` instance.
 
