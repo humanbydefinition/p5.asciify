@@ -15,7 +15,7 @@ export class P5AsciifyColorPalette {
     /**
      * Create a new color palette instance.
      * @param _p The p5 instance.
-     * @param _colors The colors to store in the palette.
+     * @param _colors The colors to store in the palette as an array of `[r, g, b]` tuples.
      */
     constructor(
         private _p: p5,

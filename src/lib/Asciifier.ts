@@ -1,32 +1,30 @@
 import p5 from 'p5';
 
-import { P5AsciifyFontTextureAtlas } from './FontTextureAtlas';
 import { P5AsciifyGrid } from './Grid';
 import { P5AsciifyFontManager } from './FontManager';
 import { P5AsciifyRendererManager } from './renderers/RendererManager';
 import { P5AsciifyError } from './AsciifyError';
+import { AbstractFeatureRenderer2D } from './renderers/2d/feature/AbstractFeatureRenderer2D';
 
 /**
- * The main class for the `p5.asciify` library, 
- * responsible for setting up the library, managing its properties, and providing an interface for interacting with the library.
+ * Manages a rendering pipeline for ASCII conversion, including font management, grid calculations, and ASCII renderers, 
+ * which is applied to the main p5.js canvas or a selected texture.
  * 
- * `p5.asciify` exports an instance `p5asciify` of this class, which is used to interact with the library.
- * 
- * Currently, this class is not designed to be instantiated by the user. Use the `p5asciify` instance exported by the library instead.
+ * Instances of this class are created and managed through the {@link p5asciify} object *(see {@link P5AsciifierManager})*.
  */
 export class P5Asciifier {
 
     /** Manages the font and provides methods to access font properties. */
     private _fontManager!: P5AsciifyFontManager;
 
-    /** Contains texture with all glyphs of the font set in the font manager. */
-    private _fontTextureAtlas!: P5AsciifyFontTextureAtlas;
-
     /** Contains the grid dimensions and offsets to create a perfect grid based on the canvas and font glyph dimensions. */
     private _grid!: P5AsciifyGrid;
 
     /** Wraps around the user's `draw()` function to capture it's output for the ascii renderers to asciify. */
-    private _sketchFramebuffer!: p5.Framebuffer;
+    private _captureFramebuffer!: p5.Framebuffer;
+
+    /** Flag to determine if the p5.js canvas is used as the sketch framebuffer. Otherwise, a custom framebuffer is used. */
+    private _canvasFlag: boolean = true;
 
     /** Manages the available ASCII renderers and handles rendering the ASCII output to the canvas. */
     private _rendererManager!: P5AsciifyRendererManager;
@@ -38,106 +36,93 @@ export class P5Asciifier {
     private _p!: p5;
 
     /**
-     * Initializes the `p5.asciify` library by setting the `p5.js` instance and loading the font manager with the default font.
+     * Creates a new `P5Asciifier` instance.
      * 
-     * **This method is called automatically when p5.js is initialized and should not be called manually, 
-     * otherwise causing unexpected behavior.**
-     * 
-     * @param p 
-     * @param fontBase64 
+     * @param sketchFramebuffer If a `sketchFramebuffer` is provided, 
+     *                          this framebuffer is used instead of the p5.js main canvas to capture the user's `draw()` function output.
+     * @ignore
      */
-    public init(p: p5, fontBase64: string): void {
-        this._p = p;
-        this._fontManager = new P5AsciifyFontManager(this._p, fontBase64);
+    constructor(
+        sketchFramebuffer?: p5.Framebuffer,
+    ) {
+        if (sketchFramebuffer) {
+            this._captureFramebuffer = sketchFramebuffer;
+            this._canvasFlag = false;
+        }
     }
 
     /**
-     * Sets up the `p5.asciify` library by initializing the font texture atlas, grid, renderer manager, and sketch framebuffer.
+     * Initializes the asciifier by setting the `p5.js` instance and loading the font manager with the default font.
      * 
-     * **This method called automatically after the user's `setup()` function has finished. 
-     * Calling this function manually would reset to the library it's default state, which is rather redundant.**
+     * This method is called automatically when p5.js is initialized or a new `P5Asciifier` instance is added through the {@link P5AsciifierManager} instance {@link p5asciify}.
+     * @param p The p5.js instance of the sketch.
+     * @param fontBase64 The base64 string of the font to use for ASCII conversion.
+     * 
+     * @ignore
+     */
+    public init(p: p5, baseFont: p5.Font): void {
+        this._p = p;
+        this._fontManager = new P5AsciifyFontManager(p, baseFont);
+    }
+
+    /**
+     * Sets up the asciifier by initializing the font texture atlas, grid, and renderer manager.
+     * 
+     * There is no need to call this method manually if the asciifier is added through the {@link P5AsciifierManager} instance {@link p5asciify}.
+     * 
+     * @ignore
      */
     public setup(): void {
-        this._fontTextureAtlas = new P5AsciifyFontTextureAtlas(
-            this._p,
-            this._fontManager,
-            this._fontSize,
-        );
+        this._fontManager.setup(this._fontSize);
 
         this._grid = new P5AsciifyGrid(
             this._p,
-            this._fontTextureAtlas.maxGlyphDimensions.width,
-            this._fontTextureAtlas.maxGlyphDimensions.height
+            this._fontManager.maxGlyphDimensions.width,
+            this._fontManager.maxGlyphDimensions.height,
         );
 
         this._rendererManager = new P5AsciifyRendererManager(
             this._p,
             this._grid,
-            this._fontTextureAtlas
+            this._fontManager
         );
 
-        if (!this._sketchFramebuffer) {
-            this._sketchFramebuffer = this._p.createFramebuffer({
+        if (!this._captureFramebuffer) {
+            this._captureFramebuffer = this._p.createFramebuffer({
                 depthFormat: this._p.UNSIGNED_INT,
-                textureFiltering: this._p.NEAREST
+                textureFiltering: this._p.NEAREST,
             });
-        }
-    }
-
-    /**
-     * Necessary to call in p5.js `INSTANCE` mode to ensure a `preload` function is defined.
-     * Otherwise an empty `preload` method is defined, so the preload loop is executed and the font provided by `p5.asciify` is loaded properly.
-     * @param p The p5.js instance to use for the library.
-     * 
-     * @example
-     * ```javascript
-     *  import p5 from 'p5';
-     *  import { p5asciify } from 'p5.asciify';
-     * 
-     *  const sketch = (p) => {
-     *      p5asciify.instance(p);
-     * 
-     *      // ... your sketch code
-     *      p.setup = () => { };
-     *      p.setupAsciify = () => { };
-     *      p.draw = () => { };
-     *      p.drawAsciify = () => { };
-     *  }
-     * 
-     * new p5(sketch);
-     * ```
-     */
-    public instance(p: p5): void {
-        if (!p.preload) {
-            p.preload = () => { };
         }
     }
 
     /**
      * Renders the ASCII output to the canvas.
      * 
-     * **This method is called automatically every time the user's `draw()` function has finished. Calling it manually is redundant and only causes useless computation.**
+     * Automatically called after the user's `draw()` function has finished when managed by the {@link P5AsciifierManager} instance {@link p5asciify}.
+     * 
+     * @ignore
      */
     public asciify(): void {
-        this._p.clear();
+        this._rendererManager.render(this._captureFramebuffer);
 
-        if (this._rendererManager.renderers.length > 0) {
-            this._rendererManager.render(this._sketchFramebuffer);
-            this._p.image(this._rendererManager.resultFramebuffer, -this._p.width / 2, -this._p.height / 2);
+        if (!this._rendererManager.hasEnabledRenderers) {
+            this._p.clear();
+            this._p.image(this._captureFramebuffer, -this._p.width / 2, -this._p.height / 2, this._p.width, this._p.height);
         } else {
-            this._p.image(this._sketchFramebuffer, -this._p.width / 2, -this._p.height / 2);
+            this._p.clear();
+            this._p.image(this._rendererManager.asciiDisplayRenderer.resultFramebuffer, -this._p.width / 2, -this._p.height / 2);
         }
     }
 
     /**
-     * Sets the font size for the ASCII renderers.
+     * Sets the font size for the ASCII renderers of the asciifier.
      * @param fontSize The font size to set.
      * 
      * @example
      * ```javascript
      *  function setupAsciify() {
-     *      // Set the font size to 32 to use for all ASCII renderers.
-     *      p5asciify.fontSize(32);
+     *      // Set the font size to 32 to use for all ASCII renderers of the asciifier.
+     *      p5asciify.asciifier().fontSize(32);
      *  }
      * ```
      */
@@ -145,10 +130,10 @@ export class P5Asciifier {
         this._fontSize = fontSize;
 
         if (this._p._setupDone) {
-            this._fontTextureAtlas.setFontSize(fontSize);
+            this._fontManager.setFontSize(fontSize);
             this._grid.resizeCellPixelDimensions(
-                this._fontTextureAtlas.maxGlyphDimensions.width,
-                this._fontTextureAtlas.maxGlyphDimensions.height
+                this._fontManager.maxGlyphDimensions.width,
+                this._fontManager.maxGlyphDimensions.height
             );
 
             this._rendererManager.resetRendererDimensions();
@@ -156,7 +141,7 @@ export class P5Asciifier {
     }
 
     /**
-     * Returns the renderer manager, containing all ASCII renderers in the rendering loop.
+     * Returns the {@link P5AsciifyRendererManager}, containing all ASCII renderers in the rendering pipeline of the asciifier.
      * @returns The renderer manager.
      * 
      * @example
@@ -165,10 +150,10 @@ export class P5Asciifier {
      * 
      *  function setupAsciify() {
      *      // Fetch the default brightness renderer from the renderer manager.
-     *      defaultBrightnessRenderer = p5asciify.renderers().get("brightness");
+     *      defaultBrightnessRenderer = p5asciify.asciifier().renderers().get("brightness");
      * 
      *      // Update any options for the renderer.
-     *      defaultBrightnessRenderer.update({ invertMode: true, });
+     *      defaultBrightnessRenderer.update({ invertMode: true });
      *  }
      * ```
      */
@@ -177,78 +162,113 @@ export class P5Asciifier {
     }
 
     /**
-     * Sets the font for the ascii renderers.
-     * @param font The font to use. Can be a path, base64 string, or p5.Font object.
+     * Sets the font for the ascii renderers in the rendering pipeline of the asciifier.
+     * @param font The `p5.Font` object to use for ASCII rendering.
      * @param options An object containing options affecting what happens after the font is loaded.
-     * @param options.updateCharacters  If `true`, updates renderer character colors for ascii conversion with new font. 
-     *                                  May throw an error if new font lacks set characters in renderers.
-     *                                  If false, the character colors won't be updated, 
-     *                                  potentially leading to incorrect ASCII conversion when not updated manually afterwards.
-     * @param onSuccess A callback function to call after the font has been loaded and potential updates have been made.
-     * @throws {@link P5AsciifyError} - If the font parameter is invalid or the font fails to load.
+     * @param options.updateCharacters If `true` *(default)*, updates set character sets in pre-defined renderers like the brightness-based ASCII renderer.
+     *                                 This might throw an error if the new font does not contain the characters of the previous font.
+     *                                 If `false`, those character sets are not updated, potentially leading to missing/different characters in the ASCII output if the mapping is not the same.
+     * @throws {@link P5AsciifyError} - If the font parameter is invalid.
      * 
      * @example
      * ```javascript
-     *  function preload() {
-     *      // Load a custom font from a path
-     *      p5asciify.loadFont('path/to/font.ttf', { updateCharacters: true }, () => {
-     *          // Font loaded successfully
-     *          console.log('Font loaded successfully');
-     *      });
+     *  let font;
      * 
-     *      // The second and third parameters are optional. When called during `preload`, 
-     *      // the font will be loaded before `setup` begins, 
-     *      // similar to how `loadFont` works in `p5.js`.
+     *  function preload() {
+     *      // Load font during preload using p5.js loadFont function.
+     *      font = loadFont('path/to/font.ttf');
+     *  }
+     * 
+     *  function setupAsciify() {
+     *      // Set the font to the loaded font.
+     *      p5asciify.asciifier().font(font);
      *  }
      * ```
      */
-    public loadFont(
-        font: string | p5.Font,
-        options: { "updateCharacters": true },
-        onSuccess?: () => void,
+    public font(
+        font: p5.Font,
+        options = { updateCharacters: true },
     ): void {
-        this._fontManager.loadFont(font, () => {
+        this._fontManager.loadFont(font);
 
-            if (this._p._setupDone) {
+        if (this._p._setupDone) {
 
-                this._fontTextureAtlas.reset();
+            this._fontManager.reset();
 
-                this._grid.resizeCellPixelDimensions(
-                    this._fontTextureAtlas.maxGlyphDimensions.width,
-                    this._fontTextureAtlas.maxGlyphDimensions.height
-                );
+            this._grid.resizeCellPixelDimensions(
+                this._fontManager.maxGlyphDimensions.width,
+                this._fontManager.maxGlyphDimensions.height
+            );
 
-                // Only update characters if option is true
-                if (options.updateCharacters) {
-                    this._rendererManager.renderers.forEach(renderer =>
+            // Only update characters if option is true
+            if (options.updateCharacters) {
+                this._rendererManager.renderers.forEach(renderer => {
+                    if (renderer.renderer instanceof AbstractFeatureRenderer2D) {
                         renderer.renderer.characters(renderer.renderer.options.characters as string)
-                    );
+                    }
                 }
-
-                this._rendererManager.resetRendererDimensions();
+                );
             }
 
-            onSuccess?.();
-        });
+            this._rendererManager.resetRendererDimensions();
+        }
     }
 
     /**
-     * Sets the background color for the ascii renderering. 
-     * 
-     * Covers all the transparent space, including the edges of the canvas, which might not be covered by the grid of characters.
-     * @param color The color to set. Needs to be a valid type to pass to the `background()` function provided by `p5.js`.
-     * @throws {@link P5AsciifyError} - If the passed color is invalid.
+     * Sets the background color for the ascii renderers, occupying all the space not covered by voxels in the grid.
+     * @param color The color to set. Needs to be a valid type to pass to the `background()` function provided by p5.js.
+     * @throws {@link P5AsciifyError} - If the color is not a string, array or p5.Color.
      * 
      * @example
      * ```javascript
      *  function setupAsciify() {
      *      // Set the background color to black.
-     *      p5asciify.background("#000000");
+     *      p5asciify.asciifier().background('#000000');
      *  }
      * ```
      */
     public background(color: string | p5.Color | [number, number?, number?, number?]) {
-        this._rendererManager.background(color as p5.Color);
+        this._rendererManager.asciiDisplayRenderer.background(color);
+    }
+
+    /**
+     * Sets the grid dimensions for the ASCII renderers. 
+     * Calling this method will make the grid dimensions fixed, no longer adjusting automatically when the canvas size changes.
+     * 
+     * To make the grid responsive to the canvas size again, use the {@link gridResponsive} method.
+     * 
+     * @param gridCols The number of columns in the grid.
+     * @param gridRows The number of rows in the grid.
+     * 
+     * @example
+     * ```javascript
+     *  function setupAsciify() {
+     *      // Set the grid dimensions to 100 columns, 50 rows.
+     *      p5asciify.asciifier().gridDimensions(100, 50);
+     *  }
+     * ```
+     * 
+     */
+    public gridDimensions(gridCols: number, gridRows: number) {
+        this._grid.resizeGridDimensions(gridCols, gridRows);
+        this._rendererManager.resetRendererDimensions();
+    }
+
+    /**
+     * Adjust the grid dimensions to be responsive to the canvas size or fixed.
+     * 
+     * If `true`, the grid dimensions will be adjusted every time the canvas size changes to create a perfect grid on the x and y axes.
+     * 
+     * If `false`, the grid dimensions will be fixed and not change when the canvas size changes.
+     * 
+     * @param bool Determines if the grid dimensions should be responsive to the canvas size.
+     */
+    public gridResponsive(bool: boolean = true) {
+        if (bool) {
+            this._grid.resetGridDimensions();
+        } else {
+            this._grid.fixedDimensions = true;
+        }
     }
 
     /**
@@ -257,14 +277,14 @@ export class P5Asciifier {
      * @throws {@link P5AsciifyError} - If no renderer is available.
      */
     private _generateAsciiTextOutput(): string[] {
-        const lastRenderer = this._rendererManager.lastRenderer;
-        if (!lastRenderer) {
+        const characterFramebuffer = this._rendererManager.characterFramebuffer;
+        if (!characterFramebuffer) {
             throw new P5AsciifyError('No renderer available to generate ASCII output');
         }
 
         // Load pixels from character framebuffer
-        lastRenderer.characterFramebuffer.loadPixels();
-        const asciiPixels = lastRenderer.characterFramebuffer.pixels;
+        characterFramebuffer.loadPixels();
+        const asciiPixels = characterFramebuffer.pixels;
 
         // Get grid dimensions
         const w = this._grid.cols;
@@ -311,9 +331,10 @@ export class P5Asciifier {
      *  function drawAsciify() {
      *      // Print the ASCII output to the console.
      *      if (frameCount === 1101100011101010110111001100001) {
-     *          console.log(p5asciify.toString());
+     *          console.log(p5asciify.asciifier().toString());
      *      }
      *  }
+     * ```
      */
     public toString(): string {
         return this._generateAsciiTextOutput().join('\n');
@@ -329,7 +350,7 @@ export class P5Asciifier {
      * function drawAsciify() {
      *     // Save the ASCII output to a text file.
      *      if (frameCount === 11100110110111101101100) {
-     *         p5asciify.saveStrings("ascii_output");
+     *         p5asciify.asciifier().saveStrings("ascii_output");
      *     }
      * }
      * ```
@@ -359,25 +380,29 @@ export class P5Asciifier {
      *  let primaryColorFramebuffer;
      *  let secondaryColorFramebuffer;
      * 
+     *  let asciifier;
+     * 
      *  function setup() {
      *      createCanvas(400, 400, WEBGL);
      *  }
      * 
      *  function setupAsciify() {
+     *      asciifier = p5asciify.asciifier();
+     * 
      *      // Enable the default custom renderer
-     *      p5asciify.renderers().get("custom").enable();
+     *      asciifier.renderers().get("custom").enable();
      *      
      *      // Assign the ascii renderer's character framebuffer to a global variable
-     *      characterFramebuffer = p5asciify.renderers().get("custom").characterFramebuffer;
-     *      primaryColorFramebuffer = p5asciify.renderers().get("custom").primaryColorFramebuffer;
-     *      secondaryColorFramebuffer = p5asciify.renderers().get("custom").secondaryColorFramebuffer;
+     *      characterFramebuffer = asciifier.renderers().get("custom").characterFramebuffer;
+     *      primaryColorFramebuffer = asciifier.renderers().get("custom").primaryColorFramebuffer;
+     *      secondaryColorFramebuffer = asciifier.renderers().get("custom").secondaryColorFramebuffer;
      *  }
      * 
      *  function draw() {
      *      // Draw a rectangle with the character 'A' to the character framebuffer
      *      characterFramebuffer.begin();
      *      clear();
-     *      p5asciify.fill("A");
+     *      asciifier.fill("A");
      *      rect(0, 0, 100, 100);
      *      characterFramebuffer.end();
      * 
@@ -398,53 +423,43 @@ export class P5Asciifier {
     }
 
     /**
-     * Returns the grid, which contains the dimensions and offsets to create a perfect grid based on the canvas and font glyph dimensions.
+     * Returns the {@link P5AsciifyGrid} instance, which contains information about grid properties, and methods to modify the grid.
      * 
      * @example
      * ```javascript
      * let framebuffer;
      * 
      * function setupAsciify() {
-     *      // Can be useful to create a framebuffer with the same dimensions as the grid.
-     *      framebuffer = createFramebuffer({width: p5asciify.grid.cols, height: p5asciify.grid.rows});
+     *      // Can also be useful to create a framebuffer with the same dimensions as the grid.
+     * 
+     *      framebuffer = createFramebuffer({
+     *          width: p5asciify.asciifier().grid.cols, 
+     *          height: p5asciify.asciifier().grid.rows
+     *      });
      * }
      * ```
      */
     get grid(): P5AsciifyGrid { return this._grid; }
 
     /**
-     * Returns the font texture atlas, which contains the texture with all glyphs of the font set in the font manager.
-     * 
-     * @example
-     * ```javascript
-     *  function drawAsciify() {
-     *      // Peek behind the curtain at the font texture atlas (you curious cat)
-     *      clear(); 
-     *      image(p5asciify.fontTextureAtlas.texture, -width / 2, -height / 2, width, height);
-     *  }
-     * ```
-     */
-    get fontTextureAtlas(): P5AsciifyFontTextureAtlas { return this._fontTextureAtlas; }
-
-    /**
-     * Returns the font manager, which manages the font and provides methods to access font properties.
+     * Returns the font manager, which manages the font and provides methods to access font properties like available characters and their corresponding rgb values.
      * 
      * @example
      * ```javascript
      *  function setupAsciify() {
      *      // Print all existing characters in the font to the console.
-     *      console.log(p5asciify.fontManager.characters);
+     *      console.log(p5asciify.asciifier().fontManager.characters);
      *  }
      * ```
      */
     get fontManager(): P5AsciifyFontManager { return this._fontManager; }
 
     /**
-     * Returns the sketch framebuffer, which contains the output of the user's `draw()` function to asciify.
+     * Retrieves the framebuffer that contains the content to asciify.
      * 
-     * There is no real reason to access this in a `p5.js` sketch, but I'm happy to be proven wrong.
+     * The returned framebuffer either contains everything drawn on the p5.js main canvas, or a custom framebuffer if set during initialization.
      */
-    get sketchFramebuffer(): p5.Framebuffer { return this._sketchFramebuffer; }
+    get captureFramebuffer(): p5.Framebuffer { return this._captureFramebuffer; }
 
     /**
      * Returns the ASCII output texture as a p5.Framebuffer, which can be used for further processing or rendering.
@@ -454,8 +469,6 @@ export class P5Asciifier {
      * ```javascript
      *  // Draw something on the canvas to asciify.
      *  function draw() {
-     *      rotateX(frameCount * 0.01);
-     *      rotateY(frameCount * 0.01);
      *      box(100);
      *  }
      * 
@@ -464,10 +477,20 @@ export class P5Asciifier {
      * 
      *      // Apply the asciified output as a texture to a 3D box.
      *      clear();
-     *      texture(p5asciify.texture);
+     *      texture(p5asciify.asciifier().texture);
+     *      rotateX(frameCount * 0.01);
+     *      rotateY(frameCount * 0.01);
      *      box(100);
      *  }
      * ```
      */
-    get texture(): p5.Framebuffer { return this._rendererManager.resultFramebuffer; }
+    get texture(): p5.Framebuffer { return this._rendererManager.asciiDisplayRenderer.resultFramebuffer; }
+
+    /**
+     * Returns the flag to determine if the p5.js canvas is being recorded into a framebuffer to asciify,
+     * or if a custom framebuffer is being used instead.
+     * 
+     * Returns `true` if the p5.js canvas is used, otherwise `false`.
+     */
+    get canvasFlag(): boolean { return this._canvasFlag; }
 }

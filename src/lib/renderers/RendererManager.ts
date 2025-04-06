@@ -1,30 +1,24 @@
 import p5 from 'p5';
 
-import { P5AsciifyBrightnessRenderer } from './brightness/BrightnessAsciiRenderer';
-import { P5AsciifyAccurateRenderer } from './accurate/AccurateAsciiRenderer';
-import { P5AsciifyEdgeRenderer } from './edge/EdgeAsciiRenderer';
-import { P5AsciifyGradientRenderer } from './gradient/GradientAsciiRenderer';
 import { P5AsciifyRenderer } from './AsciiRenderer';
+import { P5AsciifyRenderer2D } from './2d/AsciiRenderer2D';
+import { AbstractFeatureRenderer2D } from './2d/feature/AbstractFeatureRenderer2D';
+import { P5AsciifyBrightnessRenderer } from './2d/feature/brightness/BrightnessAsciiRenderer';
+import { P5AsciifyAccurateRenderer } from './2d/feature/accurate/AccurateAsciiRenderer';
+import { P5AsciifyEdgeRenderer } from './2d/feature/edge/EdgeAsciiRenderer';
+import { P5AsciifyDisplayRenderer2D } from './2d/AsciiDisplayRenderer2D';
 
 import { P5AsciifyGrid } from '../Grid';
-import { P5AsciifyFontTextureAtlas } from '../FontTextureAtlas';
+import { P5AsciifyFontManager } from '../FontManager';
 
 import { P5AsciifyError } from '../AsciifyError';
 
 import { AsciiRendererOptions } from './types';
 
-const RENDERER_TYPES = {
-    'brightness': P5AsciifyBrightnessRenderer,
-    'accurate': P5AsciifyAccurateRenderer,
-    'gradient': P5AsciifyGradientRenderer,
-    'edge': P5AsciifyEdgeRenderer,
-    'custom': P5AsciifyRenderer,
-} as const;
-
-type RendererType = keyof typeof RENDERER_TYPES;
+import { RENDERER_TYPES } from './constants';
 
 /**
- * Manages the available ASCII renderers and handles rendering the ASCII output to the canvas.
+ * Manages the whole ASCII rendering pipeline.
  */
 export class P5AsciifyRendererManager {
 
@@ -34,14 +28,33 @@ export class P5AsciifyRendererManager {
     /** The list of available renderers. */
     private _renderers: { name: string, renderer: P5AsciifyRenderer }[];
 
-    /** The last renderer used in the rendering pipeline. */
-    public lastRenderer: P5AsciifyRenderer;
+    /** The primary color framebuffer, whose pixels define the character colors of the grid cells. */
+    private _primaryColorFramebuffer: p5.Framebuffer;
 
-    /** The background color to use for the ASCII rendering for the offset space, not occupied by the centered ASCII grid. */
-    private _backgroundColor: string | p5.Color | [number, number?, number?, number?] = "#000000";
+    /** The secondary color framebuffer, whose pixels define the background colors of the grid cells. */
+    private _secondaryColorFramebuffer: p5.Framebuffer;
 
-    private _resultFramebuffer: p5.Framebuffer;
+    /** The character framebuffer, whose pixels define the ASCII characters to use in the grid cells. */
+    private _characterFramebuffer: p5.Framebuffer;
 
+    /** The inversion framebuffer, whose pixels define whether to swap the character and background colors. */
+    private _inversionFramebuffer: p5.Framebuffer;
+
+    /** The rotation framebuffer, whose pixels define the rotation angle of the characters in the grid. */
+    private _rotationFramebuffer: p5.Framebuffer;
+
+    private _asciiDisplayRenderer2D: P5AsciifyDisplayRenderer2D;
+
+    /** Whether any renderers are enabled. */
+    private _hasEnabledRenderers: boolean = false;
+
+    /**
+     * Creates a new ASCII renderer manager instance.
+     * @param _p The p5 instance.
+     * @param _grid The grid instance.
+     * @param _fontManager The font texture atlas instance.
+     * @ignore
+     */
     constructor(
         /** The p5 instance. */
         private _p: p5,
@@ -50,7 +63,7 @@ export class P5AsciifyRendererManager {
         private _grid: P5AsciifyGrid,
 
         /** The font texture atlas instance. */
-        private _fontTextureAtlas: P5AsciifyFontTextureAtlas
+        private _fontManager: P5AsciifyFontManager
     ) {
         this._currentCanvasDimensions = {
             width: this._p.width,
@@ -58,49 +71,108 @@ export class P5AsciifyRendererManager {
         };
 
         this._renderers = [
-            { name: "custom", renderer: new P5AsciifyRenderer(this._p, this._grid, _fontTextureAtlas) },
-            { name: "edge", renderer: new P5AsciifyEdgeRenderer(this._p, this._grid, _fontTextureAtlas) },
-            { name: "gradient", renderer: new P5AsciifyGradientRenderer(this._p, this._grid, _fontTextureAtlas) },
-            { name: "accurate", renderer: new P5AsciifyAccurateRenderer(this._p, this._grid, _fontTextureAtlas) },
-            { name: "brightness", renderer: new P5AsciifyBrightnessRenderer(this._p, this._grid, _fontTextureAtlas) },
+            { name: "custom2D", renderer: new P5AsciifyRenderer2D(this._p, this._grid, this._fontManager) },
+            { name: "edge", renderer: new P5AsciifyEdgeRenderer(this._p, this._grid, this._fontManager) },
+            { name: "accurate", renderer: new P5AsciifyAccurateRenderer(this._p, this._grid, this._fontManager) },
+            { name: "brightness", renderer: new P5AsciifyBrightnessRenderer(this._p, this._grid, this._fontManager) },
         ];
 
-        this._resultFramebuffer = this._p.createFramebuffer({
+        this._primaryColorFramebuffer = this._p.createFramebuffer({
+            density: 1,
+            antialias: false,
+            width: this._grid.cols,
+            height: this._grid.rows,
             depthFormat: this._p.UNSIGNED_INT,
             textureFiltering: this._p.NEAREST
         });
 
-        this.lastRenderer = this._renderers[0].renderer;
+        this._secondaryColorFramebuffer = this._p.createFramebuffer({
+            density: 1,
+            antialias: false,
+            width: this._grid.cols,
+            height: this._grid.rows,
+            depthFormat: this._p.UNSIGNED_INT,
+            textureFiltering: this._p.NEAREST
+        });
+
+        this._inversionFramebuffer = this._p.createFramebuffer({
+            density: 1,
+            antialias: false,
+            width: this._grid.cols,
+            height: this._grid.rows,
+            depthFormat: this._p.UNSIGNED_INT,
+            textureFiltering: this._p.NEAREST
+        });
+
+        this._characterFramebuffer = this._p.createFramebuffer({
+            density: 1,
+            antialias: false,
+            width: this._grid.cols,
+            height: this._grid.rows,
+            depthFormat: this._p.UNSIGNED_INT,
+            textureFiltering: this._p.NEAREST
+        });
+
+        this._rotationFramebuffer = this._p.createFramebuffer({
+            density: 1,
+            antialias: false,
+            width: this._grid.cols,
+            height: this._grid.rows,
+            depthFormat: this._p.UNSIGNED_INT,
+            textureFiltering: this._p.NEAREST
+        });
+
+        this._asciiDisplayRenderer2D = new P5AsciifyDisplayRenderer2D(this._p, this._grid, this._fontManager);
     }
 
     /**
-     * Renders the ASCII output to the result framebuffer.
+     * Runs all renderers in the pipeline, merging their framebuffers together,
+     * and passing them to the ASCII display renderer for final rendering.
      * 
-     * **This method is called internally by the `p5asciify` instance every time the `draw()` function finishes.
-     *  Should not be called manually, otherwise causing redundant computations.**
+     * All {@link P5Asciifier} instances and their renderer managers call this method automatically 
+     * after the user's `draw()` function when part of the {@link P5AsciifierManager} instance {@link p5asciify}.
      * 
      * @param inputFramebuffer The input framebuffer to transform into ASCII.
+     * 
+     * @ignore
      */
     public render(inputFramebuffer: p5.Framebuffer): void {
-        let asciiOutput = inputFramebuffer;
 
-        let currentRenderer = this._renderers[0].renderer;
+        this._characterFramebuffer.draw(() => this._p.clear());
+        this._primaryColorFramebuffer.draw(() => this._p.clear());
+        this._secondaryColorFramebuffer.draw(() => this._p.clear());
+        this._inversionFramebuffer.draw(() => this._p.clear());
+        this._rotationFramebuffer.draw(() => this._p.clear());
 
-        this._resultFramebuffer.begin();
-        this._p.clear();
-        this._p.background(this._backgroundColor as p5.Color);
+        this._hasEnabledRenderers = false;
         for (let i = this._renderers.length - 1; i >= 0; i--) {
             const renderer = this._renderers[i];
             if (renderer.renderer.options.enabled) {
-                renderer.renderer.render(inputFramebuffer, currentRenderer);
-                asciiOutput = renderer.renderer.outputFramebuffer;
-                currentRenderer = renderer.renderer;
-                this.lastRenderer = renderer.renderer;
+
+                if (renderer.renderer instanceof AbstractFeatureRenderer2D) {
+                    renderer.renderer.render(inputFramebuffer);
+                }
+
+                const xPos = -this._grid.cols / 2;
+                const yPos = ((-this._grid.rows) / 2);
+
+                this._characterFramebuffer.draw(() => this._p.image(renderer.renderer.characterFramebuffer, xPos, yPos));
+                this._primaryColorFramebuffer.draw(() => this._p.image(renderer.renderer.primaryColorFramebuffer, xPos, yPos));
+                this._secondaryColorFramebuffer.draw(() => this._p.image(renderer.renderer.secondaryColorFramebuffer, xPos, yPos));
+                this._inversionFramebuffer.draw(() => this._p.image(renderer.renderer.inversionFramebuffer, xPos, yPos));
+                this._rotationFramebuffer.draw(() => this._p.image(renderer.renderer.rotationFramebuffer, xPos, yPos));
+
+                this._hasEnabledRenderers = true;
             }
         }
 
-        this._p.image(asciiOutput, -this._p.width / 2, -this._p.height / 2);
-        this._resultFramebuffer.end();
+        this._asciiDisplayRenderer2D.render(
+            this._characterFramebuffer,
+            this._primaryColorFramebuffer,
+            this._secondaryColorFramebuffer,
+            this._inversionFramebuffer,
+            this._rotationFramebuffer
+        );
 
         this.checkCanvasDimensions();
     }
@@ -108,6 +180,9 @@ export class P5AsciifyRendererManager {
     /**
      * Checks if the canvas dimensions have changed.
      * If they have, the grid is reset and the renderers are resized.
+     * 
+     * Is called automatically when {@link render} is called 
+     * and the canvas dimensions are different to the previous {@link render} call.
      */
     private checkCanvasDimensions(): void {
         if (this._currentCanvasDimensions.width !== this._p.width || this._currentCanvasDimensions.height !== this._p.height) {
@@ -123,17 +198,24 @@ export class P5AsciifyRendererManager {
     /**
      * Resets the dimensions of all renderers.
      * 
-     * This method is automatically triggered when:
-     * - Font properties are modified
-     * - Canvas dimensions change
+     * Is called automatically when {@link render} is called 
+     * and the canvas dimensions are different to the previous {@link render} call.
      * 
-     * These changes affect the grid dimensions, requiring renderer framebuffers to be resized
-     * and certain shaders to be reinitialized. Should be redundant to call manually.
+     * @ignore
      */
     public resetRendererDimensions(): void {
+        this._primaryColorFramebuffer.resize(this._grid.cols, this._grid.rows);
+        this._secondaryColorFramebuffer.resize(this._grid.cols, this._grid.rows);
+        this._characterFramebuffer.resize(this._grid.cols, this._grid.rows);
+        this._inversionFramebuffer.resize(this._grid.cols, this._grid.rows);
+        this._rotationFramebuffer.resize(this._grid.cols, this._grid.rows);
+
         this._renderers.forEach(renderer => {
             renderer.renderer.resizeFramebuffers();
-            renderer.renderer.resetShaders();
+
+            if (renderer.renderer instanceof AbstractFeatureRenderer2D) {
+                renderer.renderer.resetShaders();
+            }
         });
     }
 
@@ -147,14 +229,17 @@ export class P5AsciifyRendererManager {
      * 
      * @example
      * ```javascript
-     * let brightnessAsciiRenderer;
+     *  let asciifier;
+     *  let brightnessAsciiRenderer;
      * 
      *  function setupAsciify() {
+     *      asciifier = p5asciify.asciifier();
+     * 
      *      // Clear all existing default renderers provided by `p5.asciify`.
-     *      p5asciify.renderers().clear();
+     *      asciifier.renderers().clear();
      * 
      *      // Add a new brightness renderer with custom options.
-     *      brightnessAsciiRenderer = p5asciify.renderers().add('brightness', 'brightness', {
+     *      brightnessAsciiRenderer = asciifier.renderers().add('brightness', 'brightness', {
      *          enabled: true,
      *          characterColor: '#FF0000',
      *          backgroundColor: '#0000FF',
@@ -166,7 +251,7 @@ export class P5AsciifyRendererManager {
      */
     public add(
         name: string,
-        type: RendererType,
+        type: keyof typeof RENDERER_TYPES,
         options: AsciiRendererOptions
     ): P5AsciifyRenderer {
         if (typeof name !== 'string' || name.trim() === '') {
@@ -180,7 +265,7 @@ export class P5AsciifyRendererManager {
             );
         }
 
-        const renderer = new RendererClass(this._p, this._grid, this._fontTextureAtlas, options);
+        const renderer = new RendererClass(this._p, this._grid, this._fontManager, options);
 
         this._renderers.push({ name, renderer });
 
@@ -198,10 +283,10 @@ export class P5AsciifyRendererManager {
      * 
      *  function setupAsciify() {
      *      // Get the brightness renderer instance by name.
-     *      brightnessRenderer = p5asciify.renderers().get('brightness');
+     *      brightnessRenderer = p5asciify.asciifier().renderers().get('brightness');
      * 
      *      // Use the brightness renderer instance to modify its properties during run-time,
-     *      // instead of constantly calling `p5asciify.renderers().get('brightness')`.
+     *      // instead of constantly calling `p5asciify.asciifier().renderers().get('brightness')`.
      *  }
      * ```
      */
@@ -218,14 +303,14 @@ export class P5AsciifyRendererManager {
     }
 
     /**
-     * Moves a renderer down in the list of renderers, meaning it will be rendered later in the pipeline.
+     * Moves a renderer down in the list of renderers, meaning it will be rendered earlier in the pipeline.
      * @param renderer The renderer to move down in the list.
      * 
      * @example
      * ```javascript
      *  function setupAsciify() {
      *      // Move the `"brightness"` renderer down in the list of renderers.
-     *      p5asciify.renderers().moveDown('brightness');
+     *      p5asciify.asciifier().renderers().moveDown('brightness');
      * 
      *      // Alternatively, you can also pass the renderer instance itself.
      *  }
@@ -233,19 +318,27 @@ export class P5AsciifyRendererManager {
      */
     public moveDown(renderer: string | P5AsciifyRenderer): void {
         const index = this._getRendererIndex(renderer);
-        if (index <= 0) return;
+
+        if (index === -1) {
+            throw new P5AsciifyError("Renderer not found.");
+        }
+
+        if (index >= this._renderers.length - 1) {
+            throw new P5AsciifyError("Renderer is already at the bottom of the list.");
+        }
+        
         this.swap(renderer, this._renderers[index + 1].renderer);
     }
 
     /**
-     * Moves a renderer up in the list of renderers, meaning it will be rendered earlier in the pipeline.
+     * Moves a renderer up in the list of renderers, meaning it will be rendered later in the pipeline.
      * @param renderer The renderer to move up in the list.
      * 
      * @example
      * ```javascript
      *  function setupAsciify() {
      *      // Move the `"accurate"` renderer up in the list of renderers.
-     *      p5asciify.renderers().moveUp('accurate');
+     *      p5asciify.asciifier().renderers().moveUp('accurate');
      * 
      *      // Alternatively, you can also pass the renderer instance itself.
      *  }
@@ -253,7 +346,15 @@ export class P5AsciifyRendererManager {
      */
     public moveUp(renderer: string | P5AsciifyRenderer): void {
         const index = this._getRendererIndex(renderer);
-        if (index === -1 || index >= this._renderers.length - 1) return;
+
+        if (index === -1) {
+            throw new P5AsciifyError("Renderer not found.");
+        }
+        
+        if (index <= 0) {
+            throw new P5AsciifyError("Renderer is already at the top of the list.");
+        }
+
         this.swap(renderer, this._renderers[index - 1].renderer);
     }
 
@@ -265,7 +366,7 @@ export class P5AsciifyRendererManager {
      * ```javascript
      *  function setupAsciify() {
      *      // Remove the `"brightness"` renderer from the list of renderers.
-     *      p5asciify.renderers().remove('brightness');
+     *      p5asciify.asciifier().renderers().remove('brightness');
      * 
      *      // Alternatively, you can also pass the renderer instance itself.
      * }
@@ -281,16 +382,16 @@ export class P5AsciifyRendererManager {
 
     /**
      * Clears the list of renderers. 
-     * Can be useful when you want to start fresh without the default renderers provided by `p5.asciify`.
+     * Can be useful when you want to start fresh without the default renderers provided by the library.
      * 
      * @example
      * ```javascript
      *  function setupAsciify() {
      *      // Clear all existing renderers.
-     *      p5asciify.renderers().clear();
+     *      p5asciify.asciifier().renderers().clear();
      * 
      *     // With no renderers, you can add your own custom renderer.
-     *     // Otherwise, `p5.asciify` will now render the input image without any ASCII effects.
+     *     // Otherwise, `p5.asciify` will now render the input image without any ASCII conversion.
      *  }
      * ```
      */
@@ -308,7 +409,7 @@ export class P5AsciifyRendererManager {
      * ```javascript
      *  function setupAsciify() {
      *      // Swap the positions of the `"brightness"` and `"accurate"` renderers.
-     *      p5asciify.renderers().swap('brightness', 'accurate');
+     *      p5asciify.asciifier().renderers().swap('brightness', 'accurate');
      * 
      *      // Alternatively, you can also pass the renderer instances themselves.
      *  }
@@ -325,45 +426,16 @@ export class P5AsciifyRendererManager {
         const temp = this._renderers[index1];
         this._renderers[index1] = this._renderers[index2];
         this._renderers[index2] = temp;
-
-        this.lastRenderer = this._renderers[0].renderer;
     }
 
     /**
-     * Sets the background color for the ascii renderers. 
-     * 
-     * Covers the empty space on the edges of the canvas, which potentially is not occupied by the centered ASCII grid.
-     * @param color The color to set. Needs to be a valid type to pass to the `background()` function provided by p5.js.
-     * @throws {@link P5AsciifyError} - If the color is not a string, array or p5.Color.
-     * 
-     * @example
-     * ```javascript
-     *  function setupAsciify() {
-     *      // Set the background color to black.
-     *      p5asciify.renderers().background('#000000');
-     * 
-     *      // Alternatively, you can also use:
-     *      p5asciify.background('#000000');
-     *  }
-     * ```
-     */
-    public background(color: string | p5.Color | [number, number?, number?, number?]) {
-        if (typeof color !== "string" && !Array.isArray(color) && !(color instanceof p5.Color)) {
-            throw new P5AsciifyError(`Invalid color type: ${typeof color}. Expected string, array or p5.Color.`);
-        }
-
-        this._backgroundColor = color;
-    }
-
-    /**
-     * Enables all renderers in the list of renderers at once,
-     * effectively rendering the input image with all ASCII renderers applied.
+     * Enables all renderers in the list of renderers at once.
      * 
      * @example
      * ```javascript
      *  function setupAsciify() {
      *     // Enable all default renderers provided by `p5.asciify`.
-     *      p5asciify.renderers().enable();
+     *      p5asciify.asciifier().renderers().enable();
      *  }
      * ```
      */
@@ -372,14 +444,13 @@ export class P5AsciifyRendererManager {
     }
 
     /**
-     * Disables all renderers in the list of renderers at once, 
-     * effectively rendering the input image without any ASCII renderers applied.
+     * Disables all renderers in the list of renderers at once.
      * 
      * @example
      * ```javascript
      *  function setupAsciify() {
-     *      // Disable all renderers, effectively rendering the input image without any ASCII effects.
-     *      p5asciify.renderers().disable();
+     *      // Disable all renderers in the list.
+     *      p5asciify.asciifier().renderers().disable();
      *  }
      * ```
      */
@@ -395,7 +466,7 @@ export class P5AsciifyRendererManager {
      * ```javascript
      *  function setupAsciify() {
      *      // Enable all default renderers provided by `p5.asciify`.
-     *      p5asciify.renderers().enabled(true);
+     *      p5asciify.asciifier().renderers().enabled(true);
      *  }
      * ```
      */
@@ -416,17 +487,26 @@ export class P5AsciifyRendererManager {
     }
 
     /**
-     * Returns the list of available renderers.
+     * Returns the list of renderers in the pipeline.
+     * 
+     * The first renderer in the list is executed last, and the last renderer in the list is executed first.
      */
     get renderers(): { name: string, renderer: P5AsciifyRenderer }[] { return this._renderers; }
 
     /**
-     * Returns the result framebuffer, which contains the final ASCII output.
-     * 
-     * `texture(p5asciify.texture);` and `texture(p5asciify.renderers().resultFramebuffer);` are equivalent,
-     * and can be useful interchangeably, e.g. for custom stuff in `drawAsciify()`.
-     * 
-     * Generally, this texture is drawn to the canvas automatically by `p5.asciify` after `draw()` finishes, and before `drawAsciify()` is called.
+     * Returns the {@link P5AsciifyDisplayRenderer2D} instance which performs the final ASCII conversion.
      */
-    get resultFramebuffer(): p5.Framebuffer { return this._resultFramebuffer; }
+    get asciiDisplayRenderer(): P5AsciifyDisplayRenderer2D { return this._asciiDisplayRenderer2D; }
+
+    /**
+     * Returns the primary color framebuffer, 
+     * which contains the primary color framebuffers of all renderers in the pipeline stacked on top of each other.
+     * @ignore
+     */
+    get characterFramebuffer(): p5.Framebuffer { return this._characterFramebuffer; }
+
+    /**
+     * Returns a boolean indicating whether any renderers are enabled in the pipeline.
+     */
+    get hasEnabledRenderers(): boolean { return this._hasEnabledRenderers; }
 }

@@ -6,8 +6,8 @@
 
 # Variable: p5asciify
 
-> `const` **p5asciify**: [`P5Asciifier`](../classes/P5Asciifier.md)
+> `const` **p5asciify**: [`P5AsciifierManager`](../classes/P5AsciifierManager.md)
 
-Defined in: [index.ts:11](https://github.com/humanbydefinition/p5.asciify/blob/6fefeaafef48319cd9c62f693034711261e84b1d/src/lib/index.ts#L11)
+Defined in: [index.ts:9](https://github.com/humanbydefinition/p5.asciify/blob/9bc9e13422f8092690e25d564658494cfe17130e/src/lib/index.ts#L9)
 
-The main instance of the `p5.asciify` library, which is used to access all of the library's functionality.
+Main instance of p5.asciify *([P5AsciifierManager](../classes/P5AsciifierManager.md))* providing full access to the library.

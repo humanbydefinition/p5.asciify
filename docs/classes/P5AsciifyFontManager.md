@@ -6,7 +6,7 @@
 
 # Class: P5AsciifyFontManager
 
-Defined in: [FontManager.ts:8](https://github.com/humanbydefinition/p5.asciify/blob/6fefeaafef48319cd9c62f693034711261e84b1d/src/lib/FontManager.ts#L8)
+Defined in: [FontManager.ts:8](https://github.com/humanbydefinition/p5.asciify/blob/9bc9e13422f8092690e25d564658494cfe17130e/src/lib/FontManager.ts#L8)
 
 Manages the font used for the ASCII rendering pipeline and provides methods for working with the font.
 
@@ -14,9 +14,9 @@ Manages the font used for the ASCII rendering pipeline and provides methods for 
 
 ### new P5AsciifyFontManager()
 
-> **new P5AsciifyFontManager**(`_p`, `fontSource`): [`P5AsciifyFontManager`](P5AsciifyFontManager.md)
+> **new P5AsciifyFontManager**(`_p`, `_font`): [`P5AsciifyFontManager`](P5AsciifyFontManager.md)
 
-Defined in: [FontManager.ts:24](https://github.com/humanbydefinition/p5.asciify/blob/6fefeaafef48319cd9c62f693034711261e84b1d/src/lib/FontManager.ts#L24)
+Defined in: [FontManager.ts:41](https://github.com/humanbydefinition/p5.asciify/blob/9bc9e13422f8092690e25d564658494cfe17130e/src/lib/FontManager.ts#L41)
 
 Creates a new `P5AsciifyFontManager` instance.
 
@@ -25,7 +25,7 @@ Creates a new `P5AsciifyFontManager` instance.
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
 | `_p` | `__module` | The p5 instance. |
-| `fontSource` | `string` \| `Font` | The source to load the font from. Can be a path to a .ttf or .otf file, a base64 string, a blob URL, or a p5.Font object. |
+| `_font` | `Font` | The font to use for ASCII rendering. |
 
 #### Returns
 
@@ -37,9 +37,9 @@ Creates a new `P5AsciifyFontManager` instance.
 
 #### Get Signature
 
-> **get** **characterGlyphs**(): [`OpenTypeGlyph`](../type-aliases/OpenTypeGlyph.md)[]
+> **get** **characterGlyphs**(): `OpenTypeGlyph`[]
 
-Defined in: [FontManager.ts:258](https://github.com/humanbydefinition/p5.asciify/blob/6fefeaafef48319cd9c62f693034711261e84b1d/src/lib/FontManager.ts#L258)
+Defined in: [FontManager.ts:333](https://github.com/humanbydefinition/p5.asciify/blob/9bc9e13422f8092690e25d564658494cfe17130e/src/lib/FontManager.ts#L333)
 
 An array of character glyphs in the set font with color assignments.
 
@@ -47,14 +47,14 @@ An array of character glyphs in the set font with color assignments.
 
 ```javascript
  function setupAsciify() {
-     // Print the character glyphs in the font
-     console.log(p5asciify.fontManager.characterGlyphs);
+     // Print the character glyph objects of the font to the console
+     console.log(p5asciify.asciifier().fontManager.characterGlyphs);
  }
 ```
 
 ##### Returns
 
-[`OpenTypeGlyph`](../type-aliases/OpenTypeGlyph.md)[]
+`OpenTypeGlyph`[]
 
 ***
 
@@ -64,7 +64,7 @@ An array of character glyphs in the set font with color assignments.
 
 > **get** **characters**(): `string`[]
 
-Defined in: [FontManager.ts:245](https://github.com/humanbydefinition/p5.asciify/blob/6fefeaafef48319cd9c62f693034711261e84b1d/src/lib/FontManager.ts#L245)
+Defined in: [FontManager.ts:320](https://github.com/humanbydefinition/p5.asciify/blob/9bc9e13422f8092690e25d564658494cfe17130e/src/lib/FontManager.ts#L320)
 
 An array of supported characters in the set font.
 
@@ -72,8 +72,8 @@ An array of supported characters in the set font.
 
 ```javascript
  function setupAsciify() {
-     // Print the supported characters in the font
-     console.log(p5asciify.fontManager.characters);
+     // Print the supported characters in the font to the console
+     console.log(p5asciify.asciifier().fontManager.characters);
  }
 ```
 
@@ -89,7 +89,7 @@ An array of supported characters in the set font.
 
 > **get** **font**(): `Font`
 
-Defined in: [FontManager.ts:232](https://github.com/humanbydefinition/p5.asciify/blob/6fefeaafef48319cd9c62f693034711261e84b1d/src/lib/FontManager.ts#L232)
+Defined in: [FontManager.ts:307](https://github.com/humanbydefinition/p5.asciify/blob/9bc9e13422f8092690e25d564658494cfe17130e/src/lib/FontManager.ts#L307)
 
 The `p5.Font` object used for ASCII rendering.
 
@@ -98,7 +98,7 @@ The `p5.Font` object used for ASCII rendering.
 ```javascript
  function drawAsciify() {
      // Draw an FPS counter, using the font set in p5.asciify, on top of the ASCII rendering.
-     textFont(p5asciify.fontManager.font);
+     textFont(p5asciify.asciifier().fontManager.font);
      textSize(16);
      fill(255);
      text(frameRate() + " FPS", 10, 10);
@@ -109,13 +109,98 @@ The `p5.Font` object used for ASCII rendering.
 
 `Font`
 
+***
+
+### fontSize
+
+#### Get Signature
+
+> **get** **fontSize**(): `number`
+
+Defined in: [FontManager.ts:291](https://github.com/humanbydefinition/p5.asciify/blob/9bc9e13422f8092690e25d564658494cfe17130e/src/lib/FontManager.ts#L291)
+
+Returns the font size used for the texture atlas.
+
+##### Returns
+
+`number`
+
+***
+
+### maxGlyphDimensions
+
+#### Get Signature
+
+> **get** **maxGlyphDimensions**(): `object`
+
+Defined in: [FontManager.ts:271](https://github.com/humanbydefinition/p5.asciify/blob/9bc9e13422f8092690e25d564658494cfe17130e/src/lib/FontManager.ts#L271)
+
+Returns the maximum width and height found in all the glyphs in the font.
+
+##### Returns
+
+`object`
+
+| Name | Type | Defined in |
+| ------ | ------ | ------ |
+| <a id="height"></a> `height` | `number` | [FontManager.ts:271](https://github.com/humanbydefinition/p5.asciify/blob/9bc9e13422f8092690e25d564658494cfe17130e/src/lib/FontManager.ts#L271) |
+| <a id="width"></a> `width` | `number` | [FontManager.ts:271](https://github.com/humanbydefinition/p5.asciify/blob/9bc9e13422f8092690e25d564658494cfe17130e/src/lib/FontManager.ts#L271) |
+
+***
+
+### texture
+
+#### Get Signature
+
+> **get** **texture**(): `Framebuffer`
+
+Defined in: [FontManager.ts:276](https://github.com/humanbydefinition/p5.asciify/blob/9bc9e13422f8092690e25d564658494cfe17130e/src/lib/FontManager.ts#L276)
+
+Returns the texture containing all characters in the font.
+
+##### Returns
+
+`Framebuffer`
+
+***
+
+### textureColumns
+
+#### Get Signature
+
+> **get** **textureColumns**(): `number`
+
+Defined in: [FontManager.ts:281](https://github.com/humanbydefinition/p5.asciify/blob/9bc9e13422f8092690e25d564658494cfe17130e/src/lib/FontManager.ts#L281)
+
+Returns the number of columns in the texture containing all characters in the font.
+
+##### Returns
+
+`number`
+
+***
+
+### textureRows
+
+#### Get Signature
+
+> **get** **textureRows**(): `number`
+
+Defined in: [FontManager.ts:286](https://github.com/humanbydefinition/p5.asciify/blob/9bc9e13422f8092690e25d564658494cfe17130e/src/lib/FontManager.ts#L286)
+
+Returns the number of rows in the texture containing all characters in the font.
+
+##### Returns
+
+`number`
+
 ## Methods
 
 ### getUnsupportedCharacters()
 
 > **getUnsupportedCharacters**(`characters`): `string`[]
 
-Defined in: [FontManager.ts:154](https://github.com/humanbydefinition/p5.asciify/blob/6fefeaafef48319cd9c62f693034711261e84b1d/src/lib/FontManager.ts#L154)
+Defined in: [FontManager.ts:138](https://github.com/humanbydefinition/p5.asciify/blob/9bc9e13422f8092690e25d564658494cfe17130e/src/lib/FontManager.ts#L138)
 
 Returns an array of characters that are not supported by the current font.
 
@@ -136,7 +221,7 @@ An array of unsupported characters. List is empty if all characters are supporte
 ```javascript
  function setupAsciify() {
      // Print a list of potentially unsupported characters.
-     console.log(p5asciify.fontManager.getUnsupportedCharacters(" .,ABC123"));
+     console.log(p5asciify.asciifier().fontManager.getUnsupportedCharacters(" .,ABC123"));
  }
 ```
 
@@ -146,7 +231,7 @@ An array of unsupported characters. List is empty if all characters are supporte
 
 > **glyphColor**(`char`): \[`number`, `number`, `number`\]
 
-Defined in: [FontManager.ts:129](https://github.com/humanbydefinition/p5.asciify/blob/6fefeaafef48319cd9c62f693034711261e84b1d/src/lib/FontManager.ts#L129)
+Defined in: [FontManager.ts:113](https://github.com/humanbydefinition/p5.asciify/blob/9bc9e13422f8092690e25d564658494cfe17130e/src/lib/FontManager.ts#L113)
 
 Gets the color of a character in the font.
 
@@ -166,14 +251,14 @@ An array containing the RGB color values for the character,
 
 #### Throws
 
-[P5AsciifyError](P5AsciifyError.md) If the character is not found in the texture atlas.
+[P5AsciifyError](P5AsciifyError.md) If the character is not found in the font.
 
 #### Example
 
 ```javascript
  function setupAsciify() {
      // Get the color of the character 'A'
-     const color = p5asciify.fontManager.glyphColor('A');
+     const color = p5asciify.asciifier().fontManager.glyphColor('A');
      console.log(color);
  }
 ```
@@ -184,7 +269,7 @@ An array containing the RGB color values for the character,
 
 > **glyphColors**(`characters`): \[`number`, `number`, `number`\][]
 
-Defined in: [FontManager.ts:204](https://github.com/humanbydefinition/p5.asciify/blob/6fefeaafef48319cd9c62f693034711261e84b1d/src/lib/FontManager.ts#L204)
+Defined in: [FontManager.ts:179](https://github.com/humanbydefinition/p5.asciify/blob/9bc9e13422f8092690e25d564658494cfe17130e/src/lib/FontManager.ts#L179)
 
 Gets an array of RGB colors for a given string of characters.
 
@@ -209,71 +294,25 @@ Array of RGB color values.
 ```javascript
  function setupAsciify() {
      // Get the RGB colors for the characters 'ABC'
-     const colors = p5asciify.fontManager.glyphColors('ABC');
+     const colors = p5asciify.asciifier().fontManager.glyphColors('ABC');
      console.log(colors);
  }
 ```
 
 ***
 
-### loadFont()
+### setup()
 
-> **loadFont**(`font`, `onSuccess`?): `void`
+> **setup**(`fontSize`): `void`
 
-Defined in: [FontManager.ts:64](https://github.com/humanbydefinition/p5.asciify/blob/6fefeaafef48319cd9c62f693034711261e84b1d/src/lib/FontManager.ts#L64)
-
-Loads a font for ASCII rendering.
-
-**Note: For proper library functionality, use `p5asciify.loadFont();` instead 
-of accessing this method directly. Direct access may lead to inconsistent state 
-as other dependent components won't be updated.**
+Defined in: [FontManager.ts:48](https://github.com/humanbydefinition/p5.asciify/blob/9bc9e13422f8092690e25d564658494cfe17130e/src/lib/FontManager.ts#L48)
 
 #### Parameters
 
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `font` | `string` \| `Font` | The font to load. Can be a path to a .ttf or .otf file, a base64 string, a blob URL, or a p5.Font object. |
-| `onSuccess`? | () => `void` | A callback function to call when the font is successfully loaded. |
+| Parameter | Type |
+| ------ | ------ |
+| `fontSize` | `number` |
 
 #### Returns
 
 `void`
-
-#### Throws
-
-[P5AsciifyError](P5AsciifyError.md) If the font parameter is invalid or the font fails to load.
-
-***
-
-### validateCharacters()
-
-> **validateCharacters**(`characters`): `void`
-
-Defined in: [FontManager.ts:182](https://github.com/humanbydefinition/p5.asciify/blob/6fefeaafef48319cd9c62f693034711261e84b1d/src/lib/FontManager.ts#L182)
-
-Validates a string of characters against the current font.
-
-#### Parameters
-
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `characters` | `string` | The string of characters to validate. |
-
-#### Returns
-
-`void`
-
-#### Throws
-
-[P5AsciifyError](P5AsciifyError.md) If any characters are not supported by the current font.
-
-#### Example
-
-```javascript
- function setupAsciify() {
-     // Validate the characters 'ABC' (all supported)
-     p5asciify.fontManager.validateCharacters('ABC');
-
-     // Validate the characters 'ABC123' (unsupported characters '123')
-     p5asciify.fontManager.validateCharacters('ABC123'); // -> Error
- }

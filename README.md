@@ -1,35 +1,64 @@
 # p5.asciify ( ͡° ͜ʖ ͡°)
 
 <p align="center">
-  <img src="https://github.com/humanbydefinition/p5.asciify/raw/main/repo_assets/p5.asciify.animated-logo.gif" />
+  <img src="./repo_assets/images/p5.asciify.animated-logo.gif" />
+  <img src="./repo_assets/images/p5.asciify.animated-logo.gif" />
 </p>
 
-`p5.asciify` is a [`p5.js`](https://p5js.org/) add-on library for converting the main canvas in [`WEBGL`](https://p5js.org/reference/p5/WEBGL/) mode into a grid of ASCII characters in real-time, allowing you to bring text-based aesthetics to your visualizations.
+`p5.asciify` is a powerful add-on library for [`p5.js`](https://p5js.org/) that transforms your canvas and offcanvas textures into dynamic ASCII/textmode representations on a 3D grid in real time, allowing you to create intricate 2D and 3D ASCII/textmode art and much more with ease.
+`p5.asciify` is a powerful add-on library for [`p5.js`](https://p5js.org/) that transforms your canvas and offcanvas textures into dynamic ASCII/textmode representations on a 3D grid in real time, allowing you to create intricate 2D and 3D ASCII/textmode art and much more with ease.
 
-The main goal of `p5.asciify` is to provide an easy-to-use, customizable solution for converting the main [`p5.js`](https://p5js.org/) canvas into a grid of ASCII characters, offering a wide range of settings to adjust the ASCII rendering to specific needs and artistic vision.
+## Table of Contents
 
-`p5.asciify` is actively developed and maintained by [**@humanbydefinition**](https://github.com/humanbydefinition), with new features and improvements being added regularly. The library is open-source and available here, where you can contribute to its development, report issues, or suggest new features. I highly value your feedback and contributions, so feel free to reach out!
+- [Features](#features)
+- [Examples](#examples)
+  - [Code examples](#code-examples)
+  - [Tools](#tools)
+- [Installation](#installation)
+  - [Prerequisites](#prerequisites)
+  - [Importing the library](#importing-the-library)
+    - [Global mode](#global-mode)
+    - [Instance mode](#instance-mode)
+- [Usage](#usage)
+- [Contributing](#contributing)
+  - [Current and past contributors](#current-and-past-contributors)
+  - [Donations](#donations)
 
-I would love to see your creations using `p5.asciify`! Feel free to tag me on social media or use the hashtag `#p5asciify` so I can enjoy and share your amazing work too. (ﾉ◕ヮ◕)ﾉ*:・ﾟ✧ 
+## Features
 
-[![Instagram](https://img.shields.io/badge/Instagram-lightgrey?style=social&logo=instagram)](https://www.instagram.com/humanbydefinition/)
+`p5.asciify` is the most advanced ASCII conversion library, offering a wide range of tools for crafting intricate ASCII art and building complex, multi-layered rendering pipelines.
 
-*Special thanks to [`@davepagurek`](https://github.com/davepagurek) for helping me learn how to create a p5.js addon library! (✿◠‿◠)*
+- **Renderer management**: Create and manage multiple ASCII renderers with different settings to create a unique rendering pipeline.
+- **Pre-built renderers (2D)**: Add pre-built renderers, like `'brightness'`- or `'edge'`-based ASCII converters, to your pipeline.
+- **Custom renderers**: Add your own custom 2D or 3D ASCII renderers to the pipeline to create unique effects by controlling each cell's ASCII character, character color, background color, and more individually.
+- **Asciifier management**: Create and manage multiple asciifiers to apply different ASCII rendering pipelines to different textures or canvases in parallel.
+- **Camera modes**: Choose between `'orthogonal'` and `'perspective'` camera modes to adjust the ASCII grid's appearance of an asciifier.
+- **Grid transformations**: Rotate, scale, and translate the ASCII grid in 3D space to create dynamic and interactive 2D/3D ASCII art.
+- **Font management**: Set the font and font size for all ASCII renderers in the pipeline of an asciifier.
+- **Grid management**: Apply a perfect and responsive grid based on the canvas/texture dimensions, font size, and font metrics, or create a custom grid with a specific number of rows, columns, and depth.
+- **WebGL1/WebGL2 support**: All shader code provided by `p5.asciify` is written in GLSL ES 1.0, making it compatible with both WebGL1 and WebGL2 contexts, allowing for a wide range of devices to run your ASCII projects.
 
-### Live Demo & Examples
+With `p5.asciify`, you can effortlessly create stunning ASCII art, textmode games, interactive ASCII experiences, and much more. The library is designed to be flexible, efficient, and easy to use, offering a comprehensive range of tools to help you develop unique and engaging ASCII projects.
 
-#### Live Demo
-See `p5.asciify` in action at [`textmode.art`](https://textmode.art/) - an ASCII/textmode editor powered by this library.
+## Examples
 
-#### Example Code
-- **Local Examples**: Explore the [`examples`](https://github.com/humanbydefinition/p5.asciify/tree/main/examples) folder for `instance mode` implementations
-- **Online Examples**: View [`p5.js web editor collection`](https://editor.p5js.org/humanbydefinition/collections/VAws0yqLW) for `global mode` versions
+### Code examples
+- [`p5.js web editor collection`](https://editor.p5js.org/humanbydefinition/collections/VAws0yqLW) - A collection of `p5.asciify` examples in `GLOBAL` mode.
+- [`./examples`](./examples) - A collection of `p5.asciify` examples in `INSTANCE` mode.
 
-> Both example sets demonstrate the same functionality, just implemented differently based on p5.js usage mode.
+### Tools
+- [`textmode.art`](https://textmode.art/) - An ASCII/textmode editor powered by `p5.asciify`.
 
-# Getting Started
+### ...and more to come!
 
-## Prerequisites
+### ...and more to come!
+
+> [!NOTE]
+> Feel free to submit your own ASCII projects and examples using `p5.asciify` to be featured here by creating a pull request or opening an issue!
+
+## Installation
+
+### Prerequisites
 
 - `p5.asciify` requires [`p5.js`](https://p5js.org/) version `1.8.0` or higher to work. 
 - `p5.asciify` only runs in [`WEBGL`](https://p5js.org/reference/#/p5/createCanvas) mode, so make sure to set up your canvas accordingly:
@@ -42,48 +71,23 @@ function setup() {
 
 That's it! You're now ready to install and use `p5.asciify` in your [`p5.js`](https://p5js.org/) projects.
 
-## Installation
+### Importing the library
 
-Download the latest version of `p5.asciify` from the [**GitHub releases page**](https://github.com/humanbydefinition/p5.asciify/releases). The library is distributed as a single JavaScript file, which you can include in your project by adding the following script tag to your HTML file <u>after</u> importing `p5.js`:
+#### Global mode
+
+Download the latest `umd` version of `p5.asciify` from the [**GitHub releases page**](https://github.com/humanbydefinition/p5.asciify/releases/) or import it directly from a CDN like [**jsDelivr**](https://www.jsdelivr.com/package/npm/p5.asciify). The library is distributed as a single JavaScript file, which you can include in your project by adding the following script tag to your HTML file <u>after</u> importing [`p5.js`](https://p5js.org/):
 
 ```html
 <!-- Import p5.js before p5.asciify -->
-<script src="https://cdn.jsdelivr.net/npm/p5@1.11.1/lib/p5.js"></script>
+<script src="path/to/library/p5.min.js"></script>
 
 <!-- Import p5.asciify after p5.js -->
-<script src="path/to/library/p5.asciify.min.js"></script>
+<script src="path/to/library/p5.asciify.umd.js"></script>
 ```
 
+#### Instance mode
 
-Alternatively, the library can be imported directly from a CDN like [**jsDelivr**](https://www.jsdelivr.com/):
-
-```html	
-<!-- Import p5.js before p5.asciify -->
-<script src="https://cdn.jsdelivr.net/npm/p5@1.11.1/lib/p5.js"></script>
-
-<!-- Import p5.asciify after p5.js -->
-<script src="https://cdn.jsdelivr.net/npm/p5.asciify@0.7.4/dist/p5.asciify.umd.js"></script>
-```
-
-> [!TIP]
-> To capture a canvas with libraries like [`p5.capture`](https://github.com/tapioca24/p5.capture) and `p5.asciify` applied, make sure to import them **after** `p5.asciify` to ensure the correct rendering order.
->
-> ```html
-> <!-- Import p5.js before p5.asciify -->
-> <script src="https://cdn.jsdelivr.net/npm/p5@1.11.1/lib/p5.js"></script>
->
-> <!-- Import p5.asciify after p5.js -->
-> <script src="https://cdn.jsdelivr.net/npm/p5.asciify@0.7.4/dist/p5.asciify.umd.js"></script>
->
-> <!-- Import p5.capture after p5.asciify -->
-> <script src="https://cdn.jsdelivr.net/npm/p5.capture@1.4.1/dist/p5.capture.umd.min.js"></script>
-> ```
-
-At this point, when imported correctly, the [`p5.js`](https://p5js.org/) canvas in `WEBGL` mode should already be converted into a grid of ASCII characters with the default settings applied! (｡◕‿‿◕｡)
-
-### Instance mode
-
-`p5.asciify` supports both global and instance mode. To use the library in instance mode *(through `npm` for example)*, you need to load the library in a specific way:
+Download the latest `esm` version of `p5.asciify` from the [**GitHub releases page**](https://github.com/humanbydefinition/p5.asciify/releases/), import it directly from a CDN like [**jsDelivr**](https://www.jsdelivr.com/package/npm/p5.asciify), or install it using `npm`:
 
 ```bash
 npm install p5.asciify
@@ -102,19 +106,6 @@ const theSketch = (sketch) => {
       sketch.createCanvas(800, 800, sketch.WEBGL);
     };
 
-    // Setup function specific to the p5.asciify library, 
-    // which is executed automatically after the p5.js setup function is finished
-    sketch.setupAsciify = () => {
-
-      // Set the font size for all ASCII renderers of the library
-      p5asciify.fontSize(finalOptions.fontSize);
-
-      p5asciify.renderers().get("brightness").update({
-        characters: " .,:;i1tfLCG08@", // ASCII characters used for rendering
-        invertMode: true, // Swap the ASCII character colors with it's cell background colors
-      });
-    };
-
     sketch.draw = () => {
       sketch.clear();
       sketch.background(0);
@@ -128,16 +119,60 @@ const theSketch = (sketch) => {
 
 let myp5 = new p5(theSketch);
 ```
-> [!NOTE]
-> All examples and explanations in the [`Wiki`](https://github.com/humanbydefinition/p5.asciify/wiki) are given in global mode. To use them in instance mode, you need to adjust the code accordingly, as shown in the example above.
->
-> Essentially, besides importing `p5.asciify`, you need to initially pass the `p5` instance to the library using `p5asciify.instance(sketch);` before preload/setup.
 
-# Usage
-Check out the [`Usage`](https://github.com/humanbydefinition/p5.asciify/wiki/02_Usage) section in the [`Wiki`](https://github.com/humanbydefinition/p5.asciify/wiki) to learn how to customize and create your own ASCII rendering pipeline! You'll find step-by-step instructions and examples on how to effectively use `p5.asciify` in your projects.
+> [!WARNING]
+> In `INSTANCE` mode, it is essential to call `p5asciify.instance(sketch);` during initialization only if you are **not** providing any `preload()` function to your sketch in order to avoid any potential issues with the library's initialization process. If you are using `preload()`, you can safely skip this step.
+> In `INSTANCE` mode, it is essential to call `p5asciify.instance(sketch);` during initialization only if you are **not** providing any `preload()` function to your sketch in order to avoid any potential issues with the library's initialization process. If you are using `preload()`, you can safely skip this step.
+>
+> *(Note: This step is not required for `GLOBAL` mode sketches.)*
+
+<hr />
+
+At this point - when imported correctly - your [`p5.js`](https://p5js.org/) canvas in `WEBGL` mode should already be converted into a grid of ASCII characters with the default settings applied. Happy coding! (｡◕‿‿◕｡)
+
+## Usage
+
+To effectively use `p5.asciify` in your projects, check out the following resources:
+- [`./docs`](https://github.com/humanbydefinition/p5-asciify/tree/main/docs) - The documentation for all classes, methods, and properties provided by `p5.asciify`.
+- [`./examples`](./examples) - A collection of `p5.asciify` examples in `INSTANCE` mode.
+- [`p5.js web editor collection`](https://editor.p5js.org/humanbydefinition/collections/VAws0yqLW) - A collection of `p5.asciify` examples in `GLOBAL` mode.
+
+> [!NOTE]
+> If you have any questions or need help with a specific feature, feel free to open an issue or reach out to [`@humanbydefinition`](https://github.com/humanbydefinition) directly for assistance.
+> If you have any questions or need help with a specific feature, feel free to open an issue or reach out to [`@humanbydefinition`](https://github.com/humanbydefinition) directly for assistance.
+>
+> If you would like to contribute to the documentation or examples, please refer to the [Contributing Guidelines](./repo_assets/markdown/CONTRIBUTING.md) or reach out for more information.
 
 ## Contributing
-Contributions are welcome! To ensure consistency, please follow our [Contributing Guidelines](https://github.com/humanbydefinition/p5.asciify/wiki/04_Contributing) before submitting issues or pull requests.
 
-## License
-This project is licensed under the MIT License. See the [`LICENSE`](https://github.com/humanbydefinition/p5.asciify/blob/main/LICENSE) file for more details.
+`p5.asciify` is an ongoing open-source project, welcoming and valuing all types of contributions from the community. If you are interested in contributing to the project, please read our [Contributing Guidelines](./repo_assets/markdown/CONTRIBUTING.md) to get started.
+
+### Current and past contributors
+
+| **Contributor** | **Website** | **Socials** |
+|-----------------|-------------|------------|
+| [humanbydefinition](https://github.com/humanbydefinition) <br> Creator and active maintainer of `p5.asciify`. | [![Website](https://badgen.net/badge/Visit/website/blue?icon=chrome-web-store)](https://textmode.art) | [![Instagram](https://badgen.net/badge/Instagram/humanbydefinition/pink?icon=instagram)](https://instagram.com/humanbydefinition) <br> [![Mastodon](https://badgen.net/badge/Mastodon/@humanbydefinition/blue?icon=mastodon)](https://mastodon.social/@humanbydefinition) |
+| [davepagurek](https://github.com/davepagurek) <br> WebGL steward for [p5.js](https://p5js.org/) and a huge help bringing `p5.asciify` to life. | [![Website](https://badgen.net/badge/Visit/website/blue?icon=chrome-web-store)](https://www.davepagurek.com/) | [![Instagram](https://badgen.net/badge/Instagram/davepagurek/pink?icon=instagram)](https://instagram.com/davepagurek) <br> [![Mastodon](https://badgen.net/badge/Mastodon/@davepagurek/blue?icon=mastodon)](https://mastodon.online/@davepagurek@genart.social) |
+| [gridsystem](https://github.com/gridsystem) <br> Provided valuable advice that greatly improved project accessibility. | *N/A* | *N/A* |
+| [flordefuego](https://github.com/flordefuego) <br> Provided examples and insights on combining Hydra, p5.js, and `p5.asciify`. | [![Website](https://badgen.net/badge/Visit/website/blue?icon=chrome-web-store)](https://flordefuego.xyz/) | [![Instagram](https://badgen.net/badge/Instagram/flordefuega/pink?icon=instagram)](https://instagram.com/flordefuega) <br> [![Mastodon](https://badgen.net/badge/Mastodon/@flordefuego/blue?icon=mastodon)](https://mastodon.social/@flordefuego@post.lurk.org) |
+> [!NOTE]
+> If you have contributed in the past and would like to be featured here, please open an issue or create a pull request to add your information to the list.
+
+### Donations
+
+If you enjoy using `p5.asciify` and would like to support my textmode endeavors and its continued development, your contribution is greatly appreciated.
+
+- [**Ko-fi**](https://ko-fi.com/humanbydefinition)
+- [**GitHub Sponsors**](https://github.com/sponsors/humanbydefinition)
+- [**Ethereum**](https://etherscan.io/address/0xAA14d79ccF069d3E57eeCb6822c1F241e0d46C42)
+- [**Tezos**](https://tzkt.io/humanbydefinition.tez)
+
+Thank you for your generosity and for being part of this creative journey! (｡♥‿♥｡)
+
+> [!NOTE]
+> You can also support the project by starring the repository, sharing it with your friends, or contributing in any way you feel comfortable with. Every little bit helps!
+>
+> I also love hearing from you and seeing the projects you create with `p5.asciify`, so feel free to reach out and share your work with me anytime! (◕‿◕)
+
+> [!IMPORTANT]
+> `p5.asciify` remains free, accessible, and open-source forever for everyone to use and enjoy, regardless of any contributions or donations. Your support is greatly appreciated but never required to use the library or access its features.

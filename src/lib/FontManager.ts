@@ -7,25 +7,47 @@ import { OpenTypeGlyph } from './types';
  */
 export class P5AsciifyFontManager {
 
-    /** The font to use for ASCII rendering. */
-    private _font!: p5.Font;
-
     /** An array of supported characters in the font. */
     private _characters: string[] = [];
 
     /** An array of character glyphs with color assignments. */
     private _characterGlyphs: OpenTypeGlyph[] = [];
 
+    /** Maximum width and height of the glyphs in the font. */
+    private _maxGlyphDimensions!: {
+        /** Maximum width fetched from all the glyphs in the font. */
+        width: number;
+        /** Maximum height fetched from all the glyphs in the font. */
+        height: number
+    };
+
+    /** Texture containing all characters in the font. As square as possible. */
+    private _texture!: p5.Framebuffer;
+
+    /** Number of columns in the texture. */
+    private _textureColumns!: number;
+
+    /** Number of rows in the texture. */
+    private _textureRows!: number;
+
+    /** Font size to use for the texture that contains all characters of the font. */
+    private _fontSize: number = 16;
+
     /**
      * Creates a new `P5AsciifyFontManager` instance.
      * @param _p The p5 instance.
-     * @param fontSource The source to load the font from. Can be a path to a .ttf or .otf file, a base64 string, a blob URL, or a p5.Font object.
+     * @param _font The font to use for ASCII rendering.
      */
     constructor(
         private _p: p5,
-        fontSource: string | p5.Font,
+        private _font: p5.Font,
     ) {
-        this.loadFont(fontSource);
+        this._initializeGlyphsAndCharacters();
+    }
+
+    public setup(fontSize: number): void {
+        this._fontSize = fontSize;
+        this.reset();
     }
 
     /**
@@ -53,60 +75,22 @@ export class P5AsciifyFontManager {
     /**
      * Loads a font for ASCII rendering.
      * 
-     * **Note: For proper library functionality, use `p5asciify.loadFont();` instead 
-     * of accessing this method directly. Direct access may lead to inconsistent state 
-     * as other dependent components won't be updated.**
+     * Not intended to be called directly. Use {@link P5Asciifier}'s `font()` instead.
+     * Otherwise, other parts of the library are not updated with the new font information.
      * 
-     * @param font The font to load. Can be a path to a .ttf or .otf file, a base64 string, a blob URL, or a p5.Font object.
-     * @param onSuccess A callback function to call when the font is successfully loaded.
-     * @throws {@link P5AsciifyError} If the font parameter is invalid or the font fails to load.
+     * @param font The p5.Font object to use for ASCII rendering.
+     * @throws {@link P5AsciifyError} If the font parameter is invalid.
+     * @ignore
      */
     public loadFont(
-        font: string | p5.Font,
-        onSuccess?: () => void,
+        font: p5.Font,
     ): void {
-        if (typeof font !== 'string' && !(font instanceof p5.Font)) {
+        if (!(font instanceof p5.Font)) {
             throw new P5AsciifyError('Invalid font parameter. Expected a path, base64 string, blob URL, or p5.Font object.');
         }
 
-        // Handle font paths, base64 strings, and blob URLs
-        if (typeof font === 'string') {
-            if (!this._isValidFontString(font)) {
-                throw new P5AsciifyError('Invalid font parameter. Expected .ttf, .otf file, or blob URL or base64 string.');
-            }
-
-            this._p.loadFont(
-                font,
-                (loadedFont: p5.Font) => {
-                    this._font = loadedFont;
-                    this._initializeGlyphsAndCharacters();
-                    this._p._decrementPreload();
-                    onSuccess?.();
-                },
-                () => {
-                    throw new P5AsciifyError(`Failed to load font from: ${font}`);
-                }
-            );
-            return;
-        }
-
-        // Handle p5.Font objects
         this._font = font;
         this._initializeGlyphsAndCharacters();
-        onSuccess?.();
-    }
-
-    /**
-     * Checks if a font string is valid.
-     * @param fontString The font string to check.
-     * @returns True if the font string is valid, false otherwise.
-     */
-    private _isValidFontString(fontString: string): boolean {
-        if (fontString.startsWith('blob:') || fontString.startsWith('data:')) {
-            return true;
-        }
-        const ext = fontString.toLowerCase().split('.').pop();
-        return ext === 'ttf' || ext === 'otf';
     }
 
     /**
@@ -115,13 +99,13 @@ export class P5AsciifyFontManager {
      * @returns An array containing the RGB color values for the character, 
      *          which can be used to set the fill color when drawing to a custom renderers `characterFramebuffer` 
      *          to convert those pixels into the selected character.
-     * @throws {@link P5AsciifyError} If the character is not found in the texture atlas.
+     * @throws {@link P5AsciifyError} If the character is not found in the font.
      * 
      * @example
      * ```javascript
      *  function setupAsciify() {
      *      // Get the color of the character 'A'
-     *      const color = p5asciify.fontManager.glyphColor('A');
+     *      const color = p5asciify.asciifier().fontManager.glyphColor('A');
      *      console.log(color);
      *  }
      * ```
@@ -147,7 +131,7 @@ export class P5AsciifyFontManager {
      * ```javascript
      *  function setupAsciify() {
      *      // Print a list of potentially unsupported characters.
-     *      console.log(p5asciify.fontManager.getUnsupportedCharacters(" .,ABC123"));
+     *      console.log(p5asciify.asciifier().fontManager.getUnsupportedCharacters(" .,ABC123"));
      *  }
      * ```
      */
@@ -168,16 +152,7 @@ export class P5AsciifyFontManager {
      * Validates a string of characters against the current font.
      * @param characters The string of characters to validate.
      * @throws {@link P5AsciifyError} If any characters are not supported by the current font.
-     * 
-     * @example
-     * ```javascript
-     *  function setupAsciify() {
-     *      // Validate the characters 'ABC' (all supported)
-     *      p5asciify.fontManager.validateCharacters('ABC');
-     * 
-     *      // Validate the characters 'ABC123' (unsupported characters '123')
-     *      p5asciify.fontManager.validateCharacters('ABC123'); // -> Error
-     *  }
+     * @ignore
      */
     public validateCharacters(characters: string): void {
         const unsupportedChars: string[] = this.getUnsupportedCharacters(characters);
@@ -196,7 +171,7 @@ export class P5AsciifyFontManager {
      * ```javascript
      *  function setupAsciify() {
      *      // Get the RGB colors for the characters 'ABC'
-     *      const colors = p5asciify.fontManager.glyphColors('ABC');
+     *      const colors = p5asciify.asciifier().fontManager.glyphColors('ABC');
      *      console.log(colors);
      *  }
      * ```
@@ -216,13 +191,113 @@ export class P5AsciifyFontManager {
     }
 
     /**
+         * Calculates the maximum width and height of all the glyphs in the font.
+         * @param fontSize - The font size to use for calculations.
+         * @returns An object containing the maximum width and height of the glyphs.
+         */
+    private _getMaxGlyphDimensions(fontSize: number): { width: number; height: number } {
+        return this.characterGlyphs.reduce<{ width: number; height: number }>(
+            (maxDims, glyph) => {
+                const bounds = glyph.getPath(0, 0, fontSize).getBoundingBox();
+                return {
+                    width: Math.ceil(Math.max(maxDims.width, bounds.x2 - bounds.x1)),
+                    height: Math.ceil(Math.max(maxDims.height, bounds.y2 - bounds.y1)),
+                };
+            },
+            { width: 0, height: 0 }
+        );
+    }
+
+    /**
+     * Resets the texture atlas by recalculating the maximum glyph dimensions and recreating the texture.
+     * @ignore
+     */
+    public reset(): void {
+        this._maxGlyphDimensions = this._getMaxGlyphDimensions(this._fontSize);
+        this._createTexture(this._fontSize);
+    }
+
+    /**
+     * Sets the font size, recalculates the maximum glyph dimensions, and recreates the texture.
+     * @param fontSize - The new font size.
+     * @ignore
+     */
+    public setFontSize(fontSize: number): void {
+        this._fontSize = fontSize;
+        this._maxGlyphDimensions = this._getMaxGlyphDimensions(this._fontSize);
+        this._createTexture(this._fontSize);
+    }
+
+    /**
+     * Creates a texture containing all characters in the font, arranged in a 2d grid that is as square as possible.
+     * @param fontSize - The font size to use for creating the texture.
+     */
+    private _createTexture(fontSize: number): void {
+        this._textureColumns = Math.ceil(Math.sqrt(this.characters.length));
+        this._textureRows = Math.ceil(this.characters.length / this._textureColumns);
+
+        if (!this._texture) {
+            this._texture = this._p.createFramebuffer({
+                width: this._maxGlyphDimensions.width * this._textureColumns,
+                height: this._maxGlyphDimensions.height * this._textureRows,
+                depthFormat: this._p.UNSIGNED_INT,
+                textureFiltering: this._p.NEAREST,
+            });
+        } else {
+            this._texture.resize(this._maxGlyphDimensions.width * this._textureColumns, this._maxGlyphDimensions.height * this._textureRows);
+        }
+
+        this._texture.begin();
+        this._p.clear();
+        this._p.textFont(this._font);
+        this._p.fill(255);
+        this._p.textSize(fontSize);
+        this._p.textAlign(this._p.LEFT, this._p.TOP);
+        this._p.noStroke();
+
+        for (let i = 0; i < this.characterGlyphs.length; i++) {
+            const col = i % this._textureColumns;
+            const row = Math.floor(i / this._textureColumns);
+            const x = this._maxGlyphDimensions.width * col - (this._maxGlyphDimensions.width * this._textureColumns) / 2;
+            const y = this._maxGlyphDimensions.height * row - (this._maxGlyphDimensions.height * this._textureRows) / 2;
+            this._p.text(String.fromCharCode(this.characterGlyphs[i].unicode), x, y);
+        }
+        this._texture.end();
+    }
+
+    /**
+     * Returns the maximum width and height found in all the glyphs in the font.
+     */
+    get maxGlyphDimensions(): { width: number; height: number } { return this._maxGlyphDimensions; }
+
+    /**
+     * Returns the texture containing all characters in the font.
+     */
+    get texture(): p5.Framebuffer { return this._texture; }
+
+    /**
+     * Returns the number of columns in the texture containing all characters in the font.
+     */
+    get textureColumns(): number { return this._textureColumns; }
+
+    /**
+     * Returns the number of rows in the texture containing all characters in the font.
+     */
+    get textureRows(): number { return this._textureRows; }
+
+    /**
+     * Returns the font size used for the texture atlas.
+     */
+    get fontSize(): number { return this._fontSize; }
+
+    /**
      * The `p5.Font` object used for ASCII rendering.
      * 
      * @example
      * ```javascript
      *  function drawAsciify() {
      *      // Draw an FPS counter, using the font set in p5.asciify, on top of the ASCII rendering.
-     *      textFont(p5asciify.fontManager.font);
+     *      textFont(p5asciify.asciifier().fontManager.font);
      *      textSize(16);
      *      fill(255);
      *      text(frameRate() + " FPS", 10, 10);
@@ -237,8 +312,8 @@ export class P5AsciifyFontManager {
      * @example
      * ```javascript
      *  function setupAsciify() {
-     *      // Print the supported characters in the font
-     *      console.log(p5asciify.fontManager.characters);
+     *      // Print the supported characters in the font to the console
+     *      console.log(p5asciify.asciifier().fontManager.characters);
      *  }
      * ```
      */
@@ -250,8 +325,8 @@ export class P5AsciifyFontManager {
      * @example
      * ```javascript
      *  function setupAsciify() {
-     *      // Print the character glyphs in the font
-     *      console.log(p5asciify.fontManager.characterGlyphs);
+     *      // Print the character glyph objects of the font to the console
+     *      console.log(p5asciify.asciifier().fontManager.characterGlyphs);
      *  }
      * ```
      */
