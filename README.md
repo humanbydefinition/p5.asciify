@@ -4,7 +4,7 @@
   <img src="./repo_assets/images/p5.asciify.animated-logo.gif" />
 </p>
 
-`p5.asciify` is a powerful add-on library for [`p5.js`](https://p5js.org/) that transforms your canvas and offcanvas textures into dynamic ASCII/textmode representations on a 3D grid in real time, allowing you to create intricate 2D and 3D ASCII/textmode art and much more with ease.
+`p5.asciify` is a powerful add-on library for [`p5.js`](https://p5js.org/) that transforms your canvas and offcanvas textures into dynamic ASCII/textmode representations on a grid in real time, allowing you to create intricate 2D ASCII/textmode art and much more with ease.
 
 ## Table of Contents
 
