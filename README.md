@@ -44,7 +44,7 @@ With `p5.asciify`, you can effortlessly create stunning ASCII art, textmode game
 
 ### Tools
 - [`textmode.art`](https://textmode.art/) - An ASCII/textmode editor powered by `p5.asciify`.
-- [`place.textmode.art`](https://place.textmode.art/) - An ASCII/textmode version of the popular [`/r/place`](https://www.reddit.com/r/place/) project, where you can collaborate with others to create a massive ASCII art piece.
+- [`place.textmode.art`](https://place.textmode.art/) - An ASCII/textmode version of the popular [`/r/place`](https://www.reddit.com/r/place/) event, where you can collaborate with others to create a massive ASCII art piece.
 
 ### ...and more to come!
 
