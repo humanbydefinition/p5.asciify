@@ -39,7 +39,7 @@ With `p5.asciify`, you can effortlessly create stunning ASCII art, textmode game
 ## Examples
 
 ### Code examples
-- [`p5.js web editor collection`](https://editor.p5js.org/humanbydefinition/collections/VAws0yqLW) - A collection of `p5.asciify` examples in `GLOBAL` mode.
+- [`OpenProcessing examples curation`](https://openprocessing.org/curation/89166) - A collection of `p5.asciify` examples in `GLOBAL` mode.
 - [`./examples`](./examples) - A collection of `p5.asciify` examples in `INSTANCE` mode.
 
 ### Tools
@@ -125,7 +125,7 @@ At this point - when imported correctly - your [`p5.js`](https://p5js.org/) canv
 To effectively use `p5.asciify` in your projects, check out the following resources:
 - [`./docs`](https://github.com/humanbydefinition/p5-asciify/tree/main/docs) - The documentation for all classes, methods, and properties provided by `p5.asciify`.
 - [`./examples`](./examples) - A collection of `p5.asciify` examples in `INSTANCE` mode.
-- [`p5.js web editor collection`](https://editor.p5js.org/humanbydefinition/collections/VAws0yqLW) - A collection of `p5.asciify` examples in `GLOBAL` mode.
+- [`OpenProcessing examples curation`](https://openprocessing.org/curation/89166) - A collection of `p5.asciify` examples in `GLOBAL` mode.
 
 > [!NOTE]
 > If you have any questions or need help with a specific feature, feel free to open an issue or reach out to [`@humanbydefinition`](https://github.com/humanbydefinition) directly for assistance.
