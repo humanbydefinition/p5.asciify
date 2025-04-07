@@ -96,24 +96,23 @@ npm install p5.asciify
 import p5 from 'p5';
 import { p5asciify } from 'p5.asciify';
 
-const theSketch = (sketch) => {
-
-    sketch.setup = () => {
-      sketch.createCanvas(800, 800, sketch.WEBGL);
+const sketch = (p) => {
+    p.setup = () => {
+      p.createCanvas(800, 800, p.WEBGL);
     };
 
-    sketch.draw = () => {
-      sketch.clear();
-      sketch.background(0);
-      sketch.fill(255);
-      sketch.rotateX(sketch.radians(sketch.frameCount * 3));
-      sketch.rotateZ(sketch.radians(sketch.frameCount));
-      sketch.directionalLight(255, 255, 255, 0, 0, -1);
-      sketch.box(800, 100, 100);
+    p.draw = () => {
+      p.clear();
+      p.background(0);
+      p.fill(255);
+      p.rotateX(p.radians(p.frameCount * 3));
+      p.rotateZ(p.radians(p.frameCount));
+      p.directionalLight(255, 255, 255, 0, 0, -1);
+      p.box(800, 100, 100);
     };
 };
 
-let myp5 = new p5(theSketch);
+let myp5 = new p5(sketch);
 ```
 
 <hr />
