@@ -1,6 +1,6 @@
 # Contributing to `p5.asciify`
 
-With the recent `v0.7.0` release, including a full rewrite of the codebase from JavaScript to TypeScript, `p5.asciify` is now more accessible than ever for contributions. This document outlines the steps to contribute to the project, including setting up the development environment, running the project locally, and submitting a pull request.
+With the `v0.7.0` release, including a full rewrite of the codebase from JavaScript to TypeScript, `p5.asciify` is now more accessible than ever for contributions. This document outlines the steps to contribute to the project, including setting up the development environment, running the project locally, and submitting a pull request.
 
 ## Table of Contents
 
