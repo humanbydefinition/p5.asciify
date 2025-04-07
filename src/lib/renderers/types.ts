@@ -1,11 +1,20 @@
 import p5 from 'p5';
+import { P5AsciifyEdgeRenderer } from './2d/feature';
+import { AbstractFeatureRenderer2D } from './2d/feature/AbstractFeatureRenderer2D';
 
-/** The options for the ASCII renderers. */
-export type AsciiRendererOptions = {
+/**
+ * Base ASCII renderer options, applicable to all ASCII renderers.
+ */
+export interface AsciiRendererOptions {
     /** Whether the renderer is enabled. */
     enabled?: boolean;
+}
 
-    /** The character set to use for the ASCII renderer. (not used in the `"custom"` and `"gradient"` renderers) */
+/**
+ * Base options for all feature-based ASCII renderers that extend the {@link AbstractFeatureRenderer2D} class.
+ */
+export interface FeatureAsciiRendererOptions extends AsciiRendererOptions {
+    /** The character set to use for the ASCII renderer. */
     characters?: string;
 
     /** The color of the ASCII characters. Only used when `characterColorMode` is set to `fixed`. */
@@ -25,10 +34,15 @@ export type AsciiRendererOptions = {
 
     /** The rotation angle of all characters affected by a given renderer. */
     rotationAngle?: number | p5.Color;
+}
 
-    /** The threshold for the Sobel edge detection algorithm. (only used in the `"edge"` renderer) */
+/**
+ * Options specific to the {@link P5AsciifyEdgeRenderer} class.
+ */
+export interface EdgeAsciiRendererOptions extends FeatureAsciiRendererOptions {
+    /** The threshold for the Sobel edge detection algorithm. */
     sobelThreshold?: number;
 
-    /** The threshold for the ASCII character sampling algorithm. (only used in the `"edge"` renderer) */
+    /** The threshold for the ASCII character sampling algorithm. */
     sampleThreshold?: number;
 }

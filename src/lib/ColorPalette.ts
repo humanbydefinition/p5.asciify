@@ -15,7 +15,7 @@ export class P5AsciifyColorPalette {
     /**
      * Create a new color palette instance.
      * @param _p The p5 instance.
-     * @param _colors The colors to store in the palette.
+     * @param _colors The colors to store in the palette as an array of `[r, g, b]` tuples.
      */
     constructor(
         private _p: p5,
@@ -72,7 +72,7 @@ export class P5AsciifyColorPalette {
     get colors(): [number, number, number][] { return this._colors; }
 
     /**
-     * Get the framebuffer of the palette.
+     * Get the framebuffer containing the colors of the palette.
      */
     get framebuffer(): p5.Framebuffer { return this._framebuffer; }
 }

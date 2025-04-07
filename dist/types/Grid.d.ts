@@ -1,13 +1,6 @@
 import p5 from 'p5';
 /**
- * Manages the grid dimensions for the ASCII renderers.
- * The grid automatically sizes to fit the maximum number of cells based on
- * current canvas dimensions and font metrics.
- *
- * While the grid properties are readable, avoid modifying them directly through this class's methods.
- * Direct modifications can lead to synchronization issues between the grid and other components.
- * Instead, use the methods provided by the `P5Asciifier` instance `p5asciify` to modify font properties,
- * which will properly propagate changes to the grid.
+ * Manages the grid for the ASCII rendering pipeline of an {@link P5Asciifier} instance.
  */
 export declare class P5AsciifyGrid {
     private _p;
@@ -25,15 +18,19 @@ export declare class P5AsciifyGrid {
     private _offsetX;
     /** The offset to the outer canvas on the y-axis when centering the grid. */
     private _offsetY;
+    /** Whether the grid dimensions are fixed, or responsive based on the canvas dimensions. */
+    private _fixedDimensions;
     /**
      * Create a new grid instance.
      * @param _p The p5 instance.
      * @param _cellWidth The width of each cell in the grid.
      * @param _cellHeight The height of each cell in the grid.
+     * @ignore
      */
     constructor(_p: p5, _cellWidth: number, _cellHeight: number);
     /**
      * Reset the grid to the default number of columns and rows based on the current canvas dimensions, and the grid cell dimensions.
+     * @ignore
      */
     reset(): void;
     /**
@@ -44,8 +41,23 @@ export declare class P5AsciifyGrid {
      * Re-assign the grid cell dimensions and `reset()` the grid.
      * @param newCellWidth The new cell width.
      * @param newCellHeight The new cell height.
+     * @ignore
      */
     resizeCellPixelDimensions(newCellWidth: number, newCellHeight: number): void;
+    /**
+     * Re-assign the grid dimensions and resize the grid.
+     *
+     * Calling this method makes the grid dimensions fixed, meaning they will not automatically resize based on the canvas dimensions.
+     * @param newCols The new number of columns.
+     * @param newRows The new number of rows.
+     * @ignore
+     */
+    resizeGridDimensions(newCols: number, newRows: number): void;
+    /**
+     * Make the grid dimensions flexible again, and `reset()` the grid.
+     * @ignore
+     */
+    resetGridDimensions(): void;
     /**
      * Returns the width of each cell in the grid.
      */
@@ -78,4 +90,14 @@ export declare class P5AsciifyGrid {
      * Returns the offset to the outer canvas borders on the y-axis when centering the grid.
      */
     get offsetY(): number;
+    /**
+     * Returns `true` if the grid dimensions *(columns and rows)* are fixed, or `false` if they are responsive based on the canvas dimensions.
+     */
+    get fixedDimensions(): boolean;
+    /**
+     * Sets whether the grid dimensions *(columns and rows)* are fixed or responsive based on the canvas dimensions.
+     * @param value `true` to make the grid dimensions fixed, or `false` to make them responsive.
+     * @ignore
+     */
+    set fixedDimensions(value: boolean);
 }

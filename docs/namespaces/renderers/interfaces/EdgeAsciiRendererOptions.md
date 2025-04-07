@@ -1,0 +1,30 @@
+[**p5.asciify v0.8.0-beta.2**](../../../README.md)
+
+***
+
+[p5.asciify](../../../README.md) / [renderers](../README.md) / EdgeAsciiRendererOptions
+
+# Interface: EdgeAsciiRendererOptions
+
+Defined in: [renderers/types.ts:42](https://github.com/humanbydefinition/p5.asciify/blob/74cffcf930697a5f633b5e35f91777ec8f4d62e4/src/lib/renderers/types.ts#L42)
+
+Options specific to the [P5AsciifyEdgeRenderer](../namespaces/2d/namespaces/feature/classes/P5AsciifyEdgeRenderer.md) class.
+
+## Extends
+
+- [`FeatureAsciiRendererOptions`](FeatureAsciiRendererOptions.md)
+
+## Properties
+
+| Property | Type | Description | Inherited from | Defined in |
+| ------ | ------ | ------ | ------ | ------ |
+| <a id="backgroundcolor"></a> `backgroundColor?` | `string` \| `Color` \| \[`number`, `number`, `number`\] | The cell background color. Only used when `characterColorMode` is set to `fixed`. | [`FeatureAsciiRendererOptions`](FeatureAsciiRendererOptions.md).[`backgroundColor`](FeatureAsciiRendererOptions.md#backgroundcolor) | [renderers/types.ts:27](https://github.com/humanbydefinition/p5.asciify/blob/74cffcf930697a5f633b5e35f91777ec8f4d62e4/src/lib/renderers/types.ts#L27) |
+| <a id="backgroundcolormode"></a> `backgroundColorMode?` | `string` \| `number` | The background color mode. Can be either `sampled` or `fixed`. | [`FeatureAsciiRendererOptions`](FeatureAsciiRendererOptions.md).[`backgroundColorMode`](FeatureAsciiRendererOptions.md#backgroundcolormode) | [renderers/types.ts:30](https://github.com/humanbydefinition/p5.asciify/blob/74cffcf930697a5f633b5e35f91777ec8f4d62e4/src/lib/renderers/types.ts#L30) |
+| <a id="charactercolor"></a> `characterColor?` | `string` \| `Color` \| \[`number`, `number`, `number`\] | The color of the ASCII characters. Only used when `characterColorMode` is set to `fixed`. | [`FeatureAsciiRendererOptions`](FeatureAsciiRendererOptions.md).[`characterColor`](FeatureAsciiRendererOptions.md#charactercolor) | [renderers/types.ts:21](https://github.com/humanbydefinition/p5.asciify/blob/74cffcf930697a5f633b5e35f91777ec8f4d62e4/src/lib/renderers/types.ts#L21) |
+| <a id="charactercolormode"></a> `characterColorMode?` | `string` \| `number` | The character color mode. Can be either `sampled` or `fixed`. | [`FeatureAsciiRendererOptions`](FeatureAsciiRendererOptions.md).[`characterColorMode`](FeatureAsciiRendererOptions.md#charactercolormode) | [renderers/types.ts:24](https://github.com/humanbydefinition/p5.asciify/blob/74cffcf930697a5f633b5e35f91777ec8f4d62e4/src/lib/renderers/types.ts#L24) |
+| <a id="characters"></a> `characters?` | `string` | The character set to use for the ASCII renderer. | [`FeatureAsciiRendererOptions`](FeatureAsciiRendererOptions.md).[`characters`](FeatureAsciiRendererOptions.md#characters) | [renderers/types.ts:18](https://github.com/humanbydefinition/p5.asciify/blob/74cffcf930697a5f633b5e35f91777ec8f4d62e4/src/lib/renderers/types.ts#L18) |
+| <a id="enabled"></a> `enabled?` | `boolean` | Whether the renderer is enabled. | [`FeatureAsciiRendererOptions`](FeatureAsciiRendererOptions.md).[`enabled`](FeatureAsciiRendererOptions.md#enabled) | [renderers/types.ts:10](https://github.com/humanbydefinition/p5.asciify/blob/74cffcf930697a5f633b5e35f91777ec8f4d62e4/src/lib/renderers/types.ts#L10) |
+| <a id="invertmode"></a> `invertMode?` | `boolean` | Swap the cells ASCII character colors with its cell background colors. | [`FeatureAsciiRendererOptions`](FeatureAsciiRendererOptions.md).[`invertMode`](FeatureAsciiRendererOptions.md#invertmode) | [renderers/types.ts:33](https://github.com/humanbydefinition/p5.asciify/blob/74cffcf930697a5f633b5e35f91777ec8f4d62e4/src/lib/renderers/types.ts#L33) |
+| <a id="rotationangle"></a> `rotationAngle?` | `number` \| `Color` | The rotation angle of all characters affected by a given renderer. | [`FeatureAsciiRendererOptions`](FeatureAsciiRendererOptions.md).[`rotationAngle`](FeatureAsciiRendererOptions.md#rotationangle) | [renderers/types.ts:36](https://github.com/humanbydefinition/p5.asciify/blob/74cffcf930697a5f633b5e35f91777ec8f4d62e4/src/lib/renderers/types.ts#L36) |
+| <a id="samplethreshold"></a> `sampleThreshold?` | `number` | The threshold for the ASCII character sampling algorithm. | - | [renderers/types.ts:47](https://github.com/humanbydefinition/p5.asciify/blob/74cffcf930697a5f633b5e35f91777ec8f4d62e4/src/lib/renderers/types.ts#L47) |
+| <a id="sobelthreshold"></a> `sobelThreshold?` | `number` | The threshold for the Sobel edge detection algorithm. | - | [renderers/types.ts:44](https://github.com/humanbydefinition/p5.asciify/blob/74cffcf930697a5f633b5e35f91777ec8f4d62e4/src/lib/renderers/types.ts#L44) |

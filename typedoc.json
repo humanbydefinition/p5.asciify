@@ -22,4 +22,5 @@
     "enumMembersFormat": "table",
     "propertyMembersFormat": "table",
     "typeDeclarationFormat": "table",
+    "cleanOutputDir": true,
 }
