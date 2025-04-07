@@ -20,6 +20,7 @@
 - [Usage](#usage)
 - [Contributing](#contributing)
   - [Current and past contributors](#current-and-past-contributors)
+  - [Community Discord](#community-discord)
   - [Donations](#donations)
 
 ## Features
@@ -146,6 +147,23 @@ To effectively use `p5.asciify` in your projects, check out the following resour
 | [flordefuego](https://github.com/flordefuego) <br> Provided a [code example](https://openprocessing.org/sketch/2606327) and insights on combining `Hydra`, `p5.js`, and `p5.asciify`. | [![Website](https://badgen.net/badge/Visit/website/blue?icon=chrome-web-store)](https://flordefuego.xyz/) | [![Instagram](https://badgen.net/badge/Instagram/flordefuega/pink?icon=instagram)](https://instagram.com/flordefuega) <br> [![Mastodon](https://badgen.net/badge/Mastodon/@flordefuego/blue?icon=mastodon)](https://mastodon.social/@flordefuego@post.lurk.org) |
 > [!NOTE]
 > If you have contributed in the past and would like to be featured here, please open an issue or create a pull request to add your information to the list.
+
+---
+
+### Community Discord
+
+Join our friendly Discord community dedicated to `p5.asciify`, [textmode.art](https://textmode.art), and textmode art in general. The server is a place to:
+
+- Get help with `p5.asciify` and discuss techniques
+- Share your textmode creations and projects
+- Connect with fellow artists and programmers
+- Learn about textmode art as a beginner or experienced creator
+
+[![Join the Discord](https://img.shields.io/discord/1357070706181017691?color=5865F2&label=Discord&logo=discord&logoColor=white)](https://discord.gg/T4EcXZJC)
+
+Everyone is welcome, whether you're just starting out or are an experienced textmode artist!
+
+---
 
 ### Donations
 
