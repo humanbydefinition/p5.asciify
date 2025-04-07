@@ -2,6 +2,19 @@
 
 With the recent `v0.7.0` release, including a full rewrite of the codebase from JavaScript to TypeScript, `p5.asciify` is now more accessible than ever for contributions. This document outlines the steps to contribute to the project, including setting up the development environment, running the project locally, and submitting a pull request.
 
+## Table of Contents
+
+- [Requirements](#requirements)
+  - [Node.js and NVM](#nodejs-and-nvm)
+  - [npm](#npm)
+- [Setting up the development environment](#setting-up-the-development-environment)
+- [Running the project locally](#running-the-project-locally)
+  - [Building the project](#building-the-project)
+  - [Running tests](#running-tests)
+  - [Running Storybook](#running-storybook)
+  - [Running the documentation](#running-the-documentation)
+- [Submitting a pull request](#submitting-a-pull-request)
+
 ## Requirements
 
 ### Node.js and NVM
@@ -72,7 +85,7 @@ With the development environment set up, you can now run the project locally.
 
 ## Running the project locally
 
-`p5.asciify` used `vite` for development and bundling. To run the project locally, use the following command:
+`p5.asciify` uses `vite` for development and bundling. To run the project locally, use the following command:
 
 ```bash
 npm run dev
