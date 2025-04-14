@@ -34,6 +34,7 @@
 - **Font management**: Set the font and font size for all ASCII renderers in the pipeline of an asciifier.
 - **Grid management**: Apply a perfect and responsive grid based on the canvas/texture dimensions, font size, and font metrics, or create a custom grid with a specific number of rows, columns.
 - **WebGL1/WebGL2 support**: All shader code provided by `p5.asciify` is written in GLSL ES 1.0, making it compatible with both WebGL1 and WebGL2 contexts, allowing for a wide range of devices to run your ASCII projects.
+- **Export functionality**: Export your ASCII art as `.txt` or `.svg` files for easy sharing and printing, complementing p5.js's native image and GIF saving capabilities.
 
 With `p5.asciify`, you can effortlessly create stunning ASCII art, textmode games, interactive ASCII experiences, and much more. The library is designed to be flexible, efficient, and easy to use, offering a comprehensive range of tools to help you develop unique and engaging ASCII projects.
 
