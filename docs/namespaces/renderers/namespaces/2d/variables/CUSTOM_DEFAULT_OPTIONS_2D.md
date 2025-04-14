@@ -1,4 +1,4 @@
-[**p5.asciify v0.8.0**](../../../../../README.md)
+[**p5.asciify v0.8.1**](../../../../../README.md)
 
 ***
 
@@ -8,7 +8,7 @@
 
 > `const` **CUSTOM\_DEFAULT\_OPTIONS\_2D**: `object`
 
-Defined in: [renderers/2d/AsciiRenderer2D.ts:12](https://github.com/humanbydefinition/p5.asciify/blob/b019705f5b5ac899f9bd233de3aa255aa7f68509/src/lib/renderers/2d/AsciiRenderer2D.ts#L12)
+Defined in: [renderers/2d/AsciiRenderer2D.ts:12](https://github.com/humanbydefinition/p5.asciify/blob/2ff3686b57984cf418f04a889ba63d608a9dd65b/src/lib/renderers/2d/AsciiRenderer2D.ts#L12)
 
 Default configuration options for `"custom2D"` ASCII renderer. 
 
@@ -18,4 +18,4 @@ If there are options not provided during the creation of the renderer, the defau
 
 | Name | Type | Default value | Description | Defined in |
 | ------ | ------ | ------ | ------ | ------ |
-| <a id="enabled"></a> `enabled` | `boolean` | false | Enable/disable the renderer | [renderers/2d/AsciiRenderer2D.ts:14](https://github.com/humanbydefinition/p5.asciify/blob/b019705f5b5ac899f9bd233de3aa255aa7f68509/src/lib/renderers/2d/AsciiRenderer2D.ts#L14) |
+| <a id="enabled"></a> `enabled` | `boolean` | false | Enable/disable the renderer | [renderers/2d/AsciiRenderer2D.ts:14](https://github.com/humanbydefinition/p5.asciify/blob/2ff3686b57984cf418f04a889ba63d608a9dd65b/src/lib/renderers/2d/AsciiRenderer2D.ts#L14) |
