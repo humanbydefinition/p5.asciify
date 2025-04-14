@@ -343,10 +343,9 @@ export class P5Asciifier {
 
         // Add background rect if needed
         const bgColor = this._rendererManager.asciiDisplayRenderer.backgroundColor;
-        if (bgColor) {
-            const bgColorStr = this._p.color(bgColor as p5.Color).toString('#rrggbb');
-            svgContent += `\n<rect width="${gridWidth}" height="${gridHeight}" fill="${bgColorStr}" />`;
-        }
+        const bgColorObj = this._p.color(bgColor as p5.Color);
+        const bgColorStr = `rgba(${bgColorObj._array[0] * 255},${bgColorObj._array[1] * 255},${bgColorObj._array[2] * 255},${bgColorObj._array[3]})`;
+        svgContent += `\n<rect width="${gridWidth}" height="${gridHeight}" fill="${bgColorStr}" />`;
 
         // Create a group for the ASCII cells
         svgContent += `\n<g id="ascii-cells">`;
