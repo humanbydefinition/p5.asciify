@@ -149,8 +149,10 @@ declare module 'p5' {
 export type OpenTypeGlyph = {
     unicode: number;
     unicodes: number[];
+    advanceWidth: number;
     getPath(x: number, y: number, fontSize: number): {
         getBoundingBox(): { x1: number; y1: number; x2: number; y2: number };
+        toSVG(): string;
     };
     r?: number;
     g?: number;
