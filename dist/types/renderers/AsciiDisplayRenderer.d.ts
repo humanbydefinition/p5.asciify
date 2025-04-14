@@ -47,4 +47,9 @@ export declare class P5AsciifyDisplayRenderer {
      * @ignore
      */
     get resultFramebuffer(): p5.Framebuffer;
+    /**
+     * Returns the background color for the ASCII output.
+     * @ignore
+     */
+    get backgroundColor(): string | p5.Color | [number, (number | undefined)?, (number | undefined)?, (number | undefined)?];
 }

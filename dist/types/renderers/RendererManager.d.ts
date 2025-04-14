@@ -266,6 +266,30 @@ export declare class P5AsciifyRendererManager {
      */
     get characterFramebuffer(): p5.Framebuffer;
     /**
+     * Returns the primary color framebuffer,
+     * which contains the primary color framebuffers of all renderers in the pipeline stacked on top of each other.
+     * @ignore
+     */
+    get primaryColorFramebuffer(): p5.Framebuffer;
+    /**
+     * Returns the secondary color framebuffer,
+     * which contains the secondary color framebuffers of all renderers in the pipeline stacked on top of each other.
+     * @ignore
+     */
+    get secondaryColorFramebuffer(): p5.Framebuffer;
+    /**
+     * Returns the inversion framebuffer,
+     * which contains the inversion framebuffers of all renderers in the pipeline stacked on top of each other.
+     * @ignore
+     */
+    get inversionFramebuffer(): p5.Framebuffer;
+    /**
+     * Returns the rotation framebuffer,
+     * which contains the rotation framebuffers of all renderers in the pipeline stacked on top of each other.
+     * @ignore
+     */
+    get rotationFramebuffer(): p5.Framebuffer;
+    /**
      * Returns a boolean indicating whether any renderers are enabled in the pipeline.
      */
     get hasEnabledRenderers(): boolean;

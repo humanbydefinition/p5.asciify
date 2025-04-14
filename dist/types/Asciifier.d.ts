@@ -159,6 +159,22 @@ export declare class P5Asciifier {
      */
     gridResponsive(bool?: boolean): void;
     /**
+     * Saves the current ASCII output as an SVG file.
+     * @param filename The filename to save the SVG file as. If not provided, a default filename is used.
+     * @throws {@link P5AsciifyError} - If no renderer is available to fetch ASCII output from.
+     *
+     * @example
+     * ```javascript
+     * function drawAsciify() {
+     *     // Save the ASCII output as an SVG file.
+     *     if (frameCount === 60) {
+     *         p5asciify.asciifier().saveSVG("asciify_output");
+     *     }
+     * }
+     * ```
+     */
+    saveSVG(filename?: string): void;
+    /**
      * Generates the ASCII output as an array of string rows.
      * @returns Array of strings representing ASCII output.
      * @throws {@link P5AsciifyError} - If no renderer is available.
