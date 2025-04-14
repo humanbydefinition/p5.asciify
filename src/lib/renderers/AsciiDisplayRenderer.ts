@@ -104,4 +104,10 @@ export class P5AsciifyDisplayRenderer {
      * @ignore
      */
     get resultFramebuffer() { return this._resultFramebuffer; }
+
+    /**
+     * Returns the background color for the ASCII output.
+     * @ignore
+     */
+    get backgroundColor() { return this._backgroundColor; }
 };
