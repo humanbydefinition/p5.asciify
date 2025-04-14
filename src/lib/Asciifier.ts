@@ -272,6 +272,197 @@ export class P5Asciifier {
     }
 
     /**
+     * Saves the current ASCII output as an SVG file.
+     * @param filename The filename to save the SVG file as. If not provided, a default filename is used.
+     * @throws {@link P5AsciifyError} - If no renderer is available to fetch ASCII output from.
+     * 
+     * @example
+     * ```javascript
+     * function drawAsciify() {
+     *     // Save the ASCII output as an SVG file.
+     *     if (frameCount === 60) {
+     *         p5asciify.asciifier().saveSVG("asciify_output");
+     *     }
+     * }
+     * ```
+     */
+    public saveSVG(filename: string = ""): void {
+        // Generate default filename if none provided
+        if (!filename) {
+            const now = new Date();
+            const date = now.toISOString().split('T')[0];
+            const time = now.toTimeString().split(' ')[0].replace(/:/g, '-');
+            filename = `asciify_output_${date}_${time}`;
+        }
+
+        // Access the framebuffers
+        const characterFramebuffer = this._rendererManager.characterFramebuffer;
+        const primaryColorFramebuffer = this._rendererManager.primaryColorFramebuffer;
+        const secondaryColorFramebuffer = this._rendererManager.secondaryColorFramebuffer;
+        const inversionFramebuffer = this._rendererManager.inversionFramebuffer;
+        const rotationFramebuffer = this._rendererManager.rotationFramebuffer;
+
+        if (!characterFramebuffer) {
+            throw new P5AsciifyError('No renderer available to generate SVG output.');
+        }
+
+        // Load pixels from all framebuffers
+        characterFramebuffer.loadPixels();
+        primaryColorFramebuffer.loadPixels();
+        secondaryColorFramebuffer.loadPixels();
+        inversionFramebuffer.loadPixels();
+        rotationFramebuffer.loadPixels();
+
+        const characterPixels = characterFramebuffer.pixels;
+        const primaryColorPixels = primaryColorFramebuffer.pixels;
+        const secondaryColorPixels = secondaryColorFramebuffer.pixels;
+        const inversionPixels = inversionFramebuffer.pixels;
+        const rotationPixels = rotationFramebuffer.pixels;
+
+        // Get grid dimensions and cell sizes
+        const cols = this._grid.cols;
+        const rows = this._grid.rows;
+        const cellWidth = this._grid.cellWidth;
+        const cellHeight = this._grid.cellHeight;
+
+        // Total dimensions of the output SVG
+        const gridWidth = this._grid.width;
+        const gridHeight = this._grid.height;
+
+        // Font information
+        const charGlyphs = this._fontManager.characterGlyphs;
+        const chars = this._fontManager.characters;
+
+        // Start building SVG content
+        let svgContent = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="${gridWidth}" height="${gridHeight}" viewBox="0 0 ${gridWidth} ${gridHeight}" 
+     xmlns="http://www.w3.org/2000/svg" version="1.1">
+<title>ascii art generated via p5.asciify</title>
+<desc>ascii art visualization of a p5.js sketch</desc>`;
+
+        // Add background rect if needed
+        const bgColor = this._rendererManager.asciiDisplayRenderer.backgroundColor;
+        if (bgColor) {
+            const bgColorStr = this._p.color(bgColor as p5.Color).toString('#rrggbb');
+            svgContent += `\n<rect width="${gridWidth}" height="${gridHeight}" fill="${bgColorStr}" />`;
+        }
+
+        // Create a group for the ASCII cells
+        svgContent += `\n<g id="ascii-cells">`;
+
+        // Iterate through the grid to create the SVG cells with characters
+        let idx = 0;
+        for (let y = 0; y < rows; y++) {
+            for (let x = 0; x < cols; x++) {
+                const pixelIdx = idx * 4;
+
+                // Get character index from red and green channels
+                const r = characterPixels[pixelIdx];
+                const g = characterPixels[pixelIdx + 1];
+                let charIndex = r + (g << 8);
+
+                // Clamp character index
+                if (charIndex >= chars.length) {
+                    charIndex = chars.length - 1;
+                }
+
+                const char = chars[charIndex];
+
+                // Get the colors for this cell from primary/secondary framebuffers
+                let primaryColor = {
+                    r: primaryColorPixels[pixelIdx],
+                    g: primaryColorPixels[pixelIdx + 1],
+                    b: primaryColorPixels[pixelIdx + 2],
+                    a: primaryColorPixels[pixelIdx + 3]
+                };
+
+                let secondaryColor = {
+                    r: secondaryColorPixels[pixelIdx],
+                    g: secondaryColorPixels[pixelIdx + 1],
+                    b: secondaryColorPixels[pixelIdx + 2],
+                    a: secondaryColorPixels[pixelIdx + 3]
+                };
+
+                // Check if colors should be inverted based on inversionFramebuffer
+                // White pixel (255) in inversionFramebuffer means colors should be swapped
+                const inversionValue = inversionPixels[pixelIdx];
+                if (inversionValue === 255) {
+                    // Swap primary and secondary colors
+                    const tempColor = primaryColor;
+                    primaryColor = secondaryColor;
+                    secondaryColor = tempColor;
+                }
+
+                // Calculate rotation angle from rotationFramebuffer
+                // Red channel for degrees up to 255, green channel for additional degrees
+                const rotationRed = rotationPixels[pixelIdx];
+                const rotationGreen = rotationPixels[pixelIdx + 1];
+                const rotationAngle = rotationRed + (rotationGreen * 256 / 15);
+
+                // Calculate position for this cell
+                const cellX = x * cellWidth;
+                const cellY = y * cellHeight;
+
+                // Add the cell background if needed
+                if (secondaryColor.a > 0) {
+                    const bgColorStr = `rgba(${secondaryColor.r},${secondaryColor.g},${secondaryColor.b},${secondaryColor.a / 255})`;
+                    svgContent += `\n  <rect x="${cellX}" y="${cellY}" width="${cellWidth}" height="${cellHeight}" fill="${bgColorStr}" />`;
+                }
+
+                // Get the glyph for this character if available
+                const glyph = charGlyphs[charIndex];
+                const foreColorStr = `rgba(${primaryColor.r},${primaryColor.g},${primaryColor.b},${primaryColor.a / 255})`;
+
+                // If we have glyph path data, use it to create precise character rendering
+                const fontSize = this._fontSize;
+
+                // Calculate center point of the cell for rotation
+                const centerX = cellX + (cellWidth / 2);
+                const centerY = cellY + (cellHeight / 2);
+
+                // Adjust position to center glyph within cell
+                const xOffset = cellX + (cellWidth - glyph.advanceWidth * fontSize / this._fontManager.font.font.unitsPerEm) / 2;
+                const yOffset = cellY + (cellHeight + fontSize * 0.7) / 2;
+
+                // Get SVG path data from the glyph - this uses opentype.js path functionality
+                const pathObj = glyph.getPath(xOffset, yOffset, fontSize);
+
+                // Get SVG path data and extract just the 'd' attribute value
+                const svgPath = pathObj.toSVG();
+                const dMatch = svgPath.match(/d="([^"]+)"/);
+
+                if (dMatch && dMatch[1]) {
+                    // If there's rotation, we need to apply a transform
+                    if (rotationAngle > 0) {
+                        svgContent += `\n  <g transform="rotate(${rotationAngle} ${centerX} ${centerY})">`;
+                        svgContent += `\n    <path d="${dMatch[1]}" fill="${foreColorStr}" />`;
+                        svgContent += `\n  </g>`;
+                    } else {
+                        svgContent += `\n  <path d="${dMatch[1]}" fill="${foreColorStr}" />`;
+                    }
+                }
+
+                idx++;
+            }
+        }
+
+        // Close the SVG
+        svgContent += `\n</g>\n</svg>`;
+
+        // Create a blob and download the SVG file
+        const svgBlob = new Blob([svgContent], { type: 'image/svg+xml' });
+        const svgUrl = URL.createObjectURL(svgBlob);
+        const downloadLink = document.createElement('a');
+        downloadLink.href = svgUrl;
+        downloadLink.download = `${filename}.svg`;
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+        URL.revokeObjectURL(svgUrl);
+    }
+
+    /**
      * Generates the ASCII output as an array of string rows.
      * @returns Array of strings representing ASCII output.
      * @throws {@link P5AsciifyError} - If no renderer is available.
