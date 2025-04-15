@@ -5,6 +5,11 @@ import { P5AsciifyRendererManager } from '../renderers/RendererManager';
 import { P5AsciifyError } from '../AsciifyError';
 
 /**
+ * Drawing mode for SVG characters
+ */
+export type SVGDrawMode = 'fill' | 'stroke' | 'text';
+
+/**
  * Options for SVG export
  */
 export interface SVGExportOptions {
@@ -19,6 +24,54 @@ export interface SVGExportOptions {
      * Default is true.
      */
     includeBackgroundRectangles?: boolean;
+
+    /**
+     * The drawing mode for ASCII characters (fill, stroke, or text).
+     * When set to 'fill', characters are rendered as filled shapes.
+     * When set to 'stroke', characters are rendered as outlines.
+     * When set to 'text', characters are rendered as text elements (more compact).
+     * Default is 'fill'.
+     */
+    drawMode?: SVGDrawMode;
+
+    /**
+     * The stroke width to use when drawMode is set to 'stroke'.
+     * Default is 1.0.
+     */
+    strokeWidth?: number;
+
+    /**
+     * Font family to use when drawMode is set to 'text'.
+     * If not specified, "monospace" will be used.
+     */
+    fontFamily?: string;
+
+    /**
+     * Whether to apply hatch pattern fills when in 'stroke' mode for pen plotter compatibility.
+     * Only applies when drawMode is 'stroke'.
+     * Default is false.
+     */
+    useHatchFill?: boolean;
+
+    /**
+     * Hatch pattern type when useHatchFill is true.
+     * Options: 'diagonal', 'cross', 'horizontal', 'vertical'
+     * Default is 'diagonal'.
+     */
+    hatchPattern?: 'diagonal' | 'cross' | 'horizontal' | 'vertical';
+
+    /**
+     * Spacing between hatch lines in pixels.
+     * Default is 3.
+     */
+    hatchSpacing?: number;
+
+    /**
+     * Whether to optimize the SVG for pen plotting (removes unnecessary attributes,
+     * ensures proper stroke properties, etc.)
+     * Default is false.
+     */
+    optimizeForPenPlotter?: boolean;
 }
 
 /**
@@ -52,13 +105,24 @@ export class P5AsciifySVGExporter {
         fontManager: P5AsciifyFontManager,
         options: SVGExportOptions
     ): void {
+        // Set defaults for options
+        const exportOptions: SVGExportOptions = {
+            includeBackgroundRectangles: true,
+            drawMode: 'fill',
+            strokeWidth: 1.0,
+            useHatchFill: false,
+            hatchPattern: 'diagonal',
+            hatchSpacing: 3,
+            optimizeForPenPlotter: false,
+            ...options
+        };
 
         // Generate default filename if none provided
-        if (!options.filename) {
+        if (!exportOptions.filename) {
             const now = new Date();
             const date = now.toISOString().split('T')[0];
             const time = now.toTimeString().split(' ')[0].replace(/:/g, '-');
-            options.filename = `asciify_output_${date}_${time}`;
+            exportOptions.filename = `asciify_output_${date}_${time}`;
         }
 
         // Access the framebuffers
@@ -103,7 +167,7 @@ export class P5AsciifySVGExporter {
         let svgContent = this.generateSVGHeader(gridWidth, gridHeight);
 
         // Add background rect if needed
-        if (options.includeBackgroundRectangles) {
+        if (exportOptions.includeBackgroundRectangles) {
             const bgColor = rendererManager.asciiDisplayRenderer.backgroundColor;
             const bgColorObj = this.p.color(bgColor as p5.Color);
             const bgColorStr = `rgba(${bgColorObj._array[0] * 255},${bgColorObj._array[1] * 255},${bgColorObj._array[2] * 255},${bgColorObj._array[3]})`;
@@ -177,7 +241,7 @@ export class P5AsciifySVGExporter {
                     rotationAngle,
                     fontManager,
                     charGlyphs,
-                    options.includeBackgroundRectangles
+                    exportOptions
                 );
 
                 idx++;
@@ -187,7 +251,7 @@ export class P5AsciifySVGExporter {
         // Close the SVG
         svgContent += `\n</g>\n</svg>`;
 
-        this.downloadSVG(svgContent, options.filename);
+        this.downloadSVG(svgContent, exportOptions.filename);
     }
 
     /**
@@ -215,10 +279,9 @@ export class P5AsciifySVGExporter {
      * @param cellWidth The width of the cell
      * @param cellHeight The height of the cell
      * @param rotationAngle The rotation angle for the character
-     * @param fontSize The font size
      * @param fontManager The font manager
      * @param charGlyphs The character glyphs
-     * @param includeBackgroundRectangles Whether to include cell background rectangles
+     * @param options The SVG export options
      * @returns The SVG content for the cell
      */
     private generateSVGCellContent(
@@ -232,49 +295,213 @@ export class P5AsciifySVGExporter {
         rotationAngle: number,
         fontManager: P5AsciifyFontManager,
         charGlyphs: any[],
-        includeBackgroundRectangles: boolean = true
+        options: SVGExportOptions
     ): string {
         let cellContent = '';
 
-        console.log("Include background rectangles:", includeBackgroundRectangles);
-
         // Add the cell background if needed and if backgrounds are included
-        if (includeBackgroundRectangles && secondaryColor.a > 0) {
+        if (options.includeBackgroundRectangles && secondaryColor.a > 0) {
             const bgColorStr = `rgba(${secondaryColor.r},${secondaryColor.g},${secondaryColor.b},${secondaryColor.a / 255})`;
-            cellContent += `\n  <rect x="${cellX}" y="${cellY}" width="${cellWidth}" height="${cellHeight}" fill="${bgColorStr}" />`;
-        }
 
-        // Get the glyph for this character if available
-        const glyph = charGlyphs[charIndex];
-        const foreColorStr = `rgba(${primaryColor.r},${primaryColor.g},${primaryColor.b},${primaryColor.a / 255})`;
+            if (options.drawMode === 'stroke') {
+                cellContent += `\n  <rect x="${cellX}" y="${cellY}" width="${cellWidth}" height="${cellHeight}" stroke="${bgColorStr}" fill="none" stroke-width="${options.strokeWidth || 1.0}" />`;
+            } else {
+                cellContent += `\n  <rect x="${cellX}" y="${cellY}" width="${cellWidth}" height="${cellHeight}" fill="${bgColorStr}" />`;
+            }
+        }
 
         // Calculate center point of the cell for rotation
         const centerX = cellX + (cellWidth / 2);
         const centerY = cellY + (cellHeight / 2);
 
-        // Adjust position to center glyph within cell
-        const xOffset = cellX + (cellWidth - glyph.advanceWidth * fontManager.fontSize / fontManager.font.font.unitsPerEm) / 2;
-        const yOffset = cellY + (cellHeight + fontManager.fontSize * 0.7) / 2;
+        // Get the actual character from fontManager
+        const char = fontManager.characters[charIndex];
+        const colorStr = `rgba(${primaryColor.r},${primaryColor.g},${primaryColor.b},${primaryColor.a / 255})`;
 
-        // Get SVG path data from the glyph - this uses opentype.js path functionality
-        const pathObj = glyph.getPath(xOffset, yOffset, fontManager.fontSize);
+        if (options.drawMode === 'text') {
+            // Use text element mode - more compact but requires font to be available
+            const fontFamily = options.fontFamily || 'monospace';
+            const fontSize = Math.min(cellWidth, cellHeight) * 0.8; // Scale font to fit cell
 
-        // Get SVG path data and extract just the 'd' attribute value
-        const svgPath = pathObj.toSVG();
-        const dMatch = svgPath.match(/d="([^"]+)"/);
-
-        if (dMatch && dMatch[1]) {
-            // If there's rotation, we need to apply a transform
             if (rotationAngle > 0) {
-                cellContent += `\n  <g transform="rotate(${rotationAngle} ${centerX} ${centerY})">`;
-                cellContent += `\n    <path d="${dMatch[1]}" fill="${foreColorStr}" />`;
-                cellContent += `\n  </g>`;
+                cellContent += `\n  <text x="${centerX}" y="${centerY}" 
+                    font-family="${fontFamily}" font-size="${fontSize}px" fill="${colorStr}"
+                    text-anchor="middle" dominant-baseline="middle"
+                    transform="rotate(${rotationAngle} ${centerX} ${centerY})">${this.escapeXml(char)}</text>`;
             } else {
-                cellContent += `\n  <path d="${dMatch[1]}" fill="${foreColorStr}" />`;
+                cellContent += `\n  <text x="${centerX}" y="${centerY}" 
+                    font-family="${fontFamily}" font-size="${fontSize}px" fill="${colorStr}"
+                    text-anchor="middle" dominant-baseline="middle">${this.escapeXml(char)}</text>`;
+            }
+        } else {
+            // Original path-based rendering (fill or stroke)
+            // Get the glyph for this character if available
+            const glyph = charGlyphs[charIndex];
+
+            // Adjust position to center glyph within cell
+            const xOffset = cellX + (cellWidth - glyph.advanceWidth * fontManager.fontSize / fontManager.font.font.unitsPerEm) / 2;
+            const yOffset = cellY + (cellHeight + fontManager.fontSize * 0.7) / 2;
+
+            // Get SVG path data from the glyph
+            const pathObj = glyph.getPath(xOffset, yOffset, fontManager.fontSize);
+
+            // Get SVG path data and extract just the 'd' attribute value
+            const svgPath = pathObj.toSVG();
+            const dMatch = svgPath.match(/d="([^"]+)"/);
+
+            if (dMatch && dMatch[1]) {
+                // Start transform group if needed for rotation
+                if (rotationAngle > 0) {
+                    cellContent += `\n  <g transform="rotate(${rotationAngle} ${centerX} ${centerY})">`;
+                }
+
+                // Apply either fill or stroke based on drawMode
+                if (options.drawMode === 'stroke') {
+                    const strokeWidth = options.strokeWidth || 1.0;
+                    const pathId = `path-${charIndex}-${cellX}-${cellY}`.replace(/\./g, '-');
+
+                    // Add the path with stroke and no fill for pen plotter
+                    cellContent += `\n    <path id="${pathId}" d="${dMatch[1]}" stroke="${colorStr}" stroke-width="${strokeWidth}" fill="none" />`;
+
+                    // If hatch fill is enabled, add hatching
+                    if (options.useHatchFill) {
+                        cellContent += this.generateHatchPattern(
+                            pathId,
+                            cellX,
+                            cellY,
+                            cellWidth,
+                            cellHeight,
+                            colorStr,
+                            options.hatchPattern || 'diagonal',
+                            options.hatchSpacing || 3,
+                            strokeWidth
+                        );
+                    }
+                } else {
+                    // Regular fill mode
+                    cellContent += `\n    <path d="${dMatch[1]}" fill="${colorStr}" />`;
+                }
+
+                // Close transform group if needed
+                if (rotationAngle > 0) {
+                    cellContent += `\n  </g>`;
+                }
             }
         }
 
         return cellContent;
+    }
+
+    /**
+     * Escapes special XML characters in a string
+     * @param str The string to escape
+     * @returns The escaped string
+     */
+    private escapeXml(str: string): string {
+        return str
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&apos;');
+    }
+
+    /**
+     * Generates SVG content for a hatch pattern to fill the given path
+     * This is useful for pen plotters that can't use solid fills
+     * @param pathId The ID of the path to apply hatching to
+     * @param cellX The x position of the cell
+     * @param cellY The y position of the cell
+     * @param cellWidth The width of the cell
+     * @param cellHeight The height of the cell
+     * @param color The stroke color for the hatch lines
+     * @param pattern The hatch pattern type
+     * @param spacing The spacing between hatch lines
+     * @param strokeWidth The width of the hatch lines
+     * @returns SVG content for the hatch pattern
+     */
+    private generateHatchPattern(
+        pathId: string,
+        cellX: number,
+        cellY: number,
+        cellWidth: number,
+        cellHeight: number,
+        color: string,
+        pattern: 'diagonal' | 'cross' | 'horizontal' | 'vertical',
+        spacing: number,
+        strokeWidth: number
+    ): string {
+        // Create a clip path to constrain the hatching within the character path
+        let hatchContent = `\n    <clipPath id="clip-${pathId}">
+      <use href="#${pathId}" />
+    </clipPath>`;
+
+        // Create a group for all hatch lines, clipped to the character shape
+        hatchContent += `\n    <g clip-path="url(#clip-${pathId})" stroke="${color}" stroke-width="${strokeWidth}" fill="none">`;
+
+        // Calculate a larger buffer to ensure complete coverage of character shapes
+        // Characters can have complex shapes that extend beyond regular bounds
+        const buffer = Math.max(cellWidth, cellHeight) * 1.5;
+
+        // Extend bounding box to ensure full coverage
+        const x1 = cellX - buffer;
+        const y1 = cellY - buffer;
+        const x2 = cellX + cellWidth + buffer;
+        const y2 = cellY + cellHeight + buffer;
+
+        // Use a tighter spacing for more consistent coverage
+        const effectiveSpacing = Math.max(1.0, spacing * 0.8);
+
+        // Add appropriate hatching based on the selected pattern
+        if (pattern === 'horizontal' || pattern === 'cross') {
+            // Add horizontal lines with increased density
+            for (let y = y1; y <= y2; y += effectiveSpacing) {
+                hatchContent += `\n      <line x1="${x1}" y1="${y}" x2="${x2}" y2="${y}" />`;
+            }
+        }
+
+        if (pattern === 'vertical' || pattern === 'cross') {
+            // Add vertical lines
+            for (let x = x1; x <= x2; x += effectiveSpacing) {
+                hatchContent += `\n      <line x1="${x}" y1="${y1}" x2="${x}" y2="${y2}" />`;
+            }
+        }
+
+        if (pattern === 'diagonal' || pattern === 'cross') {
+            // Use a more comprehensive approach for diagonal lines
+            // Calculate diagonal properties based on both width and height
+            const width = x2 - x1;
+            const height = y2 - y1;
+            const diagonalLength = Math.sqrt(width * width + height * height) * 2;
+
+            // Calculate range to ensure full coverage
+            const range = diagonalLength;
+
+            // Forward diagonal (/)
+            for (let offset = -range; offset <= range; offset += effectiveSpacing) {
+                hatchContent += `\n      <line 
+                x1="${x1 + (offset < 0 ? -offset : 0)}" 
+                y1="${y1 + (offset > 0 ? offset : 0)}" 
+                x2="${Math.min(x1 + diagonalLength, x2)}" 
+                y2="${Math.min(y1 + diagonalLength, y2)}" />`;
+            }
+
+            // Backward diagonal (\) if cross pattern
+            if (pattern === 'cross') {
+                for (let offset = -range; offset <= range; offset += effectiveSpacing) {
+                    hatchContent += `\n      <line 
+                    x1="${x1 + (offset < 0 ? -offset : 0)}" 
+                    y1="${y2 - (offset > 0 ? offset : 0)}" 
+                    x2="${Math.min(x1 + diagonalLength, x2)}" 
+                    y2="${Math.max(y2 - diagonalLength, y1)}" />`;
+                }
+            }
+        }
+
+        // Close the hatch group
+        hatchContent += `\n    </g>`;
+
+        return hatchContent;
     }
 
     /**
