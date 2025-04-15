@@ -66,10 +66,10 @@ const sketch = (p) => {
 	};
 
 	// After `p5.asciify` is set up in the background after `setup()`,
-    // we can call `setupAsciify()` to configure `p5asciify` and it's `P5Asciifier` instances and rendering pipelines
+	// we can call `setupAsciify()` to configure `p5asciify` and it's `P5Asciifier` instances and rendering pipelines
 	p.setupAsciify = () => {
 		// Fetch the default `P5Asciifier` instance provided by the library
-        asciifier = p5asciify.asciifier();
+		asciifier = p5asciify.asciifier();
 
 		// Initialize and fill the color palette framebuffer
 		colorPaletteFramebuffer = p.createFramebuffer({
@@ -178,7 +178,7 @@ const sketch = (p) => {
 		}
 
 		// Create the texture based on the given rectangles, defining the direction each pixel should move
-		shiftFramebuffer.begin(); 
+		shiftFramebuffer.begin();
 		p.clear();
 		p.shader(shiftShader);
 		shiftShader.setUniform('u_resolution', [asciifier.grid.cols, asciifier.grid.rows]);
@@ -207,7 +207,7 @@ const sketch = (p) => {
 		nextPushFramebuffer.end();
 
 		// Translate the pushShader's pixels into our ascii character colors for p5.asciify to render
-		asciiCharacterFramebuffer.begin(); 
+		asciiCharacterFramebuffer.begin();
 		p.clear();
 		p.shader(asciiCharacterShader);
 		asciiCharacterShader.setUniform('u_textureSize', [asciifier.grid.cols, asciifier.grid.rows]);
@@ -219,7 +219,7 @@ const sketch = (p) => {
 		asciiCharacterFramebuffer.end();
 
 		// Translate the pushShader's pixels into our color palette for p5.asciify to render
-		primaryColorSampleFramebuffer.begin(); 
+		primaryColorSampleFramebuffer.begin();
 		p.clear();
 		p.shader(asciiColorPaletteShader);
 		asciiColorPaletteShader.setUniform('u_textureSize', [asciifier.grid.cols, asciifier.grid.rows]);
@@ -230,7 +230,7 @@ const sketch = (p) => {
 		primaryColorSampleFramebuffer.end();
 
 		// Simply make all the grid cell background colors black.
-		secondaryColorSampleFramebuffer.begin(); 
+		secondaryColorSampleFramebuffer.begin();
 		p.background(0);
 		secondaryColorSampleFramebuffer.end();
 	};
