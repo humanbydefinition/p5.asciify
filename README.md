@@ -160,7 +160,7 @@ Join our friendly Discord community dedicated to `p5.asciify`, [textmode.art](ht
 - Connect with fellow artists and programmers
 - Learn about textmode art as a beginner or experienced creator
 
-[![Join the Discord](https://img.shields.io/discord/1357070706181017691?color=5865F2&label=Discord&logo=discord&logoColor=white)](https://discord.gg/T4EcXZJC)
+[![Join the Discord](https://img.shields.io/discord/1357070706181017691?color=5865F2&label=Discord&logo=discord&logoColor=white)](https://discord.gg/sjrw8QXNks)
 
 Everyone is welcome, whether you're just starting out or are an experienced textmode artist!
 
