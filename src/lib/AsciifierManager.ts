@@ -21,6 +21,9 @@ export class P5AsciifierManager {
     /** Defines whether the hooks are enabled or not. */
     private _hooksEnabled: boolean = true;
 
+    /** Contains the content that has been drawn to the `p5.js` canvas throughout the `draw()` loop. */
+    private _sketchFramebuffer!: p5.Framebuffer;
+
     /**
      * Creates a new `P5AsciifierManager` instance.
      * @ignore
@@ -54,6 +57,11 @@ export class P5AsciifierManager {
      * @ignore
      */
     public setup(): void {
+        this._sketchFramebuffer = this._p.createFramebuffer({
+            depthFormat: this._p.UNSIGNED_INT,
+            textureFiltering: this._p.NEAREST
+        });
+
         this._asciifiers.forEach((asciifier) => {
             asciifier.setup();
         });
@@ -159,4 +167,10 @@ export class P5AsciifierManager {
      * @ignore
      */
     get hooksEnabled(): boolean { return this._hooksEnabled; }
+
+    /**
+     * Returns the sketch framebuffer used to store the content drawn to the `p5.js` canvas.
+     * @ignore
+     */
+    get sketchFramebuffer(): p5.Framebuffer { return this._sketchFramebuffer; }
 }
