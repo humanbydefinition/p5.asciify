@@ -182,7 +182,7 @@ export class P5AsciifyFontManager {
      *  }
      * ```
      */
-    public glyphColors(characters: string = ""): Array<[number, number, number]> {
+    public glyphColors(characters: string | string[] = ""): Array<[number, number, number]> {
         return Array.from(characters).map((char: string) => {
             const glyph = this._characterGlyphs.find(
                 (glyph: OpenTypeGlyph) => glyph.unicodes.includes(char.codePointAt(0) as number)
