@@ -16,22 +16,12 @@ export declare class P5Asciifier {
     private _grid;
     /** Wraps around the user's `draw()` function to capture it's output for the ascii renderers to asciify. */
     private _captureFramebuffer;
-    /** Flag to determine if the p5.js canvas is used as the sketch framebuffer. Otherwise, a custom framebuffer is used. */
-    private _canvasFlag;
     /** Manages the available ASCII renderers and handles rendering the ASCII output to the canvas. */
     private _rendererManager;
     /** The font size for the ASCII renderers. */
     private _fontSize;
     /** The `p5.js` instance. */
     private _p;
-    /**
-     * Creates a new `P5Asciifier` instance.
-     *
-     * @param sketchFramebuffer If a `sketchFramebuffer` is provided,
-     *                          this framebuffer is used instead of the p5.js main canvas to capture the user's `draw()` function output.
-     * @ignore
-     */
-    constructor(sketchFramebuffer?: p5.Framebuffer);
     /**
      * Initializes the asciifier by setting the `p5.js` instance and loading the font manager with the default font.
      *
@@ -49,7 +39,7 @@ export declare class P5Asciifier {
      *
      * @ignore
      */
-    setup(): void;
+    setup(captureFramebuffer: p5.Framebuffer): void;
     /**
      * Renders the ASCII output to the canvas.
      *
@@ -338,12 +328,4 @@ export declare class P5Asciifier {
      * ```
      */
     get texture(): p5.Framebuffer;
-    /**
-     * Returns the flag to determine if the `p5.js` canvas is used to asciify, or if a passed framebuffer is used to asciify instead.
-     *
-     * Returns `true` if the p5.js canvas is used, otherwise `false`.
-     *
-     * @ignore
-     */
-    get canvasFlag(): boolean;
 }
