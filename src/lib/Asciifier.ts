@@ -274,9 +274,7 @@ export class P5Asciifier {
 
     /**
      * Saves the current ASCII output as an SVG file.
-     * @param options The filename to save the SVG file as or an options object.
-     *                If a string is provided, it's used as the filename.
-     *                If not provided, a default filename is used.
+     * @param options The options for saving the SVG file.
      * @throws {@link P5AsciifyError} - If no renderer is available to fetch ASCII output from.
      * 
      * @example

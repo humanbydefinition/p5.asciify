@@ -2,15 +2,9 @@ import p5 from 'p5';
 import { P5AsciifyGrid } from '../Grid';
 import { P5AsciifyFontManager } from '../FontManager';
 import { P5AsciifyRendererManager } from '../renderers/RendererManager';
-import { P5AsciifyError } from '../AsciifyError';
 
 /**
- * Drawing mode for SVG characters
- */
-export type SVGDrawMode = 'fill' | 'stroke' | 'text';
-
-/**
- * Options for SVG export
+ * Options for SVG export.
  */
 export interface SVGExportOptions {
     /**
@@ -21,61 +15,29 @@ export interface SVGExportOptions {
     /**
      * Whether to include cell background rectangles in the SVG output.
      * When false, only the character paths are included, creating a more compact SVG.
-     * Default is true.
+     * Default is `true`.
      */
     includeBackgroundRectangles?: boolean;
 
     /**
-     * The drawing mode for ASCII characters (fill, stroke, or text).
-     * When set to 'fill', characters are rendered as filled shapes.
-     * When set to 'stroke', characters are rendered as outlines.
-     * When set to 'text', characters are rendered as text elements (more compact).
-     * Default is 'fill'.
+     * The drawing mode for ASCII characters (`'fill'`, `'stroke'`, or `'text'`).
+     * When set to `'fill'`, characters are rendered as filled shapes.
+     * When set to `'stroke'`, characters are rendered as outlines.
+     * When set to `'text'`, characters are rendered as text elements using `'monospaced'` font.
+     * Default is `'fill'`.
      */
-    drawMode?: SVGDrawMode;
+    drawMode?: 'fill' | 'stroke' | 'text';
 
     /**
-     * The stroke width to use when drawMode is set to 'stroke'.
-     * Default is 1.0.
+     * The stroke width to use when drawMode is set to `'stroke'`.
+     * Default is `1.0`.
      */
     strokeWidth?: number;
-
-    /**
-     * Font family to use when drawMode is set to 'text'.
-     * If not specified, "monospace" will be used.
-     */
-    fontFamily?: string;
-
-    /**
-     * Whether to apply hatch pattern fills when in 'stroke' mode for pen plotter compatibility.
-     * Only applies when drawMode is 'stroke'.
-     * Default is false.
-     */
-    useHatchFill?: boolean;
-
-    /**
-     * Hatch pattern type when useHatchFill is true.
-     * Options: 'diagonal', 'cross', 'horizontal', 'vertical'
-     * Default is 'diagonal'.
-     */
-    hatchPattern?: 'diagonal' | 'cross' | 'horizontal' | 'vertical';
-
-    /**
-     * Spacing between hatch lines in pixels.
-     * Default is 3.
-     */
-    hatchSpacing?: number;
-
-    /**
-     * Whether to optimize the SVG for pen plotting (removes unnecessary attributes,
-     * ensures proper stroke properties, etc.)
-     * Default is false.
-     */
-    optimizeForPenPlotter?: boolean;
 }
 
 /**
  * Utility class for exporting ASCII art as SVG files.
+ * @ignore
  */
 export class P5AsciifySVGExporter {
     /**
@@ -110,10 +72,6 @@ export class P5AsciifySVGExporter {
             includeBackgroundRectangles: true,
             drawMode: 'fill',
             strokeWidth: 1.0,
-            useHatchFill: false,
-            hatchPattern: 'diagonal',
-            hatchSpacing: 3,
-            optimizeForPenPlotter: false,
             ...options
         };
 
@@ -131,10 +89,6 @@ export class P5AsciifySVGExporter {
         const secondaryColorFramebuffer = rendererManager.secondaryColorFramebuffer;
         const inversionFramebuffer = rendererManager.inversionFramebuffer;
         const rotationFramebuffer = rendererManager.rotationFramebuffer;
-
-        if (!characterFramebuffer) {
-            throw new P5AsciifyError('No renderer available to generate SVG output.');
-        }
 
         // Load pixels from all framebuffers
         characterFramebuffer.loadPixels();
@@ -320,7 +274,7 @@ export class P5AsciifySVGExporter {
 
         if (options.drawMode === 'text') {
             // Use text element mode - more compact but requires font to be available
-            const fontFamily = options.fontFamily || 'monospace';
+            const fontFamily = 'monospace';
             const fontSize = Math.min(cellWidth, cellHeight) * 0.8; // Scale font to fit cell
 
             if (rotationAngle > 0) {
@@ -362,21 +316,6 @@ export class P5AsciifySVGExporter {
 
                     // Add the path with stroke and no fill for pen plotter
                     cellContent += `\n    <path id="${pathId}" d="${dMatch[1]}" stroke="${colorStr}" stroke-width="${strokeWidth}" fill="none" />`;
-
-                    // If hatch fill is enabled, add hatching
-                    if (options.useHatchFill) {
-                        cellContent += this.generateHatchPattern(
-                            pathId,
-                            cellX,
-                            cellY,
-                            cellWidth,
-                            cellHeight,
-                            colorStr,
-                            options.hatchPattern || 'diagonal',
-                            options.hatchSpacing || 3,
-                            strokeWidth
-                        );
-                    }
                 } else {
                     // Regular fill mode
                     cellContent += `\n    <path d="${dMatch[1]}" fill="${colorStr}" />`;
@@ -404,104 +343,6 @@ export class P5AsciifySVGExporter {
             .replace(/>/g, '&gt;')
             .replace(/"/g, '&quot;')
             .replace(/'/g, '&apos;');
-    }
-
-    /**
-     * Generates SVG content for a hatch pattern to fill the given path
-     * This is useful for pen plotters that can't use solid fills
-     * @param pathId The ID of the path to apply hatching to
-     * @param cellX The x position of the cell
-     * @param cellY The y position of the cell
-     * @param cellWidth The width of the cell
-     * @param cellHeight The height of the cell
-     * @param color The stroke color for the hatch lines
-     * @param pattern The hatch pattern type
-     * @param spacing The spacing between hatch lines
-     * @param strokeWidth The width of the hatch lines
-     * @returns SVG content for the hatch pattern
-     */
-    private generateHatchPattern(
-        pathId: string,
-        cellX: number,
-        cellY: number,
-        cellWidth: number,
-        cellHeight: number,
-        color: string,
-        pattern: 'diagonal' | 'cross' | 'horizontal' | 'vertical',
-        spacing: number,
-        strokeWidth: number
-    ): string {
-        // Create a clip path to constrain the hatching within the character path
-        let hatchContent = `\n    <clipPath id="clip-${pathId}">
-      <use href="#${pathId}" />
-    </clipPath>`;
-
-        // Create a group for all hatch lines, clipped to the character shape
-        hatchContent += `\n    <g clip-path="url(#clip-${pathId})" stroke="${color}" stroke-width="${strokeWidth}" fill="none">`;
-
-        // Calculate a larger buffer to ensure complete coverage of character shapes
-        // Characters can have complex shapes that extend beyond regular bounds
-        const buffer = Math.max(cellWidth, cellHeight) * 1.5;
-
-        // Extend bounding box to ensure full coverage
-        const x1 = cellX - buffer;
-        const y1 = cellY - buffer;
-        const x2 = cellX + cellWidth + buffer;
-        const y2 = cellY + cellHeight + buffer;
-
-        // Use a tighter spacing for more consistent coverage
-        const effectiveSpacing = Math.max(1.0, spacing * 0.8);
-
-        // Add appropriate hatching based on the selected pattern
-        if (pattern === 'horizontal' || pattern === 'cross') {
-            // Add horizontal lines with increased density
-            for (let y = y1; y <= y2; y += effectiveSpacing) {
-                hatchContent += `\n      <line x1="${x1}" y1="${y}" x2="${x2}" y2="${y}" />`;
-            }
-        }
-
-        if (pattern === 'vertical' || pattern === 'cross') {
-            // Add vertical lines
-            for (let x = x1; x <= x2; x += effectiveSpacing) {
-                hatchContent += `\n      <line x1="${x}" y1="${y1}" x2="${x}" y2="${y2}" />`;
-            }
-        }
-
-        if (pattern === 'diagonal' || pattern === 'cross') {
-            // Use a more comprehensive approach for diagonal lines
-            // Calculate diagonal properties based on both width and height
-            const width = x2 - x1;
-            const height = y2 - y1;
-            const diagonalLength = Math.sqrt(width * width + height * height) * 2;
-
-            // Calculate range to ensure full coverage
-            const range = diagonalLength;
-
-            // Forward diagonal (/)
-            for (let offset = -range; offset <= range; offset += effectiveSpacing) {
-                hatchContent += `\n      <line 
-                x1="${x1 + (offset < 0 ? -offset : 0)}" 
-                y1="${y1 + (offset > 0 ? offset : 0)}" 
-                x2="${Math.min(x1 + diagonalLength, x2)}" 
-                y2="${Math.min(y1 + diagonalLength, y2)}" />`;
-            }
-
-            // Backward diagonal (\) if cross pattern
-            if (pattern === 'cross') {
-                for (let offset = -range; offset <= range; offset += effectiveSpacing) {
-                    hatchContent += `\n      <line 
-                    x1="${x1 + (offset < 0 ? -offset : 0)}" 
-                    y1="${y2 - (offset > 0 ? offset : 0)}" 
-                    x2="${Math.min(x1 + diagonalLength, x2)}" 
-                    y2="${Math.max(y2 - diagonalLength, y1)}" />`;
-                }
-            }
-        }
-
-        // Close the hatch group
-        hatchContent += `\n    </g>`;
-
-        return hatchContent;
     }
 
     /**

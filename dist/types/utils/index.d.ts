@@ -1,2 +1,2 @@
-export { Quaternion } from './Quaternion';
 export { compareVersions } from './utils';
+export * from './SVGExporter';

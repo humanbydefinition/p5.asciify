@@ -2,6 +2,7 @@ import p5 from 'p5';
 import { P5AsciifyGrid } from './Grid';
 import { P5AsciifyFontManager } from './FontManager';
 import { P5AsciifyRendererManager } from './renderers/RendererManager';
+import { SVGExportOptions } from './utils/SVGExporter';
 /**
  * Manages a rendering pipeline for ASCII conversion, including font management, grid calculations, and ASCII renderers,
  * which is applied to the main p5.js canvas or a selected texture.
@@ -160,20 +161,28 @@ export declare class P5Asciifier {
     gridResponsive(bool?: boolean): void;
     /**
      * Saves the current ASCII output as an SVG file.
-     * @param filename The filename to save the SVG file as. If not provided, a default filename is used.
+     * @param options The options for saving the SVG file.
      * @throws {@link P5AsciifyError} - If no renderer is available to fetch ASCII output from.
      *
      * @example
      * ```javascript
      * function drawAsciify() {
-     *     // Save the ASCII output as an SVG file.
+     *     // Save the ASCII output as an SVG file with default options
      *     if (frameCount === 60) {
      *         p5asciify.asciifier().saveSVG("asciify_output");
+     *     }
+     *
+     *     // Save without cell background rectangles
+     *     if (frameCount === 120) {
+     *         p5asciify.asciifier().saveSVG({
+     *             filename: "asciify_clean",
+     *             includeBackgrounds: false
+     *         });
      *     }
      * }
      * ```
      */
-    saveSVG(filename?: string): void;
+    saveSVG(options?: SVGExportOptions): void;
     /**
      * Generates the ASCII output as an array of string rows.
      * @returns Array of strings representing ASCII output.

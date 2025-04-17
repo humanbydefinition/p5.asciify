@@ -12,6 +12,8 @@ export declare class P5AsciifierManager {
     private _baseFont;
     /** Defines whether the hooks are enabled or not. */
     private _hooksEnabled;
+    /** Contains the content that has been drawn to the `p5.js` canvas throughout the `draw()` loop. */
+    private _sketchFramebuffer;
     /**
      * Creates a new `P5AsciifierManager` instance.
      * @ignore
@@ -83,4 +85,9 @@ export declare class P5AsciifierManager {
      * @ignore
      */
     get hooksEnabled(): boolean;
+    /**
+     * Returns the sketch framebuffer used to store the content drawn to the `p5.js` canvas.
+     * @ignore
+     */
+    get sketchFramebuffer(): p5.Framebuffer;
 }

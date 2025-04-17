@@ -154,7 +154,6 @@ export * as renderers from './renderers';
 
 /** 
  * Contains utility functions and classes used by the `p5.asciify` library. 
- * @ignore
  */
 export * as utils from './utils';
 

@@ -9,6 +9,7 @@
 | Namespace | Description |
 | ------ | ------ |
 | [renderers](namespaces/renderers/README.md) | Contains functionality relevant to the ASCII rendering. |
+| [utils](namespaces/utils/README.md) | Contains utility functions and classes used by the `p5.asciify` library. |
 
 ## Classes
 

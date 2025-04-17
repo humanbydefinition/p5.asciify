@@ -102,7 +102,7 @@ export declare class P5AsciifyFontManager {
      *  }
      * ```
      */
-    glyphColors(characters?: string): Array<[number, number, number]>;
+    glyphColors(characters?: string | string[]): Array<[number, number, number]>;
     /**
          * Calculates the maximum width and height of all the glyphs in the font.
          * @param fontSize - The font size to use for calculations.
