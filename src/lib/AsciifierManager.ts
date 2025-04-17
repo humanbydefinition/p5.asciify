@@ -29,7 +29,7 @@ export class P5AsciifierManager {
      * @ignore
      */
     constructor() {
-        this._asciifiers = [new P5Asciifier(this._sketchFramebuffer)];
+        this._asciifiers = [new P5Asciifier()];
     }
 
     /**
