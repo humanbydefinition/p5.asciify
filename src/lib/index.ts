@@ -88,14 +88,6 @@ export const postDrawHook = (p: p5) => {
 
   p5asciify.sketchFramebuffer.end();
 
-  for (const asciifier of p5asciify.asciifiers) {
-    if (asciifier.canvasFlag) {
-      asciifier.captureFramebuffer.begin();
-      p.clear();
-      p.image(p5asciify.sketchFramebuffer, -p.width / 2, -p.height / 2, p.width, p.height);
-      asciifier.captureFramebuffer.end();
-    }
-  }
 
   p5asciify.asciify();
 

@@ -29,7 +29,7 @@ export class P5AsciifierManager {
      * @ignore
      */
     constructor() {
-        this._asciifiers = [new P5Asciifier()];
+        this._asciifiers = [new P5Asciifier(this._sketchFramebuffer)];
     }
 
     /**
@@ -63,7 +63,7 @@ export class P5AsciifierManager {
         });
 
         this._asciifiers.forEach((asciifier) => {
-            asciifier.setup();
+            asciifier.setup(this._sketchFramebuffer);
         });
     }
 
@@ -110,11 +110,11 @@ export class P5AsciifierManager {
             throw new P5AsciifyError("Framebuffer must be an instance of p5.Framebuffer.");
         }
 
-        const asciifier = new P5Asciifier(framebuffer);
+        const asciifier = new P5Asciifier();
         asciifier.init(this._p, this._baseFont);
 
         if (this._p._setupDone) {
-            asciifier.setup();
+            asciifier.setup(framebuffer ? framebuffer : this._sketchFramebuffer);
         }
 
         this._asciifiers.push(asciifier);
