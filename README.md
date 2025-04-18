@@ -6,24 +6,12 @@
 
 `p5.asciify` is a powerful add-on library for [`p5.js`](https://p5js.org/) that transforms your canvas and offcanvas textures into dynamic ASCII/textmode representations on a grid in real time, allowing you to create intricate 2D ASCII/textmode art and much more with ease.
 
-<div style="display: flex; justify-content: space-between; align-items: center;">
-  <div>
-  <a href="https://p5js.org/"><img src="https://img.shields.io/badge/p5.js-ED225D?logo=p5.js&logoColor=white" alt="p5.js" /></a>
-    <a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white" alt="TypeScript" /></a>
-    <a href="https://www.khronos.org/webgl/"><img src="https://img.shields.io/badge/WebGL1-990000?logo=webgl&logoColor=white" alt="WebGL" /></a>
-    
-  </div>
-  <div>
-    <!-- Project Info -->
-    <a href="https://github.com/humanbydefinition/p5-asciify/tree/main/docs"><img src="https://img.shields.io/badge/docs-typedoc-blue" alt="documentation" /></a>
-    <a href="https://discord.gg/sjrw8QXNks"><img src="https://img.shields.io/discord/1357070706181017691?color=5865F2&label=Discord&logo=discord&logoColor=white" alt="discord" /></a>
-  </div>
-  <div>
-    <a href="https://www.npmjs.com/package/p5.asciify"><img src="https://img.shields.io/npm/v/p5.asciify.svg" alt="npm version" /></a>
-    <a href="https://www.npmjs.com/package/p5.asciify"><img src="https://img.shields.io/npm/dm/p5.asciify.svg" alt="npm downloads" /></a>
-    <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT" /></a>
-  </div>
-</div>
+[![p5.js](https://img.shields.io/badge/p5.js-ED225D?logo=p5.js&logoColor=white)](https://p5js.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![WebGL](https://img.shields.io/badge/WebGL1-990000?logo=webgl&logoColor=white)](https://www.khronos.org/webgl/)
+
+[![docs](https://img.shields.io/badge/docs-typedoc-blue)](https://github.com/humanbydefinition/p5-asciify/tree/main/docs)
+[![Discord](https://img.shields.io/discord/1357070706181017691?color=5865F2&label=Discord&logo=discord&logoColor=white)](https://discord.gg/sjrw8QXNks)
 
 ## Table of Contents
 
