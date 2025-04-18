@@ -9,6 +9,8 @@
 [![p5.js](https://img.shields.io/badge/p5.js-ED225D?logo=p5.js&logoColor=white)](https://p5js.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![WebGL](https://img.shields.io/badge/WebGL1-990000?logo=webgl&logoColor=white)](https://www.khronos.org/webgl/)
+[![Vite](https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
+
 
 [![docs](https://img.shields.io/badge/docs-typedoc-blue)](https://github.com/humanbydefinition/p5-asciify/tree/main/docs)
 [![Discord](https://img.shields.io/discord/1357070706181017691?color=5865F2&label=Discord&logo=discord&logoColor=white)](https://discord.gg/sjrw8QXNks)
@@ -64,7 +66,7 @@ With `p5.asciify`, you can effortlessly create stunning ASCII art, textmode game
 
 ### Prerequisites
 
-- `p5.asciify` requires [`p5.js`](https://p5js.org/) version `1.8.0` or higher to work. 
+- `p5.asciify` requires [`p5.js`](https://p5js.org/) version `1.8.0` or higher to work. *(`v2.0.0` and upcoming versions are not supported yet!)*
 - `p5.asciify` only runs in [`WEBGL`](https://p5js.org/reference/#/p5/createCanvas) mode, so make sure to set up your canvas accordingly:
 
 ```javascript

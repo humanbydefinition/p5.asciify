@@ -14,7 +14,7 @@
     }
   },
   "dependencies": {
-    "p5": ">=1.8.0"
+    "p5": "1.8.0"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^3.2.3",
@@ -27,7 +27,7 @@
     "@types/p5": "^1.7.6",
     "storybook": "^8.4.7",
     "tslib": "^2.8.1",
-    "typedoc": "^0.27.6",
+    "typedoc": "^0.28.2",
     "typedoc-plugin-markdown": "^4.4.1",
     "typescript": "^5.7.3",
     "vite": "^6.0.7",
