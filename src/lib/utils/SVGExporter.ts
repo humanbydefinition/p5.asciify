@@ -65,6 +65,7 @@ export class P5AsciifySVGExporter {
         rendererManager: P5AsciifyRendererManager,
         grid: P5AsciifyGrid,
         fontManager: P5AsciifyFontManager,
+        backgroundColor: p5.Color,
         options: SVGExportOptions
     ): void {
         // Set defaults for options
@@ -122,7 +123,7 @@ export class P5AsciifySVGExporter {
 
         // Add background rect if needed
         if (exportOptions.includeBackgroundRectangles) {
-            const bgColor = rendererManager.asciiDisplayRenderer.backgroundColor;
+            const bgColor = backgroundColor;
             const bgColorObj = this.p.color(bgColor as p5.Color);
             const bgColorStr = `rgba(${bgColorObj._array[0] * 255},${bgColorObj._array[1] * 255},${bgColorObj._array[2] * 255},${bgColorObj._array[3]})`;
             svgContent += `\n<rect width="${gridWidth}" height="${gridHeight}" fill="${bgColorStr}" />`;
