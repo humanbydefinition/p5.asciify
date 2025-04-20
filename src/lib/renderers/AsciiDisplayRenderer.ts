@@ -75,8 +75,7 @@ export class P5AsciifyDisplayRenderer {
         rotationFramebuffer: p5.Framebuffer
     ) {
         this._resultFramebuffer.begin();
-
-        this._p.background(this._backgroundColor as p5.Color);
+        this._p.clear();
         this._p.shader(this._shader);
 
         const uniforms = {
