@@ -280,6 +280,7 @@ export class P5Asciifier {
             this._rendererManager,
             this._grid,
             this._fontManager,
+            this._backgroundColor as p5.Color,
             options
         );
     }

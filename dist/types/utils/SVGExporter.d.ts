@@ -52,7 +52,7 @@ export declare class P5AsciifySVGExporter {
      * @param options Options for SVG export or just the filename as a string for backward compatibility
      * @throws {@link P5AsciifyError} - If no renderer is available to fetch ASCII output from.
      */
-    saveSVG(rendererManager: P5AsciifyRendererManager, grid: P5AsciifyGrid, fontManager: P5AsciifyFontManager, options: SVGExportOptions): void;
+    saveSVG(rendererManager: P5AsciifyRendererManager, grid: P5AsciifyGrid, fontManager: P5AsciifyFontManager, backgroundColor: p5.Color, options: SVGExportOptions): void;
     /**
      * Generates the SVG header content
      * @param width The width of the SVG

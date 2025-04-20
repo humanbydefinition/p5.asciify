@@ -19,9 +19,6 @@ export class P5AsciifyDisplayRenderer {
     /** Final shader to render the ASCII output. */
     private _shader: p5.Shader;
 
-    /** The background color for the ASCII output. */
-    private _backgroundColor: string | p5.Color | [number, number?, number?, number?] = "#000000";
-
     /**
      * Creates a new `P5AsciifyDisplayRenderer` instance.
      * @param _p The p5 instance.
@@ -43,20 +40,6 @@ export class P5AsciifyDisplayRenderer {
             textureFiltering: this._p.NEAREST
         });
     };
-
-    /**
-     * Sets the background color for the ASCII output.
-     * @param color The color to set as the background. Can be a string, p5.Color, or an array of RGBA values.
-     * @throws {@link P5AsciifyError} - If the color is not a string, array or p5.Color.
-     * @ignore
-     */
-    public background(color: string | p5.Color | [number, number?, number?, number?]) {
-        if (typeof color !== "string" && !Array.isArray(color) && !(color instanceof p5.Color)) {
-            throw new P5AsciifyError(`Invalid color type: ${typeof color}. Expected string, array or p5.Color.`);
-        }
-
-        this._backgroundColor = color;
-    }
 
     /**
      * Renders the ASCII output to the result framebuffer.
@@ -112,10 +95,4 @@ export class P5AsciifyDisplayRenderer {
      * @ignore
      */
     get resultFramebuffer() { return this._resultFramebuffer; }
-
-    /**
-     * Returns the background color for the ASCII output.
-     * @ignore
-     */
-    get backgroundColor() { return this._backgroundColor; }
 };

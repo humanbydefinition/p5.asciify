@@ -15,8 +15,6 @@ export declare class P5AsciifyDisplayRenderer {
     private _resultFramebuffer;
     /** Final shader to render the ASCII output. */
     private _shader;
-    /** The background color for the ASCII output. */
-    private _backgroundColor;
     /**
      * Creates a new `P5AsciifyDisplayRenderer` instance.
      * @param _p The p5 instance.
@@ -25,13 +23,6 @@ export declare class P5AsciifyDisplayRenderer {
      * @ignore
      */
     constructor(_p: p5, _grid: P5AsciifyGrid, _fontManager: P5AsciifyFontManager);
-    /**
-     * Sets the background color for the ASCII output.
-     * @param color The color to set as the background. Can be a string, p5.Color, or an array of RGBA values.
-     * @throws {@link P5AsciifyError} - If the color is not a string, array or p5.Color.
-     * @ignore
-     */
-    background(color: string | p5.Color | [number, number?, number?, number?]): void;
     /**
      * Renders the ASCII output to the result framebuffer.
      * @param characterFramebuffer The framebuffer containing the character indices.
@@ -43,13 +34,13 @@ export declare class P5AsciifyDisplayRenderer {
      */
     render(characterFramebuffer: p5.Framebuffer, primaryColorFramebuffer: p5.Framebuffer, secondaryColorFramebuffer: p5.Framebuffer, inversionFramebuffer: p5.Framebuffer, rotationFramebuffer: p5.Framebuffer): void;
     /**
+     * Resizes the framebuffer to match the grid width/height.
+     * @ignore
+     */
+    resizeFramebuffers(): void;
+    /**
      * Returns the framebuffer containing the final ASCII output.
      * @ignore
      */
     get resultFramebuffer(): p5.Framebuffer;
-    /**
-     * Returns the background color for the ASCII output.
-     * @ignore
-     */
-    get backgroundColor(): string | p5.Color | [number, (number | undefined)?, (number | undefined)?, (number | undefined)?];
 }

@@ -20,6 +20,7 @@ export declare class P5Asciifier {
     private _rendererManager;
     /** The font size for the ASCII renderers. */
     private _fontSize;
+    private _backgroundColor;
     /** The `p5.js` instance. */
     private _p;
     /**
