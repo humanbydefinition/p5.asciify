@@ -30,6 +30,8 @@ export class P5Asciifier {
     /** The font size for the ASCII renderers. */
     private _fontSize: number = 16;
 
+    private _backgroundColor: string | p5.Color | [number, number?, number?, number?] = "#000000";
+
     /** The `p5.js` instance. */
     private _p!: p5;
 
@@ -82,12 +84,9 @@ export class P5Asciifier {
     public asciify(): void {
         this._rendererManager.render(this._captureFramebuffer);
 
-        if (!this._rendererManager.hasEnabledRenderers) {
-            this._p.clear();
-            this._p.image(this._captureFramebuffer, -this._p.width / 2, -this._p.height / 2, this._p.width, this._p.height);
-        } else {
-            this._p.clear();
-            this._p.image(this._rendererManager.asciiDisplayRenderer.resultFramebuffer, -this._p.width / 2, -this._p.height / 2);
+        if (this._rendererManager.hasEnabledRenderers) {
+            this._p.background(this._backgroundColor as p5.Color);
+            this._p.image(this._rendererManager.asciiDisplayRenderer.resultFramebuffer, -(this._p.width / 2) + this._grid.offsetX, -(this._p.height / 2) + this._grid.offsetY);
         }
     }
 
@@ -205,7 +204,11 @@ export class P5Asciifier {
      * ```
      */
     public background(color: string | p5.Color | [number, number?, number?, number?]) {
-        this._rendererManager.asciiDisplayRenderer.background(color);
+        if (typeof color !== "string" && !Array.isArray(color) && !(color instanceof p5.Color)) {
+            throw new P5AsciifyError(`Invalid color type: ${typeof color}. Expected string, array or p5.Color.`);
+        }
+
+        this._backgroundColor = color;
     }
 
     /**

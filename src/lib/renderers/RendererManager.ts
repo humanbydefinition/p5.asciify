@@ -217,6 +217,8 @@ export class P5AsciifyRendererManager {
                 renderer.renderer.resetShaders();
             }
         });
+
+        this._asciiDisplayRenderer2D.resizeFramebuffers();
     }
 
     /**

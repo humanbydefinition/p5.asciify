@@ -37,6 +37,8 @@ export class P5AsciifyDisplayRenderer {
         this._shader = this._p.createShader(vertexShader, asciiConversionShader);
 
         this._resultFramebuffer = this._p.createFramebuffer({
+            width: this._grid.width,
+            height: this._grid.height,
             depthFormat: this._p.UNSIGNED_INT,
             textureFiltering: this._p.NEAREST
         });
@@ -87,7 +89,6 @@ export class P5AsciifyDisplayRenderer {
             u_rotationTexture: rotationFramebuffer,
             u_asciiCharacterTexture: characterFramebuffer,
             u_gridPixelDimensions: [this._grid.width, this._grid.height],
-            u_gridOffsetDimensions: [this._grid.offsetX, this._grid.offsetY],
             u_gridCellDimensions: [this._grid.cols, this._grid.rows],
         };
 
@@ -97,6 +98,14 @@ export class P5AsciifyDisplayRenderer {
 
         this._p.rect(0, 0, this._p.width, this._p.height);
         this._resultFramebuffer.end();
+    }
+
+    /**
+     * Resizes the framebuffer to match the grid width/height.
+     * @ignore
+     */
+    public resizeFramebuffers() {
+        this._resultFramebuffer.resize(this._grid.width, this._grid.height);
     }
 
     /**

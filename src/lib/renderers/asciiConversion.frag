@@ -12,7 +12,6 @@ uniform sampler2D u_rotationTexture;
 
 uniform vec2 u_gridCellDimensions;
 uniform vec2 u_gridPixelDimensions;
-uniform vec2 u_gridOffsetDimensions;
 
 uniform float u_pixelRatio; // Added uniform for pixel ratio
 
@@ -28,13 +27,7 @@ void main() {
     vec2 logicalFragCoord = gl_FragCoord.xy / u_pixelRatio;
 
     // Adjusted coordinate in logical pixel space
-    vec2 adjustedCoord = (logicalFragCoord - u_gridOffsetDimensions) / u_gridPixelDimensions;
-
-    // Check if the adjusted coordinate is outside the valid range
-    if(adjustedCoord.x < 0.0 || adjustedCoord.x > 1.0 || adjustedCoord.y < 0.0 || adjustedCoord.y > 1.0) {
-        gl_FragColor = vec4(0);
-        return;
-    }
+    vec2 adjustedCoord = (logicalFragCoord) / u_gridPixelDimensions;
 
     // Calculate the grid coordinate
     vec2 gridCoord = adjustedCoord * u_gridCellDimensions;
