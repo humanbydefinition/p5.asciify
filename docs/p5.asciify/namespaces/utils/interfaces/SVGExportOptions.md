@@ -1,4 +1,4 @@
-[**p5.asciify v0.8.3-beta.2**](../../../../README.md)
+[**p5.asciify v0.9.0-beta.1**](../../../../README.md)
 
 ***
 
@@ -6,7 +6,7 @@
 
 # Interface: SVGExportOptions
 
-Defined in: [utils/SVGExporter.ts:9](https://github.com/humanbydefinition/p5.asciify/blob/6d72ea658c8d5e1472926d21bdf01b6d105bb13a/src/lib/utils/SVGExporter.ts#L9)
+Defined in: [utils/SVGExporter.ts:9](https://github.com/humanbydefinition/p5.asciify/blob/6cf9defd71e37d5cba02efeed213cd866c2e9b33/src/lib/utils/SVGExporter.ts#L9)
 
 Options for SVG export.
 
@@ -14,7 +14,7 @@ Options for SVG export.
 
 | Property | Type | Description | Defined in |
 | ------ | ------ | ------ | ------ |
-| <a id="drawmode"></a> `drawMode?` | `"fill"` \| `"stroke"` \| `"text"` | The drawing mode for ASCII characters (`'fill'`, `'stroke'`, or `'text'`). When set to `'fill'`, characters are rendered as filled shapes. When set to `'stroke'`, characters are rendered as outlines. When set to `'text'`, characters are rendered as text elements using `'monospaced'` font. Default is `'fill'`. | [utils/SVGExporter.ts:29](https://github.com/humanbydefinition/p5.asciify/blob/6d72ea658c8d5e1472926d21bdf01b6d105bb13a/src/lib/utils/SVGExporter.ts#L29) |
-| <a id="filename"></a> `filename?` | `string` | The filename to save the SVG file as. If not provided, a default filename is used. | [utils/SVGExporter.ts:13](https://github.com/humanbydefinition/p5.asciify/blob/6d72ea658c8d5e1472926d21bdf01b6d105bb13a/src/lib/utils/SVGExporter.ts#L13) |
-| <a id="includebackgroundrectangles"></a> `includeBackgroundRectangles?` | `boolean` | Whether to include cell background rectangles in the SVG output. When false, only the character paths are included, creating a more compact SVG. Default is `true`. | [utils/SVGExporter.ts:20](https://github.com/humanbydefinition/p5.asciify/blob/6d72ea658c8d5e1472926d21bdf01b6d105bb13a/src/lib/utils/SVGExporter.ts#L20) |
-| <a id="strokewidth"></a> `strokeWidth?` | `number` | The stroke width to use when drawMode is set to `'stroke'`. Default is `1.0`. | [utils/SVGExporter.ts:35](https://github.com/humanbydefinition/p5.asciify/blob/6d72ea658c8d5e1472926d21bdf01b6d105bb13a/src/lib/utils/SVGExporter.ts#L35) |
+| <a id="drawmode"></a> `drawMode?` | `"fill"` \| `"stroke"` \| `"text"` | The drawing mode for ASCII characters (`'fill'`, `'stroke'`, or `'text'`). When set to `'fill'`, characters are rendered as filled shapes. When set to `'stroke'`, characters are rendered as outlines. When set to `'text'`, characters are rendered as text elements using `'monospaced'` font. Default is `'fill'`. | [utils/SVGExporter.ts:29](https://github.com/humanbydefinition/p5.asciify/blob/6cf9defd71e37d5cba02efeed213cd866c2e9b33/src/lib/utils/SVGExporter.ts#L29) |
+| <a id="filename"></a> `filename?` | `string` | The filename to save the SVG file as. If not provided, a default filename is used. | [utils/SVGExporter.ts:13](https://github.com/humanbydefinition/p5.asciify/blob/6cf9defd71e37d5cba02efeed213cd866c2e9b33/src/lib/utils/SVGExporter.ts#L13) |
+| <a id="includebackgroundrectangles"></a> `includeBackgroundRectangles?` | `boolean` | Whether to include cell background rectangles in the SVG output. When false, only the character paths are included, creating a more compact SVG. Default is `true`. | [utils/SVGExporter.ts:20](https://github.com/humanbydefinition/p5.asciify/blob/6cf9defd71e37d5cba02efeed213cd866c2e9b33/src/lib/utils/SVGExporter.ts#L20) |
+| <a id="strokewidth"></a> `strokeWidth?` | `number` | The stroke width to use when drawMode is set to `'stroke'`. Default is `1.0`. | [utils/SVGExporter.ts:35](https://github.com/humanbydefinition/p5.asciify/blob/6cf9defd71e37d5cba02efeed213cd866c2e9b33/src/lib/utils/SVGExporter.ts#L35) |
