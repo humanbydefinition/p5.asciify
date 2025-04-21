@@ -33,7 +33,7 @@ export const BRIGHTNESS_DEFAULT_OPTIONS = {
     /** Rotation angle of all characters in the grid in degrees */
     rotationAngle: 0,
     /** Flip the ASCII characters horizontally */
-    flipHorizontally: true,
+    flipHorizontally: false,
     /** Flip the ASCII characters vertically */
     flipVertically: false,
 };
