@@ -6,6 +6,7 @@ import { P5AsciifyRendererManager } from './renderers/RendererManager';
 import { P5AsciifyError } from './AsciifyError';
 import { AbstractFeatureRenderer2D } from './renderers/2d/feature/AbstractFeatureRenderer2D';
 import { P5AsciifySVGExporter, SVGExportOptions } from './utils/SVGExporter';
+import { JSONExportOptions, P5AsciifyJSONExporter } from './utils/JSONExporter';
 
 /**
  * Manages a rendering pipeline for ASCII conversion, including font management, grid calculations, and ASCII renderers, 
@@ -87,6 +88,9 @@ export class P5Asciifier {
         if (this._rendererManager.hasEnabledRenderers) {
             this._p.background(this._backgroundColor as p5.Color);
             this._p.image(this._rendererManager.asciiDisplayRenderer.resultFramebuffer, -(this._p.width / 2) + this._grid.offsetX, -(this._p.height / 2) + this._grid.offsetY);
+        } else {
+            this._p.clear();
+            this._p.image(this._captureFramebuffer, -(this._captureFramebuffer.width / 2), -(this._captureFramebuffer.height / 2));
         }
     }
 
@@ -281,6 +285,16 @@ export class P5Asciifier {
             this._grid,
             this._fontManager,
             this._backgroundColor as p5.Color,
+            options
+        );
+    }
+
+    public saveJSON(options: JSONExportOptions = {}): void {
+        const svgExporter = new P5AsciifyJSONExporter(this._p);
+        svgExporter.saveJSON(
+            this._rendererManager,
+            this._grid,
+            this._fontManager,
             options
         );
     }
