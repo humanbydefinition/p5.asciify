@@ -551,6 +551,8 @@ export class P5AsciifyRendererManager {
      */
     get rotationFramebuffer(): p5.Framebuffer { return this._rotationFramebuffer; }
 
+    get flipFramebuffer(): p5.Framebuffer { return this._flipFramebuffer; }
+
     /**
      * Returns a boolean indicating whether any renderers are enabled in the pipeline.
      */
