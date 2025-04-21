@@ -68,6 +68,12 @@ export interface ASCIICell {
      * Whether the foreground and background colors are inverted.
      */
     inverted: boolean;
+
+    /** Whether the cell is flipped horizontally. */
+    flipHorizontal: boolean;
+
+    /** Whether the cell is flipped vertically. */
+    flipVertical: boolean;
 }
 
 /**
@@ -122,6 +128,7 @@ export class P5AsciifyJSONExporter {
         const secondaryColorFramebuffer = rendererManager.secondaryColorFramebuffer;
         const inversionFramebuffer = rendererManager.inversionFramebuffer;
         const rotationFramebuffer = rendererManager.rotationFramebuffer;
+        const flipFramebuffer = rendererManager.flipFramebuffer;
 
         // Load pixels from all framebuffers
         characterFramebuffer.loadPixels();
@@ -129,12 +136,14 @@ export class P5AsciifyJSONExporter {
         secondaryColorFramebuffer.loadPixels();
         inversionFramebuffer.loadPixels();
         rotationFramebuffer.loadPixels();
+        flipFramebuffer.loadPixels();
 
         const characterPixels = characterFramebuffer.pixels;
         const primaryColorPixels = primaryColorFramebuffer.pixels;
         const secondaryColorPixels = secondaryColorFramebuffer.pixels;
         const inversionPixels = inversionFramebuffer.pixels;
         const rotationPixels = rotationFramebuffer.pixels;
+        const flipPixels = flipFramebuffer.pixels;
 
         // Get grid dimensions
         const cols = grid.cols;
@@ -177,7 +186,7 @@ export class P5AsciifyJSONExporter {
                 }
 
                 const char = chars[charIndex];
-                
+
                 // Skip empty cells if includeEmptyCells is false
                 if (!exportOptions.includeEmptyCells && (char === ' ' || char === '')) {
                     idx++;
@@ -203,7 +212,7 @@ export class P5AsciifyJSONExporter {
                 // White pixel (255) in inversionFramebuffer means colors should be swapped
                 const inversionValue = inversionPixels[pixelIdx];
                 const isInverted = inversionValue === 255;
-                
+
                 if (isInverted) {
                     // Swap primary and secondary colors
                     const tempColor = primaryColor;
@@ -217,18 +226,23 @@ export class P5AsciifyJSONExporter {
                 const rotationGreen = rotationPixels[pixelIdx + 1];
                 const rotationAngle = rotationRed + rotationGreen;
 
+                const flipR = flipPixels[pixelIdx];
+                const flipG = flipPixels[pixelIdx + 1];
+                const flipH = flipR === 255;
+                const flipV = flipG === 255;
+
                 // Convert colors to hex format
                 const primaryColorHex = this.rgbaToHex(
-                    primaryColor.r, 
-                    primaryColor.g, 
-                    primaryColor.b, 
+                    primaryColor.r,
+                    primaryColor.g,
+                    primaryColor.b,
                     primaryColor.a
                 );
-                
+
                 const secondaryColorHex = this.rgbaToHex(
-                    secondaryColor.r, 
-                    secondaryColor.g, 
-                    secondaryColor.b, 
+                    secondaryColor.r,
+                    secondaryColor.g,
+                    secondaryColor.b,
                     secondaryColor.a
                 );
 
@@ -241,7 +255,9 @@ export class P5AsciifyJSONExporter {
                     color: primaryColorHex,
                     backgroundColor: secondaryColorHex,
                     rotation: rotationAngle,
-                    inverted: isInverted
+                    inverted: isInverted,
+                    flipHorizontal: flipH,
+                    flipVertical: flipV
                 };
 
                 // Add the cell to the array
@@ -258,8 +274,8 @@ export class P5AsciifyJSONExporter {
 
         // Convert to JSON string
         const jsonString = JSON.stringify(
-            jsonOutput, 
-            null, 
+            jsonOutput,
+            null,
             exportOptions.prettyPrint ? 2 : 0
         );
 
