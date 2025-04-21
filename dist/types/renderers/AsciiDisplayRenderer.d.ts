@@ -32,7 +32,7 @@ export declare class P5AsciifyDisplayRenderer {
      * @param rotationFramebuffer The framebuffer containing the rotation values.
      * @ignore
      */
-    render(characterFramebuffer: p5.Framebuffer, primaryColorFramebuffer: p5.Framebuffer, secondaryColorFramebuffer: p5.Framebuffer, inversionFramebuffer: p5.Framebuffer, rotationFramebuffer: p5.Framebuffer): void;
+    render(characterFramebuffer: p5.Framebuffer, primaryColorFramebuffer: p5.Framebuffer, secondaryColorFramebuffer: p5.Framebuffer, inversionFramebuffer: p5.Framebuffer, rotationFramebuffer: p5.Framebuffer, flipFramebuffer: p5.Framebuffer): void;
     /**
      * Resizes the framebuffer to match the grid width/height.
      * @ignore

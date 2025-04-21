@@ -29,6 +29,10 @@ export declare const EDGE_DEFAULT_OPTIONS: {
     sampleThreshold: number;
     /** Rotation angle of all characters in the grid in degrees */
     rotationAngle: number;
+    /** Flip the ASCII characters horizontally */
+    flipHorizontally: boolean;
+    /** Flip the ASCII characters vertically */
+    flipVertically: boolean;
 };
 /**
  * An ASCII renderer that applies ASCII edges to the input sketch by using edge detection.
@@ -39,6 +43,7 @@ export declare class P5AsciifyEdgeRenderer extends AbstractFeatureRenderer2D<Edg
     private colorSampleShader;
     private inversionShader;
     private rotationShader;
+    private flipShader;
     private asciiCharacterShader;
     private sobelFramebuffer;
     private sampleFramebuffer;

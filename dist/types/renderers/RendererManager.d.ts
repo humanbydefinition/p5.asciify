@@ -29,6 +29,8 @@ export declare class P5AsciifyRendererManager {
     private _inversionFramebuffer;
     /** The rotation framebuffer, whose pixels define the rotation angle of the characters in the grid. */
     private _rotationFramebuffer;
+    /** The flip framebuffer, whose pixels define the flipping of the characters in the grid. */
+    private _flipFramebuffer;
     private _asciiDisplayRenderer2D;
     /** Whether any renderers are enabled. */
     private _hasEnabledRenderers;
@@ -289,6 +291,7 @@ export declare class P5AsciifyRendererManager {
      * @ignore
      */
     get rotationFramebuffer(): p5.Framebuffer;
+    get flipFramebuffer(): p5.Framebuffer;
     /**
      * Returns a boolean indicating whether any renderers are enabled in the pipeline.
      */

@@ -1,15 +1,15 @@
-**p5.asciify v0.8.2**
+**p5.asciify v0.8.3-beta.2**
 
 ***
 
-# p5.asciify v0.8.2
+# p5.asciify v0.8.3-beta.2
 
 ## Namespaces
 
 | Namespace | Description |
 | ------ | ------ |
-| [renderers](namespaces/renderers/README.md) | Contains functionality relevant to the ASCII rendering. |
-| [utils](namespaces/utils/README.md) | Contains utility functions and classes used by the `p5.asciify` library. |
+| [renderers](p5.asciify/namespaces/renderers/README.md) | Contains functionality relevant to the ASCII rendering. |
+| [utils](p5.asciify/namespaces/utils/README.md) | Contains utility functions and classes used by the `p5.asciify` library. |
 
 ## Classes
 

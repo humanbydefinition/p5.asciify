@@ -25,6 +25,10 @@ export declare const ACCURATE_DEFAULT_OPTIONS: {
     invertMode: boolean;
     /** Rotation angle of all characters in the grid in degrees */
     rotationAngle: number;
+    /** Flip the ASCII characters horizontally */
+    flipHorizontally: boolean;
+    /** Flip the ASCII characters vertically */
+    flipVertically: boolean;
 };
 /**
  * An ASCII renderer that attempts picking the most fitting ASCII representation to accurately represent the input sketch using the available ASCII characters.

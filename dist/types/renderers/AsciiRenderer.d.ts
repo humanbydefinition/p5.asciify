@@ -24,6 +24,8 @@ export declare abstract class P5AsciifyRenderer<T extends AsciiRendererOptions =
     protected _inversionFramebuffer: p5.Framebuffer;
     /** The rotation framebuffer, whose pixels define the rotation angle of the characters in the grid. */
     protected _rotationFramebuffer: p5.Framebuffer;
+    /** The flip framebuffer, whose pixels define whether to flip the characters in the grid. */
+    protected _flipFramebuffer: p5.Framebuffer;
     /**
      * Constructs a new ASCII renderer instance. Called by derived classes.
      * @param _p The p5 instance.
@@ -361,6 +363,7 @@ export declare abstract class P5AsciifyRenderer<T extends AsciiRendererOptions =
      * ```
      */
     get rotationFramebuffer(): p5.Framebuffer;
+    get flipFramebuffer(): p5.Framebuffer;
     /**
      * Get the character framebuffer, whose pixels define the ASCII characters to use in the grid cells.
      *

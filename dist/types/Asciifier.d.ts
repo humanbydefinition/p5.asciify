@@ -3,6 +3,7 @@ import { P5AsciifyGrid } from './Grid';
 import { P5AsciifyFontManager } from './FontManager';
 import { P5AsciifyRendererManager } from './renderers/RendererManager';
 import { SVGExportOptions } from './utils/SVGExporter';
+import { JSONExportOptions } from './utils/JSONExporter';
 /**
  * Manages a rendering pipeline for ASCII conversion, including font management, grid calculations, and ASCII renderers,
  * which is applied to the main p5.js canvas or a selected texture.
@@ -174,6 +175,7 @@ export declare class P5Asciifier {
      * ```
      */
     saveSVG(options?: SVGExportOptions): void;
+    saveJSON(options?: JSONExportOptions): void;
     /**
      * Generates the ASCII output as an array of string rows.
      * @returns Array of strings representing ASCII output.

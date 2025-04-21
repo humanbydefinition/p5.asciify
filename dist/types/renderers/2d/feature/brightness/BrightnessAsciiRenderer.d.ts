@@ -25,6 +25,10 @@ export declare const BRIGHTNESS_DEFAULT_OPTIONS: {
     invertMode: boolean;
     /** Rotation angle of all characters in the grid in degrees */
     rotationAngle: number;
+    /** Flip the ASCII characters horizontally */
+    flipHorizontally: boolean;
+    /** Flip the ASCII characters vertically */
+    flipVertically: boolean;
 };
 /**
  * ASCII Renderer that uses brightness to determine the ASCII characters to use from the 1D character set.
