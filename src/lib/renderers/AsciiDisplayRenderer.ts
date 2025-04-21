@@ -55,7 +55,8 @@ export class P5AsciifyDisplayRenderer {
         primaryColorFramebuffer: p5.Framebuffer,
         secondaryColorFramebuffer: p5.Framebuffer,
         inversionFramebuffer: p5.Framebuffer,
-        rotationFramebuffer: p5.Framebuffer
+        rotationFramebuffer: p5.Framebuffer,
+        flipFramebuffer: p5.Framebuffer,
     ) {
         this._resultFramebuffer.begin();
         this._p.clear();
@@ -69,6 +70,7 @@ export class P5AsciifyDisplayRenderer {
             u_secondaryColorTexture: secondaryColorFramebuffer,
             u_inversionTexture: inversionFramebuffer,
             u_rotationTexture: rotationFramebuffer,
+            u_flipTexture: flipFramebuffer,
             u_asciiCharacterTexture: characterFramebuffer,
             u_gridPixelDimensions: [this._grid.width, this._grid.height],
             u_gridCellDimensions: [this._grid.cols, this._grid.rows],

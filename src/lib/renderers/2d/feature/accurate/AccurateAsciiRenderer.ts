@@ -27,11 +27,15 @@ export const ACCURATE_DEFAULT_OPTIONS = {
     /** Cell background color. Only used when `characterColorMode` is set to `fixed` */
     backgroundColor: "#000000",
     /** Background color mode */
-    backgroundColorMode: "fixed",
+    backgroundColorMode: "sampled",
     /** Swap the cells ASCII character colors with it's cell background colors */
     invertMode: false,
     /** Rotation angle of all characters in the grid in degrees */
     rotationAngle: 0,
+    /** Flip the ASCII characters horizontally */
+    flipHorizontally: false,
+    /** Flip the ASCII characters vertically */
+    flipVertically: false,
 }
 
 /**
@@ -161,6 +165,10 @@ export class P5AsciifyAccurateRenderer extends AbstractFeatureRenderer2D {
         this._rotationFramebuffer.begin();
         this._p.background(this._options.rotationAngle as p5.Color);
         this._rotationFramebuffer.end();
+
+        this._flipFramebuffer.begin();
+        this._p.background(this._options.flipHorizontally ? 255 : 0, this._options.flipVertically ? 255 : 0, 0);
+        this._flipFramebuffer.end();
 
         // ASCII character pass
         this._characterFramebuffer.begin();

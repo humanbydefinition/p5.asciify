@@ -34,6 +34,12 @@ export interface FeatureAsciiRendererOptions extends AsciiRendererOptions {
 
     /** The rotation angle of all characters affected by a given renderer. */
     rotationAngle?: number | p5.Color;
+
+    /** Flip the ASCII characters horizontally. */
+    flipHorizontally?: boolean;
+
+    /** Flip the ASCII characters vertically. */
+    flipVertically?: boolean;
 }
 
 /**

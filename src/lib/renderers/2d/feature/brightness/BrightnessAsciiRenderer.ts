@@ -32,6 +32,10 @@ export const BRIGHTNESS_DEFAULT_OPTIONS = {
     invertMode: false,
     /** Rotation angle of all characters in the grid in degrees */
     rotationAngle: 0,
+    /** Flip the ASCII characters horizontally */
+    flipHorizontally: true,
+    /** Flip the ASCII characters vertically */
+    flipVertically: false,
 };
 
 /**
@@ -120,5 +124,9 @@ export class P5AsciifyBrightnessRenderer extends AbstractFeatureRenderer2D {
         this.asciiCharacterShader.setUniform('u_charPaletteSize', [this._characterColorPalette.colors.length, 1]);
         this._p.rect(0, 0, this._p.width, this._p.height);
         this._characterFramebuffer.end();
+
+        this._flipFramebuffer.begin();
+        this._p.background(this._options.flipHorizontally ? 255 : 0, this._options.flipVertically ? 255 : 0, 0);
+        this._flipFramebuffer.end();
     }
 }

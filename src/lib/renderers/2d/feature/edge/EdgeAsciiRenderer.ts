@@ -12,6 +12,7 @@ import inversionShader from './shaders/inversion.frag';
 import rotationShader from './shaders/rotation.frag';
 import asciiCharacterShader from './shaders/asciiCharacter.frag';
 import sobelShader from './shaders/sobel.frag';
+import flipShader from './shaders/flip.frag';
 
 import { generateSampleShader } from './shaders/shaderGenerators.min';
 
@@ -41,6 +42,10 @@ export const EDGE_DEFAULT_OPTIONS = {
     sampleThreshold: 16,
     /** Rotation angle of all characters in the grid in degrees */
     rotationAngle: 0,
+    /** Flip the ASCII characters horizontally */
+    flipHorizontally: false,
+    /** Flip the ASCII characters vertically */
+    flipVertically: false,
 };
 
 /**
@@ -52,6 +57,7 @@ export class P5AsciifyEdgeRenderer extends AbstractFeatureRenderer2D<EdgeAsciiRe
     private colorSampleShader: p5.Shader;
     private inversionShader: p5.Shader;
     private rotationShader: p5.Shader;
+    private flipShader: p5.Shader;
     private asciiCharacterShader: p5.Shader;
     private sobelFramebuffer: p5.Framebuffer;
     private sampleFramebuffer: p5.Framebuffer;
@@ -77,6 +83,7 @@ export class P5AsciifyEdgeRenderer extends AbstractFeatureRenderer2D<EdgeAsciiRe
         this.colorSampleShader = this._p.createShader(vertexShader, colorSampleShader);
         this.inversionShader = this._p.createShader(vertexShader, inversionShader);
         this.rotationShader = this._p.createShader(vertexShader, rotationShader);
+        this.flipShader = this._p.createShader(vertexShader, flipShader);
         this.asciiCharacterShader = this._p.createShader(vertexShader, asciiCharacterShader);
 
         this.sobelFramebuffer = this._p.createFramebuffer({
@@ -236,6 +243,17 @@ export class P5AsciifyEdgeRenderer extends AbstractFeatureRenderer2D<EdgeAsciiRe
         this._p.rect(0, 0, this._p.width, this._p.height);
         this._rotationFramebuffer.end();
 
+        this._flipFramebuffer.begin();
+        this._p.clear();
+        this._p.shader(this.flipShader);
+        this.flipShader.setUniform('u_flipH', this._options.flipHorizontally as boolean);
+        this.flipShader.setUniform('u_flipV', this._options.flipVertically as boolean);
+        this.flipShader.setUniform('u_sampleTexture', this.sampleFramebuffer);
+        this.flipShader.setUniform('u_compareColor', [0, 0, 0]);
+        this.flipShader.setUniform('u_gridCellDimensions', [this._grid.cols, this._grid.rows]);
+        this._p.rect(0, 0, this._p.width, this._p.height);
+        this._flipFramebuffer.end();
+
         // ASCII character pass
         this._characterFramebuffer.begin();
         this._p.clear();
@@ -244,5 +262,7 @@ export class P5AsciifyEdgeRenderer extends AbstractFeatureRenderer2D<EdgeAsciiRe
         this.asciiCharacterShader.setUniform('u_gridCellDimensions', [this._grid.cols, this._grid.rows]);
         this._p.rect(0, 0, this._p.width, this._p.height);
         this._characterFramebuffer.end();
+
+        
     }
 }

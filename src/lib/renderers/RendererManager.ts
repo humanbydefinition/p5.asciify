@@ -43,6 +43,9 @@ export class P5AsciifyRendererManager {
     /** The rotation framebuffer, whose pixels define the rotation angle of the characters in the grid. */
     private _rotationFramebuffer: p5.Framebuffer;
 
+    /** The flip framebuffer, whose pixels define the flipping of the characters in the grid. */
+    private _flipFramebuffer: p5.Framebuffer;
+
     private _asciiDisplayRenderer2D: P5AsciifyDisplayRenderer;
 
     /** Whether any renderers are enabled. */
@@ -122,6 +125,15 @@ export class P5AsciifyRendererManager {
             textureFiltering: this._p.NEAREST
         });
 
+        this._flipFramebuffer = this._p.createFramebuffer({
+            density: 1,
+            antialias: false,
+            width: this._grid.cols,
+            height: this._grid.rows,
+            depthFormat: this._p.UNSIGNED_INT,
+            textureFiltering: this._p.NEAREST
+        });
+
         this._asciiDisplayRenderer2D = new P5AsciifyDisplayRenderer(this._p, this._grid, this._fontManager);
     }
 
@@ -143,6 +155,7 @@ export class P5AsciifyRendererManager {
         this._secondaryColorFramebuffer.draw(() => this._p.clear());
         this._inversionFramebuffer.draw(() => this._p.clear());
         this._rotationFramebuffer.draw(() => this._p.clear());
+        this._flipFramebuffer.draw(() => this._p.clear());
 
         this._hasEnabledRenderers = false;
         for (let i = this._renderers.length - 1; i >= 0; i--) {
@@ -161,6 +174,7 @@ export class P5AsciifyRendererManager {
                 this._secondaryColorFramebuffer.draw(() => this._p.image(renderer.renderer.secondaryColorFramebuffer, xPos, yPos));
                 this._inversionFramebuffer.draw(() => this._p.image(renderer.renderer.inversionFramebuffer, xPos, yPos));
                 this._rotationFramebuffer.draw(() => this._p.image(renderer.renderer.rotationFramebuffer, xPos, yPos));
+                this._flipFramebuffer.draw(() => this._p.image(renderer.renderer.flipFramebuffer, xPos, yPos));
 
                 this._hasEnabledRenderers = true;
             }
@@ -171,7 +185,8 @@ export class P5AsciifyRendererManager {
             this._primaryColorFramebuffer,
             this._secondaryColorFramebuffer,
             this._inversionFramebuffer,
-            this._rotationFramebuffer
+            this._rotationFramebuffer,
+            this._flipFramebuffer
         );
 
         this.checkCanvasDimensions();
@@ -209,6 +224,7 @@ export class P5AsciifyRendererManager {
         this._characterFramebuffer.resize(this._grid.cols, this._grid.rows);
         this._inversionFramebuffer.resize(this._grid.cols, this._grid.rows);
         this._rotationFramebuffer.resize(this._grid.cols, this._grid.rows);
+        this._flipFramebuffer.resize(this._grid.cols, this._grid.rows);
 
         this._renderers.forEach(renderer => {
             renderer.renderer.resizeFramebuffers();

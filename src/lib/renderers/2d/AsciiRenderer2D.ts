@@ -46,5 +46,6 @@ export class P5AsciifyRenderer2D<T extends AsciiRendererOptions = AsciiRendererO
         this._inversionFramebuffer.resize(this._grid.cols, this._grid.rows);
         this._rotationFramebuffer.resize(this._grid.cols, this._grid.rows);
         this._characterFramebuffer.resize(this._grid.cols, this._grid.rows);
+        this._flipFramebuffer.resize(this._grid.cols, this._grid.rows);
     }
 }

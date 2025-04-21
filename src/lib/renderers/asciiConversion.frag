@@ -9,6 +9,7 @@ uniform sampler2D u_secondaryColorTexture;
 uniform sampler2D u_inversionTexture;
 uniform sampler2D u_asciiCharacterTexture;
 uniform sampler2D u_rotationTexture;
+uniform sampler2D u_flipTexture;
 
 uniform vec2 u_gridCellDimensions;
 uniform vec2 u_gridPixelDimensions;
@@ -56,7 +57,7 @@ void main() {
     // Decode the bestCharIndex from red and green channels
     int charIndex = int(encodedIndexVec.r * 255.0 + 0.5) + int(encodedIndexVec.g * 255.0 + 0.5) * 256;
 
-        // Calculate the column and row of the character in the charset texture
+    // Calculate the column and row of the character in the charset texture
     int charCol = charIndex - (charIndex / int(u_charsetDimensions.x)) * int(u_charsetDimensions.x);
     int charRow = charIndex / int(u_charsetDimensions.x);
 
@@ -71,8 +72,23 @@ void main() {
     float degrees = rotationColor.r * 255.0 + rotationColor.g * 255.0;
     float rotationAngle = radians(degrees);
 
+    // Sample flip texture to get horizontal and vertical flip values
+    vec4 flipColor = texture2D(u_flipTexture, charIndexTexCoord);
+    bool flipHorizontal = flipColor.r > 0.5;
+    bool flipVertical = flipColor.g > 0.5;
+
     // Calculate fractional part and apply rotation
     vec2 fractionalPart = fract(gridCoord) - 0.5;
+    
+    // Apply horizontal and vertical flipping before rotation
+    if (flipHorizontal) {
+        fractionalPart.x = -fractionalPart.x;
+    }
+    if (flipVertical) {
+        fractionalPart.y = -fractionalPart.y;
+    }
+    
+    // Apply rotation after flipping
     fractionalPart = rotate2D(rotationAngle) * fractionalPart;
     fractionalPart += 0.5;
 
