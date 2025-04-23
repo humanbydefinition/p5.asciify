@@ -153,6 +153,22 @@ export abstract class AbstractFeatureRenderer2D<T extends FeatureAsciiRendererOp
         this._options.characterColor = color;
     }
 
+    public flipHorizontally(flip: boolean): void {
+        if (typeof flip !== 'boolean') {
+            throw new P5AsciifyError('Flip horizontally must be a boolean');
+        }
+
+        this._options.flipHorizontally = flip;
+    }
+
+    public flipVertically(flip: boolean): void {
+        if (typeof flip !== 'boolean') {
+            throw new P5AsciifyError('Flip vertically must be a boolean');
+        }
+
+        this._options.flipVertically = flip;
+    }
+
     /**
      * Set the background color of the ASCII characters, used in the fixed color mode.
      * @param color The fixed color of the ASCII characters.
@@ -288,6 +304,14 @@ export abstract class AbstractFeatureRenderer2D<T extends FeatureAsciiRendererOp
 
         if (newOptions?.backgroundColorMode !== undefined) {
             this.backgroundColorMode(newOptions.backgroundColorMode as string);
+        }
+
+        if (newOptions?.flipHorizontally !== undefined) {
+            this.flipHorizontally(newOptions.flipHorizontally);
+        }
+
+        if (newOptions?.flipVertically !== undefined) {
+            this.flipVertically(newOptions.flipVertically);
         }
     }
 
