@@ -45,9 +45,12 @@ export class P5Asciifier {
      * 
      * @ignore
      */
-    public init(p: p5, baseFont: p5.Font): void {
+    public async init(p: p5, baseFont: p5.Font): Promise<void> {
         this._p = p;
         this._fontManager = new P5AsciifyFontManager(p, baseFont);
+        
+        // Return a resolved promise to ensure the async pattern is consistent
+        return Promise.resolve();
     }
 
     /**
@@ -57,15 +60,18 @@ export class P5Asciifier {
      * 
      * @ignore
      */
-    public setup(captureFramebuffer: p5.Framebuffer): Promise<void> {
-        this._fontManager.setup(this._fontSize);
-    
+    public async setup(captureFramebuffer: p5.Framebuffer): Promise<void> {
+        // Setup font manager first and await completion
+        await this._fontManager.setup(this._fontSize);
+        
+        // Create grid based on font dimensions
         this._grid = new P5AsciifyGrid(
             this._p,
             this._fontManager.maxGlyphDimensions.width,
             this._fontManager.maxGlyphDimensions.height,
         );
     
+        // Create renderer manager
         this._rendererManager = new P5AsciifyRendererManager(
             this._p,
             this._grid,

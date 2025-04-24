@@ -8,7 +8,13 @@ import { OpenTypeGlyph } from './types';
 export class P5AsciifyFontManager {
 
     /** An array of supported characters in the font. */
-    private _characters: string[] = [];
+    private _characters: {
+        character: string;
+        unicode: number;
+        r: number;
+        g: number;
+        b: number;
+    }[] = [];
 
     /** An array of character glyphs with color assignments. */
     private _characterGlyphs: any[] = [];
@@ -43,6 +49,8 @@ export class P5AsciifyFontManager {
         private _font: p5.Font,
     ) {
         this._initializeGlyphsAndCharacters();
+
+        console.log("FontManager initialized with font:", this._font);
     }
 
     /**
@@ -51,24 +59,22 @@ export class P5AsciifyFontManager {
      * @param fontSize The font size to use for the texture.
      * @ignore
      */
-    public setup(fontSize: number): void {
+    public async setup(fontSize: number): Promise<void> {
         this._fontSize = fontSize;
-        this.reset();
+        return this.reset();
     }
 
     /**
      * Initializes the character glyphs and characters array.
      */
     private _initializeGlyphsAndCharacters(): void {
-
         // Extract all supported character codes from the font's cmap table
-        const characterList = [];
+        const characterList: string[] = [];
         const startEndPairs = [];
 
         // Access the cmap tables that contain character to glyph mappings
         this._font.data.cmap.tables.forEach((table, tableIndex) => {
             if (table.format === 4) { // Format 4 tables contain character ranges
-
                 // Each pair of startCount and endCount defines a range of characters
                 for (let i = 0; i < table.startCount.length; i++) {
                     const start = table.startCount[i];
@@ -87,9 +93,10 @@ export class P5AsciifyFontManager {
             }
         });
 
-        this._characters = [...new Set(characterList)]; // Remove duplicates
+        const uniqueChars = [...new Set(characterList)]; // Remove duplicates
 
-        this._characterGlyphs = this._characters.map((char, index) => {
+        // Convert directly to the final format with all required properties
+        this._characters = uniqueChars.map((char, index) => {
             const codePoint = char.codePointAt(0) as number;
             return {
                 character: char,
@@ -140,15 +147,15 @@ export class P5AsciifyFontManager {
      * ```
      */
     public glyphColor(char: string): [number, number, number] {
-        const glyph = this._characterGlyphs.find(
-            (glyph: OpenTypeGlyph) => glyph.unicodes.includes(char.codePointAt(0) as number)
+        const charInfo = this._characters.find(
+            c => c.character === char
         );
 
-        if (!glyph) {
+        if (!charInfo) {
             throw new P5AsciifyError(`Could not find character in character set: ${char}`);
         }
 
-        return [glyph.r as number, glyph.g as number, glyph.b as number];
+        return [charInfo.r, charInfo.g, charInfo.b];
     }
 
     /**
@@ -165,14 +172,13 @@ export class P5AsciifyFontManager {
      * ```
      */
     public getUnsupportedCharacters(characters: string): string[] {
-        // Convert input to array of characters and remove duplicates
-        const uniqueChars = [...new Set(Array.from(characters))];
-
-        // Filter out characters that aren't in our character glyphs array
-        return uniqueChars.filter(char => {
-            const codePoint = char.codePointAt(0) as number;
-            return !this._characterGlyphs.some(glyph => glyph.unicode === codePoint);
-        });
+        return Array.from(
+            new Set(
+                Array.from(characters).filter(
+                    (char: string) => !this._characters.some(c => c.character === char)
+                )
+            )
+        );
     }
 
     /**
@@ -205,16 +211,13 @@ export class P5AsciifyFontManager {
      */
     public glyphColors(characters: string | string[] = ""): Array<[number, number, number]> {
         return Array.from(characters).map((char: string) => {
-            const codePoint = char.codePointAt(0) as number;
-            const glyph = this._characterGlyphs.find(
-                (glyph) => glyph.unicode === codePoint
-            );
+            const charInfo = this._characters.find(c => c.character === char);
 
-            if (!glyph) {
+            if (!charInfo) {
                 throw new P5AsciifyError(`Could not find character in character set: ${char}`);
             }
 
-            return [glyph.r, glyph.g, glyph.b];
+            return [charInfo.r, charInfo.g, charInfo.b];
         });
     }
 
@@ -238,10 +241,10 @@ export class P5AsciifyFontManager {
         // Check each character's dimensions
         for (const char of this._characters) {
             // Get width of this character
-            const charWidth = this._p.textWidth(char);
+            const charWidth = this._p.textWidth(char.character);
 
             // For height, we can use textBounds which gives a more precise bounding box
-            const bounds = this._font.textBounds(char, 0, 0, fontSize);
+            const bounds = this._font.textBounds(char.character, 0, 0, fontSize);
             const charHeight = bounds.h;
 
             // Update maximum dimensions
@@ -260,9 +263,9 @@ export class P5AsciifyFontManager {
      * Resets the texture atlas by recalculating the maximum glyph dimensions and recreating the texture.
      * @ignore
      */
-    public reset(): void {
+    public async reset(): Promise<void> {
         this._maxGlyphDimensions = this._getMaxGlyphDimensions(this._fontSize);
-        this._createTexture(this._fontSize);
+        return this._createTexture(this._fontSize);
     }
 
     /**
@@ -270,47 +273,75 @@ export class P5AsciifyFontManager {
      * @param fontSize - The new font size.
      * @ignore
      */
-    public setFontSize(fontSize: number): void {
+    public async setFontSize(fontSize: number): Promise<void> {
         this._fontSize = fontSize;
         this._maxGlyphDimensions = this._getMaxGlyphDimensions(this._fontSize);
-        this._createTexture(this._fontSize);
+        return this._createTexture(this._fontSize);
     }
 
     /**
      * Creates a texture containing all characters in the font, arranged in a 2d grid that is as square as possible.
      * @param fontSize - The font size to use for creating the texture.
      */
-    private _createTexture(fontSize: number): void {
+    /**
+ * Creates a texture containing all characters in the font, arranged in a 2d grid that is as square as possible.
+ * @param fontSize - The font size to use for creating the texture.
+ * @returns A promise that resolves when the texture creation is complete
+ */
+    private async _createTexture(fontSize: number): Promise<void> {
         this._textureColumns = Math.ceil(Math.sqrt(this.characters.length));
         this._textureRows = Math.ceil(this.characters.length / this._textureColumns);
-
-        if (!this._texture) {
-            this._texture = this._p.createFramebuffer({
-                width: this._maxGlyphDimensions.width * this._textureColumns,
-                height: this._maxGlyphDimensions.height * this._textureRows,
-                depthFormat: this._p.UNSIGNED_INT,
-                textureFiltering: this._p.NEAREST,
-            });
-        } else {
-            this._texture.resize(this._maxGlyphDimensions.width * this._textureColumns, this._maxGlyphDimensions.height * this._textureRows);
+    
+        const textureWidth = this._maxGlyphDimensions.width * this._textureColumns;
+        const textureHeight = this._maxGlyphDimensions.height * this._textureRows;
+    
+        // Clean up previous texture if it exists
+        if (this._texture) {
+            this._texture.remove();
         }
-
+    
+        // Create a new texture framebuffer with appropriate dimensions
+        this._texture = this._p.createFramebuffer({
+            width: textureWidth,
+            height: textureHeight,
+            depthFormat: this._p.UNSIGNED_INT,
+            textureFiltering: this._p.NEAREST,
+        });
+    
+        // Begin drawing to the framebuffer - do this ONCE for all characters
         this._texture.begin();
+        
+        // Clear the framebuffer
         this._p.clear();
+    
+        // Set text properties
         this._p.textFont(this._font);
         this._p.fill(255);
         this._p.textSize(fontSize);
         this._p.textAlign(this._p.LEFT, this._p.TOP);
         this._p.noStroke();
-
+    
+        // Calculate center offsets
+        const offsetX = (textureWidth / 2);
+        const offsetY = (textureHeight / 2);
+    
+        // Draw ALL characters in a SINGLE framebuffer session
         for (let i = 0; i < this._characters.length; i++) {
             const col = i % this._textureColumns;
             const row = Math.floor(i / this._textureColumns);
-            const x = this._maxGlyphDimensions.width * col - (this._maxGlyphDimensions.width * this._textureColumns) / 2;
-            const y = this._maxGlyphDimensions.height * row - (this._maxGlyphDimensions.height * this._textureRows) / 2;
-            this._p.text(this._characters[i], x, y);
+    
+            const x = this._maxGlyphDimensions.width * col - offsetX;
+            const y = this._maxGlyphDimensions.height * row - offsetY;
+    
+            // Draw the character
+            this._p.text(this._characters[i].character, x, y);
         }
+    
+        // End drawing to the framebuffer - do this ONCE after all characters
         this._texture.end();
+        
+        // Force a microtask delay to ensure WebGL operations complete
+        await new Promise(resolve => setTimeout(resolve, 0));
     }
 
     /**

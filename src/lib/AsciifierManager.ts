@@ -40,18 +40,16 @@ export class P5AsciifierManager {
      * @param p The p5.js instance to use for the library.
      * @ignore
      */
-    public init(p: p5): Promise<void> {
+    public async init(p: p5): Promise<void> {
         this._p = p;
-
-        // Convert callback-based loadFont to a Promise
-        return new Promise<void>((resolve) => {
-            this._baseFont = p.loadFont(URSAFONT_BASE64, (font) => {
-                this._asciifiers.forEach((asciifier) => {
-                    asciifier.init(p, font);
-                });
-                resolve();
-            });
-        });
+    
+            // Load the font using the Promise-based approach
+            this._baseFont = await this._p.loadFont(URSAFONT_BASE64);
+            
+            // Create and wait for all initialization promises to complete
+            await Promise.all(
+                this._asciifiers.map(asciifier => asciifier.init(p, this._baseFont))
+            );
     }
 
     /**
@@ -60,17 +58,19 @@ export class P5AsciifierManager {
      * For the provided {@link p5asciify} object this method is called automatically when the users `setup` function finished executing.
      * @ignore
      */
-    public setup(): Promise<void> {
+    public async setup(): Promise<void> {
+        // Create framebuffer first
         this._sketchFramebuffer = this._p.createFramebuffer({
             depthFormat: this._p.UNSIGNED_INT,
             textureFiltering: this._p.NEAREST
         });
-
-        const setupPromises = this._asciifiers.map(asciifier =>
-            Promise.resolve(asciifier.setup(this._sketchFramebuffer))
-        );
-
-        return Promise.all(setupPromises).then(() => { });
+    
+        // Then set up each asciifier sequentially to avoid WebGL context conflicts
+        for (const asciifier of this._asciifiers) {
+            await asciifier.setup(this._sketchFramebuffer);
+        }
+        
+        return Promise.resolve();
     }
 
     /**
