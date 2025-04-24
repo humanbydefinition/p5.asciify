@@ -46,20 +46,17 @@ const sketch = (p) => {
 	let noiseFramebuffer, shiftFramebuffer;
 	let previousPushFramebuffer, nextPushFramebuffer;
 
-	p.preload = () => {
-		// Relevant to the sketch, independent of p5.asciify
-		noiseShader = p.loadShader('shaders/shader.vert', 'shaders/sketch/noise.frag');
-		shiftShader = p.loadShader('shaders/shader.vert', 'shaders/sketch/shift.frag');
-		pushShader = p.loadShader('shaders/shader.vert', 'shaders/sketch/push.frag');
-
-		// Relevant to p5.asciify, translating the pushShader's pixels
-		asciiCharacterShader = p.loadShader('shaders/shader.vert', 'shaders/asciifyTranslation/asciiCharacter.frag');
-		asciiColorPaletteShader = p.loadShader('shaders/shader.vert', 'shaders/asciifyTranslation/asciiColorPalette.frag');
-	};
-
-	p.setup = () => {
+	p.setup = async () => {
 		p.randomSeed(seed);
 		p.noiseSeed(seed);
+
+		noiseShader = await p.loadShader('shaders/shader.vert', 'shaders/sketch/noise.frag');
+		shiftShader = await p.loadShader('shaders/shader.vert', 'shaders/sketch/shift.frag');
+		pushShader = await p.loadShader('shaders/shader.vert', 'shaders/sketch/push.frag');
+
+		// Relevant to p5.asciify, translating the pushShader's pixels
+		asciiCharacterShader = await p.loadShader('shaders/shader.vert', 'shaders/asciifyTranslation/asciiCharacter.frag');
+		asciiColorPaletteShader = await p.loadShader('shaders/shader.vert', 'shaders/asciifyTranslation/asciiColorPalette.frag');
 
 		p.setAttributes('antialias', false);
 		p.createCanvas(p.windowWidth, p.windowHeight, p.WEBGL);

@@ -43,9 +43,6 @@ export const createSketch = (options = {}) => {
       // Fetch the default `P5Asciifier` instance provided by the library
       asciifier = p5asciify.asciifier();
 
-      if (finalOptions.fontSize) { // If a `fontSize` is provided, set it in the `asciifier` instance
-        asciifier.fontSize(finalOptions.fontSize);
-      }
 
       // Update the pre-defined `brightness` renderer with the provided options
       asciifier.renderers().get("brightness").update({

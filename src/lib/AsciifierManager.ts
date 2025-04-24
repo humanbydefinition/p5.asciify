@@ -40,12 +40,16 @@ export class P5AsciifierManager {
      * @param p The p5.js instance to use for the library.
      * @ignore
      */
-    public init(p: p5): void {
+    public init(p: p5): Promise<void> {
         this._p = p;
-        this._baseFont = p.loadFont(URSAFONT_BASE64, (font) => {
 
-            this._asciifiers.forEach((asciifier) => {
-                asciifier.init(p, font);
+        // Convert callback-based loadFont to a Promise
+        return new Promise<void>((resolve) => {
+            this._baseFont = p.loadFont(URSAFONT_BASE64, (font) => {
+                this._asciifiers.forEach((asciifier) => {
+                    asciifier.init(p, font);
+                });
+                resolve();
             });
         });
     }
@@ -56,15 +60,17 @@ export class P5AsciifierManager {
      * For the provided {@link p5asciify} object this method is called automatically when the users `setup` function finished executing.
      * @ignore
      */
-    public setup(): void {
+    public setup(): Promise<void> {
         this._sketchFramebuffer = this._p.createFramebuffer({
             depthFormat: this._p.UNSIGNED_INT,
             textureFiltering: this._p.NEAREST
         });
 
-        this._asciifiers.forEach((asciifier) => {
-            asciifier.setup(this._sketchFramebuffer);
-        });
+        const setupPromises = this._asciifiers.map(asciifier =>
+            Promise.resolve(asciifier.setup(this._sketchFramebuffer))
+        );
+
+        return Promise.all(setupPromises).then(() => { });
     }
 
     /**

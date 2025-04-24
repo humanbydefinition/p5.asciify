@@ -11,7 +11,7 @@ export class P5AsciifyFontManager {
     private _characters: string[] = [];
 
     /** An array of character glyphs with color assignments. */
-    private _characterGlyphs: OpenTypeGlyph[] = [];
+    private _characterGlyphs: any[] = [];
 
     /** Maximum width and height of the glyphs in the font. */
     private _maxGlyphDimensions!: {
@@ -60,22 +60,45 @@ export class P5AsciifyFontManager {
      * Initializes the character glyphs and characters array.
      */
     private _initializeGlyphsAndCharacters(): void {
-        const glyphs = Object.values(this._font.font.glyphs.glyphs) as OpenTypeGlyph[];
 
-        // Initialize characters array
-        this._characters = glyphs
-            .filter((glyph): glyph is OpenTypeGlyph => glyph.unicode !== undefined)
-            .map(glyph => String.fromCharCode(glyph.unicode!));
+        // Extract all supported character codes from the font's cmap table
+        const characterList = [];
+        const startEndPairs = [];
 
-        // Initialize character glyphs with color assignments
-        this._characterGlyphs = Object.values(this._font.font.glyphs.glyphs as OpenTypeGlyph[])
-            .filter((glyph): glyph is OpenTypeGlyph => glyph.unicode !== undefined)
-            .map((glyph, index) => {
-                glyph.r = index % 256;
-                glyph.g = Math.floor(index / 256) % 256;
-                glyph.b = Math.floor(index / 65536);
-                return glyph;
-            });
+        // Access the cmap tables that contain character to glyph mappings
+        this._font.data.cmap.tables.forEach((table, tableIndex) => {
+            if (table.format === 4) { // Format 4 tables contain character ranges
+
+                // Each pair of startCount and endCount defines a range of characters
+                for (let i = 0; i < table.startCount.length; i++) {
+                    const start = table.startCount[i];
+                    const end = table.endCount[i];
+
+                    // Skip the 0xFFFF sentinel value at the end
+                    if (start === 0xFFFF && end === 0xFFFF) continue;
+
+                    startEndPairs.push({ start, end });
+
+                    // Add all characters in this range
+                    for (let codePoint = start; codePoint <= end; codePoint++) {
+                        characterList.push(String.fromCodePoint(codePoint));
+                    }
+                }
+            }
+        });
+
+        this._characters = [...new Set(characterList)]; // Remove duplicates
+
+        this._characterGlyphs = this._characters.map((char, index) => {
+            const codePoint = char.codePointAt(0) as number;
+            return {
+                character: char,
+                unicode: codePoint,
+                r: index % 256,
+                g: Math.floor(index / 256) % 256,
+                b: Math.floor(index / 65536)
+            };
+        });
     }
 
     /**
@@ -142,16 +165,14 @@ export class P5AsciifyFontManager {
      * ```
      */
     public getUnsupportedCharacters(characters: string): string[] {
-        return Array.from(
-            new Set(
-                Array.from(characters).filter(
-                    (char: string) =>
-                        !this._characterGlyphs.some((glyph: OpenTypeGlyph) =>
-                            glyph.unicodes.includes(char.codePointAt(0) as number)
-                        )
-                )
-            )
-        );
+        // Convert input to array of characters and remove duplicates
+        const uniqueChars = [...new Set(Array.from(characters))];
+
+        // Filter out characters that aren't in our character glyphs array
+        return uniqueChars.filter(char => {
+            const codePoint = char.codePointAt(0) as number;
+            return !this._characterGlyphs.some(glyph => glyph.unicode === codePoint);
+        });
     }
 
     /**
@@ -184,15 +205,16 @@ export class P5AsciifyFontManager {
      */
     public glyphColors(characters: string | string[] = ""): Array<[number, number, number]> {
         return Array.from(characters).map((char: string) => {
+            const codePoint = char.codePointAt(0) as number;
             const glyph = this._characterGlyphs.find(
-                (glyph: OpenTypeGlyph) => glyph.unicodes.includes(char.codePointAt(0) as number)
+                (glyph) => glyph.unicode === codePoint
             );
 
             if (!glyph) {
                 throw new P5AsciifyError(`Could not find character in character set: ${char}`);
             }
 
-            return [glyph.r as number, glyph.g as number, glyph.b as number];
+            return [glyph.r, glyph.g, glyph.b];
         });
     }
 
@@ -202,16 +224,36 @@ export class P5AsciifyFontManager {
          * @returns An object containing the maximum width and height of the glyphs.
          */
     private _getMaxGlyphDimensions(fontSize: number): { width: number; height: number } {
-        return this.characterGlyphs.reduce<{ width: number; height: number }>(
-            (maxDims, glyph) => {
-                const bounds = glyph.getPath(0, 0, fontSize).getBoundingBox();
-                return {
-                    width: Math.ceil(Math.max(maxDims.width, bounds.x2 - bounds.x1)),
-                    height: Math.ceil(Math.max(maxDims.height, bounds.y2 - bounds.y1)),
-                };
-            },
-            { width: 0, height: 0 }
-        );
+        // Set the font and size for accurate measurements
+        this._p.textFont(this._font);
+        this._p.textSize(fontSize);
+
+        // Calculate the maximum dimensions across all characters
+        let maxWidth = 0;
+        let maxHeight = 0;
+
+        // Use textAscent + textDescent as a base for height calculation
+        const totalHeight = this._p.textAscent() + this._p.textDescent();
+
+        // Check each character's dimensions
+        for (const char of this._characters) {
+            // Get width of this character
+            const charWidth = this._p.textWidth(char);
+
+            // For height, we can use textBounds which gives a more precise bounding box
+            const bounds = this._font.textBounds(char, 0, 0, fontSize);
+            const charHeight = bounds.h;
+
+            // Update maximum dimensions
+            maxWidth = charWidth;
+            maxHeight = Math.max(maxHeight, charHeight, totalHeight);
+        }
+
+        // Return ceiling values to ensure we have enough space
+        return {
+            width: Math.ceil(maxWidth),
+            height: Math.ceil(maxHeight)
+        };
     }
 
     /**
@@ -261,12 +303,12 @@ export class P5AsciifyFontManager {
         this._p.textAlign(this._p.LEFT, this._p.TOP);
         this._p.noStroke();
 
-        for (let i = 0; i < this.characterGlyphs.length; i++) {
+        for (let i = 0; i < this._characters.length; i++) {
             const col = i % this._textureColumns;
             const row = Math.floor(i / this._textureColumns);
             const x = this._maxGlyphDimensions.width * col - (this._maxGlyphDimensions.width * this._textureColumns) / 2;
             const y = this._maxGlyphDimensions.height * row - (this._maxGlyphDimensions.height * this._textureRows) / 2;
-            this._p.text(String.fromCharCode(this.characterGlyphs[i].unicode), x, y);
+            this._p.text(this._characters[i], x, y);
         }
         this._texture.end();
     }
