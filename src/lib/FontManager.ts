@@ -106,6 +106,8 @@ export class P5AsciifyFontManager {
                 b: Math.floor(index / 65536)
             };
         });
+
+        console.log("Characters initialized:", this._characters);
     }
 
     /**
@@ -289,59 +291,52 @@ export class P5AsciifyFontManager {
  * @returns A promise that resolves when the texture creation is complete
  */
     private async _createTexture(fontSize: number): Promise<void> {
-        this._textureColumns = Math.ceil(Math.sqrt(this.characters.length));
-        this._textureRows = Math.ceil(this.characters.length / this._textureColumns);
-    
+        // figure out how many cols/rows we need
+        this._textureColumns = Math.ceil(Math.sqrt(this._characters.length));
+        this._textureRows = Math.ceil(this._characters.length / this._textureColumns);
+
         const textureWidth = this._maxGlyphDimensions.width * this._textureColumns;
         const textureHeight = this._maxGlyphDimensions.height * this._textureRows;
-    
+
         // Clean up previous texture if it exists
         if (this._texture) {
             this._texture.remove();
         }
-    
-        // Create a new texture framebuffer with appropriate dimensions
+
+        // Create WebGL framebuffer
         this._texture = this._p.createFramebuffer({
             width: textureWidth,
             height: textureHeight,
             depthFormat: this._p.UNSIGNED_INT,
             textureFiltering: this._p.NEAREST,
         });
-    
-        // Begin drawing to the framebuffer - do this ONCE for all characters
-        this._texture.begin();
-        
-        // Clear the framebuffer
-        this._p.clear();
-    
-        // Set text properties
-        this._p.textFont(this._font);
-        this._p.fill(255);
-        this._p.textSize(fontSize);
-        this._p.textAlign(this._p.LEFT, this._p.TOP);
-        this._p.noStroke();
-    
-        // Calculate center offsets
-        const offsetX = (textureWidth / 2);
-        const offsetY = (textureHeight / 2);
-    
-        // Draw ALL characters in a SINGLE framebuffer session
-        for (let i = 0; i < this._characters.length; i++) {
-            const col = i % this._textureColumns;
-            const row = Math.floor(i / this._textureColumns);
-    
-            const x = this._maxGlyphDimensions.width * col - offsetX;
-            const y = this._maxGlyphDimensions.height * row - offsetY;
-    
-            // Draw the character
-            this._p.text(this._characters[i].character, x, y);
-        }
-    
-        // End drawing to the framebuffer - do this ONCE after all characters
-        this._texture.end();
-        
-        // Force a microtask delay to ensure WebGL operations complete
-        await new Promise(resolve => setTimeout(resolve, 0));
+
+        // Draw directly to the framebuffer
+        this._texture.draw(() => {
+            this._p.clear();
+
+            // Set text properties
+            this._p.textFont(this._font);
+            this._p.fill(255);
+            this._p.textSize(fontSize);
+            this._p.textAlign(this._p.LEFT, this._p.TOP);
+            this._p.noStroke();
+
+            // Calculate center offsets
+            const offsetX = (textureWidth / 2);
+            const offsetY = (textureHeight / 2);
+
+            for (let i = 0; i < this._characters.length; i++) {
+                const col = i % this._textureColumns;
+                const row = Math.floor(i / this._textureColumns);
+
+                const x = this._maxGlyphDimensions.width * (col) - offsetX;
+                const y = this._maxGlyphDimensions.height * (row) - offsetY;
+
+                // Draw the character
+                this._p.text(this._characters[i].character, x, y);
+            }
+        });
     }
 
     /**

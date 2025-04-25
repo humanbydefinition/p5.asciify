@@ -32,23 +32,24 @@ export const createSketch = (options = {}) => {
 
     let asciifier; // Define the `asciifier` variable to store the `P5Asciifier` instance
 
-    // Make setup async to work with p5.js v2.0.0
-    p.setup = async () => {
+    p.setup = () => {
       p.setAttributes('antialias', false);
       p.createCanvas(p.windowWidth, p.windowHeight, p.WEBGL);
     };
 
-    // Make setupAsciify async as well
-    p.setupAsciify = async () => {
+    // After `p5.asciify` is set up in the background after `setup()`,
+    // we can call `setupAsciify()` to configure `p5asciify` and it's `P5Asciifier` instances and rendering pipelines
+    p.setupAsciify = () => {
       // Fetch the default `P5Asciifier` instance provided by the library
       asciifier = p5asciify.asciifier();
 
-      /**
       // Set the font size for the `P5Asciifier` instance
+      /**
       if (finalOptions.fontSize) {
         asciifier.fontSize(finalOptions.fontSize);
       }
-      */
+      **/
+    
 
       // Update the pre-defined `brightness` renderer with the provided options
       asciifier.renderers().get("brightness").update({
@@ -85,6 +86,8 @@ export const createSketch = (options = {}) => {
       p.textSize(64);
       p.fill(255, 255, 0);
       p.text(fpsText, -p.width / 2, p.height / 2);
+
+      p.image(asciifier.fontManager.texture, -p.width / 2, -p.height / 2);
     };
 
     p.windowResized = () => {
