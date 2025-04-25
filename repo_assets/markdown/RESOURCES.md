@@ -10,7 +10,7 @@ Feel free to experiment with different fonts, but be aware that not all fonts wi
 
 | Font  | Description | 
 | ------------- | ------------- |
-| [UrsaFont](https://ursafrank.itch.io/ursafont)  | Monospaced 8x8 textmode font with 256 glyphs. <br> _Default font used by `p5.asciify`._  |
+| [UrsaFont](https://ursafrank.itch.io/ursafont)  | Monospaced 8x8 textmode font with 256 glyphs. <br/> _Default font used by `p5.asciify`._  |
 | [C64 Pro Mono](https://style64.org/c64-truetype)  | Includes all 304 unique C64 glyphs.  |
 | [FROGBLOCK-V2.1](https://polyducks.itch.io/frogblock)  | Monospaced 8x8 textmode font with 256 glyphs. |
 | [CHUNKY](https://batfeula.itch.io/chunky)  | 8x8 textmode font with 366 glyphs. |
