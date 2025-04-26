@@ -23,4 +23,5 @@
     "propertyMembersFormat": "table",
     "typeDeclarationFormat": "table",
     "cleanOutputDir": true,
+    "skipErrorChecking": true,
 }
