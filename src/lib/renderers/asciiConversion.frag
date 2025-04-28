@@ -45,6 +45,7 @@ void main() {
 
     // Sample inversion texture
     vec4 inversionColor = texture2D(u_inversionTexture, charIndexTexCoord);
+    bool isInverted = inversionColor == vec4(1.0);
 
     // Sample the character index from the ASCII character texture
     vec4 encodedIndexVec = texture2D(u_asciiCharacterTexture, charIndexTexCoord);
@@ -99,24 +100,25 @@ void main() {
 
     // Determine if the texture coordinate is within the cell boundaries
     bool outsideBounds = any(lessThan(texCoord, cellMin)) || any(greaterThan(texCoord, cellMax));
-
-    // Get the color of the character from the charset texture or use the background color if outside bounds
-    vec4 charColor = outsideBounds ? secondaryColor : texture2D(u_characterTexture, texCoord);
-
-    // If the inversion mode is enabled, invert the character color
-    if(inversionColor == vec4(1.0)) {
-        charColor.a = 1.0 - charColor.a;
-        charColor.rgb = vec3(1.0);
+    
+    if (outsideBounds) {
+        // For out-of-bounds pixels, use the appropriate color based on inversion mode
+        gl_FragColor = isInverted ? primaryColor : secondaryColor;
+        return;
     }
-
-    // Calculate the final color of the character
-    vec4 finalColor = vec4(primaryColor.rgb * charColor.rgb, charColor.a);
-
-    // Mix the final color with the secondary color based on the alpha value
-    gl_FragColor = mix(secondaryColor, finalColor, charColor.a);
-
-    // Override final color with background color for out-of-bounds areas due to rotation
-    if(outsideBounds) {
-        gl_FragColor = inversionColor == vec4(1.0) ? primaryColor : secondaryColor;
+    
+    // Sample the character texture
+    vec4 charTexel = texture2D(u_characterTexture, texCoord);
+    
+    // Check if pixel is fully white (considering minor precision issues)
+    bool isFullyWhite = all(greaterThanEqual(charTexel.rgb, vec3(0.99)));
+    
+    // Handle normal and inverted modes
+    if (isInverted) {
+        // In inverted mode, non-white pixels get primary color, white pixels get secondary color
+        gl_FragColor = isFullyWhite ? secondaryColor : primaryColor;
+    } else {
+        // In normal mode, white pixels get primary color, non-white pixels get secondary color
+        gl_FragColor = isFullyWhite ? primaryColor : secondaryColor;
     }
 }
