@@ -88,7 +88,6 @@ export const postDrawHook = (p: p5) => {
 
   p5asciify.sketchFramebuffer.end();
 
-
   p5asciify.asciify();
 
   if (p.drawAsciify) {
