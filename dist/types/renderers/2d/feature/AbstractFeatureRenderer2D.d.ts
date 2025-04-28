@@ -92,6 +92,8 @@ export declare abstract class AbstractFeatureRenderer2D<T extends FeatureAsciiRe
      * ```
      */
     characterColor(color: p5.Color): void;
+    flipHorizontally(flip: boolean): void;
+    flipVertically(flip: boolean): void;
     /**
      * Set the background color of the ASCII characters, used in the fixed color mode.
      * @param color The fixed color of the ASCII characters.

@@ -1,6 +1,6 @@
-var uA = Object.defineProperty;
-var _A = (o, e, A) => e in o ? uA(o, e, { enumerable: !0, configurable: !0, writable: !0, value: A }) : o[e] = A;
-var s = (o, e, A) => _A(o, typeof e != "symbol" ? e + "" : e, A);
+var _A = Object.defineProperty;
+var uA = (o, e, A) => e in o ? _A(o, e, { enumerable: !0, configurable: !0, writable: !0, value: A }) : o[e] = A;
+var s = (o, e, A) => uA(o, typeof e != "symbol" ? e + "" : e, A);
 import b from "p5";
 class DA {
   /**
@@ -148,8 +148,6 @@ class mA {
   constructor(e, A) {
     /** An array of supported characters in the font. */
     s(this, "_characters", []);
-    /** An array of character glyphs with color assignments. */
-    s(this, "_characterGlyphs", []);
     /** Maximum width and height of the glyphs in the font. */
     s(this, "_maxGlyphDimensions");
     /** Texture containing all characters in the font. As square as possible. */
@@ -174,9 +172,21 @@ class mA {
   /**
    * Initializes the character glyphs and characters array.
    */
+  /**
+  * Initializes the characters array with character information and color assignments.
+  */
   _initializeGlyphsAndCharacters() {
     const e = Object.values(this._font.font.glyphs.glyphs);
-    this._characters = e.filter((A) => A.unicode !== void 0).map((A) => String.fromCharCode(A.unicode)), this._characterGlyphs = Object.values(this._font.font.glyphs.glyphs).filter((A) => A.unicode !== void 0).map((A, r) => (A.r = r % 256, A.g = Math.floor(r / 256) % 256, A.b = Math.floor(r / 65536), A));
+    this._characters = e.filter((A) => A.unicode !== void 0).map((A, r) => {
+      const t = r % 256, i = Math.floor(r / 256) % 256, n = Math.floor(r / 65536);
+      return {
+        character: String.fromCharCode(A.unicode),
+        unicode: A.unicode,
+        r: t,
+        g: i,
+        b: n
+      };
+    });
   }
   /**
    * Loads a font for ASCII rendering.
@@ -211,8 +221,8 @@ class mA {
    * ```
    */
   glyphColor(e) {
-    const A = this._characterGlyphs.find(
-      (r) => r.unicodes.includes(e.codePointAt(0))
+    const A = this._characters.find(
+      (r) => r.character === e
     );
     if (!A)
       throw new g(`Could not find character in character set: ${e}`);
@@ -235,9 +245,7 @@ class mA {
     return Array.from(
       new Set(
         Array.from(e).filter(
-          (A) => !this._characterGlyphs.some(
-            (r) => r.unicodes.includes(A.codePointAt(0))
-          )
+          (A) => !this._characters.some((r) => r.character === A)
         )
       )
     );
@@ -270,9 +278,7 @@ class mA {
    */
   glyphColors(e = "") {
     return Array.from(e).map((A) => {
-      const r = this._characterGlyphs.find(
-        (t) => t.unicodes.includes(A.codePointAt(0))
-      );
+      const r = this._characters.find((t) => t.character === A);
       if (!r)
         throw new g(`Could not find character in character set: ${A}`);
       return [r.r, r.g, r.b];
@@ -284,16 +290,17 @@ class mA {
        * @returns An object containing the maximum width and height of the glyphs.
        */
   _getMaxGlyphDimensions(e) {
-    return this.characterGlyphs.reduce(
-      (A, r) => {
-        const t = r.getPath(0, 0, e).getBoundingBox();
-        return {
-          width: Math.ceil(Math.max(A.width, t.x2 - t.x1)),
-          height: Math.ceil(Math.max(A.height, t.y2 - t.y1))
-        };
-      },
-      { width: 0, height: 0 }
-    );
+    this._p.textFont(this._font), this._p.textSize(e);
+    let A = 0, r = 0;
+    const t = this._p.textAscent() + this._p.textDescent();
+    for (const i of this._characters) {
+      const n = this._p.textWidth(i.character), f = this._font.textBounds(i.character, 0, 0, e).h;
+      A = n, r = Math.max(r, f, t);
+    }
+    return {
+      width: Math.ceil(A),
+      height: Math.ceil(r)
+    };
   }
   /**
    * Resets the texture atlas by recalculating the maximum glyph dimensions and recreating the texture.
@@ -321,9 +328,9 @@ class mA {
       depthFormat: this._p.UNSIGNED_INT,
       textureFiltering: this._p.NEAREST
     }), this._texture.begin(), this._p.clear(), this._p.textFont(this._font), this._p.fill(255), this._p.textSize(e), this._p.textAlign(this._p.LEFT, this._p.TOP), this._p.noStroke();
-    for (let A = 0; A < this.characterGlyphs.length; A++) {
+    for (let A = 0; A < this._characters.length; A++) {
       const r = A % this._textureColumns, t = Math.floor(A / this._textureColumns), i = this._maxGlyphDimensions.width * r - this._maxGlyphDimensions.width * this._textureColumns / 2, n = this._maxGlyphDimensions.height * t - this._maxGlyphDimensions.height * this._textureRows / 2;
-      this._p.text(String.fromCharCode(this.characterGlyphs[A].unicode), i, n);
+      this._p.text(this._characters[A].character, i, n);
     }
     this._texture.end();
   }
@@ -375,7 +382,7 @@ class mA {
     return this._font;
   }
   /**
-   * An array of supported characters in the set font.
+   * An array of supported characters in the set font with additional information like unicode, and RGB color values.
    * 
    * @example
    * ```javascript
@@ -387,20 +394,6 @@ class mA {
    */
   get characters() {
     return this._characters;
-  }
-  /**
-   * An array of character glyphs in the set font with color assignments.
-   * 
-   * @example
-   * ```javascript
-   *  function setupAsciify() {
-   *      // Print the character glyph objects of the font to the console
-   *      console.log(p5asciify.asciifier().fontManager.characterGlyphs);
-   *  }
-   * ```
-   */
-  get characterGlyphs() {
-    return this._characterGlyphs;
   }
 }
 class lA {
@@ -1019,6 +1012,16 @@ class Y extends $ {
       throw new g("Character color must be a valid p5.Color object");
     this._options.characterColor = A;
   }
+  flipHorizontally(A) {
+    if (typeof A != "boolean")
+      throw new g("Flip horizontally must be a boolean");
+    this._options.flipHorizontally = A;
+  }
+  flipVertically(A) {
+    if (typeof A != "boolean")
+      throw new g("Flip vertically must be a boolean");
+    this._options.flipVertically = A;
+  }
   /**
    * Set the background color of the ASCII characters, used in the fixed color mode.
    * @param color The fixed color of the ASCII characters.
@@ -1099,7 +1102,7 @@ class Y extends $ {
    * ```
    */
   update(A) {
-    super.update(A), (A == null ? void 0 : A.enabled) !== void 0 && this.enabled(A.enabled), (A == null ? void 0 : A.characterColor) !== void 0 && (A.characterColor = this._p.color(A.characterColor), this.characterColor(A.characterColor)), (A == null ? void 0 : A.backgroundColor) !== void 0 && (A.backgroundColor = this._p.color(A.backgroundColor), this.backgroundColor(A.backgroundColor)), (A == null ? void 0 : A.characters) !== void 0 && this.characters(A.characters), (A == null ? void 0 : A.invertMode) !== void 0 && this.invert(A.invertMode), (A == null ? void 0 : A.rotationAngle) !== void 0 && this.rotation(A.rotationAngle), (A == null ? void 0 : A.characterColorMode) !== void 0 && this.characterColorMode(A.characterColorMode), (A == null ? void 0 : A.backgroundColorMode) !== void 0 && this.backgroundColorMode(A.backgroundColorMode);
+    super.update(A), (A == null ? void 0 : A.enabled) !== void 0 && this.enabled(A.enabled), (A == null ? void 0 : A.characterColor) !== void 0 && (A.characterColor = this._p.color(A.characterColor), this.characterColor(A.characterColor)), (A == null ? void 0 : A.backgroundColor) !== void 0 && (A.backgroundColor = this._p.color(A.backgroundColor), this.backgroundColor(A.backgroundColor)), (A == null ? void 0 : A.characters) !== void 0 && this.characters(A.characters), (A == null ? void 0 : A.invertMode) !== void 0 && this.invert(A.invertMode), (A == null ? void 0 : A.rotationAngle) !== void 0 && this.rotation(A.rotationAngle), (A == null ? void 0 : A.characterColorMode) !== void 0 && this.characterColorMode(A.characterColorMode), (A == null ? void 0 : A.backgroundColorMode) !== void 0 && this.backgroundColorMode(A.backgroundColorMode), (A == null ? void 0 : A.flipHorizontally) !== void 0 && this.flipHorizontally(A.flipHorizontally), (A == null ? void 0 : A.flipVertically) !== void 0 && this.flipVertically(A.flipVertically);
   }
   /**
    * Get the {@link P5AsciifyColorPalette} object containing colors that correspond to the defined character set.
@@ -1228,9 +1231,9 @@ class sA extends Y {
     this.colorSampleFramebuffer.begin(), this._p.clear(), this._p.shader(this.colorSampleShader), this.colorSampleShader.setUniform("u_sketchTexture", A), this.colorSampleShader.setUniform("u_gridCellDimensions", [this._grid.cols, this._grid.rows]), this._p.rect(0, 0, this.colorSampleFramebuffer.width, this.colorSampleFramebuffer.height), this.colorSampleFramebuffer.end(), this._primaryColorFramebuffer.begin(), this._options.characterColorMode === 1 ? this._p.background(this._options.characterColor) : (this._p.clear(), this._p.image(this.colorSampleFramebuffer, -this._grid.cols / 2, -this._grid.rows / 2, this._grid.cols, this._grid.rows)), this._primaryColorFramebuffer.end(), this._secondaryColorFramebuffer.begin(), this._options.backgroundColorMode === 1 ? this._p.background(this._options.backgroundColor) : (this._p.clear(), this._p.image(this.colorSampleFramebuffer, -this._grid.cols / 2, -this._grid.rows / 2, this._grid.cols, this._grid.rows)), this._secondaryColorFramebuffer.end(), this._inversionFramebuffer.begin(), this._options.invertMode ? this._p.background(255) : this._p.background(0), this._inversionFramebuffer.end(), this._rotationFramebuffer.begin(), this._p.background(this._options.rotationAngle), this._rotationFramebuffer.end(), this._characterFramebuffer.begin(), this._p.clear(), this._p.shader(this.asciiCharacterShader), this.asciiCharacterShader.setUniform("u_textureSize", [this._grid.cols, this._grid.rows]), this.asciiCharacterShader.setUniform("u_colorSampleFramebuffer", this.colorSampleFramebuffer), this.asciiCharacterShader.setUniform("u_charPaletteTexture", this._characterColorPalette.framebuffer), this.asciiCharacterShader.setUniform("u_charPaletteSize", [this._characterColorPalette.colors.length, 1]), this._p.rect(0, 0, this._p.width, this._p.height), this._characterFramebuffer.end(), this._flipFramebuffer.begin(), this._p.background(this._options.flipHorizontally ? 255 : 0, this._options.flipVertically ? 255 : 0, 0), this._flipFramebuffer.end();
   }
 }
-const BA = (o) => `
+const aA = (o) => `
 precision mediump float;uniform sampler2D u_characterTexture;uniform float u_charsetCols,u_charsetRows;uniform sampler2D u_sketchTexture;uniform vec2 u_gridPixelDimensions,u_gridCellDimensions;uniform sampler2D u_charPaletteTexture;uniform vec2 u_charPaletteSize;const float u=float(${o}),f=u*u;void main(){vec2 v=floor(floor(gl_FragCoord.xy).xy),r=u_gridPixelDimensions/u_gridCellDimensions,e=v*r/u_gridPixelDimensions;v=(v+vec2(1))*r/u_gridPixelDimensions-e;bool s=true;float k=1./u;for(int u=0;u<${o};u++){if(!s)break;for(int f=0;f<${o};f++){if(!s)break;vec2 r=vec2(float(f)+.5,float(u)+.5)*k;vec4 i=texture2D(u_sketchTexture,e+r*v);if(i.w>0.)s=false;}}if(s){gl_FragColor=vec4(0);return;}float i=1e20,g=0.,t=u_charPaletteSize.x;for(int u=0;u<1024;u++){if(float(u)>=t)break;vec2 s=vec2((float(u)+.5)/t,.5/u_charPaletteSize.y);vec4 r=texture2D(u_charPaletteTexture,s);float m=r.x*255.+r.y*255.*256.+r.z*255.*65536.,y=floor(m/u_charsetCols);s=vec2((m-u_charsetCols*y)/u_charsetCols,y/u_charsetRows);vec2 C=vec2(1./u_charsetCols,1./u_charsetRows);y=0.;for(int u=0;u<${o};u++)for(int f=0;f<${o};f++){vec2 r=vec2(float(f)+.5,float(u)+.5)*k;float m=texture2D(u_sketchTexture,e+r*v).x-texture2D(u_characterTexture,s+r*C).x;y+=m*m;}y/=f;if(y<i)i=y,g=m;}i=mod(g,256.);g=floor(g/256.);gl_FragColor=vec4(i/255.,g/255.,0,1);}
-`, aA = (o, e) => `
+`, BA = (o, e) => `
 precision mediump float;uniform sampler2D u_inputImage;uniform vec2 u_inputImageSize;uniform int u_gridCols,u_gridRows;const int u=${o},f=${e};void main(){vec2 v=floor(gl_FragCoord.xy),e=u_inputImageSize/vec2(float(u_gridCols),float(u_gridRows));v*=e;float i=0.,t=float(u*f);for(int s=0;s<u;s++)for(int g=0;g<f;g++){vec2 m=clamp((v+(vec2(float(s),float(g))+.5)*(e/vec2(float(u),float(f))))/u_inputImageSize,0.,1.);vec4 d=texture2D(u_inputImage,m);float t=.299*d.x+.587*d.y+.114*d.z;i+=t;}i/=t;gl_FragColor=vec4(vec3(i),1);}
 `, QA = (o, e, A) => `
 precision mediump float;uniform sampler2D u_inputImage,u_inputImageBW;uniform vec2 u_inputImageSize;uniform int u_gridCols,u_gridRows,u_colorRank;const int e=${o},u=${e},f=${A};void main(){vec2 i=floor(gl_FragCoord.xy),t=u_inputImageSize/vec2(float(u_gridCols),float(u_gridRows));i*=t;vec2 k=(i+t*.5)/u_inputImageSize;vec4 v=texture2D(u_inputImage,k),c[e];float b[e];for(int i=0;i<e;i++)c[i]=vec4(0),b[i]=0.;for(int v=0;v<u;v++)for(int k=0;k<f;k++){vec2 s=clamp((i+(vec2(float(v),float(k))+.5)*(t/vec2(float(u),float(f))))/u_inputImageSize,0.,1.);vec4 m=texture2D(u_inputImage,s),d=texture2D(u_inputImageBW,s);float r=step(.5,d.x);bool z=false;if(u_colorRank==1&&r>.5)z=true;else if(u_colorRank==2&&r<=.5)z=true;if(!z)continue;z=false;for(int i=0;i<e;i++)if(m.xyz==c[i].xyz){b[i]+=1.;z=true;break;}if(!z)for(int i=0;i<e;i++)if(b[i]==0.){c[i]=m;b[i]=1.;break;}}float z=0.;vec4 m=vec4(0);for(int i=0;i<e;i++){float u=b[i];vec4 k=c[i];if(u>z)z=u,m=k;}if(u_colorRank==2&&z==0.)m=v;gl_FragColor=vec4(m.xyz,1);}
@@ -1322,7 +1325,7 @@ class oA extends Y {
     s(this, "_brightnessSplitShader");
     s(this, "_brightnessSampleFramebuffer");
     s(this, "_brightnessSplitFramebuffer");
-    this._characterSelectionShader = this._p.createShader(h, BA(this._fontManager.fontSize)), this._brightnessSampleShader = this._p.createShader(h, aA(this._grid.cellHeight, this._grid.cellWidth)), this._colorSampleShader = this._p.createShader(h, QA(16, this._grid.cellHeight, this._grid.cellWidth)), this._brightnessSplitShader = this._p.createShader(h, wA), this._brightnessSampleFramebuffer = this._p.createFramebuffer({
+    this._characterSelectionShader = this._p.createShader(h, aA(this._fontManager.fontSize)), this._brightnessSampleShader = this._p.createShader(h, BA(this._grid.cellHeight, this._grid.cellWidth)), this._colorSampleShader = this._p.createShader(h, QA(16, this._grid.cellHeight, this._grid.cellWidth)), this._brightnessSplitShader = this._p.createShader(h, wA), this._brightnessSampleFramebuffer = this._p.createFramebuffer({
       density: 1,
       width: this._grid.cols,
       height: this._grid.rows,
@@ -1337,7 +1340,7 @@ class oA extends Y {
     super.resizeFramebuffers(), this._brightnessSampleFramebuffer.resize(this._grid.cols, this._grid.rows);
   }
   resetShaders() {
-    this._characterSelectionShader = this._p.createShader(h, BA(this._fontManager.fontSize)), this._brightnessSampleShader = this._p.createShader(h, aA(this._grid.cellHeight, this._grid.cellWidth)), this._colorSampleShader = this._p.createShader(h, QA(16, this._grid.cellHeight, this._grid.cellWidth));
+    this._characterSelectionShader = this._p.createShader(h, aA(this._fontManager.fontSize)), this._brightnessSampleShader = this._p.createShader(h, BA(this._grid.cellHeight, this._grid.cellWidth)), this._colorSampleShader = this._p.createShader(h, QA(16, this._grid.cellHeight, this._grid.cellWidth));
   }
   render(A) {
     this._brightnessSampleFramebuffer.begin(), this._p.clear(), this._p.shader(this._brightnessSampleShader), this._brightnessSampleShader.setUniform("u_inputImage", A), this._brightnessSampleShader.setUniform("u_inputImageSize", [this._p.width, this._p.height]), this._brightnessSampleShader.setUniform("u_gridCols", this._grid.cols), this._brightnessSampleShader.setUniform("u_gridRows", this._grid.rows), this._p.rect(0, 0, this._p.width, this._p.height), this._brightnessSampleFramebuffer.end(), this._brightnessSplitFramebuffer.begin(), this._p.clear(), this._p.shader(this._brightnessSplitShader), this._brightnessSplitShader.setUniform("u_inputImage", A), this._brightnessSplitShader.setUniform("u_brightnessTexture", this._brightnessSampleFramebuffer), this._brightnessSplitShader.setUniform("u_inputImageSize", [this._p.width, this._p.height]), this._brightnessSplitShader.setUniform("u_gridCols", this._grid.cols), this._brightnessSplitShader.setUniform("u_gridRows", this._grid.rows), this._brightnessSplitShader.setUniform("u_pixelRatio", this._p.pixelDensity()), this._p.rect(0, 0, this._p.width, this._p.height), this._brightnessSplitFramebuffer.end(), this._primaryColorFramebuffer.begin(), this._options.characterColorMode === 1 ? this._p.background(this._options.characterColor) : (this._p.clear(), this._p.shader(this._colorSampleShader), this._colorSampleShader.setUniform("u_inputImage", A), this._colorSampleShader.setUniform("u_inputImageBW", this._brightnessSplitFramebuffer), this._colorSampleShader.setUniform("u_inputImageSize", [this._p.width, this._p.height]), this._colorSampleShader.setUniform("u_gridCols", this._grid.cols), this._colorSampleShader.setUniform("u_gridRows", this._grid.rows), this._colorSampleShader.setUniform("u_colorRank", 1), this._p.rect(0, 0, this._p.width, this._p.height)), this._primaryColorFramebuffer.end(), this._secondaryColorFramebuffer.begin(), this._options.backgroundColorMode === 1 ? this._p.background(this._options.backgroundColor) : (this._p.clear(), this._p.shader(this._colorSampleShader), this._colorSampleShader.setUniform("u_inputImage", A), this._colorSampleShader.setUniform("u_inputImageBW", this._brightnessSplitFramebuffer), this._colorSampleShader.setUniform("u_inputImageSize", [this._p.width, this._p.height]), this._colorSampleShader.setUniform("u_gridCols", this._grid.cols), this._colorSampleShader.setUniform("u_gridRows", this._grid.rows), this._colorSampleShader.setUniform("u_colorRank", 2), this._p.rect(0, 0, this._p.width, this._p.height)), this._secondaryColorFramebuffer.end(), this._inversionFramebuffer.begin(), this._options.invertMode ? this._p.background(255) : this._p.background(0), this._inversionFramebuffer.end(), this._rotationFramebuffer.begin(), this._p.background(this._options.rotationAngle), this._rotationFramebuffer.end(), this._flipFramebuffer.begin(), this._p.background(this._options.flipHorizontally ? 255 : 0, this._options.flipVertically ? 255 : 0, 0), this._flipFramebuffer.end(), this._characterFramebuffer.begin(), this._p.clear(), this._p.shader(this._characterSelectionShader), this._characterSelectionShader.setUniform("u_characterTexture", this._fontManager.texture), this._characterSelectionShader.setUniform("u_charsetCols", this._fontManager.textureColumns), this._characterSelectionShader.setUniform("u_charsetRows", this._fontManager.textureRows), this._characterSelectionShader.setUniform("u_charPaletteTexture", this._characterColorPalette.framebuffer), this._characterSelectionShader.setUniform("u_charPaletteSize", [this._characterColorPalette.colors.length, 1]), this._characterSelectionShader.setUniform("u_sketchTexture", this._brightnessSplitFramebuffer), this._characterSelectionShader.setUniform("u_gridCellDimensions", [this._grid.cols, this._grid.rows]), this._characterSelectionShader.setUniform("u_gridPixelDimensions", [this._grid.width, this._grid.height]), this._p.rect(0, 0, this._p.width, this._p.height), this._characterFramebuffer.end();
@@ -1660,7 +1663,7 @@ class nA extends Y {
     this.sobelFramebuffer.begin(), this._p.clear(), this._p.shader(this.sobelShader), this.sobelShader.setUniform("u_texture", A), this.sobelShader.setUniform("u_textureSize", [this._p.width, this._p.height]), this.sobelShader.setUniform("u_threshold", this._options.sobelThreshold), this.sobelShader.setUniform("u_colorPaletteTexture", this._characterColorPalette.framebuffer), this.sobelShader.setUniform("u_totalChars", this._options.characters.length), this._p.rect(0, 0, this._p.width, this._p.height), this.sobelFramebuffer.end(), this.sampleFramebuffer.begin(), this._p.clear(), this._p.shader(this.sampleShader), this.sampleShader.setUniform("u_imageSize", [this._p.width, this._p.height]), this.sampleShader.setUniform("u_image", this.sobelFramebuffer), this.sampleShader.setUniform("u_gridCellDimensions", [this._grid.cols, this._grid.rows]), this.sampleShader.setUniform("u_threshold", this._options.sampleThreshold), this._p.rect(0, 0, this._p.width, this._p.height), this.sampleFramebuffer.end(), this._primaryColorFramebuffer.begin(), this._p.clear(), this._p.shader(this.colorSampleShader), this.colorSampleShader.setUniform("u_sketchTexture", A), this.colorSampleShader.setUniform("u_sampleTexture", this.sampleFramebuffer), this.colorSampleShader.setUniform("u_gridCellDimensions", [this._grid.cols, this._grid.rows]), this.colorSampleShader.setUniform("u_sampleMode", this._options.characterColorMode), this.colorSampleShader.setUniform("u_staticColor", this._options.characterColor._array), this._p.rect(0, 0, this._p.width, this._p.height), this._primaryColorFramebuffer.end(), this._secondaryColorFramebuffer.begin(), this._p.clear(), this._p.shader(this.colorSampleShader), this.colorSampleShader.setUniform("u_sketchTexture", A), this.colorSampleShader.setUniform("u_sampleTexture", this.sampleFramebuffer), this.colorSampleShader.setUniform("u_gridCellDimensions", [this._grid.cols, this._grid.rows]), this.colorSampleShader.setUniform("u_sampleMode", this._options.backgroundColorMode), this.colorSampleShader.setUniform("u_staticColor", this._options.backgroundColor._array), this._p.rect(0, 0, this._p.width, this._p.height), this._secondaryColorFramebuffer.end(), this._inversionFramebuffer.begin(), this._p.clear(), this._p.shader(this.inversionShader), this.inversionShader.setUniform("u_invert", this._options.invertMode), this.inversionShader.setUniform("u_sampleTexture", this.sampleFramebuffer), this.inversionShader.setUniform("u_compareColor", [0, 0, 0]), this.inversionShader.setUniform("u_gridCellDimensions", [this._grid.cols, this._grid.rows]), this._p.rect(0, 0, this._p.width, this._p.height), this._inversionFramebuffer.end(), this._rotationFramebuffer.begin(), this._p.clear(), this._p.shader(this.rotationShader), this.rotationShader.setUniform("u_rotationColor", this._options.rotationAngle._array), this.rotationShader.setUniform("u_sampleTexture", this.sampleFramebuffer), this.rotationShader.setUniform("u_compareColor", [0, 0, 0]), this.rotationShader.setUniform("u_gridCellDimensions", [this._grid.cols, this._grid.rows]), this._p.rect(0, 0, this._p.width, this._p.height), this._rotationFramebuffer.end(), this._flipFramebuffer.begin(), this._p.clear(), this._p.shader(this.flipShader), this.flipShader.setUniform("u_flipH", this._options.flipHorizontally), this.flipShader.setUniform("u_flipV", this._options.flipVertically), this.flipShader.setUniform("u_sampleTexture", this.sampleFramebuffer), this.flipShader.setUniform("u_compareColor", [0, 0, 0]), this.flipShader.setUniform("u_gridCellDimensions", [this._grid.cols, this._grid.rows]), this._p.rect(0, 0, this._p.width, this._p.height), this._flipFramebuffer.end(), this._characterFramebuffer.begin(), this._p.clear(), this._p.shader(this.asciiCharacterShader), this.asciiCharacterShader.setUniform("u_sketchTexture", this.sampleFramebuffer), this.asciiCharacterShader.setUniform("u_gridCellDimensions", [this._grid.cols, this._grid.rows]), this._p.rect(0, 0, this._p.width, this._p.height), this._characterFramebuffer.end();
   }
 }
-var GA = `precision mediump float;
+var MA = `precision mediump float;
 
 uniform sampler2D u_characterTexture;\r
 uniform vec2 u_charsetDimensions;
@@ -1704,7 +1707,8 @@ void main() {\r
     vec4 secondaryColor = texture2D(u_secondaryColorTexture, charIndexTexCoord);
 
     
-    vec4 inversionColor = texture2D(u_inversionTexture, charIndexTexCoord);
+    vec4 inversionColor = texture2D(u_inversionTexture, charIndexTexCoord);\r
+    bool isInverted = inversionColor == vec4(1.0);
 
     
     vec4 encodedIndexVec = texture2D(u_asciiCharacterTexture, charIndexTexCoord);
@@ -1758,26 +1762,27 @@ void main() {\r
     vec2 texCoord = charCoord + fractionalPart * vec2(1.0 / u_charsetDimensions.x, 1.0 / u_charsetDimensions.y);
 
     
-    bool outsideBounds = any(lessThan(texCoord, cellMin)) || any(greaterThan(texCoord, cellMax));
-
+    bool outsideBounds = any(lessThan(texCoord, cellMin)) || any(greaterThan(texCoord, cellMax));\r
+    \r
+    if (outsideBounds) {\r
+        
+        gl_FragColor = isInverted ? primaryColor : secondaryColor;\r
+        return;\r
+    }\r
+    \r
     
-    vec4 charColor = outsideBounds ? secondaryColor : texture2D(u_characterTexture, texCoord);
-
+    vec4 charTexel = texture2D(u_characterTexture, texCoord);\r
+    \r
     
-    if(inversionColor == vec4(1.0)) {\r
-        charColor.a = 1.0 - charColor.a;\r
-        charColor.rgb = vec3(1.0);\r
-    }
-
+    bool isFullyWhite = all(greaterThanEqual(charTexel.rgb, vec3(0.99)));\r
+    \r
     
-    vec4 finalColor = vec4(primaryColor.rgb * charColor.rgb, charColor.a);
-
-    
-    gl_FragColor = mix(secondaryColor, finalColor, charColor.a);
-
-    
-    if(outsideBounds) {\r
-        gl_FragColor = inversionColor == vec4(1.0) ? primaryColor : secondaryColor;\r
+    if (isInverted) {\r
+        
+        gl_FragColor = isFullyWhite ? secondaryColor : primaryColor;\r
+    } else {\r
+        
+        gl_FragColor = isFullyWhite ? primaryColor : secondaryColor;\r
     }\r
 }`;
 class cA {
@@ -1793,7 +1798,7 @@ class cA {
     s(this, "_resultFramebuffer");
     /** Final shader to render the ASCII output. */
     s(this, "_shader");
-    this._p = e, this._grid = A, this._fontManager = r, this._shader = this._p.createShader(h, GA), this._resultFramebuffer = this._p.createFramebuffer({
+    this._p = e, this._grid = A, this._fontManager = r, this._shader = this._p.createShader(h, MA), this._resultFramebuffer = this._p.createFramebuffer({
       width: this._grid.width,
       height: this._grid.height,
       depthFormat: this._p.UNSIGNED_INT,
@@ -1824,8 +1829,8 @@ class cA {
       u_gridPixelDimensions: [this._grid.width, this._grid.height],
       u_gridCellDimensions: [this._grid.cols, this._grid.rows]
     };
-    for (const [C, u] of Object.entries(E))
-      this._shader.setUniform(C, u);
+    for (const [f, _] of Object.entries(E))
+      this._shader.setUniform(f, _);
     this._p.rect(0, 0, this._p.width, this._p.height), this._resultFramebuffer.end();
   }
   /**
@@ -2298,51 +2303,51 @@ class dA {
       ...i
     };
     if (!n.filename) {
-      const _ = /* @__PURE__ */ new Date(), D = _.toISOString().split("T")[0], B = _.toTimeString().split(" ")[0].replace(/:/g, "-");
-      n.filename = `asciify_output_${D}_${B}`;
+      const u = /* @__PURE__ */ new Date(), D = u.toISOString().split("T")[0], a = u.toTimeString().split(" ")[0].replace(/:/g, "-");
+      n.filename = `asciify_output_${D}_${a}`;
     }
-    const E = e.characterFramebuffer, C = e.primaryColorFramebuffer, u = e.secondaryColorFramebuffer, m = e.inversionFramebuffer, f = e.rotationFramebuffer, v = e.flipFramebuffer;
-    E.loadPixels(), C.loadPixels(), u.loadPixels(), m.loadPixels(), f.loadPixels(), v.loadPixels();
-    const l = E.pixels, a = C.pixels, P = u.pixels, F = m.pixels, k = f.pixels, y = v.pixels, p = A.cols, x = A.rows, d = A.cellWidth, G = A.cellHeight, M = A.width, R = A.height, N = r.characterGlyphs, I = r.characters;
-    let c = this.generateSVGHeader(M, R);
+    const E = e.characterFramebuffer, f = e.primaryColorFramebuffer, _ = e.secondaryColorFramebuffer, m = e.inversionFramebuffer, d = e.rotationFramebuffer, v = e.flipFramebuffer;
+    E.loadPixels(), f.loadPixels(), _.loadPixels(), m.loadPixels(), d.loadPixels(), v.loadPixels();
+    const l = E.pixels, B = f.pixels, P = _.pixels, F = m.pixels, k = d.pixels, y = v.pixels, p = A.cols, x = A.rows, C = A.cellWidth, M = A.cellHeight, G = A.width, R = A.height, N = r.characterGlyphs, I = r.characters;
+    let c = this.generateSVGHeader(G, R);
     if (n.includeBackgroundRectangles) {
-      const _ = t, D = this.p.color(_), B = `rgba(${D._array[0] * 255},${D._array[1] * 255},${D._array[2] * 255},${D._array[3]})`;
+      const u = t, D = this.p.color(u), a = `rgba(${D._array[0] * 255},${D._array[1] * 255},${D._array[2] * 255},${D._array[3]})`;
       c += `
-<rect width="${M}" height="${R}" fill="${B}" />`;
+<rect width="${G}" height="${R}" fill="${a}" />`;
     }
     c += `
 <g id="ascii-cells">`;
     let Q = 0;
-    for (let _ = 0; _ < x; _++)
+    for (let u = 0; u < x; u++)
       for (let D = 0; D < p; D++) {
-        const B = Q * 4, U = l[B], T = l[B + 1];
+        const a = Q * 4, U = l[a], T = l[a + 1];
         let w = U + (T << 8);
         w >= I.length && (w = I.length - 1), I[w];
         let H = {
-          r: a[B],
-          g: a[B + 1],
-          b: a[B + 2],
-          a: a[B + 3]
+          r: B[a],
+          g: B[a + 1],
+          b: B[a + 2],
+          a: B[a + 3]
         }, z = {
-          r: P[B],
-          g: P[B + 1],
-          b: P[B + 2],
-          a: P[B + 3]
+          r: P[a],
+          g: P[a + 1],
+          b: P[a + 2],
+          a: P[a + 3]
         };
-        if (F[B] === 255) {
+        if (F[a] === 255) {
           const q = H;
           H = z, z = q;
         }
-        const J = k[B], O = k[B + 1], V = J + O * 256 / 15, j = D * d, L = _ * G, W = y[B], K = y[B + 1], X = W === 255, Z = K === 255;
+        const J = k[a], V = k[a + 1], j = J + V * 256 / 15, L = D * C, W = u * M, O = y[a], K = y[a + 1], X = O === 255, Z = K === 255;
         c += this.generateSVGCellContent(
           w,
           H,
           z,
-          j,
           L,
-          d,
-          G,
-          V,
+          W,
+          C,
+          M,
+          j,
           X,
           Z,
           r,
@@ -2383,41 +2388,41 @@ class dA {
    * @param options The SVG export options
    * @returns The SVG content for the cell
    */
-  generateSVGCellContent(e, A, r, t, i, n, E, C, u, m, f, v, l) {
-    let a = "";
+  generateSVGCellContent(e, A, r, t, i, n, E, f, _, m, d, v, l) {
+    let B = "";
     if (l.includeBackgroundRectangles && r.a > 0) {
-      const d = `rgba(${r.r},${r.g},${r.b},${r.a / 255})`;
-      l.drawMode === "stroke" ? a += `
-  <rect x="${t}" y="${i}" width="${n}" height="${E}" stroke="${d}" fill="none" stroke-width="${l.strokeWidth || 1}" />` : a += `
-  <rect x="${t}" y="${i}" width="${n}" height="${E}" fill="${d}" />`;
+      const C = `rgba(${r.r},${r.g},${r.b},${r.a / 255})`;
+      l.drawMode === "stroke" ? B += `
+  <rect x="${t}" y="${i}" width="${n}" height="${E}" stroke="${C}" fill="none" stroke-width="${l.strokeWidth || 1}" />` : B += `
+  <rect x="${t}" y="${i}" width="${n}" height="${E}" fill="${C}" />`;
     }
-    const P = t + n / 2, F = i + E / 2, k = f.characters[e], y = `rgba(${A.r},${A.g},${A.b},${A.a / 255})`, p = [];
-    if (u || m) {
-      const d = u ? -1 : 1, G = m ? -1 : 1;
-      p.push(`translate(${P} ${F})`), p.push(`scale(${d} ${G})`), p.push(`translate(${-P} ${-F})`);
+    const P = t + n / 2, F = i + E / 2, k = d.characters[e], y = `rgba(${A.r},${A.g},${A.b},${A.a / 255})`, p = [];
+    if (_ || m) {
+      const C = _ ? -1 : 1, M = m ? -1 : 1;
+      p.push(`translate(${P} ${F})`), p.push(`scale(${C} ${M})`), p.push(`translate(${-P} ${-F})`);
     }
-    C && p.push(`rotate(${C} ${P} ${F})`);
+    f && p.push(`rotate(${f} ${P} ${F})`);
     const x = p.length ? ` transform="${p.join(" ")}"` : "";
     if (l.drawMode === "text") {
-      const d = Math.min(n, E) * 0.8;
-      a += `
-  <text x="${P}" y="${F}" font-family="monospace" font-size="${d}px" fill="${y}" text-anchor="middle" dominant-baseline="middle"${x}>${this.escapeXml(k)}</text>`;
+      const C = Math.min(n, E) * 0.8;
+      B += `
+  <text x="${P}" y="${F}" font-family="monospace" font-size="${C}px" fill="${y}" text-anchor="middle" dominant-baseline="middle"${x}>${this.escapeXml(k)}</text>`;
     } else {
-      const d = v[e], G = f.fontSize / f.font.font.unitsPerEm, M = t + (n - d.advanceWidth * G) / 2, R = i + (E + f.fontSize * 0.7) / 2, c = d.getPath(M, R, f.fontSize).toSVG().match(/d="([^"]+)"/);
+      const C = v[e], M = d.fontSize / d.font.font.unitsPerEm, G = t + (n - C.advanceWidth * M) / 2, R = i + (E + d.fontSize * 0.7) / 2, c = C.getPath(G, R, d.fontSize).toSVG().match(/d="([^"]+)"/);
       if (c && c[1]) {
-        if (x && (a += `
+        if (x && (B += `
   <g${x}>`), l.drawMode === "stroke") {
-          const Q = l.strokeWidth || 1, _ = `path-${e}-${t}-${i}`.replace(/\./g, "-");
-          a += `
-    <path id="${_}" d="${c[1]}" stroke="${y}" stroke-width="${Q}" fill="none" />`;
+          const Q = l.strokeWidth || 1, u = `path-${e}-${t}-${i}`.replace(/\./g, "-");
+          B += `
+    <path id="${u}" d="${c[1]}" stroke="${y}" stroke-width="${Q}" fill="none" />`;
         } else
-          a += `
+          B += `
     <path d="${c[1]}" fill="${y}" />`;
-        x && (a += `
+        x && (B += `
   </g>`);
       }
     }
-    return a;
+    return B;
   }
   /**
    * Escapes special XML characters in a string
@@ -2437,7 +2442,7 @@ class dA {
     i.href = t, i.download = `${A}.svg`, document.body.appendChild(i), i.click(), document.body.removeChild(i), URL.revokeObjectURL(t);
   }
 }
-class MA {
+class GA {
   /**
    * Creates a new JSON exporter.
    * @param p The p5.js instance
@@ -2467,9 +2472,9 @@ class MA {
       const I = /* @__PURE__ */ new Date(), c = I.toISOString().split("T")[0], Q = I.toTimeString().split(" ")[0].replace(/:/g, "-");
       i.filename = `asciify_output_${c}_${Q}`;
     }
-    const n = e.characterFramebuffer, E = e.primaryColorFramebuffer, C = e.secondaryColorFramebuffer, u = e.inversionFramebuffer, m = e.rotationFramebuffer, f = e.flipFramebuffer;
-    n.loadPixels(), E.loadPixels(), C.loadPixels(), u.loadPixels(), m.loadPixels(), f.loadPixels();
-    const v = n.pixels, l = E.pixels, a = C.pixels, P = u.pixels, F = m.pixels, k = f.pixels, y = A.cols, p = A.rows, x = r.characters, d = {
+    const n = e.characterFramebuffer, E = e.primaryColorFramebuffer, f = e.secondaryColorFramebuffer, _ = e.inversionFramebuffer, m = e.rotationFramebuffer, d = e.flipFramebuffer;
+    n.loadPixels(), E.loadPixels(), f.loadPixels(), _.loadPixels(), m.loadPixels(), d.loadPixels();
+    const v = n.pixels, l = E.pixels, B = f.pixels, P = _.pixels, F = m.pixels, k = d.pixels, y = A.cols, p = A.rows, x = r.characters, C = {
       version: "1.0",
       created: (/* @__PURE__ */ new Date()).toISOString(),
       gridSize: {
@@ -2480,16 +2485,16 @@ class MA {
         width: A.width,
         height: A.height
       }
-    }, G = [];
-    let M = 0;
+    }, M = [];
+    let G = 0;
     for (let I = 0; I < p; I++)
       for (let c = 0; c < y; c++) {
-        const Q = M * 4, _ = v[Q], D = v[Q + 1];
-        let B = _ + (D << 8);
-        B >= x.length && (B = x.length - 1);
-        const U = x[B];
+        const Q = G * 4, u = v[Q], D = v[Q + 1];
+        let a = u + (D << 8);
+        a >= x.length && (a = x.length - 1);
+        const U = x[a];
         if (!i.includeEmptyCells && (U === " " || U === "")) {
-          M++;
+          G++;
           continue;
         }
         let T = {
@@ -2498,17 +2503,17 @@ class MA {
           b: l[Q + 2],
           a: l[Q + 3]
         }, w = {
-          r: a[Q],
-          g: a[Q + 1],
-          b: a[Q + 2],
-          a: a[Q + 3]
+          r: B[Q],
+          g: B[Q + 1],
+          b: B[Q + 2],
+          a: B[Q + 3]
         };
         const z = P[Q] === 255;
         if (z) {
           const q = T;
           T = w, w = q;
         }
-        const gA = F[Q], J = F[Q + 1], O = gA + J, V = k[Q], j = k[Q + 1], L = V === 255, W = j === 255, K = this.rgbaToHex(
+        const gA = F[Q], J = F[Q + 1], V = gA + J, j = k[Q], L = k[Q + 1], W = j === 255, O = L === 255, K = this.rgbaToHex(
           T.r,
           T.g,
           T.b,
@@ -2525,17 +2530,17 @@ class MA {
           unicode: U.charCodeAt(0),
           color: K,
           backgroundColor: X,
-          rotation: O,
+          rotation: V,
           inverted: z,
-          flipHorizontal: L,
-          flipVertical: W
+          flipHorizontal: W,
+          flipVertical: O
         };
-        G.push(Z), M++;
+        M.push(Z), G++;
       }
     const N = JSON.stringify(
       {
-        metadata: d,
-        cells: G
+        metadata: C,
+        cells: M
       },
       null,
       i.prettyPrint ? 2 : 0
@@ -2779,7 +2784,7 @@ class hA {
     );
   }
   saveJSON(e = {}) {
-    new MA(this._p).saveJSON(
+    new GA(this._p).saveJSON(
       this._rendererManager,
       this._grid,
       this._fontManager,
@@ -2798,14 +2803,14 @@ class hA {
     e.loadPixels();
     const A = e.pixels, r = this._grid.cols, t = this._grid.rows, i = this._fontManager.characters, n = [];
     let E = 0;
-    for (let C = 0; C < t; C++) {
-      let u = "";
+    for (let f = 0; f < t; f++) {
+      let _ = "";
       for (let m = 0; m < r; m++) {
-        const f = E * 4, v = A[f], l = A[f + 1];
-        let a = v + (l << 8);
-        a >= i.length && (a = i.length - 1), u += i[a], E++;
+        const d = E * 4, v = A[d], l = A[d + 1];
+        let B = v + (l << 8);
+        B >= i.length && (B = i.length - 1), _ += i[B], E++;
       }
-      n.push(u);
+      n.push(_);
     }
     return n;
   }
@@ -3137,14 +3142,14 @@ const CA = (o, e) => {
   CUSTOM_DEFAULT_OPTIONS_2D: AA,
   P5AsciifyRenderer2D: $,
   feature: YA
-}, Symbol.toStringTag, { value: "Module" })), VA = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+}, Symbol.toStringTag, { value: "Module" })), jA = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   "2d": UA,
   P5AsciifyDisplayRenderer: cA,
   P5AsciifyRenderer: lA,
   P5AsciifyRendererManager: fA,
   RENDERER_TYPES: iA
-}, Symbol.toStringTag, { value: "Module" })), jA = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+}, Symbol.toStringTag, { value: "Module" })), LA = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   P5AsciifySVGExporter: dA,
   compareVersions: CA
@@ -3211,6 +3216,6 @@ export {
   S as p5asciify,
   HA as postDrawHook,
   NA as preDrawHook,
-  VA as renderers,
-  jA as utils
+  jA as renderers,
+  LA as utils
 };
