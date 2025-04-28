@@ -213,22 +213,20 @@ export class P5AsciifyFontManager {
         let maxWidth = 0;
         let maxHeight = 0;
 
-        // Use textAscent + textDescent as a base for height calculation
-        const totalHeight = this._p.textAscent() + this._p.textDescent();
-
         // Check each character's dimensions
         for (const char of this._characters) {
             // Get width of this character
-            const charWidth = this._p.textWidth(char.character);
 
             // For height, we can use textBounds which gives a more precise bounding box
             const bounds = this._font.textBounds(char.character, 0, 0, fontSize);
             const charHeight = bounds.h;
+            const charWidth = bounds.w;
 
             // Update maximum dimensions
-            maxWidth = charWidth;
-            maxHeight = Math.max(maxHeight, charHeight, totalHeight);
+            maxWidth = Math.max(maxWidth, charWidth);
+            maxHeight = Math.max(maxHeight, charHeight);
         }
+
 
         // Return ceiling values to ensure we have enough space
         return {
