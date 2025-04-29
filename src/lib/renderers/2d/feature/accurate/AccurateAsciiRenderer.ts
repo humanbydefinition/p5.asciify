@@ -19,7 +19,7 @@ export const ACCURATE_DEFAULT_OPTIONS = {
     /** Enable/disable the renderer */
     enabled: false,
     /** Characters used for pattern matching */
-    characters: "0123456789",
+    characters: " .:-=+*%@#",
     /** Color of the ASCII characters. Only used when `characterColorMode` is set to `fixed` */
     characterColor: "#FFFFFF",
     /** Character color mode */

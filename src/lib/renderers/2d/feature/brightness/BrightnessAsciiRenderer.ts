@@ -19,7 +19,7 @@ export const BRIGHTNESS_DEFAULT_OPTIONS = {
     /** Enable/disable the renderer */
     enabled: true,
     /** Characters used for brightness mapping (from darkest to brightest) */
-    characters: "0123456789",
+    characters: " .:-=+*%@#",
     /** Color of the ASCII characters. Only used when `characterColorMode` is set to `fixed` */
     characterColor: "#FFFFFF",
     /** Character color mode */
