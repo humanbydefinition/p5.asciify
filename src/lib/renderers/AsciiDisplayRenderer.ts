@@ -46,7 +46,7 @@ export class P5AsciifyDisplayRenderer {
      * @param characterFramebuffer The framebuffer containing the character indices.
      * @param primaryColorFramebuffer The framebuffer containing the primary color values.
      * @param secondaryColorFramebuffer The framebuffer containing the secondary color values.
-     * @param inversionFramebuffer The framebuffer containing the inversion values.
+     * @param transformFramebuffer The framebuffer containing the inversion values.
      * @param rotationFramebuffer The framebuffer containing the rotation values.
      * @ignore
      */
@@ -54,9 +54,8 @@ export class P5AsciifyDisplayRenderer {
         characterFramebuffer: p5.Framebuffer,
         primaryColorFramebuffer: p5.Framebuffer,
         secondaryColorFramebuffer: p5.Framebuffer,
-        inversionFramebuffer: p5.Framebuffer,
+        transformFramebuffer: p5.Framebuffer,
         rotationFramebuffer: p5.Framebuffer,
-        flipFramebuffer: p5.Framebuffer,
     ) {
         this._resultFramebuffer.begin();
         this._p.clear();
@@ -68,9 +67,8 @@ export class P5AsciifyDisplayRenderer {
             u_charsetDimensions: [this._fontManager.textureColumns, this._fontManager.textureRows],
             u_primaryColorTexture: primaryColorFramebuffer,
             u_secondaryColorTexture: secondaryColorFramebuffer,
-            u_inversionTexture: inversionFramebuffer,
+            u_transformTexture: transformFramebuffer,
             u_rotationTexture: rotationFramebuffer,
-            u_flipTexture: flipFramebuffer,
             u_asciiCharacterTexture: characterFramebuffer,
             u_gridPixelDimensions: [this._grid.width, this._grid.height],
             u_gridCellDimensions: [this._grid.cols, this._grid.rows],

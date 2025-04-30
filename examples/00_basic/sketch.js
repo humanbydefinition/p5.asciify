@@ -21,7 +21,9 @@ export const BRIGHTNESS_OPTIONS = {
   backgroundColorMode: 'fixed',
   invertMode: false,
   fontSize: 16,
-  rotationAngle: 0
+  rotationAngle: 0,
+  flipHorizontally: false,
+  flipVertically: false,
 };
 
 export const createSketch = (options = {}) => {

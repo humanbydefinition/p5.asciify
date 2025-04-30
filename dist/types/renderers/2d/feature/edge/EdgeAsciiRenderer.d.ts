@@ -41,9 +41,8 @@ export declare class P5AsciifyEdgeRenderer extends AbstractFeatureRenderer2D<Edg
     private sobelShader;
     private sampleShader;
     private colorSampleShader;
-    private inversionShader;
+    private transformShader;
     private rotationShader;
-    private flipShader;
     private asciiCharacterShader;
     private sobelFramebuffer;
     private sampleFramebuffer;

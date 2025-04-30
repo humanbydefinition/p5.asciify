@@ -25,12 +25,14 @@ export declare class P5AsciifyRendererManager {
     private _secondaryColorFramebuffer;
     /** The character framebuffer, whose pixels define the ASCII characters to use in the grid cells. */
     private _characterFramebuffer;
-    /** The inversion framebuffer, whose pixels define whether to swap the character and background colors. */
-    private _inversionFramebuffer;
+    /** The transform framebuffer, where each pixels color channel defines a different transformation:
+     * - Red channel: Swap the character and background colors of the grid cells.
+     * - Green channel: Flip the ASCII characters horizontally.
+     * - Blue channel: Flip the ASCII characters vertically.
+     */
+    private _transformFramebuffer;
     /** The rotation framebuffer, whose pixels define the rotation angle of the characters in the grid. */
     private _rotationFramebuffer;
-    /** The flip framebuffer, whose pixels define the flipping of the characters in the grid. */
-    private _flipFramebuffer;
     private _asciiDisplayRenderer2D;
     /** Whether any renderers are enabled. */
     private _hasEnabledRenderers;
@@ -284,14 +286,13 @@ export declare class P5AsciifyRendererManager {
      * which contains the inversion framebuffers of all renderers in the pipeline stacked on top of each other.
      * @ignore
      */
-    get inversionFramebuffer(): p5.Framebuffer;
+    get transformFramebuffer(): p5.Framebuffer;
     /**
      * Returns the rotation framebuffer,
      * which contains the rotation framebuffers of all renderers in the pipeline stacked on top of each other.
      * @ignore
      */
     get rotationFramebuffer(): p5.Framebuffer;
-    get flipFramebuffer(): p5.Framebuffer;
     /**
      * Returns a boolean indicating whether any renderers are enabled in the pipeline.
      */

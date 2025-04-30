@@ -43,9 +43,8 @@ export class P5AsciifyRenderer2D<T extends AsciiRendererOptions = AsciiRendererO
     public resizeFramebuffers(): void {
         this._primaryColorFramebuffer.resize(this._grid.cols, this._grid.rows);
         this._secondaryColorFramebuffer.resize(this._grid.cols, this._grid.rows);
-        this._inversionFramebuffer.resize(this._grid.cols, this._grid.rows);
+        this._transformFramebuffer.resize(this._grid.cols, this._grid.rows);
         this._rotationFramebuffer.resize(this._grid.cols, this._grid.rows);
         this._characterFramebuffer.resize(this._grid.cols, this._grid.rows);
-        this._flipFramebuffer.resize(this._grid.cols, this._grid.rows);
     }
 }

@@ -89,24 +89,21 @@ export class P5AsciifySVGExporter {
         const characterFramebuffer = rendererManager.characterFramebuffer;
         const primaryColorFramebuffer = rendererManager.primaryColorFramebuffer;
         const secondaryColorFramebuffer = rendererManager.secondaryColorFramebuffer;
-        const inversionFramebuffer = rendererManager.inversionFramebuffer;
+        const transformFramebuffer = rendererManager.transformFramebuffer;
         const rotationFramebuffer = rendererManager.rotationFramebuffer;
-        const flipFramebuffer = rendererManager.flipFramebuffer;
 
         // Load pixels from all framebuffers
         characterFramebuffer.loadPixels();
         primaryColorFramebuffer.loadPixels();
         secondaryColorFramebuffer.loadPixels();
-        inversionFramebuffer.loadPixels();
+        transformFramebuffer.loadPixels();
         rotationFramebuffer.loadPixels();
-        flipFramebuffer.loadPixels();
 
         const characterPixels = characterFramebuffer.pixels;
         const primaryColorPixels = primaryColorFramebuffer.pixels;
         const secondaryColorPixels = secondaryColorFramebuffer.pixels;
-        const inversionPixels = inversionFramebuffer.pixels;
+        const transformPixels = transformFramebuffer.pixels;
         const rotationPixels = rotationFramebuffer.pixels;
-        const flipPixels = flipFramebuffer.pixels;
 
         // Get grid dimensions and cell sizes
         const cols = grid.cols;
@@ -166,18 +163,25 @@ export class P5AsciifySVGExporter {
                     a: secondaryColorPixels[pixelIdx + 3]
                 };
 
-                // Check if colors should be inverted based on inversionFramebuffer
-                // White pixel (255) in inversionFramebuffer means colors should be swapped
-                const inversionValue = inversionPixels[pixelIdx];
-                if (inversionValue === 255) {
-                    // Swap primary and secondary colors
+                // Get transform data (inversion and flips) from transformFramebuffer
+                const transformR = transformPixels[pixelIdx];
+                const transformG = transformPixels[pixelIdx + 1];
+                const transformB = transformPixels[pixelIdx + 2];
+
+                // R channel for inversion
+                const isInverted = transformR === 255;
+                // G channel for horizontal flip, B channel for vertical flip
+                const flipH = transformG === 255;
+                const flipV = transformB === 255;
+
+                // If inverted, swap primary and secondary colors
+                if (isInverted) {
                     const tempColor = primaryColor;
                     primaryColor = secondaryColor;
                     secondaryColor = tempColor;
                 }
 
                 // Calculate rotation angle from rotationFramebuffer
-                // Red channel for degrees up to 255, green channel for additional degrees
                 const rotationRed = rotationPixels[pixelIdx];
                 const rotationGreen = rotationPixels[pixelIdx + 1];
                 const rotationAngle = rotationRed + (rotationGreen * 256 / 15);
@@ -185,12 +189,6 @@ export class P5AsciifySVGExporter {
                 // Calculate position for this cell
                 const cellX = x * cellWidth;
                 const cellY = y * cellHeight;
-
-                // Read flip flags (red=H, green=V)
-                const flipR = flipPixels[pixelIdx];
-                const flipG = flipPixels[pixelIdx + 1];
-                const flipH = flipR === 255;
-                const flipV = flipG === 255;
 
                 svgContent += this.generateSVGCellContent(
                     charIndex,

@@ -20,12 +20,14 @@ export declare abstract class P5AsciifyRenderer<T extends AsciiRendererOptions =
     protected _secondaryColorFramebuffer: p5.Framebuffer;
     /** The character framebuffer, whose pixels define the ASCII characters to use in the grid cells. */
     protected _characterFramebuffer: p5.Framebuffer;
-    /** The inversion framebuffer, whose pixels define whether to swap the character and background colors. */
-    protected _inversionFramebuffer: p5.Framebuffer;
+    /** The transform framebuffer, where each pixels color channel defines a different transformation:
+     * - Red channel: Swap the character and background colors of the grid cells.
+     * - Green channel: Flip the ASCII characters horizontally.
+     * - Blue channel: Flip the ASCII characters vertically.
+     */
+    protected _transformFramebuffer: p5.Framebuffer;
     /** The rotation framebuffer, whose pixels define the rotation angle of the characters in the grid. */
     protected _rotationFramebuffer: p5.Framebuffer;
-    /** The flip framebuffer, whose pixels define whether to flip the characters in the grid. */
-    protected _flipFramebuffer: p5.Framebuffer;
     /**
      * Constructs a new ASCII renderer instance. Called by derived classes.
      * @param _p The p5 instance.
@@ -302,7 +304,7 @@ export declare abstract class P5AsciifyRenderer<T extends AsciiRendererOptions =
      *  }
      * ```
      */
-    get inversionFramebuffer(): p5.Framebuffer;
+    get transformFramebuffer(): p5.Framebuffer;
     /**
      * Get the rotation framebuffer, whose pixels define the rotation angle of each character in the grid.
      *
@@ -363,7 +365,6 @@ export declare abstract class P5AsciifyRenderer<T extends AsciiRendererOptions =
      * ```
      */
     get rotationFramebuffer(): p5.Framebuffer;
-    get flipFramebuffer(): p5.Framebuffer;
     /**
      * Get the character framebuffer, whose pixels define the ASCII characters to use in the grid cells.
      *

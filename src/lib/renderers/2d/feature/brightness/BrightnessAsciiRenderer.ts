@@ -103,13 +103,9 @@ export class P5AsciifyBrightnessRenderer extends AbstractFeatureRenderer2D {
         }
         this._secondaryColorFramebuffer.end();
 
-        this._inversionFramebuffer.begin();
-        if (this._options.invertMode) {
-            this._p.background(255);
-        } else {
-            this._p.background(0);
-        }
-        this._inversionFramebuffer.end();
+        this._transformFramebuffer.begin();
+        this._p.background(this._options.invertMode ? 255 : 0, this._options.flipHorizontally ? 255 : 0, this._options.flipVertically ? 255 : 0);
+        this._transformFramebuffer.end();
 
         this._rotationFramebuffer.begin();
         this._p.background(this._options.rotationAngle as p5.Color);
@@ -124,9 +120,5 @@ export class P5AsciifyBrightnessRenderer extends AbstractFeatureRenderer2D {
         this.asciiCharacterShader.setUniform('u_charPaletteSize', [this._characterColorPalette.colors.length, 1]);
         this._p.rect(0, 0, this._p.width, this._p.height);
         this._characterFramebuffer.end();
-
-        this._flipFramebuffer.begin();
-        this._p.background(this._options.flipHorizontally ? 255 : 0, this._options.flipVertically ? 255 : 0, 0);
-        this._flipFramebuffer.end();
     }
 }

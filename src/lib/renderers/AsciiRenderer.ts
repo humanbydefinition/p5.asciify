@@ -19,14 +19,15 @@ export abstract class P5AsciifyRenderer<T extends AsciiRendererOptions = AsciiRe
     /** The character framebuffer, whose pixels define the ASCII characters to use in the grid cells. */
     protected _characterFramebuffer: p5.Framebuffer;
 
-    /** The inversion framebuffer, whose pixels define whether to swap the character and background colors. */
-    protected _inversionFramebuffer: p5.Framebuffer;
+    /** The transform framebuffer, where each pixels color channel defines a different transformation:
+     * - Red channel: Swap the character and background colors of the grid cells.
+     * - Green channel: Flip the ASCII characters horizontally.
+     * - Blue channel: Flip the ASCII characters vertically.
+     */
+    protected _transformFramebuffer: p5.Framebuffer;
 
     /** The rotation framebuffer, whose pixels define the rotation angle of the characters in the grid. */
     protected _rotationFramebuffer: p5.Framebuffer;
-
-    /** The flip framebuffer, whose pixels define whether to flip the characters in the grid. */
-    protected _flipFramebuffer: p5.Framebuffer;
 
     /**
      * Constructs a new ASCII renderer instance. Called by derived classes.
@@ -58,10 +59,9 @@ export abstract class P5AsciifyRenderer<T extends AsciiRendererOptions = AsciiRe
 
         this._primaryColorFramebuffer = this._p.createFramebuffer(framebufferSettings);
         this._secondaryColorFramebuffer = this._p.createFramebuffer(framebufferSettings);
-        this._inversionFramebuffer = this._p.createFramebuffer(framebufferSettings);
+        this._transformFramebuffer = this._p.createFramebuffer(framebufferSettings);
         this._characterFramebuffer = this._p.createFramebuffer(framebufferSettings);
         this._rotationFramebuffer = this._p.createFramebuffer(framebufferSettings);
-        this._flipFramebuffer = this._p.createFramebuffer(framebufferSettings);
     }
 
     /**
@@ -95,8 +95,6 @@ export abstract class P5AsciifyRenderer<T extends AsciiRendererOptions = AsciiRe
             this.enabled(newOptions.enabled);
         }
     }
-
-
 
     /**
      * Enable or disable the renderer.
@@ -132,7 +130,7 @@ export abstract class P5AsciifyRenderer<T extends AsciiRendererOptions = AsciiRe
             const framebuffers = [
                 this._primaryColorFramebuffer,
                 this._secondaryColorFramebuffer,
-                this._inversionFramebuffer,
+                this._transformFramebuffer,
                 this._rotationFramebuffer,
                 this._characterFramebuffer
             ]
@@ -373,7 +371,7 @@ export abstract class P5AsciifyRenderer<T extends AsciiRendererOptions = AsciiRe
      *  }
      * ```
      */
-    get inversionFramebuffer() { return this._inversionFramebuffer; }
+    get transformFramebuffer() { return this._transformFramebuffer; }
 
     /**
      * Get the rotation framebuffer, whose pixels define the rotation angle of each character in the grid.
@@ -435,8 +433,6 @@ export abstract class P5AsciifyRenderer<T extends AsciiRendererOptions = AsciiRe
      * ```
      */
     get rotationFramebuffer() { return this._rotationFramebuffer; }
-
-    get flipFramebuffer() { return this._flipFramebuffer; }
 
     /**
      * Get the character framebuffer, whose pixels define the ASCII characters to use in the grid cells.

@@ -6,15 +6,14 @@ uniform vec2 u_charsetDimensions;
 
 uniform sampler2D u_primaryColorTexture;
 uniform sampler2D u_secondaryColorTexture;
-uniform sampler2D u_inversionTexture;
+uniform sampler2D u_transformTexture;
 uniform sampler2D u_asciiCharacterTexture;
 uniform sampler2D u_rotationTexture;
-uniform sampler2D u_flipTexture;
 
 uniform vec2 u_gridCellDimensions;
 uniform vec2 u_gridPixelDimensions;
 
-uniform float u_pixelRatio; // Added uniform for pixel ratio
+uniform float u_pixelRatio;
 
 // Function to rotate coordinates
 mat2 rotate2D(float angle) {
@@ -43,9 +42,11 @@ void main() {
     // Sample secondary color (background color)
     vec4 secondaryColor = texture2D(u_secondaryColorTexture, charIndexTexCoord);
 
-    // Sample inversion texture
-    vec4 inversionColor = texture2D(u_inversionTexture, charIndexTexCoord);
-    bool isInverted = inversionColor == vec4(1.0);
+    // Sample transform texture for inversion and flips
+    vec4 transformColor = texture2D(u_transformTexture, charIndexTexCoord);
+    bool isInverted = transformColor.r > 0.5; // Inversion in red channel
+    bool flipHorizontal = transformColor.g > 0.5; // Horizontal flip in red channel
+    bool flipVertical = transformColor.b > 0.5;   // Vertical flip in blue channel
 
     // Sample the character index from the ASCII character texture
     vec4 encodedIndexVec = texture2D(u_asciiCharacterTexture, charIndexTexCoord);
@@ -72,11 +73,6 @@ void main() {
     // green = additional degrees (0-105)
     float degrees = rotationColor.r * 255.0 + rotationColor.g * 255.0;
     float rotationAngle = radians(degrees);
-
-    // Sample flip texture to get horizontal and vertical flip values
-    vec4 flipColor = texture2D(u_flipTexture, charIndexTexCoord);
-    bool flipHorizontal = flipColor.r > 0.5;
-    bool flipVertical = flipColor.g > 0.5;
 
     // Calculate fractional part and apply rotation
     vec2 fractionalPart = fract(gridCoord) - 0.5;

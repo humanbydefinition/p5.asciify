@@ -154,21 +154,13 @@ export class P5AsciifyAccurateRenderer extends AbstractFeatureRenderer2D {
         }
         this._secondaryColorFramebuffer.end();
 
-        this._inversionFramebuffer.begin();
-        if (this._options.invertMode) {
-            this._p.background(255);
-        } else {
-            this._p.background(0);
-        }
-        this._inversionFramebuffer.end();
+        this._transformFramebuffer.begin();
+        this._p.background(this._options.invertMode ? 255 : 0, this._options.flipHorizontally ? 255 : 0, this._options.flipVertically ? 255 : 0);
+        this._transformFramebuffer.end();
 
         this._rotationFramebuffer.begin();
         this._p.background(this._options.rotationAngle as p5.Color);
         this._rotationFramebuffer.end();
-
-        this._flipFramebuffer.begin();
-        this._p.background(this._options.flipHorizontally ? 255 : 0, this._options.flipVertically ? 255 : 0, 0);
-        this._flipFramebuffer.end();
 
         // ASCII character pass
         this._characterFramebuffer.begin();

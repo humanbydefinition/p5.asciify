@@ -126,24 +126,21 @@ export class P5AsciifyJSONExporter {
         const characterFramebuffer = rendererManager.characterFramebuffer;
         const primaryColorFramebuffer = rendererManager.primaryColorFramebuffer;
         const secondaryColorFramebuffer = rendererManager.secondaryColorFramebuffer;
-        const inversionFramebuffer = rendererManager.inversionFramebuffer;
+        const transformFramebuffer = rendererManager.transformFramebuffer;
         const rotationFramebuffer = rendererManager.rotationFramebuffer;
-        const flipFramebuffer = rendererManager.flipFramebuffer;
 
         // Load pixels from all framebuffers
         characterFramebuffer.loadPixels();
         primaryColorFramebuffer.loadPixels();
         secondaryColorFramebuffer.loadPixels();
-        inversionFramebuffer.loadPixels();
+        transformFramebuffer.loadPixels();
         rotationFramebuffer.loadPixels();
-        flipFramebuffer.loadPixels();
 
         const characterPixels = characterFramebuffer.pixels;
         const primaryColorPixels = primaryColorFramebuffer.pixels;
         const secondaryColorPixels = secondaryColorFramebuffer.pixels;
-        const inversionPixels = inversionFramebuffer.pixels;
+        const transformPixels = transformFramebuffer.pixels;
         const rotationPixels = rotationFramebuffer.pixels;
-        const flipPixels = flipFramebuffer.pixels;
 
         // Get grid dimensions
         const cols = grid.cols;
@@ -208,11 +205,16 @@ export class P5AsciifyJSONExporter {
                     a: secondaryColorPixels[pixelIdx + 3]
                 };
 
-                // Check if colors should be inverted based on inversionFramebuffer
-                // White pixel (255) in inversionFramebuffer means colors should be swapped
-                const inversionValue = inversionPixels[pixelIdx];
-                const isInverted = inversionValue === 255;
+                const transformR = transformPixels[pixelIdx];
+                const transformG = transformPixels[pixelIdx + 1];
+                const transformB = transformPixels[pixelIdx + 2];
 
+                // R channel for inversion, G for horizontal flip, B for vertical flip
+                const isInverted = transformR === 255;
+                const flipH = transformG === 255;
+                const flipV = transformB === 255;
+
+                // The rest of color swapping logic remains the same
                 if (isInverted) {
                     // Swap primary and secondary colors
                     const tempColor = primaryColor;
@@ -225,11 +227,6 @@ export class P5AsciifyJSONExporter {
                 const rotationRed = rotationPixels[pixelIdx];
                 const rotationGreen = rotationPixels[pixelIdx + 1];
                 const rotationAngle = rotationRed + rotationGreen;
-
-                const flipR = flipPixels[pixelIdx];
-                const flipG = flipPixels[pixelIdx + 1];
-                const flipH = flipR === 255;
-                const flipV = flipG === 255;
 
                 // Convert colors to hex format
                 const primaryColorHex = this.rgbaToHex(

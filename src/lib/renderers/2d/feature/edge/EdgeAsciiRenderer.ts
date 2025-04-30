@@ -8,7 +8,7 @@ import { EdgeAsciiRendererOptions } from '../../../types';
 
 import vertexShader from '../../../../assets/shaders/vert/shader.vert';
 import colorSampleShader from './shaders/colorSample.frag';
-import inversionShader from './shaders/inversion.frag';
+import transformShader from './shaders/transform.frag';
 import rotationShader from './shaders/rotation.frag';
 import asciiCharacterShader from './shaders/asciiCharacter.frag';
 import sobelShader from './shaders/sobel.frag';
@@ -55,9 +55,8 @@ export class P5AsciifyEdgeRenderer extends AbstractFeatureRenderer2D<EdgeAsciiRe
     private sobelShader: p5.Shader;
     private sampleShader: p5.Shader;
     private colorSampleShader: p5.Shader;
-    private inversionShader: p5.Shader;
+    private transformShader: p5.Shader;
     private rotationShader: p5.Shader;
-    private flipShader: p5.Shader;
     private asciiCharacterShader: p5.Shader;
     private sobelFramebuffer: p5.Framebuffer;
     private sampleFramebuffer: p5.Framebuffer;
@@ -81,9 +80,8 @@ export class P5AsciifyEdgeRenderer extends AbstractFeatureRenderer2D<EdgeAsciiRe
         this.sobelShader = this._p.createShader(vertexShader, sobelShader);
         this.sampleShader = this._p.createShader(vertexShader, generateSampleShader(16, this._grid.cellHeight, this._grid.cellWidth));
         this.colorSampleShader = this._p.createShader(vertexShader, colorSampleShader);
-        this.inversionShader = this._p.createShader(vertexShader, inversionShader);
+        this.transformShader = this._p.createShader(vertexShader, transformShader);
         this.rotationShader = this._p.createShader(vertexShader, rotationShader);
-        this.flipShader = this._p.createShader(vertexShader, flipShader);
         this.asciiCharacterShader = this._p.createShader(vertexShader, asciiCharacterShader);
 
         this.sobelFramebuffer = this._p.createFramebuffer({
@@ -223,15 +221,17 @@ export class P5AsciifyEdgeRenderer extends AbstractFeatureRenderer2D<EdgeAsciiRe
         this._secondaryColorFramebuffer.end();
 
         // Inversion pass
-        this._inversionFramebuffer.begin();
+        this._transformFramebuffer.begin();
         this._p.clear();
-        this._p.shader(this.inversionShader);
-        this.inversionShader.setUniform('u_invert', this._options.invertMode as boolean);
-        this.inversionShader.setUniform('u_sampleTexture', this.sampleFramebuffer);
-        this.inversionShader.setUniform('u_compareColor', [0, 0, 0]);
-        this.inversionShader.setUniform('u_gridCellDimensions', [this._grid.cols, this._grid.rows]);
+        this._p.shader(this.transformShader);
+        this.transformShader.setUniform('u_invert', this._options.invertMode as boolean);
+        this.transformShader.setUniform('u_flipH', this._options.flipHorizontally as boolean);
+        this.transformShader.setUniform('u_flipV', this._options.flipVertically as boolean);
+        this.transformShader.setUniform('u_sampleTexture', this.sampleFramebuffer);
+        this.transformShader.setUniform('u_compareColor', [0, 0, 0]);
+        this.transformShader.setUniform('u_gridCellDimensions', [this._grid.cols, this._grid.rows]);
         this._p.rect(0, 0, this._p.width, this._p.height);
-        this._inversionFramebuffer.end();
+        this._transformFramebuffer.end();
 
         this._rotationFramebuffer.begin();
         this._p.clear();
@@ -242,17 +242,6 @@ export class P5AsciifyEdgeRenderer extends AbstractFeatureRenderer2D<EdgeAsciiRe
         this.rotationShader.setUniform('u_gridCellDimensions', [this._grid.cols, this._grid.rows]);
         this._p.rect(0, 0, this._p.width, this._p.height);
         this._rotationFramebuffer.end();
-
-        this._flipFramebuffer.begin();
-        this._p.clear();
-        this._p.shader(this.flipShader);
-        this.flipShader.setUniform('u_flipH', this._options.flipHorizontally as boolean);
-        this.flipShader.setUniform('u_flipV', this._options.flipVertically as boolean);
-        this.flipShader.setUniform('u_sampleTexture', this.sampleFramebuffer);
-        this.flipShader.setUniform('u_compareColor', [0, 0, 0]);
-        this.flipShader.setUniform('u_gridCellDimensions', [this._grid.cols, this._grid.rows]);
-        this._p.rect(0, 0, this._p.width, this._p.height);
-        this._flipFramebuffer.end();
 
         // ASCII character pass
         this._characterFramebuffer.begin();
