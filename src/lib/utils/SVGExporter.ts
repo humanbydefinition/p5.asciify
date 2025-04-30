@@ -2,6 +2,7 @@ import p5 from 'p5';
 import { P5AsciifyGrid } from '../Grid';
 import { P5AsciifyFontManager } from '../FontManager';
 import { P5AsciifyRendererManager } from '../renderers/RendererManager';
+import { P5AsciifyCharacter } from '../types';
 
 /**
  * Options for SVG export.
@@ -118,7 +119,6 @@ export class P5AsciifySVGExporter {
         const gridHeight = grid.height;
 
         // Font information
-        const charGlyphs = fontManager.characterGlyphs;
         const chars = fontManager.characters;
 
         // Start building SVG content
@@ -150,8 +150,6 @@ export class P5AsciifySVGExporter {
                 if (charIndex >= chars.length) {
                     charIndex = chars.length - 1;
                 }
-
-                const char = chars[charIndex];
 
                 // Get the colors for this cell from primary/secondary framebuffers
                 let primaryColor = {
@@ -206,7 +204,7 @@ export class P5AsciifySVGExporter {
                     flipH,
                     flipV,
                     fontManager,
-                    charGlyphs,
+                    chars[charIndex],
                     exportOptions
                 );
 
@@ -246,11 +244,11 @@ export class P5AsciifySVGExporter {
      * @param cellHeight The height of the cell
      * @param rotationAngle The rotation angle for the character
      * @param fontManager The font manager
-     * @param charGlyphs The character glyphs
+     * @param char The characters object array
      * @param options The SVG export options
      * @returns The SVG content for the cell
      */
-        private generateSVGCellContent(
+    private generateSVGCellContent(
         charIndex: number,
         primaryColor: { r: number, g: number, b: number, a: number },
         secondaryColor: { r: number, g: number, b: number, a: number },
@@ -262,11 +260,11 @@ export class P5AsciifySVGExporter {
         flipHorizontal: boolean,
         flipVertical: boolean,
         fontManager: P5AsciifyFontManager,
-        charGlyphs: any[],
+        char: P5AsciifyCharacter,
         options: SVGExportOptions
     ): string {
         let cellContent = '';
-    
+
         // draw background rectangle if requested
         if (options.includeBackgroundRectangles && secondaryColor.a > 0) {
             const bgColorStr = `rgba(${secondaryColor.r},${secondaryColor.g},${secondaryColor.b},${secondaryColor.a / 255})`;
@@ -276,12 +274,11 @@ export class P5AsciifySVGExporter {
                 cellContent += `\n  <rect x="${cellX}" y="${cellY}" width="${cellWidth}" height="${cellHeight}" fill="${bgColorStr}" />`;
             }
         }
-    
+
         const centerX = cellX + cellWidth / 2;
         const centerY = cellY + cellHeight / 2;
-        const char = fontManager.characters[charIndex];
         const colorStr = `rgba(${primaryColor.r},${primaryColor.g},${primaryColor.b},${primaryColor.a / 255})`;
-    
+
         // build flip + rotate transforms around cell center
         const tx: string[] = [];
         if (flipHorizontal || flipVertical) {
@@ -295,22 +292,20 @@ export class P5AsciifySVGExporter {
             tx.push(`rotate(${rotationAngle} ${centerX} ${centerY})`);
         }
         const transformAttr = tx.length ? ` transform="${tx.join(' ')}"` : '';
-    
+
         if (options.drawMode === 'text') {
             // text mode
             const fontSize = Math.min(cellWidth, cellHeight) * 0.8;
             cellContent += `\n  <text x="${centerX}" y="${centerY}"`
                 + ` font-family="monospace" font-size="${fontSize}px" fill="${colorStr}"`
                 + ` text-anchor="middle" dominant-baseline="middle"${transformAttr}>`
-                + `${this.escapeXml(char)}</text>`;
-        } else {
-            // path mode (fill or stroke)
-            const glyph = charGlyphs[charIndex];
+                + `${this.escapeXml(char.character)}</text>`;
+        } else { // path mode (fill or stroke)
             // center glyph in cell
             const scale = fontManager.fontSize / fontManager.font.font.unitsPerEm;
-            const xOffset = cellX + (cellWidth - glyph.advanceWidth * scale) / 2;
+            const xOffset = cellX + (cellWidth - char.advanceWidth * scale) / 2;
             const yOffset = cellY + (cellHeight + fontManager.fontSize * 0.7) / 2;
-            const pathObj = glyph.getPath(xOffset, yOffset, fontManager.fontSize);
+            const pathObj = char.getPath(xOffset, yOffset, fontManager.fontSize);
             const svgPath = pathObj.toSVG();
             const dMatch = svgPath.match(/d="([^"]+)"/);
             if (dMatch && dMatch[1]) {
@@ -329,7 +324,7 @@ export class P5AsciifySVGExporter {
                 }
             }
         }
-    
+
         return cellContent;
     }
 

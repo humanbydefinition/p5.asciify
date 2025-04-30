@@ -1,6 +1,8 @@
 import p5 from 'p5';
 import { P5AsciifyError } from './AsciifyError';
-import { OpenTypeGlyph } from './types';
+import { OpenTypeGlyph, P5AsciifyCharacter } from './types';
+
+
 
 /**
  * Manages the font used for the ASCII rendering pipeline and provides methods for working with the font.
@@ -8,13 +10,7 @@ import { OpenTypeGlyph } from './types';
 export class P5AsciifyFontManager {
 
     /** An array of supported characters in the font. */
-    private _characters: {
-        character: string;
-        unicode: number;
-        r: number;
-        g: number;
-        b: number;
-    }[] = [];
+    private _characters: P5AsciifyCharacter[] = [];
 
     /** Maximum width and height of the glyphs in the font. */
     private _maxGlyphDimensions!: {
@@ -79,6 +75,8 @@ export class P5AsciifyFontManager {
                 return {
                     character: String.fromCharCode(glyph.unicode!),
                     unicode: glyph.unicode!,
+                    getPath: (x: number, y: number, fontSize: number) => glyph.getPath(x, y, fontSize),
+                    advanceWidth: glyph.advanceWidth,
                     r,
                     g,
                     b
@@ -218,7 +216,7 @@ export class P5AsciifyFontManager {
             // Get width of this character
 
             // For height, we can use textBounds which gives a more precise bounding box
-            const bounds = this._font.textBounds(char.character, 0, 0, fontSize);
+            const bounds = this._font.textBounds(char.character, 0, 0, fontSize) as { h: number; w: number };
             const charHeight = bounds.h;
             const charWidth = bounds.w;
 
@@ -226,7 +224,6 @@ export class P5AsciifyFontManager {
             maxWidth = Math.max(maxWidth, charWidth);
             maxHeight = Math.max(maxHeight, charHeight);
         }
-
 
         // Return ceiling values to ensure we have enough space
         return {
@@ -344,11 +341,5 @@ export class P5AsciifyFontManager {
      *  }
      * ```
      */
-    get characters(): {
-        character: string;
-        unicode: number;
-        r: number;
-        g: number;
-        b: number;
-    }[] { return this._characters; }
+    get characters(): P5AsciifyCharacter[] { return this._characters; }
 }

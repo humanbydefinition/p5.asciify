@@ -188,7 +188,7 @@ export class P5AsciifyJSONExporter {
                 const char = chars[charIndex];
 
                 // Skip empty cells if includeEmptyCells is false
-                if (!exportOptions.includeEmptyCells && (char === ' ' || char === '')) {
+                if (!exportOptions.includeEmptyCells && (char.character === ' ' || char.character === '')) {
                     idx++;
                     continue;
                 }
@@ -250,8 +250,8 @@ export class P5AsciifyJSONExporter {
                 const cell: ASCIICell = {
                     x: x,
                     y: y,
-                    character: char,
-                    unicode: char.charCodeAt(0),
+                    character: char.character,
+                    unicode: char.unicode,
                     color: primaryColorHex,
                     backgroundColor: secondaryColorHex,
                     rotation: rotationAngle,
