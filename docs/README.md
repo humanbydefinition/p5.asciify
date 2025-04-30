@@ -1,8 +1,8 @@
-**p5.asciify v0.9.0-beta.1**
+**p5.asciify v0.9.0-beta.4**
 
 ***
 
-# p5.asciify v0.9.0-beta.1
+# p5.asciify v0.9.0-beta.4
 
 ## Namespaces
 
@@ -27,6 +27,12 @@
 | Interface | Description |
 | ------ | ------ |
 | [P5AsciifyExtensions](interfaces/P5AsciifyExtensions.md) | Interface for additional properties and methods added to the `p5.js` instance by the `p5.asciify` library. |
+
+## Type Aliases
+
+| Type Alias | Description |
+| ------ | ------ |
+| [P5AsciifyCharacter](type-aliases/P5AsciifyCharacter.md) | Character object used by the [P5AsciifyFontManager](classes/P5AsciifyFontManager.md) class. |
 
 ## Variables
 

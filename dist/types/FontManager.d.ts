@@ -1,4 +1,5 @@
 import p5 from 'p5';
+import { P5AsciifyCharacter } from './types';
 /**
  * Manages the font used for the ASCII rendering pipeline and provides methods for working with the font.
  */
@@ -174,11 +175,5 @@ export declare class P5AsciifyFontManager {
      *  }
      * ```
      */
-    get characters(): {
-        character: string;
-        unicode: number;
-        r: number;
-        g: number;
-        b: number;
-    }[];
+    get characters(): P5AsciifyCharacter[];
 }

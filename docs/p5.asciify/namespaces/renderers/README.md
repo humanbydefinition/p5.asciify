@@ -1,4 +1,4 @@
-[**p5.asciify v0.9.0-beta.1**](../../../README.md)
+[**p5.asciify v0.9.0-beta.4**](../../../README.md)
 
 ***
 
@@ -12,7 +12,7 @@ Contains functionality relevant to the ASCII rendering.
 
 | Namespace | Description |
 | ------ | ------ |
-| [2d](namespaces/2d/README.md) | Contains all ASCII renderers for 2D rendering. |
+| [renderer2d](namespaces/renderer2d/README.md) | Contains all ASCII renderers for 2D rendering. |
 
 ## Classes
 
@@ -27,8 +27,8 @@ Contains functionality relevant to the ASCII rendering.
 | Interface | Description |
 | ------ | ------ |
 | [AsciiRendererOptions](interfaces/AsciiRendererOptions.md) | Base ASCII renderer options, applicable to all ASCII renderers. |
-| [EdgeAsciiRendererOptions](interfaces/EdgeAsciiRendererOptions.md) | Options specific to the [P5AsciifyEdgeRenderer](namespaces/2d/namespaces/feature/classes/P5AsciifyEdgeRenderer.md) class. |
-| [FeatureAsciiRendererOptions](interfaces/FeatureAsciiRendererOptions.md) | Base options for all feature-based ASCII renderers that extend the [AbstractFeatureRenderer2D](namespaces/2d/namespaces/feature/classes/AbstractFeatureRenderer2D.md) class. |
+| [EdgeAsciiRendererOptions](interfaces/EdgeAsciiRendererOptions.md) | Options specific to the [P5AsciifyEdgeRenderer](namespaces/renderer2d/namespaces/feature/classes/P5AsciifyEdgeRenderer.md) class. |
+| [FeatureAsciiRendererOptions](interfaces/FeatureAsciiRendererOptions.md) | Base options for all feature-based ASCII renderers that extend the [AbstractFeatureRenderer2D](namespaces/renderer2d/namespaces/feature/classes/AbstractFeatureRenderer2D.md) class. |
 
 ## Variables
 

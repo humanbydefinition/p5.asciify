@@ -1,4 +1,4 @@
-[**p5.asciify v0.9.0-beta.1**](../../../../README.md)
+[**p5.asciify v0.9.0-beta.4**](../../../../README.md)
 
 ***
 
@@ -6,7 +6,7 @@
 
 # Interface: AsciiRendererOptions
 
-Defined in: [renderers/types.ts:8](https://github.com/humanbydefinition/p5.asciify/blob/edf0ab1cc6347e56bd84618ff447f3c7ef1e1694/src/lib/renderers/types.ts#L8)
+Defined in: [renderers/types.ts:8](https://github.com/humanbydefinition/p5.asciify/blob/efa13807f031eb411bb838accfe71654ff0d9825/src/lib/renderers/types.ts#L8)
 
 Base ASCII renderer options, applicable to all ASCII renderers.
 
@@ -18,4 +18,4 @@ Base ASCII renderer options, applicable to all ASCII renderers.
 
 | Property | Type | Description | Defined in |
 | ------ | ------ | ------ | ------ |
-| <a id="enabled"></a> `enabled?` | `boolean` | Whether the renderer is enabled. | [renderers/types.ts:10](https://github.com/humanbydefinition/p5.asciify/blob/edf0ab1cc6347e56bd84618ff447f3c7ef1e1694/src/lib/renderers/types.ts#L10) |
+| <a id="enabled"></a> `enabled?` | `boolean` | Whether the renderer is enabled. | [renderers/types.ts:10](https://github.com/humanbydefinition/p5.asciify/blob/efa13807f031eb411bb838accfe71654ff0d9825/src/lib/renderers/types.ts#L10) |

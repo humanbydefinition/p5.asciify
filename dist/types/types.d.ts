@@ -145,3 +145,23 @@ export type OpenTypeGlyph = {
     g?: number;
     b?: number;
 };
+/**
+ * Character object used by the {@link P5AsciifyFontManager} class.
+ */
+export type P5AsciifyCharacter = {
+    character: string;
+    unicode: number;
+    getPath(x: number, y: number, fontSize: number): {
+        getBoundingBox(): {
+            x1: number;
+            y1: number;
+            x2: number;
+            y2: number;
+        };
+        toSVG(): string;
+    };
+    advanceWidth: number;
+    r: number;
+    g: number;
+    b: number;
+};
