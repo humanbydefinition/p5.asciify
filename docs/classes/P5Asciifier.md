@@ -1,4 +1,4 @@
-[**p5.asciify v0.9.0-beta.4**](../README.md)
+[**p5.asciify v0.9.0-beta.5**](../README.md)
 
 ***
 
@@ -6,7 +6,7 @@
 
 # Class: P5Asciifier
 
-Defined in: [Asciifier.ts:17](https://github.com/humanbydefinition/p5.asciify/blob/efa13807f031eb411bb838accfe71654ff0d9825/src/lib/Asciifier.ts#L17)
+Defined in: [Asciifier.ts:17](https://github.com/humanbydefinition/p5.asciify/blob/a4ed761105277b111d87aa2fc6aabd150321d66d/src/lib/Asciifier.ts#L17)
 
 Manages a rendering pipeline for ASCII conversion, including font management, grid calculations, and ASCII renderers, 
 which is applied to the main p5.js canvas or a selected texture.
@@ -31,7 +31,7 @@ Instances of this class are created and managed through the [p5asciify](../varia
 
 > **get** **fontManager**(): [`P5AsciifyFontManager`](P5AsciifyFontManager.md)
 
-Defined in: [Asciifier.ts:483](https://github.com/humanbydefinition/p5.asciify/blob/efa13807f031eb411bb838accfe71654ff0d9825/src/lib/Asciifier.ts#L483)
+Defined in: [Asciifier.ts:483](https://github.com/humanbydefinition/p5.asciify/blob/a4ed761105277b111d87aa2fc6aabd150321d66d/src/lib/Asciifier.ts#L483)
 
 Returns the font manager, which manages the font and provides methods to access font properties like available characters and their corresponding rgb values,
 and the texture containing all the characters in the font.
@@ -57,7 +57,7 @@ and the texture containing all the characters in the font.
 
 > **get** **grid**(): [`P5AsciifyGrid`](P5AsciifyGrid.md)
 
-Defined in: [Asciifier.ts:469](https://github.com/humanbydefinition/p5.asciify/blob/efa13807f031eb411bb838accfe71654ff0d9825/src/lib/Asciifier.ts#L469)
+Defined in: [Asciifier.ts:469](https://github.com/humanbydefinition/p5.asciify/blob/a4ed761105277b111d87aa2fc6aabd150321d66d/src/lib/Asciifier.ts#L469)
 
 Returns the [P5AsciifyGrid](P5AsciifyGrid.md) instance, which contains information about grid properties, and methods to modify the grid.
 
@@ -87,7 +87,7 @@ function setupAsciify() {
 
 > **get** **texture**(): `Framebuffer`
 
-Defined in: [Asciifier.ts:519](https://github.com/humanbydefinition/p5.asciify/blob/efa13807f031eb411bb838accfe71654ff0d9825/src/lib/Asciifier.ts#L519)
+Defined in: [Asciifier.ts:519](https://github.com/humanbydefinition/p5.asciify/blob/a4ed761105277b111d87aa2fc6aabd150321d66d/src/lib/Asciifier.ts#L519)
 
 Returns the ASCII output texture as a p5.Framebuffer, which can be used for further processing or rendering.
 Can also be used via the p5.js `texture()` function.
@@ -124,7 +124,7 @@ Can also be used via the p5.js `texture()` function.
 
 > **background**(`color`): `void`
 
-Defined in: [Asciifier.ts:210](https://github.com/humanbydefinition/p5.asciify/blob/efa13807f031eb411bb838accfe71654ff0d9825/src/lib/Asciifier.ts#L210)
+Defined in: [Asciifier.ts:210](https://github.com/humanbydefinition/p5.asciify/blob/a4ed761105277b111d87aa2fc6aabd150321d66d/src/lib/Asciifier.ts#L210)
 
 Sets the background color for the ascii renderers, occupying all the space not covered by cells in the grid.
 
@@ -157,7 +157,7 @@ Sets the background color for the ascii renderers, occupying all the space not c
 
 > **fill**(`character`): `void`
 
-Defined in: [Asciifier.ts:449](https://github.com/humanbydefinition/p5.asciify/blob/efa13807f031eb411bb838accfe71654ff0d9825/src/lib/Asciifier.ts#L449)
+Defined in: [Asciifier.ts:449](https://github.com/humanbydefinition/p5.asciify/blob/a4ed761105277b111d87aa2fc6aabd150321d66d/src/lib/Asciifier.ts#L449)
 
 Sets the p5.js `fill()` color to the color of the given character in the font texture atlas.
 
@@ -225,7 +225,7 @@ which is used to convert the pixel data to ASCII characters.
 
 > **font**(`font`, `options`): `void`
 
-Defined in: [Asciifier.ts:168](https://github.com/humanbydefinition/p5.asciify/blob/efa13807f031eb411bb838accfe71654ff0d9825/src/lib/Asciifier.ts#L168)
+Defined in: [Asciifier.ts:168](https://github.com/humanbydefinition/p5.asciify/blob/a4ed761105277b111d87aa2fc6aabd150321d66d/src/lib/Asciifier.ts#L168)
 
 Sets the font for the ascii renderers in the rendering pipeline of the asciifier.
 
@@ -267,7 +267,7 @@ Sets the font for the ascii renderers in the rendering pipeline of the asciifier
 
 > **fontSize**(`fontSize`): `void`
 
-Defined in: [Asciifier.ts:109](https://github.com/humanbydefinition/p5.asciify/blob/efa13807f031eb411bb838accfe71654ff0d9825/src/lib/Asciifier.ts#L109)
+Defined in: [Asciifier.ts:109](https://github.com/humanbydefinition/p5.asciify/blob/a4ed761105277b111d87aa2fc6aabd150321d66d/src/lib/Asciifier.ts#L109)
 
 Sets the font size for the ASCII renderers of the asciifier.
 
@@ -296,7 +296,7 @@ Sets the font size for the ASCII renderers of the asciifier.
 
 > **gridDimensions**(`gridCols`, `gridRows`): `void`
 
-Defined in: [Asciifier.ts:236](https://github.com/humanbydefinition/p5.asciify/blob/efa13807f031eb411bb838accfe71654ff0d9825/src/lib/Asciifier.ts#L236)
+Defined in: [Asciifier.ts:236](https://github.com/humanbydefinition/p5.asciify/blob/a4ed761105277b111d87aa2fc6aabd150321d66d/src/lib/Asciifier.ts#L236)
 
 Sets the grid dimensions for the ASCII renderers. 
 Calling this method will make the grid dimensions fixed, no longer adjusting automatically when the canvas size changes.
@@ -329,7 +329,7 @@ To make the grid responsive to the canvas size again, use the [gridResponsive](#
 
 > **gridResponsive**(`bool`): `void`
 
-Defined in: [Asciifier.ts:250](https://github.com/humanbydefinition/p5.asciify/blob/efa13807f031eb411bb838accfe71654ff0d9825/src/lib/Asciifier.ts#L250)
+Defined in: [Asciifier.ts:250](https://github.com/humanbydefinition/p5.asciify/blob/a4ed761105277b111d87aa2fc6aabd150321d66d/src/lib/Asciifier.ts#L250)
 
 Adjust the grid dimensions to be responsive to the canvas size or fixed.
 
@@ -353,7 +353,7 @@ If `false`, the grid dimensions will be fixed and not change when the canvas siz
 
 > **renderers**(): [`P5AsciifyRendererManager`](../p5.asciify/namespaces/renderers/classes/P5AsciifyRendererManager.md)
 
-Defined in: [Asciifier.ts:140](https://github.com/humanbydefinition/p5.asciify/blob/efa13807f031eb411bb838accfe71654ff0d9825/src/lib/Asciifier.ts#L140)
+Defined in: [Asciifier.ts:140](https://github.com/humanbydefinition/p5.asciify/blob/a4ed761105277b111d87aa2fc6aabd150321d66d/src/lib/Asciifier.ts#L140)
 
 Returns the [P5AsciifyRendererManager](../p5.asciify/namespaces/renderers/classes/P5AsciifyRendererManager.md), containing all ASCII renderers in the rendering pipeline of the asciifier.
 
@@ -383,7 +383,7 @@ The renderer manager.
 
 > **saveJSON**(`options`): `void`
 
-Defined in: [Asciifier.ts:292](https://github.com/humanbydefinition/p5.asciify/blob/efa13807f031eb411bb838accfe71654ff0d9825/src/lib/Asciifier.ts#L292)
+Defined in: [Asciifier.ts:292](https://github.com/humanbydefinition/p5.asciify/blob/a4ed761105277b111d87aa2fc6aabd150321d66d/src/lib/Asciifier.ts#L292)
 
 #### Parameters
 
@@ -401,7 +401,7 @@ Defined in: [Asciifier.ts:292](https://github.com/humanbydefinition/p5.asciify/b
 
 > **saveStrings**(`filename`): `void`
 
-Defined in: [Asciifier.ts:386](https://github.com/humanbydefinition/p5.asciify/blob/efa13807f031eb411bb838accfe71654ff0d9825/src/lib/Asciifier.ts#L386)
+Defined in: [Asciifier.ts:386](https://github.com/humanbydefinition/p5.asciify/blob/a4ed761105277b111d87aa2fc6aabd150321d66d/src/lib/Asciifier.ts#L386)
 
 Saves the ASCII output to a text file.
 
@@ -436,7 +436,7 @@ function drawAsciify() {
 
 > **saveSVG**(`options`): `void`
 
-Defined in: [Asciifier.ts:281](https://github.com/humanbydefinition/p5.asciify/blob/efa13807f031eb411bb838accfe71654ff0d9825/src/lib/Asciifier.ts#L281)
+Defined in: [Asciifier.ts:281](https://github.com/humanbydefinition/p5.asciify/blob/a4ed761105277b111d87aa2fc6aabd150321d66d/src/lib/Asciifier.ts#L281)
 
 Saves the current ASCII output as an SVG file.
 
@@ -479,7 +479,7 @@ function drawAsciify() {
 
 > **toString**(): `string`
 
-Defined in: [Asciifier.ts:367](https://github.com/humanbydefinition/p5.asciify/blob/efa13807f031eb411bb838accfe71654ff0d9825/src/lib/Asciifier.ts#L367)
+Defined in: [Asciifier.ts:367](https://github.com/humanbydefinition/p5.asciify/blob/a4ed761105277b111d87aa2fc6aabd150321d66d/src/lib/Asciifier.ts#L367)
 
 Returns the current ASCII output as a string.
 

@@ -1,4 +1,4 @@
-[**p5.asciify v0.9.0-beta.4**](../README.md)
+[**p5.asciify v0.9.0-beta.5**](../README.md)
 
 ***
 
@@ -8,7 +8,7 @@
 
 > **P5AsciifyCharacter** = `object`
 
-Defined in: [types.ts:165](https://github.com/humanbydefinition/p5.asciify/blob/efa13807f031eb411bb838accfe71654ff0d9825/src/lib/types.ts#L165)
+Defined in: [types.ts:165](https://github.com/humanbydefinition/p5.asciify/blob/a4ed761105277b111d87aa2fc6aabd150321d66d/src/lib/types.ts#L165)
 
 Character object used by the [P5AsciifyFontManager](../classes/P5AsciifyFontManager.md) class.
 
@@ -18,7 +18,7 @@ Character object used by the [P5AsciifyFontManager](../classes/P5AsciifyFontMana
 
 > **advanceWidth**: `number`
 
-Defined in: [types.ts:172](https://github.com/humanbydefinition/p5.asciify/blob/efa13807f031eb411bb838accfe71654ff0d9825/src/lib/types.ts#L172)
+Defined in: [types.ts:172](https://github.com/humanbydefinition/p5.asciify/blob/a4ed761105277b111d87aa2fc6aabd150321d66d/src/lib/types.ts#L172)
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: [types.ts:172](https://github.com/humanbydefinition/p5.asciify/blob/
 
 > **b**: `number`
 
-Defined in: [types.ts:175](https://github.com/humanbydefinition/p5.asciify/blob/efa13807f031eb411bb838accfe71654ff0d9825/src/lib/types.ts#L175)
+Defined in: [types.ts:175](https://github.com/humanbydefinition/p5.asciify/blob/a4ed761105277b111d87aa2fc6aabd150321d66d/src/lib/types.ts#L175)
 
 ***
 
@@ -34,7 +34,7 @@ Defined in: [types.ts:175](https://github.com/humanbydefinition/p5.asciify/blob/
 
 > **character**: `string`
 
-Defined in: [types.ts:166](https://github.com/humanbydefinition/p5.asciify/blob/efa13807f031eb411bb838accfe71654ff0d9825/src/lib/types.ts#L166)
+Defined in: [types.ts:166](https://github.com/humanbydefinition/p5.asciify/blob/a4ed761105277b111d87aa2fc6aabd150321d66d/src/lib/types.ts#L166)
 
 ***
 
@@ -42,7 +42,7 @@ Defined in: [types.ts:166](https://github.com/humanbydefinition/p5.asciify/blob/
 
 > **g**: `number`
 
-Defined in: [types.ts:174](https://github.com/humanbydefinition/p5.asciify/blob/efa13807f031eb411bb838accfe71654ff0d9825/src/lib/types.ts#L174)
+Defined in: [types.ts:174](https://github.com/humanbydefinition/p5.asciify/blob/a4ed761105277b111d87aa2fc6aabd150321d66d/src/lib/types.ts#L174)
 
 ***
 
@@ -50,7 +50,7 @@ Defined in: [types.ts:174](https://github.com/humanbydefinition/p5.asciify/blob/
 
 > **r**: `number`
 
-Defined in: [types.ts:173](https://github.com/humanbydefinition/p5.asciify/blob/efa13807f031eb411bb838accfe71654ff0d9825/src/lib/types.ts#L173)
+Defined in: [types.ts:173](https://github.com/humanbydefinition/p5.asciify/blob/a4ed761105277b111d87aa2fc6aabd150321d66d/src/lib/types.ts#L173)
 
 ***
 
@@ -58,7 +58,7 @@ Defined in: [types.ts:173](https://github.com/humanbydefinition/p5.asciify/blob/
 
 > **unicode**: `number`
 
-Defined in: [types.ts:167](https://github.com/humanbydefinition/p5.asciify/blob/efa13807f031eb411bb838accfe71654ff0d9825/src/lib/types.ts#L167)
+Defined in: [types.ts:167](https://github.com/humanbydefinition/p5.asciify/blob/a4ed761105277b111d87aa2fc6aabd150321d66d/src/lib/types.ts#L167)
 
 ## Methods
 
@@ -66,7 +66,7 @@ Defined in: [types.ts:167](https://github.com/humanbydefinition/p5.asciify/blob/
 
 > **getPath**(`x`, `y`, `fontSize`): `object`
 
-Defined in: [types.ts:168](https://github.com/humanbydefinition/p5.asciify/blob/efa13807f031eb411bb838accfe71654ff0d9825/src/lib/types.ts#L168)
+Defined in: [types.ts:168](https://github.com/humanbydefinition/p5.asciify/blob/a4ed761105277b111d87aa2fc6aabd150321d66d/src/lib/types.ts#L168)
 
 #### Parameters
 
@@ -82,5 +82,5 @@ Defined in: [types.ts:168](https://github.com/humanbydefinition/p5.asciify/blob/
 
 | Name | Type | Defined in |
 | ------ | ------ | ------ |
-| `getBoundingBox()` | () => `object` | [types.ts:169](https://github.com/humanbydefinition/p5.asciify/blob/efa13807f031eb411bb838accfe71654ff0d9825/src/lib/types.ts#L169) |
-| `toSVG()` | () => `string` | [types.ts:170](https://github.com/humanbydefinition/p5.asciify/blob/efa13807f031eb411bb838accfe71654ff0d9825/src/lib/types.ts#L170) |
+| `getBoundingBox()` | () => `object` | [types.ts:169](https://github.com/humanbydefinition/p5.asciify/blob/a4ed761105277b111d87aa2fc6aabd150321d66d/src/lib/types.ts#L169) |
+| `toSVG()` | () => `string` | [types.ts:170](https://github.com/humanbydefinition/p5.asciify/blob/a4ed761105277b111d87aa2fc6aabd150321d66d/src/lib/types.ts#L170) |

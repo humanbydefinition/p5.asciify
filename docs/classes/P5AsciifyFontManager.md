@@ -1,4 +1,4 @@
-[**p5.asciify v0.9.0-beta.4**](../README.md)
+[**p5.asciify v0.9.0-beta.5**](../README.md)
 
 ***
 
@@ -6,7 +6,7 @@
 
 # Class: P5AsciifyFontManager
 
-Defined in: [FontManager.ts:10](https://github.com/humanbydefinition/p5.asciify/blob/efa13807f031eb411bb838accfe71654ff0d9825/src/lib/FontManager.ts#L10)
+Defined in: [FontManager.ts:10](https://github.com/humanbydefinition/p5.asciify/blob/a4ed761105277b111d87aa2fc6aabd150321d66d/src/lib/FontManager.ts#L10)
 
 Manages the font used for the ASCII rendering pipeline and provides methods for working with the font.
 
@@ -16,7 +16,7 @@ Manages the font used for the ASCII rendering pipeline and provides methods for 
 
 > **new P5AsciifyFontManager**(`_p`, `_font`): `P5AsciifyFontManager`
 
-Defined in: [FontManager.ts:40](https://github.com/humanbydefinition/p5.asciify/blob/efa13807f031eb411bb838accfe71654ff0d9825/src/lib/FontManager.ts#L40)
+Defined in: [FontManager.ts:40](https://github.com/humanbydefinition/p5.asciify/blob/a4ed761105277b111d87aa2fc6aabd150321d66d/src/lib/FontManager.ts#L40)
 
 Creates a new `P5AsciifyFontManager` instance.
 
@@ -39,7 +39,7 @@ Creates a new `P5AsciifyFontManager` instance.
 
 > **get** **characters**(): [`P5AsciifyCharacter`](../type-aliases/P5AsciifyCharacter.md)[]
 
-Defined in: [FontManager.ts:344](https://github.com/humanbydefinition/p5.asciify/blob/efa13807f031eb411bb838accfe71654ff0d9825/src/lib/FontManager.ts#L344)
+Defined in: [FontManager.ts:344](https://github.com/humanbydefinition/p5.asciify/blob/a4ed761105277b111d87aa2fc6aabd150321d66d/src/lib/FontManager.ts#L344)
 
 An array of supported characters in the set font with additional information like unicode, and RGB color values.
 
@@ -64,7 +64,7 @@ An array of supported characters in the set font with additional information lik
 
 > **get** **font**(): `Font`
 
-Defined in: [FontManager.ts:331](https://github.com/humanbydefinition/p5.asciify/blob/efa13807f031eb411bb838accfe71654ff0d9825/src/lib/FontManager.ts#L331)
+Defined in: [FontManager.ts:331](https://github.com/humanbydefinition/p5.asciify/blob/a4ed761105277b111d87aa2fc6aabd150321d66d/src/lib/FontManager.ts#L331)
 
 The `p5.Font` object used for ASCII rendering.
 
@@ -92,7 +92,7 @@ The `p5.Font` object used for ASCII rendering.
 
 > **get** **fontSize**(): `number`
 
-Defined in: [FontManager.ts:315](https://github.com/humanbydefinition/p5.asciify/blob/efa13807f031eb411bb838accfe71654ff0d9825/src/lib/FontManager.ts#L315)
+Defined in: [FontManager.ts:315](https://github.com/humanbydefinition/p5.asciify/blob/a4ed761105277b111d87aa2fc6aabd150321d66d/src/lib/FontManager.ts#L315)
 
 Returns the font size used for the texture containing all characters in the font.
 
@@ -108,7 +108,7 @@ Returns the font size used for the texture containing all characters in the font
 
 > **get** **maxGlyphDimensions**(): `object`
 
-Defined in: [FontManager.ts:295](https://github.com/humanbydefinition/p5.asciify/blob/efa13807f031eb411bb838accfe71654ff0d9825/src/lib/FontManager.ts#L295)
+Defined in: [FontManager.ts:295](https://github.com/humanbydefinition/p5.asciify/blob/a4ed761105277b111d87aa2fc6aabd150321d66d/src/lib/FontManager.ts#L295)
 
 Returns the maximum width and height found in all the glyphs in the font.
 
@@ -118,8 +118,8 @@ Returns the maximum width and height found in all the glyphs in the font.
 
 | Name | Type | Defined in |
 | ------ | ------ | ------ |
-| `height` | `number` | [FontManager.ts:295](https://github.com/humanbydefinition/p5.asciify/blob/efa13807f031eb411bb838accfe71654ff0d9825/src/lib/FontManager.ts#L295) |
-| `width` | `number` | [FontManager.ts:295](https://github.com/humanbydefinition/p5.asciify/blob/efa13807f031eb411bb838accfe71654ff0d9825/src/lib/FontManager.ts#L295) |
+| `height` | `number` | [FontManager.ts:295](https://github.com/humanbydefinition/p5.asciify/blob/a4ed761105277b111d87aa2fc6aabd150321d66d/src/lib/FontManager.ts#L295) |
+| `width` | `number` | [FontManager.ts:295](https://github.com/humanbydefinition/p5.asciify/blob/a4ed761105277b111d87aa2fc6aabd150321d66d/src/lib/FontManager.ts#L295) |
 
 ***
 
@@ -129,7 +129,7 @@ Returns the maximum width and height found in all the glyphs in the font.
 
 > **get** **texture**(): `Framebuffer`
 
-Defined in: [FontManager.ts:300](https://github.com/humanbydefinition/p5.asciify/blob/efa13807f031eb411bb838accfe71654ff0d9825/src/lib/FontManager.ts#L300)
+Defined in: [FontManager.ts:300](https://github.com/humanbydefinition/p5.asciify/blob/a4ed761105277b111d87aa2fc6aabd150321d66d/src/lib/FontManager.ts#L300)
 
 Returns the texture containing all characters in the font.
 
@@ -145,7 +145,7 @@ Returns the texture containing all characters in the font.
 
 > **get** **textureColumns**(): `number`
 
-Defined in: [FontManager.ts:305](https://github.com/humanbydefinition/p5.asciify/blob/efa13807f031eb411bb838accfe71654ff0d9825/src/lib/FontManager.ts#L305)
+Defined in: [FontManager.ts:305](https://github.com/humanbydefinition/p5.asciify/blob/a4ed761105277b111d87aa2fc6aabd150321d66d/src/lib/FontManager.ts#L305)
 
 Returns the number of columns in the texture containing all characters in the font.
 
@@ -161,7 +161,7 @@ Returns the number of columns in the texture containing all characters in the fo
 
 > **get** **textureRows**(): `number`
 
-Defined in: [FontManager.ts:310](https://github.com/humanbydefinition/p5.asciify/blob/efa13807f031eb411bb838accfe71654ff0d9825/src/lib/FontManager.ts#L310)
+Defined in: [FontManager.ts:310](https://github.com/humanbydefinition/p5.asciify/blob/a4ed761105277b111d87aa2fc6aabd150321d66d/src/lib/FontManager.ts#L310)
 
 Returns the number of rows in the texture containing all characters in the font.
 
@@ -175,7 +175,7 @@ Returns the number of rows in the texture containing all characters in the font.
 
 > **getUnsupportedCharacters**(`characters`): `string`[]
 
-Defined in: [FontManager.ts:150](https://github.com/humanbydefinition/p5.asciify/blob/efa13807f031eb411bb838accfe71654ff0d9825/src/lib/FontManager.ts#L150)
+Defined in: [FontManager.ts:150](https://github.com/humanbydefinition/p5.asciify/blob/a4ed761105277b111d87aa2fc6aabd150321d66d/src/lib/FontManager.ts#L150)
 
 Returns an array of characters that are not supported by the current font.
 
@@ -206,7 +206,7 @@ An array of unsupported characters. List is empty if all characters are supporte
 
 > **glyphColor**(`char`): \[`number`, `number`, `number`\]
 
-Defined in: [FontManager.ts:125](https://github.com/humanbydefinition/p5.asciify/blob/efa13807f031eb411bb838accfe71654ff0d9825/src/lib/FontManager.ts#L125)
+Defined in: [FontManager.ts:125](https://github.com/humanbydefinition/p5.asciify/blob/a4ed761105277b111d87aa2fc6aabd150321d66d/src/lib/FontManager.ts#L125)
 
 Gets the color of a character in the font.
 
@@ -244,7 +244,7 @@ An array containing the RGB color values for the character,
 
 > **glyphColors**(`characters`): \[`number`, `number`, `number`\][]
 
-Defined in: [FontManager.ts:188](https://github.com/humanbydefinition/p5.asciify/blob/efa13807f031eb411bb838accfe71654ff0d9825/src/lib/FontManager.ts#L188)
+Defined in: [FontManager.ts:188](https://github.com/humanbydefinition/p5.asciify/blob/a4ed761105277b111d87aa2fc6aabd150321d66d/src/lib/FontManager.ts#L188)
 
 Gets an array of RGB colors for a given string of characters.
 

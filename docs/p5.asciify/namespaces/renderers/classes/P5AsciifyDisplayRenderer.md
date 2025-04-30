@@ -1,4 +1,4 @@
-[**p5.asciify v0.9.0-beta.4**](../../../../README.md)
+[**p5.asciify v0.9.0-beta.5**](../../../../README.md)
 
 ***
 
@@ -6,7 +6,7 @@
 
 # Class: P5AsciifyDisplayRenderer
 
-Defined in: [renderers/AsciiDisplayRenderer.ts:14](https://github.com/humanbydefinition/p5.asciify/blob/efa13807f031eb411bb838accfe71654ff0d9825/src/lib/renderers/AsciiDisplayRenderer.ts#L14)
+Defined in: [renderers/AsciiDisplayRenderer.ts:14](https://github.com/humanbydefinition/p5.asciify/blob/a4ed761105277b111d87aa2fc6aabd150321d66d/src/lib/renderers/AsciiDisplayRenderer.ts#L14)
 
 Handles the final rendering of the ASCII output based on the final textures from the rendering pipeline.
 
