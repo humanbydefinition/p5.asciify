@@ -53,7 +53,7 @@ export interface P5AsciifyExtensions {
      * ```
      */
     setupAsciify(): void;
-    
+
     /**
      * Called once per frame after the `draw()` loop of `p5.asciify` is complete.
      * Use this method to perform any additional drawing steps after the asciified content is rendered.
@@ -116,7 +116,20 @@ declare module 'p5' {
         height: number;
     }
 
-    let RendererGL: any;
+    interface RendererGLConstructor {
+        prototype: {
+            [key: string]: any;
+            _getImmediateModeShader: () => any;
+            _getNormalShader: () => any;
+            _getColorShader: () => any;
+            _getPointShader: () => any;
+            _getLineShader: () => any;
+            _getFontShader: () => any;
+        }
+        new(...args: any[]): any;
+    }
+
+    let RendererGL: RendererGLConstructor;
 
     interface p5InstanceExtensions extends P5AsciifyExtensions {
         _setupDone: boolean;
