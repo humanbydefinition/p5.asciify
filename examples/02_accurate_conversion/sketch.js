@@ -42,7 +42,7 @@ const sketch = (p) => {
         asciifier.renderers().get("accurate").update({
             enabled: true,
             // Use all characters in the asciifier's font
-            characters: asciifier.fontManager.characters.toString(),
+            characters: asciifier.fontManager.characters.map(charObj => charObj.character).join(''),
             characterColorMode: "sampled",
             backgroundColorMode: "sampled",
         });
