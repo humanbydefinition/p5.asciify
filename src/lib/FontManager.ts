@@ -58,9 +58,6 @@ export class P5AsciifyFontManager {
     /**
      * Initializes the character glyphs and characters array.
      */
-    /**
- * Initializes the characters array with character information and color assignments.
- */
     private _initializeGlyphsAndCharacters(): void {
         const glyphs = Object.values(this._font.font.glyphs.glyphs) as OpenTypeGlyph[];
 
