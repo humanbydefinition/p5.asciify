@@ -152,6 +152,11 @@ export abstract class AbstractFeatureRenderer2D<T extends FeatureAsciiRendererOp
         this._options.characterColor = color;
     }
 
+    /**
+     * Define whether to flip the ASCII characters horizontally.
+     * @param flip Whether to flip the characters horizontally.
+     * @throws {P5AsciifyError} If flip is not a boolean.
+     */
     public flipHorizontally(flip: boolean): void {
         if (typeof flip !== 'boolean') {
             throw new P5AsciifyError('Flip horizontally must be a boolean');
@@ -160,6 +165,11 @@ export abstract class AbstractFeatureRenderer2D<T extends FeatureAsciiRendererOp
         this._options.flipHorizontally = flip;
     }
 
+    /**
+     * Define whether to flip the ASCII characters vertically.
+     * @param flip Whether to flip the characters vertically.
+     * @throws {P5AsciifyError} If flip is not a boolean.
+     */
     public flipVertically(flip: boolean): void {
         if (typeof flip !== 'boolean') {
             throw new P5AsciifyError('Flip vertically must be a boolean');
