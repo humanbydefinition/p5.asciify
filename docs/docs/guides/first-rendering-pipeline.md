@@ -1,6 +1,6 @@
 ---
 sidebar_position: 2
-title: Your First Rendering Pipeline
+title: Your first rendering pipeline
 description: Learn how to set up your first rendering pipeline with p5.asciify.
 ---
 

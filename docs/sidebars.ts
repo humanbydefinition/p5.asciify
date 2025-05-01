@@ -18,7 +18,7 @@ const sidebars: SidebarsConfig = {
     'intro',
     {
       type: 'category',
-      label: 'Getting Started',
+      label: 'Getting started',
       collapsed: false,
       items: [
         {

@@ -1,6 +1,6 @@
 ---
 sidebar_position: 3
-title: Custom ASCII Renderers
+title: Custom ASCII renderers
 ---
 
 import CustomRendererSetupSketch from '!!raw-loader!./sketches/customRenderer/00_custom_setup_sketch.js';
