@@ -31,9 +31,7 @@
   "scripts": {
     "build": "vite build && tsc",
     "dev": "vite --host",
-    "build-docs": "typedoc",
-    "dev-docs": "typedoc --watch",
-    "vitest": "vitest run",
+    "vitest": "vitest run"
   },
   "repository": {
     "type": "git",
