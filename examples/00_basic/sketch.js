@@ -58,7 +58,9 @@ export const createSketch = (options = {}) => {
         backgroundColor: finalOptions.backgroundColor,
         backgroundColorMode: finalOptions.backgroundColorMode,
         invertMode: finalOptions.invertMode,
-        rotationAngle: finalOptions.rotationAngle
+        rotationAngle: finalOptions.rotationAngle,
+        flipHorizontally: finalOptions.flipHorizontally,
+        flipVertically: finalOptions.flipVertically,
       });
     };
 
