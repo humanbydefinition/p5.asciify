@@ -115,7 +115,6 @@ export abstract class AbstractFeatureRenderer2D<T extends FeatureAsciiRendererOp
      * @throws {P5AsciifyError} If angle is not a number.
      */
     public rotation(angle: number): void {
-
         if (typeof angle !== 'number') {
             throw new P5AsciifyError('Rotation angle must be a number');
         }
@@ -124,11 +123,11 @@ export abstract class AbstractFeatureRenderer2D<T extends FeatureAsciiRendererOp
         angle = angle % 360;
         if (angle < 0) angle += 360;
 
-        // Calculate red and green components
-        const red = Math.min(255, Math.floor(angle));
-        const green = angle > 255 ? Math.floor(angle - 255) : 0;
+        // Map 0-360 degrees to 0-255 range for the red channel
+        const normalizedValue = angle / 360;
+        const red = Math.round(normalizedValue * 255);
 
-        this._options.rotationAngle = this._p.color(red, green, 0);
+        this._options.rotationAngle = this._p.color(red, 0, 0);
     }
 
     /**

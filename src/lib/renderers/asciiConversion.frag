@@ -69,22 +69,20 @@ void main() {
     // Sample rotation texture and decode angle
     vec4 rotationColor = texture2D(u_rotationTexture, charIndexTexCoord);
 
-    // Direct mapping: red = base degrees (0-255)
-    // green = additional degrees (0-105)
-    float degrees = rotationColor.r * 255.0 + rotationColor.g * 255.0;
-    float rotationAngle = radians(degrees);
+// Or map directly to radians (0-2π)
+    float rotationAngle = rotationColor.r * 2.0 * 3.14159265359;
 
     // Calculate fractional part and apply rotation
     vec2 fractionalPart = fract(gridCoord) - 0.5;
-    
+
     // Apply horizontal and vertical flipping before rotation
-    if (flipHorizontal) {
+    if(flipHorizontal) {
         fractionalPart.x = -fractionalPart.x;
     }
-    if (flipVertical) {
+    if(flipVertical) {
         fractionalPart.y = -fractionalPart.y;
     }
-    
+
     // Apply rotation after flipping
     fractionalPart = rotate2D(rotationAngle) * fractionalPart;
     fractionalPart += 0.5;
@@ -96,21 +94,21 @@ void main() {
 
     // Determine if the texture coordinate is within the cell boundaries
     bool outsideBounds = any(lessThan(texCoord, cellMin)) || any(greaterThan(texCoord, cellMax));
-    
-    if (outsideBounds) {
+
+    if(outsideBounds) {
         // For out-of-bounds pixels, use the appropriate color based on inversion mode
         gl_FragColor = isInverted ? primaryColor : secondaryColor;
         return;
     }
-    
+
     // Sample the character texture
     vec4 charTexel = texture2D(u_characterTexture, texCoord);
-    
+
     // Check if pixel is fully white (considering minor precision issues)
     bool isFullyWhite = all(greaterThanEqual(charTexel.rgb, vec3(0.99)));
-    
+
     // Handle normal and inverted modes
-    if (isInverted) {
+    if(isInverted) {
         // In inverted mode, non-white pixels get primary color, white pixels get secondary color
         gl_FragColor = isFullyWhite ? secondaryColor : primaryColor;
     } else {
