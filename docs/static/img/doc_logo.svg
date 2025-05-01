@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="16" height="16" viewBox="0 0 16 16" 
+     xmlns="http://www.w3.org/2000/svg" version="1.1">
+<title>ascii art generated via p5.asciify</title>
+<desc>ascii art visualization of a p5.js sketch</desc>
+<g id="ascii-cells">
+    <path d="M14 1.60L14 5.60L16 5.60L16 11.60L14 11.60L14 13.60L16 13.60L16 15.60L10 15.60L10 13.60L6 13.60L6 15.60L0 15.60L0 13.60L2 13.60L2 11.60L0 11.60L0 1.60L2 1.60L2-0.40L6-0.40L6 1.60L4 1.60L4 5.60L6 5.60L6 1.60L8 1.60L8-0.40L12-0.40L12 1.60L10 1.60L10 5.60L12 5.60L12 1.60L14 1.60ZM12 11.60L12 9.60L14 9.60L14 7.60L6 7.60L6 11.60L12 11.60Z" fill="#25c2a0" />
+</g>
+</svg>
