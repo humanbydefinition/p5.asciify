@@ -93,12 +93,6 @@ export const createSketch = (options = {}) => {
     };
   };
 
-  // For Storybook usage
-  if (options.container) {
-    p5Instance = new p5(sketch, options.container);
-    return options.container;
-  }
-
   // For standalone example usage
   p5Instance = new p5(sketch);
 };
