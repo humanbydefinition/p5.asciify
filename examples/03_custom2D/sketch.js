@@ -99,7 +99,7 @@ const sketch = (p) => {
 		});
 
 		// Fetch the colors that correspond to each character in the font and fill the framebuffer
-		charsetColorPalette = asciifier.fontManager.glyphColors(asciifier.fontManager.characters);
+		charsetColorPalette = asciifier.fontManager.glyphColors(asciifier.fontManager.characters.map(charObj => charObj.character).join(''));
 		charsetColorPaletteFramebuffer.loadPixels();
 		for (let i = 0; i < asciifier.fontManager.characters.length; i++) {
 			let c = charsetColorPalette[i];
