@@ -11,6 +11,8 @@ import { RENDERER_TYPES } from './constants';
 export declare class P5AsciifyRendererManager {
     /** The p5 instance. */
     private _p;
+    /** The framebuffer containing the content to be asciified. */
+    private _captureFramebuffer;
     /** The grid instance. */
     private _grid;
     /** The font texture atlas instance. */
@@ -46,6 +48,8 @@ export declare class P5AsciifyRendererManager {
     constructor(
     /** The p5 instance. */
     _p: p5, 
+    /** The framebuffer containing the content to be asciified. */
+    _captureFramebuffer: p5.Framebuffer, 
     /** The grid instance. */
     _grid: P5AsciifyGrid, 
     /** The font texture atlas instance. */

@@ -1,7 +1,7 @@
-var _A = Object.defineProperty;
-var uA = (o, e, A) => e in o ? _A(o, e, { enumerable: !0, configurable: !0, writable: !0, value: A }) : o[e] = A;
-var s = (o, e, A) => uA(o, typeof e != "symbol" ? e + "" : e, A);
-import b from "p5";
+var DA = Object.defineProperty;
+var _A = (o, e, A) => e in o ? DA(o, e, { enumerable: !0, configurable: !0, writable: !0, value: A }) : o[e] = A;
+var s = (o, e, A) => _A(o, typeof e != "symbol" ? e + "" : e, A);
+import w from "p5";
 class mA {
   /**
    * Create a new grid instance.
@@ -179,7 +179,7 @@ class PA {
       return {
         character: String.fromCharCode(A.unicode),
         unicode: A.unicode,
-        getPath: (n, c, C) => A.getPath(n, c, C),
+        getPath: (B, c, C) => A.getPath(B, c, C),
         advanceWidth: A.advanceWidth,
         r: t,
         g: i,
@@ -198,7 +198,7 @@ class PA {
    * @ignore
    */
   loadFont(e) {
-    if (!(e instanceof b.Font))
+    if (!(e instanceof w.Font))
       throw new a("Invalid font parameter. Expected a path, base64 string, blob URL, or p5.Font object.");
     this._font = e, this._initializeGlyphsAndCharacters();
   }
@@ -292,8 +292,8 @@ class PA {
     this._p.textFont(this._font), this._p.textSize(e);
     let A = 0, r = 0;
     for (const t of this._characters) {
-      const i = this._font.textBounds(t.character, 0, 0, e), g = i.h, n = i.w;
-      A = Math.max(A, n), r = Math.max(r, g);
+      const i = this._font.textBounds(t.character, 0, 0, e), g = i.h, B = i.w;
+      A = Math.max(A, B), r = Math.max(r, g);
     }
     return {
       width: Math.ceil(A),
@@ -1008,7 +1008,7 @@ class T extends H {
    * ```
    */
   characterColor(A) {
-    if (!A || !(A instanceof b.Color))
+    if (!A || !(A instanceof w.Color))
       throw new a("Character color must be a valid p5.Color object");
     this._options.characterColor = A;
   }
@@ -1047,7 +1047,7 @@ class T extends H {
    * ```
    */
   backgroundColor(A) {
-    if (!A || !(A instanceof b.Color))
+    if (!A || !(A instanceof w.Color))
       throw new a("Background color must be a valid p5.Color object");
     this._options.backgroundColor = A;
   }
@@ -1158,7 +1158,7 @@ void main() {\r
 
     
     gl_FragColor = finalColor;\r
-}`, wA = `precision mediump float;
+}`, bA = `precision mediump float;
 
 uniform sampler2D u_colorSampleFramebuffer;\r
 uniform sampler2D u_charPaletteTexture;\r
@@ -1224,7 +1224,7 @@ class sA extends T {
     s(this, "colorSampleShader");
     s(this, "asciiCharacterShader");
     s(this, "colorSampleFramebuffer");
-    this.colorSampleShader = this._p.createShader(l, pA), this.asciiCharacterShader = this._p.createShader(l, wA), this.colorSampleFramebuffer = this._p.createFramebuffer({
+    this.colorSampleShader = this._p.createShader(l, pA), this.asciiCharacterShader = this._p.createShader(l, bA), this.colorSampleFramebuffer = this._p.createFramebuffer({
       density: 1,
       width: this._grid.cols,
       height: this._grid.rows,
@@ -1238,17 +1238,17 @@ class sA extends T {
     super.resizeFramebuffers(), this.colorSampleFramebuffer.resize(this._grid.cols, this._grid.rows);
   }
   render(A) {
-    this.colorSampleFramebuffer.begin(), this._p.clear(), this._p.shader(this.colorSampleShader), this.colorSampleShader.setUniform("u_sketchTexture", A), this.colorSampleShader.setUniform("u_gridCellDimensions", [this._grid.cols, this._grid.rows]), this._p.rect(0, 0, this.colorSampleFramebuffer.width, this.colorSampleFramebuffer.height), this.colorSampleFramebuffer.end(), this._primaryColorFramebuffer.begin(), this._options.characterColorMode === 1 ? this._p.background(this._options.characterColor) : (this._p.clear(), this._p.image(this.colorSampleFramebuffer, -this._grid.cols / 2, -this._grid.rows / 2, this._grid.cols, this._grid.rows)), this._primaryColorFramebuffer.end(), this._secondaryColorFramebuffer.begin(), this._options.backgroundColorMode === 1 ? this._p.background(this._options.backgroundColor) : (this._p.clear(), this._p.image(this.colorSampleFramebuffer, -this._grid.cols / 2, -this._grid.rows / 2, this._grid.cols, this._grid.rows)), this._secondaryColorFramebuffer.end(), this._transformFramebuffer.begin(), this._p.background(this._options.invertMode ? 255 : 0, this._options.flipHorizontally ? 255 : 0, this._options.flipVertically ? 255 : 0), this._transformFramebuffer.end(), this._rotationFramebuffer.begin(), this._p.background(this._options.rotationAngle), this._rotationFramebuffer.end(), this._characterFramebuffer.begin(), this._p.clear(), this._p.shader(this.asciiCharacterShader), this.asciiCharacterShader.setUniform("u_textureSize", [this._grid.cols, this._grid.rows]), this.asciiCharacterShader.setUniform("u_colorSampleFramebuffer", this.colorSampleFramebuffer), this.asciiCharacterShader.setUniform("u_charPaletteTexture", this._characterColorPalette.framebuffer), this.asciiCharacterShader.setUniform("u_charPaletteSize", [this._characterColorPalette.colors.length, 1]), this._p.rect(0, 0, this._p.width, this._p.height), this._characterFramebuffer.end();
+    this.colorSampleFramebuffer.begin(), this._p.clear(), this._p.shader(this.colorSampleShader), this.colorSampleShader.setUniform("u_sketchTexture", A), this.colorSampleShader.setUniform("u_gridCellDimensions", [this._grid.cols, this._grid.rows]), this._p.rect(0, 0, this.colorSampleFramebuffer.width, this.colorSampleFramebuffer.height), this.colorSampleFramebuffer.end(), this._primaryColorFramebuffer.begin(), this._options.characterColorMode === 1 ? this._p.background(this._options.characterColor) : (this._p.clear(), this._p.image(this.colorSampleFramebuffer, -this._grid.cols / 2, -this._grid.rows / 2, this._grid.cols, this._grid.rows)), this._primaryColorFramebuffer.end(), this._secondaryColorFramebuffer.begin(), this._options.backgroundColorMode === 1 ? this._p.background(this._options.backgroundColor) : (this._p.clear(), this._p.image(this.colorSampleFramebuffer, -this._grid.cols / 2, -this._grid.rows / 2, this._grid.cols, this._grid.rows)), this._secondaryColorFramebuffer.end(), this._transformFramebuffer.begin(), this._p.background(this._options.invertMode ? 255 : 0, this._options.flipHorizontally ? 255 : 0, this._options.flipVertically ? 255 : 0), this._transformFramebuffer.end(), this._rotationFramebuffer.begin(), this._p.background(this._options.rotationAngle), this._rotationFramebuffer.end(), this._characterFramebuffer.begin(), this._p.clear(), this._p.shader(this.asciiCharacterShader), this.asciiCharacterShader.setUniform("u_textureSize", [this._grid.cols, this._grid.rows]), this.asciiCharacterShader.setUniform("u_colorSampleFramebuffer", this.colorSampleFramebuffer), this.asciiCharacterShader.setUniform("u_charPaletteTexture", this._characterColorPalette.framebuffer), this.asciiCharacterShader.setUniform("u_charPaletteSize", [this._characterColorPalette.colors.length, 1]), this._p.rect(0, 0, this._characterFramebuffer.width, this._characterFramebuffer.height), this._characterFramebuffer.end();
   }
 }
 const gA = (o) => `
 precision mediump float;uniform sampler2D u_characterTexture;uniform float u_charsetCols,u_charsetRows;uniform sampler2D u_sketchTexture;uniform vec2 u_gridPixelDimensions,u_gridCellDimensions;uniform sampler2D u_charPaletteTexture;uniform vec2 u_charPaletteSize;const float u=float(${o}),f=u*u;void main(){vec2 v=floor(floor(gl_FragCoord.xy).xy),r=u_gridPixelDimensions/u_gridCellDimensions,e=v*r/u_gridPixelDimensions;v=(v+vec2(1))*r/u_gridPixelDimensions-e;bool s=true;float k=1./u;for(int u=0;u<${o};u++){if(!s)break;for(int f=0;f<${o};f++){if(!s)break;vec2 r=vec2(float(f)+.5,float(u)+.5)*k;vec4 i=texture2D(u_sketchTexture,e+r*v);if(i.w>0.)s=false;}}if(s){gl_FragColor=vec4(0);return;}float i=1e20,g=0.,t=u_charPaletteSize.x;for(int u=0;u<1024;u++){if(float(u)>=t)break;vec2 s=vec2((float(u)+.5)/t,.5/u_charPaletteSize.y);vec4 r=texture2D(u_charPaletteTexture,s);float m=r.x*255.+r.y*255.*256.+r.z*255.*65536.,y=floor(m/u_charsetCols);s=vec2((m-u_charsetCols*y)/u_charsetCols,y/u_charsetRows);vec2 C=vec2(1./u_charsetCols,1./u_charsetRows);y=0.;for(int u=0;u<${o};u++)for(int f=0;f<${o};f++){vec2 r=vec2(float(f)+.5,float(u)+.5)*k;float m=texture2D(u_sketchTexture,e+r*v).x-texture2D(u_characterTexture,s+r*C).x;y+=m*m;}y/=f;if(y<i)i=y,g=m;}i=mod(g,256.);g=floor(g/256.);gl_FragColor=vec4(i/255.,g/255.,0,1);}
-`, BA = (o, e) => `
+`, nA = (o, e) => `
 precision mediump float;uniform sampler2D u_inputImage;uniform vec2 u_inputImageSize;uniform int u_gridCols,u_gridRows;const int u=${o},f=${e};void main(){vec2 v=floor(gl_FragCoord.xy),e=u_inputImageSize/vec2(float(u_gridCols),float(u_gridRows));v*=e;float i=0.,t=float(u*f);for(int s=0;s<u;s++)for(int g=0;g<f;g++){vec2 m=clamp((v+(vec2(float(s),float(g))+.5)*(e/vec2(float(u),float(f))))/u_inputImageSize,0.,1.);vec4 d=texture2D(u_inputImage,m);float t=.299*d.x+.587*d.y+.114*d.z;i+=t;}i/=t;gl_FragColor=vec4(vec3(i),1);}
-`, nA = (o, e, A) => `
+`, BA = (o, e, A) => `
 precision mediump float;uniform sampler2D u_inputImage,u_inputImageBW;uniform vec2 u_inputImageSize;uniform int u_gridCols,u_gridRows,u_colorRank;const int e=${o},u=${e},f=${A};void main(){vec2 i=floor(gl_FragCoord.xy),t=u_inputImageSize/vec2(float(u_gridCols),float(u_gridRows));i*=t;vec2 k=(i+t*.5)/u_inputImageSize;vec4 v=texture2D(u_inputImage,k),c[e];float b[e];for(int i=0;i<e;i++)c[i]=vec4(0),b[i]=0.;for(int v=0;v<u;v++)for(int k=0;k<f;k++){vec2 s=clamp((i+(vec2(float(v),float(k))+.5)*(t/vec2(float(u),float(f))))/u_inputImageSize,0.,1.);vec4 m=texture2D(u_inputImage,s),d=texture2D(u_inputImageBW,s);float r=step(.5,d.x);bool z=false;if(u_colorRank==1&&r>.5)z=true;else if(u_colorRank==2&&r<=.5)z=true;if(!z)continue;z=false;for(int i=0;i<e;i++)if(m.xyz==c[i].xyz){b[i]+=1.;z=true;break;}if(!z)for(int i=0;i<e;i++)if(b[i]==0.){c[i]=m;b[i]=1.;break;}}float z=0.;vec4 m=vec4(0);for(int i=0;i<e;i++){float u=b[i];vec4 k=c[i];if(u>z)z=u,m=k;}if(u_colorRank==2&&z==0.)m=v;gl_FragColor=vec4(m.xyz,1);}
 `;
-var bA = `precision mediump float;
+var wA = `precision mediump float;
 
 uniform sampler2D u_inputImage;        
 uniform sampler2D u_brightnessTexture; 
@@ -1335,7 +1335,7 @@ class oA extends T {
     s(this, "_brightnessSplitShader");
     s(this, "_brightnessSampleFramebuffer");
     s(this, "_brightnessSplitFramebuffer");
-    this._characterSelectionShader = this._p.createShader(l, gA(this._fontManager.fontSize)), this._brightnessSampleShader = this._p.createShader(l, BA(this._grid.cellHeight, this._grid.cellWidth)), this._colorSampleShader = this._p.createShader(l, nA(16, this._grid.cellHeight, this._grid.cellWidth)), this._brightnessSplitShader = this._p.createShader(l, bA), this._brightnessSampleFramebuffer = this._p.createFramebuffer({
+    this._characterSelectionShader = this._p.createShader(l, gA(this._fontManager.fontSize)), this._brightnessSampleShader = this._p.createShader(l, nA(this._grid.cellHeight, this._grid.cellWidth)), this._colorSampleShader = this._p.createShader(l, BA(16, this._grid.cellHeight, this._grid.cellWidth)), this._brightnessSplitShader = this._p.createShader(l, wA), this._brightnessSampleFramebuffer = this._p.createFramebuffer({
       density: 1,
       width: this._grid.cols,
       height: this._grid.rows,
@@ -1350,10 +1350,10 @@ class oA extends T {
     super.resizeFramebuffers(), this._brightnessSampleFramebuffer.resize(this._grid.cols, this._grid.rows);
   }
   resetShaders() {
-    this._characterSelectionShader = this._p.createShader(l, gA(this._fontManager.fontSize)), this._brightnessSampleShader = this._p.createShader(l, BA(this._grid.cellHeight, this._grid.cellWidth)), this._colorSampleShader = this._p.createShader(l, nA(16, this._grid.cellHeight, this._grid.cellWidth));
+    this._characterSelectionShader = this._p.createShader(l, gA(this._fontManager.fontSize)), this._brightnessSampleShader = this._p.createShader(l, nA(this._grid.cellHeight, this._grid.cellWidth)), this._colorSampleShader = this._p.createShader(l, BA(16, this._grid.cellHeight, this._grid.cellWidth));
   }
   render(A) {
-    this._brightnessSampleFramebuffer.begin(), this._p.clear(), this._p.shader(this._brightnessSampleShader), this._brightnessSampleShader.setUniform("u_inputImage", A), this._brightnessSampleShader.setUniform("u_inputImageSize", [this._p.width, this._p.height]), this._brightnessSampleShader.setUniform("u_gridCols", this._grid.cols), this._brightnessSampleShader.setUniform("u_gridRows", this._grid.rows), this._p.rect(0, 0, this._p.width, this._p.height), this._brightnessSampleFramebuffer.end(), this._brightnessSplitFramebuffer.begin(), this._p.clear(), this._p.shader(this._brightnessSplitShader), this._brightnessSplitShader.setUniform("u_inputImage", A), this._brightnessSplitShader.setUniform("u_brightnessTexture", this._brightnessSampleFramebuffer), this._brightnessSplitShader.setUniform("u_inputImageSize", [this._p.width, this._p.height]), this._brightnessSplitShader.setUniform("u_gridCols", this._grid.cols), this._brightnessSplitShader.setUniform("u_gridRows", this._grid.rows), this._brightnessSplitShader.setUniform("u_pixelRatio", this._p.pixelDensity()), this._p.rect(0, 0, this._p.width, this._p.height), this._brightnessSplitFramebuffer.end(), this._primaryColorFramebuffer.begin(), this._options.characterColorMode === 1 ? this._p.background(this._options.characterColor) : (this._p.clear(), this._p.shader(this._colorSampleShader), this._colorSampleShader.setUniform("u_inputImage", A), this._colorSampleShader.setUniform("u_inputImageBW", this._brightnessSplitFramebuffer), this._colorSampleShader.setUniform("u_inputImageSize", [this._p.width, this._p.height]), this._colorSampleShader.setUniform("u_gridCols", this._grid.cols), this._colorSampleShader.setUniform("u_gridRows", this._grid.rows), this._colorSampleShader.setUniform("u_colorRank", 1), this._p.rect(0, 0, this._p.width, this._p.height)), this._primaryColorFramebuffer.end(), this._secondaryColorFramebuffer.begin(), this._options.backgroundColorMode === 1 ? this._p.background(this._options.backgroundColor) : (this._p.clear(), this._p.shader(this._colorSampleShader), this._colorSampleShader.setUniform("u_inputImage", A), this._colorSampleShader.setUniform("u_inputImageBW", this._brightnessSplitFramebuffer), this._colorSampleShader.setUniform("u_inputImageSize", [this._p.width, this._p.height]), this._colorSampleShader.setUniform("u_gridCols", this._grid.cols), this._colorSampleShader.setUniform("u_gridRows", this._grid.rows), this._colorSampleShader.setUniform("u_colorRank", 2), this._p.rect(0, 0, this._p.width, this._p.height)), this._secondaryColorFramebuffer.end(), this._transformFramebuffer.begin(), this._p.background(this._options.invertMode ? 255 : 0, this._options.flipHorizontally ? 255 : 0, this._options.flipVertically ? 255 : 0), this._transformFramebuffer.end(), this._rotationFramebuffer.begin(), this._p.background(this._options.rotationAngle), this._rotationFramebuffer.end(), this._characterFramebuffer.begin(), this._p.clear(), this._p.shader(this._characterSelectionShader), this._characterSelectionShader.setUniform("u_characterTexture", this._fontManager.texture), this._characterSelectionShader.setUniform("u_charsetCols", this._fontManager.textureColumns), this._characterSelectionShader.setUniform("u_charsetRows", this._fontManager.textureRows), this._characterSelectionShader.setUniform("u_charPaletteTexture", this._characterColorPalette.framebuffer), this._characterSelectionShader.setUniform("u_charPaletteSize", [this._characterColorPalette.colors.length, 1]), this._characterSelectionShader.setUniform("u_sketchTexture", this._brightnessSplitFramebuffer), this._characterSelectionShader.setUniform("u_gridCellDimensions", [this._grid.cols, this._grid.rows]), this._characterSelectionShader.setUniform("u_gridPixelDimensions", [this._grid.width, this._grid.height]), this._p.rect(0, 0, this._p.width, this._p.height), this._characterFramebuffer.end();
+    this._brightnessSampleFramebuffer.begin(), this._p.clear(), this._p.shader(this._brightnessSampleShader), this._brightnessSampleShader.setUniform("u_inputImage", A), this._brightnessSampleShader.setUniform("u_inputImageSize", [this._p.width, this._p.height]), this._brightnessSampleShader.setUniform("u_gridCols", this._grid.cols), this._brightnessSampleShader.setUniform("u_gridRows", this._grid.rows), this._p.rect(0, 0, this._brightnessSampleFramebuffer.width, this._brightnessSampleFramebuffer.height), this._brightnessSampleFramebuffer.end(), this._brightnessSplitFramebuffer.begin(), this._p.clear(), this._p.shader(this._brightnessSplitShader), this._brightnessSplitShader.setUniform("u_inputImage", A), this._brightnessSplitShader.setUniform("u_brightnessTexture", this._brightnessSampleFramebuffer), this._brightnessSplitShader.setUniform("u_inputImageSize", [this._p.width, this._p.height]), this._brightnessSplitShader.setUniform("u_gridCols", this._grid.cols), this._brightnessSplitShader.setUniform("u_gridRows", this._grid.rows), this._brightnessSplitShader.setUniform("u_pixelRatio", this._p.pixelDensity()), this._p.rect(0, 0, this._brightnessSplitFramebuffer.width, this._brightnessSplitFramebuffer.height), this._brightnessSplitFramebuffer.end(), this._primaryColorFramebuffer.begin(), this._options.characterColorMode === 1 ? this._p.background(this._options.characterColor) : (this._p.clear(), this._p.shader(this._colorSampleShader), this._colorSampleShader.setUniform("u_inputImage", A), this._colorSampleShader.setUniform("u_inputImageBW", this._brightnessSplitFramebuffer), this._colorSampleShader.setUniform("u_inputImageSize", [this._p.width, this._p.height]), this._colorSampleShader.setUniform("u_gridCols", this._grid.cols), this._colorSampleShader.setUniform("u_gridRows", this._grid.rows), this._colorSampleShader.setUniform("u_colorRank", 1), this._p.rect(0, 0, this._primaryColorFramebuffer.width, this._primaryColorFramebuffer.height)), this._primaryColorFramebuffer.end(), this._secondaryColorFramebuffer.begin(), this._options.backgroundColorMode === 1 ? this._p.background(this._options.backgroundColor) : (this._p.clear(), this._p.shader(this._colorSampleShader), this._colorSampleShader.setUniform("u_inputImage", A), this._colorSampleShader.setUniform("u_inputImageBW", this._brightnessSplitFramebuffer), this._colorSampleShader.setUniform("u_inputImageSize", [this._p.width, this._p.height]), this._colorSampleShader.setUniform("u_gridCols", this._grid.cols), this._colorSampleShader.setUniform("u_gridRows", this._grid.rows), this._colorSampleShader.setUniform("u_colorRank", 2), this._p.rect(0, 0, this._secondaryColorFramebuffer.width, this._secondaryColorFramebuffer.height)), this._secondaryColorFramebuffer.end(), this._transformFramebuffer.begin(), this._p.background(this._options.invertMode ? 255 : 0, this._options.flipHorizontally ? 255 : 0, this._options.flipVertically ? 255 : 0), this._transformFramebuffer.end(), this._rotationFramebuffer.begin(), this._p.background(this._options.rotationAngle), this._rotationFramebuffer.end(), this._characterFramebuffer.begin(), this._p.clear(), this._p.shader(this._characterSelectionShader), this._characterSelectionShader.setUniform("u_characterTexture", this._fontManager.texture), this._characterSelectionShader.setUniform("u_charsetCols", this._fontManager.textureColumns), this._characterSelectionShader.setUniform("u_charsetRows", this._fontManager.textureRows), this._characterSelectionShader.setUniform("u_charPaletteTexture", this._characterColorPalette.framebuffer), this._characterSelectionShader.setUniform("u_charPaletteSize", [this._characterColorPalette.colors.length, 1]), this._characterSelectionShader.setUniform("u_sketchTexture", this._brightnessSplitFramebuffer), this._characterSelectionShader.setUniform("u_gridCellDimensions", [this._grid.cols, this._grid.rows]), this._characterSelectionShader.setUniform("u_gridPixelDimensions", [this._grid.width, this._grid.height]), this._p.rect(0, 0, this._characterFramebuffer.width, this._characterFramebuffer.height), this._characterFramebuffer.end();
   }
 }
 var xA = `precision mediump float;
@@ -1649,7 +1649,7 @@ class aA extends T {
     super.update(A), A.sobelThreshold !== void 0 && this.sobelThreshold(A.sobelThreshold), A.sampleThreshold !== void 0 && this.sampleThreshold(A.sampleThreshold);
   }
   render(A) {
-    this.sobelFramebuffer.begin(), this._p.clear(), this._p.shader(this.sobelShader), this.sobelShader.setUniform("u_texture", A), this.sobelShader.setUniform("u_textureSize", [this._p.width, this._p.height]), this.sobelShader.setUniform("u_threshold", this._options.sobelThreshold), this.sobelShader.setUniform("u_colorPaletteTexture", this._characterColorPalette.framebuffer), this.sobelShader.setUniform("u_totalChars", this._options.characters.length), this._p.rect(0, 0, this._p.width, this._p.height), this.sobelFramebuffer.end(), this.sampleFramebuffer.begin(), this._p.clear(), this._p.shader(this.sampleShader), this.sampleShader.setUniform("u_imageSize", [this._p.width, this._p.height]), this.sampleShader.setUniform("u_image", this.sobelFramebuffer), this.sampleShader.setUniform("u_gridCellDimensions", [this._grid.cols, this._grid.rows]), this.sampleShader.setUniform("u_threshold", this._options.sampleThreshold), this._p.rect(0, 0, this._p.width, this._p.height), this.sampleFramebuffer.end(), this._primaryColorFramebuffer.begin(), this._p.clear(), this._p.shader(this.colorSampleShader), this.colorSampleShader.setUniform("u_sketchTexture", A), this.colorSampleShader.setUniform("u_sampleTexture", this.sampleFramebuffer), this.colorSampleShader.setUniform("u_gridCellDimensions", [this._grid.cols, this._grid.rows]), this.colorSampleShader.setUniform("u_sampleMode", this._options.characterColorMode), this.colorSampleShader.setUniform("u_staticColor", this._options.characterColor._array), this._p.rect(0, 0, this._p.width, this._p.height), this._primaryColorFramebuffer.end(), this._secondaryColorFramebuffer.begin(), this._p.clear(), this._p.shader(this.colorSampleShader), this.colorSampleShader.setUniform("u_sketchTexture", A), this.colorSampleShader.setUniform("u_sampleTexture", this.sampleFramebuffer), this.colorSampleShader.setUniform("u_gridCellDimensions", [this._grid.cols, this._grid.rows]), this.colorSampleShader.setUniform("u_sampleMode", this._options.backgroundColorMode), this.colorSampleShader.setUniform("u_staticColor", this._options.backgroundColor._array), this._p.rect(0, 0, this._p.width, this._p.height), this._secondaryColorFramebuffer.end(), this._transformFramebuffer.begin(), this._p.clear(), this._p.shader(this.transformShader), this.transformShader.setUniform("u_invert", this._options.invertMode), this.transformShader.setUniform("u_flipH", this._options.flipHorizontally), this.transformShader.setUniform("u_flipV", this._options.flipVertically), this.transformShader.setUniform("u_sampleTexture", this.sampleFramebuffer), this.transformShader.setUniform("u_compareColor", [0, 0, 0]), this.transformShader.setUniform("u_gridCellDimensions", [this._grid.cols, this._grid.rows]), this._p.rect(0, 0, this._p.width, this._p.height), this._transformFramebuffer.end(), this._rotationFramebuffer.begin(), this._p.clear(), this._p.shader(this.rotationShader), this.rotationShader.setUniform("u_rotationColor", this._options.rotationAngle._array), this.rotationShader.setUniform("u_sampleTexture", this.sampleFramebuffer), this.rotationShader.setUniform("u_compareColor", [0, 0, 0]), this.rotationShader.setUniform("u_gridCellDimensions", [this._grid.cols, this._grid.rows]), this._p.rect(0, 0, this._p.width, this._p.height), this._rotationFramebuffer.end(), this._characterFramebuffer.begin(), this._p.clear(), this._p.shader(this.asciiCharacterShader), this.asciiCharacterShader.setUniform("u_sketchTexture", this.sampleFramebuffer), this.asciiCharacterShader.setUniform("u_gridCellDimensions", [this._grid.cols, this._grid.rows]), this._p.rect(0, 0, this._p.width, this._p.height), this._characterFramebuffer.end();
+    this.sobelFramebuffer.begin(), this._p.clear(), this._p.shader(this.sobelShader), this.sobelShader.setUniform("u_texture", A), this.sobelShader.setUniform("u_textureSize", [this._p.width, this._p.height]), this.sobelShader.setUniform("u_threshold", this._options.sobelThreshold), this.sobelShader.setUniform("u_colorPaletteTexture", this._characterColorPalette.framebuffer), this.sobelShader.setUniform("u_totalChars", this._options.characters.length), this._p.rect(0, 0, this.sobelFramebuffer.width, this.sobelFramebuffer.height), this.sobelFramebuffer.end(), this.sampleFramebuffer.begin(), this._p.clear(), this._p.shader(this.sampleShader), this.sampleShader.setUniform("u_imageSize", [this._p.width, this._p.height]), this.sampleShader.setUniform("u_image", this.sobelFramebuffer), this.sampleShader.setUniform("u_gridCellDimensions", [this._grid.cols, this._grid.rows]), this.sampleShader.setUniform("u_threshold", this._options.sampleThreshold), this._p.rect(0, 0, this.sampleFramebuffer.width, this.sampleFramebuffer.height), this.sampleFramebuffer.end(), this._primaryColorFramebuffer.begin(), this._p.clear(), this._p.shader(this.colorSampleShader), this.colorSampleShader.setUniform("u_sketchTexture", A), this.colorSampleShader.setUniform("u_sampleTexture", this.sampleFramebuffer), this.colorSampleShader.setUniform("u_gridCellDimensions", [this._grid.cols, this._grid.rows]), this.colorSampleShader.setUniform("u_sampleMode", this._options.characterColorMode), this.colorSampleShader.setUniform("u_staticColor", this._options.characterColor._array), this._p.rect(0, 0, this._primaryColorFramebuffer.width, this._primaryColorFramebuffer.height), this._primaryColorFramebuffer.end(), this._secondaryColorFramebuffer.begin(), this._p.clear(), this._p.shader(this.colorSampleShader), this.colorSampleShader.setUniform("u_sketchTexture", A), this.colorSampleShader.setUniform("u_sampleTexture", this.sampleFramebuffer), this.colorSampleShader.setUniform("u_gridCellDimensions", [this._grid.cols, this._grid.rows]), this.colorSampleShader.setUniform("u_sampleMode", this._options.backgroundColorMode), this.colorSampleShader.setUniform("u_staticColor", this._options.backgroundColor._array), this._p.rect(0, 0, this._secondaryColorFramebuffer.width, this._secondaryColorFramebuffer.height), this._secondaryColorFramebuffer.end(), this._transformFramebuffer.begin(), this._p.clear(), this._p.shader(this.transformShader), this.transformShader.setUniform("u_invert", this._options.invertMode), this.transformShader.setUniform("u_flipH", this._options.flipHorizontally), this.transformShader.setUniform("u_flipV", this._options.flipVertically), this.transformShader.setUniform("u_sampleTexture", this.sampleFramebuffer), this.transformShader.setUniform("u_compareColor", [0, 0, 0]), this.transformShader.setUniform("u_gridCellDimensions", [this._grid.cols, this._grid.rows]), this._p.rect(0, 0, this._transformFramebuffer.width, this._transformFramebuffer.height), this._transformFramebuffer.end(), this._rotationFramebuffer.begin(), this._p.clear(), this._p.shader(this.rotationShader), this.rotationShader.setUniform("u_rotationColor", this._options.rotationAngle._array), this.rotationShader.setUniform("u_sampleTexture", this.sampleFramebuffer), this.rotationShader.setUniform("u_compareColor", [0, 0, 0]), this.rotationShader.setUniform("u_gridCellDimensions", [this._grid.cols, this._grid.rows]), this._p.rect(0, 0, this._rotationFramebuffer.width, this._rotationFramebuffer.height), this._rotationFramebuffer.end(), this._characterFramebuffer.begin(), this._p.clear(), this._p.shader(this.asciiCharacterShader), this.asciiCharacterShader.setUniform("u_sketchTexture", this.sampleFramebuffer), this.asciiCharacterShader.setUniform("u_gridCellDimensions", [this._grid.cols, this._grid.rows]), this._p.rect(0, 0, this._characterFramebuffer.width, this._characterFramebuffer.height), this._characterFramebuffer.end();
   }
 }
 var MA = `precision mediump float;
@@ -1810,9 +1810,9 @@ class lA {
       u_gridPixelDimensions: [this._grid.width, this._grid.height],
       u_gridCellDimensions: [this._grid.cols, this._grid.rows]
     };
-    for (const [n, c] of Object.entries(g))
-      this._shader.setUniform(n, c);
-    this._p.rect(0, 0, this._p.width, this._p.height), this._resultFramebuffer.end();
+    for (const [B, c] of Object.entries(g))
+      this._shader.setUniform(B, c);
+    this._p.rect(0, 0, this._resultFramebuffer.width, this._resultFramebuffer.height), this._resultFramebuffer.end();
   }
   /**
    * Resizes the framebuffer to match the grid width/height.
@@ -1843,7 +1843,7 @@ class cA {
    * @param _fontManager The font texture atlas instance.
    * @ignore
    */
-  constructor(e, A, r) {
+  constructor(e, A, r, t) {
     /** The current dimensions of the canvas. If the dimensions change, the grid is reset and the renderers are resized. */
     s(this, "_currentCanvasDimensions");
     /** The list of available renderers. */
@@ -1865,9 +1865,9 @@ class cA {
     s(this, "_asciiDisplayRenderer2D");
     /** Whether any renderers are enabled. */
     s(this, "_hasEnabledRenderers", !1);
-    this._p = e, this._grid = A, this._fontManager = r, this._currentCanvasDimensions = {
-      width: this._p.width,
-      height: this._p.height
+    this._p = e, this._captureFramebuffer = A, this._grid = r, this._fontManager = t, this._currentCanvasDimensions = {
+      width: this._captureFramebuffer.width,
+      height: this._captureFramebuffer.height
     }, this._renderers = [
       { name: "custom2D", renderer: new H(this._p, this._grid, this._fontManager) },
       { name: "edge", renderer: new aA(this._p, this._grid, this._fontManager) },
@@ -1947,7 +1947,7 @@ class cA {
    * and the canvas dimensions are different to the previous {@link render} call.
    */
   checkCanvasDimensions() {
-    (this._currentCanvasDimensions.width !== this._p.width || this._currentCanvasDimensions.height !== this._p.height) && (this._currentCanvasDimensions.width = this._p.width, this._currentCanvasDimensions.height = this._p.height, this._grid.reset(), this.resetRendererDimensions());
+    (this._currentCanvasDimensions.width !== this._captureFramebuffer.width || this._currentCanvasDimensions.height !== this._captureFramebuffer.height) && (this._currentCanvasDimensions.width = this._captureFramebuffer.width, this._currentCanvasDimensions.height = this._captureFramebuffer.height, this._grid.reset(), this.resetRendererDimensions());
   }
   /**
    * Resets the dimensions of all renderers.
@@ -2275,26 +2275,26 @@ class fA {
       ...i
     };
     if (!g.filename) {
-      const B = /* @__PURE__ */ new Date(), d = B.toISOString().split("T")[0], E = B.toTimeString().split(" ")[0].replace(/:/g, "-");
+      const n = /* @__PURE__ */ new Date(), d = n.toISOString().split("T")[0], E = n.toTimeString().split(" ")[0].replace(/:/g, "-");
       g.filename = `asciify_output_${d}_${E}`;
     }
-    const n = e.characterFramebuffer, c = e.primaryColorFramebuffer, C = e.secondaryColorFramebuffer, I = e.transformFramebuffer, D = e.rotationFramebuffer;
-    n.loadPixels(), c.loadPixels(), C.loadPixels(), I.loadPixels(), D.loadPixels();
-    const _ = n.pixels, h = c.pixels, Q = C.pixels, p = I.pixels, x = D.pixels, M = A.cols, P = A.rows, y = A.cellWidth, f = A.cellHeight, S = A.width, U = A.height, k = r.characters;
-    let u = this.generateSVGHeader(S, U);
+    const B = e.characterFramebuffer, c = e.primaryColorFramebuffer, C = e.secondaryColorFramebuffer, I = e.transformFramebuffer, u = e.rotationFramebuffer;
+    B.loadPixels(), c.loadPixels(), C.loadPixels(), I.loadPixels(), u.loadPixels();
+    const D = B.pixels, h = c.pixels, Q = C.pixels, p = I.pixels, x = u.pixels, M = A.cols, P = A.rows, y = A.cellWidth, f = A.cellHeight, S = A.width, U = A.height, k = r.characters;
+    let _ = this.generateSVGHeader(S, U);
     if (g.includeBackgroundRectangles) {
-      const B = t, d = this.p.color(B), E = `rgba(${d._array[0] * 255},${d._array[1] * 255},${d._array[2] * 255},${d._array[3]})`;
-      u += `
+      const n = t, d = this.p.color(n), E = `rgba(${d._array[0] * 255},${d._array[1] * 255},${d._array[2] * 255},${d._array[3]})`;
+      _ += `
 <rect width="${S}" height="${U}" fill="${E}" />`;
     }
-    u += `
+    _ += `
 <g id="ascii-cells">`;
     let m = 0;
-    for (let B = 0; B < P; B++)
+    for (let n = 0; n < P; n++)
       for (let d = 0; d < M; d++) {
-        const E = m * 4, z = _[E], Y = _[E + 1];
-        let w = z + (Y << 8);
-        w >= k.length && (w = k.length - 1);
+        const E = m * 4, z = D[E], Y = D[E + 1];
+        let b = z + (Y << 8);
+        b >= k.length && (b = k.length - 1);
         let F = {
           r: h[E],
           g: h[E + 1],
@@ -2308,12 +2308,12 @@ class fA {
         };
         const $ = p[E], J = p[E + 1], N = p[E + 2], V = $ === 255, j = J === 255, W = N === 255;
         if (V) {
-          const DA = F;
-          F = R, R = DA;
+          const uA = F;
+          F = R, R = uA;
         }
-        const L = x[E], O = x[E + 1], K = L + O * 256 / 15, X = d * y, Z = B * f;
-        u += this.generateSVGCellContent(
-          w,
+        const L = x[E], O = x[E + 1], K = L + O * 256 / 15, X = d * y, Z = n * f;
+        _ += this.generateSVGCellContent(
+          b,
           F,
           R,
           X,
@@ -2324,13 +2324,13 @@ class fA {
           j,
           W,
           r,
-          k[w],
+          k[b],
           g
         ), m++;
       }
-    u += `
+    _ += `
 </g>
-</svg>`, this.downloadSVG(u, g.filename);
+</svg>`, this.downloadSVG(_, g.filename);
   }
   /**
    * Generates the SVG header content
@@ -2361,15 +2361,15 @@ class fA {
    * @param options The SVG export options
    * @returns The SVG content for the cell
    */
-  generateSVGCellContent(e, A, r, t, i, g, n, c, C, I, D, _, h) {
+  generateSVGCellContent(e, A, r, t, i, g, B, c, C, I, u, D, h) {
     let Q = "";
     if (h.includeBackgroundRectangles && r.a > 0) {
       const f = `rgba(${r.r},${r.g},${r.b},${r.a / 255})`;
       h.drawMode === "stroke" ? Q += `
-  <rect x="${t}" y="${i}" width="${g}" height="${n}" stroke="${f}" fill="none" stroke-width="${h.strokeWidth || 1}" />` : Q += `
-  <rect x="${t}" y="${i}" width="${g}" height="${n}" fill="${f}" />`;
+  <rect x="${t}" y="${i}" width="${g}" height="${B}" stroke="${f}" fill="none" stroke-width="${h.strokeWidth || 1}" />` : Q += `
+  <rect x="${t}" y="${i}" width="${g}" height="${B}" fill="${f}" />`;
     }
-    const p = t + g / 2, x = i + n / 2, M = `rgba(${A.r},${A.g},${A.b},${A.a / 255})`, P = [];
+    const p = t + g / 2, x = i + B / 2, M = `rgba(${A.r},${A.g},${A.b},${A.a / 255})`, P = [];
     if (C || I) {
       const f = C ? -1 : 1, S = I ? -1 : 1;
       P.push(`translate(${p} ${x})`), P.push(`scale(${f} ${S})`), P.push(`translate(${-p} ${-x})`);
@@ -2377,17 +2377,17 @@ class fA {
     c && P.push(`rotate(${c} ${p} ${x})`);
     const y = P.length ? ` transform="${P.join(" ")}"` : "";
     if (h.drawMode === "text") {
-      const f = Math.min(g, n) * 0.8;
+      const f = Math.min(g, B) * 0.8;
       Q += `
-  <text x="${p}" y="${x}" font-family="monospace" font-size="${f}px" fill="${M}" text-anchor="middle" dominant-baseline="middle"${y}>${this.escapeXml(_.character)}</text>`;
+  <text x="${p}" y="${x}" font-family="monospace" font-size="${f}px" fill="${M}" text-anchor="middle" dominant-baseline="middle"${y}>${this.escapeXml(D.character)}</text>`;
     } else {
-      const f = D.fontSize / D.font.font.unitsPerEm, S = t + (g - _.advanceWidth * f) / 2, U = i + (n + D.fontSize * 0.7) / 2, m = _.getPath(S, U, D.fontSize).toSVG().match(/d="([^"]+)"/);
+      const f = u.fontSize / u.font.font.unitsPerEm, S = t + (g - D.advanceWidth * f) / 2, U = i + (B + u.fontSize * 0.7) / 2, m = D.getPath(S, U, u.fontSize).toSVG().match(/d="([^"]+)"/);
       if (m && m[1]) {
         if (y && (Q += `
   <g${y}>`), h.drawMode === "stroke") {
-          const B = h.strokeWidth || 1, d = `path-${e}-${t}-${i}`.replace(/\./g, "-");
+          const n = h.strokeWidth || 1, d = `path-${e}-${t}-${i}`.replace(/\./g, "-");
           Q += `
-    <path id="${d}" d="${m[1]}" stroke="${M}" stroke-width="${B}" fill="none" />`;
+    <path id="${d}" d="${m[1]}" stroke="${M}" stroke-width="${n}" fill="none" />`;
         } else
           Q += `
     <path d="${m[1]}" fill="${M}" />`;
@@ -2442,12 +2442,12 @@ class dA {
       ...t
     };
     if (!i.filename) {
-      const u = /* @__PURE__ */ new Date(), m = u.toISOString().split("T")[0], B = u.toTimeString().split(" ")[0].replace(/:/g, "-");
-      i.filename = `asciify_output_${m}_${B}`;
+      const _ = /* @__PURE__ */ new Date(), m = _.toISOString().split("T")[0], n = _.toTimeString().split(" ")[0].replace(/:/g, "-");
+      i.filename = `asciify_output_${m}_${n}`;
     }
-    const g = e.characterFramebuffer, n = e.primaryColorFramebuffer, c = e.secondaryColorFramebuffer, C = e.transformFramebuffer, I = e.rotationFramebuffer;
-    g.loadPixels(), n.loadPixels(), c.loadPixels(), C.loadPixels(), I.loadPixels();
-    const D = g.pixels, _ = n.pixels, h = c.pixels, Q = C.pixels, p = I.pixels, x = A.cols, M = A.rows, P = r.characters, y = {
+    const g = e.characterFramebuffer, B = e.primaryColorFramebuffer, c = e.secondaryColorFramebuffer, C = e.transformFramebuffer, I = e.rotationFramebuffer;
+    g.loadPixels(), B.loadPixels(), c.loadPixels(), C.loadPixels(), I.loadPixels();
+    const u = g.pixels, D = B.pixels, h = c.pixels, Q = C.pixels, p = I.pixels, x = A.cols, M = A.rows, P = r.characters, y = {
       version: "1.0",
       created: (/* @__PURE__ */ new Date()).toISOString(),
       gridSize: {
@@ -2460,9 +2460,9 @@ class dA {
       }
     }, f = [];
     let S = 0;
-    for (let u = 0; u < M; u++)
+    for (let _ = 0; _ < M; _++)
       for (let m = 0; m < x; m++) {
-        const B = S * 4, d = D[B], E = D[B + 1];
+        const n = S * 4, d = u[n], E = u[n + 1];
         let z = d + (E << 8);
         z >= P.length && (z = P.length - 1);
         const Y = P[z];
@@ -2470,27 +2470,27 @@ class dA {
           S++;
           continue;
         }
-        let w = {
-          r: _[B],
-          g: _[B + 1],
-          b: _[B + 2],
-          a: _[B + 3]
+        let b = {
+          r: D[n],
+          g: D[n + 1],
+          b: D[n + 2],
+          a: D[n + 3]
         }, F = {
-          r: h[B],
-          g: h[B + 1],
-          b: h[B + 2],
-          a: h[B + 3]
+          r: h[n],
+          g: h[n + 1],
+          b: h[n + 2],
+          a: h[n + 3]
         };
-        const R = Q[B], $ = Q[B + 1], J = Q[B + 2], N = R === 255, V = $ === 255, j = J === 255;
+        const R = Q[n], $ = Q[n + 1], J = Q[n + 2], N = R === 255, V = $ === 255, j = J === 255;
         if (N) {
-          const Z = w;
-          w = F, F = Z;
+          const Z = b;
+          b = F, F = Z;
         }
-        const W = p[B], L = p[B + 1], O = W + L, K = this.rgbaToHex(
-          w.r,
-          w.g,
-          w.b,
-          w.a
+        const W = p[n], L = p[n + 1], O = W + L, K = this.rgbaToHex(
+          b.r,
+          b.g,
+          b.b,
+          b.a
         ), X = this.rgbaToHex(
           F.r,
           F.g,
@@ -2499,7 +2499,7 @@ class dA {
         );
         f.push({
           x: m,
-          y: u,
+          y: _,
           character: Y.character,
           unicode: Y.unicode,
           color: K,
@@ -2530,8 +2530,8 @@ class dA {
    */
   rgbaToHex(e, A, r, t) {
     const i = (g) => {
-      const n = Math.round(g).toString(16);
-      return n.length === 1 ? "0" + n : n;
+      const B = Math.round(g).toString(16);
+      return B.length === 1 ? "0" + B : B;
     };
     return `#${i(e)}${i(A)}${i(r)}${i(t)}`;
   }
@@ -2589,6 +2589,7 @@ class EA {
       this._fontManager.maxGlyphDimensions.height
     ), this._rendererManager = new cA(
       this._p,
+      this._captureFramebuffer,
       this._grid,
       this._fontManager
     );
@@ -2692,7 +2693,7 @@ class EA {
    * ```
    */
   background(e) {
-    if (typeof e != "string" && !Array.isArray(e) && !(e instanceof b.Color))
+    if (typeof e != "string" && !Array.isArray(e) && !(e instanceof w.Color))
       throw new a(`Invalid color type: ${typeof e}. Expected string, array or p5.Color.`);
     this._backgroundColor = e;
   }
@@ -2785,13 +2786,13 @@ class EA {
       throw new a("No renderer available to generate ASCII output");
     e.loadPixels();
     const A = e.pixels, r = this._grid.cols, t = this._grid.rows, i = this._fontManager.characters, g = [];
-    let n = 0;
+    let B = 0;
     for (let c = 0; c < t; c++) {
       let C = "";
       for (let I = 0; I < r; I++) {
-        const D = n * 4, _ = A[D], h = A[D + 1];
-        let Q = _ + (h << 8);
-        Q >= i.length && (Q = i.length - 1), C += i[Q], n++;
+        const u = B * 4, D = A[u], h = A[u + 1];
+        let Q = D + (h << 8);
+        Q >= i.length && (Q = i.length - 1), C += i[Q], B++;
       }
       g.push(C);
     }
@@ -3073,7 +3074,7 @@ const GA = `data:font/truetype;charset=utf-8;base64,AAEAAAAKAIAAAwAgT1MvMs+QEyQA
    * @throws {@link P5AsciifyError} If the framebuffer is not an instance of `p5.Framebuffer`.
    */
   add(e) {
-    if (e !== void 0 && !(e instanceof b.Framebuffer))
+    if (e !== void 0 && !(e instanceof w.Framebuffer))
       throw new a("Framebuffer must be an instance of p5.Framebuffer.");
     const A = new EA();
     return A.init(this._p, this._baseFont), this._p._setupDone && A.setup(e || this._sketchFramebuffer), this._asciifiers.push(A), A;
@@ -3168,7 +3169,7 @@ typeof window < "u" && (window.p5asciify = v);
 const YA = (o) => {
   v.hooksEnabled && v.init(o);
 };
-b.prototype.registerMethod("init", function() {
+w.prototype.registerMethod("init", function() {
   YA(this);
 });
 const UA = (o) => {
@@ -3180,7 +3181,7 @@ const UA = (o) => {
     v.setup(), o.setupAsciify && o.setupAsciify();
   }, 0);
 };
-b.prototype.registerMethod("afterSetup", function() {
+w.prototype.registerMethod("afterSetup", function() {
   UA(this);
 });
 const zA = (o) => {
@@ -3188,10 +3189,10 @@ const zA = (o) => {
 }, RA = (o) => {
   v.sketchFramebuffer.end(), v.asciify(), o.drawAsciify && o.drawAsciify();
 };
-b.prototype.registerMethod("pre", function() {
+w.prototype.registerMethod("pre", function() {
   v.hooksEnabled && zA(this);
 });
-b.prototype.registerMethod("post", function() {
+w.prototype.registerMethod("post", function() {
   v.hooksEnabled && RA(this);
 });
 const NA = [
@@ -3203,8 +3204,8 @@ const NA = [
   ["_getFontShader", "_defaultFontShader"]
 ];
 for (const [o, e] of NA) {
-  const A = b.RendererGL.prototype[o];
-  b.RendererGL.prototype[o] = function() {
+  const A = w.RendererGL.prototype[o];
+  w.RendererGL.prototype[o] = function() {
     return this[e] || (this[e] = A.call(this), this[e]._vertSrc = this[e]._vertSrc.replace(
       /mediump/g,
       "highp"
