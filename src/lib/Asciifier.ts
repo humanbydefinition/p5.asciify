@@ -36,6 +36,9 @@ export class P5Asciifier {
     /** The `p5.js` instance. */
     private _p!: p5;
 
+    /** Defines if the ASCII output should be rendered to the canvas or not. */
+    private _renderToCanvas: boolean = true;
+
     /**
      * Initializes the asciifier by setting the `p5.js` instance and loading the font manager with the default font.
      * 
@@ -85,12 +88,14 @@ export class P5Asciifier {
     public asciify(): void {
         this._rendererManager.render(this._captureFramebuffer);
 
-        if (this._rendererManager.hasEnabledRenderers) {
-            this._p.background(this._backgroundColor as p5.Color);
-            this._p.image(this._rendererManager.asciiDisplayRenderer.resultFramebuffer, -(this._p.width / 2) + this._grid.offsetX, -(this._p.height / 2) + this._grid.offsetY);
-        } else {
-            this._p.clear();
-            this._p.image(this._captureFramebuffer, -(this._captureFramebuffer.width / 2), -(this._captureFramebuffer.height / 2));
+        if (this._renderToCanvas) {
+            if (this._rendererManager.hasEnabledRenderers) {
+                this._p.background(this._backgroundColor as p5.Color);
+                this._p.image(this._rendererManager.asciiDisplayRenderer.resultFramebuffer, -(this._p.width / 2) + this._grid.offsetX, -(this._p.height / 2) + this._grid.offsetY);
+            } else {
+                this._p.clear();
+                this._p.image(this._captureFramebuffer, -(this._captureFramebuffer.width / 2), -(this._captureFramebuffer.height / 2));
+            }
         }
     }
 
@@ -400,6 +405,22 @@ export class P5Asciifier {
         }
 
         this._p.saveStrings(this._generateAsciiTextOutput(), `${filename}.txt`);
+    }
+
+    /**
+     * Sets whether the ASCII output should be rendered to the canvas or not.
+     * 
+     * If this is set to `false`, the canvas will be clear/empty until you start drawing stuff again in `drawAsciify()`.
+     * Do not bother until you know what you are doing.
+     * 
+     * @param bool `true` to render to the canvas, `false` to not render.
+     */
+    public renderToCanvas(bool: boolean): void {
+        if (typeof bool !== "boolean") {
+            throw new P5AsciifyError(`Invalid type for renderToCanvas: ${typeof bool}. Expected boolean.`);
+        }
+
+        this._renderToCanvas = bool;
     }
 
     /**
