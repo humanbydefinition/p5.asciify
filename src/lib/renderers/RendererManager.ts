@@ -241,7 +241,7 @@ export class P5AsciifyRendererManager {
      *  function setupAsciify() {
      *      asciifier = p5asciify.asciifier();
      * 
-     *      // Clear all existing default renderers provided by `p5.asciify`.
+     *      // Remove all existing default renderers provided by `p5.asciify`.
      *      asciifier.renderers().clear();
      * 
      *      // Add a new brightness renderer with custom options.

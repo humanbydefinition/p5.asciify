@@ -173,17 +173,38 @@ export type OpenTypeGlyph = {
 };
 
 /**
- * Character object used by the {@link P5AsciifyFontManager} class.
+ * Each character from a loaded font is represented as a `P5AsciifyCharacter` object.
+ * 
+ * To receive the list of characters from a loaded font, use the {@link P5AsciifyFontManager} class.
  */
 export type P5AsciifyCharacter = {
+    /** The character represented by this glyph. */
     character: string;
+
+    /** The unicode value of the character. */
     unicode: number;
+
+    /**
+     * Gets the outline path of this character positioned at specified coordinates.
+     * @param x - The horizontal position to place the character
+     * @param y - The vertical position to place the character
+     * @param fontSize - The font size to scale the glyph to (in pixels)
+     * @returns An object with methods to get the bounding box and SVG representation of the character
+     */
     getPath(x: number, y: number, fontSize: number): {
         getBoundingBox(): { x1: number; y1: number; x2: number; y2: number };
         toSVG(): string;
     };
+
+    /** The advance width of the character. Only relevant for SVG export. To be removed in the future hopefully. */
     advanceWidth: number;
+
+    /** The red component of the character color. */
     r: number;
+
+    /** The green component of the character color. */
     g: number;
+
+    /** The blue component of the character color. */
     b: number;
 }

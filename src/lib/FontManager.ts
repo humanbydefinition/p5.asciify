@@ -2,8 +2,6 @@ import p5 from 'p5';
 import { P5AsciifyError } from './AsciifyError';
 import { OpenTypeGlyph, P5AsciifyCharacter } from './types';
 
-
-
 /**
  * Manages the font used for the ASCII rendering pipeline and provides methods for working with the font.
  */

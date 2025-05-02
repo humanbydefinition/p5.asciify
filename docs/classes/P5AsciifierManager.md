@@ -6,9 +6,18 @@
 
 # Class: P5AsciifierManager
 
-Defined in: [AsciifierManager.ts:10](https://github.com/humanbydefinition/p5.asciify/blob/72321c3efb20e586522e95711ebe51cc0ce11317/src/lib/AsciifierManager.ts#L10)
+Defined in: [AsciifierManager.ts:19](https://github.com/humanbydefinition/p5.asciify/blob/fe0dff6d1233011a7a23cab5c777ec3b02b03613/src/lib/AsciifierManager.ts#L19)
 
-Manages the `p5.asciify` library by handling one or more `P5Asciifier` instances through the exposed [p5asciify](../variables/p5asciify.md) object, which is an instance of this class.
+Manages the `p5.asciify` library by handling one or more `P5Asciifier` instances.
+
+This class is implemented as a singleton, meaning only one instance exists throughout the application.
+Access the instance through the exposed [p5asciify](../variables/p5asciify.md) object or via [P5AsciifierManager.getInstance](#getinstance).
+
+The manager is responsible for:
+- Initializing ASCII rendering capabilities
+- Managing multiple asciifier instances
+- Coordinating with p5.js rendering lifecycle
+- Providing an API for creating, accessing, and removing asciifiers
 
 ## Accessors
 
@@ -18,7 +27,7 @@ Manages the `p5.asciify` library by handling one or more `P5Asciifier` instances
 
 > **get** **asciifiers**(): [`P5Asciifier`](P5Asciifier.md)[]
 
-Defined in: [AsciifierManager.ts:163](https://github.com/humanbydefinition/p5.asciify/blob/72321c3efb20e586522e95711ebe51cc0ce11317/src/lib/AsciifierManager.ts#L163)
+Defined in: [AsciifierManager.ts:192](https://github.com/humanbydefinition/p5.asciify/blob/fe0dff6d1233011a7a23cab5c777ec3b02b03613/src/lib/AsciifierManager.ts#L192)
 
 Returns the list of `P5Asciifier` instances managed by the library.
 
@@ -32,7 +41,7 @@ Returns the list of `P5Asciifier` instances managed by the library.
 
 > **add**(`framebuffer?`): [`P5Asciifier`](P5Asciifier.md)
 
-Defined in: [AsciifierManager.ts:108](https://github.com/humanbydefinition/p5.asciify/blob/72321c3efb20e586522e95711ebe51cc0ce11317/src/lib/AsciifierManager.ts#L108)
+Defined in: [AsciifierManager.ts:137](https://github.com/humanbydefinition/p5.asciify/blob/fe0dff6d1233011a7a23cab5c777ec3b02b03613/src/lib/AsciifierManager.ts#L137)
 
 Adds a new `P5Asciifier` instance to the library.
 
@@ -58,11 +67,11 @@ The newly created `P5Asciifier` instance.
 
 > **asciifier**(`index`): [`P5Asciifier`](P5Asciifier.md)
 
-Defined in: [AsciifierManager.ts:93](https://github.com/humanbydefinition/p5.asciify/blob/72321c3efb20e586522e95711ebe51cc0ce11317/src/lib/AsciifierManager.ts#L93)
+Defined in: [AsciifierManager.ts:122](https://github.com/humanbydefinition/p5.asciify/blob/fe0dff6d1233011a7a23cab5c777ec3b02b03613/src/lib/AsciifierManager.ts#L122)
 
 Returns the `P5Asciifier` instance at the specified index.
 
-By default, the method returns the first `P5Asciifier` instance in the list, 
+When passing no arguments, the method returns the first `P5Asciifier` instance in the list, 
 which usually corresponds to the default `P5Asciifier` provided by the library, which is applied to the main canvas of the `p5.js` instance.
 
 #### Parameters
@@ -87,7 +96,7 @@ The `P5Asciifier` instance at the specified index.
 
 > **remove**(`indexOrAsciifier`): `void`
 
-Defined in: [AsciifierManager.ts:130](https://github.com/humanbydefinition/p5.asciify/blob/72321c3efb20e586522e95711ebe51cc0ce11317/src/lib/AsciifierManager.ts#L130)
+Defined in: [AsciifierManager.ts:159](https://github.com/humanbydefinition/p5.asciify/blob/fe0dff6d1233011a7a23cab5c777ec3b02b03613/src/lib/AsciifierManager.ts#L159)
 
 Removes a `P5Asciifier` instance.
 
@@ -104,3 +113,20 @@ Removes a `P5Asciifier` instance.
 #### Throws
 
 [P5AsciifyError](P5AsciifyError.md) If the index is out of bounds or the specified asciifier is not found.
+
+***
+
+### getInstance()
+
+> `static` **getInstance**(): `P5AsciifierManager`
+
+Defined in: [AsciifierManager.ts:44](https://github.com/humanbydefinition/p5.asciify/blob/fe0dff6d1233011a7a23cab5c777ec3b02b03613/src/lib/AsciifierManager.ts#L44)
+
+Gets the singleton instance of `P5AsciifierManager`.
+If the instance doesn't exist yet, it creates one.
+
+#### Returns
+
+`P5AsciifierManager`
+
+The singleton instance of `P5AsciifierManager`.

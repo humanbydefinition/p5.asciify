@@ -6,7 +6,7 @@
 
 # Class: P5AsciifyBrightnessRenderer
 
-Defined in: [renderers/2d/feature/brightness/BrightnessAsciiRenderer.ts:44](https://github.com/humanbydefinition/p5.asciify/blob/72321c3efb20e586522e95711ebe51cc0ce11317/src/lib/renderers/2d/feature/brightness/BrightnessAsciiRenderer.ts#L44)
+Defined in: [renderers/2d/feature/brightness/BrightnessAsciiRenderer.ts:44](https://github.com/humanbydefinition/p5.asciify/blob/fe0dff6d1233011a7a23cab5c777ec3b02b03613/src/lib/renderers/2d/feature/brightness/BrightnessAsciiRenderer.ts#L44)
 
 ASCII Renderer that uses brightness to determine the ASCII characters to use from the 1D character set.
 
@@ -22,7 +22,7 @@ ASCII Renderer that uses brightness to determine the ASCII characters to use fro
 
 > **get** **characterColorPalette**(): [`P5AsciifyColorPalette`](../../../../../../../../classes/P5AsciifyColorPalette.md)
 
-Defined in: [renderers/2d/feature/AbstractFeatureRenderer2D.ts:330](https://github.com/humanbydefinition/p5.asciify/blob/72321c3efb20e586522e95711ebe51cc0ce11317/src/lib/renderers/2d/feature/AbstractFeatureRenderer2D.ts#L330)
+Defined in: [renderers/2d/feature/AbstractFeatureRenderer2D.ts:330](https://github.com/humanbydefinition/p5.asciify/blob/fe0dff6d1233011a7a23cab5c777ec3b02b03613/src/lib/renderers/2d/feature/AbstractFeatureRenderer2D.ts#L330)
 
 Get the [P5AsciifyColorPalette](../../../../../../../../classes/P5AsciifyColorPalette.md) object containing colors that correspond to the defined character set.
 
@@ -42,7 +42,7 @@ Get the [P5AsciifyColorPalette](../../../../../../../../classes/P5AsciifyColorPa
 
 > **get** **characterFramebuffer**(): `Framebuffer`
 
-Defined in: [renderers/AsciiRenderer.ts:488](https://github.com/humanbydefinition/p5.asciify/blob/72321c3efb20e586522e95711ebe51cc0ce11317/src/lib/renderers/AsciiRenderer.ts#L488)
+Defined in: [renderers/AsciiRenderer.ts:492](https://github.com/humanbydefinition/p5.asciify/blob/fe0dff6d1233011a7a23cab5c777ec3b02b03613/src/lib/renderers/AsciiRenderer.ts#L492)
 
 Get the character framebuffer, whose pixels define the ASCII characters to use in the grid cells.
 
@@ -111,7 +111,7 @@ In `'custom2D'` renderers, you must write to it manually in your `draw()` functi
 
 > **get** **options**(): `T`
 
-Defined in: [renderers/AsciiRenderer.ts:204](https://github.com/humanbydefinition/p5.asciify/blob/72321c3efb20e586522e95711ebe51cc0ce11317/src/lib/renderers/AsciiRenderer.ts#L204)
+Defined in: [renderers/AsciiRenderer.ts:204](https://github.com/humanbydefinition/p5.asciify/blob/fe0dff6d1233011a7a23cab5c777ec3b02b03613/src/lib/renderers/AsciiRenderer.ts#L204)
 
 Get the set options for the ASCII renderer.
 
@@ -141,7 +141,7 @@ Get the set options for the ASCII renderer.
 
 > **get** **primaryColorFramebuffer**(): `Framebuffer`
 
-Defined in: [renderers/AsciiRenderer.ts:258](https://github.com/humanbydefinition/p5.asciify/blob/72321c3efb20e586522e95711ebe51cc0ce11317/src/lib/renderers/AsciiRenderer.ts#L258)
+Defined in: [renderers/AsciiRenderer.ts:258](https://github.com/humanbydefinition/p5.asciify/blob/fe0dff6d1233011a7a23cab5c777ec3b02b03613/src/lib/renderers/AsciiRenderer.ts#L258)
 
 Get the primary color framebuffer, whose pixels define the character colors of the grid cells.
 
@@ -210,7 +210,7 @@ In `'custom2D'` renderers, you must write to it manually in your `draw()` functi
 
 > **get** **rotationFramebuffer**(): `Framebuffer`
 
-Defined in: [renderers/AsciiRenderer.ts:435](https://github.com/humanbydefinition/p5.asciify/blob/72321c3efb20e586522e95711ebe51cc0ce11317/src/lib/renderers/AsciiRenderer.ts#L435)
+Defined in: [renderers/AsciiRenderer.ts:439](https://github.com/humanbydefinition/p5.asciify/blob/fe0dff6d1233011a7a23cab5c777ec3b02b03613/src/lib/renderers/AsciiRenderer.ts#L439)
 
 Get the rotation framebuffer, whose pixels define the rotation angle of each character in the grid.
 
@@ -263,10 +263,11 @@ In `'custom2D'` renderers, you must write to it manually in your `draw()` functi
      background(0);
      secondaryColorFramebuffer.end();
 
-     // Rotates all characters in the grid by 270 degrees. 
-     // Utilize the red and green channels for the rotation angle.
+     // Rotates all characters in the grid by X degrees. 
+     // Utilize the red color channel for the rotation angle.
+     // TODO: Add functionality to `p5.asciify` to simplify this for non-shader users.
      rotationFramebuffer.begin();
-     background(255, 15, 0); // a bit cheesy right now, but you get the idea.
+     background(255, 0, 0); // BLACK = 0 degrees, RED = 360 degrees
      rotationFramebuffer.end();
  }
 ```
@@ -287,7 +288,7 @@ In `'custom2D'` renderers, you must write to it manually in your `draw()` functi
 
 > **get** **secondaryColorFramebuffer**(): `Framebuffer`
 
-Defined in: [renderers/AsciiRenderer.ts:312](https://github.com/humanbydefinition/p5.asciify/blob/72321c3efb20e586522e95711ebe51cc0ce11317/src/lib/renderers/AsciiRenderer.ts#L312)
+Defined in: [renderers/AsciiRenderer.ts:312](https://github.com/humanbydefinition/p5.asciify/blob/fe0dff6d1233011a7a23cab5c777ec3b02b03613/src/lib/renderers/AsciiRenderer.ts#L312)
 
 Get the secondary color framebuffer, whose pixels define the background colors of the grid cells.
 
@@ -356,10 +357,12 @@ In `'custom2D'` renderers, you must write to it manually in your `draw()` functi
 
 > **get** **transformFramebuffer**(): `Framebuffer`
 
-Defined in: [renderers/AsciiRenderer.ts:374](https://github.com/humanbydefinition/p5.asciify/blob/72321c3efb20e586522e95711ebe51cc0ce11317/src/lib/renderers/AsciiRenderer.ts#L374)
+Defined in: [renderers/AsciiRenderer.ts:377](https://github.com/humanbydefinition/p5.asciify/blob/fe0dff6d1233011a7a23cab5c777ec3b02b03613/src/lib/renderers/AsciiRenderer.ts#L377)
 
-Get the inversion framebuffer, 
-whose pixels define whether to swap the character and background colors of the grid cells.
+Get the transform framebuffer, where each pixels color channel defines a different transformation:
+- Red channel: Swap the character and background colors of the grid cells.
+- Green channel: Flip the ASCII characters horizontally.
+- Blue channel: Flip the ASCII characters vertically.
 
 Pre-built ASCII renderers like `'brightness'` write to this buffer automatically based on your settings. 
 In `'custom2D'` renderers, you must write to it manually in your `draw()` function.
@@ -370,7 +373,7 @@ In `'custom2D'` renderers, you must write to it manually in your `draw()` functi
  let characterFramebuffer;
  let primaryColorFramebuffer;
  let secondaryColorFramebuffer;
- let inversionFramebuffer;
+ let transformFramebuffer;
 
  let asciifier;
 
@@ -390,7 +393,7 @@ In `'custom2D'` renderers, you must write to it manually in your `draw()` functi
      characterFramebuffer = asciifier.renderers().get("custom2D").characterFramebuffer;
      primaryColorFramebuffer = asciifier.renderers().get("custom2D").primaryColorFramebuffer;
      secondaryColorFramebuffer = asciifier.renderers().get("custom2D").secondaryColorFramebuffer;
-     inversionFramebuffer = asciifier.renderers().get("custom2D").inversionFramebuffer;
+     transformFramebuffer = asciifier.renderers().get("custom2D").transformFramebuffer;
  }
 
  function draw() {
@@ -411,10 +414,11 @@ In `'custom2D'` renderers, you must write to it manually in your `draw()` functi
      background(0);
      secondaryColorFramebuffer.end();
 
-     // Swap the character and background colors of all grid cells.
-     inversionFramebuffer.begin();
-     background(255); // WHITE = swap, BLACK = don't swap
-     inversionFramebuffer.end();
+     // Swap the character and background colors of all grid cells,
+     // and flip the ASCII characters horizontally.
+     transformFramebuffer.begin();
+     background(255, 255, 0); 
+     transformFramebuffer.end();
  }
 ```
 
@@ -432,7 +436,7 @@ In `'custom2D'` renderers, you must write to it manually in your `draw()` functi
 
 > **backgroundColor**(`color`): `void`
 
-Defined in: [renderers/2d/feature/AbstractFeatureRenderer2D.ts:195](https://github.com/humanbydefinition/p5.asciify/blob/72321c3efb20e586522e95711ebe51cc0ce11317/src/lib/renderers/2d/feature/AbstractFeatureRenderer2D.ts#L195)
+Defined in: [renderers/2d/feature/AbstractFeatureRenderer2D.ts:195](https://github.com/humanbydefinition/p5.asciify/blob/fe0dff6d1233011a7a23cab5c777ec3b02b03613/src/lib/renderers/2d/feature/AbstractFeatureRenderer2D.ts#L195)
 
 Set the background color of the ASCII characters, used in the fixed color mode.
 
@@ -470,7 +474,7 @@ If color is not a p5.Color object.
 
 > **backgroundColorMode**(`mode`): `void`
 
-Defined in: [renderers/2d/feature/AbstractFeatureRenderer2D.ts:245](https://github.com/humanbydefinition/p5.asciify/blob/72321c3efb20e586522e95711ebe51cc0ce11317/src/lib/renderers/2d/feature/AbstractFeatureRenderer2D.ts#L245)
+Defined in: [renderers/2d/feature/AbstractFeatureRenderer2D.ts:245](https://github.com/humanbydefinition/p5.asciify/blob/fe0dff6d1233011a7a23cab5c777ec3b02b03613/src/lib/renderers/2d/feature/AbstractFeatureRenderer2D.ts#L245)
 
 Sets the color mode for the grid cell background.
 
@@ -507,7 +511,7 @@ If mode is not a string or not one of the allowed values ('sampled' or 'fixed')
 
 > **characterColor**(`color`): `void`
 
-Defined in: [renderers/2d/feature/AbstractFeatureRenderer2D.ts:147](https://github.com/humanbydefinition/p5.asciify/blob/72321c3efb20e586522e95711ebe51cc0ce11317/src/lib/renderers/2d/feature/AbstractFeatureRenderer2D.ts#L147)
+Defined in: [renderers/2d/feature/AbstractFeatureRenderer2D.ts:147](https://github.com/humanbydefinition/p5.asciify/blob/fe0dff6d1233011a7a23cab5c777ec3b02b03613/src/lib/renderers/2d/feature/AbstractFeatureRenderer2D.ts#L147)
 
 Set the color of the ASCII characters, used in the fixed color mode.
 
@@ -545,7 +549,7 @@ If color is not a p5.Color object.
 
 > **characterColorMode**(`mode`): `void`
 
-Defined in: [renderers/2d/feature/AbstractFeatureRenderer2D.ts:216](https://github.com/humanbydefinition/p5.asciify/blob/72321c3efb20e586522e95711ebe51cc0ce11317/src/lib/renderers/2d/feature/AbstractFeatureRenderer2D.ts#L216)
+Defined in: [renderers/2d/feature/AbstractFeatureRenderer2D.ts:216](https://github.com/humanbydefinition/p5.asciify/blob/fe0dff6d1233011a7a23cab5c777ec3b02b03613/src/lib/renderers/2d/feature/AbstractFeatureRenderer2D.ts#L216)
 
 Sets the color mode for ASCII characters.
 
@@ -582,7 +586,7 @@ If mode is not a string or not one of the allowed values ('sampled' or 'fixed')
 
 > **characters**(`characters`): `void`
 
-Defined in: [renderers/2d/feature/AbstractFeatureRenderer2D.ts:52](https://github.com/humanbydefinition/p5.asciify/blob/72321c3efb20e586522e95711ebe51cc0ce11317/src/lib/renderers/2d/feature/AbstractFeatureRenderer2D.ts#L52)
+Defined in: [renderers/2d/feature/AbstractFeatureRenderer2D.ts:52](https://github.com/humanbydefinition/p5.asciify/blob/fe0dff6d1233011a7a23cab5c777ec3b02b03613/src/lib/renderers/2d/feature/AbstractFeatureRenderer2D.ts#L52)
 
 Set the characters for the character set.
 
@@ -619,7 +623,7 @@ If characters is not a string.
 
 > **disable**(): `boolean`
 
-Defined in: [renderers/AsciiRenderer.ts:188](https://github.com/humanbydefinition/p5.asciify/blob/72321c3efb20e586522e95711ebe51cc0ce11317/src/lib/renderers/AsciiRenderer.ts#L188)
+Defined in: [renderers/AsciiRenderer.ts:188](https://github.com/humanbydefinition/p5.asciify/blob/fe0dff6d1233011a7a23cab5c777ec3b02b03613/src/lib/renderers/AsciiRenderer.ts#L188)
 
 Disable the renderer.
 
@@ -656,7 +660,7 @@ The new state of the renderer.
 
 > **enable**(): `boolean`
 
-Defined in: [renderers/AsciiRenderer.ts:163](https://github.com/humanbydefinition/p5.asciify/blob/72321c3efb20e586522e95711ebe51cc0ce11317/src/lib/renderers/AsciiRenderer.ts#L163)
+Defined in: [renderers/AsciiRenderer.ts:163](https://github.com/humanbydefinition/p5.asciify/blob/fe0dff6d1233011a7a23cab5c777ec3b02b03613/src/lib/renderers/AsciiRenderer.ts#L163)
 
 Enable the renderer.
 
@@ -690,7 +694,7 @@ The new state of the renderer.
 
 > **enabled**(`enabled?`): `boolean`
 
-Defined in: [renderers/AsciiRenderer.ts:118](https://github.com/humanbydefinition/p5.asciify/blob/72321c3efb20e586522e95711ebe51cc0ce11317/src/lib/renderers/AsciiRenderer.ts#L118)
+Defined in: [renderers/AsciiRenderer.ts:118](https://github.com/humanbydefinition/p5.asciify/blob/fe0dff6d1233011a7a23cab5c777ec3b02b03613/src/lib/renderers/AsciiRenderer.ts#L118)
 
 Enable or disable the renderer.
 
@@ -734,7 +738,7 @@ If the provided enabled value is not a boolean.
 
 > **flipHorizontally**(`flip`): `void`
 
-Defined in: [renderers/2d/feature/AbstractFeatureRenderer2D.ts:160](https://github.com/humanbydefinition/p5.asciify/blob/72321c3efb20e586522e95711ebe51cc0ce11317/src/lib/renderers/2d/feature/AbstractFeatureRenderer2D.ts#L160)
+Defined in: [renderers/2d/feature/AbstractFeatureRenderer2D.ts:160](https://github.com/humanbydefinition/p5.asciify/blob/fe0dff6d1233011a7a23cab5c777ec3b02b03613/src/lib/renderers/2d/feature/AbstractFeatureRenderer2D.ts#L160)
 
 Define whether to flip the ASCII characters horizontally.
 
@@ -762,7 +766,7 @@ If flip is not a boolean.
 
 > **flipVertically**(`flip`): `void`
 
-Defined in: [renderers/2d/feature/AbstractFeatureRenderer2D.ts:173](https://github.com/humanbydefinition/p5.asciify/blob/72321c3efb20e586522e95711ebe51cc0ce11317/src/lib/renderers/2d/feature/AbstractFeatureRenderer2D.ts#L173)
+Defined in: [renderers/2d/feature/AbstractFeatureRenderer2D.ts:173](https://github.com/humanbydefinition/p5.asciify/blob/fe0dff6d1233011a7a23cab5c777ec3b02b03613/src/lib/renderers/2d/feature/AbstractFeatureRenderer2D.ts#L173)
 
 Define whether to flip the ASCII characters vertically.
 
@@ -790,7 +794,7 @@ If flip is not a boolean.
 
 > **invert**(`invert`): `void`
 
-Defined in: [renderers/2d/feature/AbstractFeatureRenderer2D.ts:78](https://github.com/humanbydefinition/p5.asciify/blob/72321c3efb20e586522e95711ebe51cc0ce11317/src/lib/renderers/2d/feature/AbstractFeatureRenderer2D.ts#L78)
+Defined in: [renderers/2d/feature/AbstractFeatureRenderer2D.ts:78](https://github.com/humanbydefinition/p5.asciify/blob/fe0dff6d1233011a7a23cab5c777ec3b02b03613/src/lib/renderers/2d/feature/AbstractFeatureRenderer2D.ts#L78)
 
 Swap the colors of the ASCII character and cell background colors.
 
@@ -827,7 +831,7 @@ If invert is not a boolean.
 
 > **rotation**(`angle`): `void`
 
-Defined in: [renderers/2d/feature/AbstractFeatureRenderer2D.ts:117](https://github.com/humanbydefinition/p5.asciify/blob/72321c3efb20e586522e95711ebe51cc0ce11317/src/lib/renderers/2d/feature/AbstractFeatureRenderer2D.ts#L117)
+Defined in: [renderers/2d/feature/AbstractFeatureRenderer2D.ts:117](https://github.com/humanbydefinition/p5.asciify/blob/fe0dff6d1233011a7a23cab5c777ec3b02b03613/src/lib/renderers/2d/feature/AbstractFeatureRenderer2D.ts#L117)
 
 Define the rotation angle of all characters in the grid affected by the renderer in degrees.
 
@@ -868,7 +872,7 @@ If angle is not a number.
 
 > **update**(`newOptions`): `void`
 
-Defined in: [renderers/2d/feature/AbstractFeatureRenderer2D.ts:281](https://github.com/humanbydefinition/p5.asciify/blob/72321c3efb20e586522e95711ebe51cc0ce11317/src/lib/renderers/2d/feature/AbstractFeatureRenderer2D.ts#L281)
+Defined in: [renderers/2d/feature/AbstractFeatureRenderer2D.ts:281](https://github.com/humanbydefinition/p5.asciify/blob/fe0dff6d1233011a7a23cab5c777ec3b02b03613/src/lib/renderers/2d/feature/AbstractFeatureRenderer2D.ts#L281)
 
 Updates renderer options.
 
