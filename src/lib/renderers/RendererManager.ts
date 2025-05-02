@@ -63,6 +63,9 @@ export class P5AsciifyRendererManager {
         /** The p5 instance. */
         private _p: p5,
 
+        /** The framebuffer containing the content to be asciified. */
+        private _captureFramebuffer: p5.Framebuffer,
+
         /** The grid instance. */
         private _grid: P5AsciifyGrid,
 
@@ -70,8 +73,8 @@ export class P5AsciifyRendererManager {
         private _fontManager: P5AsciifyFontManager
     ) {
         this._currentCanvasDimensions = {
-            width: this._p.width,
-            height: this._p.height
+            width: this._captureFramebuffer.width,
+            height: this._captureFramebuffer.height
         };
 
         this._renderers = [
@@ -189,9 +192,9 @@ export class P5AsciifyRendererManager {
      * and the canvas dimensions are different to the previous {@link render} call.
      */
     private checkCanvasDimensions(): void {
-        if (this._currentCanvasDimensions.width !== this._p.width || this._currentCanvasDimensions.height !== this._p.height) {
-            this._currentCanvasDimensions.width = this._p.width;
-            this._currentCanvasDimensions.height = this._p.height;
+        if (this._currentCanvasDimensions.width !== this._captureFramebuffer.width || this._currentCanvasDimensions.height !== this._captureFramebuffer.height) {
+            this._currentCanvasDimensions.width = this._captureFramebuffer.width;
+            this._currentCanvasDimensions.height = this._captureFramebuffer.height;
 
             this._grid.reset();
 

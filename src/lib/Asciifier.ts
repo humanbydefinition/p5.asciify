@@ -73,6 +73,7 @@ export class P5Asciifier {
 
         this._rendererManager = new P5AsciifyRendererManager(
             this._p,
+            this._captureFramebuffer,
             this._grid,
             this._fontManager
         );
