@@ -8,6 +8,8 @@ import URSAFONT_BASE64 from './assets/fonts/ursafont_base64.txt?raw';
  * Manages the `p5.asciify` library by handling one or more `P5Asciifier` instances through the exposed {@link p5asciify} object, which is an instance of this class.
  */
 export class P5AsciifierManager {
+    /** Singleton instance of the manager */
+    private static _instance: P5AsciifierManager | null = null;
 
     /** The p5.js instance used by the library. */
     private _p!: p5;
@@ -25,10 +27,28 @@ export class P5AsciifierManager {
     private _sketchFramebuffer!: p5.Framebuffer;
 
     /**
+     * Gets the singleton instance of P5AsciifierManager.
+     * If the instance doesn't exist yet, it creates one.
+     * 
+     * @returns The singleton instance of P5AsciifierManager
+     */
+    public static getInstance(): P5AsciifierManager {
+        if (!P5AsciifierManager._instance) {
+            P5AsciifierManager._instance = new P5AsciifierManager();
+        }
+        return P5AsciifierManager._instance;
+    }
+
+    /**
      * Creates a new `P5AsciifierManager` instance.
      * @ignore
      */
-    constructor() {
+    private constructor() {
+        // Only allow one instance
+        if (P5AsciifierManager._instance) {
+            throw new P5AsciifyError("P5AsciifierManager is a singleton and cannot be instantiated directly. Use P5AsciifierManager.getInstance() instead.");
+        }
+
         this._asciifiers = [new P5Asciifier()];
     }
 

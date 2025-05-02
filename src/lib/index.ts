@@ -6,7 +6,7 @@ import { compareVersions } from './utils/utils';
 /**
  * Main instance of p5.asciify *({@link P5AsciifierManager})* providing full access to the library.
  */
-export const p5asciify = new P5AsciifierManager();
+export const p5asciify = P5AsciifierManager.getInstance();
 
 // Global mode: assign a dummy preload and expose p5asciify.
 if (typeof window !== 'undefined') {
