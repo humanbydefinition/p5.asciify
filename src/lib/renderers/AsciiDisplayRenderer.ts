@@ -3,7 +3,6 @@ import { P5AsciifyGrid } from '../Grid';
 import { P5AsciifyFontManager } from '../FontManager';
 import vertexShader from '../assets/shaders/vert/shader.vert';
 import asciiConversionShader from './asciiConversion.frag';
-import { P5AsciifyError } from '../AsciifyError';
 
 /**
  * Handles the final rendering of the ASCII output based on the final textures from the rendering pipeline.
