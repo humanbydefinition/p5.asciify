@@ -58,10 +58,12 @@ export class P5Asciifier {
      * @ignore
      */
     public setup(captureFramebuffer: p5.Framebuffer): void {
+        this._captureFramebuffer = captureFramebuffer;
+
         this._fontManager.setup(this._fontSize);
 
         this._grid = new P5AsciifyGrid(
-            this._p,
+            this._captureFramebuffer,
             this._fontManager.maxGlyphDimensions.width,
             this._fontManager.maxGlyphDimensions.height,
         );
@@ -71,8 +73,6 @@ export class P5Asciifier {
             this._grid,
             this._fontManager
         );
-
-        this._captureFramebuffer = captureFramebuffer;
     }
 
     /**
