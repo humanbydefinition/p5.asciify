@@ -24,6 +24,8 @@ export declare class P5Asciifier {
     private _backgroundColor;
     /** The `p5.js` instance. */
     private _p;
+    /** Defines if the ASCII output should be rendered to the canvas or not. */
+    private _renderToCanvas;
     /**
      * Initializes the asciifier by setting the `p5.js` instance and loading the font manager with the default font.
      *
@@ -222,6 +224,15 @@ export declare class P5Asciifier {
      * ```
      */
     saveStrings(filename: string): void;
+    /**
+     * Sets whether the ASCII output should be rendered to the canvas or not.
+     *
+     * If this is set to `false`, the canvas will be clear/empty until you start drawing stuff again in `drawAsciify()`.
+     * Do not bother until you know what you are doing.
+     *
+     * @param bool `true` to render to the canvas, `false` to not render.
+     */
+    renderToCanvas(bool: boolean): void;
     /**
      * Sets the p5.js `fill()` color to the color of the given character in the font texture atlas.
      *
