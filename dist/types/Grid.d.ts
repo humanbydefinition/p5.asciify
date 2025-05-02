@@ -3,7 +3,7 @@ import p5 from 'p5';
  * Manages the grid for the ASCII rendering pipeline of an {@link P5Asciifier} instance.
  */
 export declare class P5AsciifyGrid {
-    private _p;
+    private _texture;
     private _cellWidth;
     private _cellHeight;
     /** The number of columns in the grid. */
@@ -22,12 +22,12 @@ export declare class P5AsciifyGrid {
     private _fixedDimensions;
     /**
      * Create a new grid instance.
-     * @param _p The p5 instance.
+     * @param _texture The framebuffer for the asciifier, used to determine the grid dimensions.
      * @param _cellWidth The width of each cell in the grid.
      * @param _cellHeight The height of each cell in the grid.
      * @ignore
      */
-    constructor(_p: p5, _cellWidth: number, _cellHeight: number);
+    constructor(_texture: p5.Framebuffer, _cellWidth: number, _cellHeight: number);
     /**
      * Reset the grid to the default number of columns and rows based on the current canvas dimensions, and the grid cell dimensions.
      * @ignore

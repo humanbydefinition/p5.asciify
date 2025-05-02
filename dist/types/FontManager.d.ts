@@ -34,9 +34,6 @@ export declare class P5AsciifyFontManager {
     /**
      * Initializes the character glyphs and characters array.
      */
-    /**
- * Initializes the characters array with character information and color assignments.
- */
     private _initializeGlyphsAndCharacters;
     /**
      * Loads a font for ASCII rendering.
