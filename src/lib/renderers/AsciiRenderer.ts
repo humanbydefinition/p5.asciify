@@ -429,9 +429,8 @@ export abstract class P5AsciifyRenderer<T extends AsciiRendererOptions = AsciiRe
      * 
      *      // Rotates all characters in the grid by X degrees. 
      *      // Utilize the red color channel for the rotation angle.
-     *      // TODO: Add functionality to `p5.asciify` to simplify this for non-shader users.
      *      rotationFramebuffer.begin();
-     *      background(255, 0, 0); // BLACK = 0 degrees, RED = 360 degrees
+     *      background('rgb(25%, 0%, 0%)'); // 25% of 360 degrees = 90 degrees
      *      rotationFramebuffer.end();
      *  }
      * ```
