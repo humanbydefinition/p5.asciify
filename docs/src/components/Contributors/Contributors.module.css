@@ -1,7 +1,0 @@
-/* src/components/Contributors.module.css */
-.container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 2rem;
-  margin: 2rem 0;
-}
