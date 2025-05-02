@@ -58,25 +58,32 @@ export class P5AsciifyFontManager {
      */
     private _initializeGlyphsAndCharacters(): void {
         const glyphs = Object.values(this._font.font.glyphs.glyphs) as OpenTypeGlyph[];
+        this._characters = [];
 
-        // Initialize characters array with objects containing character, unicode, and color values
-        this._characters = glyphs
-            .filter((glyph): glyph is OpenTypeGlyph => glyph.unicode !== undefined)
-            .map((glyph, index) => {
-                const r = index % 256;
-                const g = Math.floor(index / 256) % 256;
-                const b = Math.floor(index / 65536);
+        // Process all glyphs in a single loop
+        glyphs.forEach((glyph, index) => {
+            // Skip glyphs with no unicode information
+            if ((!glyph.unicode && (!glyph.unicodes || !glyph.unicodes.length))) {
+                return;
+            }
 
-                return {
-                    character: String.fromCharCode(glyph.unicode!),
-                    unicode: glyph.unicode!,
-                    getPath: (x: number, y: number, fontSize: number) => glyph.getPath(x, y, fontSize),
-                    advanceWidth: glyph.advanceWidth,
-                    r,
-                    g,
-                    b
-                };
+            // Calculate color values based on current array length
+            const idx = this._characters.length;
+            const r = idx % 256;
+            const g = Math.floor(idx / 256) % 256;
+            const b = Math.floor(idx / 65536);
+
+            // Use either direct unicode or first value from unicodes array
+            const unicode = glyph.unicode ?? glyph.unicodes![0];
+
+            this._characters.push({
+                character: String.fromCodePoint(unicode),
+                unicode,
+                getPath: (x: number, y: number, fontSize: number) => glyph.getPath(x, y, fontSize),
+                advanceWidth: glyph.advanceWidth,
+                r, g, b
             });
+        });
     }
 
     /**
@@ -118,12 +125,15 @@ export class P5AsciifyFontManager {
      * ```
      */
     public glyphColor(char: string): [number, number, number] {
+        // Handle multi-byte characters correctly
         const charInfo = this._characters.find(
             c => c.character === char
         );
 
         if (!charInfo) {
-            throw new P5AsciifyError(`Could not find character in character set: ${char}`);
+            const codePoint = char.codePointAt(0);
+            const hexCode = codePoint ? codePoint.toString(16).padStart(4, '0') : 'unknown';
+            throw new P5AsciifyError(`Could not find character in character set: ${char} (U+${hexCode})`);
         }
 
         return [charInfo.r, charInfo.g, charInfo.b];
@@ -143,12 +153,8 @@ export class P5AsciifyFontManager {
      * ```
      */
     public getUnsupportedCharacters(characters: string): string[] {
-        return Array.from(
-            new Set(
-                Array.from(characters).filter(
-                    (char: string) => !this._characters.some(c => c.character === char)
-                )
-            )
+        return [...characters].filter(
+            (char: string) => !this._characters.some(c => c.character === char)
         );
     }
 
@@ -185,7 +191,9 @@ export class P5AsciifyFontManager {
             const charInfo = this._characters.find(c => c.character === char);
 
             if (!charInfo) {
-                throw new P5AsciifyError(`Could not find character in character set: ${char}`);
+                const codePoint = char.codePointAt(0);
+                const hexCode = codePoint ? codePoint.toString(16).padStart(4, '0') : 'unknown';
+                throw new P5AsciifyError(`Could not find character in character set: ${char} (U+${hexCode})`);
             }
 
             return [charInfo.r, charInfo.g, charInfo.b];
