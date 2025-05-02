@@ -40,7 +40,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/humanbydefinition/p5-asciify.git"
+    "url": "git+https://github.com/humanbydefinition/p5.asciify.git"
   },
   "keywords": [
     "p5",
@@ -52,9 +52,9 @@
   "author": "humanbydefinition",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/humanbydefinition/p5-asciify/issues"
+    "url": "https://github.com/humanbydefinition/p5.asciify/issues"
   },
-  "homepage": "https://github.com/humanbydefinition/p5-asciify",
+  "homepage": "https://p5.textmode.art",
   "files": [
     "dist"
   ]
