@@ -118,7 +118,7 @@ export class P5AsciifyBrightnessRenderer extends AbstractFeatureRenderer2D {
         this.asciiCharacterShader.setUniform('u_colorSampleFramebuffer', this.colorSampleFramebuffer);
         this.asciiCharacterShader.setUniform('u_charPaletteTexture', this._characterColorPalette.framebuffer);
         this.asciiCharacterShader.setUniform('u_charPaletteSize', [this._characterColorPalette.colors.length, 1]);
-        this._p.rect(0, 0, this._p.width, this._p.height);
+        this._p.rect(0, 0, this._characterFramebuffer.width, this._characterFramebuffer.height);
         this._characterFramebuffer.end();
     }
 }

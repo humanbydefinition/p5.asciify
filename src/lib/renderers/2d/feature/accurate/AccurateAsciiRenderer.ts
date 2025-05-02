@@ -104,7 +104,7 @@ export class P5AsciifyAccurateRenderer extends AbstractFeatureRenderer2D {
         this._brightnessSampleShader.setUniform('u_inputImageSize', [this._p.width, this._p.height]);
         this._brightnessSampleShader.setUniform('u_gridCols', this._grid.cols);
         this._brightnessSampleShader.setUniform('u_gridRows', this._grid.rows);
-        this._p.rect(0, 0, this._p.width, this._p.height);
+        this._p.rect(0, 0, this._brightnessSampleFramebuffer.width, this._brightnessSampleFramebuffer.height);
         this._brightnessSampleFramebuffer.end();
 
         // Brightness split pass
@@ -117,7 +117,7 @@ export class P5AsciifyAccurateRenderer extends AbstractFeatureRenderer2D {
         this._brightnessSplitShader.setUniform('u_gridCols', this._grid.cols);
         this._brightnessSplitShader.setUniform('u_gridRows', this._grid.rows);
         this._brightnessSplitShader.setUniform('u_pixelRatio', this._p.pixelDensity());
-        this._p.rect(0, 0, this._p.width, this._p.height);
+        this._p.rect(0, 0, this._brightnessSplitFramebuffer.width, this._brightnessSplitFramebuffer.height);
         this._brightnessSplitFramebuffer.end();
 
         // Primary color sample pass
@@ -133,7 +133,7 @@ export class P5AsciifyAccurateRenderer extends AbstractFeatureRenderer2D {
             this._colorSampleShader.setUniform('u_gridCols', this._grid.cols);
             this._colorSampleShader.setUniform('u_gridRows', this._grid.rows);
             this._colorSampleShader.setUniform('u_colorRank', 1);
-            this._p.rect(0, 0, this._p.width, this._p.height);
+            this._p.rect(0, 0, this._primaryColorFramebuffer.width, this._primaryColorFramebuffer.height);
         }
         this._primaryColorFramebuffer.end();
 
@@ -150,7 +150,7 @@ export class P5AsciifyAccurateRenderer extends AbstractFeatureRenderer2D {
             this._colorSampleShader.setUniform('u_gridCols', this._grid.cols);
             this._colorSampleShader.setUniform('u_gridRows', this._grid.rows);
             this._colorSampleShader.setUniform('u_colorRank', 2);
-            this._p.rect(0, 0, this._p.width, this._p.height);
+            this._p.rect(0, 0, this._secondaryColorFramebuffer.width, this._secondaryColorFramebuffer.height);
         }
         this._secondaryColorFramebuffer.end();
 
@@ -174,7 +174,7 @@ export class P5AsciifyAccurateRenderer extends AbstractFeatureRenderer2D {
         this._characterSelectionShader.setUniform('u_sketchTexture', this._brightnessSplitFramebuffer);
         this._characterSelectionShader.setUniform('u_gridCellDimensions', [this._grid.cols, this._grid.rows]);
         this._characterSelectionShader.setUniform('u_gridPixelDimensions', [this._grid.width, this._grid.height]);
-        this._p.rect(0, 0, this._p.width, this._p.height);
+        this._p.rect(0, 0, this._characterFramebuffer.width, this._characterFramebuffer.height);
         this._characterFramebuffer.end();
     }
 }

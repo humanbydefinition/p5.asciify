@@ -182,7 +182,7 @@ export class P5AsciifyEdgeRenderer extends AbstractFeatureRenderer2D<EdgeAsciiRe
         this.sobelShader.setUniform('u_threshold', this._options.sobelThreshold as number);
         this.sobelShader.setUniform('u_colorPaletteTexture', this._characterColorPalette.framebuffer);
         this.sobelShader.setUniform('u_totalChars', this._options.characters!.length);
-        this._p.rect(0, 0, this._p.width, this._p.height);
+        this._p.rect(0, 0, this.sobelFramebuffer.width, this.sobelFramebuffer.height);
         this.sobelFramebuffer.end();
 
         // Sample pass
@@ -193,7 +193,7 @@ export class P5AsciifyEdgeRenderer extends AbstractFeatureRenderer2D<EdgeAsciiRe
         this.sampleShader.setUniform('u_image', this.sobelFramebuffer);
         this.sampleShader.setUniform('u_gridCellDimensions', [this._grid.cols, this._grid.rows]);
         this.sampleShader.setUniform('u_threshold', this._options.sampleThreshold as number);
-        this._p.rect(0, 0, this._p.width, this._p.height);
+        this._p.rect(0, 0, this.sampleFramebuffer.width, this.sampleFramebuffer.height);
         this.sampleFramebuffer.end();
 
         // Primary color pass
@@ -205,7 +205,7 @@ export class P5AsciifyEdgeRenderer extends AbstractFeatureRenderer2D<EdgeAsciiRe
         this.colorSampleShader.setUniform('u_gridCellDimensions', [this._grid.cols, this._grid.rows]);
         this.colorSampleShader.setUniform('u_sampleMode', this._options.characterColorMode as number);
         this.colorSampleShader.setUniform('u_staticColor', (this._options.characterColor as p5.Color)._array);
-        this._p.rect(0, 0, this._p.width, this._p.height);
+        this._p.rect(0, 0, this._primaryColorFramebuffer.width, this._primaryColorFramebuffer.height);
         this._primaryColorFramebuffer.end();
 
         // Secondary color pass
@@ -217,7 +217,7 @@ export class P5AsciifyEdgeRenderer extends AbstractFeatureRenderer2D<EdgeAsciiRe
         this.colorSampleShader.setUniform('u_gridCellDimensions', [this._grid.cols, this._grid.rows]);
         this.colorSampleShader.setUniform('u_sampleMode', this._options.backgroundColorMode as number);
         this.colorSampleShader.setUniform('u_staticColor', (this._options.backgroundColor as p5.Color)._array);
-        this._p.rect(0, 0, this._p.width, this._p.height);
+        this._p.rect(0, 0, this._secondaryColorFramebuffer.width, this._secondaryColorFramebuffer.height);
         this._secondaryColorFramebuffer.end();
 
         // Inversion pass
@@ -230,7 +230,7 @@ export class P5AsciifyEdgeRenderer extends AbstractFeatureRenderer2D<EdgeAsciiRe
         this.transformShader.setUniform('u_sampleTexture', this.sampleFramebuffer);
         this.transformShader.setUniform('u_compareColor', [0, 0, 0]);
         this.transformShader.setUniform('u_gridCellDimensions', [this._grid.cols, this._grid.rows]);
-        this._p.rect(0, 0, this._p.width, this._p.height);
+        this._p.rect(0, 0, this._transformFramebuffer.width, this._transformFramebuffer.height);
         this._transformFramebuffer.end();
 
         this._rotationFramebuffer.begin();
@@ -240,7 +240,7 @@ export class P5AsciifyEdgeRenderer extends AbstractFeatureRenderer2D<EdgeAsciiRe
         this.rotationShader.setUniform('u_sampleTexture', this.sampleFramebuffer);
         this.rotationShader.setUniform('u_compareColor', [0, 0, 0]);
         this.rotationShader.setUniform('u_gridCellDimensions', [this._grid.cols, this._grid.rows]);
-        this._p.rect(0, 0, this._p.width, this._p.height);
+        this._p.rect(0, 0, this._rotationFramebuffer.width, this._rotationFramebuffer.height);
         this._rotationFramebuffer.end();
 
         // ASCII character pass
@@ -249,7 +249,7 @@ export class P5AsciifyEdgeRenderer extends AbstractFeatureRenderer2D<EdgeAsciiRe
         this._p.shader(this.asciiCharacterShader);
         this.asciiCharacterShader.setUniform('u_sketchTexture', this.sampleFramebuffer);
         this.asciiCharacterShader.setUniform('u_gridCellDimensions', [this._grid.cols, this._grid.rows]);
-        this._p.rect(0, 0, this._p.width, this._p.height);
+        this._p.rect(0, 0, this._characterFramebuffer.width, this._characterFramebuffer.height);
         this._characterFramebuffer.end();
 
         

@@ -77,7 +77,7 @@ export class P5AsciifyDisplayRenderer {
             this._shader.setUniform(key, value);
         }
 
-        this._p.rect(0, 0, this._p.width, this._p.height);
+        this._p.rect(0, 0, this._resultFramebuffer.width, this._resultFramebuffer.height);
         this._resultFramebuffer.end();
     }
 
