@@ -19,8 +19,12 @@ export abstract class P5AsciifyRenderer<T extends AsciiRendererOptions = AsciiRe
     /** The character framebuffer, whose pixels define the ASCII characters to use in the grid cells. */
     protected _characterFramebuffer: p5.Framebuffer;
 
-    /** The inversion framebuffer, whose pixels define whether to swap the character and background colors. */
-    protected _inversionFramebuffer: p5.Framebuffer;
+    /** The transform framebuffer, where each pixels color channel defines a different transformation:
+     * - Red channel: Swap the character and background colors of the grid cells.
+     * - Green channel: Flip the ASCII characters horizontally.
+     * - Blue channel: Flip the ASCII characters vertically.
+     */
+    protected _transformFramebuffer: p5.Framebuffer;
 
     /** The rotation framebuffer, whose pixels define the rotation angle of the characters in the grid. */
     protected _rotationFramebuffer: p5.Framebuffer;
@@ -36,6 +40,7 @@ export abstract class P5AsciifyRenderer<T extends AsciiRendererOptions = AsciiRe
      */
     constructor(
         protected _p: p5,
+        protected _captureFramebuffer: p5.Framebuffer,
         protected _grid: P5AsciifyGrid,
         protected initialFramebufferDimensions: {
             width: number,
@@ -55,7 +60,7 @@ export abstract class P5AsciifyRenderer<T extends AsciiRendererOptions = AsciiRe
 
         this._primaryColorFramebuffer = this._p.createFramebuffer(framebufferSettings);
         this._secondaryColorFramebuffer = this._p.createFramebuffer(framebufferSettings);
-        this._inversionFramebuffer = this._p.createFramebuffer(framebufferSettings);
+        this._transformFramebuffer = this._p.createFramebuffer(framebufferSettings);
         this._characterFramebuffer = this._p.createFramebuffer(framebufferSettings);
         this._rotationFramebuffer = this._p.createFramebuffer(framebufferSettings);
     }
@@ -92,8 +97,6 @@ export abstract class P5AsciifyRenderer<T extends AsciiRendererOptions = AsciiRe
         }
     }
 
-
-
     /**
      * Enable or disable the renderer.
      * @param enabled - Whether to enable or disable the renderer.
@@ -128,7 +131,7 @@ export abstract class P5AsciifyRenderer<T extends AsciiRendererOptions = AsciiRe
             const framebuffers = [
                 this._primaryColorFramebuffer,
                 this._secondaryColorFramebuffer,
-                this._inversionFramebuffer,
+                this._transformFramebuffer,
                 this._rotationFramebuffer,
                 this._characterFramebuffer
             ]
@@ -310,8 +313,10 @@ export abstract class P5AsciifyRenderer<T extends AsciiRendererOptions = AsciiRe
     get secondaryColorFramebuffer() { return this._secondaryColorFramebuffer; }
 
     /**
-     * Get the inversion framebuffer, 
-     * whose pixels define whether to swap the character and background colors of the grid cells.
+     * Get the transform framebuffer, where each pixels color channel defines a different transformation:
+     * - Red channel: Swap the character and background colors of the grid cells.
+     * - Green channel: Flip the ASCII characters horizontally.
+     * - Blue channel: Flip the ASCII characters vertically.
      * 
      * Pre-built ASCII renderers like `'brightness'` write to this buffer automatically based on your settings. 
      * In `'custom2D'` renderers, you must write to it manually in your `draw()` function.
@@ -321,7 +326,7 @@ export abstract class P5AsciifyRenderer<T extends AsciiRendererOptions = AsciiRe
      *  let characterFramebuffer;
      *  let primaryColorFramebuffer;
      *  let secondaryColorFramebuffer;
-     *  let inversionFramebuffer;
+     *  let transformFramebuffer;
      * 
      *  let asciifier;
      * 
@@ -341,7 +346,7 @@ export abstract class P5AsciifyRenderer<T extends AsciiRendererOptions = AsciiRe
      *      characterFramebuffer = asciifier.renderers().get("custom2D").characterFramebuffer;
      *      primaryColorFramebuffer = asciifier.renderers().get("custom2D").primaryColorFramebuffer;
      *      secondaryColorFramebuffer = asciifier.renderers().get("custom2D").secondaryColorFramebuffer;
-     *      inversionFramebuffer = asciifier.renderers().get("custom2D").inversionFramebuffer;
+     *      transformFramebuffer = asciifier.renderers().get("custom2D").transformFramebuffer;
      *  }
      * 
      *  function draw() {
@@ -362,14 +367,15 @@ export abstract class P5AsciifyRenderer<T extends AsciiRendererOptions = AsciiRe
      *      background(0);
      *      secondaryColorFramebuffer.end();
      * 
-     *      // Swap the character and background colors of all grid cells.
-     *      inversionFramebuffer.begin();
-     *      background(255); // WHITE = swap, BLACK = don't swap
-     *      inversionFramebuffer.end();
+     *      // Swap the character and background colors of all grid cells,
+     *      // and flip the ASCII characters horizontally.
+     *      transformFramebuffer.begin();
+     *      background(255, 255, 0); 
+     *      transformFramebuffer.end();
      *  }
      * ```
      */
-    get inversionFramebuffer() { return this._inversionFramebuffer; }
+    get transformFramebuffer() { return this._transformFramebuffer; }
 
     /**
      * Get the rotation framebuffer, whose pixels define the rotation angle of each character in the grid.
@@ -422,10 +428,10 @@ export abstract class P5AsciifyRenderer<T extends AsciiRendererOptions = AsciiRe
      *      background(0);
      *      secondaryColorFramebuffer.end();
      * 
-     *      // Rotates all characters in the grid by 270 degrees. 
-     *      // Utilize the red and green channels for the rotation angle.
+     *      // Rotates all characters in the grid by X degrees. 
+     *      // Utilize the red color channel for the rotation angle.
      *      rotationFramebuffer.begin();
-     *      background(255, 15, 0); // a bit cheesy right now, but you get the idea.
+     *      background('rgb(25%, 0%, 0%)'); // 25% of 360 degrees = 90 degrees
      *      rotationFramebuffer.end();
      *  }
      * ```

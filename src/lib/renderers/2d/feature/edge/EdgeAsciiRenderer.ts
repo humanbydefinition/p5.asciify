@@ -8,10 +8,11 @@ import { EdgeAsciiRendererOptions } from '../../../types';
 
 import vertexShader from '../../../../assets/shaders/vert/shader.vert';
 import colorSampleShader from './shaders/colorSample.frag';
-import inversionShader from './shaders/inversion.frag';
+import transformShader from './shaders/transform.frag';
 import rotationShader from './shaders/rotation.frag';
 import asciiCharacterShader from './shaders/asciiCharacter.frag';
 import sobelShader from './shaders/sobel.frag';
+import flipShader from './shaders/flip.frag';
 
 import { generateSampleShader } from './shaders/shaderGenerators.min';
 
@@ -41,6 +42,10 @@ export const EDGE_DEFAULT_OPTIONS = {
     sampleThreshold: 16,
     /** Rotation angle of all characters in the grid in degrees */
     rotationAngle: 0,
+    /** Flip the ASCII characters horizontally */
+    flipHorizontally: false,
+    /** Flip the ASCII characters vertically */
+    flipVertically: false,
 };
 
 /**
@@ -50,7 +55,7 @@ export class P5AsciifyEdgeRenderer extends AbstractFeatureRenderer2D<EdgeAsciiRe
     private sobelShader: p5.Shader;
     private sampleShader: p5.Shader;
     private colorSampleShader: p5.Shader;
-    private inversionShader: p5.Shader;
+    private transformShader: p5.Shader;
     private rotationShader: p5.Shader;
     private asciiCharacterShader: p5.Shader;
     private sobelFramebuffer: p5.Framebuffer;
@@ -66,21 +71,24 @@ export class P5AsciifyEdgeRenderer extends AbstractFeatureRenderer2D<EdgeAsciiRe
      */
     constructor(
         p5Instance: p5,
+        captureFramebuffer: p5.Framebuffer,
         grid: P5AsciifyGrid,
         fontManager: P5AsciifyFontManager,
         options: EdgeAsciiRendererOptions = EDGE_DEFAULT_OPTIONS
     ) {
-        super(p5Instance, grid, fontManager, { ...EDGE_DEFAULT_OPTIONS, ...options });
+        super(p5Instance, captureFramebuffer, grid, fontManager, { ...EDGE_DEFAULT_OPTIONS, ...options });
 
         this.sobelShader = this._p.createShader(vertexShader, sobelShader);
         this.sampleShader = this._p.createShader(vertexShader, generateSampleShader(16, this._grid.cellHeight, this._grid.cellWidth));
         this.colorSampleShader = this._p.createShader(vertexShader, colorSampleShader);
-        this.inversionShader = this._p.createShader(vertexShader, inversionShader);
+        this.transformShader = this._p.createShader(vertexShader, transformShader);
         this.rotationShader = this._p.createShader(vertexShader, rotationShader);
         this.asciiCharacterShader = this._p.createShader(vertexShader, asciiCharacterShader);
 
         this.sobelFramebuffer = this._p.createFramebuffer({
             density: 1,
+            width: this._captureFramebuffer.width,
+            height: this._captureFramebuffer.height,
             depthFormat: this._p.UNSIGNED_INT,
             textureFiltering: this._p.NEAREST
         });
@@ -97,6 +105,7 @@ export class P5AsciifyEdgeRenderer extends AbstractFeatureRenderer2D<EdgeAsciiRe
     resizeFramebuffers(): void {
         super.resizeFramebuffers();
         this.sampleFramebuffer.resize(this._grid.cols, this._grid.rows);
+        this.sobelFramebuffer.resize(this._captureFramebuffer.width, this._captureFramebuffer.height);
     }
 
     resetShaders(): void {
@@ -167,64 +176,66 @@ export class P5AsciifyEdgeRenderer extends AbstractFeatureRenderer2D<EdgeAsciiRe
         }
     }
 
-    render(inputFramebuffer: p5.Framebuffer): void {
+    render(): void {
         // Sobel pass
         this.sobelFramebuffer.begin();
         this._p.clear();
         this._p.shader(this.sobelShader);
-        this.sobelShader.setUniform('u_texture', inputFramebuffer);
-        this.sobelShader.setUniform('u_textureSize', [this._p.width, this._p.height]);
+        this.sobelShader.setUniform('u_texture', this._captureFramebuffer);
+        this.sobelShader.setUniform('u_textureSize', [this._captureFramebuffer.width, this._captureFramebuffer.height]);
         this.sobelShader.setUniform('u_threshold', this._options.sobelThreshold as number);
         this.sobelShader.setUniform('u_colorPaletteTexture', this._characterColorPalette.framebuffer);
         this.sobelShader.setUniform('u_totalChars', this._options.characters!.length);
-        this._p.rect(0, 0, this._p.width, this._p.height);
+        this._p.rect(0, 0, this.sobelFramebuffer.width, this.sobelFramebuffer.height);
         this.sobelFramebuffer.end();
 
         // Sample pass
         this.sampleFramebuffer.begin();
         this._p.clear();
         this._p.shader(this.sampleShader);
-        this.sampleShader.setUniform('u_imageSize', [this._p.width, this._p.height]);
+        this.sampleShader.setUniform('u_imageSize', [this._captureFramebuffer.width, this._captureFramebuffer.height]);
         this.sampleShader.setUniform('u_image', this.sobelFramebuffer);
         this.sampleShader.setUniform('u_gridCellDimensions', [this._grid.cols, this._grid.rows]);
         this.sampleShader.setUniform('u_threshold', this._options.sampleThreshold as number);
-        this._p.rect(0, 0, this._p.width, this._p.height);
+        this._p.rect(0, 0, this.sampleFramebuffer.width, this.sampleFramebuffer.height);
         this.sampleFramebuffer.end();
 
         // Primary color pass
         this._primaryColorFramebuffer.begin();
         this._p.clear();
         this._p.shader(this.colorSampleShader);
-        this.colorSampleShader.setUniform('u_sketchTexture', inputFramebuffer);
+        this.colorSampleShader.setUniform('u_sketchTexture', this._captureFramebuffer);
         this.colorSampleShader.setUniform('u_sampleTexture', this.sampleFramebuffer);
         this.colorSampleShader.setUniform('u_gridCellDimensions', [this._grid.cols, this._grid.rows]);
         this.colorSampleShader.setUniform('u_sampleMode', this._options.characterColorMode as number);
         this.colorSampleShader.setUniform('u_staticColor', (this._options.characterColor as p5.Color)._array);
-        this._p.rect(0, 0, this._p.width, this._p.height);
+        this._p.rect(0, 0, this._primaryColorFramebuffer.width, this._primaryColorFramebuffer.height);
         this._primaryColorFramebuffer.end();
 
         // Secondary color pass
         this._secondaryColorFramebuffer.begin();
         this._p.clear();
         this._p.shader(this.colorSampleShader);
-        this.colorSampleShader.setUniform('u_sketchTexture', inputFramebuffer);
+        this.colorSampleShader.setUniform('u_sketchTexture', this._captureFramebuffer);
         this.colorSampleShader.setUniform('u_sampleTexture', this.sampleFramebuffer);
         this.colorSampleShader.setUniform('u_gridCellDimensions', [this._grid.cols, this._grid.rows]);
         this.colorSampleShader.setUniform('u_sampleMode', this._options.backgroundColorMode as number);
         this.colorSampleShader.setUniform('u_staticColor', (this._options.backgroundColor as p5.Color)._array);
-        this._p.rect(0, 0, this._p.width, this._p.height);
+        this._p.rect(0, 0, this._secondaryColorFramebuffer.width, this._secondaryColorFramebuffer.height);
         this._secondaryColorFramebuffer.end();
 
         // Inversion pass
-        this._inversionFramebuffer.begin();
+        this._transformFramebuffer.begin();
         this._p.clear();
-        this._p.shader(this.inversionShader);
-        this.inversionShader.setUniform('u_invert', this._options.invertMode as boolean);
-        this.inversionShader.setUniform('u_sampleTexture', this.sampleFramebuffer);
-        this.inversionShader.setUniform('u_compareColor', [0, 0, 0]);
-        this.inversionShader.setUniform('u_gridCellDimensions', [this._grid.cols, this._grid.rows]);
-        this._p.rect(0, 0, this._p.width, this._p.height);
-        this._inversionFramebuffer.end();
+        this._p.shader(this.transformShader);
+        this.transformShader.setUniform('u_invert', this._options.invertMode as boolean);
+        this.transformShader.setUniform('u_flipH', this._options.flipHorizontally as boolean);
+        this.transformShader.setUniform('u_flipV', this._options.flipVertically as boolean);
+        this.transformShader.setUniform('u_sampleTexture', this.sampleFramebuffer);
+        this.transformShader.setUniform('u_compareColor', [0, 0, 0]);
+        this.transformShader.setUniform('u_gridCellDimensions', [this._grid.cols, this._grid.rows]);
+        this._p.rect(0, 0, this._transformFramebuffer.width, this._transformFramebuffer.height);
+        this._transformFramebuffer.end();
 
         this._rotationFramebuffer.begin();
         this._p.clear();
@@ -233,7 +244,7 @@ export class P5AsciifyEdgeRenderer extends AbstractFeatureRenderer2D<EdgeAsciiRe
         this.rotationShader.setUniform('u_sampleTexture', this.sampleFramebuffer);
         this.rotationShader.setUniform('u_compareColor', [0, 0, 0]);
         this.rotationShader.setUniform('u_gridCellDimensions', [this._grid.cols, this._grid.rows]);
-        this._p.rect(0, 0, this._p.width, this._p.height);
+        this._p.rect(0, 0, this._rotationFramebuffer.width, this._rotationFramebuffer.height);
         this._rotationFramebuffer.end();
 
         // ASCII character pass
@@ -242,7 +253,9 @@ export class P5AsciifyEdgeRenderer extends AbstractFeatureRenderer2D<EdgeAsciiRe
         this._p.shader(this.asciiCharacterShader);
         this.asciiCharacterShader.setUniform('u_sketchTexture', this.sampleFramebuffer);
         this.asciiCharacterShader.setUniform('u_gridCellDimensions', [this._grid.cols, this._grid.rows]);
-        this._p.rect(0, 0, this._p.width, this._p.height);
+        this._p.rect(0, 0, this._characterFramebuffer.width, this._characterFramebuffer.height);
         this._characterFramebuffer.end();
+
+        
     }
 }

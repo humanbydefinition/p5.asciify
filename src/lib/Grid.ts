@@ -27,13 +27,13 @@ export class P5AsciifyGrid {
 
     /**
      * Create a new grid instance.
-     * @param _p The p5 instance.
+     * @param _texture The framebuffer for the asciifier, used to determine the grid dimensions.
      * @param _cellWidth The width of each cell in the grid.
      * @param _cellHeight The height of each cell in the grid.
      * @ignore
      */
     constructor(
-        private _p: p5,
+        private _texture: p5.Framebuffer,
         private _cellWidth: number,
         private _cellHeight: number,
     ) {
@@ -46,7 +46,7 @@ export class P5AsciifyGrid {
      */
     public reset(): void {
         if (!this._fixedDimensions) {
-            [this._cols, this._rows] = [Math.floor(this._p.width / this._cellWidth), Math.floor(this._p.height / this._cellHeight)];
+            [this._cols, this._rows] = [Math.floor(this._texture.width / this._cellWidth), Math.floor(this._texture.height / this._cellHeight)];
         }
 
         this._resizeGrid();
@@ -58,8 +58,8 @@ export class P5AsciifyGrid {
     private _resizeGrid(): void {
         this._width = this._cols * this._cellWidth;
         this._height = this._rows * this._cellHeight;
-        this._offsetX = Math.floor((this._p.width - this._width) / 2);
-        this._offsetY = Math.floor((this._p.height - this._height) / 2);
+        this._offsetX = Math.floor((this._texture.width - this._width) / 2);
+        this._offsetY = Math.floor((this._texture.height - this._height) / 2);
     }
 
     /**

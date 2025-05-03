@@ -1,5 +1,5 @@
 import p5 from 'p5';
-import { OpenTypeGlyph } from './types';
+import { P5AsciifyCharacter } from './types';
 /**
  * Manages the font used for the ASCII rendering pipeline and provides methods for working with the font.
  */
@@ -8,8 +8,6 @@ export declare class P5AsciifyFontManager {
     private _font;
     /** An array of supported characters in the font. */
     private _characters;
-    /** An array of character glyphs with color assignments. */
-    private _characterGlyphs;
     /** Maximum width and height of the glyphs in the font. */
     private _maxGlyphDimensions;
     /** Texture containing all characters in the font. As square as possible. */
@@ -164,7 +162,7 @@ export declare class P5AsciifyFontManager {
      */
     get font(): p5.Font;
     /**
-     * An array of supported characters in the set font.
+     * An array of supported characters in the set font with additional information like unicode, and RGB color values.
      *
      * @example
      * ```javascript
@@ -174,17 +172,5 @@ export declare class P5AsciifyFontManager {
      *  }
      * ```
      */
-    get characters(): string[];
-    /**
-     * An array of character glyphs in the set font with color assignments.
-     *
-     * @example
-     * ```javascript
-     *  function setupAsciify() {
-     *      // Print the character glyph objects of the font to the console
-     *      console.log(p5asciify.asciifier().fontManager.characterGlyphs);
-     *  }
-     * ```
-     */
-    get characterGlyphs(): OpenTypeGlyph[];
+    get characters(): P5AsciifyCharacter[];
 }

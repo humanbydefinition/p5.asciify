@@ -25,11 +25,12 @@ export abstract class AbstractFeatureRenderer2D<T extends FeatureAsciiRendererOp
      */
     constructor(
         p: p5,
+        captureFramebuffer: p5.Framebuffer,
         grid: P5AsciifyGrid,
         fontManager: P5AsciifyFontManager,
         options: T
     ) {
-        super(p, grid, fontManager, options);
+        super(p, captureFramebuffer, grid, fontManager, options);
 
         this._characterColorPalette = new P5AsciifyColorPalette(this._p, this._fontManager.glyphColors(this._options.characters));
 
@@ -92,10 +93,9 @@ export abstract class AbstractFeatureRenderer2D<T extends FeatureAsciiRendererOp
     /**
      * Convert the input framebuffer into separate ASCII framebuffers based on pre-built renderer settings,
      * which are used by the final {@link P5AsciifyDisplayRenderer} to render the final ASCII output.
-     * @param inputFramebuffer - The input framebuffer to convert to ASCII.
      * @ignore
      */
-    abstract render(inputFramebuffer: p5.Framebuffer): void;
+    abstract render(): void;
 
     /**
      * Define the rotation angle of all characters in the grid affected by the renderer in degrees.
@@ -115,7 +115,6 @@ export abstract class AbstractFeatureRenderer2D<T extends FeatureAsciiRendererOp
      * @throws {P5AsciifyError} If angle is not a number.
      */
     public rotation(angle: number): void {
-
         if (typeof angle !== 'number') {
             throw new P5AsciifyError('Rotation angle must be a number');
         }
@@ -124,11 +123,11 @@ export abstract class AbstractFeatureRenderer2D<T extends FeatureAsciiRendererOp
         angle = angle % 360;
         if (angle < 0) angle += 360;
 
-        // Calculate red and green components
-        const red = Math.min(255, Math.floor(angle));
-        const green = angle > 255 ? Math.floor(angle - 255) : 0;
+        // Map 0-360 degrees to 0-255 range for the red channel
+        const normalizedValue = angle / 360;
+        const red = Math.round(normalizedValue * 255);
 
-        this._options.rotationAngle = this._p.color(red, green, 0);
+        this._options.rotationAngle = this._p.color(red, 0, 0);
     }
 
     /**
@@ -151,6 +150,32 @@ export abstract class AbstractFeatureRenderer2D<T extends FeatureAsciiRendererOp
         }
 
         this._options.characterColor = color;
+    }
+
+    /**
+     * Define whether to flip the ASCII characters horizontally.
+     * @param flip Whether to flip the characters horizontally.
+     * @throws {P5AsciifyError} If flip is not a boolean.
+     */
+    public flipHorizontally(flip: boolean): void {
+        if (typeof flip !== 'boolean') {
+            throw new P5AsciifyError('Flip horizontally must be a boolean');
+        }
+
+        this._options.flipHorizontally = flip;
+    }
+
+    /**
+     * Define whether to flip the ASCII characters vertically.
+     * @param flip Whether to flip the characters vertically.
+     * @throws {P5AsciifyError} If flip is not a boolean.
+     */
+    public flipVertically(flip: boolean): void {
+        if (typeof flip !== 'boolean') {
+            throw new P5AsciifyError('Flip vertically must be a boolean');
+        }
+
+        this._options.flipVertically = flip;
     }
 
     /**
@@ -288,6 +313,14 @@ export abstract class AbstractFeatureRenderer2D<T extends FeatureAsciiRendererOp
 
         if (newOptions?.backgroundColorMode !== undefined) {
             this.backgroundColorMode(newOptions.backgroundColorMode as string);
+        }
+
+        if (newOptions?.flipHorizontally !== undefined) {
+            this.flipHorizontally(newOptions.flipHorizontally);
+        }
+
+        if (newOptions?.flipVertically !== undefined) {
+            this.flipVertically(newOptions.flipVertically);
         }
     }
 

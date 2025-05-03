@@ -6,6 +6,7 @@ import { P5AsciifyRendererManager } from './renderers/RendererManager';
 import { P5AsciifyError } from './AsciifyError';
 import { AbstractFeatureRenderer2D } from './renderers/2d/feature/AbstractFeatureRenderer2D';
 import { P5AsciifySVGExporter, SVGExportOptions } from './utils/SVGExporter';
+import { JSONExportOptions, P5AsciifyJSONExporter } from './utils/JSONExporter';
 
 /**
  * Manages a rendering pipeline for ASCII conversion, including font management, grid calculations, and ASCII renderers, 
@@ -35,6 +36,9 @@ export class P5Asciifier {
     /** The `p5.js` instance. */
     private _p!: p5;
 
+    /** Defines if the ASCII output should be rendered to the canvas or not. */
+    private _renderToCanvas: boolean = true;
+
     /**
      * Initializes the asciifier by setting the `p5.js` instance and loading the font manager with the default font.
      * 
@@ -57,21 +61,22 @@ export class P5Asciifier {
      * @ignore
      */
     public setup(captureFramebuffer: p5.Framebuffer): void {
+        this._captureFramebuffer = captureFramebuffer;
+
         this._fontManager.setup(this._fontSize);
 
         this._grid = new P5AsciifyGrid(
-            this._p,
+            this._captureFramebuffer,
             this._fontManager.maxGlyphDimensions.width,
             this._fontManager.maxGlyphDimensions.height,
         );
 
         this._rendererManager = new P5AsciifyRendererManager(
             this._p,
+            this._captureFramebuffer,
             this._grid,
             this._fontManager
         );
-
-        this._captureFramebuffer = captureFramebuffer;
     }
 
     /**
@@ -84,9 +89,14 @@ export class P5Asciifier {
     public asciify(): void {
         this._rendererManager.render(this._captureFramebuffer);
 
-        if (this._rendererManager.hasEnabledRenderers) {
-            this._p.background(this._backgroundColor as p5.Color);
-            this._p.image(this._rendererManager.asciiDisplayRenderer.resultFramebuffer, -(this._p.width / 2) + this._grid.offsetX, -(this._p.height / 2) + this._grid.offsetY);
+        if (this._renderToCanvas) {
+            if (this._rendererManager.hasEnabledRenderers) {
+                this._p.background(this._backgroundColor as p5.Color);
+                this._p.image(this._rendererManager.asciiDisplayRenderer.resultFramebuffer, -(this._p.width / 2) + this._grid.offsetX, -(this._p.height / 2) + this._grid.offsetY);
+            } else {
+                this._p.clear();
+                this._p.image(this._captureFramebuffer, -(this._captureFramebuffer.width / 2), -(this._captureFramebuffer.height / 2));
+            }
         }
     }
 
@@ -142,7 +152,7 @@ export class P5Asciifier {
      * @param font The `p5.Font` object to use for ASCII rendering.
      * @param options An object containing options affecting what happens after the font is loaded.
      * @param options.updateCharacters If `true` *(default)*, updates set character sets in pre-defined renderers like the brightness-based ASCII renderer.
-     *                                 This might throw an error if the new font does not contain the character sets used with the previous font.
+     *                                 This might cause an error if the new font does not contain the character sets used with the previous font.
      *                                 If `false`, those character sets are not updated, potentially leading to missing/different characters in the ASCII output if the mapping is not the same.
      * @throws {@link P5AsciifyError} - If the font parameter is invalid.
      * 
@@ -191,9 +201,12 @@ export class P5Asciifier {
     }
 
     /**
-     * Sets the background color for the ascii renderers, occupying all the space not covered by cells in the grid.
+     * Sets the background color for the ascii renderers, occupying all the space not covered by cells in the grid. 
+     * 
+     * To make the background transparent, pass an appropriate color value with an alpha value of `0`.
+     * 
      * @param color The color to set. Needs to be a valid type to pass to the `background()` function provided by p5.js.
-     * @throws {@link P5AsciifyError} - If the color is not a string, array or p5.Color.
+     * @throws {@link P5AsciifyError} - If the color is not a string, array or `p5.Color`.
      * 
      * @example
      * ```javascript
@@ -215,7 +228,7 @@ export class P5Asciifier {
      * Sets the grid dimensions for the ASCII renderers. 
      * Calling this method will make the grid dimensions fixed, no longer adjusting automatically when the canvas size changes.
      * 
-     * To make the grid responsive to the canvas size again, use the {@link gridResponsive} method.
+     * To make the grid dimensions responsive to the canvas size again, use the {@link gridResponsive} method.
      * 
      * @param gridCols The number of columns in the grid.
      * @param gridRows The number of rows in the grid.
@@ -281,6 +294,21 @@ export class P5Asciifier {
             this._grid,
             this._fontManager,
             this._backgroundColor as p5.Color,
+            options
+        );
+    }
+
+    /**
+     * Saves the current ASCII output as a JSON file.
+     * @param options The options for saving the JSON file.
+     * @throws {@link P5AsciifyError} - If no renderer is available to fetch ASCII output from.
+     */
+    public saveJSON(options: JSONExportOptions = {}): void {
+        const svgExporter = new P5AsciifyJSONExporter(this._p);
+        svgExporter.saveJSON(
+            this._rendererManager,
+            this._grid,
+            this._fontManager,
             options
         );
     }
@@ -381,6 +409,22 @@ export class P5Asciifier {
     }
 
     /**
+     * Sets whether the ASCII output should be rendered to the canvas or not.
+     * 
+     * If this is set to `false`, the canvas will remain clear/empty until you start drawing stuff again in `drawAsciify()`.
+     * This is because `p5.asciify` wraps your `draw()` loop inside a framebuffer's `begin()` and `end()`, if the canvas is being recorded.
+     * 
+     * @param bool `true` to render to the canvas, `false` to not render.
+     */
+    public renderToCanvas(bool: boolean): void {
+        if (typeof bool !== "boolean") {
+            throw new P5AsciifyError(`Invalid type for renderToCanvas: ${typeof bool}. Expected boolean.`);
+        }
+
+        this._renderToCanvas = bool;
+    }
+
+    /**
      * Sets the p5.js `fill()` color to the color of the given character in the font texture atlas.
      * 
      * This method can be useful when drawing to a custom renderers `characterFramebuffer`, 
@@ -417,7 +461,7 @@ export class P5Asciifier {
      *      characterFramebuffer.begin();
      *      clear();
      *      asciifier.fill("A");
-     *      rect(0, 0, 100, 100);
+     *      rect(0, 0, 10, 10);
      *      characterFramebuffer.end();
      * 
      *      // Makes all ascii characters on the grid white.
@@ -437,7 +481,7 @@ export class P5Asciifier {
     }
 
     /**
-     * Returns the {@link P5AsciifyGrid} instance, which contains information about grid properties, and methods to modify the grid.
+     * Returns the {@link P5AsciifyGrid} instance, which contains information about grid properties.
      * 
      * @example
      * ```javascript
@@ -478,7 +522,7 @@ export class P5Asciifier {
     get captureFramebuffer(): p5.Framebuffer { return this._captureFramebuffer; }
 
     /**
-     * Returns the ASCII output texture as a p5.Framebuffer, which can be used for further processing or rendering.
+     * Returns the ASCII output texture as a `p5.Framebuffer`, which can be used for further processing or rendering.
      * Can also be used via the p5.js `texture()` function.
      * 
      * @example

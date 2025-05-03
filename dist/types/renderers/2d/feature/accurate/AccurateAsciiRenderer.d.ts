@@ -25,6 +25,10 @@ export declare const ACCURATE_DEFAULT_OPTIONS: {
     invertMode: boolean;
     /** Rotation angle of all characters in the grid in degrees */
     rotationAngle: number;
+    /** Flip the ASCII characters horizontally */
+    flipHorizontally: boolean;
+    /** Flip the ASCII characters vertically */
+    flipVertically: boolean;
 };
 /**
  * An ASCII renderer that attempts picking the most fitting ASCII representation to accurately represent the input sketch using the available ASCII characters.
@@ -44,8 +48,8 @@ export declare class P5AsciifyAccurateRenderer extends AbstractFeatureRenderer2D
      * @param options The options for the ASCII renderer.
      * @ignore
      */
-    constructor(p5Instance: p5, grid: P5AsciifyGrid, fontManager: P5AsciifyFontManager, options?: FeatureAsciiRendererOptions);
+    constructor(p5Instance: p5, captureFramebuffer: p5.Framebuffer, grid: P5AsciifyGrid, fontManager: P5AsciifyFontManager, options?: FeatureAsciiRendererOptions);
     resizeFramebuffers(): void;
     resetShaders(): void;
-    render(inputFramebuffer: p5.Framebuffer): void;
+    render(): void;
 }

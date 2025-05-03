@@ -21,7 +21,9 @@ export const BRIGHTNESS_OPTIONS = {
   backgroundColorMode: 'fixed',
   invertMode: false,
   fontSize: 16,
-  rotationAngle: 0
+  rotationAngle: 0,
+  flipHorizontally: false,
+  flipVertically: false,
 };
 
 export const createSketch = (options = {}) => {
@@ -56,7 +58,9 @@ export const createSketch = (options = {}) => {
         backgroundColor: finalOptions.backgroundColor,
         backgroundColorMode: finalOptions.backgroundColorMode,
         invertMode: finalOptions.invertMode,
-        rotationAngle: finalOptions.rotationAngle
+        rotationAngle: finalOptions.rotationAngle,
+        flipHorizontally: finalOptions.flipHorizontally,
+        flipVertically: finalOptions.flipVertically,
       });
     };
 
@@ -88,12 +92,6 @@ export const createSketch = (options = {}) => {
       p.resizeCanvas(p.windowWidth, p.windowHeight);
     };
   };
-
-  // For Storybook usage
-  if (options.container) {
-    p5Instance = new p5(sketch, options.container);
-    return options.container;
-  }
 
   // For standalone example usage
   p5Instance = new p5(sketch);

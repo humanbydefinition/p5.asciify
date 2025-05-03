@@ -18,7 +18,7 @@ export declare abstract class AbstractFeatureRenderer2D<T extends FeatureAsciiRe
      * @param options The options for the ASCII renderer.
      * @ignore
      */
-    constructor(p: p5, grid: P5AsciifyGrid, fontManager: P5AsciifyFontManager, options: T);
+    constructor(p: p5, captureFramebuffer: p5.Framebuffer, grid: P5AsciifyGrid, fontManager: P5AsciifyFontManager, options: T);
     /**
      * Set the characters for the character set.
      * @param characters The characters to set for the character set.
@@ -55,10 +55,9 @@ export declare abstract class AbstractFeatureRenderer2D<T extends FeatureAsciiRe
     /**
      * Convert the input framebuffer into separate ASCII framebuffers based on pre-built renderer settings,
      * which are used by the final {@link P5AsciifyDisplayRenderer} to render the final ASCII output.
-     * @param inputFramebuffer - The input framebuffer to convert to ASCII.
      * @ignore
      */
-    abstract render(inputFramebuffer: p5.Framebuffer): void;
+    abstract render(): void;
     /**
      * Define the rotation angle of all characters in the grid affected by the renderer in degrees.
      *
@@ -92,6 +91,18 @@ export declare abstract class AbstractFeatureRenderer2D<T extends FeatureAsciiRe
      * ```
      */
     characterColor(color: p5.Color): void;
+    /**
+     * Define whether to flip the ASCII characters horizontally.
+     * @param flip Whether to flip the characters horizontally.
+     * @throws {P5AsciifyError} If flip is not a boolean.
+     */
+    flipHorizontally(flip: boolean): void;
+    /**
+     * Define whether to flip the ASCII characters vertically.
+     * @param flip Whether to flip the characters vertically.
+     * @throws {P5AsciifyError} If flip is not a boolean.
+     */
+    flipVertically(flip: boolean): void;
     /**
      * Set the background color of the ASCII characters, used in the fixed color mode.
      * @param color The fixed color of the ASCII characters.

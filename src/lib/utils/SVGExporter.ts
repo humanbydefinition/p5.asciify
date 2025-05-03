@@ -2,6 +2,7 @@ import p5 from 'p5';
 import { P5AsciifyGrid } from '../Grid';
 import { P5AsciifyFontManager } from '../FontManager';
 import { P5AsciifyRendererManager } from '../renderers/RendererManager';
+import { P5AsciifyCharacter } from '../types';
 
 /**
  * Options for SVG export.
@@ -88,20 +89,20 @@ export class P5AsciifySVGExporter {
         const characterFramebuffer = rendererManager.characterFramebuffer;
         const primaryColorFramebuffer = rendererManager.primaryColorFramebuffer;
         const secondaryColorFramebuffer = rendererManager.secondaryColorFramebuffer;
-        const inversionFramebuffer = rendererManager.inversionFramebuffer;
+        const transformFramebuffer = rendererManager.transformFramebuffer;
         const rotationFramebuffer = rendererManager.rotationFramebuffer;
 
         // Load pixels from all framebuffers
         characterFramebuffer.loadPixels();
         primaryColorFramebuffer.loadPixels();
         secondaryColorFramebuffer.loadPixels();
-        inversionFramebuffer.loadPixels();
+        transformFramebuffer.loadPixels();
         rotationFramebuffer.loadPixels();
 
         const characterPixels = characterFramebuffer.pixels;
         const primaryColorPixels = primaryColorFramebuffer.pixels;
         const secondaryColorPixels = secondaryColorFramebuffer.pixels;
-        const inversionPixels = inversionFramebuffer.pixels;
+        const transformPixels = transformFramebuffer.pixels;
         const rotationPixels = rotationFramebuffer.pixels;
 
         // Get grid dimensions and cell sizes
@@ -115,7 +116,6 @@ export class P5AsciifySVGExporter {
         const gridHeight = grid.height;
 
         // Font information
-        const charGlyphs = fontManager.characterGlyphs;
         const chars = fontManager.characters;
 
         // Start building SVG content
@@ -148,8 +148,6 @@ export class P5AsciifySVGExporter {
                     charIndex = chars.length - 1;
                 }
 
-                const char = chars[charIndex];
-
                 // Get the colors for this cell from primary/secondary framebuffers
                 let primaryColor = {
                     r: primaryColorPixels[pixelIdx],
@@ -165,18 +163,25 @@ export class P5AsciifySVGExporter {
                     a: secondaryColorPixels[pixelIdx + 3]
                 };
 
-                // Check if colors should be inverted based on inversionFramebuffer
-                // White pixel (255) in inversionFramebuffer means colors should be swapped
-                const inversionValue = inversionPixels[pixelIdx];
-                if (inversionValue === 255) {
-                    // Swap primary and secondary colors
+                // Get transform data (inversion and flips) from transformFramebuffer
+                const transformR = transformPixels[pixelIdx];
+                const transformG = transformPixels[pixelIdx + 1];
+                const transformB = transformPixels[pixelIdx + 2];
+
+                // R channel for inversion
+                const isInverted = transformR === 255;
+                // G channel for horizontal flip, B channel for vertical flip
+                const flipH = transformG === 255;
+                const flipV = transformB === 255;
+
+                // If inverted, swap primary and secondary colors
+                if (isInverted) {
                     const tempColor = primaryColor;
                     primaryColor = secondaryColor;
                     secondaryColor = tempColor;
                 }
 
                 // Calculate rotation angle from rotationFramebuffer
-                // Red channel for degrees up to 255, green channel for additional degrees
                 const rotationRed = rotationPixels[pixelIdx];
                 const rotationGreen = rotationPixels[pixelIdx + 1];
                 const rotationAngle = rotationRed + (rotationGreen * 256 / 15);
@@ -194,8 +199,10 @@ export class P5AsciifySVGExporter {
                     cellWidth,
                     cellHeight,
                     rotationAngle,
+                    flipH,
+                    flipV,
                     fontManager,
-                    charGlyphs,
+                    chars[charIndex],
                     exportOptions
                 );
 
@@ -235,7 +242,7 @@ export class P5AsciifySVGExporter {
      * @param cellHeight The height of the cell
      * @param rotationAngle The rotation angle for the character
      * @param fontManager The font manager
-     * @param charGlyphs The character glyphs
+     * @param char The characters object array
      * @param options The SVG export options
      * @returns The SVG content for the cell
      */
@@ -248,16 +255,17 @@ export class P5AsciifySVGExporter {
         cellWidth: number,
         cellHeight: number,
         rotationAngle: number,
+        flipHorizontal: boolean,
+        flipVertical: boolean,
         fontManager: P5AsciifyFontManager,
-        charGlyphs: any[],
+        char: P5AsciifyCharacter,
         options: SVGExportOptions
     ): string {
         let cellContent = '';
 
-        // Add the cell background if needed and if backgrounds are included
+        // draw background rectangle if requested
         if (options.includeBackgroundRectangles && secondaryColor.a > 0) {
             const bgColorStr = `rgba(${secondaryColor.r},${secondaryColor.g},${secondaryColor.b},${secondaryColor.a / 255})`;
-
             if (options.drawMode === 'stroke') {
                 cellContent += `\n  <rect x="${cellX}" y="${cellY}" width="${cellWidth}" height="${cellHeight}" stroke="${bgColorStr}" fill="none" stroke-width="${options.strokeWidth || 1.0}" />`;
             } else {
@@ -265,65 +273,51 @@ export class P5AsciifySVGExporter {
             }
         }
 
-        // Calculate center point of the cell for rotation
-        const centerX = cellX + (cellWidth / 2);
-        const centerY = cellY + (cellHeight / 2);
-
-        // Get the actual character from fontManager
-        const char = fontManager.characters[charIndex];
+        const centerX = cellX + cellWidth / 2;
+        const centerY = cellY + cellHeight / 2;
         const colorStr = `rgba(${primaryColor.r},${primaryColor.g},${primaryColor.b},${primaryColor.a / 255})`;
 
+        // build flip + rotate transforms around cell center
+        const tx: string[] = [];
+        if (flipHorizontal || flipVertical) {
+            const sx = flipHorizontal ? -1 : 1;
+            const sy = flipVertical ? -1 : 1;
+            tx.push(`translate(${centerX} ${centerY})`);
+            tx.push(`scale(${sx} ${sy})`);
+            tx.push(`translate(${-centerX} ${-centerY})`);
+        }
+        if (rotationAngle) {
+            tx.push(`rotate(${rotationAngle} ${centerX} ${centerY})`);
+        }
+        const transformAttr = tx.length ? ` transform="${tx.join(' ')}"` : '';
+
         if (options.drawMode === 'text') {
-            // Use text element mode - more compact but requires font to be available
-            const fontFamily = 'monospace';
-            const fontSize = Math.min(cellWidth, cellHeight) * 0.8; // Scale font to fit cell
-
-            if (rotationAngle > 0) {
-                cellContent += `\n  <text x="${centerX}" y="${centerY}" 
-                    font-family="${fontFamily}" font-size="${fontSize}px" fill="${colorStr}"
-                    text-anchor="middle" dominant-baseline="middle"
-                    transform="rotate(${rotationAngle} ${centerX} ${centerY})">${this.escapeXml(char)}</text>`;
-            } else {
-                cellContent += `\n  <text x="${centerX}" y="${centerY}" 
-                    font-family="${fontFamily}" font-size="${fontSize}px" fill="${colorStr}"
-                    text-anchor="middle" dominant-baseline="middle">${this.escapeXml(char)}</text>`;
-            }
-        } else {
-            // Original path-based rendering (fill or stroke)
-            // Get the glyph for this character if available
-            const glyph = charGlyphs[charIndex];
-
-            // Adjust position to center glyph within cell
-            const xOffset = cellX + (cellWidth - glyph.advanceWidth * fontManager.fontSize / fontManager.font.font.unitsPerEm) / 2;
+            // text mode
+            const fontSize = Math.min(cellWidth, cellHeight) * 0.8;
+            cellContent += `\n  <text x="${centerX}" y="${centerY}"`
+                + ` font-family="monospace" font-size="${fontSize}px" fill="${colorStr}"`
+                + ` text-anchor="middle" dominant-baseline="middle"${transformAttr}>`
+                + `${this.escapeXml(char.character)}</text>`;
+        } else { // path mode (fill or stroke)
+            // center glyph in cell
+            const scale = fontManager.fontSize / fontManager.font.font.unitsPerEm;
+            const xOffset = cellX + (cellWidth - char.advanceWidth * scale) / 2;
             const yOffset = cellY + (cellHeight + fontManager.fontSize * 0.7) / 2;
-
-            // Get SVG path data from the glyph
-            const pathObj = glyph.getPath(xOffset, yOffset, fontManager.fontSize);
-
-            // Get SVG path data and extract just the 'd' attribute value
+            const pathObj = char.getPath(xOffset, yOffset, fontManager.fontSize);
             const svgPath = pathObj.toSVG();
             const dMatch = svgPath.match(/d="([^"]+)"/);
-
             if (dMatch && dMatch[1]) {
-                // Start transform group if needed for rotation
-                if (rotationAngle > 0) {
-                    cellContent += `\n  <g transform="rotate(${rotationAngle} ${centerX} ${centerY})">`;
+                if (transformAttr) {
+                    cellContent += `\n  <g${transformAttr}>`;
                 }
-
-                // Apply either fill or stroke based on drawMode
                 if (options.drawMode === 'stroke') {
-                    const strokeWidth = options.strokeWidth || 1.0;
-                    const pathId = `path-${charIndex}-${cellX}-${cellY}`.replace(/\./g, '-');
-
-                    // Add the path with stroke and no fill for pen plotter
-                    cellContent += `\n    <path id="${pathId}" d="${dMatch[1]}" stroke="${colorStr}" stroke-width="${strokeWidth}" fill="none" />`;
+                    const sw = options.strokeWidth || 1.0;
+                    const pid = `path-${charIndex}-${cellX}-${cellY}`.replace(/\./g, '-');
+                    cellContent += `\n    <path id="${pid}" d="${dMatch[1]}" stroke="${colorStr}" stroke-width="${sw}" fill="none" />`;
                 } else {
-                    // Regular fill mode
                     cellContent += `\n    <path d="${dMatch[1]}" fill="${colorStr}" />`;
                 }
-
-                // Close transform group if needed
-                if (rotationAngle > 0) {
+                if (transformAttr) {
                     cellContent += `\n  </g>`;
                 }
             }

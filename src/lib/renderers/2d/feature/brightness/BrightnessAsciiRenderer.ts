@@ -19,7 +19,7 @@ export const BRIGHTNESS_DEFAULT_OPTIONS = {
     /** Enable/disable the renderer */
     enabled: true,
     /** Characters used for brightness mapping (from darkest to brightest) */
-    characters: "0123456789",
+    characters: " .:-=+*%@#",
     /** Color of the ASCII characters. Only used when `characterColorMode` is set to `fixed` */
     characterColor: "#FFFFFF",
     /** Character color mode */
@@ -32,6 +32,10 @@ export const BRIGHTNESS_DEFAULT_OPTIONS = {
     invertMode: false,
     /** Rotation angle of all characters in the grid in degrees */
     rotationAngle: 0,
+    /** Flip the ASCII characters horizontally */
+    flipHorizontally: false,
+    /** Flip the ASCII characters vertically */
+    flipVertically: false,
 };
 
 /**
@@ -50,8 +54,8 @@ export class P5AsciifyBrightnessRenderer extends AbstractFeatureRenderer2D {
      * @param options The options for the ASCII renderer.
      * @ignore
      */
-    constructor(p5Instance: p5, grid: P5AsciifyGrid, fontManager: P5AsciifyFontManager, options: FeatureAsciiRendererOptions = BRIGHTNESS_DEFAULT_OPTIONS) {
-        super(p5Instance, grid, fontManager, { ...BRIGHTNESS_DEFAULT_OPTIONS, ...options });
+    constructor(p5Instance: p5, captureFramebuffer: p5.Framebuffer, grid: P5AsciifyGrid, fontManager: P5AsciifyFontManager, options: FeatureAsciiRendererOptions = BRIGHTNESS_DEFAULT_OPTIONS) {
+        super(p5Instance, captureFramebuffer, grid, fontManager, { ...BRIGHTNESS_DEFAULT_OPTIONS, ...options });
 
         this.colorSampleShader = this._p.createShader(vertexShader, colorSampleShader);
         this.asciiCharacterShader = this._p.createShader(vertexShader, asciiCharacterShader);
@@ -72,11 +76,11 @@ export class P5AsciifyBrightnessRenderer extends AbstractFeatureRenderer2D {
         this.colorSampleFramebuffer.resize(this._grid.cols, this._grid.rows);
     }
 
-    render(inputFramebuffer: p5.Framebuffer): void {
+    render(): void {
         this.colorSampleFramebuffer.begin();
         this._p.clear();
         this._p.shader(this.colorSampleShader);
-        this.colorSampleShader.setUniform('u_sketchTexture', inputFramebuffer);
+        this.colorSampleShader.setUniform('u_sketchTexture', this._captureFramebuffer);
         this.colorSampleShader.setUniform('u_gridCellDimensions', [this._grid.cols, this._grid.rows]);
         this._p.rect(0, 0, this.colorSampleFramebuffer.width, this.colorSampleFramebuffer.height);
         this.colorSampleFramebuffer.end();
@@ -99,13 +103,9 @@ export class P5AsciifyBrightnessRenderer extends AbstractFeatureRenderer2D {
         }
         this._secondaryColorFramebuffer.end();
 
-        this._inversionFramebuffer.begin();
-        if (this._options.invertMode) {
-            this._p.background(255);
-        } else {
-            this._p.background(0);
-        }
-        this._inversionFramebuffer.end();
+        this._transformFramebuffer.begin();
+        this._p.background(this._options.invertMode ? 255 : 0, this._options.flipHorizontally ? 255 : 0, this._options.flipVertically ? 255 : 0);
+        this._transformFramebuffer.end();
 
         this._rotationFramebuffer.begin();
         this._p.background(this._options.rotationAngle as p5.Color);
@@ -118,7 +118,7 @@ export class P5AsciifyBrightnessRenderer extends AbstractFeatureRenderer2D {
         this.asciiCharacterShader.setUniform('u_colorSampleFramebuffer', this.colorSampleFramebuffer);
         this.asciiCharacterShader.setUniform('u_charPaletteTexture', this._characterColorPalette.framebuffer);
         this.asciiCharacterShader.setUniform('u_charPaletteSize', [this._characterColorPalette.colors.length, 1]);
-        this._p.rect(0, 0, this._p.width, this._p.height);
+        this._p.rect(0, 0, this._characterFramebuffer.width, this._characterFramebuffer.height);
         this._characterFramebuffer.end();
     }
 }

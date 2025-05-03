@@ -25,6 +25,10 @@ export declare const BRIGHTNESS_DEFAULT_OPTIONS: {
     invertMode: boolean;
     /** Rotation angle of all characters in the grid in degrees */
     rotationAngle: number;
+    /** Flip the ASCII characters horizontally */
+    flipHorizontally: boolean;
+    /** Flip the ASCII characters vertically */
+    flipVertically: boolean;
 };
 /**
  * ASCII Renderer that uses brightness to determine the ASCII characters to use from the 1D character set.
@@ -41,8 +45,8 @@ export declare class P5AsciifyBrightnessRenderer extends AbstractFeatureRenderer
      * @param options The options for the ASCII renderer.
      * @ignore
      */
-    constructor(p5Instance: p5, grid: P5AsciifyGrid, fontManager: P5AsciifyFontManager, options?: FeatureAsciiRendererOptions);
+    constructor(p5Instance: p5, captureFramebuffer: p5.Framebuffer, grid: P5AsciifyGrid, fontManager: P5AsciifyFontManager, options?: FeatureAsciiRendererOptions);
     resetShaders(): void;
     resizeFramebuffers(): void;
-    render(inputFramebuffer: p5.Framebuffer): void;
+    render(): void;
 }

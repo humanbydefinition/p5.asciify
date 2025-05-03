@@ -29,11 +29,12 @@ export class P5AsciifyRenderer2D<T extends AsciiRendererOptions = AsciiRendererO
      */
     constructor(
         p: p5,
+        captureFramebuffer: p5.Framebuffer,
         grid: P5AsciifyGrid,
         fontManager: P5AsciifyFontManager,
         options: T = CUSTOM_DEFAULT_OPTIONS_2D as T
     ) {
-        super(p, grid, {width: grid.cols, height: grid.rows}, fontManager, { ...CUSTOM_DEFAULT_OPTIONS_2D, ...options });
+        super(p, captureFramebuffer, grid, {width: grid.cols, height: grid.rows}, fontManager, { ...CUSTOM_DEFAULT_OPTIONS_2D, ...options });
     }
 
     /**
@@ -43,7 +44,7 @@ export class P5AsciifyRenderer2D<T extends AsciiRendererOptions = AsciiRendererO
     public resizeFramebuffers(): void {
         this._primaryColorFramebuffer.resize(this._grid.cols, this._grid.rows);
         this._secondaryColorFramebuffer.resize(this._grid.cols, this._grid.rows);
-        this._inversionFramebuffer.resize(this._grid.cols, this._grid.rows);
+        this._transformFramebuffer.resize(this._grid.cols, this._grid.rows);
         this._rotationFramebuffer.resize(this._grid.cols, this._grid.rows);
         this._characterFramebuffer.resize(this._grid.cols, this._grid.rows);
     }

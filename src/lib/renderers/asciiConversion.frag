@@ -6,14 +6,14 @@ uniform vec2 u_charsetDimensions;
 
 uniform sampler2D u_primaryColorTexture;
 uniform sampler2D u_secondaryColorTexture;
-uniform sampler2D u_inversionTexture;
+uniform sampler2D u_transformTexture;
 uniform sampler2D u_asciiCharacterTexture;
 uniform sampler2D u_rotationTexture;
 
 uniform vec2 u_gridCellDimensions;
 uniform vec2 u_gridPixelDimensions;
 
-uniform float u_pixelRatio; // Added uniform for pixel ratio
+uniform float u_pixelRatio;
 
 // Function to rotate coordinates
 mat2 rotate2D(float angle) {
@@ -42,8 +42,11 @@ void main() {
     // Sample secondary color (background color)
     vec4 secondaryColor = texture2D(u_secondaryColorTexture, charIndexTexCoord);
 
-    // Sample inversion texture
-    vec4 inversionColor = texture2D(u_inversionTexture, charIndexTexCoord);
+    // Sample transform texture for inversion and flips
+    vec4 transformColor = texture2D(u_transformTexture, charIndexTexCoord);
+    bool isInverted = transformColor.r > 0.5; // Inversion in red channel
+    bool flipHorizontal = transformColor.g > 0.5; // Horizontal flip in red channel
+    bool flipVertical = transformColor.b > 0.5;   // Vertical flip in blue channel
 
     // Sample the character index from the ASCII character texture
     vec4 encodedIndexVec = texture2D(u_asciiCharacterTexture, charIndexTexCoord);
@@ -56,7 +59,7 @@ void main() {
     // Decode the bestCharIndex from red and green channels
     int charIndex = int(encodedIndexVec.r * 255.0 + 0.5) + int(encodedIndexVec.g * 255.0 + 0.5) * 256;
 
-        // Calculate the column and row of the character in the charset texture
+    // Calculate the column and row of the character in the charset texture
     int charCol = charIndex - (charIndex / int(u_charsetDimensions.x)) * int(u_charsetDimensions.x);
     int charRow = charIndex / int(u_charsetDimensions.x);
 
@@ -66,13 +69,21 @@ void main() {
     // Sample rotation texture and decode angle
     vec4 rotationColor = texture2D(u_rotationTexture, charIndexTexCoord);
 
-    // Direct mapping: red = base degrees (0-255)
-    // green = additional degrees (0-105)
-    float degrees = rotationColor.r * 255.0 + rotationColor.g * 255.0;
-    float rotationAngle = radians(degrees);
+// Or map directly to radians (0-2π)
+    float rotationAngle = rotationColor.r * 2.0 * 3.14159265359;
 
     // Calculate fractional part and apply rotation
     vec2 fractionalPart = fract(gridCoord) - 0.5;
+
+    // Apply horizontal and vertical flipping before rotation
+    if(flipHorizontal) {
+        fractionalPart.x = -fractionalPart.x;
+    }
+    if(flipVertical) {
+        fractionalPart.y = -fractionalPart.y;
+    }
+
+    // Apply rotation after flipping
     fractionalPart = rotate2D(rotationAngle) * fractionalPart;
     fractionalPart += 0.5;
 
@@ -84,23 +95,24 @@ void main() {
     // Determine if the texture coordinate is within the cell boundaries
     bool outsideBounds = any(lessThan(texCoord, cellMin)) || any(greaterThan(texCoord, cellMax));
 
-    // Get the color of the character from the charset texture or use the background color if outside bounds
-    vec4 charColor = outsideBounds ? secondaryColor : texture2D(u_characterTexture, texCoord);
-
-    // If the inversion mode is enabled, invert the character color
-    if(inversionColor == vec4(1.0)) {
-        charColor.a = 1.0 - charColor.a;
-        charColor.rgb = vec3(1.0);
+    if(outsideBounds) {
+        // For out-of-bounds pixels, use the appropriate color based on inversion mode
+        gl_FragColor = isInverted ? primaryColor : secondaryColor;
+        return;
     }
 
-    // Calculate the final color of the character
-    vec4 finalColor = vec4(primaryColor.rgb * charColor.rgb, charColor.a);
+    // Sample the character texture
+    vec4 charTexel = texture2D(u_characterTexture, texCoord);
 
-    // Mix the final color with the secondary color based on the alpha value
-    gl_FragColor = mix(secondaryColor, finalColor, charColor.a);
+    // Check if pixel is fully white (considering minor precision issues)
+    bool isFullyWhite = all(greaterThanEqual(charTexel.rgb, vec3(0.99)));
 
-    // Override final color with background color for out-of-bounds areas due to rotation
-    if(outsideBounds) {
-        gl_FragColor = inversionColor == vec4(1.0) ? primaryColor : secondaryColor;
+    // Handle normal and inverted modes
+    if(isInverted) {
+        // In inverted mode, non-white pixels get primary color, white pixels get secondary color
+        gl_FragColor = isFullyWhite ? secondaryColor : primaryColor;
+    } else {
+        // In normal mode, white pixels get primary color, non-white pixels get secondary color
+        gl_FragColor = isFullyWhite ? primaryColor : secondaryColor;
     }
 }

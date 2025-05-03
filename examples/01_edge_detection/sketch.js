@@ -79,6 +79,9 @@ const sketch = (p) => {
             invertMode: false,
             sobelThreshold: 0.01,
             sampleThreshold: 16,
+            rotationAngle: 0,
+            flipHorizontally: false,
+            flipVertically: false,
         });
 
         // The pre-defined 'brightness' renderer is enabled by default and can be updated as well

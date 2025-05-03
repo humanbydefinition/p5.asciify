@@ -11,6 +11,8 @@ import { RENDERER_TYPES } from './constants';
 export declare class P5AsciifyRendererManager {
     /** The p5 instance. */
     private _p;
+    /** The framebuffer containing the content to be asciified. */
+    private _captureFramebuffer;
     /** The grid instance. */
     private _grid;
     /** The font texture atlas instance. */
@@ -25,8 +27,12 @@ export declare class P5AsciifyRendererManager {
     private _secondaryColorFramebuffer;
     /** The character framebuffer, whose pixels define the ASCII characters to use in the grid cells. */
     private _characterFramebuffer;
-    /** The inversion framebuffer, whose pixels define whether to swap the character and background colors. */
-    private _inversionFramebuffer;
+    /** The transform framebuffer, where each pixels color channel defines a different transformation:
+     * - Red channel: Swap the character and background colors of the grid cells.
+     * - Green channel: Flip the ASCII characters horizontally.
+     * - Blue channel: Flip the ASCII characters vertically.
+     */
+    private _transformFramebuffer;
     /** The rotation framebuffer, whose pixels define the rotation angle of the characters in the grid. */
     private _rotationFramebuffer;
     private _asciiDisplayRenderer2D;
@@ -42,6 +48,8 @@ export declare class P5AsciifyRendererManager {
     constructor(
     /** The p5 instance. */
     _p: p5, 
+    /** The framebuffer containing the content to be asciified. */
+    _captureFramebuffer: p5.Framebuffer, 
     /** The grid instance. */
     _grid: P5AsciifyGrid, 
     /** The font texture atlas instance. */
@@ -91,7 +99,7 @@ export declare class P5AsciifyRendererManager {
      *  function setupAsciify() {
      *      asciifier = p5asciify.asciifier();
      *
-     *      // Clear all existing default renderers provided by `p5.asciify`.
+     *      // Remove all existing default renderers provided by `p5.asciify`.
      *      asciifier.renderers().clear();
      *
      *      // Add a new brightness renderer with custom options.
@@ -282,7 +290,7 @@ export declare class P5AsciifyRendererManager {
      * which contains the inversion framebuffers of all renderers in the pipeline stacked on top of each other.
      * @ignore
      */
-    get inversionFramebuffer(): p5.Framebuffer;
+    get transformFramebuffer(): p5.Framebuffer;
     /**
      * Returns the rotation framebuffer,
      * which contains the rotation framebuffers of all renderers in the pipeline stacked on top of each other.

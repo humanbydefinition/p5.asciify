@@ -37,8 +37,12 @@ export class P5AsciifyRendererManager {
     /** The character framebuffer, whose pixels define the ASCII characters to use in the grid cells. */
     private _characterFramebuffer: p5.Framebuffer;
 
-    /** The inversion framebuffer, whose pixels define whether to swap the character and background colors. */
-    private _inversionFramebuffer: p5.Framebuffer;
+    /** The transform framebuffer, where each pixels color channel defines a different transformation:
+     * - Red channel: Swap the character and background colors of the grid cells.
+     * - Green channel: Flip the ASCII characters horizontally.
+     * - Blue channel: Flip the ASCII characters vertically.
+     */
+    private _transformFramebuffer: p5.Framebuffer;
 
     /** The rotation framebuffer, whose pixels define the rotation angle of the characters in the grid. */
     private _rotationFramebuffer: p5.Framebuffer;
@@ -59,6 +63,9 @@ export class P5AsciifyRendererManager {
         /** The p5 instance. */
         private _p: p5,
 
+        /** The framebuffer containing the content to be asciified. */
+        private _captureFramebuffer: p5.Framebuffer,
+
         /** The grid instance. */
         private _grid: P5AsciifyGrid,
 
@@ -66,15 +73,15 @@ export class P5AsciifyRendererManager {
         private _fontManager: P5AsciifyFontManager
     ) {
         this._currentCanvasDimensions = {
-            width: this._p.width,
-            height: this._p.height
+            width: this._captureFramebuffer.width,
+            height: this._captureFramebuffer.height
         };
 
         this._renderers = [
-            { name: "custom2D", renderer: new P5AsciifyRenderer2D(this._p, this._grid, this._fontManager) },
-            { name: "edge", renderer: new P5AsciifyEdgeRenderer(this._p, this._grid, this._fontManager) },
-            { name: "accurate", renderer: new P5AsciifyAccurateRenderer(this._p, this._grid, this._fontManager) },
-            { name: "brightness", renderer: new P5AsciifyBrightnessRenderer(this._p, this._grid, this._fontManager) },
+            { name: "custom2D", renderer: new P5AsciifyRenderer2D(this._p, this._captureFramebuffer, this._grid, this._fontManager) },
+            { name: "edge", renderer: new P5AsciifyEdgeRenderer(this._p, this._captureFramebuffer, this._grid, this._fontManager) },
+            { name: "accurate", renderer: new P5AsciifyAccurateRenderer(this._p, this._captureFramebuffer, this._grid, this._fontManager) },
+            { name: "brightness", renderer: new P5AsciifyBrightnessRenderer(this._p, this._captureFramebuffer, this._grid, this._fontManager) },
         ];
 
         this._primaryColorFramebuffer = this._p.createFramebuffer({
@@ -95,7 +102,7 @@ export class P5AsciifyRendererManager {
             textureFiltering: this._p.NEAREST
         });
 
-        this._inversionFramebuffer = this._p.createFramebuffer({
+        this._transformFramebuffer = this._p.createFramebuffer({
             density: 1,
             antialias: false,
             width: this._grid.cols,
@@ -141,7 +148,7 @@ export class P5AsciifyRendererManager {
         this._characterFramebuffer.draw(() => this._p.clear());
         this._primaryColorFramebuffer.draw(() => this._p.clear());
         this._secondaryColorFramebuffer.draw(() => this._p.clear());
-        this._inversionFramebuffer.draw(() => this._p.clear());
+        this._transformFramebuffer.draw(() => this._p.clear());
         this._rotationFramebuffer.draw(() => this._p.clear());
 
         this._hasEnabledRenderers = false;
@@ -150,7 +157,7 @@ export class P5AsciifyRendererManager {
             if (renderer.renderer.options.enabled) {
 
                 if (renderer.renderer instanceof AbstractFeatureRenderer2D) {
-                    renderer.renderer.render(inputFramebuffer);
+                    renderer.renderer.render();
                 }
 
                 const xPos = -this._grid.cols / 2;
@@ -159,7 +166,7 @@ export class P5AsciifyRendererManager {
                 this._characterFramebuffer.draw(() => this._p.image(renderer.renderer.characterFramebuffer, xPos, yPos));
                 this._primaryColorFramebuffer.draw(() => this._p.image(renderer.renderer.primaryColorFramebuffer, xPos, yPos));
                 this._secondaryColorFramebuffer.draw(() => this._p.image(renderer.renderer.secondaryColorFramebuffer, xPos, yPos));
-                this._inversionFramebuffer.draw(() => this._p.image(renderer.renderer.inversionFramebuffer, xPos, yPos));
+                this._transformFramebuffer.draw(() => this._p.image(renderer.renderer.transformFramebuffer, xPos, yPos));
                 this._rotationFramebuffer.draw(() => this._p.image(renderer.renderer.rotationFramebuffer, xPos, yPos));
 
                 this._hasEnabledRenderers = true;
@@ -170,8 +177,8 @@ export class P5AsciifyRendererManager {
             this._characterFramebuffer,
             this._primaryColorFramebuffer,
             this._secondaryColorFramebuffer,
-            this._inversionFramebuffer,
-            this._rotationFramebuffer
+            this._transformFramebuffer,
+            this._rotationFramebuffer,
         );
 
         this.checkCanvasDimensions();
@@ -185,9 +192,9 @@ export class P5AsciifyRendererManager {
      * and the canvas dimensions are different to the previous {@link render} call.
      */
     private checkCanvasDimensions(): void {
-        if (this._currentCanvasDimensions.width !== this._p.width || this._currentCanvasDimensions.height !== this._p.height) {
-            this._currentCanvasDimensions.width = this._p.width;
-            this._currentCanvasDimensions.height = this._p.height;
+        if (this._currentCanvasDimensions.width !== this._captureFramebuffer.width || this._currentCanvasDimensions.height !== this._captureFramebuffer.height) {
+            this._currentCanvasDimensions.width = this._captureFramebuffer.width;
+            this._currentCanvasDimensions.height = this._captureFramebuffer.height;
 
             this._grid.reset();
 
@@ -207,7 +214,7 @@ export class P5AsciifyRendererManager {
         this._primaryColorFramebuffer.resize(this._grid.cols, this._grid.rows);
         this._secondaryColorFramebuffer.resize(this._grid.cols, this._grid.rows);
         this._characterFramebuffer.resize(this._grid.cols, this._grid.rows);
-        this._inversionFramebuffer.resize(this._grid.cols, this._grid.rows);
+        this._transformFramebuffer.resize(this._grid.cols, this._grid.rows);
         this._rotationFramebuffer.resize(this._grid.cols, this._grid.rows);
 
         this._renderers.forEach(renderer => {
@@ -237,7 +244,7 @@ export class P5AsciifyRendererManager {
      *  function setupAsciify() {
      *      asciifier = p5asciify.asciifier();
      * 
-     *      // Clear all existing default renderers provided by `p5.asciify`.
+     *      // Remove all existing default renderers provided by `p5.asciify`.
      *      asciifier.renderers().clear();
      * 
      *      // Add a new brightness renderer with custom options.
@@ -267,7 +274,7 @@ export class P5AsciifyRendererManager {
             );
         }
 
-        const renderer = new RendererClass(this._p, this._grid, this._fontManager, options);
+        const renderer = new RendererClass(this._p, this._captureFramebuffer, this._grid, this._fontManager, options);
 
         this._renderers.push({ name, renderer });
 
@@ -526,7 +533,7 @@ export class P5AsciifyRendererManager {
      * which contains the inversion framebuffers of all renderers in the pipeline stacked on top of each other.
      * @ignore
      */
-    get inversionFramebuffer(): p5.Framebuffer { return this._inversionFramebuffer; }
+    get transformFramebuffer(): p5.Framebuffer { return this._transformFramebuffer; }
 
     /**
      * Returns the rotation framebuffer,

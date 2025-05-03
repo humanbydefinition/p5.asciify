@@ -28,11 +28,11 @@ export declare class P5AsciifyDisplayRenderer {
      * @param characterFramebuffer The framebuffer containing the character indices.
      * @param primaryColorFramebuffer The framebuffer containing the primary color values.
      * @param secondaryColorFramebuffer The framebuffer containing the secondary color values.
-     * @param inversionFramebuffer The framebuffer containing the inversion values.
+     * @param transformFramebuffer The framebuffer containing the inversion values.
      * @param rotationFramebuffer The framebuffer containing the rotation values.
      * @ignore
      */
-    render(characterFramebuffer: p5.Framebuffer, primaryColorFramebuffer: p5.Framebuffer, secondaryColorFramebuffer: p5.Framebuffer, inversionFramebuffer: p5.Framebuffer, rotationFramebuffer: p5.Framebuffer): void;
+    render(characterFramebuffer: p5.Framebuffer, primaryColorFramebuffer: p5.Framebuffer, secondaryColorFramebuffer: p5.Framebuffer, transformFramebuffer: p5.Framebuffer, rotationFramebuffer: p5.Framebuffer): void;
     /**
      * Resizes the framebuffer to match the grid width/height.
      * @ignore

@@ -5,9 +5,20 @@ import { P5AsciifyError } from './AsciifyError';
 import URSAFONT_BASE64 from './assets/fonts/ursafont_base64.txt?raw';
 
 /**
- * Manages the `p5.asciify` library by handling one or more `P5Asciifier` instances through the exposed {@link p5asciify} object, which is an instance of this class.
+ * Manages the `p5.asciify` library by handling one or more `P5Asciifier` instances.
+ * 
+ * This class is implemented as a singleton, meaning only one instance exists throughout the application.
+ * Access the instance through the exposed {@link p5asciify} object or via {@link P5AsciifierManager.getInstance}.
+ * 
+ * The manager is responsible for:
+ * - Initializing ASCII rendering capabilities
+ * - Managing multiple asciifier instances
+ * - Coordinating with p5.js rendering lifecycle
+ * - Providing an API for creating, accessing, and removing asciifiers
  */
 export class P5AsciifierManager {
+    /** Singleton instance of the manager */
+    private static _instance: P5AsciifierManager | null = null;
 
     /** The p5.js instance used by the library. */
     private _p!: p5;
@@ -25,10 +36,28 @@ export class P5AsciifierManager {
     private _sketchFramebuffer!: p5.Framebuffer;
 
     /**
+     * Gets the singleton instance of `P5AsciifierManager`.
+     * If the instance doesn't exist yet, it creates one.
+     * 
+     * @returns The singleton instance of `P5AsciifierManager`.
+     */
+    public static getInstance(): P5AsciifierManager {
+        if (!P5AsciifierManager._instance) {
+            P5AsciifierManager._instance = new P5AsciifierManager();
+        }
+        return P5AsciifierManager._instance;
+    }
+
+    /**
      * Creates a new `P5AsciifierManager` instance.
      * @ignore
      */
-    constructor() {
+    private constructor() {
+        // Only allow one instance
+        if (P5AsciifierManager._instance) {
+            throw new P5AsciifyError("P5AsciifierManager is a singleton and cannot be instantiated directly. Use P5AsciifierManager.getInstance() instead.");
+        }
+
         this._asciifiers = [new P5Asciifier()];
     }
 
@@ -83,7 +112,7 @@ export class P5AsciifierManager {
     /**
      * Returns the `P5Asciifier` instance at the specified index.
      * 
-     * By default, the method returns the first `P5Asciifier` instance in the list, 
+     * When passing no arguments, the method returns the first `P5Asciifier` instance in the list, 
      * which usually corresponds to the default `P5Asciifier` provided by the library, which is applied to the main canvas of the `p5.js` instance.
      * 
      * @param index The index of the `P5Asciifier` instance to return.

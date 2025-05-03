@@ -2,69 +2,39 @@
 
 
 <div align="center">
-  <img src="./repo_assets/images/p5.asciify.animated-logo.gif" />
+
+![p5 asciify animated-logo](https://github.com/user-attachments/assets/bdc42553-c800-43a9-bedb-75a39b2a67d3)
 
 
-| [![p5.js](https://img.shields.io/badge/p5.js-ED225D?logo=p5.js&logoColor=white)](https://p5js.org/) [![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/) [![WebGL](https://img.shields.io/badge/WebGL1-990000?logo=webgl&logoColor=white)](https://www.khronos.org/webgl/) [![Vite](https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/) | [![docs](https://img.shields.io/badge/docs-typedoc-blue)](https://github.com/humanbydefinition/p5-asciify/tree/main/docs) [![Discord](https://img.shields.io/discord/1357070706181017691?color=5865F2&label=Discord&logo=discord&logoColor=white)](https://discord.gg/sjrw8QXNks) | [![ko-fi](https://shields.io/badge/ko--fi-donate-ff5f5f?logo=ko-fi)](https://ko-fi.com/V7V8JG2FY) [![Github-sponsors](https://img.shields.io/badge/sponsor-30363D?logo=GitHub-Sponsors&logoColor=#EA4AAA)](https://github.com/sponsors/humanbydefinition) |
+| [![p5.js](https://img.shields.io/badge/p5.js-ED225D?logo=p5.js&logoColor=white)](https://p5js.org/) [![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/) [![WebGL](https://img.shields.io/badge/WebGL1-990000?logo=webgl&logoColor=white)](https://www.khronos.org/webgl/) [![Vite](https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/) | [![docs](https://img.shields.io/badge/docs-docusaurus-3ECC5F?logo=docusaurus&logoColor=white)](https://p5.textmode.art/) [![Discord](https://img.shields.io/discord/1357070706181017691?color=5865F2&label=Discord&logo=discord&logoColor=white)](https://discord.gg/sjrw8QXNks) | [![ko-fi](https://shields.io/badge/ko--fi-donate-ff5f5f?logo=ko-fi)](https://ko-fi.com/V7V8JG2FY) [![Github-sponsors](https://img.shields.io/badge/sponsor-30363D?logo=GitHub-Sponsors&logoColor=#EA4AAA)](https://github.com/sponsors/humanbydefinition) |
 |:-------------|:-------------|:-------------|
 
 </div>
 
 
-`p5.asciify` is a powerful add-on library for [`p5.js`](https://p5js.org/) that transforms your canvas and offcanvas textures into dynamic ASCII/textmode representations on a grid in real time, allowing you to create intricate 2D ASCII/textmode art and much more with ease.
-
-## Table of Contents
-
-- [Features](#features)
-- [Examples](#examples)
-  - [Code examples](#code-examples)
-  - [Tools](#tools)
-- [Installation](#installation)
-  - [Prerequisites](#prerequisites)
-  - [Importing the library](#importing-the-library)
-    - [Global mode](#global-mode)
-    - [Instance mode](#instance-mode)
-- [Usage](#usage)
-- [Contributing](#contributing)
-  - [Current and past contributors](#current-and-past-contributors)
-  - [Community Discord](#community-discord)
-  - [Donations](#donations)
+`p5.asciify` is a powerful add-on library for [`p5.js`](https://p5js.org/) that transforms your canvas and offcanvas textures into dynamic ASCII/textmode representations on a grid in real time, allowing you to create intricate ASCII/textmode art and much more with ease.
 
 ## Features
 
-`p5.asciify` is the most advanced ASCII conversion library, offering a wide range of tools for crafting intricate ASCII art and building complex rendering pipelines.
+`p5.asciify` is the most advanced ASCII conversion library available, offering a wide range of tools for crafting intricate ASCII art and building complex rendering pipelines.
 
 - **Renderer management**: Create and manage multiple ASCII renderers with different settings to create a unique rendering pipeline.
 - **Pre-built renderers**: Add pre-built renderers, like `'brightness'`- or `'edge'`-based ASCII converters, to your pipeline.
-- **Custom renderers**: Add your own custom 2D ASCII renderers to the pipeline through code to create unique effects by controlling each cell's ASCII character, character color, background color, and more individually.
+- **Custom renderers**: Add your own custom ASCII renderers to the pipeline through code to create unique effects by controlling each cell's ASCII character, character color, background color, and more individually.
 - **Asciifier management**: Create and manage multiple asciifiers to apply different ASCII rendering pipelines to different textures or canvases in parallel.
 - **Font management**: Set the font and font size for all ASCII renderers in the pipeline of an asciifier.
-- **Grid management**: Apply a perfect and responsive grid based on the canvas/texture dimensions, font size, and font metrics, or create a custom grid with a specific number of rows, columns.
+- **Grid management**: Apply a perfect and responsive grid based on the canvas/texture dimensions, font size, and font metrics, or create a custom grid with a specific number of rows, columns, and depth.
 - **WebGL1/WebGL2 support**: All shader code provided by `p5.asciify` is written in GLSL ES 1.0, making it compatible with both WebGL1 and WebGL2 contexts, allowing for a wide range of devices to run your ASCII projects.
-- **Export functionality**: Export your ASCII art as `.txt` or `.svg` files for easy sharing and printing, complementing p5.js's native image and GIF saving capabilities.
+- **Export functionality**: Export your ASCII art as `.txt`, `.svg` and `.json` files for easy sharing and printing, complementing p5.js's native image and GIF saving capabilities.
 
 With `p5.asciify`, you can effortlessly create stunning ASCII art, textmode games, interactive ASCII experiences, and much more. The library is designed to be flexible, efficient, and easy to use, offering a comprehensive range of tools to help you develop unique and engaging ASCII projects.
-
-## Examples
-
-### Code examples
-- [`OpenProcessing examples curation`](https://openprocessing.org/curation/89166) - A collection of `p5.asciify` examples in `GLOBAL` mode.
-- [`./examples`](./examples) - A collection of `p5.asciify` examples in `INSTANCE` mode.
-
-### Tools
-- [`textmode.art`](https://textmode.art/) - An ASCII/textmode editor powered by `p5.asciify`.
-- [`place.textmode.art`](https://place.textmode.art/) - An ASCII/textmode version of the popular [`/r/place`](https://www.reddit.com/r/place/) event, where you can collaborate with others to create a massive ASCII art piece.
-
-### ...and more to come!
-
-> [!NOTE]
-> Feel free to submit your own ASCII projects and examples using `p5.asciify` to be featured here by creating a pull request or opening an issue!
 
 ## Installation
 
 ### Prerequisites
 
-- `p5.asciify` requires [`p5.js`](https://p5js.org/) version `1.8.0` or higher to work. *(`v2.0.0` and upcoming versions are not supported yet!)*
+- `p5.asciify` requires [`p5.js`](https://p5js.org/) versions `1.8.0` to `1.X.X` to run.
+  - `p5.js` versions `2.X.X` are not yet supported, but will be in the future.
 - `p5.asciify` only runs in [`WEBGL`](https://p5js.org/reference/#/p5/createCanvas) mode, so make sure to set up your canvas accordingly:
 
 ```javascript
@@ -89,7 +59,7 @@ Download the latest `umd` version of `p5.asciify` from the [**GitHub releases pa
 <script src="path/to/library/p5.asciify.umd.js"></script>
 
 <!-- Or import it directly from a CDN like jsDelivr
-<script src="https://cdn.jsdelivr.net/npm/p5.asciify@0.8.2/dist/p5.asciify.umd.min.js"></script> 
+<script src="https://cdn.jsdelivr.net/npm/p5.asciify@0.9.0/dist/p5.asciify.umd.min.js"></script> 
 -->
 ```
 
@@ -128,66 +98,18 @@ let myp5 = new p5(sketch);
 
 At this point - when imported correctly - your [`p5.js`](https://p5js.org/) canvas in `WEBGL` mode should already be converted into a grid of ASCII characters with the default settings applied. Happy coding! (｡◕‿‿◕｡)
 
-## Usage
+## Learn more
 
-To effectively use `p5.asciify` in your projects, check out the following resources:
-- [`./docs`](https://github.com/humanbydefinition/p5-asciify/tree/main/docs) - The documentation for all classes, methods, and properties provided by `p5.asciify`.
-- [`./examples`](./examples) - A collection of `p5.asciify` examples in `INSTANCE` mode.
-- [`OpenProcessing examples curation`](https://openprocessing.org/curation/89166) - A collection of `p5.asciify` examples in `GLOBAL` mode.
+### 📚 [Visit the Official Documentation](https://p5.textmode.art/)
 
-> [!NOTE]
-> If you have any questions or need help with a specific feature, feel free to open an issue or reach out to [`@humanbydefinition`](https://github.com/humanbydefinition) directly for assistance.
-> If you have any questions or need help with a specific feature, feel free to open an issue or reach out to [`@humanbydefinition`](https://github.com/humanbydefinition) directly for assistance.
->
-> If you would like to contribute to the documentation or examples, please refer to the [Contributing Guidelines](./repo_assets/markdown/CONTRIBUTING.md) or reach out for more information.
+Explore the comprehensive documentation at [p5.textmode.art](https://p5.textmode.art/) for:
+- Detailed guides
+- Interactive examples
+- Complete API reference
+- Tips and tricks
+- ... and much more!
 
-## Contributing
-
-`p5.asciify` is an ongoing open-source project, welcoming and valuing all types of contributions from the community. If you are interested in contributing to the project, please read our [Contributing Guidelines](./repo_assets/markdown/CONTRIBUTING.md) to get started.
-
-### Current and past contributors
-
-| **Contributor** | **Website** | **Socials** |
-|-----------------|-------------|------------|
-| [humanbydefinition](https://github.com/humanbydefinition) <br> Creator and active maintainer of `p5.asciify`. | [![Website](https://badgen.net/badge/Visit/website/blue?icon=chrome-web-store)](https://textmode.art) | [![Instagram](https://badgen.net/badge/Instagram/humanbydefinition/pink?icon=instagram)](https://instagram.com/humanbydefinition) <br> [![Mastodon](https://badgen.net/badge/Mastodon/@humanbydefinition/blue?icon=mastodon)](https://mastodon.social/@humanbydefinition) |
-| [davepagurek](https://github.com/davepagurek) <br> Helped in a major way bringing `p5.asciify` to life thanks to his deep knowledge with `p5.js`. | [![Website](https://badgen.net/badge/Visit/website/blue?icon=chrome-web-store)](https://www.davepagurek.com/) | [![Instagram](https://badgen.net/badge/Instagram/davepagurek/pink?icon=instagram)](https://instagram.com/davepagurek) <br> [![Mastodon](https://badgen.net/badge/Mastodon/@davepagurek/blue?icon=mastodon)](https://mastodon.online/@davepagurek@genart.social) |
-| [gridsystem](https://github.com/gridsystem) <br> Provided valuable advice that greatly improved the accessability and structure of `p5.asciify`. | *N/A* | *N/A* |
-| [flordefuego](https://github.com/flordefuego) <br> Provided a [code example](https://openprocessing.org/sketch/2606327) and insights on combining `Hydra`, `p5.js`, and `p5.asciify`. | [![Website](https://badgen.net/badge/Visit/website/blue?icon=chrome-web-store)](https://flordefuego.xyz/) | [![Instagram](https://badgen.net/badge/Instagram/flordefuega/pink?icon=instagram)](https://instagram.com/flordefuega) <br> [![Mastodon](https://badgen.net/badge/Mastodon/@flordefuego/blue?icon=mastodon)](https://mastodon.social/@flordefuego@post.lurk.org) |
-> [!NOTE]
-> If you have contributed in the past and would like to be featured here, please open an issue or create a pull request to add your information to the list.
-
----
-
-### Community Discord
-
-Join our friendly Discord community dedicated to `p5.asciify`, [textmode.art](https://textmode.art), and textmode art in general. The server is a place to:
-
-- Get help with `p5.asciify` and discuss techniques
-- Share your textmode creations and projects
-- Connect with fellow artists and programmers
-- Learn about textmode art as a beginner or experienced creator
-
-[![Join the Discord](https://img.shields.io/discord/1357070706181017691?color=5865F2&label=Discord&logo=discord&logoColor=white)](https://discord.gg/sjrw8QXNks)
-
-Everyone is welcome, whether you're just starting out or are an experienced textmode artist!
-
----
-
-### Donations
-
-If you enjoy using `p5.asciify` and would like to support my textmode endeavors and its continued development, your contribution is greatly appreciated.
-
-- [**Ko-fi**](https://ko-fi.com/humanbydefinition)
-- [**GitHub Sponsors**](https://github.com/sponsors/humanbydefinition)
-- [**Ethereum**](https://etherscan.io/address/0xAA14d79ccF069d3E57eeCb6822c1F241e0d46C42)
-- [**Tezos**](https://tzkt.io/humanbydefinition.tez)
-
-Thank you for your generosity and for being part of this creative journey! (｡♥‿♥｡)
+The documentation will help you unlock the full potential of p5.asciify in your creative coding projects.
 
 > [!NOTE]
-> You can also support the project by starring the repository, sharing it with your friends, or contributing in any way you feel comfortable with. Every little bit helps!
->
-> I also love hearing from you and seeing the projects you create with `p5.asciify`, so feel free to reach out and share your work with me anytime! (◕‿◕)
-
-> [!IMPORTANT]
-> `p5.asciify` remains free, accessible, and open-source forever for everyone to use and enjoy, regardless of any contributions or donations. Your support is greatly appreciated but never required to use the library or access its features.
+> While the API reference is complete and always up-to-date, the documentation is still a work in progress. If you have any questions or need assistance, feel free to reach out on [Discord](https://discord.gg/sjrw8QXNks) or open an issue on GitHub.
