@@ -71,11 +71,12 @@ export class P5AsciifyEdgeRenderer extends AbstractFeatureRenderer2D<EdgeAsciiRe
      */
     constructor(
         p5Instance: p5,
+        captureFramebuffer: p5.Framebuffer,
         grid: P5AsciifyGrid,
         fontManager: P5AsciifyFontManager,
         options: EdgeAsciiRendererOptions = EDGE_DEFAULT_OPTIONS
     ) {
-        super(p5Instance, grid, fontManager, { ...EDGE_DEFAULT_OPTIONS, ...options });
+        super(p5Instance, captureFramebuffer, grid, fontManager, { ...EDGE_DEFAULT_OPTIONS, ...options });
 
         this.sobelShader = this._p.createShader(vertexShader, sobelShader);
         this.sampleShader = this._p.createShader(vertexShader, generateSampleShader(16, this._grid.cellHeight, this._grid.cellWidth));
@@ -86,6 +87,8 @@ export class P5AsciifyEdgeRenderer extends AbstractFeatureRenderer2D<EdgeAsciiRe
 
         this.sobelFramebuffer = this._p.createFramebuffer({
             density: 1,
+            width: this._captureFramebuffer.width,
+            height: this._captureFramebuffer.height,
             depthFormat: this._p.UNSIGNED_INT,
             textureFiltering: this._p.NEAREST
         });
@@ -102,6 +105,7 @@ export class P5AsciifyEdgeRenderer extends AbstractFeatureRenderer2D<EdgeAsciiRe
     resizeFramebuffers(): void {
         super.resizeFramebuffers();
         this.sampleFramebuffer.resize(this._grid.cols, this._grid.rows);
+        this.sobelFramebuffer.resize(this._captureFramebuffer.width, this._captureFramebuffer.height);
     }
 
     resetShaders(): void {
@@ -172,13 +176,13 @@ export class P5AsciifyEdgeRenderer extends AbstractFeatureRenderer2D<EdgeAsciiRe
         }
     }
 
-    render(inputFramebuffer: p5.Framebuffer): void {
+    render(): void {
         // Sobel pass
         this.sobelFramebuffer.begin();
         this._p.clear();
         this._p.shader(this.sobelShader);
-        this.sobelShader.setUniform('u_texture', inputFramebuffer);
-        this.sobelShader.setUniform('u_textureSize', [this._p.width, this._p.height]);
+        this.sobelShader.setUniform('u_texture', this._captureFramebuffer);
+        this.sobelShader.setUniform('u_textureSize', [this._captureFramebuffer.width, this._captureFramebuffer.height]);
         this.sobelShader.setUniform('u_threshold', this._options.sobelThreshold as number);
         this.sobelShader.setUniform('u_colorPaletteTexture', this._characterColorPalette.framebuffer);
         this.sobelShader.setUniform('u_totalChars', this._options.characters!.length);
@@ -189,7 +193,7 @@ export class P5AsciifyEdgeRenderer extends AbstractFeatureRenderer2D<EdgeAsciiRe
         this.sampleFramebuffer.begin();
         this._p.clear();
         this._p.shader(this.sampleShader);
-        this.sampleShader.setUniform('u_imageSize', [this._p.width, this._p.height]);
+        this.sampleShader.setUniform('u_imageSize', [this._captureFramebuffer.width, this._captureFramebuffer.height]);
         this.sampleShader.setUniform('u_image', this.sobelFramebuffer);
         this.sampleShader.setUniform('u_gridCellDimensions', [this._grid.cols, this._grid.rows]);
         this.sampleShader.setUniform('u_threshold', this._options.sampleThreshold as number);
@@ -200,7 +204,7 @@ export class P5AsciifyEdgeRenderer extends AbstractFeatureRenderer2D<EdgeAsciiRe
         this._primaryColorFramebuffer.begin();
         this._p.clear();
         this._p.shader(this.colorSampleShader);
-        this.colorSampleShader.setUniform('u_sketchTexture', inputFramebuffer);
+        this.colorSampleShader.setUniform('u_sketchTexture', this._captureFramebuffer);
         this.colorSampleShader.setUniform('u_sampleTexture', this.sampleFramebuffer);
         this.colorSampleShader.setUniform('u_gridCellDimensions', [this._grid.cols, this._grid.rows]);
         this.colorSampleShader.setUniform('u_sampleMode', this._options.characterColorMode as number);
@@ -212,7 +216,7 @@ export class P5AsciifyEdgeRenderer extends AbstractFeatureRenderer2D<EdgeAsciiRe
         this._secondaryColorFramebuffer.begin();
         this._p.clear();
         this._p.shader(this.colorSampleShader);
-        this.colorSampleShader.setUniform('u_sketchTexture', inputFramebuffer);
+        this.colorSampleShader.setUniform('u_sketchTexture', this._captureFramebuffer);
         this.colorSampleShader.setUniform('u_sampleTexture', this.sampleFramebuffer);
         this.colorSampleShader.setUniform('u_gridCellDimensions', [this._grid.cols, this._grid.rows]);
         this.colorSampleShader.setUniform('u_sampleMode', this._options.backgroundColorMode as number);

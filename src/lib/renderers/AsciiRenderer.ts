@@ -40,6 +40,7 @@ export abstract class P5AsciifyRenderer<T extends AsciiRendererOptions = AsciiRe
      */
     constructor(
         protected _p: p5,
+        protected _captureFramebuffer: p5.Framebuffer,
         protected _grid: P5AsciifyGrid,
         protected initialFramebufferDimensions: {
             width: number,

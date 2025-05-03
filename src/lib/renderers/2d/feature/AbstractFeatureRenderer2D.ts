@@ -25,11 +25,12 @@ export abstract class AbstractFeatureRenderer2D<T extends FeatureAsciiRendererOp
      */
     constructor(
         p: p5,
+        captureFramebuffer: p5.Framebuffer,
         grid: P5AsciifyGrid,
         fontManager: P5AsciifyFontManager,
         options: T
     ) {
-        super(p, grid, fontManager, options);
+        super(p, captureFramebuffer, grid, fontManager, options);
 
         this._characterColorPalette = new P5AsciifyColorPalette(this._p, this._fontManager.glyphColors(this._options.characters));
 
@@ -92,10 +93,9 @@ export abstract class AbstractFeatureRenderer2D<T extends FeatureAsciiRendererOp
     /**
      * Convert the input framebuffer into separate ASCII framebuffers based on pre-built renderer settings,
      * which are used by the final {@link P5AsciifyDisplayRenderer} to render the final ASCII output.
-     * @param inputFramebuffer - The input framebuffer to convert to ASCII.
      * @ignore
      */
-    abstract render(inputFramebuffer: p5.Framebuffer): void;
+    abstract render(): void;
 
     /**
      * Define the rotation angle of all characters in the grid affected by the renderer in degrees.

@@ -78,10 +78,10 @@ export class P5AsciifyRendererManager {
         };
 
         this._renderers = [
-            { name: "custom2D", renderer: new P5AsciifyRenderer2D(this._p, this._grid, this._fontManager) },
-            { name: "edge", renderer: new P5AsciifyEdgeRenderer(this._p, this._grid, this._fontManager) },
-            { name: "accurate", renderer: new P5AsciifyAccurateRenderer(this._p, this._grid, this._fontManager) },
-            { name: "brightness", renderer: new P5AsciifyBrightnessRenderer(this._p, this._grid, this._fontManager) },
+            { name: "custom2D", renderer: new P5AsciifyRenderer2D(this._p, this._captureFramebuffer, this._grid, this._fontManager) },
+            { name: "edge", renderer: new P5AsciifyEdgeRenderer(this._p, this._captureFramebuffer, this._grid, this._fontManager) },
+            { name: "accurate", renderer: new P5AsciifyAccurateRenderer(this._p, this._captureFramebuffer, this._grid, this._fontManager) },
+            { name: "brightness", renderer: new P5AsciifyBrightnessRenderer(this._p, this._captureFramebuffer, this._grid, this._fontManager) },
         ];
 
         this._primaryColorFramebuffer = this._p.createFramebuffer({
@@ -157,7 +157,7 @@ export class P5AsciifyRendererManager {
             if (renderer.renderer.options.enabled) {
 
                 if (renderer.renderer instanceof AbstractFeatureRenderer2D) {
-                    renderer.renderer.render(inputFramebuffer);
+                    renderer.renderer.render();
                 }
 
                 const xPos = -this._grid.cols / 2;
@@ -274,7 +274,7 @@ export class P5AsciifyRendererManager {
             );
         }
 
-        const renderer = new RendererClass(this._p, this._grid, this._fontManager, options);
+        const renderer = new RendererClass(this._p, this._captureFramebuffer, this._grid, this._fontManager, options);
 
         this._renderers.push({ name, renderer });
 

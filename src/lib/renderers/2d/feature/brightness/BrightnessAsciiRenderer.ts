@@ -54,8 +54,8 @@ export class P5AsciifyBrightnessRenderer extends AbstractFeatureRenderer2D {
      * @param options The options for the ASCII renderer.
      * @ignore
      */
-    constructor(p5Instance: p5, grid: P5AsciifyGrid, fontManager: P5AsciifyFontManager, options: FeatureAsciiRendererOptions = BRIGHTNESS_DEFAULT_OPTIONS) {
-        super(p5Instance, grid, fontManager, { ...BRIGHTNESS_DEFAULT_OPTIONS, ...options });
+    constructor(p5Instance: p5, captureFramebuffer: p5.Framebuffer, grid: P5AsciifyGrid, fontManager: P5AsciifyFontManager, options: FeatureAsciiRendererOptions = BRIGHTNESS_DEFAULT_OPTIONS) {
+        super(p5Instance, captureFramebuffer, grid, fontManager, { ...BRIGHTNESS_DEFAULT_OPTIONS, ...options });
 
         this.colorSampleShader = this._p.createShader(vertexShader, colorSampleShader);
         this.asciiCharacterShader = this._p.createShader(vertexShader, asciiCharacterShader);
@@ -76,11 +76,11 @@ export class P5AsciifyBrightnessRenderer extends AbstractFeatureRenderer2D {
         this.colorSampleFramebuffer.resize(this._grid.cols, this._grid.rows);
     }
 
-    render(inputFramebuffer: p5.Framebuffer): void {
+    render(): void {
         this.colorSampleFramebuffer.begin();
         this._p.clear();
         this._p.shader(this.colorSampleShader);
-        this.colorSampleShader.setUniform('u_sketchTexture', inputFramebuffer);
+        this.colorSampleShader.setUniform('u_sketchTexture', this._captureFramebuffer);
         this.colorSampleShader.setUniform('u_gridCellDimensions', [this._grid.cols, this._grid.rows]);
         this._p.rect(0, 0, this.colorSampleFramebuffer.width, this.colorSampleFramebuffer.height);
         this.colorSampleFramebuffer.end();
