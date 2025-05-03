@@ -43,7 +43,7 @@ function draw() {
     <title>p5.asciify sketch</title>
 
     <script src="https://cdn.jsdelivr.net/npm/p5@1.11.5/lib/p5.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/p5.asciify@0.8.2/dist/p5.asciify.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/p5.asciify@0.9.0/dist/p5.asciify.umd.min.js"></script>
   </head>
   <body>
     <script src="sketch.js"></script>
