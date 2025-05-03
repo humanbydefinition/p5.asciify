@@ -26,10 +26,11 @@ If you have an instance of a custom renderer stored in a variable called `custom
     - Each pixel determines the background color to render in the corresponding grid cell.
 - `customRenderer.rotationFramebuffer`
     - Each pixel determines the rotation of the character to render in the corresponding grid cell.
-- `customRenderer.inversionFramebuffer`
-    - Each pixel determines whether to swap the character and background color in the corresponding grid cell.
-- `customRenderer.flipFramebuffer`
-    - Each pixel determines whether to flip the character in the corresponding grid cell horizontally and/or vertically.
+- `customRenderer.transformFramebuffer`
+    - Each pixels color channel defines the transformation of the character in the corresponding grid cell:
+        - Red channel: Swap the character and background color *(0 or 1)*
+        - Green channel: Horizontal flipping *(0 or 1)*
+        - Blue channel: Vertical flipping *(0 or 1)*
 
 All of these framebuffers share the same dimensions and are always equal to the grid dimensions in columns and rows, which are responsive based on the current font, canvas- & font-size by default.
 
@@ -93,19 +94,26 @@ Let's look at how the other recommended rotations can be applied to the `rotatio
 - `0°`
     - Keep the pixel black `(0, 0, 0)` or transparent `(0, 0, 0, 0)`.
 - `90°`
-    - Set the red color channel to `90` and keep the other channels black `(90, 0, 0)`.
+    - `background("rgb(25%, 0%, 0%)");`
 - `180°`
-    - Set the red color channel to `180` and keep the other channels black `(180, 0, 0)`.
+    - `background("rgb(50%, 0%, 0%)");`
 - `270°`
-    - Use both the red and green color channels to add up to `270` and keep the other channels black `(255, 15, 0)`.
+    - `background("rgb(75%, 0%, 0%)");`
 
 That should give a rough idea of how to populate the `rotationFramebuffer` and how to use it. In the future this may be changed to use a more intuitive way of defining the rotation, also tied to the `angleMode()` function of `p5.js`.
 
-#### Populating the `inversionFramebuffer` and `flipFramebuffer`
+#### Populating the `transformFramebuffer`
 
-Both the `inversionFramebuffer` and `flipFramebuffer` work in a similar way, and might also be combined into a single texture now that I think about it. The `inversionFramebuffer` is used to swap the character and background color in the corresponding grid cell, while the `flipFramebuffer` is used to flip the character in the corresponding grid cell horizontally and/or vertically.
+The `transformFramebuffer` allows you to apply various transformations to each character in your grid. Each pixel's RGB channels control different transformation properties:
 
-For the `inversionFramebuffer`, you basically just need to set the pixel to white `(255, 255, 255)` to swap the character and background color in the corresponding grid cell. The `flipFramebuffer` is a bit more complex, as it uses the red and green color channels to determine whether to flip the character horizontally and/or vertically. To apply horizontal flipping, set the red color channel to `255`, and for vertical flipping, set the green color channel to `255`. To apply both horizontal and vertical flipping, set both color channels to `255`.
+- **Red channel**: Controls character/background color swapping. Setting this channel to `255` will swap the primary and secondary colors for that cell.
+- **Green channel**: Controls horizontal flipping. Setting this channel to `255` will flip the character horizontally.
+- **Blue channel**: Controls vertical flipping. Setting this channel to `255` will flip the character vertically.
+
+You can combine these transformations by setting multiple channels. For example:
+- To swap colors and flip horizontally: `color(255, 255, 0)`
+- To flip both horizontally and vertically: `color(0, 255, 255)`
+- To apply all three transformations: `color(255, 255, 255)`
 
 ### Bringing it all together
 
