@@ -48,8 +48,8 @@ export declare class P5AsciifyAccurateRenderer extends AbstractFeatureRenderer2D
      * @param options The options for the ASCII renderer.
      * @ignore
      */
-    constructor(p5Instance: p5, grid: P5AsciifyGrid, fontManager: P5AsciifyFontManager, options?: FeatureAsciiRendererOptions);
+    constructor(p5Instance: p5, captureFramebuffer: p5.Framebuffer, grid: P5AsciifyGrid, fontManager: P5AsciifyFontManager, options?: FeatureAsciiRendererOptions);
     resizeFramebuffers(): void;
     resetShaders(): void;
-    render(inputFramebuffer: p5.Framebuffer): void;
+    render(): void;
 }

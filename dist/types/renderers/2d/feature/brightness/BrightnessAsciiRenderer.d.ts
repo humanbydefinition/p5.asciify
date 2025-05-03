@@ -45,8 +45,8 @@ export declare class P5AsciifyBrightnessRenderer extends AbstractFeatureRenderer
      * @param options The options for the ASCII renderer.
      * @ignore
      */
-    constructor(p5Instance: p5, grid: P5AsciifyGrid, fontManager: P5AsciifyFontManager, options?: FeatureAsciiRendererOptions);
+    constructor(p5Instance: p5, captureFramebuffer: p5.Framebuffer, grid: P5AsciifyGrid, fontManager: P5AsciifyFontManager, options?: FeatureAsciiRendererOptions);
     resetShaders(): void;
     resizeFramebuffers(): void;
-    render(inputFramebuffer: p5.Framebuffer): void;
+    render(): void;
 }

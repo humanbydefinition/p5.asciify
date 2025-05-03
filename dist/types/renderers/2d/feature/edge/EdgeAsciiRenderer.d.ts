@@ -54,7 +54,7 @@ export declare class P5AsciifyEdgeRenderer extends AbstractFeatureRenderer2D<Edg
      * @param options The options for the ASCII renderer.
      * @ignore
      */
-    constructor(p5Instance: p5, grid: P5AsciifyGrid, fontManager: P5AsciifyFontManager, options?: EdgeAsciiRendererOptions);
+    constructor(p5Instance: p5, captureFramebuffer: p5.Framebuffer, grid: P5AsciifyGrid, fontManager: P5AsciifyFontManager, options?: EdgeAsciiRendererOptions);
     resizeFramebuffers(): void;
     resetShaders(): void;
     /**
@@ -88,5 +88,5 @@ export declare class P5AsciifyEdgeRenderer extends AbstractFeatureRenderer2D<Edg
      */
     sampleThreshold(value: number): void;
     update(newOptions: Partial<EdgeAsciiRendererOptions>): void;
-    render(inputFramebuffer: p5.Framebuffer): void;
+    render(): void;
 }

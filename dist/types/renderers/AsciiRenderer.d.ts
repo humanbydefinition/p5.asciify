@@ -7,6 +7,7 @@ import { AsciiRendererOptions } from './types';
  */
 export declare abstract class P5AsciifyRenderer<T extends AsciiRendererOptions = AsciiRendererOptions> {
     protected _p: p5;
+    protected _captureFramebuffer: p5.Framebuffer;
     protected _grid: P5AsciifyGrid;
     protected initialFramebufferDimensions: {
         width: number;
@@ -37,7 +38,7 @@ export declare abstract class P5AsciifyRenderer<T extends AsciiRendererOptions =
      * @param _options The options for the ASCII renderer.
      * @ignore
      */
-    constructor(_p: p5, _grid: P5AsciifyGrid, initialFramebufferDimensions: {
+    constructor(_p: p5, _captureFramebuffer: p5.Framebuffer, _grid: P5AsciifyGrid, initialFramebufferDimensions: {
         width: number;
         height: number;
     }, _fontManager: P5AsciifyFontManager, _options: T);
