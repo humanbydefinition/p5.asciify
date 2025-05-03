@@ -13,7 +13,7 @@ They are mostly useful for:
 - Sharing your sketches with others
 - Reporting bugs or issues
 
-Choose one of the available options below to get started: (work in progress)
+Choose one of the available options below to get started:
 
 <PlaygroundGrid 
   cards={[
@@ -23,12 +23,8 @@ Choose one of the available options below to get started: (work in progress)
       description: 'The official p5.js web editor. Create and share your sketches online.',
       buttons: [
         { 
-          label: 'Open Playground', 
-          url: 'https://editor.p5js.org/'
-        },
-        { 
-          label: 'Explore Examples', 
-          url: 'https://editor.p5js.org/examples/'
+          label: 'Open playground', 
+          url: 'https://editor.p5js.org/humanbydefinition/sketches/LyjURtFvm'
         }
       ]
     },
@@ -38,8 +34,16 @@ Choose one of the available options below to get started: (work in progress)
       description: 'A platform for sharing and discovering creative coding projects, including p5.js sketches.',
       buttons: [
         { 
-          label: 'Open Playground', 
-          url: 'https://openprocessing.org/' 
+          label: 'Open playground', 
+          url: 'https://openprocessing.org/sketch/2635694' 
+        },
+        { 
+          label: 'Explore examples', 
+          url: 'https://openprocessing.org/curation/89166' 
+        },
+        { 
+          label: 'Explore curation', 
+          url: 'https://openprocessing.org/curation/89429' 
         }
       ]
     },
@@ -49,8 +53,8 @@ Choose one of the available options below to get started: (work in progress)
       description: 'CodeSandbox is an online code editor and development environment that allows developers to create, share and collaborate on web development projects in a browser-based environment.',
       buttons: [
         { 
-          label: 'Open Playground', 
-          url: 'https://codesandbox.io/s/new' 
+          label: 'Open playground', 
+          url: 'https://codesandbox.io/p/sandbox/frosty-cohen-dlz6cv' 
         }
       ]
     },
@@ -60,8 +64,8 @@ Choose one of the available options below to get started: (work in progress)
       description: 'StackBlitz is an online IDE and development environment that enables developers to create, prototype and share web applications directly in the browser. It offers instant setup, live collaboration features, and seamless GitHub integration with zero configuration required.',
       buttons: [
         { 
-          label: 'Open Playground', 
-          url: 'https://stackblitz.com/fork/react' 
+          label: 'Open playground', 
+          url: 'https://stackblitz.com/edit/stackblitz-starters-77exu2qi' 
         }
       ]
     }
