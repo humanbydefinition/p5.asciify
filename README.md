@@ -12,7 +12,7 @@
 </div>
 
 
-`p5.asciify` is a powerful add-on library for [`p5.js`](https://p5js.org/) that transforms your canvas and offcanvas textures into dynamic ASCII/textmode representations on a grid in real time, allowing you to create intricate 2D ASCII/textmode art and much more with ease.
+`p5.asciify` is a powerful add-on library for [`p5.js`](https://p5js.org/) that transforms your canvas and offcanvas textures into dynamic ASCII/textmode representations on a grid in real time, allowing you to create intricate ASCII/textmode art and much more with ease.
 
 ## Features
 
@@ -33,7 +33,8 @@ With `p5.asciify`, you can effortlessly create stunning ASCII art, textmode game
 
 ### Prerequisites
 
-- `p5.asciify` requires [`p5.js`](https://p5js.org/) version `1.8.0` or higher to work. *(`v2.0.0` and upcoming versions are not supported yet!)*
+- `p5.asciify` requires [`p5.js`](https://p5js.org/) versions `1.8.0` to `1.X.X` to run.
+  - `p5.js` versions `2.X.X` are not yet supported, but will be in the future.
 - `p5.asciify` only runs in [`WEBGL`](https://p5js.org/reference/#/p5/createCanvas) mode, so make sure to set up your canvas accordingly:
 
 ```javascript
@@ -97,6 +98,18 @@ let myp5 = new p5(sketch);
 
 At this point - when imported correctly - your [`p5.js`](https://p5js.org/) canvas in `WEBGL` mode should already be converted into a grid of ASCII characters with the default settings applied. Happy coding! (｡◕‿‿◕｡)
 
-## Usage
+## Learn more
 
-To effectively use `p5.asciify` in your projects, check out the official documentation at [`p5.textmode.art`](https://p5.textmode.art/) for detailed information. The documentation includes guides, examples, and API references to help you get started and make the most of the library's features.
+### 📚 [Visit the Official Documentation](https://p5.textmode.art/)
+
+Explore the comprehensive documentation at [p5.textmode.art](https://p5.textmode.art/) for:
+- Detailed guides
+- Interactive examples
+- Complete API reference
+- Tips and tricks
+- ... and much more!
+
+The documentation will help you unlock the full potential of p5.asciify in your creative coding projects.
+
+> [!NOTE]
+> While the API reference is complete and always up-to-date, the documentation is still a work in progress. If you have any questions or need assistance, feel free to reach out on [Discord](https://discord.gg/sjrw8QXNks) or open an issue on GitHub.
