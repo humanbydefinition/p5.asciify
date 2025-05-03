@@ -4,7 +4,7 @@ let customRenderer;
 let characterFramebuffer;
 let primaryColorFramebuffer;
 let secondaryColorFramebuffer;
-let inversionFramebuffer;
+let transformFramebuffer;
 
 let textFramebuffer;
 let textColorFramebuffer;
@@ -62,7 +62,7 @@ function setupAsciify() {
   characterFramebuffer = customRenderer.characterFramebuffer;
   primaryColorFramebuffer = customRenderer.primaryColorFramebuffer;
   secondaryColorFramebuffer = customRenderer.secondaryColorFramebuffer;
-  inversionFramebuffer = customRenderer.inversionFramebuffer;
+  transformFramebuffer = customRenderer.transformFramebuffer;
 
   // Fetch the glyph colors from the font manager,
   // returning an array of RGB values
@@ -111,7 +111,7 @@ function updatePropertyFramebuffers() {
   textColorFramebuffer.end();
 
   invertTextFramebuffer.begin();
-  background(invertLogoColor ? 255 : 0);
+  background(invertLogoColor ? 255 : 0, 0, 0);
   invertTextFramebuffer.end();
 }
 
@@ -193,11 +193,11 @@ function draw() {
   background(0);
   secondaryColorFramebuffer.end();
 
-  inversionFramebuffer.begin();
+  transformFramebuffer.begin();
   background(0);
 
   image(invertTextFramebuffer, logoX - logoWidth / 2, logoY - logoHeight / 2);
-  inversionFramebuffer.end();
+  transformFramebuffer.end();
 }
 
 function windowResized() {
