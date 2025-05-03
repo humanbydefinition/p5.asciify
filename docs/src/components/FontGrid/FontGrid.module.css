@@ -1,0 +1,20 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 2rem;
+  margin: 2rem 0;
+}
+
+.gridItem {
+  display: flex;
+  width: 100%; /* Ensure gridItem takes full width of its grid cell */
+  height: 100%; /* Ensure consistent height */
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+

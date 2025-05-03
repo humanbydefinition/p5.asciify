@@ -1,0 +1,31 @@
+[
+  {
+    "username": "humanbydefinition",
+    "name": "humanbydefinition",
+    "description": "Creator and lead maintainer of `p5.asciify` and the [`textmode.art`](https://textmode.art) project.",
+    "instagram": "https://instagram.com/humanbydefinition",
+    "mastodon": "https://mastodon.social/@humanbydefinition",
+    "website": "https://textmode.art"
+  },
+  {
+    "username": "davepagurek",
+    "name": "davepagurek",
+    "description": "Helped in a major way bringing `p5.asciify` to life thanks to his deep knowledge with `p5.js`.",
+    "instagram": "https://instagram.com/davepagurek",
+    "mastodon": "https://genart.social/@davepagurek",
+    "website": "https://janedoe.dev"
+  },
+  {
+    "username": "gridsystem",
+    "name": "gridsystem",
+    "description": "Provided valuable advice that greatly improved the accessability and structure of `p5.asciify`."
+  },
+  {
+    "username": "flordefuego",
+    "name": "flordefuego",
+    "description": "Provided a [code example](https://openprocessing.org/sketch/2606327) and insights on combining `Hydra`, `p5.js`, and `p5.asciify`.",
+    "instagram": "https://instagram.com/flordefuega",
+    "mastodon": "https://mastodon.social/@flordefuego@post.lurk.org",
+    "website": "https://johnsmith.dev"
+  }
+]
