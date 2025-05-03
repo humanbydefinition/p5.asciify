@@ -227,8 +227,8 @@ export declare class P5Asciifier {
     /**
      * Sets whether the ASCII output should be rendered to the canvas or not.
      *
-     * If this is set to `false`, the canvas will be clear/empty until you start drawing stuff again in `drawAsciify()`.
-     * Do not bother until you know what you are doing.
+     * If this is set to `false`, the canvas will remain clear/empty until you start drawing stuff again in `drawAsciify()`.
+     * This is because `p5.asciify` wraps your `draw()` loop inside a framebuffer's `begin()` and `end()`, if the canvas is being recorded.
      *
      * @param bool `true` to render to the canvas, `false` to not render.
      */
