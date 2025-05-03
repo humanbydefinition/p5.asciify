@@ -1,3 +1,4 @@
+
 let asciifier;
 let customRenderer;
 
@@ -5,8 +6,7 @@ let characterFramebuffer;
 let primaryColorFramebuffer;
 let secondaryColorFramebuffer;
 let rotationFramebuffer;
-let inversionFramebuffer;
-let flipFramebuffer;
+let transformFramebuffer;
 
 function setup() {
   setAttributes('antialias', false);
@@ -33,8 +33,7 @@ function setupAsciify() {
   primaryColorFramebuffer = customRenderer.primaryColorFramebuffer;
   secondaryColorFramebuffer = customRenderer.secondaryColorFramebuffer;
   rotationFramebuffer = customRenderer.rotationFramebuffer;
-  inversionFramebuffer = customRenderer.inversionFramebuffer;
-  flipFramebuffer = customRenderer.flipFramebuffer;
+  transformFramebuffer = customRenderer.transformFramebuffer;
 }
 
 function draw() {
@@ -51,19 +50,19 @@ function draw() {
   secondaryColorFramebuffer.end();
 
   rotationFramebuffer.begin();
-  background(90, 0, 0);
+  background("rgb(25%, 0%, 0%)");
   rotationFramebuffer.end();
 
-  inversionFramebuffer.begin();
+  transformFramebuffer.begin();
   // Set the entire background to black first
   background(0);
 
   // Draw a white rectangle on the right half of the canvas
   fill(255);    // Set fill to white
   noStroke();   // No outline for the rectangle
-  translate(inversionFramebuffer.width / 4, 0, 0); // Move to the right quarter of the canvas
-  plane(inversionFramebuffer.width / 2, inversionFramebuffer.height);   // Create a plane that covers the right half
-  inversionFramebuffer.end();
+  translate(transformFramebuffer.width / 4, 0, 0); // Move to the right quarter of the canvas
+  plane(transformFramebuffer.width / 2, transformFramebuffer.height);   // Create a plane that covers the right half
+  transformFramebuffer.end();
 }
 
 function windowResized() {
