@@ -43,13 +43,13 @@ function setup() {
 }
 ```
 
-That's it! You're now ready to install and use `p5.asciify` in your [`p5.js`](https://p5js.org/) projects.
+That's it! You're now ready to install and use `p5.asciify` in your `p5.js` projects.
 
 ### Importing the library
 
 #### Global mode
 
-Download the latest `umd` version of `p5.asciify` from the [**GitHub releases page**](https://github.com/humanbydefinition/p5.asciify/releases/) or import it directly from a CDN like [**jsDelivr**](https://www.jsdelivr.com/package/npm/p5.asciify). The library is distributed as a single JavaScript file, which you can include in your project by adding the following script tag to your HTML file <u>after</u> importing [`p5.js`](https://p5js.org/):
+Download the latest `umd` version of `p5.asciify` from the [**GitHub releases page**](https://github.com/humanbydefinition/p5.asciify/releases/) or import it directly from a CDN like [**jsDelivr**](https://www.jsdelivr.com/package/npm/p5.asciify). The library is distributed as a single JavaScript file, which you can include in your project by adding the following script tag to your HTML file <u>after</u> importing `p5.js`:
 
 ```html
 <!-- Import p5.js before p5.asciify -->
@@ -96,7 +96,7 @@ let myp5 = new p5(sketch);
 
 <hr />
 
-At this point - when imported correctly - your [`p5.js`](https://p5js.org/) canvas in `WEBGL` mode should already be converted into a grid of ASCII characters with the default settings applied. Happy coding! (｡◕‿‿◕｡)
+At this point - when imported correctly - your `p5.js` canvas in `WEBGL` mode should already be converted into a grid of ASCII characters with the default settings applied. Happy coding! (｡◕‿‿◕｡)
 
 ## Learn more
 
