@@ -186,6 +186,10 @@ export type P5AsciifyCharacter = {
 
     /**
      * Gets the outline path of this character positioned at specified coordinates.
+     * 
+     * This method comes from the `opentype.js` library, which is used by `p5.js` through the `p5.Font` object
+     * throughout the `v1.X.X` versions `p5.asciify` is compatible with.
+     * 
      * @param x - The horizontal position to place the character
      * @param y - The vertical position to place the character
      * @param fontSize - The font size to scale the glyph to (in pixels)
