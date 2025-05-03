@@ -18,7 +18,7 @@ const config: Config = {
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
   organizationName: 'humanbydefinition', // Usually your GitHub org/user name.
-  projectName: 'p5.textmode.art', // Usually your repo name.
+  projectName: 'p5.asciify', // Usually your repo name.
 
   onBrokenLinks: 'warn',
   onBrokenMarkdownLinks: 'warn',
@@ -75,7 +75,7 @@ const config: Config = {
         docs: {
           sidebarPath: './sidebars.ts',
           editUrl:
-            'https://github.com/humanbydefinition/p5.textmode.art/edit/main/',
+            'https://github.com/humanbydefinition/p5.asciify/edit/main/',
         },
         blog: {
           showReadingTime: true,
@@ -84,7 +84,7 @@ const config: Config = {
             xslt: true,
           },
           editUrl:
-            'https://github.com/humanbydefinition/p5.textmode.art/edit/main/',
+            'https://github.com/humanbydefinition/p5.asciify/edit/main/',
           // Useful options to enforce blogging best practices
           onInlineTags: 'warn',
           onInlineAuthors: 'warn',

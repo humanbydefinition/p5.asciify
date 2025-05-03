@@ -1,6 +1,6 @@
 # Class: P5AsciifyDisplayRenderer
 
-Defined in: [renderers/AsciiDisplayRenderer.ts:13](https://github.com/humanbydefinition/p5.asciify/blob/5e9910685d5c8078f25814adc623836a002b98cb/src/lib/renderers/AsciiDisplayRenderer.ts#L13)
+Defined in: [renderers/AsciiDisplayRenderer.ts:13](https://github.com/humanbydefinition/p5.asciify/blob/1b0e0230844dd061e84f34cd89b50b829d9275de/src/lib/renderers/AsciiDisplayRenderer.ts#L13)
 
 Handles the final rendering of the ASCII output based on the final textures from the rendering pipeline.
 
