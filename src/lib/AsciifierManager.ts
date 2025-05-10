@@ -71,8 +71,8 @@ export class P5AsciifierManager {
      */
     public init(p: p5): void {
         this._p = p;
+        this._p._incrementPreload();
         this._baseFont = p.loadFont(URSAFONT_BASE64, (font) => {
-
             this._asciifiers.forEach((asciifier) => {
                 asciifier.init(p, font);
             });
