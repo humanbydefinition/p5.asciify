@@ -8,7 +8,7 @@ import { compareVersions } from './utils/utils';
  */
 export const p5asciify = P5AsciifierManager.getInstance();
 
-// Global mode: assign a dummy preload and expose p5asciify.
+// Global mode: Expose p5asciify.
 if (typeof window !== 'undefined') {
   window.p5asciify = p5asciify;
 }
