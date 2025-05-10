@@ -1431,7 +1431,7 @@ void main() {\r
         \r
         gl_FragColor = vec4(r, g, b, 1.0);\r
     } else {\r
-        gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);\r
+        gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0);\r
     }\r
 }`, SA = `precision mediump float;
 
@@ -3026,7 +3026,7 @@ const GA = `data:font/truetype;charset=utf-8;base64,AAEAAAAKAIAAAwAgT1MvMs+QEyQA
    * @ignore
    */
   init(e) {
-    this._p = e, this._baseFont = e.loadFont(GA, (A) => {
+    this._p = e, this._p._incrementPreload(), this._baseFont = e.loadFont(GA, (A) => {
       this._asciifiers.forEach((r) => {
         r.init(e, A);
       });
