@@ -12,7 +12,7 @@
 
     "declaration": true,
     "declarationMap": false,
-    "emitDeclarationOnly": false,
+    "emitDeclarationOnly": true,
     "declarationDir": "dist/types",
     
     "outDir": "dist",            
