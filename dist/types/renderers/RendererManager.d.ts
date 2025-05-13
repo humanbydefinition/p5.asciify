@@ -4,7 +4,6 @@ import { P5AsciifyDisplayRenderer } from './AsciiDisplayRenderer';
 import { P5AsciifyGrid } from '../Grid';
 import { P5AsciifyFontManager } from '../FontManager';
 import { AsciiRendererOptions } from './types';
-import { RENDERER_TYPES } from './constants';
 import { P5AsciifyRendererPlugin } from '../plugins/RendererPlugin';
 /**
  * Manages the whole ASCII rendering pipeline.
@@ -118,7 +117,7 @@ export declare class P5AsciifyRendererManager {
      *  }
      * ```
      */
-    add(name: string, type: keyof typeof RENDERER_TYPES, options: AsciiRendererOptions): P5AsciifyRenderer;
+    add(name: string, type: string, options: AsciiRendererOptions): P5AsciifyRenderer;
     /**
      * Gets the ASCII renderer instance with the given name.
      * @param rendererName The name of the renderer to get.

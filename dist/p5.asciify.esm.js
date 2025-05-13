@@ -1,7 +1,7 @@
 var fA = Object.defineProperty;
 var CA = (o, e, A) => e in o ? fA(o, e, { enumerable: !0, configurable: !0, writable: !0, value: A }) : o[e] = A;
 var s = (o, e, A) => CA(o, typeof e != "symbol" ? e + "" : e, A);
-import w from "p5";
+import p from "p5";
 class DA {
   /**
    * Create a new grid instance.
@@ -200,7 +200,7 @@ class dA {
    * @ignore
    */
   loadFont(e) {
-    if (!(e instanceof w.Font))
+    if (!(e instanceof p.Font))
       throw new Q("Invalid font parameter. Expected a path, base64 string, blob URL, or p5.Font object.");
     this._font = e, this._initializeGlyphsAndCharacters();
   }
@@ -1010,7 +1010,7 @@ class U extends V {
    * ```
    */
   characterColor(A) {
-    if (!A || !(A instanceof w.Color))
+    if (!A || !(A instanceof p.Color))
       throw new Q("Character color must be a valid p5.Color object");
     this._options.characterColor = A;
   }
@@ -1049,7 +1049,7 @@ class U extends V {
    * ```
    */
   backgroundColor(A) {
-    if (!A || !(A instanceof w.Color))
+    if (!A || !(A instanceof p.Color))
       throw new Q("Background color must be a valid p5.Color object");
     this._options.backgroundColor = A;
   }
@@ -1315,7 +1315,7 @@ void main() {\r
     } else {\r
         gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0);\r
     }\r
-}`, pA = `precision mediump float;
+}`, wA = `precision mediump float;
 
 uniform sampler2D u_sampleTexture;\r
 uniform vec2 u_gridCellDimensions;\r
@@ -1342,7 +1342,7 @@ void main() {\r
     } else {\r
         gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0);\r
     }\r
-}`, wA = `precision mediump float;
+}`, pA = `precision mediump float;
 
 uniform sampler2D u_sketchTexture;\r
 uniform vec2 u_gridCellDimensions;
@@ -1472,7 +1472,7 @@ class BA extends U {
     s(this, "asciiCharacterShader");
     s(this, "sobelFramebuffer");
     s(this, "sampleFramebuffer");
-    this.sobelShader = this._p.createShader(y, bA), this.sampleShader = this._p.createShader(y, QA(16, this._grid.cellHeight, this._grid.cellWidth)), this.colorSampleShader = this._p.createShader(y, mA), this.transformShader = this._p.createShader(y, IA), this.rotationShader = this._p.createShader(y, pA), this.asciiCharacterShader = this._p.createShader(y, wA), this.sobelFramebuffer = this._p.createFramebuffer({
+    this.sobelShader = this._p.createShader(y, bA), this.sampleShader = this._p.createShader(y, QA(16, this._grid.cellHeight, this._grid.cellWidth)), this.colorSampleShader = this._p.createShader(y, mA), this.transformShader = this._p.createShader(y, IA), this.rotationShader = this._p.createShader(y, wA), this.asciiCharacterShader = this._p.createShader(y, pA), this.sobelFramebuffer = this._p.createFramebuffer({
       density: 1,
       width: this._captureFramebuffer.width,
       height: this._captureFramebuffer.height,
@@ -1881,28 +1881,30 @@ const H = {
   add(e, A, r) {
     if (typeof e != "string" || e.trim() === "")
       throw new Q("Renderer name must be a non-empty string");
-    let t = H[A];
-    if (!t && G._plugins.has(A)) {
+    let t;
+    const i = H[A];
+    if (i)
+      t = new i(this._p, this._captureFramebuffer, this._grid, this._fontManager, r);
+    else if (G._plugins.has(A)) {
       const B = G._plugins.get(A);
-      if (B) {
-        const E = B.create(
-          this._p,
-          this._captureFramebuffer,
-          this._grid,
-          this._fontManager,
-          r
-        );
-        return this._renderers.push({ name: e, renderer: E }), E;
-      }
+      B && (t = B.create(
+        this._p,
+        this._captureFramebuffer,
+        this._grid,
+        this._fontManager,
+        r
+      ));
     }
     if (!t) {
-      const B = [...Object.keys(H), ...G._plugins.keys()].join(", ");
+      const B = [
+        ...Object.keys(H),
+        ...G._plugins.keys()
+      ].join(", ");
       throw new Q(
         `Invalid renderer type: ${A}. Valid types are: ${B}`
       );
     }
-    const i = new t(this._p, this._captureFramebuffer, this._grid, this._fontManager, r);
-    return this._renderers.push({ name: e, renderer: i }), i;
+    return this._renderers.unshift({ name: e, renderer: t }), t;
   }
   /**
    * Gets the ASCII renderer instance with the given name.
@@ -2223,8 +2225,8 @@ class nA {
     for (let g = 0; g < m; g++)
       for (let C = 0; C < M; C++) {
         const n = P * 4, R = u[n], k = u[n + 1];
-        let p = R + (k << 8);
-        p >= Y.length && (p = Y.length - 1);
+        let w = R + (k << 8);
+        w >= Y.length && (w = Y.length - 1);
         let F = {
           r: h[n],
           g: h[n + 1],
@@ -2243,7 +2245,7 @@ class nA {
         }
         const X = b[n], Z = b[n + 1], q = X + Z * 256 / 15, AA = C * S, eA = g * f;
         _ += this.generateSVGCellContent(
-          p,
+          w,
           F,
           N,
           AA,
@@ -2254,7 +2256,7 @@ class nA {
           K,
           W,
           r,
-          Y[p],
+          Y[w],
           B
         ), P++;
       }
@@ -2400,7 +2402,7 @@ class hA {
           x++;
           continue;
         }
-        let p = {
+        let w = {
           r: u[g],
           g: u[g + 1],
           b: u[g + 2],
@@ -2413,14 +2415,14 @@ class hA {
         };
         const N = a[g], j = a[g + 1], L = a[g + 2], J = N === 255, O = j === 255, K = L === 255;
         if (J) {
-          const eA = p;
-          p = F, F = eA;
+          const eA = w;
+          w = F, F = eA;
         }
         const W = I[g], X = I[g + 1], Z = W + X, q = this.rgbaToHex(
-          p.r,
-          p.g,
-          p.b,
-          p.a
+          w.r,
+          w.g,
+          w.b,
+          w.a
         ), AA = this.rgbaToHex(
           F.r,
           F.g,
@@ -2623,7 +2625,7 @@ class EA {
    * ```
    */
   background(e) {
-    if (typeof e != "string" && !Array.isArray(e) && !(e instanceof w.Color))
+    if (typeof e != "string" && !Array.isArray(e) && !(e instanceof p.Color))
       throw new Q(`Invalid color type: ${typeof e}. Expected string, array or p5.Color.`);
     this._backgroundColor = e;
   }
@@ -3023,7 +3025,7 @@ const FA = `data:font/truetype;charset=utf-8;base64,AAEAAAAKAIAAAwAgT1MvMs+QEyQA
    * @throws {@link P5AsciifyError} If the framebuffer is not an instance of `p5.Framebuffer`.
    */
   add(e) {
-    if (e !== void 0 && !(e instanceof w.Framebuffer))
+    if (e !== void 0 && !(e instanceof p.Framebuffer))
       throw new Q("Framebuffer must be an instance of p5.Framebuffer.");
     const A = new EA();
     return A.init(this._p, this._baseFont), this._p._setupDone && A.setup(e || this._sketchFramebuffer), this._asciifiers.push(A), A;
@@ -3106,7 +3108,7 @@ typeof window < "u" && (window.p5asciify = v);
 const SA = (o) => {
   v.hooksEnabled && v.init(o);
 };
-w.prototype.registerMethod("init", function() {
+p.prototype.registerMethod("init", function() {
   SA(this);
 });
 const GA = (o) => {
@@ -3118,7 +3120,7 @@ const GA = (o) => {
     v.setup(), o.setupAsciify && o.setupAsciify();
   }, 0);
 };
-w.prototype.registerMethod("afterSetup", function() {
+p.prototype.registerMethod("afterSetup", function() {
   GA(this);
 });
 const MA = (o) => {
@@ -3126,10 +3128,10 @@ const MA = (o) => {
 }, TA = (o) => {
   v.sketchFramebuffer.end(), v.asciify(), o.drawAsciify && o.drawAsciify();
 };
-w.prototype.registerMethod("pre", function() {
+p.prototype.registerMethod("pre", function() {
   v.hooksEnabled && MA(this);
 });
-w.prototype.registerMethod("post", function() {
+p.prototype.registerMethod("post", function() {
   v.hooksEnabled && TA(this);
 });
 const YA = [
@@ -3141,8 +3143,8 @@ const YA = [
   ["_getFontShader", "_defaultFontShader"]
 ];
 for (const [o, e] of YA) {
-  const A = w.RendererGL.prototype[o];
-  w.RendererGL.prototype[o] = function() {
+  const A = p.RendererGL.prototype[o];
+  p.RendererGL.prototype[o] = function() {
     return this[e] || (this[e] = A.call(this), this[e]._vertSrc = this[e]._vertSrc.replace(
       /mediump/g,
       "highp"
