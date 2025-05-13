@@ -27,6 +27,11 @@
       "import": "./dist/p5.asciify.esm.js",
       "require": "./dist/p5.asciify.umd.js"
     },
+    "./plugins": {
+      "types": "./dist/types/plugins/index.d.ts",
+      "import": "./dist/p5.asciify.esm.js",
+      "require": "./dist/p5.asciify.umd.js"
+    },
     "./utils": {
       "types": "./dist/types/utils/index.d.ts",
       "import": "./dist/p5.asciify.esm.js",
@@ -43,6 +48,9 @@
       ],
       "renderers/2d/feature": [
         "./dist/types/renderers/2d/feature/index.d.ts"
+      ],
+      "plugins": [
+        "./dist/types/plugins/index.d.ts"
       ],
       "utils": [
         "./dist/types/utils/index.d.ts"
