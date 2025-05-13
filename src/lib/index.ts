@@ -67,7 +67,6 @@ p5.prototype.registerMethod('afterSetup', function (this: p5) { afterSetupHook(t
  * @ignore
  */
 export const preDrawHook = (p: p5) => {
-
   p5asciify.sketchFramebuffer.begin();
   p.clear();
 };
@@ -85,7 +84,6 @@ export const preDrawHook = (p: p5) => {
  * @ignore
  */
 export const postDrawHook = (p: p5) => {
-
   p5asciify.sketchFramebuffer.end();
 
   p5asciify.asciify();
