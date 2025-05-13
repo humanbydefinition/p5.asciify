@@ -17,6 +17,9 @@ import { AsciiRendererOptions } from './types';
 import { RENDERER_TYPES } from './constants';
 import { P5AsciifyRendererPlugin } from '../plugins/RendererPlugin';
 
+import { P5AsciifyPluginRegistry } from '../plugins/PluginRegistry';
+
+
 /**
  * Manages the whole ASCII rendering pipeline.
  */
@@ -75,7 +78,10 @@ export class P5AsciifyRendererManager {
         private _grid: P5AsciifyGrid,
 
         /** The font texture atlas instance. */
-        private _fontManager: P5AsciifyFontManager
+        private _fontManager: P5AsciifyFontManager,
+
+        /** The plugin registry instance. */
+        private _pluginRegistry: P5AsciifyPluginRegistry
     ) {
         this._currentCanvasDimensions = {
             width: this._captureFramebuffer.width,
@@ -281,8 +287,8 @@ export class P5AsciifyRendererManager {
             renderer = new RendererClass(this._p, this._captureFramebuffer, this._grid, this._fontManager, options);
         }
         // If not found, check for plugin renderers
-        else if (P5AsciifyRendererManager._plugins.has(type)) {
-            const plugin = P5AsciifyRendererManager._plugins.get(type);
+        else {
+            const plugin = this._pluginRegistry.get(type);
             if (plugin) {
                 renderer = plugin.create(
                     this._p,
@@ -298,7 +304,7 @@ export class P5AsciifyRendererManager {
         if (!renderer) {
             const availableTypes = [
                 ...Object.keys(RENDERER_TYPES),
-                ...P5AsciifyRendererManager._plugins.keys()
+                ...this._pluginRegistry.getIds()
             ].join(', ');
 
             throw new P5AsciifyError(
@@ -347,7 +353,7 @@ export class P5AsciifyRendererManager {
     public getAvailableRendererTypes(): string[] {
         return [
             ...Object.keys(RENDERER_TYPES),
-            ...P5AsciifyRendererManager._plugins.keys()
+            ...this._pluginRegistry.getIds()
         ];
     }
 
@@ -521,25 +527,6 @@ export class P5AsciifyRendererManager {
      */
     public enabled(enabled: boolean) {
         enabled ? this.enable() : this.disable();
-    }
-
-    /**
-     * Registers a new renderer plugin.
-     * @param plugin The renderer plugin to register
-     * @throws {@link P5AsciifyError} - If a plugin with the same ID is already registered
-     */
-    public static registerPlugin(plugin: P5AsciifyRendererPlugin): void {
-        if (P5AsciifyRendererManager._plugins.has(plugin.id)) {
-            throw new P5AsciifyError(`A plugin with ID '${plugin.id}' is already registered`);
-        }
-
-        if (plugin.id in RENDERER_TYPES) {
-            throw new P5AsciifyError(
-                `Cannot register plugin with ID '${plugin.id}' because it conflicts with a built-in renderer type`
-            );
-        }
-
-        P5AsciifyRendererManager._plugins.set(plugin.id, plugin);
     }
 
     /**

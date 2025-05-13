@@ -7,6 +7,7 @@ import { P5AsciifyError } from './AsciifyError';
 import { AbstractFeatureRenderer2D } from './renderers/2d/feature/AbstractFeatureRenderer2D';
 import { P5AsciifySVGExporter, SVGExportOptions } from './utils/SVGExporter';
 import { JSONExportOptions, P5AsciifyJSONExporter } from './utils/JSONExporter';
+import { P5AsciifyPluginRegistry } from './plugins/PluginRegistry';
 
 /**
  * Manages a rendering pipeline for ASCII conversion, including font management, grid calculations, and ASCII renderers, 
@@ -38,6 +39,13 @@ export class P5Asciifier {
 
     /** Defines if the ASCII output should be rendered to the canvas or not. */
     private _renderToCanvas: boolean = true;
+
+    /** The plugin registry instance. */
+    private _pluginRegistry: P5AsciifyPluginRegistry;
+
+    constructor(pluginRegistry: P5AsciifyPluginRegistry) {
+        this._pluginRegistry = pluginRegistry;
+    }
 
     /**
      * Initializes the asciifier by setting the `p5.js` instance and loading the font manager with the default font.
@@ -75,7 +83,8 @@ export class P5Asciifier {
             this._p,
             this._captureFramebuffer,
             this._grid,
-            this._fontManager
+            this._fontManager,
+            this._pluginRegistry,
         );
     }
 
