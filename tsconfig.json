@@ -1,10 +1,8 @@
 {
   "compilerOptions": {
     "target": "ESNext", 
-
     "importHelpers": true,
     
-    // Let the bundler produce UMD/ES out of ESNext modules
     "module": "ESNext",  
     "moduleResolution": "Node",
 
@@ -12,21 +10,17 @@
 
     "lib": ["DOM", "ESNext"],
 
-    // Generate .d.ts files
     "declaration": true,
-    "declarationMap": false,     // or true if you want .d.ts.map
-    "emitDeclarationOnly": true,
+    "declarationMap": false,
+    "emitDeclarationOnly": false,
     "declarationDir": "dist/types",
     
-    // Output compiled .js and .d.ts to /dist
     "outDir": "dist",            
     "rootDir": "src/lib",
 
-    // Interop settings
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
 
-    // Type-checking
     "strict": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
@@ -34,7 +28,6 @@
     "types": [
       "vite-plugin-glsl/ext"
     ]
-
   },
   "include": ["src/lib", "src/declarations.d.ts"]
 }
