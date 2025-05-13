@@ -19,10 +19,7 @@ export default defineConfig({
                 globals: {
                     p5: 'p5'
                 },
-                // Preserve modules structure
-                preserveModules: true,
-                // Output directory for preserve modules
-                preserveModulesRoot: 'src/lib'
+                
             },
         }
     },
