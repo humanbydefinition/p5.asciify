@@ -5,6 +5,7 @@ import { P5AsciifyGrid } from '../Grid';
 import { P5AsciifyFontManager } from '../FontManager';
 import { AsciiRendererOptions } from './types';
 import { RENDERER_TYPES } from './constants';
+import { P5AsciifyRendererPlugin } from '../plugin/RendererPlugin';
 /**
  * Manages the whole ASCII rendering pipeline.
  */
@@ -38,6 +39,10 @@ export declare class P5AsciifyRendererManager {
     private _asciiDisplayRenderer2D;
     /** Whether any renderers are enabled. */
     private _hasEnabledRenderers;
+    /**
+     * Registered plugin renderers
+     */
+    private static _plugins;
     /**
      * Creates a new ASCII renderer manager instance.
      * @param _p The p5 instance.
@@ -133,6 +138,11 @@ export declare class P5AsciifyRendererManager {
      * ```
      */
     get(rendererName: string): P5AsciifyRenderer;
+    /**
+     * Gets a list of all available renderer types (built-in and plugins)
+     * @returns An array of available renderer type IDs
+     */
+    getAvailableRendererTypes(): string[];
     /**
      * Moves a renderer down in the list of renderers, meaning it will be rendered earlier in the pipeline.
      * @param renderer The renderer to move down in the list.
@@ -248,6 +258,12 @@ export declare class P5AsciifyRendererManager {
      * ```
      */
     enabled(enabled: boolean): void;
+    /**
+     * Registers a new renderer plugin.
+     * @param plugin The renderer plugin to register
+     * @throws {@link P5AsciifyError} - If a plugin with the same ID is already registered
+     */
+    static registerPlugin(plugin: P5AsciifyRendererPlugin): void;
     /**
      * Gets the index of a renderer in the list of renderers.
      * @param renderer The renderer to get the index of.

@@ -1,5 +1,6 @@
 import p5 from 'p5';
 import { P5Asciifier } from './Asciifier';
+import { P5AsciifyRendererPlugin } from './plugin/RendererPlugin';
 /**
  * Manages the `p5.asciify` library by handling one or more `P5Asciifier` instances.
  *
@@ -94,6 +95,11 @@ export declare class P5AsciifierManager {
      * @ignore
      */
     setHooksEnabled(enabled: boolean): void;
+    /**
+     * Register a new renderer plugin with p5.asciify
+     * @param plugin The renderer plugin to register
+     */
+    registerPlugin(plugin: P5AsciifyRendererPlugin): void;
     /**
      * Returns the list of `P5Asciifier` instances managed by the library.
      */
