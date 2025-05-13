@@ -3,6 +3,8 @@ import { P5Asciifier } from './Asciifier';
 import { P5AsciifyError } from './AsciifyError';
 
 import URSAFONT_BASE64 from './assets/fonts/ursafont_base64.txt?raw';
+import { P5AsciifyRendererPlugin } from './plugin/RendererPlugin';
+import { P5AsciifyRendererManager } from './renderers';
 
 /**
  * Manages the `p5.asciify` library by handling one or more `P5Asciifier` instances.
@@ -184,6 +186,14 @@ export class P5AsciifierManager {
      */
     public setHooksEnabled(enabled: boolean): void {
         this._hooksEnabled = enabled;
+    }
+
+    /**
+     * Register a new renderer plugin with p5.asciify
+     * @param plugin The renderer plugin to register
+     */
+    public registerPlugin(plugin: P5AsciifyRendererPlugin): void {
+        P5AsciifyRendererManager.registerPlugin(plugin);
     }
 
     /**
