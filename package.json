@@ -75,7 +75,7 @@
   },
   "scripts": {
     "build": "vite build && tsc",
-    "dev": "vite --host",
+    "dev": "vite --host --port 5175",
     "vitest": "vitest --ui"
   },
   "repository": {
