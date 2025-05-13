@@ -3,7 +3,7 @@ import { P5Asciifier } from './Asciifier';
 import { P5AsciifyError } from './AsciifyError';
 
 import URSAFONT_BASE64 from './assets/fonts/ursafont_base64.txt?raw';
-import { P5AsciifyRendererPlugin } from './plugin/RendererPlugin';
+import { P5AsciifyRendererPlugin } from './plugins/RendererPlugin';
 import { P5AsciifyRendererManager } from './renderers';
 
 /**

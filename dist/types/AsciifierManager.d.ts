@@ -1,6 +1,6 @@
 import p5 from 'p5';
 import { P5Asciifier } from './Asciifier';
-import { P5AsciifyRendererPlugin } from './plugin/RendererPlugin';
+import { P5AsciifyRendererPlugin } from './plugins/RendererPlugin';
 /**
  * Manages the `p5.asciify` library by handling one or more `P5Asciifier` instances.
  *

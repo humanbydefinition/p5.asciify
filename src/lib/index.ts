@@ -143,10 +143,11 @@ for (const [method, cacheKey] of shadersToReplace) {
 /** Contains functionality relevant to the ASCII rendering. */
 export * as renderers from './renderers';
 
-/** 
- * Contains utility functions and classes used by the `p5.asciify` library. 
- */
+/** Contains utility functions and classes used by the `p5.asciify` library. */
 export * as utils from './utils';
+
+/** Contains plugin interfaces to implement against. */
+export * as plugins from './plugins';
 
 export { P5AsciifierManager } from './AsciifierManager';
 export { P5AsciifyError } from './AsciifyError';

@@ -5,7 +5,7 @@ import { P5AsciifyGrid } from '../Grid';
 import { P5AsciifyFontManager } from '../FontManager';
 import { AsciiRendererOptions } from './types';
 import { RENDERER_TYPES } from './constants';
-import { P5AsciifyRendererPlugin } from '../plugin/RendererPlugin';
+import { P5AsciifyRendererPlugin } from '../plugins/RendererPlugin';
 /**
  * Manages the whole ASCII rendering pipeline.
  */
