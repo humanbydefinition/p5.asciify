@@ -4,7 +4,6 @@ import { P5AsciifyRenderer } from './AsciiRenderer';
 import { P5AsciifyRenderer2D } from './2d/AsciiRenderer2D';
 import { AbstractFeatureRenderer2D } from './2d/feature/AbstractFeatureRenderer2D';
 import { P5AsciifyBrightnessRenderer } from './2d/feature/brightness/BrightnessAsciiRenderer';
-import { P5AsciifyAccurateRenderer } from './2d/feature/accurate/AccurateAsciiRenderer';
 import { P5AsciifyEdgeRenderer } from './2d/feature/edge/EdgeAsciiRenderer';
 import { P5AsciifyDisplayRenderer } from './AsciiDisplayRenderer';
 
@@ -16,6 +15,7 @@ import { P5AsciifyError } from '../AsciifyError';
 import { AsciiRendererOptions } from './types';
 
 import { RENDERER_TYPES } from './constants';
+import { P5AsciifyRendererPlugin } from '../plugin/RendererPlugin';
 
 /**
  * Manages the whole ASCII rendering pipeline.
@@ -53,6 +53,11 @@ export class P5AsciifyRendererManager {
     private _hasEnabledRenderers: boolean = false;
 
     /**
+     * Registered plugin renderers
+     */
+    private static _plugins = new Map<string, P5AsciifyRendererPlugin>();
+
+    /**
      * Creates a new ASCII renderer manager instance.
      * @param _p The p5 instance.
      * @param _grid The grid instance.
@@ -80,7 +85,6 @@ export class P5AsciifyRendererManager {
         this._renderers = [
             { name: "custom2D", renderer: new P5AsciifyRenderer2D(this._p, this._captureFramebuffer, this._grid, this._fontManager) },
             { name: "edge", renderer: new P5AsciifyEdgeRenderer(this._p, this._captureFramebuffer, this._grid, this._fontManager) },
-            { name: "accurate", renderer: new P5AsciifyAccurateRenderer(this._p, this._captureFramebuffer, this._grid, this._fontManager) },
             { name: "brightness", renderer: new P5AsciifyBrightnessRenderer(this._p, this._captureFramebuffer, this._grid, this._fontManager) },
         ];
 
