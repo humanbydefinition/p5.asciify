@@ -264,41 +264,49 @@ export class P5AsciifyRendererManager {
      */
     public add(
         name: string,
-        type: keyof typeof RENDERER_TYPES,
+        type: string,
         options: AsciiRendererOptions
     ): P5AsciifyRenderer {
         if (typeof name !== 'string' || name.trim() === '') {
             throw new P5AsciifyError('Renderer name must be a non-empty string');
         }
 
+        let renderer: P5AsciifyRenderer | undefined;
+
         // Check built-in renderers first
-        let RendererClass = RENDERER_TYPES[type];
-        
+        const RendererClass = RENDERER_TYPES[type as keyof typeof RENDERER_TYPES];
+
+        if (RendererClass) {
+            // Create built-in renderer
+            renderer = new RendererClass(this._p, this._captureFramebuffer, this._grid, this._fontManager, options);
+        }
         // If not found, check for plugin renderers
-        if (!RendererClass && P5AsciifyRendererManager._plugins.has(type)) {
+        else if (P5AsciifyRendererManager._plugins.has(type)) {
             const plugin = P5AsciifyRendererManager._plugins.get(type);
             if (plugin) {
-                const renderer = plugin.create(
-                    this._p, 
-                    this._captureFramebuffer, 
-                    this._grid, 
-                    this._fontManager, 
+                renderer = plugin.create(
+                    this._p,
+                    this._captureFramebuffer,
+                    this._grid,
+                    this._fontManager,
                     options
                 );
-                this._renderers.push({ name, renderer });
-                return renderer;
             }
         }
 
-        if (!RendererClass) {
-            const availableTypes = [...Object.keys(RENDERER_TYPES), ...P5AsciifyRendererManager._plugins.keys()].join(', ');
+        // If neither built-in nor plugin, throw error
+        if (!renderer) {
+            const availableTypes = [
+                ...Object.keys(RENDERER_TYPES),
+                ...P5AsciifyRendererManager._plugins.keys()
+            ].join(', ');
+
             throw new P5AsciifyError(
                 `Invalid renderer type: ${type}. Valid types are: ${availableTypes}`
             );
         }
 
-        const renderer = new RendererClass(this._p, this._captureFramebuffer, this._grid, this._fontManager, options);
-        this._renderers.push({ name, renderer });
+        this._renderers.unshift({ name, renderer });
         return renderer;
     }
 
@@ -367,7 +375,7 @@ export class P5AsciifyRendererManager {
         if (index >= this._renderers.length - 1) {
             throw new P5AsciifyError("Renderer is already at the bottom of the list.");
         }
-        
+
         this.swap(renderer, this._renderers[index + 1].renderer);
     }
 
@@ -391,7 +399,7 @@ export class P5AsciifyRendererManager {
         if (index === -1) {
             throw new P5AsciifyError("Renderer not found.");
         }
-        
+
         if (index <= 0) {
             throw new P5AsciifyError("Renderer is already at the top of the list.");
         }
@@ -524,13 +532,13 @@ export class P5AsciifyRendererManager {
         if (P5AsciifyRendererManager._plugins.has(plugin.id)) {
             throw new P5AsciifyError(`A plugin with ID '${plugin.id}' is already registered`);
         }
-        
+
         if (plugin.id in RENDERER_TYPES) {
             throw new P5AsciifyError(
                 `Cannot register plugin with ID '${plugin.id}' because it conflicts with a built-in renderer type`
             );
         }
-        
+
         P5AsciifyRendererManager._plugins.set(plugin.id, plugin);
     }
 
