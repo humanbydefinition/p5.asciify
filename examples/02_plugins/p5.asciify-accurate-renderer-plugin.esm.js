@@ -74,7 +74,7 @@ void main() {\r
     v_texCoord = aTexCoord;\r
 }`, n = {
   /** Enable/disable the renderer */
-  enabled: !1,
+  enabled: !0,
   /** Characters used for pattern matching */
   characters: " .:-=+*%@#",
   /** Color of the ASCII characters. Only used when `characterColorMode` is set to `fixed` */
@@ -112,7 +112,7 @@ class S extends d.renderer2d.feature.AbstractFeatureRenderer2D {
     i(this, "_brightnessSplitShader");
     i(this, "_brightnessSampleFramebuffer");
     i(this, "_brightnessSplitFramebuffer");
-    console.log(), this._characterSelectionShader = this._p.createShader(a, h(this._fontManager.fontSize)), this._brightnessSampleShader = this._p.createShader(a, l(this._grid.cellHeight, this._grid.cellWidth)), this._colorSampleShader = this._p.createShader(a, u(16, this._grid.cellHeight, this._grid.cellWidth)), this._brightnessSplitShader = this._p.createShader(a, p), this._brightnessSampleFramebuffer = this._p.createFramebuffer({
+    this._characterSelectionShader = this._p.createShader(a, h(this._fontManager.fontSize)), this._brightnessSampleShader = this._p.createShader(a, l(this._grid.cellHeight, this._grid.cellWidth)), this._colorSampleShader = this._p.createShader(a, u(16, this._grid.cellHeight, this._grid.cellWidth)), this._brightnessSplitShader = this._p.createShader(a, p), this._brightnessSampleFramebuffer = this._p.createFramebuffer({
       density: 1,
       width: this._grid.cols,
       height: this._grid.rows,
@@ -124,7 +124,7 @@ class S extends d.renderer2d.feature.AbstractFeatureRenderer2D {
       height: this._captureFramebuffer.height,
       depthFormat: this._p.UNSIGNED_INT,
       textureFiltering: this._p.NEAREST
-    });
+    }), console.log();
   }
   resizeFramebuffers() {
     super.resizeFramebuffers(), this._brightnessSampleFramebuffer.resize(this._grid.cols, this._grid.rows), this._brightnessSplitFramebuffer.resize(this._captureFramebuffer.width, this._captureFramebuffer.height);
