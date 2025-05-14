@@ -4,7 +4,7 @@ import { P5AsciifyGrid } from './Grid';
 import { P5AsciifyFontManager } from './FontManager';
 import { P5AsciifyRendererManager } from './renderers/RendererManager';
 import { P5AsciifyError } from './AsciifyError';
-import { AbstractFeatureRenderer2D } from './renderers/2d/feature/AbstractFeatureRenderer2D';
+import { P5AsciifyAbstractFeatureRenderer2D } from './renderers/2d/feature/AbstractFeatureRenderer2D';
 import { P5AsciifySVGExporter, SVGExportOptions } from './utils/SVGExporter';
 import { JSONExportOptions, P5AsciifyJSONExporter } from './utils/JSONExporter';
 import { P5AsciifyPluginRegistry } from './plugins/PluginRegistry';
@@ -198,7 +198,7 @@ export class P5Asciifier {
             // Only update characters if option is true
             if (options.updateCharacters) {
                 this._rendererManager.renderers.forEach(renderer => {
-                    if (renderer.renderer instanceof AbstractFeatureRenderer2D) {
+                    if (renderer.renderer instanceof P5AsciifyAbstractFeatureRenderer2D) {
                         renderer.renderer.characters(renderer.renderer.options.characters as string)
                     }
                 }

@@ -1,6 +1,6 @@
 import p5 from 'p5';
 import { P5AsciifyEdgeRenderer } from './2d/feature';
-import { AbstractFeatureRenderer2D } from './2d/feature/AbstractFeatureRenderer2D';
+import { P5AsciifyAbstractFeatureRenderer2D } from './2d/feature/AbstractFeatureRenderer2D';
 
 /**
  * Base ASCII renderer options, applicable to all ASCII renderers.
@@ -11,7 +11,7 @@ export interface AsciiRendererOptions {
 }
 
 /**
- * Base options for all feature-based ASCII renderers that extend the {@link AbstractFeatureRenderer2D} class.
+ * Base options for all feature-based ASCII renderers that extend the {@link P5AsciifyAbstractFeatureRenderer2D} class.
  */
 export interface FeatureAsciiRendererOptions extends AsciiRendererOptions {
     /** The character set to use for the ASCII renderer. */

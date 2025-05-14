@@ -2,7 +2,7 @@ import p5 from 'p5';
 
 import { P5AsciifyRenderer } from './AsciiRenderer';
 import { P5AsciifyRenderer2D } from './2d/AsciiRenderer2D';
-import { AbstractFeatureRenderer2D } from './2d/feature/AbstractFeatureRenderer2D';
+import { P5AsciifyAbstractFeatureRenderer2D } from './2d/feature/AbstractFeatureRenderer2D';
 import { P5AsciifyBrightnessRenderer } from './2d/feature/brightness/BrightnessAsciiRenderer';
 import { P5AsciifyEdgeRenderer } from './2d/feature/edge/EdgeAsciiRenderer';
 import { P5AsciifyDisplayRenderer } from './AsciiDisplayRenderer';
@@ -166,7 +166,7 @@ export class P5AsciifyRendererManager {
             const renderer = this._renderers[i];
             if (renderer.renderer.options.enabled) {
 
-                if (renderer.renderer instanceof AbstractFeatureRenderer2D) {
+                if (renderer.renderer instanceof P5AsciifyAbstractFeatureRenderer2D) {
                     renderer.renderer.render();
                 }
 
@@ -230,7 +230,7 @@ export class P5AsciifyRendererManager {
         this._renderers.forEach(renderer => {
             renderer.renderer.resizeFramebuffers();
 
-            if (renderer.renderer instanceof AbstractFeatureRenderer2D) {
+            if (renderer.renderer instanceof P5AsciifyAbstractFeatureRenderer2D) {
                 renderer.renderer.resetShaders();
             }
         });
