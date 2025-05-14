@@ -139,7 +139,7 @@ class Q extends Error {
     super(e), this.name = "P5AsciifyError";
   }
 }
-const N = (o, e) => {
+const T = (o, e) => {
   const [A, r] = [o, e].map((t) => t.split(".").map(Number));
   for (let t = 0; t < Math.max(A.length, r.length); t++) {
     const i = A[t] ?? 0, B = r[t] ?? 0;
@@ -175,32 +175,32 @@ class aA {
       ...i
     };
     if (!B.filename) {
-      const n = /* @__PURE__ */ new Date(), D = n.toISOString().split("T")[0], a = n.toTimeString().split(" ")[0].replace(/:/g, "-");
+      const g = /* @__PURE__ */ new Date(), D = g.toISOString().split("T")[0], a = g.toTimeString().split(" ")[0].replace(/:/g, "-");
       B.filename = `asciify_output_${D}_${a}`;
     }
-    const g = e.characterFramebuffer, c = e.primaryColorFramebuffer, u = e.secondaryColorFramebuffer, _ = e.transformFramebuffer, f = e.rotationFramebuffer;
-    g.loadPixels(), c.loadPixels(), u.loadPixels(), _.loadPixels(), f.loadPixels();
-    const P = g.pixels, h = c.pixels, E = u.pixels, w = _.pixels, x = f.pixels, G = A.cols, p = A.rows, S = A.cellWidth, d = A.cellHeight, F = A.width, R = A.height, Y = r.characters;
-    let m = this.generateSVGHeader(F, R);
+    const n = e.characterFramebuffer, c = e.primaryColorFramebuffer, u = e.secondaryColorFramebuffer, _ = e.transformFramebuffer, f = e.rotationFramebuffer;
+    n.loadPixels(), c.loadPixels(), u.loadPixels(), _.loadPixels(), f.loadPixels();
+    const P = n.pixels, h = c.pixels, E = u.pixels, w = _.pixels, x = f.pixels, M = A.cols, p = A.rows, v = A.cellWidth, d = A.cellHeight, F = A.width, U = A.height, k = r.characters;
+    let m = this.generateSVGHeader(F, U);
     if (B.includeBackgroundRectangles) {
-      const n = t, D = this.p.color(n), a = `rgba(${D._array[0] * 255},${D._array[1] * 255},${D._array[2] * 255},${D._array[3]})`;
+      const g = t, D = this.p.color(g), a = `rgba(${D._array[0] * 255},${D._array[1] * 255},${D._array[2] * 255},${D._array[3]})`;
       m += `
-<rect width="${F}" height="${R}" fill="${a}" />`;
+<rect width="${F}" height="${U}" fill="${a}" />`;
     }
     m += `
 <g id="ascii-cells">`;
     let I = 0;
-    for (let n = 0; n < p; n++)
-      for (let D = 0; D < G; D++) {
-        const a = I * 4, U = P[a], k = P[a + 1];
-        let b = U + (k << 8);
-        b >= Y.length && (b = Y.length - 1);
+    for (let g = 0; g < p; g++)
+      for (let D = 0; D < M; D++) {
+        const a = I * 4, z = P[a], R = P[a + 1];
+        let b = z + (R << 8);
+        b >= k.length && (b = k.length - 1);
         let y = {
           r: h[a],
           g: h[a + 1],
           b: h[a + 2],
           a: h[a + 3]
-        }, z = {
+        }, N = {
           r: E[a],
           g: E[a + 1],
           b: E[a + 2],
@@ -209,22 +209,22 @@ class aA {
         const V = w[a], j = w[a + 1], $ = w[a + 2], L = V === 255, O = j === 255, W = $ === 255;
         if (L) {
           const cA = y;
-          y = z, z = cA;
+          y = N, N = cA;
         }
-        const K = x[a], X = x[a + 1], Z = K + X * 256 / 15, q = D * S, AA = n * d;
+        const K = x[a], X = x[a + 1], Z = K + X * 256 / 15, q = D * v, AA = g * d;
         m += this.generateSVGCellContent(
           b,
           y,
-          z,
+          N,
           q,
           AA,
-          S,
+          v,
           d,
           Z,
           O,
           W,
           r,
-          Y[b],
+          k[b],
           B
         ), I++;
       }
@@ -261,37 +261,37 @@ class aA {
    * @param options The SVG export options
    * @returns The SVG content for the cell
    */
-  generateSVGCellContent(e, A, r, t, i, B, g, c, u, _, f, P, h) {
+  generateSVGCellContent(e, A, r, t, i, B, n, c, u, _, f, P, h) {
     let E = "";
     if (h.includeBackgroundRectangles && r.a > 0) {
       const d = `rgba(${r.r},${r.g},${r.b},${r.a / 255})`;
       h.drawMode === "stroke" ? E += `
-  <rect x="${t}" y="${i}" width="${B}" height="${g}" stroke="${d}" fill="none" stroke-width="${h.strokeWidth || 1}" />` : E += `
-  <rect x="${t}" y="${i}" width="${B}" height="${g}" fill="${d}" />`;
+  <rect x="${t}" y="${i}" width="${B}" height="${n}" stroke="${d}" fill="none" stroke-width="${h.strokeWidth || 1}" />` : E += `
+  <rect x="${t}" y="${i}" width="${B}" height="${n}" fill="${d}" />`;
     }
-    const w = t + B / 2, x = i + g / 2, G = `rgba(${A.r},${A.g},${A.b},${A.a / 255})`, p = [];
+    const w = t + B / 2, x = i + n / 2, M = `rgba(${A.r},${A.g},${A.b},${A.a / 255})`, p = [];
     if (u || _) {
       const d = u ? -1 : 1, F = _ ? -1 : 1;
       p.push(`translate(${w} ${x})`), p.push(`scale(${d} ${F})`), p.push(`translate(${-w} ${-x})`);
     }
     c && p.push(`rotate(${c} ${w} ${x})`);
-    const S = p.length ? ` transform="${p.join(" ")}"` : "";
+    const v = p.length ? ` transform="${p.join(" ")}"` : "";
     if (h.drawMode === "text") {
-      const d = Math.min(B, g) * 0.8;
+      const d = Math.min(B, n) * 0.8;
       E += `
-  <text x="${w}" y="${x}" font-family="monospace" font-size="${d}px" fill="${G}" text-anchor="middle" dominant-baseline="middle"${S}>${this.escapeXml(P.character)}</text>`;
+  <text x="${w}" y="${x}" font-family="monospace" font-size="${d}px" fill="${M}" text-anchor="middle" dominant-baseline="middle"${v}>${this.escapeXml(P.character)}</text>`;
     } else {
-      const d = f.fontSize / f.font.font.unitsPerEm, F = t + (B - P.advanceWidth * d) / 2, R = i + (g + f.fontSize * 0.7) / 2, I = P.getPath(F, R, f.fontSize).toSVG().match(/d="([^"]+)"/);
+      const d = f.fontSize / f.font.font.unitsPerEm, F = t + (B - P.advanceWidth * d) / 2, U = i + (n + f.fontSize * 0.7) / 2, I = P.getPath(F, U, f.fontSize).toSVG().match(/d="([^"]+)"/);
       if (I && I[1]) {
-        if (S && (E += `
-  <g${S}>`), h.drawMode === "stroke") {
-          const n = h.strokeWidth || 1, D = `path-${e}-${t}-${i}`.replace(/\./g, "-");
+        if (v && (E += `
+  <g${v}>`), h.drawMode === "stroke") {
+          const g = h.strokeWidth || 1, D = `path-${e}-${t}-${i}`.replace(/\./g, "-");
           E += `
-    <path id="${D}" d="${I[1]}" stroke="${G}" stroke-width="${n}" fill="none" />`;
+    <path id="${D}" d="${I[1]}" stroke="${M}" stroke-width="${g}" fill="none" />`;
         } else
           E += `
-    <path d="${I[1]}" fill="${G}" />`;
-        S && (E += `
+    <path d="${I[1]}" fill="${M}" />`;
+        v && (E += `
   </g>`);
       }
     }
@@ -342,17 +342,17 @@ class hA {
       ...t
     };
     if (!i.filename) {
-      const m = /* @__PURE__ */ new Date(), I = m.toISOString().split("T")[0], n = m.toTimeString().split(" ")[0].replace(/:/g, "-");
-      i.filename = `asciify_output_${I}_${n}`;
+      const m = /* @__PURE__ */ new Date(), I = m.toISOString().split("T")[0], g = m.toTimeString().split(" ")[0].replace(/:/g, "-");
+      i.filename = `asciify_output_${I}_${g}`;
     }
-    const B = e.characterFramebuffer, g = e.primaryColorFramebuffer, c = e.secondaryColorFramebuffer, u = e.transformFramebuffer, _ = e.rotationFramebuffer;
-    B.loadPixels(), g.loadPixels(), c.loadPixels(), u.loadPixels(), _.loadPixels();
-    const f = B.pixels, P = g.pixels, h = c.pixels, E = u.pixels, w = _.pixels, x = A.cols, G = A.rows, p = r.characters, S = {
+    const B = e.characterFramebuffer, n = e.primaryColorFramebuffer, c = e.secondaryColorFramebuffer, u = e.transformFramebuffer, _ = e.rotationFramebuffer;
+    B.loadPixels(), n.loadPixels(), c.loadPixels(), u.loadPixels(), _.loadPixels();
+    const f = B.pixels, P = n.pixels, h = c.pixels, E = u.pixels, w = _.pixels, x = A.cols, M = A.rows, p = r.characters, v = {
       version: "1.0",
       created: (/* @__PURE__ */ new Date()).toISOString(),
       gridSize: {
         cols: x,
-        rows: G,
+        rows: M,
         cellWidth: A.cellWidth,
         cellHeight: A.cellHeight,
         width: A.width,
@@ -360,33 +360,33 @@ class hA {
       }
     }, d = [];
     let F = 0;
-    for (let m = 0; m < G; m++)
+    for (let m = 0; m < M; m++)
       for (let I = 0; I < x; I++) {
-        const n = F * 4, D = f[n], a = f[n + 1];
-        let U = D + (a << 8);
-        U >= p.length && (U = p.length - 1);
-        const k = p[U];
-        if (!i.includeEmptyCells && (k.character === " " || k.character === "")) {
+        const g = F * 4, D = f[g], a = f[g + 1];
+        let z = D + (a << 8);
+        z >= p.length && (z = p.length - 1);
+        const R = p[z];
+        if (!i.includeEmptyCells && (R.character === " " || R.character === "")) {
           F++;
           continue;
         }
         let b = {
-          r: P[n],
-          g: P[n + 1],
-          b: P[n + 2],
-          a: P[n + 3]
+          r: P[g],
+          g: P[g + 1],
+          b: P[g + 2],
+          a: P[g + 3]
         }, y = {
-          r: h[n],
-          g: h[n + 1],
-          b: h[n + 2],
-          a: h[n + 3]
+          r: h[g],
+          g: h[g + 1],
+          b: h[g + 2],
+          a: h[g + 3]
         };
-        const z = E[n], V = E[n + 1], j = E[n + 2], $ = z === 255, L = V === 255, O = j === 255;
+        const N = E[g], V = E[g + 1], j = E[g + 2], $ = N === 255, L = V === 255, O = j === 255;
         if ($) {
           const AA = b;
           b = y, y = AA;
         }
-        const W = w[n], K = w[n + 1], X = W + K, Z = this.rgbaToHex(
+        const W = w[g], K = w[g + 1], X = W + K, Z = this.rgbaToHex(
           b.r,
           b.g,
           b.b,
@@ -400,8 +400,8 @@ class hA {
         d.push({
           x: I,
           y: m,
-          character: k.character,
-          unicode: k.unicode,
+          character: R.character,
+          unicode: R.unicode,
           color: Z,
           backgroundColor: q,
           rotation: X,
@@ -410,15 +410,15 @@ class hA {
           flipVertical: O
         }), F++;
       }
-    const Y = JSON.stringify(
+    const k = JSON.stringify(
       {
-        metadata: S,
+        metadata: v,
         cells: d
       },
       null,
       i.prettyPrint ? 2 : 0
     );
-    this.downloadJSON(Y, i.filename);
+    this.downloadJSON(k, i.filename);
   }
   /**
    * Converts RGBA values to a hex color string
@@ -430,8 +430,8 @@ class hA {
    */
   rgbaToHex(e, A, r, t) {
     const i = (B) => {
-      const g = Math.round(B).toString(16);
-      return g.length === 1 ? "0" + g : g;
+      const n = Math.round(B).toString(16);
+      return n.length === 1 ? "0" + n : n;
     };
     return `#${i(e)}${i(A)}${i(r)}${i(t)}`;
   }
@@ -449,7 +449,7 @@ const zA = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   P5AsciifyJSONExporter: hA,
   P5AsciifySVGExporter: aA,
-  compareVersions: N
+  compareVersions: T
 }, Symbol.toStringTag, { value: "Module" }));
 class DA {
   /**
@@ -485,12 +485,12 @@ class DA {
    * Initializes the character glyphs and characters array.
    */
   _initializeGlyphsAndCharacters() {
-    if (N(this._p.VERSION, "2.0.0") < 0) {
+    if (T(this._p.VERSION, "2.0.0") < 0) {
       const e = Object.values(this._font.font.glyphs.glyphs);
       this._characters = [], e.forEach((A, r) => {
         if (!A.unicode && (!A.unicodes || !A.unicodes.length))
           return;
-        const t = this._characters.length, i = t % 256, B = Math.floor(t / 256) % 256, g = Math.floor(t / 65536), c = A.unicode ?? A.unicodes[0];
+        const t = this._characters.length, i = t % 256, B = Math.floor(t / 256) % 256, n = Math.floor(t / 65536), c = A.unicode ?? A.unicodes[0];
         this._characters.push({
           character: String.fromCodePoint(c),
           unicode: c,
@@ -498,7 +498,7 @@ class DA {
           advanceWidth: A.advanceWidth,
           r: i,
           g: B,
-          b: g
+          b: n
         });
       });
     } else {
@@ -508,8 +508,8 @@ class DA {
           for (let t = 0; t < r.startCount.length; t++) {
             const i = r.startCount[t], B = r.endCount[t];
             if (!(i === 65535 && B === 65535))
-              for (let g = i; g <= B; g++)
-                e.push(String.fromCodePoint(g));
+              for (let n = i; n <= B; n++)
+                e.push(String.fromCodePoint(n));
           }
       });
       const A = [...new Set(e)];
@@ -636,8 +636,8 @@ class DA {
     this._p.textFont(this._font), this._p.textSize(e);
     let A = 0, r = 0;
     for (const t of this._characters) {
-      const i = this._font.textBounds(t.character, 0, 0, e), B = i.h, g = i.w;
-      A = Math.max(A, g), r = Math.max(r, B);
+      const i = this._font.textBounds(t.character, 0, 0, e), B = i.h, n = i.w;
+      A = Math.max(A, n), r = Math.max(r, B);
     }
     return {
       width: Math.ceil(A),
@@ -764,7 +764,7 @@ class sA {
     /** The rotation framebuffer, whose pixels define the rotation angle of the characters in the grid. */
     s(this, "_rotationFramebuffer");
     this._p = e, this._captureFramebuffer = A, this._grid = r, this.initialFramebufferDimensions = t, this._fontManager = i, this._options = B;
-    const g = {
+    const n = {
       density: 1,
       antialias: !1,
       width: t.width,
@@ -772,7 +772,7 @@ class sA {
       depthFormat: this._p.UNSIGNED_INT,
       textureFiltering: this._p.NEAREST
     };
-    this._primaryColorFramebuffer = this._p.createFramebuffer(g), this._secondaryColorFramebuffer = this._p.createFramebuffer(g), this._transformFramebuffer = this._p.createFramebuffer(g), this._characterFramebuffer = this._p.createFramebuffer(g), this._rotationFramebuffer = this._p.createFramebuffer(g);
+    this._primaryColorFramebuffer = this._p.createFramebuffer(n), this._secondaryColorFramebuffer = this._p.createFramebuffer(n), this._transformFramebuffer = this._p.createFramebuffer(n), this._characterFramebuffer = this._p.createFramebuffer(n), this._rotationFramebuffer = this._p.createFramebuffer(n);
   }
   /**
    * Updates renderer options.
@@ -1262,7 +1262,7 @@ class uA {
     return this._framebuffer;
   }
 }
-class T extends H {
+class Y extends H {
   /**
    * Creates a new feature-based 2D ASCII renderer instance.
    * @param p The p5 instance.
@@ -1465,7 +1465,7 @@ class T extends H {
     return this._characterColorPalette;
   }
 }
-var v = `precision mediump float;
+var S = `precision mediump float;
 
 attribute vec3 aPosition;\r
 attribute vec2 aTexCoord;
@@ -1554,7 +1554,7 @@ const rA = {
   /** Flip the ASCII characters vertically */
   flipVertically: !1
 };
-class oA extends T {
+class oA extends Y {
   /**
    * Creates a new `"brightness"` ASCII renderer instance.
    * @param p5Instance The p5 instance.
@@ -1568,7 +1568,7 @@ class oA extends T {
     s(this, "colorSampleShader");
     s(this, "asciiCharacterShader");
     s(this, "colorSampleFramebuffer");
-    this.colorSampleShader = this._p.createShader(v, _A), this.asciiCharacterShader = this._p.createShader(v, PA), this.colorSampleFramebuffer = this._p.createFramebuffer({
+    this.colorSampleShader = this._p.createShader(S, _A), this.asciiCharacterShader = this._p.createShader(S, PA), this.colorSampleFramebuffer = this._p.createFramebuffer({
       density: 1,
       width: this._grid.cols,
       height: this._grid.rows,
@@ -1767,7 +1767,7 @@ void main() {\r
 
     gl_FragColor = edgeColor;\r
 }`;
-const gA = (o, e, A) => `
+const nA = (o, e, A) => `
 precision mediump float;uniform sampler2D u_image;uniform vec2 u_imageSize,u_gridCellDimensions;uniform int u_threshold;const vec3 i=vec3(0);vec3 f[${o}];int u[${o}];float r(float i){return floor(i+.5);}void main(){vec2 v=floor(gl_FragCoord.xy);ivec2 b=ivec2(v);v=u_imageSize/u_gridCellDimensions;b=ivec2(r(float(b.x)*v.x),r(float(b.y)*v.y));int m=0;for(int b=0;b<${o};b++)f[b]=i,u[b]=0;for(int v=0;v<${A};v++)for(int r=0;r<${e};r++){ivec2 y=b+ivec2(r,v);if(y.x<0||y.y<0||y.x>=int(u_imageSize.x)||y.y>=int(u_imageSize.y))continue;vec3 e=texture2D(u_image,(vec2(y)+.5)/u_imageSize).xyz;if(length(e-i)<.001)continue;m++;bool x=false;for(int b=0;b<${o};b++)if(length(e-f[b])<.001){u[b]++;x=true;break;}if(!x)for(int b=0;b<${o};b++)if(u[b]==0){f[b]=e;u[b]=1;break;}}vec3 e=i;int x=0;for(int b=0;b<${o};b++)if(u[b]>x)e=f[b],x=u[b];gl_FragColor=m<u_threshold?vec4(i,0):vec4(e,1);}
 `, tA = {
   /** Enable/disable the renderer */
@@ -1795,7 +1795,7 @@ precision mediump float;uniform sampler2D u_image;uniform vec2 u_imageSize,u_gri
   /** Flip the ASCII characters vertically */
   flipVertically: !1
 };
-class BA extends T {
+class BA extends Y {
   /**
    * Creates a new `"edge"` ASCII renderer instance.
    * @param p5Instance The p5 instance.
@@ -1814,7 +1814,7 @@ class BA extends T {
     s(this, "asciiCharacterShader");
     s(this, "sobelFramebuffer");
     s(this, "sampleFramebuffer");
-    this.sobelShader = this._p.createShader(v, bA), this.sampleShader = this._p.createShader(v, gA(16, this._grid.cellHeight, this._grid.cellWidth)), this.colorSampleShader = this._p.createShader(v, mA), this.transformShader = this._p.createShader(v, IA), this.rotationShader = this._p.createShader(v, pA), this.asciiCharacterShader = this._p.createShader(v, wA), this.sobelFramebuffer = this._p.createFramebuffer({
+    this.sobelShader = this._p.createShader(S, bA), this.sampleShader = this._p.createShader(S, nA(16, this._grid.cellHeight, this._grid.cellWidth)), this.colorSampleShader = this._p.createShader(S, mA), this.transformShader = this._p.createShader(S, IA), this.rotationShader = this._p.createShader(S, pA), this.asciiCharacterShader = this._p.createShader(S, wA), this.sobelFramebuffer = this._p.createFramebuffer({
       density: 1,
       width: this._captureFramebuffer.width,
       height: this._captureFramebuffer.height,
@@ -1832,7 +1832,7 @@ class BA extends T {
     super.resizeFramebuffers(), this.sampleFramebuffer.resize(this._grid.cols, this._grid.rows), this.sobelFramebuffer.resize(this._captureFramebuffer.width, this._captureFramebuffer.height);
   }
   resetShaders() {
-    this.sampleShader = this._p.createShader(v, gA(16, this._grid.cellHeight, this._grid.cellWidth));
+    this.sampleShader = this._p.createShader(S, nA(16, this._grid.cellHeight, this._grid.cellWidth));
   }
   /**
    * Set the threshold value for the Sobel edge detection algorithm.
@@ -2011,7 +2011,7 @@ class lA {
     s(this, "_resultFramebuffer");
     /** Final shader to render the ASCII output. */
     s(this, "_shader");
-    this._p = e, this._grid = A, this._fontManager = r, this._shader = this._p.createShader(v, xA), this._resultFramebuffer = this._p.createFramebuffer({
+    this._p = e, this._grid = A, this._fontManager = r, this._shader = this._p.createShader(S, xA), this._resultFramebuffer = this._p.createFramebuffer({
       width: this._grid.width,
       height: this._grid.height,
       depthFormat: this._p.UNSIGNED_INT,
@@ -2041,8 +2041,8 @@ class lA {
       u_gridPixelDimensions: [this._grid.width, this._grid.height],
       u_gridCellDimensions: [this._grid.cols, this._grid.rows]
     };
-    for (const [g, c] of Object.entries(B))
-      this._shader.setUniform(g, c);
+    for (const [n, c] of Object.entries(B))
+      this._shader.setUniform(n, c);
     this._p.rect(0, 0, this._resultFramebuffer.width, this._resultFramebuffer.height), this._resultFramebuffer.end();
   }
   /**
@@ -2155,7 +2155,7 @@ class QA {
     for (let A = this._renderers.length - 1; A >= 0; A--) {
       const r = this._renderers[A];
       if (r.renderer.options.enabled) {
-        r.renderer instanceof T && r.renderer.render();
+        r.renderer instanceof Y && r.renderer.render();
         const t = -this._grid.cols / 2, i = -this._grid.rows / 2;
         this._characterFramebuffer.draw(() => this._p.image(r.renderer.characterFramebuffer, t, i)), this._primaryColorFramebuffer.draw(() => this._p.image(r.renderer.primaryColorFramebuffer, t, i)), this._secondaryColorFramebuffer.draw(() => this._p.image(r.renderer.secondaryColorFramebuffer, t, i)), this._transformFramebuffer.draw(() => this._p.image(r.renderer.transformFramebuffer, t, i)), this._rotationFramebuffer.draw(() => this._p.image(r.renderer.rotationFramebuffer, t, i)), this._hasEnabledRenderers = !0;
       }
@@ -2188,7 +2188,7 @@ class QA {
    */
   resetRendererDimensions() {
     this._primaryColorFramebuffer.resize(this._grid.cols, this._grid.rows), this._secondaryColorFramebuffer.resize(this._grid.cols, this._grid.rows), this._characterFramebuffer.resize(this._grid.cols, this._grid.rows), this._transformFramebuffer.resize(this._grid.cols, this._grid.rows), this._rotationFramebuffer.resize(this._grid.cols, this._grid.rows), this._renderers.forEach((e) => {
-      e.renderer.resizeFramebuffers(), e.renderer instanceof T && e.renderer.resetShaders();
+      e.renderer.resizeFramebuffers(), e.renderer instanceof Y && e.renderer.resetShaders();
     }), this._asciiDisplayRenderer2D.resizeFramebuffers();
   }
   /**
@@ -2507,7 +2507,7 @@ class QA {
  * Registered plugin renderers
  */
 s(QA, "_plugins", /* @__PURE__ */ new Map());
-class nA {
+class gA {
   constructor(e) {
     /** Manages the font and provides methods to access font properties. */
     s(this, "_fontManager");
@@ -2548,7 +2548,7 @@ class nA {
    * @ignore
    */
   async setup(e) {
-    return this._captureFramebuffer = e, await this._fontManager.setup(this._fontSize), this._grid = new dA(
+    return this._captureFramebuffer = e, T(this._p.VERSION, "2.0.0") < 0 ? this._fontManager.setup(this._fontSize) : await this._fontManager.setup(this._fontSize), this._grid = new dA(
       this._captureFramebuffer,
       this._fontManager.maxGlyphDimensions.width,
       this._fontManager.maxGlyphDimensions.height
@@ -2638,7 +2638,7 @@ class nA {
       this._fontManager.maxGlyphDimensions.height
     ), A.updateCharacters && this._rendererManager.renderers.forEach(
       (r) => {
-        r.renderer instanceof T && r.renderer.characters(r.renderer.options.characters);
+        r.renderer instanceof Y && r.renderer.characters(r.renderer.options.characters);
       }
     ), this._rendererManager.resetRendererDimensions());
   }
@@ -2752,13 +2752,13 @@ class nA {
       throw new Q("No renderer available to generate ASCII output");
     e.loadPixels();
     const A = e.pixels, r = this._grid.cols, t = this._grid.rows, i = this._fontManager.characters, B = [];
-    let g = 0;
+    let n = 0;
     for (let c = 0; c < t; c++) {
       let u = "";
       for (let _ = 0; _ < r; _++) {
-        const f = g * 4, P = A[f], h = A[f + 1];
+        const f = n * 4, P = A[f], h = A[f + 1];
         let E = P + (h << 8);
-        E >= i.length && (E = i.length - 1), u += i[E], g++;
+        E >= i.length && (E = i.length - 1), u += i[E], n++;
       }
       B.push(u);
     }
@@ -3002,7 +3002,7 @@ class FA {
     return Array.from(this._plugins.values());
   }
 }
-const M = class M {
+const G = class G {
   /**
    * Creates a new `P5AsciifierManager` instance.
    * @ignore
@@ -3020,9 +3020,9 @@ const M = class M {
     s(this, "_sketchFramebuffer");
     /** The plugin registry instance. */
     s(this, "_pluginRegistry");
-    if (M._instance)
+    if (G._instance)
       throw new Q("P5AsciifierManager is a singleton and cannot be instantiated directly. Use P5AsciifierManager.getInstance() instead.");
-    this._pluginRegistry = new FA(), this._asciifiers = [new nA(this._pluginRegistry)];
+    this._pluginRegistry = new FA(), this._asciifiers = [new gA(this._pluginRegistry)];
   }
   /**
    * Gets the singleton instance of `P5AsciifierManager`.
@@ -3031,7 +3031,7 @@ const M = class M {
    * @returns The singleton instance of `P5AsciifierManager`.
    */
   static getInstance() {
-    return M._instance || (M._instance = new M()), M._instance;
+    return G._instance || (G._instance = new G()), G._instance;
   }
   /**
    * Initializes the `p5.asciify` library by setting the `p5.js` instance.
@@ -3042,13 +3042,18 @@ const M = class M {
    * @ignore
    */
   async init(e) {
-    this._p = e, N(e.VERSION, "2.0.0") < 0 ? (this._p._incrementPreload(), this._baseFont = e.loadFont(EA, (A) => {
-      this._asciifiers.forEach((r) => {
-        r.init(e, A);
-      });
-    })) : (this._baseFont = await this._p.loadFont(EA), await Promise.all(
-      this._asciifiers.map((A) => A.init(e, this._baseFont))
-    ));
+    this._p = e;
+    try {
+      T(e.VERSION, "2.0.0") < 0 ? (this._p = e, this._p._incrementPreload(), this._baseFont = e.loadFont(EA, (A) => {
+        this._asciifiers.forEach((r) => {
+          r.init(e, A);
+        });
+      })) : (this._baseFont = await this._p.loadFont(EA), await Promise.all(
+        this._asciifiers.map((A) => A.init(e, this._baseFont))
+      ));
+    } catch (A) {
+      throw console.error("Error during p5.asciify initialization:", A), A;
+    }
   }
   /**
    * Sets up the `P5Asciifier` instances managed by the library.
@@ -3063,7 +3068,6 @@ const M = class M {
     });
     for (const e of this._asciifiers)
       await e.setup(this._sketchFramebuffer);
-    return Promise.resolve();
   }
   /**
    * Executes the ASCII conversion rendering pipelines for each `P5Asciifier` instance managed by the library.
@@ -3099,11 +3103,13 @@ const M = class M {
    * @returns The newly created `P5Asciifier` instance.
    * @throws {@link P5AsciifyError} If the framebuffer is not an instance of `p5.Framebuffer`.
    */
-  async add(e) {
+  add(e) {
+    if (!this._p)
+      throw new Q("Cannot add asciifier before initializing p5.asciify. Ensure p5.asciify is initialized first.");
     if (e !== void 0 && !(e instanceof l.Framebuffer))
       throw new Q("Framebuffer must be an instance of p5.Framebuffer.");
-    const A = new nA(this._pluginRegistry);
-    return await A.init(this._p, this._baseFont), this._p._setupDone && await A.setup(e || this._sketchFramebuffer), this._asciifiers.push(A), A;
+    const A = new gA(this._pluginRegistry);
+    return T(this._p.VERSION, "2.0.0") < 0 ? (A.init(this._p, this._baseFont), this._p._setupDone && A.setup(e || this._sketchFramebuffer), this._asciifiers.push(A), A) : (async () => (await A.init(this._p, this._baseFont), this._p._setupDone && this._sketchFramebuffer && await A.setup(e || this._sketchFramebuffer), this._asciifiers.push(A), A))();
   }
   /**
    * Removes a `P5Asciifier` instance.
@@ -3169,16 +3175,16 @@ const M = class M {
   }
 };
 /** Singleton instance of the manager */
-s(M, "_instance", null);
-let iA = M;
+s(G, "_instance", null);
+let iA = G;
 const yA = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   BRIGHTNESS_DEFAULT_OPTIONS: rA,
   EDGE_DEFAULT_OPTIONS: tA,
-  P5AsciifyAbstractFeatureRenderer2D: T,
+  P5AsciifyAbstractFeatureRenderer2D: Y,
   P5AsciifyBrightnessRenderer: oA,
   P5AsciifyEdgeRenderer: BA
-}, Symbol.toStringTag, { value: "Module" })), vA = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+}, Symbol.toStringTag, { value: "Module" })), SA = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   CUSTOM_DEFAULT_OPTIONS_2D: eA,
   P5AsciifyRenderer2D: H,
@@ -3189,14 +3195,14 @@ const yA = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   P5AsciifyRenderer: sA,
   P5AsciifyRendererManager: QA,
   RENDERER_TYPES: J,
-  renderer2d: vA
+  renderer2d: SA
 }, Symbol.toStringTag, { value: "Module" })), HA = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null
 }, Symbol.toStringTag, { value: "Module" }));
-if (typeof l < "u" && N(l.prototype.VERSION, "1.8.0") < 0)
+if (typeof l < "u" && T(l.prototype.VERSION, "1.8.0") < 0)
   throw new Q("p5.asciify requires p5.js v1.8.0 or higher to run.");
 const C = iA.getInstance();
-function SA(o, e, A) {
+function vA(o, e, A) {
   e.setupAsciify = async function() {
   }, e.drawAsciify = async function() {
   }, A.presetup = async function() {
@@ -3215,25 +3221,33 @@ function SA(o, e, A) {
     C.sketchFramebuffer.end(), C.asciify(), this.drawAsciify && this.drawAsciify();
   };
 }
-const GA = (o) => {
+const MA = (o) => {
   C.hooksEnabled && C.init(o);
-}, MA = (o) => {
-  C.hooksEnabled && setTimeout(() => {
+}, GA = (o) => {
+  C.hooksEnabled && setTimeout(async () => {
     if (!(o._renderer.drawingContext instanceof WebGLRenderingContext || o._renderer.drawingContext instanceof WebGL2RenderingContext))
       throw new Q("WebGL renderer is required for p5.asciify to run.");
-    if (N(o.VERSION, "1.8.0") < 0)
+    if (T(o.VERSION, "1.8.0") < 0)
       throw new Q("p5.asciify requires p5.js v1.8.0 or higher to run.");
-    C.setup(), o.setupAsciify && o.setupAsciify();
+    if (await C.setup(), o.setupAsciify)
+      if (T(o.VERSION, "2.0.0") < 0)
+        try {
+          o.setupAsciify();
+        } catch (e) {
+          console.error("Error in setupAsciify:", e);
+        }
+      else
+        o.setupAsciify();
   }, 0);
 }, TA = (o) => {
   C.sketchFramebuffer.begin(), o.clear();
 }, YA = (o) => {
   C.sketchFramebuffer.end(), C.asciify(), o.drawAsciify && o.drawAsciify();
 };
-typeof l < "u" && typeof l.registerAddon == "function" ? l.registerAddon(SA) : typeof l < "u" && (l.prototype.registerMethod("init", function() {
-  GA(this);
-}), l.prototype.registerMethod("afterSetup", function() {
+typeof l < "u" && typeof l.registerAddon == "function" ? l.registerAddon(vA) : typeof l < "u" && (l.prototype.registerMethod("init", function() {
   MA(this);
+}), l.prototype.registerMethod("afterSetup", function() {
+  GA(this);
 }), l.prototype.registerMethod("pre", function() {
   C.hooksEnabled && TA(this);
 }), l.prototype.registerMethod("post", function() {
@@ -3259,19 +3273,19 @@ for (const [o, e] of kA) {
     )), this[e];
   };
 }
-typeof window < "u" && (window.p5asciify = C, window.P5AsciifyAbstractFeatureRenderer2D = T, window.P5AsciifyRenderer2D = H, window.P5AsciifyRenderer = sA);
+typeof window < "u" && (window.p5asciify = C, window.P5AsciifyAbstractFeatureRenderer2D = Y, window.P5AsciifyRenderer2D = H, window.P5AsciifyRenderer = sA);
 export {
-  nA as P5Asciifier,
+  gA as P5Asciifier,
   iA as P5AsciifierManager,
-  T as P5AsciifyAbstractFeatureRenderer2D,
+  Y as P5AsciifyAbstractFeatureRenderer2D,
   uA as P5AsciifyColorPalette,
   Q as P5AsciifyError,
   DA as P5AsciifyFontManager,
   dA as P5AsciifyGrid,
   sA as P5AsciifyRenderer,
   H as P5AsciifyRenderer2D,
-  MA as afterSetupHook,
-  GA as initHook,
+  GA as afterSetupHook,
+  MA as initHook,
   C as p5asciify,
   HA as plugins,
   YA as postDrawHook,
