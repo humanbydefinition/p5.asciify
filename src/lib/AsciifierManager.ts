@@ -121,8 +121,6 @@ export class P5AsciifierManager {
         for (const asciifier of this._asciifiers) {
             await asciifier.setup(this._sketchFramebuffer);
         }
-
-        return Promise.resolve();
     }
 
     /**
@@ -163,7 +161,7 @@ export class P5AsciifierManager {
      * @returns The newly created `P5Asciifier` instance.
      * @throws {@link P5AsciifyError} If the framebuffer is not an instance of `p5.Framebuffer`.
      */
-    public add(framebuffer?: p5.Framebuffer): P5Asciifier {
+    public add(framebuffer?: p5.Framebuffer): P5Asciifier | Promise<P5Asciifier> {
         if (!this._p) {
             throw new P5AsciifyError("Cannot add asciifier before initializing p5.asciify. Ensure p5.asciify is initialized first.");
         }
@@ -174,7 +172,7 @@ export class P5AsciifierManager {
 
         const asciifier = new P5Asciifier(this._pluginRegistry);
 
-        // For p5.js 1.x, we use the synchronous initialization pattern
+        // For p5.js 1.x, use the synchronous initialization pattern
         if (compareVersions(this._p.VERSION, "2.0.0") < 0) {
             // For p5.js 1.x, synchronous init
             asciifier.init(this._p, this._baseFont);
@@ -183,22 +181,22 @@ export class P5AsciifierManager {
             if (this._p._setupDone) {
                 asciifier.setup(framebuffer ? framebuffer : this._sketchFramebuffer);
             }
+
+            this._asciifiers.push(asciifier);
+            return asciifier;
         } else {
-            // For p5.js 2.0+, we'll handle the Promise behind the scenes
-            // This allows p5.js 2.0+ users to use async/await if they want
-            const setupPromise = (async () => {
+            // For p5.js 2.0+, return a Promise
+            return (async () => {
                 await asciifier.init(this._p, this._baseFont);
+
                 if (this._p._setupDone && this._sketchFramebuffer) {
                     await asciifier.setup(framebuffer ? framebuffer : this._sketchFramebuffer);
                 }
+
+                this._asciifiers.push(asciifier);
+                return asciifier;
             })();
-
-            // Store the promise for later use if needed
-            (asciifier as any)._setupPromise = setupPromise;
         }
-
-        this._asciifiers.push(asciifier);
-        return asciifier;
     }
 
     /**
