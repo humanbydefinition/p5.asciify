@@ -244,16 +244,16 @@ const sketch = (p) => {
 		p.textSize(64);
 
 		// Get accurate text bounds for the background rectangle
-		const textBounds = p.textBounds(fpsText, -p.width / 2, p.height / 2);
+		const bounds = p.textBounds(fpsText, -p.width / 2, p.height / 2);
 
 		// Draw background with padding
 		p.noStroke();
 		p.fill(0);
 		p.rect(
-			textBounds.x - 5,
-			textBounds.y - 5,
-			textBounds.w + 10,
-			textBounds.h + 10
+			bounds.x - 5,
+			bounds.y - 5,
+			bounds.w + 10,
+			bounds.h + 10
 		);
 
 		// Draw the text

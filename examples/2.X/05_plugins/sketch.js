@@ -20,7 +20,7 @@ import ExampleImage from './brutalist-high-rise-building.jpeg';
 const sketch = new p5((p) => {
     let asciifier;
     let img;
-    
+
     p.setup = async () => {
         p.setAttributes('antialias', false);
         p.createCanvas(p.windowWidth, p.windowHeight, p.WEBGL);
@@ -61,17 +61,30 @@ const sketch = new p5((p) => {
 
     // Draw a FPS display on top of the asciified result on the bottom left.
     p.drawAsciify = () => {
+        // Draw the FPS counter
         const fpsText = "FPS:" + Math.min(Math.ceil(p.frameRate()), 60);
 
-        p.noStroke();
-        p.fill(0);
-        p.rect(-p.width / 2, p.height / 2 - p.textAscent() - 4, p.textWidth(fpsText), p.textAscent());
-
+        // Set text properties first so the bounds calculation is accurate
         p.textFont(asciifier.fontManager.font);
         p.textSize(64);
+
+        // Get accurate text bounds for the background rectangle
+        const bounds = p.textBounds(fpsText, -p.width / 2, p.height / 2);
+
+        // Draw background with padding
+        p.noStroke();
+        p.fill(0);
+        p.rect(
+            bounds.x - 5,
+            bounds.y - 5,
+            bounds.w + 10,
+            bounds.h + 10
+        );
+
+        // Draw the text
         p.fill(255, 255, 0);
         p.text(fpsText, -p.width / 2, p.height / 2);
-    };
+    }
 
     p.windowResized = () => {
         p.resizeCanvas(p.windowWidth, p.windowHeight);
