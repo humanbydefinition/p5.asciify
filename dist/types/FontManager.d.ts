@@ -30,7 +30,7 @@ export declare class P5AsciifyFontManager {
      * @param fontSize The font size to use for the texture.
      * @ignore
      */
-    setup(fontSize: number): void;
+    setup(fontSize: number): Promise<void>;
     /**
      * Initializes the character glyphs and characters array.
      */
@@ -111,13 +111,13 @@ export declare class P5AsciifyFontManager {
      * Resets the texture atlas by recalculating the maximum glyph dimensions and recreating the texture.
      * @ignore
      */
-    reset(): void;
+    reset(): Promise<void>;
     /**
      * Sets the font size, recalculates the maximum glyph dimensions, and recreates the texture.
      * @param fontSize - The new font size.
      * @ignore
      */
-    setFontSize(fontSize: number): void;
+    setFontSize(fontSize: number): Promise<void>;
     /**
      * Creates a texture containing all characters in the font, arranged in a 2d grid that is as square as possible.
      * @param fontSize - The font size to use for creating the texture.
