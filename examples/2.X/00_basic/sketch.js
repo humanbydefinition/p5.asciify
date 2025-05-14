@@ -1,23 +1,17 @@
 /**
- * @name 04_hydra-synth
- * @description Basic example utilizing hydra-synth with p5.js and p5.asciify.
- * @author flordefuega
+ * @name 00_basic
+ * @description Basic example applying the pre-defined `'brightness'` renderer to a p5.js canvas with `p5.asciify`.
  * @author humanbydefinition
  * @link https://github.com/humanbydefinition/p5.asciify
- * @link https://github.com/hydra-synth/hydra-synth
- * @link https://hydra.ojack.xyz/
  * 
- * This example demonstrates how to utilize the `hydra-synth` library with `p5.asciify`.
- * The default 'brightness' renderer is used to asciify the hydra canvas.
- * 
- * The `hydra-synth` library is imported globally in the HTML file.
- * (Probably also works with the npm package `hydra-synth` with some minor adjustments.)
+ * This example demonstrates how to apply the pre-defined `'brightness'` renderer to a p5.js canvas.
+ * A rotating 3D box is drawn on the canvas and asciified using the `'brightness'` renderer.
  */
 
 import p5 from 'p5';
-import { p5asciify } from '../../src/lib/index';
+import { p5asciify } from '../../../src/lib/index';
 
-// Define the default options for the brightness renderer
+// Define options for the brightness renderer
 export const BRIGHTNESS_OPTIONS = {
   enabled: true,
   characters: " .:-=+*#%@",
@@ -28,17 +22,13 @@ export const BRIGHTNESS_OPTIONS = {
   invertMode: false,
   fontSize: 16,
   rotationAngle: 0,
-  flipVertically: false,
   flipHorizontally: false,
+  flipVertically: false,
 };
 
 export const createSketch = (options = {}) => {
   const finalOptions = { ...BRIGHTNESS_OPTIONS, ...options };
   let p5Instance = null;
-
-  let hydra; // Create a hydra object
-  let hydraCanvas; // Create a canvas for hydra to render to
-  let pGraphic; // Create a p5.Graphics object to store the hydra canvas (Would be cool if framebuffers work too..)
 
   const sketch = (p) => {
 
@@ -47,19 +37,6 @@ export const createSketch = (options = {}) => {
     p.setup = () => {
       p.setAttributes('antialias', false);
       p.createCanvas(p.windowWidth, p.windowHeight, p.WEBGL);
-
-      pGraphic = p.createGraphics(p.width, p.height);
-
-      // taken from p5Live references
-      // https://teddavis.org/p5live/
-      // hydra canvas + init
-      hydraCanvas = document.createElement("canvas");
-      hydraCanvas.width = p.width;
-      hydraCanvas.height = p.height;
-      hydra = new Hydra({ detectAudio: false, canvas: hydraCanvas });
-
-      // hydra code
-      osc(10, 0.1, [0, 2].smooth()).out();
     };
 
     // After `p5.asciify` is set up in the background after `setup()`,
@@ -82,38 +59,50 @@ export const createSketch = (options = {}) => {
         backgroundColorMode: finalOptions.backgroundColorMode,
         invertMode: finalOptions.invertMode,
         rotationAngle: finalOptions.rotationAngle,
-        flipVertically: finalOptions.flipVertically,
         flipHorizontally: finalOptions.flipHorizontally,
+        flipVertically: finalOptions.flipVertically,
       });
     };
 
+    // Draw anything on the canvas to be asciified
     p.draw = () => {
-      pGraphic.clear(); // Draw hydra to pGraphic
-      pGraphic.drawingContext.drawImage(hydraCanvas, 0, 0, p.width, p.height);
-
-      p.clear(); // Draw pGraphic to the screen for `p5asciify` to process
-      p.image(pGraphic, -p.width / 2, -p.height / 2);
+      p.clear();
+      p.fill(255);
+      p.rotateX(p.radians(p.frameCount * 3));
+      p.rotateZ(p.radians(p.frameCount));
+      p.directionalLight(255, 255, 255, 0, 0, -1);
+      p.box(800, 100, 100);
     };
 
     // After the asciified content is drawn to the canvas, use `drawAsciify()` to draw on top of it
     p.drawAsciify = () => {
+      // Draw the FPS counter
       const fpsText = "FPS:" + Math.min(Math.ceil(p.frameRate()), 60);
 
-      p.noStroke();
-      p.fill(0);
-      p.rect(-p.width / 2, p.height / 2 - p.textAscent() - 4, p.textWidth(fpsText), p.textAscent());
-
+      // Set text properties first so the bounds calculation is accurate
       p.textFont(asciifier.fontManager.font);
       p.textSize(64);
+
+      // Get accurate text bounds for the background rectangle
+      const textBounds = p.textBounds(fpsText, -p.width / 2, p.height / 2);
+
+      // Draw background with padding
+      p.noStroke();
+      p.fill(0);
+      p.rect(
+        textBounds.x - 5,
+        textBounds.y - 5,
+        textBounds.w + 10,
+        textBounds.h + 10
+      );
+
+      // Draw the text
       p.fill(255, 255, 0);
       p.text(fpsText, -p.width / 2, p.height / 2);
-    };
+    }
 
     p.windowResized = () => {
       p.resizeCanvas(p.windowWidth, p.windowHeight);
-      pGraphic.resizeCanvas(p.width, p.height);
-
-      hydra.setResolution(p.width, p.height);
     };
   };
 
