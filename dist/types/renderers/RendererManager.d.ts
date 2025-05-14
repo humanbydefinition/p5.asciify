@@ -4,7 +4,7 @@ import { P5AsciifyDisplayRenderer } from './AsciiDisplayRenderer';
 import { P5AsciifyGrid } from '../Grid';
 import { P5AsciifyFontManager } from '../FontManager';
 import { AsciiRendererOptions } from './types';
-import { P5AsciifyRendererPlugin } from '../plugins/RendererPlugin';
+import { P5AsciifyPluginRegistry } from '../plugins/PluginRegistry';
 /**
  * Manages the whole ASCII rendering pipeline.
  */
@@ -17,6 +17,8 @@ export declare class P5AsciifyRendererManager {
     private _grid;
     /** The font texture atlas instance. */
     private _fontManager;
+    /** The plugin registry instance. */
+    private _pluginRegistry;
     /** The current dimensions of the canvas. If the dimensions change, the grid is reset and the renderers are resized. */
     private _currentCanvasDimensions;
     /** The list of available renderers. */
@@ -57,7 +59,9 @@ export declare class P5AsciifyRendererManager {
     /** The grid instance. */
     _grid: P5AsciifyGrid, 
     /** The font texture atlas instance. */
-    _fontManager: P5AsciifyFontManager);
+    _fontManager: P5AsciifyFontManager, 
+    /** The plugin registry instance. */
+    _pluginRegistry: P5AsciifyPluginRegistry);
     /**
      * Runs all renderers in the pipeline, merging their framebuffers together,
      * and passing them to the ASCII display renderer for final rendering.
@@ -257,12 +261,6 @@ export declare class P5AsciifyRendererManager {
      * ```
      */
     enabled(enabled: boolean): void;
-    /**
-     * Registers a new renderer plugin.
-     * @param plugin The renderer plugin to register
-     * @throws {@link P5AsciifyError} - If a plugin with the same ID is already registered
-     */
-    static registerPlugin(plugin: P5AsciifyRendererPlugin): void;
     /**
      * Gets the index of a renderer in the list of renderers.
      * @param renderer The renderer to get the index of.

@@ -4,6 +4,7 @@ import { P5AsciifyFontManager } from './FontManager';
 import { P5AsciifyRendererManager } from './renderers/RendererManager';
 import { SVGExportOptions } from './utils/SVGExporter';
 import { JSONExportOptions } from './utils/JSONExporter';
+import { P5AsciifyPluginRegistry } from './plugins/PluginRegistry';
 /**
  * Manages a rendering pipeline for ASCII conversion, including font management, grid calculations, and ASCII renderers,
  * which is applied to the main p5.js canvas or a selected texture.
@@ -26,6 +27,9 @@ export declare class P5Asciifier {
     private _p;
     /** Defines if the ASCII output should be rendered to the canvas or not. */
     private _renderToCanvas;
+    /** The plugin registry instance. */
+    private _pluginRegistry;
+    constructor(pluginRegistry: P5AsciifyPluginRegistry);
     /**
      * Initializes the asciifier by setting the `p5.js` instance and loading the font manager with the default font.
      *
