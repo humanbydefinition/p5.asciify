@@ -20,14 +20,12 @@ import ExampleImage from './brutalist-high-rise-building.jpeg';
 const sketch = new p5((p) => {
     let asciifier;
     let img;
-
-    p.preload = () => {
-        img = p.loadImage(ExampleImage);
-    };
-
-    p.setup = () => {
+    
+    p.setup = async () => {
         p.setAttributes('antialias', false);
         p.createCanvas(p.windowWidth, p.windowHeight, p.WEBGL);
+
+        img = await p.loadImage(ExampleImage);
     };
 
     p.setupAsciify = () => {
