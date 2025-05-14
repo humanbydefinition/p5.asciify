@@ -8,6 +8,7 @@ import { P5AsciifyAbstractFeatureRenderer2D } from './renderers/2d/feature/Abstr
 import { P5AsciifySVGExporter, SVGExportOptions } from './utils/SVGExporter';
 import { JSONExportOptions, P5AsciifyJSONExporter } from './utils/JSONExporter';
 import { P5AsciifyPluginRegistry } from './plugins/PluginRegistry';
+import { compareVersions } from './utils';
 
 /**
  * Manages a rendering pipeline for ASCII conversion, including font management, grid calculations, and ASCII renderers, 
@@ -74,7 +75,11 @@ export class P5Asciifier {
     public async setup(captureFramebuffer: p5.Framebuffer): Promise<void> {
         this._captureFramebuffer = captureFramebuffer;
 
-        await this._fontManager.setup(this._fontSize);
+        if (compareVersions(this._p.VERSION, "2.0.0") < 0) {
+            this._fontManager.setup(this._fontSize);
+        } else {
+            await this._fontManager.setup(this._fontSize);
+        }
 
         this._grid = new P5AsciifyGrid(
             this._captureFramebuffer,
