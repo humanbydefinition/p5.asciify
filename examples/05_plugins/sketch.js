@@ -1,5 +1,5 @@
 /**
- * @name Accurate-plugin-renderer-example
+ * @name 05_plugins
  * @description Basic example applying the 'accurate' plugin renderer to a p5.js canvas with p5.asciify.
  * @author humanbydefinition
  * @link https://github.com/humanbydefinition/p5.asciify

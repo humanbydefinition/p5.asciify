@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8">
-  <title>p5.asciify | 03_custom2D</title>
+  <title>p5.asciify | 03_multiple_asciifiers</title>
 
   <style>
     body {
@@ -15,10 +15,14 @@
       display: block;
     }
   </style>
+
 </head>
 
 <body>
-  <script type="module" src="sketch.js"></script>
+  <script type="module">
+    import { createSketch } from './sketch.js';
+    createSketch();
+  </script>
 </body>
 
 </html>
