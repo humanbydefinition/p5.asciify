@@ -6,10 +6,62 @@ import { P5AsciifyAbstractFeatureRenderer2D } from './renderers/2d/feature';
 import { P5AsciifyRenderer2D } from './renderers/2d';
 import { P5AsciifyRenderer } from './renderers';
 
+// Check if p5.js version is 1.8.0 or higher
+if (typeof p5 !== 'undefined' && compareVersions(p5.prototype.VERSION, "1.8.0") < 0) {
+  throw new P5AsciifyError("p5.asciify requires p5.js v1.8.0 or higher to run.");
+}
+
 /**
  * Main instance of p5.asciify *({@link P5AsciifierManager})* providing full access to the library.
  */
 export const p5asciify = P5AsciifierManager.getInstance();
+
+// p5.js v2.0.0+ compatibility using the new addon system
+function p5AsciifyAddon(p5Core: any, fn: any, lifecycles: any) {
+
+  fn.setupAsciify = async function () { };
+  fn.drawAsciify = async function () { };
+
+  lifecycles.presetup = async function () {
+    await p5asciify.init(this);
+  }
+
+  // Register lifecycles for p5.js v2.0.0+
+  lifecycles.postsetup = async function () {
+    try {
+      // Ensure WebGL renderer is used
+      if (!(this._renderer.drawingContext instanceof WebGLRenderingContext ||
+        this._renderer.drawingContext instanceof WebGL2RenderingContext)) {
+        throw new P5AsciifyError("WebGL renderer is required for p5.asciify to run.");
+      }
+
+      // Wait for setup to complete
+      await p5asciify.setup();
+
+      // Only call setupAsciify after everything else is done
+      if (this.setupAsciify) {
+        await this.setupAsciify();
+      }
+    } catch (error) {
+      console.error("Error during p5.asciify initialization:", error);
+      throw new P5AsciifyError("Failed to initialize p5.asciify: " + (error instanceof Error ? error.message : String(error)));
+    }
+  };
+
+  lifecycles.predraw = function () {
+    p5asciify.sketchFramebuffer.begin();
+    this.clear();
+  };
+
+  lifecycles.postdraw = function () {
+    p5asciify.sketchFramebuffer.end();
+    p5asciify.asciify();
+
+    if (this.drawAsciify) {
+      this.drawAsciify();
+    }
+  };
+}
 
 /**
  * Hook to initialize `p5.asciify` automatically during the `init` phase of the p5.js sketch.
@@ -20,8 +72,6 @@ export const initHook = (p: p5) => {
   if (!p5asciify.hooksEnabled) return;  
   p5asciify.init(p);
 };
-p5.prototype.registerMethod('init', function (this: p5) { initHook(this); });
-
 
 /**
  * Hook to fully setup `p5.asciify` automatically after the `setup()` method of the p5.js sketch.
@@ -54,7 +104,6 @@ export const afterSetupHook = (p: p5) => {
     }
   }, 0);
 };
-p5.prototype.registerMethod('afterSetup', function (this: p5) { afterSetupHook(this); });
 
 /**
  * Hook to start capturing the content drawn to the `p5.js` canvas before the `draw()` method is called.
@@ -91,16 +140,25 @@ export const postDrawHook = (p: p5) => {
   }
 };
 
-// Register the pre and post draw hooks
-p5.prototype.registerMethod('pre', function(this: p5) { 
-  if (!p5asciify.hooksEnabled) return;
-  preDrawHook(this); 
-});
+// Register the addon for p5.js v2.0.0+ or use legacy hooks
+if (typeof p5 !== 'undefined' && typeof p5.registerAddon === 'function') {
+  p5.registerAddon(p5AsciifyAddon);
+} else if (typeof p5 !== 'undefined') {
+  // Legacy hooks for p5.js v1.8.0-1.x
+  p5.prototype.registerMethod('init', function (this: p5) { initHook(this); });
+  p5.prototype.registerMethod('afterSetup', function (this: p5) { afterSetupHook(this); });
 
-p5.prototype.registerMethod('post', function(this: p5) { 
-  if (!p5asciify.hooksEnabled) return;
-  postDrawHook(this); 
-});
+  // Register the pre and post draw hooks
+  p5.prototype.registerMethod('pre', function (this: p5) {
+    if (!p5asciify.hooksEnabled) return;
+    preDrawHook(this);
+  });
+
+  p5.prototype.registerMethod('post', function (this: p5) {
+    if (!p5asciify.hooksEnabled) return;
+    postDrawHook(this);
+  });
+}
 
 /**
  * A fix for the p5.js shaders to use highp precision instead of mediump.
