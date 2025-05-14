@@ -1,0 +1,1 @@
+export type { P5AsciifyRendererPlugin } from './RendererPlugin';

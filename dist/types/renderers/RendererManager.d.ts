@@ -4,7 +4,7 @@ import { P5AsciifyDisplayRenderer } from './AsciiDisplayRenderer';
 import { P5AsciifyGrid } from '../Grid';
 import { P5AsciifyFontManager } from '../FontManager';
 import { AsciiRendererOptions } from './types';
-import { RENDERER_TYPES } from './constants';
+import { P5AsciifyPluginRegistry } from '../plugins/PluginRegistry';
 /**
  * Manages the whole ASCII rendering pipeline.
  */
@@ -17,6 +17,8 @@ export declare class P5AsciifyRendererManager {
     private _grid;
     /** The font texture atlas instance. */
     private _fontManager;
+    /** The plugin registry instance. */
+    private _pluginRegistry;
     /** The current dimensions of the canvas. If the dimensions change, the grid is reset and the renderers are resized. */
     private _currentCanvasDimensions;
     /** The list of available renderers. */
@@ -39,6 +41,10 @@ export declare class P5AsciifyRendererManager {
     /** Whether any renderers are enabled. */
     private _hasEnabledRenderers;
     /**
+     * Registered plugin renderers
+     */
+    private static _plugins;
+    /**
      * Creates a new ASCII renderer manager instance.
      * @param _p The p5 instance.
      * @param _grid The grid instance.
@@ -53,7 +59,9 @@ export declare class P5AsciifyRendererManager {
     /** The grid instance. */
     _grid: P5AsciifyGrid, 
     /** The font texture atlas instance. */
-    _fontManager: P5AsciifyFontManager);
+    _fontManager: P5AsciifyFontManager, 
+    /** The plugin registry instance. */
+    _pluginRegistry: P5AsciifyPluginRegistry);
     /**
      * Runs all renderers in the pipeline, merging their framebuffers together,
      * and passing them to the ASCII display renderer for final rendering.
@@ -113,7 +121,7 @@ export declare class P5AsciifyRendererManager {
      *  }
      * ```
      */
-    add(name: string, type: keyof typeof RENDERER_TYPES, options: AsciiRendererOptions): P5AsciifyRenderer;
+    add(name: string, type: string, options: AsciiRendererOptions): P5AsciifyRenderer;
     /**
      * Gets the ASCII renderer instance with the given name.
      * @param rendererName The name of the renderer to get.
@@ -133,6 +141,11 @@ export declare class P5AsciifyRendererManager {
      * ```
      */
     get(rendererName: string): P5AsciifyRenderer;
+    /**
+     * Gets a list of all available renderer types (built-in and plugins)
+     * @returns An array of available renderer type IDs
+     */
+    getAvailableRendererTypes(): string[];
     /**
      * Moves a renderer down in the list of renderers, meaning it will be rendered earlier in the pipeline.
      * @param renderer The renderer to move down in the list.

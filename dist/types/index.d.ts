@@ -44,10 +44,10 @@ export declare const preDrawHook: (p: p5) => void;
 export declare const postDrawHook: (p: p5) => void;
 /** Contains functionality relevant to the ASCII rendering. */
 export * as renderers from './renderers';
-/**
- * Contains utility functions and classes used by the `p5.asciify` library.
- */
+/** Contains utility functions and classes used by the `p5.asciify` library. */
 export * as utils from './utils';
+/** Contains plugin interfaces to implement against. */
+export * as plugins from './plugins';
 export { P5AsciifierManager } from './AsciifierManager';
 export { P5AsciifyError } from './AsciifyError';
 export { P5Asciifier } from './Asciifier';
@@ -55,3 +55,6 @@ export { P5AsciifyColorPalette } from './ColorPalette';
 export { P5AsciifyGrid } from './Grid';
 export { P5AsciifyFontManager } from './FontManager';
 export * from './types';
+export { P5AsciifyAbstractFeatureRenderer2D } from './renderers/2d/feature';
+export { P5AsciifyRenderer2D } from './renderers/2d';
+export { P5AsciifyRenderer } from './renderers';

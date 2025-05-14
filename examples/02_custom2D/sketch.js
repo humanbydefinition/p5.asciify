@@ -1,5 +1,5 @@
 /**
- * @name 03_custom2D
+ * @name 02_custom2D
  * @description Advanced example applying a custom 2D renderer to a p5.js canvas with p5.asciify utilizing custom shaders.
  * @author humanbydefinition
  * @link https://github.com/humanbydefinition/p5.asciify

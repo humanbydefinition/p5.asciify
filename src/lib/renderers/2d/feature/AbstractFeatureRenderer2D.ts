@@ -10,7 +10,7 @@ import { P5AsciifyColorPalette } from '../../../ColorPalette';
 /**
  * Abstract class for feature-based 2D ASCII renderers.
  */
-export abstract class AbstractFeatureRenderer2D<T extends FeatureAsciiRendererOptions = FeatureAsciiRendererOptions> extends P5AsciifyRenderer2D<T> {
+export abstract class P5AsciifyAbstractFeatureRenderer2D<T extends FeatureAsciiRendererOptions = FeatureAsciiRendererOptions> extends P5AsciifyRenderer2D<T> {
 
     /** {@link P5AsciifyColorPalette} object containing colors that correspond to the defined character set. */
     protected _characterColorPalette: P5AsciifyColorPalette;

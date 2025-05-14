@@ -2,16 +2,14 @@ import p5 from 'p5';
 import { P5AsciifierManager } from './AsciifierManager';
 import { P5AsciifyError } from './AsciifyError';
 import { compareVersions } from './utils/utils';
+import { P5AsciifyAbstractFeatureRenderer2D } from './renderers/2d/feature';
+import { P5AsciifyRenderer2D } from './renderers/2d';
+import { P5AsciifyRenderer } from './renderers';
 
 /**
  * Main instance of p5.asciify *({@link P5AsciifierManager})* providing full access to the library.
  */
 export const p5asciify = P5AsciifierManager.getInstance();
-
-// Global mode: Expose p5asciify.
-if (typeof window !== 'undefined') {
-  window.p5asciify = p5asciify;
-}
 
 /**
  * Hook to initialize `p5.asciify` automatically during the `init` phase of the p5.js sketch.
@@ -67,7 +65,6 @@ p5.prototype.registerMethod('afterSetup', function (this: p5) { afterSetupHook(t
  * @ignore
  */
 export const preDrawHook = (p: p5) => {
-
   p5asciify.sketchFramebuffer.begin();
   p.clear();
 };
@@ -85,7 +82,6 @@ export const preDrawHook = (p: p5) => {
  * @ignore
  */
 export const postDrawHook = (p: p5) => {
-
   p5asciify.sketchFramebuffer.end();
 
   p5asciify.asciify();
@@ -143,10 +139,11 @@ for (const [method, cacheKey] of shadersToReplace) {
 /** Contains functionality relevant to the ASCII rendering. */
 export * as renderers from './renderers';
 
-/** 
- * Contains utility functions and classes used by the `p5.asciify` library. 
- */
+/** Contains utility functions and classes used by the `p5.asciify` library. */
 export * as utils from './utils';
+
+/** Contains plugin interfaces to implement against. */
+export * as plugins from './plugins';
 
 export { P5AsciifierManager } from './AsciifierManager';
 export { P5AsciifyError } from './AsciifyError';
@@ -155,3 +152,15 @@ export { P5AsciifyColorPalette } from './ColorPalette';
 export { P5AsciifyGrid } from './Grid';
 export { P5AsciifyFontManager } from './FontManager';
 export * from './types';
+
+// Add explicit exports of the base classes for easier consumption in both ESM and UMD
+export { P5AsciifyAbstractFeatureRenderer2D } from './renderers/2d/feature';
+export { P5AsciifyRenderer2D } from './renderers/2d';
+export { P5AsciifyRenderer } from './renderers';
+
+if (typeof window !== 'undefined') {
+  window.p5asciify = p5asciify;
+  window.P5AsciifyAbstractFeatureRenderer2D = P5AsciifyAbstractFeatureRenderer2D;
+  window.P5AsciifyRenderer2D = P5AsciifyRenderer2D;
+  window.P5AsciifyRenderer = P5AsciifyRenderer;
+}

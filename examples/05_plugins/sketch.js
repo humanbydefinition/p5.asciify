@@ -1,10 +1,10 @@
 /**
- * @name 02_accurate_conversion
- * @description Basic example applying the pre-defined 'accurate' renderer to a p5.js canvas with p5.asciify.
+ * @name 05_plugins
+ * @description Basic example applying the 'accurate' plugin renderer to a p5.js canvas with p5.asciify.
  * @author humanbydefinition
  * @link https://github.com/humanbydefinition/p5.asciify
  * 
- * This example demonstrates how to apply the pre-defined 'accurate' renderer to a p5.js canvas.
+ * This example demonstrates how to apply the 'accurate' plugin renderer to a p5.js canvas.
  * An image (CC0 licensed) is displayed on the canvas and asciified using the 'accurate' renderer.
  * 
  * Attribution:
@@ -13,15 +13,16 @@
  */
 
 import p5 from 'p5';
-import { p5asciify } from '../../src/lib/index';
+import { p5asciify } from 'p5.asciify';
+import { AccurateRendererPlugin } from './p5.asciify-accurate-renderer-plugin.esm';
+import ExampleImage from './brutalist-high-rise-building.jpeg';
 
-const sketch = (p) => {
-
-    let asciifier; // Define the `asciifier` variable to store the `P5Asciifier` instance
+const sketch = new p5((p) => {
+    let asciifier;
     let img;
 
     p.preload = () => {
-        img = p.loadImage('brutalist-high-rise-building.jpeg');
+        img = p.loadImage(ExampleImage);
     };
 
     p.setup = () => {
@@ -29,32 +30,38 @@ const sketch = (p) => {
         p.createCanvas(p.windowWidth, p.windowHeight, p.WEBGL);
     };
 
-    // After `p5.asciify` is set up in the background after `setup()`,
-    // we can call `setupAsciify()` to configure `p5asciify` and it's `P5Asciifier` instances and rendering pipelines
     p.setupAsciify = () => {
-        // Fetch the default `P5Asciifier` instance provided by the library
+        // Register the plugin renderer
+        p5asciify.registerPlugin(AccurateRendererPlugin);
+
+        // Fetch the asciifier instance
         asciifier = p5asciify.asciifier();
 
-        // Disable all pre-defined renderers in the rendering pipeline of the `asciifier` instance
-        asciifier.renderers().disable();
+        // Disable the brightness renderer
+        asciifier.renderers().get("brightness").disable();
 
-        // Update the pre-defined `accurate` renderer with the provided options
+        // Add the accurate plugin renderer
+        asciifier.renderers().add("accurate", "accurate");
+
+        // Update the accurate renderer settings
         asciifier.renderers().get("accurate").update({
-            enabled: true,
-            // Use all characters in the asciifier's font
             characters: asciifier.fontManager.characters.map(charObj => charObj.character).join(''),
             characterColorMode: "sampled",
             backgroundColorMode: "sampled",
+            enabled: true,
         });
+
+        // Display the available renderer types in the console
+        console.log(asciifier.renderers().getAvailableRendererTypes());
     };
 
-    // Draw the image on the canvas to be asciified
+    // Draw the image to the canvas during `draw()` to asciify it
     p.draw = () => {
         p.clear();
         p.image(img, -p.windowWidth / 2, -p.windowHeight / 2);
     };
 
-    // After the asciified content is drawn to the canvas, use `drawAsciify()` to draw on top of it
+    // Draw a FPS display on top of the asciified result on the bottom left.
     p.drawAsciify = () => {
         const fpsText = "FPS:" + Math.min(Math.ceil(p.frameRate()), 60);
 
@@ -71,6 +78,6 @@ const sketch = (p) => {
     p.windowResized = () => {
         p.resizeCanvas(p.windowWidth, p.windowHeight);
     };
-};
+});
 
-const myp5 = new p5(sketch);
+export default sketch;

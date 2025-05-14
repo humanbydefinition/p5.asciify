@@ -1,5 +1,7 @@
 import p5 from 'p5';
 import { P5Asciifier } from './Asciifier';
+import { P5AsciifyRendererPlugin } from './plugins/RendererPlugin';
+import { P5AsciifyPluginRegistry } from './plugins/PluginRegistry';
 /**
  * Manages the `p5.asciify` library by handling one or more `P5Asciifier` instances.
  *
@@ -25,6 +27,8 @@ export declare class P5AsciifierManager {
     private _hooksEnabled;
     /** Contains the content that has been drawn to the `p5.js` canvas throughout the `draw()` loop. */
     private _sketchFramebuffer;
+    /** The plugin registry instance. */
+    private _pluginRegistry;
     /**
      * Gets the singleton instance of `P5AsciifierManager`.
      * If the instance doesn't exist yet, it creates one.
@@ -94,6 +98,16 @@ export declare class P5AsciifierManager {
      * @ignore
      */
     setHooksEnabled(enabled: boolean): void;
+    /**
+     * Register a new renderer plugin with p5.asciify
+     * @param plugin The renderer plugin to register
+     */
+    registerPlugin(plugin: P5AsciifyRendererPlugin): void;
+    /**
+     * Get the plugin registry
+     * @returns The plugin registry instance
+     */
+    get pluginRegistry(): P5AsciifyPluginRegistry;
     /**
      * Returns the list of `P5Asciifier` instances managed by the library.
      */

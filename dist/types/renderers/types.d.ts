@@ -7,7 +7,7 @@ export interface AsciiRendererOptions {
     enabled?: boolean;
 }
 /**
- * Base options for all feature-based ASCII renderers that extend the {@link AbstractFeatureRenderer2D} class.
+ * Base options for all feature-based ASCII renderers that extend the {@link P5AsciifyAbstractFeatureRenderer2D} class.
  */
 export interface FeatureAsciiRendererOptions extends AsciiRendererOptions {
     /** The character set to use for the ASCII renderer. */

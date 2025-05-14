@@ -2,9 +2,8 @@ import p5 from 'p5';
 
 import { P5AsciifyRenderer } from './AsciiRenderer';
 import { P5AsciifyRenderer2D } from './2d/AsciiRenderer2D';
-import { AbstractFeatureRenderer2D } from './2d/feature/AbstractFeatureRenderer2D';
+import { P5AsciifyAbstractFeatureRenderer2D } from './2d/feature/AbstractFeatureRenderer2D';
 import { P5AsciifyBrightnessRenderer } from './2d/feature/brightness/BrightnessAsciiRenderer';
-import { P5AsciifyAccurateRenderer } from './2d/feature/accurate/AccurateAsciiRenderer';
 import { P5AsciifyEdgeRenderer } from './2d/feature/edge/EdgeAsciiRenderer';
 import { P5AsciifyDisplayRenderer } from './AsciiDisplayRenderer';
 
@@ -16,6 +15,10 @@ import { P5AsciifyError } from '../AsciifyError';
 import { AsciiRendererOptions } from './types';
 
 import { RENDERER_TYPES } from './constants';
+import { P5AsciifyRendererPlugin } from '../plugins/RendererPlugin';
+
+import { P5AsciifyPluginRegistry } from '../plugins/PluginRegistry';
+
 
 /**
  * Manages the whole ASCII rendering pipeline.
@@ -53,6 +56,11 @@ export class P5AsciifyRendererManager {
     private _hasEnabledRenderers: boolean = false;
 
     /**
+     * Registered plugin renderers
+     */
+    private static _plugins = new Map<string, P5AsciifyRendererPlugin>();
+
+    /**
      * Creates a new ASCII renderer manager instance.
      * @param _p The p5 instance.
      * @param _grid The grid instance.
@@ -70,7 +78,10 @@ export class P5AsciifyRendererManager {
         private _grid: P5AsciifyGrid,
 
         /** The font texture atlas instance. */
-        private _fontManager: P5AsciifyFontManager
+        private _fontManager: P5AsciifyFontManager,
+
+        /** The plugin registry instance. */
+        private _pluginRegistry: P5AsciifyPluginRegistry
     ) {
         this._currentCanvasDimensions = {
             width: this._captureFramebuffer.width,
@@ -80,7 +91,6 @@ export class P5AsciifyRendererManager {
         this._renderers = [
             { name: "custom2D", renderer: new P5AsciifyRenderer2D(this._p, this._captureFramebuffer, this._grid, this._fontManager) },
             { name: "edge", renderer: new P5AsciifyEdgeRenderer(this._p, this._captureFramebuffer, this._grid, this._fontManager) },
-            { name: "accurate", renderer: new P5AsciifyAccurateRenderer(this._p, this._captureFramebuffer, this._grid, this._fontManager) },
             { name: "brightness", renderer: new P5AsciifyBrightnessRenderer(this._p, this._captureFramebuffer, this._grid, this._fontManager) },
         ];
 
@@ -156,7 +166,7 @@ export class P5AsciifyRendererManager {
             const renderer = this._renderers[i];
             if (renderer.renderer.options.enabled) {
 
-                if (renderer.renderer instanceof AbstractFeatureRenderer2D) {
+                if (renderer.renderer instanceof P5AsciifyAbstractFeatureRenderer2D) {
                     renderer.renderer.render();
                 }
 
@@ -220,7 +230,7 @@ export class P5AsciifyRendererManager {
         this._renderers.forEach(renderer => {
             renderer.renderer.resizeFramebuffers();
 
-            if (renderer.renderer instanceof AbstractFeatureRenderer2D) {
+            if (renderer.renderer instanceof P5AsciifyAbstractFeatureRenderer2D) {
                 renderer.renderer.resetShaders();
             }
         });
@@ -260,24 +270,49 @@ export class P5AsciifyRendererManager {
      */
     public add(
         name: string,
-        type: keyof typeof RENDERER_TYPES,
+        type: string,
         options: AsciiRendererOptions
     ): P5AsciifyRenderer {
         if (typeof name !== 'string' || name.trim() === '') {
             throw new P5AsciifyError('Renderer name must be a non-empty string');
         }
 
-        const RendererClass = RENDERER_TYPES[type];
-        if (!RendererClass) {
+        let renderer: P5AsciifyRenderer | undefined;
+
+        // Check built-in renderers first
+        const RendererClass = RENDERER_TYPES[type as keyof typeof RENDERER_TYPES];
+
+        if (RendererClass) {
+            // Create built-in renderer
+            renderer = new RendererClass(this._p, this._captureFramebuffer, this._grid, this._fontManager, options);
+        }
+        // If not found, check for plugin renderers
+        else {
+            const plugin = this._pluginRegistry.get(type);
+            if (plugin) {
+                renderer = plugin.create(
+                    this._p,
+                    this._captureFramebuffer,
+                    this._grid,
+                    this._fontManager,
+                    options
+                );
+            }
+        }
+
+        // If neither built-in nor plugin, throw error
+        if (!renderer) {
+            const availableTypes = [
+                ...Object.keys(RENDERER_TYPES),
+                ...this._pluginRegistry.getIds()
+            ].join(', ');
+
             throw new P5AsciifyError(
-                `Invalid renderer type: ${type}. Valid types are: ${Object.keys(RENDERER_TYPES).join(', ')}`
+                `Invalid renderer type: ${type}. Valid types are: ${availableTypes}`
             );
         }
 
-        const renderer = new RendererClass(this._p, this._captureFramebuffer, this._grid, this._fontManager, options);
-
-        this._renderers.push({ name, renderer });
-
+        this._renderers.unshift({ name, renderer });
         return renderer;
     }
 
@@ -312,6 +347,17 @@ export class P5AsciifyRendererManager {
     }
 
     /**
+     * Gets a list of all available renderer types (built-in and plugins)
+     * @returns An array of available renderer type IDs
+     */
+    public getAvailableRendererTypes(): string[] {
+        return [
+            ...Object.keys(RENDERER_TYPES),
+            ...this._pluginRegistry.getIds()
+        ];
+    }
+
+    /**
      * Moves a renderer down in the list of renderers, meaning it will be rendered earlier in the pipeline.
      * @param renderer The renderer to move down in the list.
      * 
@@ -335,7 +381,7 @@ export class P5AsciifyRendererManager {
         if (index >= this._renderers.length - 1) {
             throw new P5AsciifyError("Renderer is already at the bottom of the list.");
         }
-        
+
         this.swap(renderer, this._renderers[index + 1].renderer);
     }
 
@@ -359,7 +405,7 @@ export class P5AsciifyRendererManager {
         if (index === -1) {
             throw new P5AsciifyError("Renderer not found.");
         }
-        
+
         if (index <= 0) {
             throw new P5AsciifyError("Renderer is already at the top of the list.");
         }

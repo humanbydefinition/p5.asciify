@@ -1,5 +1,5 @@
 /**
- * @name 06_hydra-synth
+ * @name 04_hydra-synth
  * @description Basic example utilizing hydra-synth with p5.js and p5.asciify.
  * @author flordefuega
  * @author humanbydefinition

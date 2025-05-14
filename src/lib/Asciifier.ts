@@ -4,9 +4,10 @@ import { P5AsciifyGrid } from './Grid';
 import { P5AsciifyFontManager } from './FontManager';
 import { P5AsciifyRendererManager } from './renderers/RendererManager';
 import { P5AsciifyError } from './AsciifyError';
-import { AbstractFeatureRenderer2D } from './renderers/2d/feature/AbstractFeatureRenderer2D';
+import { P5AsciifyAbstractFeatureRenderer2D } from './renderers/2d/feature/AbstractFeatureRenderer2D';
 import { P5AsciifySVGExporter, SVGExportOptions } from './utils/SVGExporter';
 import { JSONExportOptions, P5AsciifyJSONExporter } from './utils/JSONExporter';
+import { P5AsciifyPluginRegistry } from './plugins/PluginRegistry';
 
 /**
  * Manages a rendering pipeline for ASCII conversion, including font management, grid calculations, and ASCII renderers, 
@@ -38,6 +39,13 @@ export class P5Asciifier {
 
     /** Defines if the ASCII output should be rendered to the canvas or not. */
     private _renderToCanvas: boolean = true;
+
+    /** The plugin registry instance. */
+    private _pluginRegistry: P5AsciifyPluginRegistry;
+
+    constructor(pluginRegistry: P5AsciifyPluginRegistry) {
+        this._pluginRegistry = pluginRegistry;
+    }
 
     /**
      * Initializes the asciifier by setting the `p5.js` instance and loading the font manager with the default font.
@@ -75,7 +83,8 @@ export class P5Asciifier {
             this._p,
             this._captureFramebuffer,
             this._grid,
-            this._fontManager
+            this._fontManager,
+            this._pluginRegistry,
         );
     }
 
@@ -189,7 +198,7 @@ export class P5Asciifier {
             // Only update characters if option is true
             if (options.updateCharacters) {
                 this._rendererManager.renderers.forEach(renderer => {
-                    if (renderer.renderer instanceof AbstractFeatureRenderer2D) {
+                    if (renderer.renderer instanceof P5AsciifyAbstractFeatureRenderer2D) {
                         renderer.renderer.characters(renderer.renderer.options.characters as string)
                     }
                 }

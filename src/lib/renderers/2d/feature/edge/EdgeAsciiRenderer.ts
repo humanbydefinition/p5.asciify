@@ -1,5 +1,5 @@
 import p5 from 'p5';
-import { AbstractFeatureRenderer2D } from '../AbstractFeatureRenderer2D';
+import { P5AsciifyAbstractFeatureRenderer2D } from '../AbstractFeatureRenderer2D';
 import { P5AsciifyGrid } from '../../../../Grid';
 import { P5AsciifyError } from '../../../../AsciifyError';
 import { P5AsciifyFontManager } from '../../../../FontManager';
@@ -51,7 +51,7 @@ export const EDGE_DEFAULT_OPTIONS = {
 /**
  * An ASCII renderer that applies ASCII edges to the input sketch by using edge detection.
  */
-export class P5AsciifyEdgeRenderer extends AbstractFeatureRenderer2D<EdgeAsciiRendererOptions> {
+export class P5AsciifyEdgeRenderer extends P5AsciifyAbstractFeatureRenderer2D<EdgeAsciiRendererOptions> {
     private sobelShader: p5.Shader;
     private sampleShader: p5.Shader;
     private colorSampleShader: p5.Shader;

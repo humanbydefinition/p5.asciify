@@ -1,16 +1,23 @@
 import { P5AsciifierManager } from './AsciifierManager';
 import { P5AsciifyFontManager } from './FontManager';
+
 import p5 from 'p5';
+import { P5AsciifyAbstractFeatureRenderer2D } from './renderers/2d/feature';
+import { P5AsciifyRenderer2D } from './renderers/2d';
+import { P5AsciifyRenderer } from './renderers';
 
 /**
  * Extends the global window object with a preload function, in case the user doesn't provide one.
  */
 declare global {
-    interface Window {
-        preload?: () => void;
-        p5asciify: P5AsciifierManager;
-    }
+  interface Window {
+    p5asciify: P5AsciifierManager;
+    P5AsciifyAbstractFeatureRenderer2D: typeof P5AsciifyAbstractFeatureRenderer2D;
+    P5AsciifyRenderer2D: typeof P5AsciifyRenderer2D;
+    P5AsciifyRenderer: typeof P5AsciifyRenderer;
+  }
 }
+
 
 /**
  * Interface for additional properties and methods added to the `p5.js` instance by the `p5.asciify` library.

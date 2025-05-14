@@ -1,6 +1,6 @@
 {
   "name": "p5.asciify",
-  "version": "0.9.1-beta.2",
+  "version": "0.9.1-beta.5",
   "description": "Apply real-time ASCII conversion to your favorite p5.js sketches instantly.",
   "type": "module",
   "types": "./dist/types/index.d.ts",
@@ -11,42 +11,6 @@
       "types": "./dist/types/index.d.ts",
       "import": "./dist/p5.asciify.esm.js",
       "require": "./dist/p5.asciify.umd.js"
-    },
-    "./renderers": {
-      "types": "./dist/types/renderers/index.d.ts",
-      "import": "./dist/p5.asciify.esm.js",
-      "require": "./dist/p5.asciify.umd.js"
-    },
-    "./renderers/2d": {
-      "types": "./dist/types/renderers/2d/index.d.ts",
-      "import": "./dist/p5.asciify.esm.js",
-      "require": "./dist/p5.asciify.umd.js"
-    },
-    "./renderers/2d/feature": {
-      "types": "./dist/types/renderers/2d/feature/index.d.ts",
-      "import": "./dist/p5.asciify.esm.js",
-      "require": "./dist/p5.asciify.umd.js"
-    },
-    "./utils": {
-      "types": "./dist/types/utils/index.d.ts",
-      "import": "./dist/p5.asciify.esm.js",
-      "require": "./dist/p5.asciify.umd.js"
-    }
-  },
-  "typesVersions": {
-    "*": {
-      "renderers": [
-        "./dist/types/renderers/index.d.ts"
-      ],
-      "renderers/2d": [
-        "./dist/types/renderers/2d/index.d.ts"
-      ],
-      "renderers/2d/feature": [
-        "./dist/types/renderers/2d/feature/index.d.ts"
-      ],
-      "utils": [
-        "./dist/types/utils/index.d.ts"
-      ]
     }
   },
   "dependencies": {
@@ -67,7 +31,7 @@
   },
   "scripts": {
     "build": "vite build && tsc",
-    "dev": "vite --host",
+    "dev": "vite --host --port 5175",
     "vitest": "vitest --ui"
   },
   "repository": {

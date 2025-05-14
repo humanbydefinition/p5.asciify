@@ -19,6 +19,7 @@ export default defineConfig({
                 globals: {
                     p5: 'p5'
                 },
+                
             },
         }
     },

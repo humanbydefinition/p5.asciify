@@ -3,6 +3,8 @@ import { P5Asciifier } from './Asciifier';
 import { P5AsciifyError } from './AsciifyError';
 
 import URSAFONT_BASE64 from './assets/fonts/ursafont_base64.txt?raw';
+import { P5AsciifyRendererPlugin } from './plugins/RendererPlugin';
+import { P5AsciifyPluginRegistry } from './plugins/PluginRegistry';
 
 /**
  * Manages the `p5.asciify` library by handling one or more `P5Asciifier` instances.
@@ -35,6 +37,9 @@ export class P5AsciifierManager {
     /** Contains the content that has been drawn to the `p5.js` canvas throughout the `draw()` loop. */
     private _sketchFramebuffer!: p5.Framebuffer;
 
+    /** The plugin registry instance. */
+    private _pluginRegistry: P5AsciifyPluginRegistry;
+
     /**
      * Gets the singleton instance of `P5AsciifierManager`.
      * If the instance doesn't exist yet, it creates one.
@@ -58,7 +63,8 @@ export class P5AsciifierManager {
             throw new P5AsciifyError("P5AsciifierManager is a singleton and cannot be instantiated directly. Use P5AsciifierManager.getInstance() instead.");
         }
 
-        this._asciifiers = [new P5Asciifier()];
+        this._pluginRegistry = new P5AsciifyPluginRegistry();
+        this._asciifiers = [new P5Asciifier(this._pluginRegistry)];
     }
 
     /**
@@ -139,7 +145,7 @@ export class P5AsciifierManager {
             throw new P5AsciifyError("Framebuffer must be an instance of p5.Framebuffer.");
         }
 
-        const asciifier = new P5Asciifier();
+        const asciifier = new P5Asciifier(this._pluginRegistry);
         asciifier.init(this._p, this._baseFont);
 
         if (this._p._setupDone) {
@@ -184,6 +190,22 @@ export class P5AsciifierManager {
      */
     public setHooksEnabled(enabled: boolean): void {
         this._hooksEnabled = enabled;
+    }
+
+    /**
+     * Register a new renderer plugin with p5.asciify
+     * @param plugin The renderer plugin to register
+     */
+    public registerPlugin(plugin: P5AsciifyRendererPlugin): void {
+        this._pluginRegistry.register(plugin);
+    }
+
+    /**
+     * Get the plugin registry
+     * @returns The plugin registry instance
+     */
+    public get pluginRegistry(): P5AsciifyPluginRegistry {
+        return this._pluginRegistry;
     }
 
     /**

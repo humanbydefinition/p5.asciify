@@ -1,5 +1,5 @@
 import p5 from 'p5';
-import { AbstractFeatureRenderer2D } from '../AbstractFeatureRenderer2D';
+import { P5AsciifyAbstractFeatureRenderer2D } from '../AbstractFeatureRenderer2D';
 import { P5AsciifyGrid } from '../../../../Grid';
 import { P5AsciifyFontManager } from '../../../../FontManager';
 import { FeatureAsciiRendererOptions } from '../../../types';
@@ -33,7 +33,7 @@ export declare const BRIGHTNESS_DEFAULT_OPTIONS: {
 /**
  * ASCII Renderer that uses brightness to determine the ASCII characters to use from the 1D character set.
  */
-export declare class P5AsciifyBrightnessRenderer extends AbstractFeatureRenderer2D {
+export declare class P5AsciifyBrightnessRenderer extends P5AsciifyAbstractFeatureRenderer2D {
     private colorSampleShader;
     private asciiCharacterShader;
     private colorSampleFramebuffer;

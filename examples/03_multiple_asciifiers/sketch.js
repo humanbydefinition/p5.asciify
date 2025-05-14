@@ -1,5 +1,5 @@
 /**
- * @name 05_multiple_asciifiers
+ * @name 03_multiple_asciifiers
  * @description Basic example applying multiple asciifiers on various textures in parallel with p5.js and p5.asciify.
  * @author humanbydefinition
  * @link https://github.com/humanbydefinition/p5.asciify
