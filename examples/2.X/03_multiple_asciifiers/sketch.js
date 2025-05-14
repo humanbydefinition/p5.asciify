@@ -10,7 +10,7 @@
  */
 
 import p5 from 'p5';
-import { p5asciify } from '../../src/lib/index';
+import { p5asciify } from '../../../src/lib/index';
 
 export const DEFAULT_BRIGHTNESS_OPTIONS = {
   enabled: true,
@@ -55,14 +55,14 @@ export const createSketch = (options = {}) => {
 
     // After `p5.asciify` is set up in the background after `setup()`,
     // we can call `setupAsciify()` to configure `p5asciify` and it's `P5Asciifier` instances and rendering pipelines
-    p.setupAsciify = () => {
+    p.setupAsciify = async () => {
 
       // Fetch the default `P5Asciifier` instance provided by the library
       defaultAsciifier = p5asciify.asciifier();
 
       // Create a new asciifier instance and apply it to a custom framebuffer
       customFramebuffer = p.createFramebuffer();
-      customAsciifier = p5asciify.add(customFramebuffer);
+      customAsciifier = await p5asciify.add(customFramebuffer);
 
       // Set the font size for both asciifiers
       defaultAsciifier.fontSize(finalDefaultOptions.fontSize);
@@ -128,15 +128,27 @@ export const createSketch = (options = {}) => {
       // Draw the FPS counter
       const fpsText = "FPS:" + Math.min(Math.ceil(p.frameRate()), 60);
 
-      p.noStroke();
-      p.fill(0);
-      p.rect(-p.width / 2, p.height / 2 - p.textAscent() - 4, p.textWidth(fpsText), p.textAscent());
+      // Set text properties first so the bounds calculation is accurate
+        p.textFont(defaultAsciifier.fontManager.font);
+        p.textSize(64);
 
-      p.textFont(defaultAsciifier.fontManager.font);
-      p.textSize(64);
-      p.fill(255, 255, 0);
-      p.text(fpsText, -p.width / 2, p.height / 2);
-    }
+        // Get accurate text bounds for the background rectangle
+        const bounds = p.textBounds(fpsText, -p.width / 2, p.height / 2);
+
+        // Draw background with padding
+        p.noStroke();
+        p.fill(0);
+        p.rect(
+            bounds.x - 5,
+            bounds.y - 5,
+            bounds.w + 10,
+            bounds.h + 10
+        );
+
+        // Draw the text
+        p.fill(255, 255, 0);
+        p.text(fpsText, -p.width / 2, p.height / 2);
+    };
 
     p.windowResized = () => {
       p.resizeCanvas(p.windowWidth, p.windowHeight);

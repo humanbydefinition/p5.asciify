@@ -49,14 +49,14 @@ export declare class P5AsciifierManager {
      * @param p The p5.js instance to use for the library.
      * @ignore
      */
-    init(p: p5): void;
+    init(p: p5): Promise<void>;
     /**
      * Sets up the `P5Asciifier` instances managed by the library.
      *
      * For the provided {@link p5asciify} object this method is called automatically when the users `setup` function finished executing.
      * @ignore
      */
-    setup(): void;
+    setup(): Promise<void>;
     /**
      * Executes the ASCII conversion rendering pipelines for each `P5Asciifier` instance managed by the library.
      *
@@ -83,7 +83,7 @@ export declare class P5AsciifierManager {
      * @returns The newly created `P5Asciifier` instance.
      * @throws {@link P5AsciifyError} If the framebuffer is not an instance of `p5.Framebuffer`.
      */
-    add(framebuffer?: p5.Framebuffer): P5Asciifier;
+    add(framebuffer?: p5.Framebuffer): P5Asciifier | Promise<P5Asciifier>;
     /**
      * Removes a `P5Asciifier` instance.
      * @param indexOrAsciifier The index of the `P5Asciifier` instance to remove, or the `P5Asciifier` instance itself.

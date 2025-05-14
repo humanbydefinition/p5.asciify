@@ -39,7 +39,7 @@ export declare class P5Asciifier {
      *
      * @ignore
      */
-    init(p: p5, baseFont: p5.Font): void;
+    init(p: p5, baseFont: p5.Font): Promise<void>;
     /**
      * Sets up the asciifier by initializing the font texture atlas, grid, and renderer manager.
      *
@@ -47,7 +47,7 @@ export declare class P5Asciifier {
      *
      * @ignore
      */
-    setup(captureFramebuffer: p5.Framebuffer): void;
+    setup(captureFramebuffer: p5.Framebuffer): Promise<void>;
     /**
      * Renders the ASCII output to the canvas.
      *

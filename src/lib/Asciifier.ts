@@ -8,6 +8,7 @@ import { P5AsciifyAbstractFeatureRenderer2D } from './renderers/2d/feature/Abstr
 import { P5AsciifySVGExporter, SVGExportOptions } from './utils/SVGExporter';
 import { JSONExportOptions, P5AsciifyJSONExporter } from './utils/JSONExporter';
 import { P5AsciifyPluginRegistry } from './plugins/PluginRegistry';
+import { compareVersions } from './utils';
 
 /**
  * Manages a rendering pipeline for ASCII conversion, including font management, grid calculations, and ASCII renderers, 
@@ -56,9 +57,12 @@ export class P5Asciifier {
      * 
      * @ignore
      */
-    public init(p: p5, baseFont: p5.Font): void {
+    public async init(p: p5, baseFont: p5.Font): Promise<void> {
         this._p = p;
         this._fontManager = new P5AsciifyFontManager(p, baseFont);
+        
+        // Return a resolved promise to ensure the async pattern is consistent
+        return Promise.resolve();
     }
 
     /**
@@ -68,10 +72,14 @@ export class P5Asciifier {
      * 
      * @ignore
      */
-    public setup(captureFramebuffer: p5.Framebuffer): void {
+    public async setup(captureFramebuffer: p5.Framebuffer): Promise<void> {
         this._captureFramebuffer = captureFramebuffer;
 
-        this._fontManager.setup(this._fontSize);
+        if (compareVersions(this._p.VERSION, "2.0.0") < 0) {
+            this._fontManager.setup(this._fontSize);
+        } else {
+            await this._fontManager.setup(this._fontSize);
+        }
 
         this._grid = new P5AsciifyGrid(
             this._captureFramebuffer,
@@ -86,6 +94,8 @@ export class P5Asciifier {
             this._fontManager,
             this._pluginRegistry,
         );
+
+        return Promise.resolve();
     }
 
     /**

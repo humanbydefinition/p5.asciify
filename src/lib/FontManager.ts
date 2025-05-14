@@ -1,6 +1,7 @@
 import p5 from 'p5';
 import { P5AsciifyError } from './AsciifyError';
 import { OpenTypeGlyph, P5AsciifyCharacter } from './types';
+import { compareVersions } from './utils';
 
 /**
  * Manages the font used for the ASCII rendering pipeline and provides methods for working with the font.
@@ -48,15 +49,17 @@ export class P5AsciifyFontManager {
      * @param fontSize The font size to use for the texture.
      * @ignore
      */
-    public setup(fontSize: number): void {
+    public async setup(fontSize: number): Promise<void> {
         this._fontSize = fontSize;
-        this.reset();
+        return this.reset();
     }
 
     /**
      * Initializes the character glyphs and characters array.
      */
     private _initializeGlyphsAndCharacters(): void {
+    if (compareVersions(this._p.VERSION, "2.0.0") < 0) {
+        // p5.js versions before 2.0.0 use opentype.js
         const glyphs = Object.values(this._font.font.glyphs.glyphs) as OpenTypeGlyph[];
         this._characters = [];
 
@@ -84,7 +87,52 @@ export class P5AsciifyFontManager {
                 r, g, b
             });
         });
+    } else {
+        // p5.js 2.0.0+ uses typr.js
+        // Extract all supported character codes from the font's cmap table
+        const characterList: string[] = [];
+        const startEndPairs = [];
+
+        // Access the cmap tables that contain character to glyph mappings
+        this._font.data.cmap.tables.forEach((table) => {
+            if (table.format === 4) { // Format 4 tables contain character ranges
+                // Each pair of startCount and endCount defines a range of characters
+                for (let i = 0; i < table.startCount.length; i++) {
+                    const start = table.startCount[i];
+                    const end = table.endCount[i];
+
+                    // Skip the 0xFFFF sentinel value at the end
+                    if (start === 0xFFFF && end === 0xFFFF) continue;
+
+                    startEndPairs.push({ start, end });
+
+                    // Add all characters in this range
+                    for (let codePoint = start; codePoint <= end; codePoint++) {
+                        characterList.push(String.fromCodePoint(codePoint));
+                    }
+                }
+            }
+        });
+
+        const uniqueChars = [...new Set(characterList)]; // Remove duplicates
+
+        // Convert directly to the final format with all required properties
+        this._characters = uniqueChars.map((char, index) => {
+            const codePoint = char.codePointAt(0) as number;
+            return {
+                character: char,
+                unicode: codePoint,
+                // For typr.js fonts, we can't directly access glyph paths the same way,
+                // so we'll create compatible wrapper functions or null values
+                getPath: null, // Will need to be handled differently for typr.js
+                advanceWidth: null, // Will need to be handled differently for typr.js
+                r: index % 256,
+                g: Math.floor(index / 256) % 256,
+                b: Math.floor(index / 65536)
+            };
+        });
     }
+}
 
     /**
      * Loads a font for ASCII rendering.
@@ -239,9 +287,9 @@ export class P5AsciifyFontManager {
      * Resets the texture atlas by recalculating the maximum glyph dimensions and recreating the texture.
      * @ignore
      */
-    public reset(): void {
+    public async reset(): Promise<void> {
         this._maxGlyphDimensions = this._getMaxGlyphDimensions(this._fontSize);
-        this._createTexture(this._fontSize);
+        return this._createTexture(this._fontSize);
     }
 
     /**
@@ -249,17 +297,17 @@ export class P5AsciifyFontManager {
      * @param fontSize - The new font size.
      * @ignore
      */
-    public setFontSize(fontSize: number): void {
+    public async setFontSize(fontSize: number): Promise<void> {
         this._fontSize = fontSize;
         this._maxGlyphDimensions = this._getMaxGlyphDimensions(this._fontSize);
-        this._createTexture(this._fontSize);
+        return this._createTexture(this._fontSize);
     }
 
     /**
      * Creates a texture containing all characters in the font, arranged in a 2d grid that is as square as possible.
      * @param fontSize - The font size to use for creating the texture.
      */
-    private _createTexture(fontSize: number): void {
+    private async _createTexture(fontSize: number): Promise<void> {
         this._textureColumns = Math.ceil(Math.sqrt(this.characters.length));
         this._textureRows = Math.ceil(this.characters.length / this._textureColumns);
 

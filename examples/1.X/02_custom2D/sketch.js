@@ -12,7 +12,7 @@
  */
 
 import p5 from 'p5';
-import { p5asciify } from '../../src/lib/index';
+import { p5asciify } from '../../../src/lib/index';
 import { RectangleManager } from './RectangleManager';
 
 const sketch = (p) => {
