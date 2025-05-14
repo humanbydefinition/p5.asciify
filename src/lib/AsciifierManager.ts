@@ -76,24 +76,59 @@ export class P5AsciifierManager {
      * @param p The p5.js instance to use for the library.
      * @ignore
      */
-    public async init(p: p5): void {
+    public async init(p: p5): Promise<void> {
         this._p = p;
-        if (compareVersions(p.VERSION, "2.0.0") < 0) {
-            this._p._incrementPreload();
 
-            this._baseFont = p.loadFont(URSAFONT_BASE64, (font) => {
-                this._asciifiers.forEach((asciifier) => {
-                    asciifier.init(p, font);
+        try {
+            if (compareVersions(p.VERSION, "2.0.0") < 0) {
+                // For p5.js 1.x - use preload increment and callback
+                this._p._incrementPreload();
+
+                // Create a Promise that will resolve when the font is loaded
+                const fontLoadPromise = new Promise<p5.Font>((resolve) => {
+                    this._baseFont = p.loadFont(URSAFONT_BASE64, (font) => {
+                        resolve(font);
+                    });
                 });
-            });
-        } else {
-            // Load the font using the Promise-based approach
-            this._baseFont = await this._p.loadFont(URSAFONT_BASE64);
 
-            // Create and wait for all initialization promises to complete
-            await Promise.all(
-                this._asciifiers.map(asciifier => asciifier.init(p, this._baseFont))
-            );
+                // Wait for the font to load
+                const font = await fontLoadPromise;
+
+                // Initialize all asciifiers with the loaded font
+                await Promise.all(
+                    this._asciifiers.map(asciifier => asciifier.init(p, font))
+                );
+
+                // Create framebuffer early for p5.js 1.x
+                this._sketchFramebuffer = this._p.createFramebuffer({
+                    depthFormat: this._p.UNSIGNED_INT,
+                    textureFiltering: this._p.NEAREST
+                });
+
+                // Set up each asciifier sequentially to avoid WebGL context conflicts
+                for (const asciifier of this._asciifiers) {
+                    await asciifier.setup(this._sketchFramebuffer);
+                }
+
+                // Decrement preload counter to allow sketch to continue
+                this._p._decrementPreload();
+            } else {
+                // For p5.js 2.0.0+ - use the Promise-based approach
+                this._baseFont = await this._p.loadFont(URSAFONT_BASE64);
+
+                // Create and wait for all initialization promises to complete
+                await Promise.all(
+                    this._asciifiers.map(asciifier => asciifier.init(p, this._baseFont))
+                );
+
+                // For 2.0.0+, we'll create framebuffer later in setup()
+            }
+        } catch (error) {
+            console.error("Error during p5.asciify initialization:", error);
+            if (compareVersions(p.VERSION, "2.0.0") < 0) {
+                this._p._decrementPreload(); // Ensure we don't block the sketch
+            }
+            throw error;
         }
     }
 
@@ -104,17 +139,20 @@ export class P5AsciifierManager {
      * @ignore
      */
     public async setup(): Promise<void> {
-        // Create framebuffer first
-        this._sketchFramebuffer = this._p.createFramebuffer({
-            depthFormat: this._p.UNSIGNED_INT,
-            textureFiltering: this._p.NEAREST
-        });
-    
-        // Then set up each asciifier sequentially to avoid WebGL context conflicts
-        for (const asciifier of this._asciifiers) {
-            await asciifier.setup(this._sketchFramebuffer);
+        // For p5.js 2.0.0+, create framebuffer here
+        // For p5.js 1.x, this was already done in init()
+        if (compareVersions(this._p.VERSION, "2.0.0") >= 0) {
+            this._sketchFramebuffer = this._p.createFramebuffer({
+                depthFormat: this._p.UNSIGNED_INT,
+                textureFiltering: this._p.NEAREST
+            });
+
+            // Then set up each asciifier sequentially to avoid WebGL context conflicts
+            for (const asciifier of this._asciifiers) {
+                await asciifier.setup(this._sketchFramebuffer);
+            }
         }
-        
+
         return Promise.resolve();
     }
 
@@ -157,21 +195,21 @@ export class P5AsciifierManager {
      * @throws {@link P5AsciifyError} If the framebuffer is not an instance of `p5.Framebuffer`.
      */
     public async add(framebuffer?: p5.Framebuffer): Promise<P5Asciifier> {
-    if (framebuffer !== undefined && !(framebuffer instanceof p5.Framebuffer)) {
-        throw new P5AsciifyError("Framebuffer must be an instance of p5.Framebuffer.");
+        if (framebuffer !== undefined && !(framebuffer instanceof p5.Framebuffer)) {
+            throw new P5AsciifyError("Framebuffer must be an instance of p5.Framebuffer.");
+        }
+
+        const asciifier = new P5Asciifier(this._pluginRegistry);
+        await asciifier.init(this._p, this._baseFont);
+
+        if (this._p._setupDone) {
+            await asciifier.setup(framebuffer ? framebuffer : this._sketchFramebuffer);
+        }
+
+        this._asciifiers.push(asciifier);
+
+        return asciifier;
     }
-
-    const asciifier = new P5Asciifier(this._pluginRegistry);
-    await asciifier.init(this._p, this._baseFont);
-
-    if (this._p._setupDone) {
-        await asciifier.setup(framebuffer ? framebuffer : this._sketchFramebuffer);
-    }
-
-    this._asciifiers.push(asciifier);
-
-    return asciifier;
-}
 
     /**
      * Removes a `P5Asciifier` instance.
