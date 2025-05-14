@@ -85,7 +85,7 @@ export const initHook = (p: p5) => {
 export const afterSetupHook = (p: p5) => {
   if (!p5asciify.hooksEnabled) return;  
 
-  setTimeout(() => {
+  setTimeout(async () => {
     // Ensure WebGL renderer is used
     if (!(p._renderer.drawingContext instanceof WebGLRenderingContext ||
       p._renderer.drawingContext instanceof WebGL2RenderingContext)) {
@@ -97,10 +97,19 @@ export const afterSetupHook = (p: p5) => {
       throw new P5AsciifyError("p5.asciify requires p5.js v1.8.0 or higher to run.");
     }
 
-    p5asciify.setup();
+    await p5asciify.setup();
 
     if (p.setupAsciify) {
-      p.setupAsciify();
+      // For p5.js 1.x, the setup might already be done during init
+      if (compareVersions(p.VERSION, "2.0.0") < 0) {
+        try {
+          p.setupAsciify();
+        } catch (error) {
+          console.error("Error in setupAsciify:", error);
+        }
+      } else {
+        p.setupAsciify();
+      }
     }
   }, 0);
 };
