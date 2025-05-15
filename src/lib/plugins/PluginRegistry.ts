@@ -3,6 +3,7 @@ import { P5AsciifyError } from '../AsciifyError';
 
 /**
  * Registry that manages renderer plugins for p5.asciify
+ * @ignore
  */
 export class P5AsciifyPluginRegistry {
     // Map of plugin id to plugin instance
