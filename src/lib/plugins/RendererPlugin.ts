@@ -19,8 +19,11 @@ export interface P5AsciifyRendererPlugin {
     
     /** Version of the plugin */
     readonly version: string;
+
+    /** Author of the plugin */
+    readonly author: string;
     
-    /** Creates a new instance of the renderer */
+    /** Creates a new instance of the plugin renderer */
     create(
         p: p5, 
         captureFramebuffer: p5.Framebuffer, 
