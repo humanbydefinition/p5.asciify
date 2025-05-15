@@ -1,18 +1,22 @@
-# Class: `abstract` P5AsciifyRenderer\<T\>
+# Class: P5AsciifyRenderer2D\<T\>
 
-Defined in: [renderers/AsciiRenderer.ts:11](https://github.com/humanbydefinition/p5.asciify/blob/00720ad8f2ef8d8a53f9642532fdf1c23814b144/src/lib/renderers/AsciiRenderer.ts#L11)
+Defined in: [renderers/2d/AsciiRenderer2D.ts:20](https://github.com/humanbydefinition/p5.asciify/blob/883b8f77570245b1cd4d1e87634e3133d65faa13/src/lib/renderers/2d/AsciiRenderer2D.ts#L20)
 
-Abstract ASCII renderer base class that all custom and pre-built ASCII renderers extend from.
+ASCII renderer for custom 2D rendering.
+
+## Extends
+
+- [`P5AsciifyRenderer`](P5AsciifyRenderer.md)\<`T`\>
 
 ## Extended by
 
-- [`P5AsciifyRenderer2D`](../namespaces/renderer2d/classes/P5AsciifyRenderer2D.md)
+- [`P5AsciifyAbstractFeatureRenderer2D`](P5AsciifyAbstractFeatureRenderer2D.md)
 
 ## Type Parameters
 
-| Type Parameter                                                                | Default type                                                    |
-| ----------------------------------------------------------------------------- | --------------------------------------------------------------- |
-| `T` _extends_ [`AsciiRendererOptions`](../interfaces/AsciiRendererOptions.md) | [`AsciiRendererOptions`](../interfaces/AsciiRendererOptions.md) |
+| Type Parameter                                                                                                | Default type                                                                                    |
+| ------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| `T` _extends_ [`AsciiRendererOptions`](../p5.asciify/namespaces/renderers/interfaces/AsciiRendererOptions.md) | [`AsciiRendererOptions`](../p5.asciify/namespaces/renderers/interfaces/AsciiRendererOptions.md) |
 
 ## Accessors
 
@@ -22,7 +26,7 @@ Abstract ASCII renderer base class that all custom and pre-built ASCII renderers
 
 > **get** **characterFramebuffer**(): `Framebuffer`
 
-Defined in: [renderers/AsciiRenderer.ts:492](https://github.com/humanbydefinition/p5.asciify/blob/00720ad8f2ef8d8a53f9642532fdf1c23814b144/src/lib/renderers/AsciiRenderer.ts#L492)
+Defined in: [renderers/AsciiRenderer.ts:492](https://github.com/humanbydefinition/p5.asciify/blob/883b8f77570245b1cd4d1e87634e3133d65faa13/src/lib/renderers/AsciiRenderer.ts#L492)
 
 Get the character framebuffer, whose pixels define the ASCII characters to use in the grid cells.
 
@@ -85,6 +89,10 @@ function draw() {
 
 `Framebuffer`
 
+#### Inherited from
+
+[`P5AsciifyRenderer`](P5AsciifyRenderer.md).[`characterFramebuffer`](P5AsciifyRenderer.md#characterframebuffer)
+
 ---
 
 ### options
@@ -93,7 +101,7 @@ function draw() {
 
 > **get** **options**(): `T`
 
-Defined in: [renderers/AsciiRenderer.ts:205](https://github.com/humanbydefinition/p5.asciify/blob/00720ad8f2ef8d8a53f9642532fdf1c23814b144/src/lib/renderers/AsciiRenderer.ts#L205)
+Defined in: [renderers/AsciiRenderer.ts:205](https://github.com/humanbydefinition/p5.asciify/blob/883b8f77570245b1cd4d1e87634e3133d65faa13/src/lib/renderers/AsciiRenderer.ts#L205)
 
 Get the set options for the ASCII renderer.
 
@@ -115,6 +123,10 @@ function setupAsciify() {
 
 `T`
 
+#### Inherited from
+
+[`P5AsciifyRenderer`](P5AsciifyRenderer.md).[`options`](P5AsciifyRenderer.md#options)
+
 ---
 
 ### primaryColorFramebuffer
@@ -123,7 +135,7 @@ function setupAsciify() {
 
 > **get** **primaryColorFramebuffer**(): `Framebuffer`
 
-Defined in: [renderers/AsciiRenderer.ts:259](https://github.com/humanbydefinition/p5.asciify/blob/00720ad8f2ef8d8a53f9642532fdf1c23814b144/src/lib/renderers/AsciiRenderer.ts#L259)
+Defined in: [renderers/AsciiRenderer.ts:259](https://github.com/humanbydefinition/p5.asciify/blob/883b8f77570245b1cd4d1e87634e3133d65faa13/src/lib/renderers/AsciiRenderer.ts#L259)
 
 Get the primary color framebuffer, whose pixels define the character colors of the grid cells.
 
@@ -186,6 +198,10 @@ function draw() {
 
 `Framebuffer`
 
+#### Inherited from
+
+[`P5AsciifyRenderer`](P5AsciifyRenderer.md).[`primaryColorFramebuffer`](P5AsciifyRenderer.md#primarycolorframebuffer)
+
 ---
 
 ### rotationFramebuffer
@@ -194,7 +210,7 @@ function draw() {
 
 > **get** **rotationFramebuffer**(): `Framebuffer`
 
-Defined in: [renderers/AsciiRenderer.ts:439](https://github.com/humanbydefinition/p5.asciify/blob/00720ad8f2ef8d8a53f9642532fdf1c23814b144/src/lib/renderers/AsciiRenderer.ts#L439)
+Defined in: [renderers/AsciiRenderer.ts:439](https://github.com/humanbydefinition/p5.asciify/blob/883b8f77570245b1cd4d1e87634e3133d65faa13/src/lib/renderers/AsciiRenderer.ts#L439)
 
 Get the rotation framebuffer, whose pixels define the rotation angle of each character in the grid.
 
@@ -267,6 +283,10 @@ function draw() {
 
 `Framebuffer`
 
+#### Inherited from
+
+[`P5AsciifyRenderer`](P5AsciifyRenderer.md).[`rotationFramebuffer`](P5AsciifyRenderer.md#rotationframebuffer)
+
 ---
 
 ### secondaryColorFramebuffer
@@ -275,7 +295,7 @@ function draw() {
 
 > **get** **secondaryColorFramebuffer**(): `Framebuffer`
 
-Defined in: [renderers/AsciiRenderer.ts:313](https://github.com/humanbydefinition/p5.asciify/blob/00720ad8f2ef8d8a53f9642532fdf1c23814b144/src/lib/renderers/AsciiRenderer.ts#L313)
+Defined in: [renderers/AsciiRenderer.ts:313](https://github.com/humanbydefinition/p5.asciify/blob/883b8f77570245b1cd4d1e87634e3133d65faa13/src/lib/renderers/AsciiRenderer.ts#L313)
 
 Get the secondary color framebuffer, whose pixels define the background colors of the grid cells.
 
@@ -338,6 +358,10 @@ function draw() {
 
 `Framebuffer`
 
+#### Inherited from
+
+[`P5AsciifyRenderer`](P5AsciifyRenderer.md).[`secondaryColorFramebuffer`](P5AsciifyRenderer.md#secondarycolorframebuffer)
+
 ---
 
 ### transformFramebuffer
@@ -346,7 +370,7 @@ function draw() {
 
 > **get** **transformFramebuffer**(): `Framebuffer`
 
-Defined in: [renderers/AsciiRenderer.ts:378](https://github.com/humanbydefinition/p5.asciify/blob/00720ad8f2ef8d8a53f9642532fdf1c23814b144/src/lib/renderers/AsciiRenderer.ts#L378)
+Defined in: [renderers/AsciiRenderer.ts:378](https://github.com/humanbydefinition/p5.asciify/blob/883b8f77570245b1cd4d1e87634e3133d65faa13/src/lib/renderers/AsciiRenderer.ts#L378)
 
 Get the transform framebuffer, where each pixels color channel defines a different transformation:
 
@@ -423,13 +447,17 @@ function draw() {
 
 `Framebuffer`
 
+#### Inherited from
+
+[`P5AsciifyRenderer`](P5AsciifyRenderer.md).[`transformFramebuffer`](P5AsciifyRenderer.md#transformframebuffer)
+
 ## Methods
 
 ### disable()
 
 > **disable**(): `boolean`
 
-Defined in: [renderers/AsciiRenderer.ts:189](https://github.com/humanbydefinition/p5.asciify/blob/00720ad8f2ef8d8a53f9642532fdf1c23814b144/src/lib/renderers/AsciiRenderer.ts#L189)
+Defined in: [renderers/AsciiRenderer.ts:189](https://github.com/humanbydefinition/p5.asciify/blob/883b8f77570245b1cd4d1e87634e3133d65faa13/src/lib/renderers/AsciiRenderer.ts#L189)
 
 Disable the renderer.
 
@@ -456,13 +484,17 @@ function keyPressed() {
 }
 ```
 
+#### Inherited from
+
+[`P5AsciifyRenderer`](P5AsciifyRenderer.md).[`disable`](P5AsciifyRenderer.md#disable)
+
 ---
 
 ### enable()
 
 > **enable**(): `boolean`
 
-Defined in: [renderers/AsciiRenderer.ts:164](https://github.com/humanbydefinition/p5.asciify/blob/00720ad8f2ef8d8a53f9642532fdf1c23814b144/src/lib/renderers/AsciiRenderer.ts#L164)
+Defined in: [renderers/AsciiRenderer.ts:164](https://github.com/humanbydefinition/p5.asciify/blob/883b8f77570245b1cd4d1e87634e3133d65faa13/src/lib/renderers/AsciiRenderer.ts#L164)
 
 Enable the renderer.
 
@@ -486,13 +518,17 @@ function keyPressed() {
 }
 ```
 
+#### Inherited from
+
+[`P5AsciifyRenderer`](P5AsciifyRenderer.md).[`enable`](P5AsciifyRenderer.md#enable)
+
 ---
 
 ### enabled()
 
 > **enabled**(`enabled?`): `boolean`
 
-Defined in: [renderers/AsciiRenderer.ts:119](https://github.com/humanbydefinition/p5.asciify/blob/00720ad8f2ef8d8a53f9642532fdf1c23814b144/src/lib/renderers/AsciiRenderer.ts#L119)
+Defined in: [renderers/AsciiRenderer.ts:119](https://github.com/humanbydefinition/p5.asciify/blob/883b8f77570245b1cd4d1e87634e3133d65faa13/src/lib/renderers/AsciiRenderer.ts#L119)
 
 Enable or disable the renderer.
 
@@ -526,13 +562,17 @@ function keyPressed() {
 }
 ```
 
+#### Inherited from
+
+[`P5AsciifyRenderer`](P5AsciifyRenderer.md).[`enabled`](P5AsciifyRenderer.md#enabled)
+
 ---
 
 ### update()
 
 > **update**(`newOptions`): `void`
 
-Defined in: [renderers/AsciiRenderer.ts:94](https://github.com/humanbydefinition/p5.asciify/blob/00720ad8f2ef8d8a53f9642532fdf1c23814b144/src/lib/renderers/AsciiRenderer.ts#L94)
+Defined in: [renderers/AsciiRenderer.ts:94](https://github.com/humanbydefinition/p5.asciify/blob/883b8f77570245b1cd4d1e87634e3133d65faa13/src/lib/renderers/AsciiRenderer.ts#L94)
 
 Updates renderer options.
 
@@ -566,3 +606,7 @@ function setupAsciify() {
     });
 }
 ```
+
+#### Inherited from
+
+[`P5AsciifyRenderer`](P5AsciifyRenderer.md).[`update`](P5AsciifyRenderer.md#update)
