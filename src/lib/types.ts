@@ -10,12 +10,12 @@ import { P5AsciifyRenderer } from './renderers';
  * Extends the global window object with a preload function, in case the user doesn't provide one.
  */
 declare global {
-  interface Window {
-    p5asciify: P5AsciifierManager;
-    P5AsciifyAbstractFeatureRenderer2D: typeof P5AsciifyAbstractFeatureRenderer2D;
-    P5AsciifyRenderer2D: typeof P5AsciifyRenderer2D;
-    P5AsciifyRenderer: typeof P5AsciifyRenderer;
-  }
+    interface Window {
+        p5asciify: P5AsciifierManager;
+        P5AsciifyAbstractFeatureRenderer2D: typeof P5AsciifyAbstractFeatureRenderer2D;
+        P5AsciifyRenderer2D: typeof P5AsciifyRenderer2D;
+        P5AsciifyRenderer: typeof P5AsciifyRenderer;
+    }
 }
 
 
@@ -116,6 +116,35 @@ declare module 'p5' {
         _array: number[];
     }
 
+    interface Font {
+        data: {
+            cmap: {
+                tables: {
+                    platformID: number;
+                    encodingID: number;
+                    map: Record<string, number>;
+                    maxGlyphID: number;
+                    glyphIndexMap: Record<string, number>;
+                    [key: string]: any;
+                }[];
+                [key: string]: any;
+            };
+            glyf: {
+                [glyphIndex: number]: any;
+            };
+            hmtx: {
+                aWidth: number[];
+                [key: string]: any;
+            };
+            head: {
+                unitsPerEm: number;
+                [key: string]: any;
+            };
+            [key: string]: any;
+        };
+        [key: string]: any;
+    }
+
     interface Framebuffer {
         loadPixels(): void;
         updatePixels(): void;
@@ -153,6 +182,8 @@ declare module 'p5' {
 
         createFramebuffer(options?: object): p5.Framebuffer;
     }
+
+    const registerAddon: (addon: (p5Core: any, fn: any, lifecycles: any) => void) => void;
 }
 
 /**
