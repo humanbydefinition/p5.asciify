@@ -2,7 +2,7 @@
 
 > **createGlyphPath**(`font`, `glyphData`, `x`, `y`, `fontSize`): `object`
 
-Defined in: [utils/fonts/TyprFontUtils.ts:60](https://github.com/humanbydefinition/p5.asciify/blob/883b8f77570245b1cd4d1e87634e3133d65faa13/src/lib/utils/fonts/TyprFontUtils.ts#L60)
+Defined in: [utils/fonts/TyprFontUtils.ts:60](https://github.com/humanbydefinition/p5.asciify/blob/da415d822fbe05fa59dd8bb5f8c6f704edbd5094/src/lib/utils/fonts/TyprFontUtils.ts#L60)
 
 Creates a path object for a glyph that implements the same interface as OpenType.js paths
 
@@ -24,5 +24,5 @@ A path object with getBoundingBox and toSVG methods
 
 | Name               | Type           | Defined in                                                                                                                                                                |
 | ------------------ | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `getBoundingBox()` | () => `object` | [utils/fonts/TyprFontUtils.ts:66](https://github.com/humanbydefinition/p5.asciify/blob/883b8f77570245b1cd4d1e87634e3133d65faa13/src/lib/utils/fonts/TyprFontUtils.ts#L66) |
-| `toSVG()`          | () => `string` | [utils/fonts/TyprFontUtils.ts:66](https://github.com/humanbydefinition/p5.asciify/blob/883b8f77570245b1cd4d1e87634e3133d65faa13/src/lib/utils/fonts/TyprFontUtils.ts#L66) |
+| `getBoundingBox()` | () => `object` | [utils/fonts/TyprFontUtils.ts:66](https://github.com/humanbydefinition/p5.asciify/blob/da415d822fbe05fa59dd8bb5f8c6f704edbd5094/src/lib/utils/fonts/TyprFontUtils.ts#L66) |
+| `toSVG()`          | () => `string` | [utils/fonts/TyprFontUtils.ts:66](https://github.com/humanbydefinition/p5.asciify/blob/da415d822fbe05fa59dd8bb5f8c6f704edbd5094/src/lib/utils/fonts/TyprFontUtils.ts#L66) |

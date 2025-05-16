@@ -34,9 +34,9 @@ If you have an instance of a custom renderer stored in a variable called `custom
 
 All of these framebuffers share the same dimensions and are always equal to the grid dimensions in columns and rows, which are responsive based on the current font, canvas- & font-size by default.
 
-Each framebuffer and it's pixels are processed differently, some more complex than others, but the basic idea is to populate each pixel of the framebuffers with a value that corresponds to the properties we want to control in our ASCII representation. While some framebuffers like the `primaryColorFramebuffer` and `secondaryColorFramebuffer` are pretty straightforward, others like the `characterFramebuffer` require a bit more work to get the correct character in the right pixel, especially when using custom shaders. If a pixel in the `characterFramebuffer` is left transparent, the whole grid cell will be left transparent as well, making what's behind visible.
+Each framebuffer and it's pixels are processed differently, some more complex than others, but the basic idea is to populate each pixel of the framebuffers with a value that corresponds to the properties we want to control in our ASCII representation. While some framebuffers like the `primaryColorFramebuffer` and `secondaryColorFramebuffer` are pretty straightforward, others like the `characterFramebuffer` require a bit more work to display the characters we want. If a pixel in the `characterFramebuffer` is left transparent, the whole grid cell will be left transparent as well, making what's behind visible.
 
-After the `draw()` function of your sketch has been executed, the `p5.asciify` library will automatically read the values of each ASCII converters six framebuffers in your pipeline and merge them into six combined framebuffers, which are then used to render the final ASCII representation of an `P5Asciifier` instance based on the canvas content or the texture provided to it. In the case of custom renderers, the canvas or texture content doesn't matter, as the ASCII representation is solely based on the framebuffers populated by you during the `draw()` function of your sketch.
+After the `draw()` function of your sketch has been executed, the `p5.asciify` library will automatically read the values of each ASCII converters five framebuffers in your pipeline and merge them into five combined framebuffers, which are then used to render the final ASCII representation of an `P5Asciifier` instance based on the canvas content or the texture provided to it. In the case of custom renderers, the canvas or texture content doesn't matter, as the ASCII representation is solely based on the framebuffers populated by you during the `draw()` function of your sketch.
 
 ## Creating a custom ASCII renderer
 
@@ -74,7 +74,7 @@ Let's start with the `characterFramebuffer`, which is the most complex one to po
 
 <br />
 
-In here we are using a previously unintroduced property `asciifier.fontManager`, which is the `P5AsciifyFontManager` instance of the `asciifier` instance. The `P5AsciifyFontManager` is responsible for managing the fonts used in the ASCII representation and provides us with methods to get relevant information about each character in the font, and which color to use for each character.
+In here we are using a previously unintroduced property `asciifier.fontManager`, which is the `P5AsciifyFontManager` instance of the `asciifier` instance. The `P5AsciifyFontManager` is responsible for managing the font used in the ASCII representation and provides us with methods to get relevant information about each character in the font, and which color to use for each character.
 
 Using `asciifier.fontManager.glyphColors(string)` we can get an array of RGB colors for each character in the string. Likewise, there is `.glyphColor(char)` to get the RGB colors of a single character.
 

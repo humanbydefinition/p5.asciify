@@ -6,7 +6,7 @@ title: Installation
 ## Prerequisites
 
 - `p5.asciify` requires [`p5.js`](https://p5js.org/) version `1.8.0` or higher.
-  - The library is also compatible with `p5.js` version `2.x.x`, but only from version `2.0.2` onward.
+  - The library is also compatible with `p5.js` versions `2.x.x`, but only from version `2.0.2` onward.
 - `p5.asciify` only runs in [`WEBGL`](https://p5js.org/reference/#/p5/createCanvas) mode, so make sure to set up your canvas accordingly:
 ```javascript
 function setup() {
@@ -65,11 +65,20 @@ const sketch = (p) => {
 let myp5 = new p5(sketch);
 ```
 
-<hr />
-
 :::info
 At this point - when imported correctly - your `p5.js` canvas in `WEBGL` mode should already be converted into a grid of ASCII characters with the default settings applied.
+:::
 
-Make sure to check out the [**Fundamentals**](../guides/fundamentals) guide to learn more about the core concepts of the library and how to get started with your first project before diving into the [**Your First Rendering Pipeline**](../guides/first-rendering-pipeline) guide to create your first custom rendering pipeline. (◕‿◕✿)
+<hr />
 
-If you feel adventurous, you can also check out the [**Playgrounds**](../playgrounds) section to run and play with `p5.asciify` example sketches in your browser, without installing anything! (✿◠‿◠)
+## Next steps
+
+Now that you have `p5.asciify` installed and running, you're ready to start creating amazing ASCII art and textmode experiences in your `p5.js` projects! (｡◕‿‿◕｡)
+
+It's a good idea to check out the [**Playgrounds**](../playgrounds) section to run, and play with `p5.asciify` example sketches in your browser to get a feel for the library and its capabilities.
+
+In the [**Fundamentals**](../guides/fundamentals) guide, you'll learn more about the core concepts of the library and how to get started with your first project before diving into the [**Your First Rendering Pipeline**](../guides/first-rendering-pipeline) guide to create your first own rendering pipeline. (◕‿◕✿)
+
+:::note
+If you are using `p5.js` version `2.x.x`, please refer to the [**Integrating p5.asciify with p5.js 2.0**](./p5-2.x.x) guide for more information on how to set up the library in your project. All examples and guides in this documentation are based on `p5.js` versions `1.8.0` to `1.X.X`, so please keep that in mind when following along.
+:::

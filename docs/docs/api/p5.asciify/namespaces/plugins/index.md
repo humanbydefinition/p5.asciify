@@ -2,12 +2,6 @@
 
 Contains plugin interfaces to implement against.
 
-## Classes
-
-| Class                                                         | Description                                           |
-| ------------------------------------------------------------- | ----------------------------------------------------- |
-| [P5AsciifyPluginRegistry](classes/P5AsciifyPluginRegistry.md) | Registry that manages renderer plugins for p5.asciify |
-
 ## Interfaces
 
 | Interface                                                        | Description                                                    |

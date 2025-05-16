@@ -2,7 +2,7 @@ import { P5AsciifyRenderer } from '../renderers/AsciiRenderer';
 import p5 from 'p5';
 import { P5AsciifyGrid } from '../Grid';
 import { P5AsciifyFontManager } from '../FontManager';
-import { AsciiRendererOptions } from '../renderers/types';
+import { FeatureAsciiRendererOptions } from '../renderers/types';
 
 /**
  * Interface that all p5.asciify renderer plugins must implement.
@@ -29,6 +29,6 @@ export interface P5AsciifyRendererPlugin {
         captureFramebuffer: p5.Framebuffer, 
         grid: P5AsciifyGrid, 
         fontManager: P5AsciifyFontManager, 
-        options?: AsciiRendererOptions
+        options?: FeatureAsciiRendererOptions
     ): P5AsciifyRenderer;
 }
