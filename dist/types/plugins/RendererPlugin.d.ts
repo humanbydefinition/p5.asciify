@@ -15,6 +15,8 @@ export interface P5AsciifyRendererPlugin {
     readonly description: string;
     /** Version of the plugin */
     readonly version: string;
-    /** Creates a new instance of the renderer */
+    /** Author of the plugin */
+    readonly author: string;
+    /** Creates a new instance of the plugin renderer */
     create(p: p5, captureFramebuffer: p5.Framebuffer, grid: P5AsciifyGrid, fontManager: P5AsciifyFontManager, options?: AsciiRendererOptions): P5AsciifyRenderer;
 }
