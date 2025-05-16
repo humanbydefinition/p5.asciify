@@ -1,8 +1,8 @@
-var fA = Object.defineProperty;
-var CA = (o, e, A) => e in o ? fA(o, e, { enumerable: !0, configurable: !0, writable: !0, value: A }) : o[e] = A;
-var s = (o, e, A) => CA(o, typeof e != "symbol" ? e + "" : e, A);
-import l from "p5";
-class dA {
+var _A = Object.defineProperty;
+var PA = (o, e, A) => e in o ? _A(o, e, { enumerable: !0, configurable: !0, writable: !0, value: A }) : o[e] = A;
+var s = (o, e, A) => PA(o, typeof e != "symbol" ? e + "" : e, A);
+import _ from "p5";
+class mA {
   /**
    * Create a new grid instance.
    * @param _texture The framebuffer for the asciifier, used to determine the grid dimensions.
@@ -130,7 +130,7 @@ class dA {
     this._fixedDimensions = e;
   }
 }
-class Q extends Error {
+class n extends Error {
   /**
    * Create a new P5AsciifyError instance.
    * @param message The error message.
@@ -139,7 +139,7 @@ class Q extends Error {
     super(e), this.name = "P5AsciifyError";
   }
 }
-const T = (o, e) => {
+const M = (o, e) => {
   const [A, r] = [o, e].map((t) => t.split(".").map(Number));
   for (let t = 0; t < Math.max(A.length, r.length); t++) {
     const i = A[t] ?? 0, B = r[t] ?? 0;
@@ -147,7 +147,7 @@ const T = (o, e) => {
   }
   return 0;
 };
-class aA {
+class hA {
   /**
    * Creates a new SVG exporter.
    * @param p The p5.js instance
@@ -175,62 +175,62 @@ class aA {
       ...i
     };
     if (!B.filename) {
-      const g = /* @__PURE__ */ new Date(), D = g.toISOString().split("T")[0], a = g.toTimeString().split(" ")[0].replace(/:/g, "-");
-      B.filename = `asciify_output_${D}_${a}`;
+      const E = /* @__PURE__ */ new Date(), b = E.toISOString().split("T")[0], C = E.toTimeString().split(" ")[0].replace(/:/g, "-");
+      B.filename = `asciify_output_${b}_${C}`;
     }
-    const n = e.characterFramebuffer, c = e.primaryColorFramebuffer, u = e.secondaryColorFramebuffer, _ = e.transformFramebuffer, f = e.rotationFramebuffer;
-    n.loadPixels(), c.loadPixels(), u.loadPixels(), _.loadPixels(), f.loadPixels();
-    const P = n.pixels, h = c.pixels, E = u.pixels, w = _.pixels, x = f.pixels, M = A.cols, p = A.rows, v = A.cellWidth, d = A.cellHeight, F = A.width, U = A.height, k = r.characters;
-    let m = this.generateSVGHeader(F, U);
+    const Q = e.characterFramebuffer, a = e.primaryColorFramebuffer, h = e.secondaryColorFramebuffer, c = e.transformFramebuffer, l = e.rotationFramebuffer;
+    Q.loadPixels(), a.loadPixels(), h.loadPixels(), c.loadPixels(), l.loadPixels();
+    const u = Q.pixels, f = a.pixels, g = h.pixels, m = c.pixels, P = l.pixels, p = A.cols, d = A.rows, S = A.cellWidth, D = A.cellHeight, w = A.width, k = A.height, T = r.characters;
+    let x = this.generateSVGHeader(w, k);
     if (B.includeBackgroundRectangles) {
-      const g = t, D = this.p.color(g), a = `rgba(${D._array[0] * 255},${D._array[1] * 255},${D._array[2] * 255},${D._array[3]})`;
-      m += `
-<rect width="${F}" height="${U}" fill="${a}" />`;
+      const E = t, b = this.p.color(E), C = `rgba(${b._array[0] * 255},${b._array[1] * 255},${b._array[2] * 255},${b._array[3]})`;
+      x += `
+<rect width="${w}" height="${k}" fill="${C}" />`;
     }
-    m += `
+    x += `
 <g id="ascii-cells">`;
-    let I = 0;
-    for (let g = 0; g < p; g++)
-      for (let D = 0; D < M; D++) {
-        const a = I * 4, z = P[a], R = P[a + 1];
-        let b = z + (R << 8);
-        b >= k.length && (b = k.length - 1);
-        let y = {
-          r: h[a],
-          g: h[a + 1],
-          b: h[a + 2],
-          a: h[a + 3]
+    let F = 0;
+    for (let E = 0; E < d; E++)
+      for (let b = 0; b < p; b++) {
+        const C = F * 4, U = u[C], z = u[C + 1];
+        let y = U + (z << 8);
+        y >= T.length && (y = T.length - 1);
+        let v = {
+          r: f[C],
+          g: f[C + 1],
+          b: f[C + 2],
+          a: f[C + 3]
         }, N = {
-          r: E[a],
-          g: E[a + 1],
-          b: E[a + 2],
-          a: E[a + 3]
+          r: g[C],
+          g: g[C + 1],
+          b: g[C + 2],
+          a: g[C + 3]
         };
-        const V = w[a], j = w[a + 1], $ = w[a + 2], L = V === 255, O = j === 255, W = $ === 255;
+        const j = m[C], O = m[C + 1], H = m[C + 2], L = j === 255, W = O === 255, K = H === 255;
         if (L) {
-          const cA = y;
-          y = N, N = cA;
+          const uA = v;
+          v = N, N = uA;
         }
-        const K = x[a], X = x[a + 1], Z = K + X * 256 / 15, q = D * v, AA = g * d;
-        m += this.generateSVGCellContent(
-          b,
+        const X = P[C], Z = P[C + 1], q = X + Z * 256 / 15, AA = b * S, eA = E * D;
+        x += this.generateSVGCellContent(
           y,
-          N,
-          q,
-          AA,
           v,
-          d,
-          Z,
-          O,
+          N,
+          AA,
+          eA,
+          S,
+          D,
+          q,
           W,
+          K,
           r,
-          k[b],
+          T[y],
           B
-        ), I++;
+        ), F++;
       }
-    m += `
+    x += `
 </g>
-</svg>`, this.downloadSVG(m, B.filename);
+</svg>`, this.downloadSVG(x, B.filename);
   }
   /**
    * Generates the SVG header content
@@ -261,41 +261,43 @@ class aA {
    * @param options The SVG export options
    * @returns The SVG content for the cell
    */
-  generateSVGCellContent(e, A, r, t, i, B, n, c, u, _, f, P, h) {
-    let E = "";
-    if (h.includeBackgroundRectangles && r.a > 0) {
-      const d = `rgba(${r.r},${r.g},${r.b},${r.a / 255})`;
-      h.drawMode === "stroke" ? E += `
-  <rect x="${t}" y="${i}" width="${B}" height="${n}" stroke="${d}" fill="none" stroke-width="${h.strokeWidth || 1}" />` : E += `
-  <rect x="${t}" y="${i}" width="${B}" height="${n}" fill="${d}" />`;
+  generateSVGCellContent(e, A, r, t, i, B, Q, a, h, c, l, u, f) {
+    let g = "";
+    if (f.includeBackgroundRectangles && r.a > 0) {
+      const D = `rgba(${r.r},${r.g},${r.b},${r.a / 255})`;
+      f.drawMode === "stroke" ? g += `
+  <rect x="${t}" y="${i}" width="${B}" height="${Q}" stroke="${D}" fill="none" stroke-width="${f.strokeWidth || 1}" />` : g += `
+  <rect x="${t}" y="${i}" width="${B}" height="${Q}" fill="${D}" />`;
     }
-    const w = t + B / 2, x = i + n / 2, M = `rgba(${A.r},${A.g},${A.b},${A.a / 255})`, p = [];
-    if (u || _) {
-      const d = u ? -1 : 1, F = _ ? -1 : 1;
-      p.push(`translate(${w} ${x})`), p.push(`scale(${d} ${F})`), p.push(`translate(${-w} ${-x})`);
+    const m = t + B / 2, P = i + Q / 2, p = `rgba(${A.r},${A.g},${A.b},${A.a / 255})`, d = [];
+    if (h || c) {
+      const D = h ? -1 : 1, w = c ? -1 : 1;
+      d.push(`translate(${m} ${P})`), d.push(`scale(${D} ${w})`), d.push(`translate(${-m} ${-P})`);
     }
-    c && p.push(`rotate(${c} ${w} ${x})`);
-    const v = p.length ? ` transform="${p.join(" ")}"` : "";
-    if (h.drawMode === "text") {
-      const d = Math.min(B, n) * 0.8;
-      E += `
-  <text x="${w}" y="${x}" font-family="monospace" font-size="${d}px" fill="${M}" text-anchor="middle" dominant-baseline="middle"${v}>${this.escapeXml(P.character)}</text>`;
+    a && d.push(`rotate(${a} ${m} ${P})`);
+    const S = d.length ? ` transform="${d.join(" ")}"` : "";
+    if (f.drawMode === "text") {
+      const D = Math.min(B, Q) * 0.8;
+      g += `
+  <text x="${m}" y="${P}" font-family="monospace" font-size="${D}px" fill="${p}" text-anchor="middle" dominant-baseline="middle"${S}>${this.escapeXml(u.character)}</text>`;
     } else {
-      const d = f.fontSize / f.font.font.unitsPerEm, F = t + (B - P.advanceWidth * d) / 2, U = i + (n + f.fontSize * 0.7) / 2, I = P.getPath(F, U, f.fontSize).toSVG().match(/d="([^"]+)"/);
-      if (I && I[1]) {
-        if (v && (E += `
-  <g${v}>`), h.drawMode === "stroke") {
-          const g = h.strokeWidth || 1, D = `path-${e}-${t}-${i}`.replace(/\./g, "-");
-          E += `
-    <path id="${D}" d="${I[1]}" stroke="${M}" stroke-width="${g}" fill="none" />`;
+      let D = 1;
+      M(this.p.VERSION, "2.0.0") < 0 ? D = l.fontSize / l.font.font.unitsPerEm : D = l.fontSize / l.font.data.head.unitsPerEm;
+      const w = t + (B - u.advanceWidth * D) / 2, k = i + (Q + l.fontSize * 0.7) / 2, F = u.getPath(w, k, l.fontSize).toSVG().match(/d="([^"]+)"/);
+      if (F && F[1]) {
+        if (S && (g += `
+  <g${S}>`), f.drawMode === "stroke") {
+          const E = f.strokeWidth || 1, b = `path-${e}-${t}-${i}`.replace(/\./g, "-");
+          g += `
+    <path id="${b}" d="${F[1]}" stroke="${p}" stroke-width="${E}" fill="none" />`;
         } else
-          E += `
-    <path d="${I[1]}" fill="${M}" />`;
-        v && (E += `
+          g += `
+    <path d="${F[1]}" fill="${p}" />`;
+        S && (g += `
   </g>`);
       }
     }
-    return E;
+    return g;
   }
   /**
    * Escapes special XML characters in a string
@@ -315,7 +317,7 @@ class aA {
     i.href = t, i.download = `${A}.svg`, document.body.appendChild(i), i.click(), document.body.removeChild(i), URL.revokeObjectURL(t);
   }
 }
-class hA {
+class lA {
   /**
    * Creates a new JSON exporter.
    * @param p The p5.js instance
@@ -342,83 +344,83 @@ class hA {
       ...t
     };
     if (!i.filename) {
-      const m = /* @__PURE__ */ new Date(), I = m.toISOString().split("T")[0], g = m.toTimeString().split(" ")[0].replace(/:/g, "-");
-      i.filename = `asciify_output_${I}_${g}`;
+      const x = /* @__PURE__ */ new Date(), F = x.toISOString().split("T")[0], E = x.toTimeString().split(" ")[0].replace(/:/g, "-");
+      i.filename = `asciify_output_${F}_${E}`;
     }
-    const B = e.characterFramebuffer, n = e.primaryColorFramebuffer, c = e.secondaryColorFramebuffer, u = e.transformFramebuffer, _ = e.rotationFramebuffer;
-    B.loadPixels(), n.loadPixels(), c.loadPixels(), u.loadPixels(), _.loadPixels();
-    const f = B.pixels, P = n.pixels, h = c.pixels, E = u.pixels, w = _.pixels, x = A.cols, M = A.rows, p = r.characters, v = {
+    const B = e.characterFramebuffer, Q = e.primaryColorFramebuffer, a = e.secondaryColorFramebuffer, h = e.transformFramebuffer, c = e.rotationFramebuffer;
+    B.loadPixels(), Q.loadPixels(), a.loadPixels(), h.loadPixels(), c.loadPixels();
+    const l = B.pixels, u = Q.pixels, f = a.pixels, g = h.pixels, m = c.pixels, P = A.cols, p = A.rows, d = r.characters, S = {
       version: "1.0",
       created: (/* @__PURE__ */ new Date()).toISOString(),
       gridSize: {
-        cols: x,
-        rows: M,
+        cols: P,
+        rows: p,
         cellWidth: A.cellWidth,
         cellHeight: A.cellHeight,
         width: A.width,
         height: A.height
       }
-    }, d = [];
-    let F = 0;
-    for (let m = 0; m < M; m++)
-      for (let I = 0; I < x; I++) {
-        const g = F * 4, D = f[g], a = f[g + 1];
-        let z = D + (a << 8);
-        z >= p.length && (z = p.length - 1);
-        const R = p[z];
-        if (!i.includeEmptyCells && (R.character === " " || R.character === "")) {
-          F++;
+    }, D = [];
+    let w = 0;
+    for (let x = 0; x < p; x++)
+      for (let F = 0; F < P; F++) {
+        const E = w * 4, b = l[E], C = l[E + 1];
+        let U = b + (C << 8);
+        U >= d.length && (U = d.length - 1);
+        const z = d[U];
+        if (!i.includeEmptyCells && (z.character === " " || z.character === "")) {
+          w++;
           continue;
         }
-        let b = {
-          r: P[g],
-          g: P[g + 1],
-          b: P[g + 2],
-          a: P[g + 3]
-        }, y = {
-          r: h[g],
-          g: h[g + 1],
-          b: h[g + 2],
-          a: h[g + 3]
+        let y = {
+          r: u[E],
+          g: u[E + 1],
+          b: u[E + 2],
+          a: u[E + 3]
+        }, v = {
+          r: f[E],
+          g: f[E + 1],
+          b: f[E + 2],
+          a: f[E + 3]
         };
-        const N = E[g], V = E[g + 1], j = E[g + 2], $ = N === 255, L = V === 255, O = j === 255;
-        if ($) {
-          const AA = b;
-          b = y, y = AA;
+        const N = g[E], j = g[E + 1], O = g[E + 2], H = N === 255, L = j === 255, W = O === 255;
+        if (H) {
+          const eA = y;
+          y = v, v = eA;
         }
-        const W = w[g], K = w[g + 1], X = W + K, Z = this.rgbaToHex(
-          b.r,
-          b.g,
-          b.b,
-          b.a
-        ), q = this.rgbaToHex(
+        const K = m[E], X = m[E + 1], Z = K + X, q = this.rgbaToHex(
           y.r,
           y.g,
           y.b,
           y.a
+        ), AA = this.rgbaToHex(
+          v.r,
+          v.g,
+          v.b,
+          v.a
         );
-        d.push({
-          x: I,
-          y: m,
-          character: R.character,
-          unicode: R.unicode,
-          color: Z,
-          backgroundColor: q,
-          rotation: X,
-          inverted: $,
+        D.push({
+          x: F,
+          y: x,
+          character: z.character,
+          unicode: z.unicode,
+          color: q,
+          backgroundColor: AA,
+          rotation: Z,
+          inverted: H,
           flipHorizontal: L,
-          flipVertical: O
-        }), F++;
+          flipVertical: W
+        }), w++;
       }
-    const k = JSON.stringify(
+    const T = JSON.stringify(
       {
-        metadata: v,
-        cells: d
+        metadata: S,
+        cells: D
       },
       null,
       i.prettyPrint ? 2 : 0
     );
-    this.downloadJSON(k, i.filename);
+    this.downloadJSON(T, i.filename);
   }
   /**
    * Converts RGBA values to a hex color string
@@ -430,8 +432,8 @@ class hA {
    */
   rgbaToHex(e, A, r, t) {
     const i = (B) => {
-      const n = Math.round(B).toString(16);
-      return n.length === 1 ? "0" + n : n;
+      const Q = Math.round(B).toString(16);
+      return Q.length === 1 ? "0" + Q : Q;
     };
     return `#${i(e)}${i(A)}${i(r)}${i(t)}`;
   }
@@ -445,13 +447,94 @@ class hA {
     i.href = t, i.download = `${A}.json`, document.body.appendChild(i), i.click(), document.body.removeChild(i), URL.revokeObjectURL(t);
   }
 }
-const zA = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+function cA(o, e) {
+  const A = o.data.cmap;
+  if (!A || !A.tables) return 0;
+  for (const r of A.tables)
+    if (r.format === 4) {
+      for (let t = 0; t < r.startCount.length; t++)
+        if (e >= r.startCount[t] && e <= r.endCount[t]) {
+          if (r.idRangeOffset[t] === 0)
+            return e + r.idDelta[t] & 65535;
+          {
+            const i = r.idRangeOffset[t] / 2 + (e - r.startCount[t]) - (r.startCount.length - t);
+            if (i >= 0 && i < r.glyphIdArray.length) {
+              const B = r.glyphIdArray[i];
+              if (B !== 0)
+                return B + r.idDelta[t] & 65535;
+            }
+          }
+        }
+    }
+  return 0;
+}
+function V() {
+  return {
+    getBoundingBox: () => ({ x1: 0, y1: 0, x2: 0, y2: 0 }),
+    toSVG: () => ""
+  };
+}
+function fA(o, e, A, r, t) {
+  if (!e || !e.xs || e.xs.length === 0)
+    return V();
+  const i = t / o.data.head.unitsPerEm;
+  return {
+    getBoundingBox: () => ({
+      x1: A + e.xMin * i,
+      y1: r + -e.yMax * i,
+      // Flip Y coordinates (TTF uses Y-up)
+      x2: A + e.xMax * i,
+      y2: r + -e.yMin * i
+      // Flip Y coordinates
+    }),
+    toSVG: () => CA(e, A, r, i)
+  };
+}
+function CA(o, e, A, r) {
+  if (!o || !o.xs) return "";
+  const { xs: t, ys: i, endPts: B, flags: Q } = o;
+  if (!t || !i || !B || !Q) return "";
+  let a = "", h = 0;
+  for (let c = 0; c < B.length; c++) {
+    const l = B[c];
+    if (!(l < h)) {
+      if (l >= h) {
+        const u = e + t[h] * r, f = A - i[h] * r;
+        a += `M${u.toFixed(2)},${f.toFixed(2)}`;
+        let g = h + 1;
+        for (; g <= l; )
+          if ((Q[g] & 1) !== 0) {
+            const P = e + t[g] * r, p = A - i[g] * r;
+            a += `L${P.toFixed(2)},${p.toFixed(2)}`, g++;
+          } else {
+            const P = e + t[g] * r, p = A - i[g] * r;
+            let d = g + 1 > l ? h : g + 1;
+            if ((Q[d] & 1) !== 0) {
+              const D = e + t[d] * r, w = A - i[d] * r;
+              a += `Q${P.toFixed(2)},${p.toFixed(2)} ${D.toFixed(2)},${w.toFixed(2)}`, g = d + 1;
+            } else {
+              const D = e + t[d] * r, w = A - i[d] * r, k = (P + D) / 2, T = (p + w) / 2;
+              a += `Q${P.toFixed(2)},${p.toFixed(2)} ${k.toFixed(2)},${T.toFixed(2)}`, g = d;
+            }
+          }
+        a += "Z";
+      }
+      h = l + 1;
+    }
+  }
+  return `<path d="${a}" />`;
+}
+const JA = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
-  P5AsciifyJSONExporter: hA,
-  P5AsciifySVGExporter: aA,
-  compareVersions: T
+  P5AsciifyJSONExporter: lA,
+  P5AsciifySVGExporter: hA,
+  compareVersions: M,
+  createEmptyPath: V,
+  createGlyphPath: fA,
+  getGlyphIndex: cA,
+  glyphToSVGPath: CA
 }, Symbol.toStringTag, { value: "Module" }));
-class DA {
+class IA {
   /**
    * Creates a new `P5AsciifyFontManager` instance.
    * @param _p The p5 instance.
@@ -485,48 +568,54 @@ class DA {
    * Initializes the character glyphs and characters array.
    */
   _initializeGlyphsAndCharacters() {
-    if (T(this._p.VERSION, "2.0.0") < 0) {
+    if (M(this._p.VERSION, "2.0.0") < 0) {
       const e = Object.values(this._font.font.glyphs.glyphs);
       this._characters = [], e.forEach((A, r) => {
         if (!A.unicode && (!A.unicodes || !A.unicodes.length))
           return;
-        const t = this._characters.length, i = t % 256, B = Math.floor(t / 256) % 256, n = Math.floor(t / 65536), c = A.unicode ?? A.unicodes[0];
+        const t = this._characters.length, i = t % 256, B = Math.floor(t / 256) % 256, Q = Math.floor(t / 65536), a = A.unicode ?? A.unicodes[0];
         this._characters.push({
-          character: String.fromCodePoint(c),
-          unicode: c,
-          getPath: (u, _, f) => A.getPath(u, _, f),
+          character: String.fromCodePoint(a),
+          unicode: a,
+          getPath: (h, c, l) => A.getPath(h, c, l),
           advanceWidth: A.advanceWidth,
           r: i,
           g: B,
-          b: n
+          b: Q
         });
       });
     } else {
-      const e = [];
-      this._font.data.cmap.tables.forEach((r) => {
-        if (r.format === 4)
-          for (let t = 0; t < r.startCount.length; t++) {
-            const i = r.startCount[t], B = r.endCount[t];
-            if (!(i === 65535 && B === 65535))
-              for (let n = i; n <= B; n++)
-                e.push(String.fromCodePoint(n));
+      const e = [], A = /* @__PURE__ */ new Map();
+      this._font.data.cmap.tables.forEach((t) => {
+        if (t.format === 4)
+          for (let i = 0; i < t.startCount.length; i++) {
+            const B = t.startCount[i], Q = t.endCount[i];
+            if (!(B === 65535 && Q === 65535))
+              for (let a = B; a <= Q; a++) {
+                const h = String.fromCodePoint(a), c = cA(this._font, a);
+                c && c > 0 && (e.push(h), A.set(h, c));
+              }
           }
       });
-      const A = [...new Set(e)];
-      this._characters = A.map((r, t) => {
-        const i = r.codePointAt(0);
+      const r = [...new Set(e)];
+      this._characters = r.map((t, i) => {
+        const B = t.codePointAt(0), Q = A.get(t);
+        let a = 0;
+        Q !== void 0 && this._font.data.hmtx && this._font.data.hmtx.aWidth && (a = this._font.data.hmtx.aWidth[Q]);
+        const h = i % 256, c = Math.floor(i / 256) % 256, l = Math.floor(i / 65536);
         return {
-          character: r,
-          unicode: i,
-          // For typr.js fonts, we can't directly access glyph paths the same way,
-          // so we'll create compatible wrapper functions or null values
-          getPath: null,
-          // Will need to be handled differently for typr.js
-          advanceWidth: null,
-          // Will need to be handled differently for typr.js
-          r: t % 256,
-          g: Math.floor(t / 256) % 256,
-          b: Math.floor(t / 65536)
+          character: t,
+          unicode: B,
+          // Create a path generator for this glyph
+          getPath: (u, f, g) => {
+            if (Q === void 0) return V();
+            const m = this._font.data.glyf[Q];
+            return m ? fA(this._font, m, u, f, g) : V();
+          },
+          advanceWidth: a,
+          r: h,
+          g: c,
+          b: l
         };
       });
     }
@@ -542,8 +631,8 @@ class DA {
    * @ignore
    */
   loadFont(e) {
-    if (!(e instanceof l.Font))
-      throw new Q("Invalid font parameter. Expected a path, base64 string, blob URL, or p5.Font object.");
+    if (!(e instanceof _.Font))
+      throw new n("Invalid font parameter. Expected a path, base64 string, blob URL, or p5.Font object.");
     this._font = e, this._initializeGlyphsAndCharacters();
   }
   /**
@@ -569,7 +658,7 @@ class DA {
     );
     if (!A) {
       const r = e.codePointAt(0), t = r ? r.toString(16).padStart(4, "0") : "unknown";
-      throw new Q(`Could not find character in character set: ${e} (U+${t})`);
+      throw new n(`Could not find character in character set: ${e} (U+${t})`);
     }
     return [A.r, A.g, A.b];
   }
@@ -600,7 +689,7 @@ class DA {
   validateCharacters(e) {
     const A = this.getUnsupportedCharacters(e);
     if (A.length > 0)
-      throw new Q(`The following characters are not supported by the current font: [${A.join(", ")}].`);
+      throw new n(`The following characters are not supported by the current font: [${A.join(", ")}].`);
   }
   /**
    * Gets an array of RGB colors for a given string of characters.
@@ -622,7 +711,7 @@ class DA {
       const r = this._characters.find((t) => t.character === A);
       if (!r) {
         const t = A.codePointAt(0), i = t ? t.toString(16).padStart(4, "0") : "unknown";
-        throw new Q(`Could not find character in character set: ${A} (U+${i})`);
+        throw new n(`Could not find character in character set: ${A} (U+${i})`);
       }
       return [r.r, r.g, r.b];
     });
@@ -636,8 +725,8 @@ class DA {
     this._p.textFont(this._font), this._p.textSize(e);
     let A = 0, r = 0;
     for (const t of this._characters) {
-      const i = this._font.textBounds(t.character, 0, 0, e), B = i.h, n = i.w;
-      A = Math.max(A, n), r = Math.max(r, B);
+      const i = this._font.textBounds(t.character, 0, 0, e), B = i.h, Q = i.w;
+      A = Math.max(A, Q), r = Math.max(r, B);
     }
     return {
       width: Math.ceil(A),
@@ -738,7 +827,7 @@ class DA {
     return this._characters;
   }
 }
-class sA {
+class oA {
   /**
    * Constructs a new ASCII renderer instance. Called by derived classes.
    * @param _p The p5 instance.
@@ -764,7 +853,7 @@ class sA {
     /** The rotation framebuffer, whose pixels define the rotation angle of the characters in the grid. */
     s(this, "_rotationFramebuffer");
     this._p = e, this._captureFramebuffer = A, this._grid = r, this.initialFramebufferDimensions = t, this._fontManager = i, this._options = B;
-    const n = {
+    const Q = {
       density: 1,
       antialias: !1,
       width: t.width,
@@ -772,7 +861,7 @@ class sA {
       depthFormat: this._p.UNSIGNED_INT,
       textureFiltering: this._p.NEAREST
     };
-    this._primaryColorFramebuffer = this._p.createFramebuffer(n), this._secondaryColorFramebuffer = this._p.createFramebuffer(n), this._transformFramebuffer = this._p.createFramebuffer(n), this._characterFramebuffer = this._p.createFramebuffer(n), this._rotationFramebuffer = this._p.createFramebuffer(n);
+    this._primaryColorFramebuffer = this._p.createFramebuffer(Q), this._secondaryColorFramebuffer = this._p.createFramebuffer(Q), this._transformFramebuffer = this._p.createFramebuffer(Q), this._characterFramebuffer = this._p.createFramebuffer(Q), this._rotationFramebuffer = this._p.createFramebuffer(Q);
   }
   /**
    * Updates renderer options.
@@ -820,7 +909,7 @@ class sA {
     if (e === void 0)
       return this._options.enabled;
     if (typeof e != "boolean")
-      throw new Q("Enabled must be a boolean.");
+      throw new n("Enabled must be a boolean.");
     if (this._options.enabled = e, !e) {
       const A = [
         this._primaryColorFramebuffer,
@@ -1186,11 +1275,11 @@ class sA {
     return this._characterFramebuffer;
   }
 }
-const eA = {
+const rA = {
   /** Enable/disable the renderer */
   enabled: !1
 };
-class H extends sA {
+class $ extends oA {
   /**
    * Creates a new `"custom2D"` ASCII renderer instance.
    * @param _p The p5 instance.
@@ -1199,8 +1288,8 @@ class H extends sA {
    * @param _options The options for the ASCII renderer.
    * @ignore
    */
-  constructor(e, A, r, t, i = eA) {
-    super(e, A, r, { width: r.cols, height: r.rows }, t, { ...eA, ...i });
+  constructor(e, A, r, t, i = rA) {
+    super(e, A, r, { width: r.cols, height: r.rows }, t, { ...rA, ...i });
   }
   /**
    * Resize the framebuffers to match the 2D grid size based on the number of rows and columns.
@@ -1210,7 +1299,7 @@ class H extends sA {
     this._primaryColorFramebuffer.resize(this._grid.cols, this._grid.rows), this._secondaryColorFramebuffer.resize(this._grid.cols, this._grid.rows), this._transformFramebuffer.resize(this._grid.cols, this._grid.rows), this._rotationFramebuffer.resize(this._grid.cols, this._grid.rows), this._characterFramebuffer.resize(this._grid.cols, this._grid.rows);
   }
 }
-class uA {
+class pA {
   /**
    * Create a new color palette instance.
    * @param _p The p5 instance.
@@ -1262,7 +1351,7 @@ class uA {
     return this._framebuffer;
   }
 }
-class Y extends H {
+class R extends $ {
   /**
    * Creates a new feature-based 2D ASCII renderer instance.
    * @param p The p5 instance.
@@ -1275,7 +1364,7 @@ class Y extends H {
     super(A, r, t, i, B);
     /** {@link P5AsciifyColorPalette} object containing colors that correspond to the defined character set. */
     s(this, "_characterColorPalette");
-    this._characterColorPalette = new uA(this._p, this._fontManager.glyphColors(this._options.characters)), this.update(this._options);
+    this._characterColorPalette = new pA(this._p, this._fontManager.glyphColors(this._options.characters)), this.update(this._options);
   }
   /**
    * Set the characters for the character set.
@@ -1292,7 +1381,7 @@ class Y extends H {
    */
   characters(A = "") {
     if (typeof A != "string")
-      throw new Q("Characters must be a string.");
+      throw new n("Characters must be a string.");
     this._fontManager.validateCharacters(A), this._characterColorPalette.setColors(this._fontManager.glyphColors(A)), this.resetShaders(), this._options.characters = A;
   }
   /**
@@ -1310,7 +1399,7 @@ class Y extends H {
    */
   invert(A) {
     if (typeof A != "boolean")
-      throw new Q("Invert mode must be a boolean.");
+      throw new n("Invert mode must be a boolean.");
     this._options.invertMode = A;
   }
   /**
@@ -1332,7 +1421,7 @@ class Y extends H {
    */
   rotation(A) {
     if (typeof A != "number")
-      throw new Q("Rotation angle must be a number");
+      throw new n("Rotation angle must be a number");
     A = A % 360, A < 0 && (A += 360);
     const r = A / 360, t = Math.round(r * 255);
     this._options.rotationAngle = this._p.color(t, 0, 0);
@@ -1352,8 +1441,8 @@ class Y extends H {
    * ```
    */
   characterColor(A) {
-    if (!A || !(A instanceof l.Color))
-      throw new Q("Character color must be a valid p5.Color object");
+    if (!A || !(A instanceof _.Color))
+      throw new n("Character color must be a valid p5.Color object");
     this._options.characterColor = A;
   }
   /**
@@ -1363,7 +1452,7 @@ class Y extends H {
    */
   flipHorizontally(A) {
     if (typeof A != "boolean")
-      throw new Q("Flip horizontally must be a boolean");
+      throw new n("Flip horizontally must be a boolean");
     this._options.flipHorizontally = A;
   }
   /**
@@ -1373,7 +1462,7 @@ class Y extends H {
    */
   flipVertically(A) {
     if (typeof A != "boolean")
-      throw new Q("Flip vertically must be a boolean");
+      throw new n("Flip vertically must be a boolean");
     this._options.flipVertically = A;
   }
   /**
@@ -1391,8 +1480,8 @@ class Y extends H {
    * ```
    */
   backgroundColor(A) {
-    if (!A || !(A instanceof l.Color))
-      throw new Q("Background color must be a valid p5.Color object");
+    if (!A || !(A instanceof _.Color))
+      throw new n("Background color must be a valid p5.Color object");
     this._options.backgroundColor = A;
   }
   /**
@@ -1410,9 +1499,9 @@ class Y extends H {
    */
   characterColorMode(A) {
     if (typeof A != "string")
-      throw new Q("Character color mode must be a string");
+      throw new n("Character color mode must be a string");
     if (A !== "sampled" && A !== "fixed")
-      throw new Q("Character color mode must be either 'sampled' or 'fixed'");
+      throw new n("Character color mode must be either 'sampled' or 'fixed'");
     A === "sampled" ? this._options.characterColorMode = 0 : A === "fixed" && (this._options.characterColorMode = 1);
   }
   /**
@@ -1430,9 +1519,9 @@ class Y extends H {
    */
   backgroundColorMode(A) {
     if (typeof A != "string")
-      throw new Q("Background color mode must be a string");
+      throw new n("Background color mode must be a string");
     if (A !== "sampled" && A !== "fixed")
-      throw new Q("Background color mode must be either 'sampled' or 'fixed'");
+      throw new n("Background color mode must be either 'sampled' or 'fixed'");
     A === "sampled" ? this._options.backgroundColorMode = 0 : A === "fixed" && (this._options.backgroundColorMode = 1);
   }
   /**
@@ -1465,7 +1554,7 @@ class Y extends H {
     return this._characterColorPalette;
   }
 }
-var S = `precision mediump float;
+var G = `precision mediump float;
 
 attribute vec3 aPosition;\r
 attribute vec2 aTexCoord;
@@ -1480,7 +1569,7 @@ void main() {\r
     gl_Position = positionVec4;
 
     v_texCoord = aTexCoord;\r
-}`, _A = `precision mediump float;
+}`, wA = `precision mediump float;
 
 uniform sampler2D u_sketchTexture;             
 uniform vec2 u_gridCellDimensions;             
@@ -1502,7 +1591,7 @@ void main() {\r
 
     
     gl_FragColor = finalColor;\r
-}`, PA = `precision mediump float;
+}`, bA = `precision mediump float;
 
 uniform sampler2D u_colorSampleFramebuffer;\r
 uniform sampler2D u_charPaletteTexture;\r
@@ -1532,7 +1621,7 @@ void main() {\r
     vec3 charColor = texture2D(u_charPaletteTexture, vec2((index + 0.5) / u_charPaletteSize.x, 0.0)).rgb;\r
     gl_FragColor = vec4(charColor, inputColor.a);\r
 }`;
-const rA = {
+const tA = {
   /** Enable/disable the renderer */
   enabled: !0,
   /** Characters used for brightness mapping (from darkest to brightest) */
@@ -1554,7 +1643,7 @@ const rA = {
   /** Flip the ASCII characters vertically */
   flipVertically: !1
 };
-class oA extends Y {
+class BA extends R {
   /**
    * Creates a new `"brightness"` ASCII renderer instance.
    * @param p5Instance The p5 instance.
@@ -1563,12 +1652,12 @@ class oA extends Y {
    * @param options The options for the ASCII renderer.
    * @ignore
    */
-  constructor(A, r, t, i, B = rA) {
-    super(A, r, t, i, { ...rA, ...B });
+  constructor(A, r, t, i, B = tA) {
+    super(A, r, t, i, { ...tA, ...B });
     s(this, "colorSampleShader");
     s(this, "asciiCharacterShader");
     s(this, "colorSampleFramebuffer");
-    this.colorSampleShader = this._p.createShader(S, _A), this.asciiCharacterShader = this._p.createShader(S, PA), this.colorSampleFramebuffer = this._p.createFramebuffer({
+    this.colorSampleShader = this._p.createShader(G, wA), this.asciiCharacterShader = this._p.createShader(G, bA), this.colorSampleFramebuffer = this._p.createFramebuffer({
       density: 1,
       width: this._grid.cols,
       height: this._grid.rows,
@@ -1585,7 +1674,7 @@ class oA extends Y {
     this.colorSampleFramebuffer.begin(), this._p.clear(), this._p.shader(this.colorSampleShader), this.colorSampleShader.setUniform("u_sketchTexture", this._captureFramebuffer), this.colorSampleShader.setUniform("u_gridCellDimensions", [this._grid.cols, this._grid.rows]), this._p.rect(0, 0, this.colorSampleFramebuffer.width, this.colorSampleFramebuffer.height), this.colorSampleFramebuffer.end(), this._primaryColorFramebuffer.begin(), this._options.characterColorMode === 1 ? this._p.background(this._options.characterColor) : (this._p.clear(), this._p.image(this.colorSampleFramebuffer, -this._grid.cols / 2, -this._grid.rows / 2, this._grid.cols, this._grid.rows)), this._primaryColorFramebuffer.end(), this._secondaryColorFramebuffer.begin(), this._options.backgroundColorMode === 1 ? this._p.background(this._options.backgroundColor) : (this._p.clear(), this._p.image(this.colorSampleFramebuffer, -this._grid.cols / 2, -this._grid.rows / 2, this._grid.cols, this._grid.rows)), this._secondaryColorFramebuffer.end(), this._transformFramebuffer.begin(), this._p.background(this._options.invertMode ? 255 : 0, this._options.flipHorizontally ? 255 : 0, this._options.flipVertically ? 255 : 0), this._transformFramebuffer.end(), this._rotationFramebuffer.begin(), this._p.background(this._options.rotationAngle), this._rotationFramebuffer.end(), this._characterFramebuffer.begin(), this._p.clear(), this._p.shader(this.asciiCharacterShader), this.asciiCharacterShader.setUniform("u_textureSize", [this._grid.cols, this._grid.rows]), this.asciiCharacterShader.setUniform("u_colorSampleFramebuffer", this.colorSampleFramebuffer), this.asciiCharacterShader.setUniform("u_charPaletteTexture", this._characterColorPalette.framebuffer), this.asciiCharacterShader.setUniform("u_charPaletteSize", [this._characterColorPalette.colors.length, 1]), this._p.rect(0, 0, this._characterFramebuffer.width, this._characterFramebuffer.height), this._characterFramebuffer.end();
   }
 }
-var mA = `precision mediump float;
+var xA = `precision mediump float;
 
 uniform sampler2D u_sketchTexture;\r
 uniform sampler2D u_sampleTexture;             
@@ -1620,7 +1709,7 @@ void main() {\r
 
     
     gl_FragColor = finalColor;\r
-}`, IA = `precision mediump float;
+}`, FA = `precision mediump float;
 
 uniform sampler2D u_sampleTexture;\r
 uniform vec2 u_gridCellDimensions;\r
@@ -1657,7 +1746,7 @@ void main() {\r
     } else {\r
         gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0);\r
     }\r
-}`, pA = `precision mediump float;
+}`, yA = `precision mediump float;
 
 uniform sampler2D u_sampleTexture;\r
 uniform vec2 u_gridCellDimensions;\r
@@ -1684,7 +1773,7 @@ void main() {\r
     } else {\r
         gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0);\r
     }\r
-}`, wA = `precision mediump float;
+}`, SA = `precision mediump float;
 
 uniform sampler2D u_sketchTexture;\r
 uniform vec2 u_gridCellDimensions;
@@ -1701,7 +1790,7 @@ void main() {\r
     \r
     
     gl_FragColor = texture2D(u_sketchTexture, cellCenterTexCoord);\r
-}`, bA = `precision mediump float;
+}`, vA = `precision mediump float;
 
 varying vec2 v_texCoord;
 
@@ -1767,9 +1856,9 @@ void main() {\r
 
     gl_FragColor = edgeColor;\r
 }`;
-const nA = (o, e, A) => `
+const gA = (o, e, A) => `
 precision mediump float;uniform sampler2D u_image;uniform vec2 u_imageSize,u_gridCellDimensions;uniform int u_threshold;const vec3 i=vec3(0);vec3 f[${o}];int u[${o}];float r(float i){return floor(i+.5);}void main(){vec2 v=floor(gl_FragCoord.xy);ivec2 b=ivec2(v);v=u_imageSize/u_gridCellDimensions;b=ivec2(r(float(b.x)*v.x),r(float(b.y)*v.y));int m=0;for(int b=0;b<${o};b++)f[b]=i,u[b]=0;for(int v=0;v<${A};v++)for(int r=0;r<${e};r++){ivec2 y=b+ivec2(r,v);if(y.x<0||y.y<0||y.x>=int(u_imageSize.x)||y.y>=int(u_imageSize.y))continue;vec3 e=texture2D(u_image,(vec2(y)+.5)/u_imageSize).xyz;if(length(e-i)<.001)continue;m++;bool x=false;for(int b=0;b<${o};b++)if(length(e-f[b])<.001){u[b]++;x=true;break;}if(!x)for(int b=0;b<${o};b++)if(u[b]==0){f[b]=e;u[b]=1;break;}}vec3 e=i;int x=0;for(int b=0;b<${o};b++)if(u[b]>x)e=f[b],x=u[b];gl_FragColor=m<u_threshold?vec4(i,0):vec4(e,1);}
-`, tA = {
+`, iA = {
   /** Enable/disable the renderer */
   enabled: !1,
   /** Characters used for edge representation (8 characters for different angles) */
@@ -1795,7 +1884,7 @@ precision mediump float;uniform sampler2D u_image;uniform vec2 u_imageSize,u_gri
   /** Flip the ASCII characters vertically */
   flipVertically: !1
 };
-class BA extends Y {
+class nA extends R {
   /**
    * Creates a new `"edge"` ASCII renderer instance.
    * @param p5Instance The p5 instance.
@@ -1804,8 +1893,8 @@ class BA extends Y {
    * @param options The options for the ASCII renderer.
    * @ignore
    */
-  constructor(A, r, t, i, B = tA) {
-    super(A, r, t, i, { ...tA, ...B });
+  constructor(A, r, t, i, B = iA) {
+    super(A, r, t, i, { ...iA, ...B });
     s(this, "sobelShader");
     s(this, "sampleShader");
     s(this, "colorSampleShader");
@@ -1814,7 +1903,7 @@ class BA extends Y {
     s(this, "asciiCharacterShader");
     s(this, "sobelFramebuffer");
     s(this, "sampleFramebuffer");
-    this.sobelShader = this._p.createShader(S, bA), this.sampleShader = this._p.createShader(S, nA(16, this._grid.cellHeight, this._grid.cellWidth)), this.colorSampleShader = this._p.createShader(S, mA), this.transformShader = this._p.createShader(S, IA), this.rotationShader = this._p.createShader(S, pA), this.asciiCharacterShader = this._p.createShader(S, wA), this.sobelFramebuffer = this._p.createFramebuffer({
+    this.sobelShader = this._p.createShader(G, vA), this.sampleShader = this._p.createShader(G, gA(16, this._grid.cellHeight, this._grid.cellWidth)), this.colorSampleShader = this._p.createShader(G, xA), this.transformShader = this._p.createShader(G, FA), this.rotationShader = this._p.createShader(G, yA), this.asciiCharacterShader = this._p.createShader(G, SA), this.sobelFramebuffer = this._p.createFramebuffer({
       density: 1,
       width: this._captureFramebuffer.width,
       height: this._captureFramebuffer.height,
@@ -1832,7 +1921,7 @@ class BA extends Y {
     super.resizeFramebuffers(), this.sampleFramebuffer.resize(this._grid.cols, this._grid.rows), this.sobelFramebuffer.resize(this._captureFramebuffer.width, this._captureFramebuffer.height);
   }
   resetShaders() {
-    this.sampleShader = this._p.createShader(S, nA(16, this._grid.cellHeight, this._grid.cellWidth));
+    this.sampleShader = this._p.createShader(G, gA(16, this._grid.cellHeight, this._grid.cellWidth));
   }
   /**
    * Set the threshold value for the Sobel edge detection algorithm.
@@ -1850,9 +1939,9 @@ class BA extends Y {
    */
   sobelThreshold(A) {
     if (typeof A != "number" || Number.isNaN(A) || !Number.isFinite(A))
-      throw new Q("Sobel threshold must be a valid number");
+      throw new n("Sobel threshold must be a valid number");
     if (A < 0 || A > 1)
-      throw new Q("Sobel threshold must be between 0 and 1");
+      throw new n("Sobel threshold must be between 0 and 1");
     this._options.sobelThreshold = A;
   }
   /**
@@ -1871,9 +1960,9 @@ class BA extends Y {
    */
   sampleThreshold(A) {
     if (typeof A != "number" || Number.isNaN(A) || !Number.isFinite(A))
-      throw new Q("Sample threshold must be a valid number");
+      throw new n("Sample threshold must be a valid number");
     if (A < 0)
-      throw new Q("Sample threshold must be greater than or equal to 0");
+      throw new n("Sample threshold must be greater than or equal to 0");
     this._options.sampleThreshold = A;
   }
   update(A) {
@@ -1883,7 +1972,7 @@ class BA extends Y {
     this.sobelFramebuffer.begin(), this._p.clear(), this._p.shader(this.sobelShader), this.sobelShader.setUniform("u_texture", this._captureFramebuffer), this.sobelShader.setUniform("u_textureSize", [this._captureFramebuffer.width, this._captureFramebuffer.height]), this.sobelShader.setUniform("u_threshold", this._options.sobelThreshold), this.sobelShader.setUniform("u_colorPaletteTexture", this._characterColorPalette.framebuffer), this.sobelShader.setUniform("u_totalChars", this._options.characters.length), this._p.rect(0, 0, this.sobelFramebuffer.width, this.sobelFramebuffer.height), this.sobelFramebuffer.end(), this.sampleFramebuffer.begin(), this._p.clear(), this._p.shader(this.sampleShader), this.sampleShader.setUniform("u_imageSize", [this._captureFramebuffer.width, this._captureFramebuffer.height]), this.sampleShader.setUniform("u_image", this.sobelFramebuffer), this.sampleShader.setUniform("u_gridCellDimensions", [this._grid.cols, this._grid.rows]), this.sampleShader.setUniform("u_threshold", this._options.sampleThreshold), this._p.rect(0, 0, this.sampleFramebuffer.width, this.sampleFramebuffer.height), this.sampleFramebuffer.end(), this._primaryColorFramebuffer.begin(), this._p.clear(), this._p.shader(this.colorSampleShader), this.colorSampleShader.setUniform("u_sketchTexture", this._captureFramebuffer), this.colorSampleShader.setUniform("u_sampleTexture", this.sampleFramebuffer), this.colorSampleShader.setUniform("u_gridCellDimensions", [this._grid.cols, this._grid.rows]), this.colorSampleShader.setUniform("u_sampleMode", this._options.characterColorMode), this.colorSampleShader.setUniform("u_staticColor", this._options.characterColor._array), this._p.rect(0, 0, this._primaryColorFramebuffer.width, this._primaryColorFramebuffer.height), this._primaryColorFramebuffer.end(), this._secondaryColorFramebuffer.begin(), this._p.clear(), this._p.shader(this.colorSampleShader), this.colorSampleShader.setUniform("u_sketchTexture", this._captureFramebuffer), this.colorSampleShader.setUniform("u_sampleTexture", this.sampleFramebuffer), this.colorSampleShader.setUniform("u_gridCellDimensions", [this._grid.cols, this._grid.rows]), this.colorSampleShader.setUniform("u_sampleMode", this._options.backgroundColorMode), this.colorSampleShader.setUniform("u_staticColor", this._options.backgroundColor._array), this._p.rect(0, 0, this._secondaryColorFramebuffer.width, this._secondaryColorFramebuffer.height), this._secondaryColorFramebuffer.end(), this._transformFramebuffer.begin(), this._p.clear(), this._p.shader(this.transformShader), this.transformShader.setUniform("u_invert", this._options.invertMode), this.transformShader.setUniform("u_flipH", this._options.flipHorizontally), this.transformShader.setUniform("u_flipV", this._options.flipVertically), this.transformShader.setUniform("u_sampleTexture", this.sampleFramebuffer), this.transformShader.setUniform("u_compareColor", [0, 0, 0]), this.transformShader.setUniform("u_gridCellDimensions", [this._grid.cols, this._grid.rows]), this._p.rect(0, 0, this._transformFramebuffer.width, this._transformFramebuffer.height), this._transformFramebuffer.end(), this._rotationFramebuffer.begin(), this._p.clear(), this._p.shader(this.rotationShader), this.rotationShader.setUniform("u_rotationColor", this._options.rotationAngle._array), this.rotationShader.setUniform("u_sampleTexture", this.sampleFramebuffer), this.rotationShader.setUniform("u_compareColor", [0, 0, 0]), this.rotationShader.setUniform("u_gridCellDimensions", [this._grid.cols, this._grid.rows]), this._p.rect(0, 0, this._rotationFramebuffer.width, this._rotationFramebuffer.height), this._rotationFramebuffer.end(), this._characterFramebuffer.begin(), this._p.clear(), this._p.shader(this.asciiCharacterShader), this.asciiCharacterShader.setUniform("u_sketchTexture", this.sampleFramebuffer), this.asciiCharacterShader.setUniform("u_gridCellDimensions", [this._grid.cols, this._grid.rows]), this._p.rect(0, 0, this._characterFramebuffer.width, this._characterFramebuffer.height), this._characterFramebuffer.end();
   }
 }
-var xA = `precision mediump float;
+var GA = `precision mediump float;
 
 uniform sampler2D u_characterTexture;\r
 uniform vec2 u_charsetDimensions;
@@ -1998,7 +2087,7 @@ void main() {\r
         gl_FragColor = isFullyWhite ? primaryColor : secondaryColor;\r
     }\r
 }`;
-class lA {
+class dA {
   /**
    * Creates a new `P5AsciifyDisplayRenderer` instance.
    * @param _p The p5 instance.
@@ -2011,7 +2100,7 @@ class lA {
     s(this, "_resultFramebuffer");
     /** Final shader to render the ASCII output. */
     s(this, "_shader");
-    this._p = e, this._grid = A, this._fontManager = r, this._shader = this._p.createShader(S, xA), this._resultFramebuffer = this._p.createFramebuffer({
+    this._p = e, this._grid = A, this._fontManager = r, this._shader = this._p.createShader(G, GA), this._resultFramebuffer = this._p.createFramebuffer({
       width: this._grid.width,
       height: this._grid.height,
       depthFormat: this._p.UNSIGNED_INT,
@@ -2041,8 +2130,8 @@ class lA {
       u_gridPixelDimensions: [this._grid.width, this._grid.height],
       u_gridCellDimensions: [this._grid.cols, this._grid.rows]
     };
-    for (const [n, c] of Object.entries(B))
-      this._shader.setUniform(n, c);
+    for (const [Q, a] of Object.entries(B))
+      this._shader.setUniform(Q, a);
     this._p.rect(0, 0, this._resultFramebuffer.width, this._resultFramebuffer.height), this._resultFramebuffer.end();
   }
   /**
@@ -2061,9 +2150,9 @@ class lA {
   }
 }
 const J = {
-  brightness: oA,
-  edge: BA,
-  custom2D: H
+  brightness: BA,
+  edge: nA,
+  custom2D: $
 };
 class QA {
   /**
@@ -2099,9 +2188,9 @@ class QA {
       width: this._captureFramebuffer.width,
       height: this._captureFramebuffer.height
     }, this._renderers = [
-      { name: "custom2D", renderer: new H(this._p, this._captureFramebuffer, this._grid, this._fontManager) },
-      { name: "edge", renderer: new BA(this._p, this._captureFramebuffer, this._grid, this._fontManager) },
-      { name: "brightness", renderer: new oA(this._p, this._captureFramebuffer, this._grid, this._fontManager) }
+      { name: "custom2D", renderer: new $(this._p, this._captureFramebuffer, this._grid, this._fontManager) },
+      { name: "edge", renderer: new nA(this._p, this._captureFramebuffer, this._grid, this._fontManager) },
+      { name: "brightness", renderer: new BA(this._p, this._captureFramebuffer, this._grid, this._fontManager) }
     ], this._primaryColorFramebuffer = this._p.createFramebuffer({
       density: 1,
       antialias: !1,
@@ -2137,7 +2226,7 @@ class QA {
       height: this._grid.rows,
       depthFormat: this._p.UNSIGNED_INT,
       textureFiltering: this._p.NEAREST
-    }), this._asciiDisplayRenderer2D = new lA(this._p, this._grid, this._fontManager);
+    }), this._asciiDisplayRenderer2D = new dA(this._p, this._grid, this._fontManager);
   }
   /**
    * Runs all renderers in the pipeline, merging their framebuffers together,
@@ -2155,7 +2244,7 @@ class QA {
     for (let A = this._renderers.length - 1; A >= 0; A--) {
       const r = this._renderers[A];
       if (r.renderer.options.enabled) {
-        r.renderer instanceof Y && r.renderer.render();
+        r.renderer instanceof R && r.renderer.render();
         const t = -this._grid.cols / 2, i = -this._grid.rows / 2;
         this._characterFramebuffer.draw(() => this._p.image(r.renderer.characterFramebuffer, t, i)), this._primaryColorFramebuffer.draw(() => this._p.image(r.renderer.primaryColorFramebuffer, t, i)), this._secondaryColorFramebuffer.draw(() => this._p.image(r.renderer.secondaryColorFramebuffer, t, i)), this._transformFramebuffer.draw(() => this._p.image(r.renderer.transformFramebuffer, t, i)), this._rotationFramebuffer.draw(() => this._p.image(r.renderer.rotationFramebuffer, t, i)), this._hasEnabledRenderers = !0;
       }
@@ -2188,7 +2277,7 @@ class QA {
    */
   resetRendererDimensions() {
     this._primaryColorFramebuffer.resize(this._grid.cols, this._grid.rows), this._secondaryColorFramebuffer.resize(this._grid.cols, this._grid.rows), this._characterFramebuffer.resize(this._grid.cols, this._grid.rows), this._transformFramebuffer.resize(this._grid.cols, this._grid.rows), this._rotationFramebuffer.resize(this._grid.cols, this._grid.rows), this._renderers.forEach((e) => {
-      e.renderer.resizeFramebuffers(), e.renderer instanceof Y && e.renderer.resetShaders();
+      e.renderer.resizeFramebuffers(), e.renderer instanceof R && e.renderer.resetShaders();
     }), this._asciiDisplayRenderer2D.resizeFramebuffers();
   }
   /**
@@ -2223,7 +2312,7 @@ class QA {
    */
   add(e, A, r) {
     if (typeof e != "string" || e.trim() === "")
-      throw new Q("Renderer name must be a non-empty string");
+      throw new n("Renderer name must be a non-empty string");
     let t;
     const i = J[A];
     if (i)
@@ -2243,7 +2332,7 @@ class QA {
         ...Object.keys(J),
         ...this._pluginRegistry.getIds()
       ].join(", ");
-      throw new Q(
+      throw new n(
         `Invalid renderer type: ${A}. Valid types are: ${B}`
       );
     }
@@ -2271,7 +2360,7 @@ class QA {
     var r;
     const A = (r = this._renderers.find((t) => t.name === e)) == null ? void 0 : r.renderer;
     if (!A)
-      throw new Q(
+      throw new n(
         `Renderer '${e}' not found. Available renderers: ${this._renderers.map((t) => t.name).join(", ")}`
       );
     return A;
@@ -2303,9 +2392,9 @@ class QA {
   moveDown(e) {
     const A = this._getRendererIndex(e);
     if (A === -1)
-      throw new Q("Renderer not found.");
+      throw new n("Renderer not found.");
     if (A >= this._renderers.length - 1)
-      throw new Q("Renderer is already at the bottom of the list.");
+      throw new n("Renderer is already at the bottom of the list.");
     this.swap(e, this._renderers[A + 1].renderer);
   }
   /**
@@ -2325,9 +2414,9 @@ class QA {
   moveUp(e) {
     const A = this._getRendererIndex(e);
     if (A === -1)
-      throw new Q("Renderer not found.");
+      throw new n("Renderer not found.");
     if (A <= 0)
-      throw new Q("Renderer is already at the top of the list.");
+      throw new n("Renderer is already at the top of the list.");
     this.swap(e, this._renderers[A - 1].renderer);
   }
   /**
@@ -2347,7 +2436,7 @@ class QA {
   remove(e) {
     const A = this._getRendererIndex(e);
     if (A === -1)
-      throw new Q("Renderer not found.");
+      throw new n("Renderer not found.");
     this._renderers.splice(A, 1);
   }
   /**
@@ -2387,7 +2476,7 @@ class QA {
   swap(e, A) {
     const r = this._getRendererIndex(e), t = this._getRendererIndex(A);
     if (r === -1 || t === -1)
-      throw new Q("One or more renderers not found.");
+      throw new n("One or more renderers not found.");
     const i = this._renderers[r];
     this._renderers[r] = this._renderers[t], this._renderers[t] = i;
   }
@@ -2507,7 +2596,7 @@ class QA {
  * Registered plugin renderers
  */
 s(QA, "_plugins", /* @__PURE__ */ new Map());
-class gA {
+class aA {
   constructor(e) {
     /** Manages the font and provides methods to access font properties. */
     s(this, "_fontManager");
@@ -2538,7 +2627,7 @@ class gA {
    * @ignore
    */
   async init(e, A) {
-    return this._p = e, this._fontManager = new DA(e, A), Promise.resolve();
+    return this._p = e, this._fontManager = new IA(e, A), Promise.resolve();
   }
   /**
    * Sets up the asciifier by initializing the font texture atlas, grid, and renderer manager.
@@ -2548,7 +2637,7 @@ class gA {
    * @ignore
    */
   async setup(e) {
-    return this._captureFramebuffer = e, T(this._p.VERSION, "2.0.0") < 0 ? this._fontManager.setup(this._fontSize) : await this._fontManager.setup(this._fontSize), this._grid = new dA(
+    return this._captureFramebuffer = e, M(this._p.VERSION, "2.0.0") < 0 ? this._fontManager.setup(this._fontSize) : await this._fontManager.setup(this._fontSize), this._grid = new mA(
       this._captureFramebuffer,
       this._fontManager.maxGlyphDimensions.width,
       this._fontManager.maxGlyphDimensions.height
@@ -2638,7 +2727,7 @@ class gA {
       this._fontManager.maxGlyphDimensions.height
     ), A.updateCharacters && this._rendererManager.renderers.forEach(
       (r) => {
-        r.renderer instanceof Y && r.renderer.characters(r.renderer.options.characters);
+        r.renderer instanceof R && r.renderer.characters(r.renderer.options.characters);
       }
     ), this._rendererManager.resetRendererDimensions());
   }
@@ -2659,8 +2748,8 @@ class gA {
    * ```
    */
   background(e) {
-    if (typeof e != "string" && !Array.isArray(e) && !(e instanceof l.Color))
-      throw new Q(`Invalid color type: ${typeof e}. Expected string, array or p5.Color.`);
+    if (typeof e != "string" && !Array.isArray(e) && !(e instanceof _.Color))
+      throw new n(`Invalid color type: ${typeof e}. Expected string, array or p5.Color.`);
     this._backgroundColor = e;
   }
   /**
@@ -2720,7 +2809,7 @@ class gA {
    * ```
    */
   saveSVG(e = {}) {
-    new aA(this._p).saveSVG(
+    new hA(this._p).saveSVG(
       this._rendererManager,
       this._grid,
       this._fontManager,
@@ -2734,7 +2823,7 @@ class gA {
    * @throws {@link P5AsciifyError} - If no renderer is available to fetch ASCII output from.
    */
   saveJSON(e = {}) {
-    new hA(this._p).saveJSON(
+    new lA(this._p).saveJSON(
       this._rendererManager,
       this._grid,
       this._fontManager,
@@ -2749,18 +2838,18 @@ class gA {
   _generateAsciiTextOutput() {
     const e = this._rendererManager.characterFramebuffer;
     if (!e)
-      throw new Q("No renderer available to generate ASCII output");
+      throw new n("No renderer available to generate ASCII output");
     e.loadPixels();
     const A = e.pixels, r = this._grid.cols, t = this._grid.rows, i = this._fontManager.characters, B = [];
-    let n = 0;
-    for (let c = 0; c < t; c++) {
-      let u = "";
-      for (let _ = 0; _ < r; _++) {
-        const f = n * 4, P = A[f], h = A[f + 1];
-        let E = P + (h << 8);
-        E >= i.length && (E = i.length - 1), u += i[E], n++;
+    let Q = 0;
+    for (let a = 0; a < t; a++) {
+      let h = "";
+      for (let c = 0; c < r; c++) {
+        const l = Q * 4, u = A[l], f = A[l + 1];
+        let g = u + (f << 8);
+        g >= i.length && (g = i.length - 1), h += i[g], Q++;
       }
-      B.push(u);
+      B.push(h);
     }
     return B;
   }
@@ -2815,7 +2904,7 @@ class gA {
    */
   renderToCanvas(e) {
     if (typeof e != "boolean")
-      throw new Q(`Invalid type for renderToCanvas: ${typeof e}. Expected boolean.`);
+      throw new n(`Invalid type for renderToCanvas: ${typeof e}. Expected boolean.`);
     this._renderToCanvas = e;
   }
   /**
@@ -2948,7 +3037,7 @@ class gA {
 }
 const EA = `data:font/truetype;charset=utf-8;base64,AAEAAAAKAIAAAwAgT1MvMs+QEyQAAAEoAAAAYGNtYXAg7yVJAAAFjAAACSBnbHlmuHLTdAAAErQAAGi0aGVhZFvXdUwAAACsAAAANmhoZWELAQUCAAAA5AAAACRobXR4BACDgAAAAYgAAAQEbG9jYQAy54AAAA6sAAAECG1heHABIgCCAAABCAAAACBuYW1lVs/OSgAAe2gAAAOicG9zdABpADQAAH8MAAAAIAABAAAAAQAAzOWHqV8PPPUAAAQAAAAAAHxiGCcAAAAAfGIYJwAAAAAEAAQAAAAACAACAAEAAAAAAAEAAAQAAAAAAAQAAAAAAAcAAAEAAAAAAAAAAAAAAAAAAAEBAAEAAAEBAIAAIAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAgQAAZAABQAEAgACAAAAAAACAAIAAAACAAAzAMwAAAAABAAAAAAAAACAAACLAABw4wAAAAAAAAAAWUFMLgBAACAmawQAAAAAAAQAAAAAAAFRAAAAAAMABAAAAAAgAAAEAAAABAAAAAQAAAAEAAGABAABAAQAAIAEAACABAAAgAQAAIAEAAGABAABAAQAAQAEAACABAABAAQAAIAEAACABAABAAQAAIAEAACABAAAgAQAAIAEAACABAAAgAQAAIAEAACABAAAgAQAAIAEAACABAABAAQAAIAEAAEABAAAgAQAAIAEAACABAAAgAQAAIAEAACABAAAgAQAAIAEAACABAAAgAQAAIAEAACABAAAgAQAAIAEAACABAAAgAQAAIAEAACABAAAgAQAAIAEAACABAAAgAQAAIAEAACABAAAgAQAAIAEAACABAAAgAQAAIAEAACABAABAAQAAIAEAAEABAAAgAQAAIAEAAEABAAAgAQAAIAEAACABAAAgAQAAIAEAAEABAAAgAQAAIAEAAGABAAAgAQAAIAEAAGABAAAgAQAAIAEAACABAAAgAQAAIAEAAEABAAAgAQAAIAEAACABAAAgAQAAIAEAACABAAAgAQAAIAEAACABAABgAQAAQAEAACABAAAAAQAAgAEAACABAAAgAQAAIAEAACABAACAAQAAAAEAAIABAABgAQAAgAEAACABAAAgAQAAAAEAACABAAAAAQAAAAEAAAABAAAAAQAAAAEAAIABAADAAQAAAAEAAAABAAAgAQAAYAEAAAABAAAAAQAAIAEAAAA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AIAAAACA/YAAgAAAAIAAAP8AAoABAAAA/4AAAP+A/4AAgAAAAIAAAP8AA4AAAP8AAAAAgAAAAIAAAP+AAAD/gAAA/4AAAP+AAAD/gAAA/4AAAACAAAAAgAAAAIAAAACAAAAAgAAAAAAAAP+AAAD/gAAAAAAAAP8AAAAAgAAAAAAAAP+AAAD/gAAAAAAAAwCAAIAEAAQAABcAHQAjAAABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAAIAAAAAgAAA/4AAAACAAAAAgAAA/4AAAACAAAD9AAAA/4AAAACAAAD/gAAAAIAAgAAAAIAAAACAAAD/AAAAAQAAAP+AAAAEAAAA/4AAAP8AAAD/gAAAAIAAAP8AAAD/gAAA/4AAAACAAAABAAAAAIAAAAEAAAAAAP+AAAD/gAAAAQD+gP8AAAAAgAAAAIAAAAABAYACgAKABAAAAwAAAQEBAQGAAQAAAP8ABAAAAP6AAAAAAAABAQAAgAMABAAAEwAAAQEBAQEBAQEBAQEBAQEBAQEBAQECAAEAAAD/gAAA/4AAAACAAAAAgAAA/wAAAP+AAAD/gAAAAIAAAACABAAAAP+AAAD/gAAA/oAAAP+AAAD/gAAAAIAAAACAAAABgAAAAIAAAAAAAAEBAACAAwAEAAATAAABAQEBAQEBAQEBAQEBAQEBAQEBAQEAAQAAAACAAAAAgAAA/4AAAP+AAAD/AAAAAIAAAACAAAD/gAAA/4AEAAAA/4AAAP+AAAD+gAAA/4AAAP+AAAAAgAAAAIAAAAGAAAAAgAAAAAAABQCAAYADgAQAAAMABwATABcAGwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAAIAAAP+AAYAAgAAA/4D/AAEAAAABAAAA/wAAAP8AAAD/AAAAAQD/gACAAAD/gAGAAIAAAP+ABAAAAP+AAAAAgAAA/4AAAAAAAAD/gAAA/4AAAP+AAAAAgAAAAIAAAP8AAAD/gAAAAIAAAP+AAAAAAAABAQAAgAOAAwAACwAAAQEBAQEBAQEBAQEBAgAAgAAAAQAAAP8AAAD/gAAA/wAAAAEAAwAAAP8AAAD/gAAA/wAAAAEAAAAAgAAAAAAAAQCAAAACAAGAAAcAAAEBAQEBAQEBAQABAAAA/4AAAP8AAAAAgAGAAAD/AAAA/4AAAACAAAAAAAABAIABgAOAAgAAAwAAAQEBAQCAAwAAAP0AAgAAAP+AAAAAAAABAQAAgAIAAYAAAwAAAQEBAQEAAQAAAP8AAYAAAP8AAAAAAAABAIAAgAQAA4AAFwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAwABAAAA/4AAAP+AAAD/gAAA/4AAAP+AAAD/AAAAAIAAAACAAAAAgAAAAIAAAACAA4AAAP+AAAD/gAAA/4AAAP+AAAD/gAAA/4AAAACAAAAAgAAAAIAAAACAAAAAgAAAAAAAAwCAAIADgAQAAAsAEQAXAAABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAAIAAAAAgAAA/4AAAP4AAAD/gAAAAIAAgAAAAIAAAACAAAD/gAAA/4AAAAEAAAAEAAAA/4AAAP2AAAD/gAAAAIAAAAKAAAAAAP8AAAAAgAAAAID/AP+AAAD/AAAAAYAAAAABAIAAgAOABAAADQAAAQEBAQEBAQEBAQEBAQEBgAEAAAABAAAA/QAAAAEAAAD/AAAAAIAAAACABAAAAP0AAAD/gAAAAIAAAAGAAAAAgAAAAIAAAAABAIAAgAOABAAAGwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAAgAAAACAAAD/gAAA/4AAAP+AAAABgAAA/QAAAACAAAAAgAAAAIAAAACAAAD/AAAA/wAAAACABAAAAP+AAAD/AAAA/4AAAP+AAAD/gAAA/4AAAACAAAAAgAAAAIAAAACAAAABAAAA/wAAAAEAAAAAAAABAIAAgAOABAAAGwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAAgAAAACAAAD/gAAAAIAAAP+AAAD+AAAA/4AAAAEAAAABAAAA/wAAAAEAAAD/AAAA/wAAAACABAAAAP+AAAD/AAAA/4AAAP8AAAD/gAAAAIAAAACAAAD/gAAAAQAAAACAAAABAAAA/4AAAACAAAAAAAABAIAAgAOABAAAEQAAAQEBAQEBAQEBAQEBAQEBAQEBAYABAAAA/4AAAP+AAAABAAAAAQAAAP8AAAD+AAAAAIAAAACABAAAAP+AAAD/gAAA/wAAAAEAAAD9gAAAAQAAAAGAAAAAgAAAAAEAgACAA4AEAAATAAABAQEBAQEBAQEBAQEBAQEBAQEBAQCAAwAAAP4AAAABgAAAAIAAAP+AAAD+AAAA/4AAAAEAAAABAAAA/gAEAAAA/4AAAP8AAAD/gAAA/wAAAP+AAAAAgAAAAIAAAP+AAAABAAAAAAAAAgCAAIADgAQAABMAFwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQACAAAAAIAAAP8AAAD/AAAAAYAAAACAAAD/gAAA/gAAAP+AAAAAgACAAAABAAAABAAAAP+AAAD/gAAAAIAAAP8AAAD/gAAA/wAAAP+AAAAAgAAAAoAAAP6A/wAAAAEAAAEAgACAA4AEAAAPAAABAQEBAQEBAQEBAQEBAQEBAIADAAAA/4AAAP+AAAD/AAAAAIAAAACAAAD+gAAA/4AEAAAA/oAAAP+AAAD+gAAAAYAAAACAAAABAAAA/4AAAAAAAAMAgACAA4AEAAATABcAGwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAAgAAAACAAAD/gAAAAIAAAP+AAAD+AAAA/4AAAACAAAD/gAAAAIAAgAAAAQAAAP8AAAABAAAABAAAAP+AAAD/AAAA/4AAAP8AAAD/gAAAAIAAAAEAAAAAgAAAAQAAAAAA/wAAAAEA/oD/AAAAAQAAAAACAIAAgAOABAAACwAPAAABAQEBAQEBAQEBAQEBAQEBAQACAAAAAIAAAP8AAAD+gAAA/4AAAACAAIAAAAEAAAAEAAAA/4AAAP0AAAABAAAAAIAAAAGAAAAAAP6AAAABgAACAQABAAIAA4AAAwAHAAABAQEBAQEBAQEAAQAAAP8AAAABAAAA/wADgAAA/wAAAP+AAAD/AAAAAAIAgACAAgADgAADAAsAAAEBAQEBAQEBAQEBAQEAAQAAAP8AAAABAAAA/4AAAP8AAAAAgAOAAAD/AAAA/4AAAP8AAAD/gAAAAIAAAAABAQAAgAOABAAAGwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQKAAQAAAP+AAAD/gAAA/4AAAACAAAAAgAAAAIAAAP8AAAD/gAAA/4AAAP+AAAAAgAAAAIAAAACABAAAAP+AAAD/gAAA/4AAAP+AAAD/gAAA/4AAAP+AAAAAgAAAAIAAAACAAAAAgAAAAIAAAACAAAAAAAACAIABgAOAAwAAAwAHAAABAQEBAQEBAQCAAwAAAP0AAAADAAAA/QADAAAA/4AAAP+AAAD/gAAAAAEAgACAAwAEAAAbAAABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAIABAAAAAIAAAACAAAAAgAAA/4AAAP+AAAD/gAAA/wAAAACAAAAAgAAAAIAAAP+AAAD/gAAA/4AEAAAA/4AAAP+AAAD/gAAA/4AAAP+AAAD/gAAA/4AAAACAAAAAgAAAAIAAAACAAAAAgAAAAIAAAAAAAAIAgACAA4AEAAATABcAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAAgAAAACAAAD/gAAA/4AAAP8AAAAAgAAAAIAAAP8AAAD/AAAAAIAAgAEAAAD/AAQAAAD/gAAA/4AAAP+AAAD/gAAAAIAAAACAAAAAgAAA/4AAAACAAAD+AAAA/wAAAAACAIAAgAOABAAAEQAVAAABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQACAAAAAIAAAP6AAAAAgAAA/wAAAAGAAAD+AAAA/4AAAACAAgAAgAAA/4AEAAAA/4AAAP6AAAABAAAAAIAAAP2AAAD/gAAAAIAAAAKAAAD+AAAA/4AAAAAAAAIAgACAA4AEAAAPABMAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAYABAAAAAIAAAACAAAD/AAAA/wAAAP8AAAAAgAAAAIAAAAAAAQAAAAQAAAD/gAAA/4AAAP2AAAABAAAA/wAAAAKAAAAAgAAA/4D/AAAAAQAAAwCAAIADgAQAAAsADwATAAABAQEBAQEBAQEBAQEBAQEBAQEBAQCAAoAAAACAAAD/gAAAAIAAAP+AAAD9gAEAAAABAAAA/wAAAAEAAAAEAAAA/4AAAP8AAAD/gAAA/wAAAP+AAAADAP8AAAABAP6A/wAAAAEAAAAAAQCAAIADgAQAABMAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQACAAAAAIAAAP8AAAD/AAAAAQAAAAEAAAD/gAAA/gAAAP+AAAAAgAQAAAD/gAAA/4AAAACAAAD9gAAAAIAAAP+AAAD/gAAAAIAAAAKAAAAAAAACAIAAgAOABAAACwATAAABAQEBAQEBAQEBAQEBAQEBAQEBAQCAAgAAAACAAAAAgAAA/4AAAP+AAAD+AAEAAAAAgAAAAIAAAP+AAAAEAAAA/4AAAP+AAAD+gAAA/4AAAP+AAAADAP2AAAAAgAAAAYAAAACAAAEAgACAA4AEAAAXAAABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAAIAAAAAgAAA/wAAAP8AAAABAAAA/wAAAAEAAAABAAAA/4AAAP4AAAD/gAAAAIAEAAAA/4AAAP+AAAAAgAAA/wAAAP+AAAD/AAAAAIAAAP+AAAD/gAAAAIAAAAKAAAAAAAABAIAAgAOABAAACQAAAQEBAQEBAQEBAQCAAwAAAP4AAAABAAAA/wAAAP8ABAAAAP+AAAD/AAAA/4AAAP6AAAAAAQCAAIADgAQAABUAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAAIAAAAAgAAA/wAAAP8AAAABAAAA/4AAAAGAAAD/gAAA/gAAAP+AAAAAgAQAAAD/gAAA/4AAAACAAAD9gAAAAQAAAACAAAD+gAAA/4AAAACAAAACgAAAAAEAgACAA4AEAAALAAABAQEBAQEBAQEBAQEAgAEAAAABAAAAAQAAAP8AAAD/AAAA/wAEAAAA/gAAAAIAAAD8gAAAAQAAAP8AAAAAAAABAIAAgAOABAAACwAAAQEBAQEBAQEBAQEBAIADAAAA/wAAAAEAAAD9AAAAAQAAAP8ABAAAAP+AAAD9gAAA/4AAAACAAAACgAAAAAAAAQCAAIAEAAQAAA8AAAEBAQEBAQEBAQEBAQEBAQEBAAMAAAD/gAAA/4AAAP4AAAD/gAAAAQAAAAEAAAD+gAQAAAD/gAAA/YAAAP+AAAAAgAAAAQAAAP8AAAACgAAAAAAAAQCAAIADgAQAABsAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAgAEAAAAAgAAAAIAAAAEAAAD/gAAA/4AAAP+AAAAAgAAAAIAAAACAAAD/AAAA/4AAAP+AAAD/AAQAAAD/AAAAAIAAAACAAAD/gAAA/4AAAP+AAAD/gAAA/4AAAP+AAAD/gAAAAIAAAACAAAD/AAAAAAAAAQCAAIADgAQAAAUAAAEBAQEBAQCAAQAAAAIAAAD9AAQAAAD9AAAA/4AAAAABAIAAgAQABAAAEwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEAgAEAAAAAgAAAAIAAAACAAAABAAAA/wAAAP+AAAD/gAAA/4AAAP8ABAAAAP+AAAD/gAAAAIAAAACAAAD8gAAAAgAAAP+AAAAAgAAA/gAAAAAAAAEAgACABAAEAAATAAABAQEBAQEBAQEBAQEBAQEBAQEBAQCAAQAAAACAAAAAgAAAAIAAAAEAAAD/AAAA/4AAAP+AAAD/gAAA/wAEAAAA/4AAAP+AAAD/gAAAAYAAAPyAAAABAAAAAIAAAACAAAD+AAAAAAAAAgCAAIADgAQAAAsADwAAAQEBAQEBAQEBAQEBAQEBAQEAAgAAAACAAAD/gAAA/gAAAP+AAAAAgACAAAABAAAABAAAAP+AAAD9gAAA/4AAAACAAAACgAAAAAD9gAAAAoAAAgCAAIADgAQAAAkADQAAAQEBAQEBAQEBAQEBAQEAgAKAAAAAgAAA/4AAAP6AAAD/AAEAAAABAAAABAAAAP+AAAD+gAAA/4AAAP8AAAADAP6AAAABgAAAAAIAgACABAAEAAAPABcAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAAgAAAACAAAAAgAAA/4AAAP+AAAD+AAAA/4AAAACAAIAAAAEAAAD/gAAAAIAAAAQAAAD/gAAA/gAAAP8AAAAAgAAA/4AAAACAAAACgAAAAAD9gAAAAIAAAACAAAABgAACAIAAgAOABAAAEwAXAAABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAgAKAAAAAgAAA/4AAAP+AAAAAgAAAAIAAAP8AAAD/gAAA/4AAAP8AAQAAAAEAAAAEAAAA/4AAAP8AAAD/gAAA/4AAAP+AAAD/gAAAAIAAAACAAAD/AAAAAwD/AAAAAQAAAQCAAIADgAQAABsAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAAIAAAAAgAAA/wAAAP8AAAABgAAAAIAAAP+AAAD+AAAA/4AAAAEAAAABAAAA/oAAAP+AAAAAgAQAAAD/gAAA/4AAAACAAAD/AAAA/4AAAP8AAAD/gAAAAIAAAACAAAD/gAAAAQAAAACAAAABAAAAAAAAAQCAAIADgAQAAAcAAAEBAQEBAQEBAIADAAAA/wAAAP8AAAD/AAQAAAD/gAAA/QAAAAMAAAAAAAABAIAAgAOABAAACwAAAQEBAQEBAQEBAQEBAIABAAAAAQAAAAEAAAD/gAAA/gAAAP+ABAAAAP0AAAADAAAA/QAAAP+AAAAAgAAAAAAAAQCAAIADgAQAAA8AAAEBAQEBAQEBAQEBAQEBAQEAgAEAAAABAAAAAQAAAP+AAAD/gAAA/wAAAP+AAAD/gAQAAAD+AAAAAgAAAP4AAAD/AAAA/4AAAACAAAABAAAAAAAAAQCAAIAEAAQAABMAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAIABAAAAAIAAAACAAAAAgAAAAQAAAP8AAAD/gAAA/4AAAP+AAAD/AAQAAAD+AAAAAIAAAP+AAAACAAAA/IAAAACAAAAAgAAA/4AAAP+AAAAAAAABAIAAgAOABAAAGwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQCAAQAAAAEAAAABAAAA/4AAAP+AAAAAgAAAAIAAAP8AAAD/AAAA/wAAAACAAAAAgAAA/4AAAP+ABAAAAP8AAAABAAAA/wAAAP+AAAD/gAAA/4AAAP8AAAABAAAA/wAAAAEAAAAAgAAAAIAAAACAAAAAAAABAIAAgAOABAAADwAAAQEBAQEBAQEBAQEBAQEBAQCAAQAAAAEAAAABAAAA/4AAAP+AAAD/AAAA/4AAAP+ABAAAAP6AAAABgAAA/oAAAP+AAAD+gAAAAYAAAACAAAAAAAABAIAAgAOABAAAFwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAIADAAAA/4AAAP+AAAD/gAAA/4AAAAIAAAD9AAAAAIAAAACAAAAAgAAAAIAAAP4ABAAAAP8AAAD/gAAA/4AAAP+AAAD/gAAA/4AAAAEAAAAAgAAAAIAAAACAAAAAgAAAAAAAAQEAAIADAAQAAAcAAAEBAQEBAQEBAQACAAAA/wAAAAEAAAD+AAQAAAD/gAAA/YAAAP+AAAAAAAABAIAAgAQAA4AAFwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAIABAAAAAIAAAACAAAAAgAAAAIAAAACAAAD/AAAA/4AAAP+AAAD/gAAA/4AAAP+AA4AAAP+AAAD/gAAA/4AAAP+AAAD/gAAA/4AAAACAAAAAgAAAAIAAAACAAAAAgAAAAAAAAQEAAIADAAQAAAcAAAEBAQEBAQEBAQACAAAA/gAAAAEAAAD/AAQAAAD8gAAAAIAAAAKAAAAAAAABAIACAAQABAAAFwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAgAAgAAAAIAAAACAAAAAgAAA/wAAAP+AAAD/gAAA/4AAAP8AAAAAgAAAAIAAAACABAAAAP+AAAD/gAAA/4AAAP+AAAAAgAAAAIAAAP+AAAD/gAAAAIAAAACAAAAAgAAAAAAAAQCAAIADgAEAAAMAAAEBAQEAgAMAAAD9AAEAAAD/gAAAAAAAAQEAAoACgAQAAAkAAAEBAQEBAQEBAQEBAAEAAAAAgAAA/4AAAP+AAAD/gAQAAAD/gAAA/wAAAACAAAAAgAAAAAEAgACAA4ADAAAPAAABAQEBAQEBAQEBAQEBAQEBAQACgAAA/4AAAP+AAAD/AAAAAQAAAP6AAAD/gAAAAIADAAAA/YAAAACAAAABgAAA/oAAAP+AAAAAgAAAAYAAAAAAAAIAgACAA4AEAAAJAA0AAAEBAQEBAQEBAQEBAQEBAIABAAAAAYAAAACAAAD/gAAA/YABAAAAAQAAAAQAAAD/AAAA/4AAAP6AAAD/gAAAAgD+gAAAAYAAAAABAIAAgAOAAwAAEwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAAIAAAAAgAAA/wAAAP8AAAABAAAAAQAAAP+AAAD+AAAA/4AAAACAAwAAAP+AAAD/gAAAAIAAAP6AAAAAgAAA/4AAAP+AAAAAgAAAAYAAAAAAAAIAgACAA4AEAAAJAA0AAAEBAQEBAQEBAQEBAQEBAoABAAAA/YAAAP+AAAAAgAAAAYD/AAAAAQAAAAQAAAD8gAAAAIAAAAGAAAAAgAAA/4D+gAAAAYAAAAACAIAAgAOAAwAADQARAAABAQEBAQEBAQEBAQEBAQEBAQEBAAIAAAAAgAAA/gAAAAGAAAD+AAAA/4AAAACAAIAAAAEAAAADAAAA/4AAAP8AAAD/gAAA/4AAAACAAAABgAAAAAD/gAAAAIAAAAABAQAAgAOAA4AACwAAAQEBAQEBAQEBAQEBAYACAAAA/oAAAAEAAAD/AAAA/wAAAACAA4AAAP+AAAD/AAAA/4AAAP8AAAACgAAAAAAAAgCAAIADgAOAAA8AEwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAAIAAAAAgAAA/4AAAP4AAAABgAAA/oAAAP+AAAAAgACAAAABAAAAA4AAAP+AAAD+AAAA/4AAAACAAAAAgAAAAIAAAAEAAAAAAP8AAAABAAABAIAAgAOABAAACwAAAQEBAQEBAQEBAQEBAIABAAAAAYAAAACAAAD/AAAA/wAAAP8ABAAAAP8AAAD/gAAA/gAAAAIAAAD+AAAAAAAAAgGAAIACgAQAAAMABwAAAQEBAQEBAQEBgAEAAAD/AAAAAQAAAP8ABAAAAP+AAAD/gAAA/YAAAAACAIAAgAOABAAAAwAPAAABAQEBAQEBAQEBAQEBAQEBAoABAAAA/wAAAAEAAAD/gAAA/gAAAP+AAAABAAAAAQAEAAAA/4AAAP+AAAD+AAAA/4AAAACAAAABAAAA/wAAAAABAIAAgAOAA4AAEwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEAgAEAAAAAgAAAAQAAAP+AAAAAgAAAAIAAAP8AAAD/gAAA/4AAAP8AA4AAAP8AAAAAgAAA/4AAAP8AAAD/gAAA/4AAAACAAAAAgAAA/wAAAAAAAAEBgACAAwAEAAAHAAABAQEBAQEBAQGAAQAAAACAAAD/AAAA/4AEAAAA/QAAAP+AAAAAgAAAAAAAAQCAAIAEAAMAABMAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQABAAAAAIAAAAEAAAAAgAAA/wAAAP+AAAD/gAAA/4AAAP8AAAAAgAMAAAD/gAAAAIAAAP+AAAD+AAAAAYAAAP+AAAAAgAAA/oAAAAIAAAAAAAABAIAAgAOAAwAADwAAAQEBAQEBAQEBAQEBAQEBAQCAAQAAAACAAAABAAAAAIAAAP8AAAD/gAAA/4AAAP8AAwAAAP+AAAAAgAAA/4AAAP4AAAABgAAA/4AAAP8AAAAAAAACAIAAgAOAAwAACwAPAAABAQEBAQEBAQEBAQEBAQEBAQACAAAAAIAAAP+AAAD+AAAA/4AAAACAAIAAAAEAAAADAAAA/4AAAP6AAAD/gAAAAIAAAAGAAAAAAP6AAAABgAACAIAAgAOAAwAACQANAAABAQEBAQEBAQEBAQEBAQCAAoAAAACAAAD/gAAA/oAAAP8AAQAAAAEAAAADAAAA/4AAAP+AAAD/gAAA/wAAAAIA/4AAAACAAAAAAgCAAIAEAAMAAA0AEQAAAQEBAQEBAQEBAQEBAQEBAQEBAQACgAAAAIAAAP+AAAD/AAAA/oAAAP+AAAAAgACAAAABAAAAAwAAAP6AAAD/gAAA/4AAAAEAAAAAgAAAAIAAAAAA/4AAAACAAAAAAQEAAIADgAMAAAkAAAEBAQEBAQEBAQEBAAIAAAAAgAAA/wAAAP+AAAD/AAMAAAD/gAAA/wAAAAEAAAD+AAAAAAEAgACABAADAAATAAABAQEBAQEBAQEBAQEBAQEBAQEBAQEAAoAAAP6AAAABgAAAAIAAAP+AAAD9AAAAAgAAAP6AAAD/gAAAAIADAAAA/4AAAP+AAAD/gAAA/4AAAP+AAAAAgAAAAIAAAACAAAAAgAAAAAAAAQCAAIADgAOAABMAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQABAAAAAQAAAP8AAAAAgAAAAQAAAP+AAAD+gAAA/4AAAP+AAAAAgAOAAAD/gAAA/4AAAP6AAAAAgAAA/4AAAP+AAAAAgAAAAYAAAACAAAAAAAABAIAAgAOAAwAADwAAAQEBAQEBAQEBAQEBAQEBAQCAAQAAAACAAAAAgAAAAQAAAP+AAAD/gAAA/oAAAP+AAwAAAP4AAAAAgAAAAYAAAP2AAAAAgAAA/4AAAACAAAAAAAABAIAAgAOAAwAADwAAAQEBAQEBAQEBAQEBAQEBAQCAAQAAAAEAAAABAAAA/4AAAP+AAAD/AAAA/4AAAP+AAwAAAP6AAAABgAAA/oAAAP+AAAD/gAAAAIAAAACAAAAAAAABAIAAgAQAAwAAEwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEAgAEAAAAAgAAAAIAAAACAAAABAAAA/4AAAP8AAAD/gAAA/wAAAP+AAwAAAP6AAAAAgAAA/4AAAAGAAAD+AAAA/4AAAACAAAD/gAAAAIAAAAAAAAEAgACAA4ADAAAbAAABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAIABAAAAAQAAAAEAAAD/gAAA/4AAAACAAAAAgAAA/wAAAP8AAAD/AAAAAIAAAACAAAD/gAAA/4ADAAAA/4AAAACAAAD/gAAA/4AAAP+AAAD/gAAA/4AAAACAAAD/gAAAAIAAAACAAAAAgAAAAIAAAAAAAAEAgACAA4ADAAAPAAABAQEBAQEBAQEBAQEBAQEBAIABAAAAAQAAAAEAAAD/gAAA/gAAAAGAAAD+gAAA/4ADAAAA/wAAAAEAAAD+AAAA/4AAAACAAAAAgAAAAIAAAAAAAAEAgACAA4ADAAATAAABAQEBAQEBAQEBAQEBAQEBAQEBAQCAAwAAAP+AAAD/gAAA/4AAAAGAAAD9AAAAAIAAAACAAAAAgAAA/oADAAAA/4AAAP+AAAD/gAAA/4AAAP+AAAAAgAAAAIAAAACAAAAAgAAAAAAAAQCAAIADAAQAABMAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAYABgAAA/wAAAP+AAAAAgAAAAQAAAP6AAAD/gAAA/4AAAACAAAAAgAQAAAD/gAAA/wAAAP+AAAD/AAAA/4AAAACAAAABAAAAAIAAAAEAAAAAAAABAYAAgAKABAAAAwAAAQEBAQGAAQAAAP8ABAAAAPyAAAAAAAABAQAAgAOABAAAEwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAAGAAAAAgAAAAIAAAP+AAAD/gAAA/oAAAAEAAAAAgAAA/4AAAP8ABAAAAP+AAAD/AAAA/4AAAP8AAAD/gAAAAIAAAAEAAAAAgAAAAQAAAAAAAAEAgAGAA4ADAAAPAAABAQEBAQEBAQEBAQEBAQEBAQABAAAAAQAAAACAAAD/gAAA/wAAAP8AAAD/gAAAAIADAAAA/4AAAACAAAD/AAAA/4AAAACAAAD/gAAAAQAAAAAAAAEAAAAABAAEAAATAAABAQEBAQEBAQEBAQEBAQEBAQEBAQAAAYAAAAEAAAAAgAAAAIAAAACAAAD/AAAA/4AAAP+AAAD/AAAA/wAEAAAA/4AAAP+AAAD/gAAA/wAAAP6AAAABAAAAAQAAAACAAAAAgAAAAAAAAQIAAAAEAAQAAAMAAAEBAQECAAIAAAD+AAQAAAD8AAAAAAAAAgCAAIADgAQAABcAGwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQGAAYAAAP8AAAABAAAA/4AAAP+AAAABgAAA/QAAAACAAAAAgAAA/wAAAACAAAAAgAGAAIAAAP+ABAAAAP+AAAD/AAAA/4AAAP+AAAD/gAAA/4AAAACAAAAAgAAAAIAAAACAAAABAAAAAAAAAP+AAAAAAQCAAIADgAQAABsAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAgAEAAAABAAAAAQAAAP+AAAAAgAAA/wAAAAEAAAD/AAAA/wAAAP8AAAABAAAA/wAAAACAAAD/gAQAAAD+gAAAAYAAAP8AAAD/gAAA/4AAAP+AAAD/gAAA/4AAAACAAAAAgAAAAIAAAACAAAAAgAAAAAAABACAAIAEAAQAABcAGwAfACMAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAAoAAAP4AAAABgAAAAIAAAACAAAD/gAAA/YAAAAIAAAD+gAAA/4AAAP+AAAAAgAEAAAAAgAAAAQAAgAAA/4D9AACAAAD/gAQAAAD/gAAA/4AAAP+AAAD/gAAA/wAAAP+AAAAAgAAAAIAAAACAAAAAgAAAAQAAAP8A/4AAAACAAQAAAP+AAAD+gAAA/4AAAAAEAIAAgAQAA4AAAwAHAAsADwAAAQEBAQEBAQEBAQEBAQEBAQCAAIAAAP+AAQAAgAAA/4ABAACAAAD/gAEAAIAAAP+AA4AAAP0AAAADAAAA/QAAAAMAAAD9AAAAAwAAAP0AAAAAAQIAAAAEAAQAAAkAAAEBAQEBAQEBAQEDgACAAAD+AAAAAIAAAACAAAAAgAQAAAD8AAAAAQAAAAEAAAABAAAAAAgAAAAABAAEAAADAAcACwAPABMAFwAbAB8AAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAAABAAAA/wACAAEAAAD/AP8AAQAAAP8AAgABAAAA/wD9AAEAAAD/AAIAAQAAAP8A/wABAAAA/wACAAEAAAD/AAQAAAD/AAAAAQAAAP8AAAAAAAAA/wAAAAEAAAD/AAAAAAAAAP8AAAABAAAA/wAAAAAAAAD/AAAAAQAAAP8AAAAAAQIAAAADAAQAAAMAAAEBAQECAAEAAAD/AAQAAAD8AAAAAAAAAgGAAIACgAQAAAMABwAAAQEBAQEBAQEBgAEAAAD/AAAAAQAAAP8ABAAAAP6AAAD/gAAA/oAAAAABAgAAAAQAAgAAAwAAAQEBAQIAAgAAAP4AAgAAAP4AAAAAAAAEAIAAAAQABAAAAwAHAAsADwAAAQEBAQEBAQEBAQEBAQEBAQCAAIAAAP+AAQAAgAAA/4ABAACAAAD/gAEAAIAAAP+ABAAAAPwAAAAEAAAA/AAAAAQAAAD8AAAABAAAAPwAAAAAAQCAAIADgAOAABMAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAoABAAAA/oAAAP+AAAD/gAAA/4AAAACAAAAAgAAAAIAAAAEAAAD/gAOAAAD+AAAA/wAAAACAAAAAgAAAAIAAAACAAAAAgAAA/wAAAAEAAAAAAAABAAAAAAQABAAACwAAAQEBAQEBAQEBAQEBAAAEAAAA/gAAAP+AAAD/gAAA/4AAAP+ABAAAAPwAAAAAgAAAAIAAAACAAAAAgAAAAAAAAQCAAIAEAAOAABsAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAgACAAAAAgAAAAIAAAACAAAAAgAAAAIAAAACAAAD/gAAA/4AAAP+AAAD/gAAA/4AAAP+AAAD/gAOAAAD/gAAAAIAAAP8AAAABAAAA/oAAAAGAAAD9AAAAAIAAAP+AAAABAAAA/wAAAAGAAAD+gAAAAAAAAQAAAAACAAQAAAkAAAEBAQEBAQEBAQEAAACAAAAAgAAAAIAAAACAAAD+AAQAAAD/AAAA/wAAAP8AAAD/AAAAAAEAAAAABAAEAAATAAABAQEBAQEBAQEBAQEBAQEBAQEBAQKAAYAAAP8AAAD/AAAA/4AAAP+AAAD/AAAAAIAAAACAAAAAgAAAAQAEAAAA/wAAAP+AAAD/gAAA/wAAAP8AAAABgAAAAQAAAACAAAAAgAAAAAAAAQAAAAAEAAIAAA8AAAEBAQEBAQEBAQEBAQEBAQEBgAEAAAAAgAAAAIAAAACAAAD8AAAAAIAAAACAAAAAgAIAAAD/gAAA/4AAAP+AAAD/gAAAAIAAAACAAAAAgAAAAAAAAgAAAAAEAAQAAAMABwAAAQEBAQEBAQEAAAIAAAD+AAIAAgAAAP4ABAAAAP4AAAAAAAAA/gAAAAAEAAACAAQABAAAAwAHAAsADwAAAQEBAQEBAQEBAQEBAQEBAQAAAQAAAP8AAgABAAAA/wD/AAEAAAD/AAIAAQAAAP8ABAAAAP8AAAABAAAA/wAAAAAAAAD/AAAAAQAAAP8AAAAABAIAAAAEAAQAAAMABwALAA8AAAEBAQEBAQEBAQEBAQEBAQECAAEAAAD/AAEAAQAAAP8A/wABAAAA/wABAAEAAAD/AAQAAAD/AAAAAAAAAP8AAAAAAAAA/wAAAAAAAAD/AAAAAAEDAAAABAAEAAADAAABAQEBAwABAAAA/wAEAAAA/AAAAAAAAAEAAAAABAAEAAAFAAABAQEBAQEAAAQAAAD9AAAA/wAEAAAA/wAAAP0AAAAAAQAAAAABAAQAAAMAAAEBAQEAAAEAAAD/AAQAAAD8AAAAAAAAAwCAAIADAAOAAAMABwALAAABAQEBAQEBAQEBAQEAgACAAAD/gAEAAIAAAP+AAQAAgAAA/4ADgAAA/QAAAAMAAAD9AAAAAwAAAP0AAAAAAAABAYABgAQABAAACwAAAQEBAQEBAQEBAQEBAYABAAAAAIAAAAEAAAD+gAAA/4AAAP+ABAAAAP8AAAD/gAAA/wAAAACAAAAAgAAAAAAAAQAAAYACgAQAAAsAAAEBAQEBAQEBAQEBAQGAAQAAAP+AAAD/gAAA/oAAAAEAAAAAgAQAAAD+gAAA/4AAAP+AAAABAAAAAIAAAAAAAAEAAAAABAAEAAAJAAABAQEBAQEBAQEBAwABAAAA/AAAAAEAAAABAAAAAQAEAAAA/AAAAAKAAAAAgAAAAIAAAAABAIAAgAMABAAACwAAAQEBAQEBAQEBAQEBAgABAAAA/4AAAP6AAAD/gAAAAIAAAAEABAAAAP0AAAD/gAAAAIAAAAEAAAAAgAAAAAAAAQAAAAAEAAQAAAUAAAEBAQEBAQAAAQAAAAMAAAD8AAQAAAD9AAAA/wAAAAACAIAAgAMAAoAACwAPAAABAQEBAQEBAQEBAQEBAQEBAQABgAAAAIAAAP+AAAD+gAAAAQAAAP8A/4AAgAAA/4ACgAAA/4AAAP8AAAD/gAAAAIAAAAEAAAAAAAAA/wAAAAACAIAAgAMABAAACwAPAAABAQEBAQEBAQEBAQEBAQEBAgABAAAA/4AAAP6AAAABAAAA/wAAAAEA/oAAgAAA/4AEAAAA/QAAAP+AAAAAgAAAAQAAAACAAAD/gAAA/wAAAAABAIAAgAQABAAADQAAAQEBAQEBAQEBAQEBAQECAAIAAAD/AAAA/4AAAP6AAAD/gAAAAIAAAAEABAAAAP+AAAD9gAAA/4AAAACAAAABAAAAAIAAAAACAAAAAAQABAAAAwAHAAABAQEBAQEBAQAABAAAAPwAAQAAAAIAAAAEAAAA/AAAAAMA/gAAAAIAAAEAgACABAAEAAARAAABAQEBAQEBAQEBAQEBAQEBAQECAAIAAAD/AAAAAQAAAP8AAAD/gAAA/oAAAP+AAAAAgAAAAQAEAAAA/4AAAP+AAAD/gAAA/oAAAP+AAAAAgAAAAQAAAACAAAAAAQAAAAACgAKAAAsAAAEBAQEBAQEBAQEBAQAAAYAAAACAAAAAgAAA/wAAAP+AAAD/AAKAAAD/gAAA/4AAAP6AAAABAAAAAIAAAAAAAAEAAAAABAAEAAAFAAABAQEBAQEAAAQAAAD/AAAA/QAEAAAA/AAAAAMAAAAAAQCAAIAEAAQAABUAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQECAAIAAAD/AAAAAQAAAP8AAAABAAAA/wAAAP+AAAD+gAAA/4AAAACAAAABAAQAAAD/gAAA/4AAAP+AAAD/gAAA/4AAAP+AAAD/gAAAAIAAAAEAAAAAgAAAAAEBgAAABAACgAALAAABAQEBAQEBAQEBAQECgAGAAAD/AAAA/4AAAP8AAAAAgAAAAIACgAAA/wAAAP+AAAD/AAAAAYAAAACAAAAAAAABAAAAAAQABAAAEQAAAQEBAQEBAQEBAQEBAQEBAQEBAAAAgAAAAIAAAACAAAAAgAAAAIAAAACAAAAAgAAAAIAAAPwABAAAAP+AAAD/gAAA/4AAAP+AAAD/gAAA/4AAAP+AAAD/gAAAAAEAAAAABAABAAADAAABAQEBAAAEAAAA/AABAAAA/wAAAAAAAAEAAAAABAAEAAARAAABAQEBAQEBAQEBAQEBAQEBAQEDgACAAAD8AAAAAIAAAACAAAAAgAAAAIAAAACAAAAAgAAAAIAEAAAA/AAAAACAAAAAgAAAAIAAAACAAAAAgAAAAIAAAACAAAAAAQAAAgAEAAQAAAMAAAEBAQEAAAQAAAD8AAQAAAD+AAAAAAAAAgCAAIACAAOAAAMABwAAAQEBAQEBAQEAgACAAAD/gAEAAIAAAP+AA4AAAP0AAAADAAAA/QAAAAAEAIAAgAQABAAAAwAHAAsADwAAAQEBAQEBAQEBAQEBAQEBAQCAA4AAAPyAAIAAAACAAAAAgAAAAIAAAACAAAAAgAAABAAAAPyAAAADAP+AAAAAgP8A/4AAAACA/wD/gAAAAIAAAQAAAAAEAAQAAAUAAAEBAQEBAQMAAQAAAPwAAAADAAQAAAD8AAAAAQAAAAACAIAAgAQABAAAAwAHAAABAQEBAQEBAQCAA4AAAPyAAYAAAACAAAAEAAAA/IAAAAIA/4AAAACAAAMAgACABAAEAAADAAcACwAAAQEBAQEBAQEBAQEBAIADgAAA/IAAgAAAAIAAAAGAAAAAgAAABAAAAPyAAAADAP+AAAAAgP4A/4AAAACAAAAABAAAAIAEAAQAAAMABwALAA8AAAEBAQEBAQEBAQEBAQEBAQEAAAQAAAD8AAAABAAAAPwAAAAEAAAA/AAAAAQAAAD8AAQAAAD/gAAA/4AAAP+AAAD/gAAA/4AAAP+AAAD/gAAAAAYAgACABAAEAAADAAcACwAPABMAFwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAIADgAAA/IAAgAAAAIAAAAGAAAAAgAAA/oAAAACAAAD+gAAAAIAAAAGAAAAAgAAABAAAAPyAAAADAP+AAAAAgAAA/4AAAACA/wD/gAAAAID/AP+AAAAAgAAA/4AAAACAAAEAgACAAQADgAADAAABAQEBAIAAgAAA/4ADgAAA/QAAAAAAAAUAgACABAAEAAADAAcACwAPABMAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAIADgAAA/IAAgAAAAIAAAAGAAAAAgAAA/YAAAACAAAABgAAAAIAAAAQAAAD8gAAAAwD/gAAAAIAAAP+AAAAAgP4A/4AAAACAAAD/gAAAAIAAAAABAAADAAQABAAAAwAAAQEBAQAABAAAAPwABAAAAP8AAAAAAAAHAIAAgAQABAAAAwAHAAsADwATABcAGwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQCAA4AAAPyAAIAAAACAAAABgAAAAIAAAP2AAAAAgAAAAYAAAACAAAD9gAAAAIAAAAGAAAAAgAAABAAAAPyAAAADAP+AAAAAgAAA/4AAAACA/wD/gAAAAIAAAP+AAAAAgP8A/4AAAACAAAD/gAAAAIAAAAAEAAAAAAQAAgAAAwAHAAsADwAAAQEBAQEBAQEBAQEBAQEBAQAAAQAAAP8AAgABAAAA/wD/AAEAAAD/AAIAAQAAAP8AAgAAAP8AAAABAAAA/wAAAAAAAAD/AAAAAQAAAP8AAAAAAQAAAAAEAAQAAAkAAAEBAQEBAQEBAQEAAAEAAAABAAAAAQAAAAEAAAD8AAQAAAD/gAAA/4AAAP+AAAD9gAAAAAEBAAAAAgAEAAADAAABAQEBAQABAAAA/wAEAAAA/AAAAAAAAAEAAAAABAAEAAALAAABAQEBAQEBAQEBAQECgAGAAAD8AAAAAIAAAACAAAAAgAAAAQAEAAAA/AAAAAGAAAABAAAAAIAAAACAAAAAAAABAAABAAQAAgAAAwAAAQEBAQAABAAAAPwAAgAAAP8AAAAAAAABAAAAAAQABAAACwAAAQEBAQEBAQEBAQEBAgACAAAA/AAAAACAAAAAgAAAAIAAAACABAAAAPwAAAACAAAAAIAAAACAAAAAgAAAAAAAAQAAAAAEAAIAAAkAAAEBAQEBAQEBAQEDAAEAAAD8AAAAAQAAAAEAAAABAAIAAAD+AAAAAIAAAACAAAAAgAAAAAEAAAAABAAEAAALAAABAQEBAQEBAQEBAQEAAAIAAAAAgAAAAIAAAACAAAAAgAAA/AAEAAAA/4AAAP+AAAD/gAAA/4AAAP4AAAAAAAADAAAAAAQABAAAGwAnADMAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAAAEAAAAAgAAAAIAAAACAAAAAgAAAAIAAAACAAAD/AAAA/4AAAP+AAAD/gAAA/4AAAP+AAAD/gAIAAYAAAACAAAD/gAAA/4AAAP+AAAD/gP4AAIAAAACAAAAAgAAAAIAAAP6AAAD/gAQAAAD/gAAA/4AAAP+AAAD/gAAA/4AAAP+AAAD/AAAAAIAAAACAAAAAgAAAAIAAAACAAAAAgAAAAQAAAP+AAAD+gAAAAIAAAACAAAAAgAAA/oAAAP+AAAD/gAAA/4AAAP+AAAAAgAAAAAAAAQAAAAAEAAIAAAkAAAEBAQEBAQEBAQEAAAEAAAABAAAAAQAAAAEAAAD8AAIAAAD/gAAA/4AAAP+AAAD/gAAAAAEAAAAABAAEAAALAAABAQEBAQEBAQEBAQEAAAGAAAABAAAAAIAAAACAAAAAgAAA/AAEAAAA/4AAAP+AAAD/gAAA/wAAAP6AAAAAAAAEAAAAgAQABAAAAwAHAAsADwAAAQEBAQEBAQEBAQEBAQEBAQCAAYAAAP6AAgABgAAA/oD9gAGAAAD+gAIAAYAAAP6ABAAAAP6AAAABgAAA/oAAAP+AAAD+gAAAAYAAAP6AAAAAAQIAAgAEAAQAAAMAAAEBAQECAAIAAAD+AAQAAAD+AAAAAAAABACAAIAEAAQAAAMABwAjACcAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAAEAAAD/AAGAAQAAAP8A/gAAgAAAAIAAAACAAAAAgAAAAIAAAACAAAAAgAAA/4AAAP+AAAD/gAAA/4AAAP+AAAD/gAAA/4ABgACAAAD/gAQAAAD/gAAAAIAAAP+AAAAAAAAA/wAAAP+AAAD/gAAAAIAAAACAAAABAAAA/oAAAP+AAAD/gAAA/4AAAACAAAAAgAAAAIAAAAGAAAD/gAAAAAQAAAAABAAEAAADAAcACwAPAAABAQEBAQEBAQEBAQEBAQEBAAAAgAAA/4ADgACAAAD/gPyAAIAAAP+AA4AAgAAA/4AEAAAA/4AAAACAAAD/gAAA/QAAAP+AAAAAgAAA/4AAAAABAAAAAAIAAgAAAwAAAQEBAQAAAgAAAP4AAgAAAP4AAAAAAAAEAAAAAAIABAAAAwAHAAsADwAAAQEBAQEBAQEBAQEBAQEBAQAAAQAAAP8AAQABAAAA/wD/AAEAAAD/AAEAAQAAAP8ABAAAAP8AAAAAAAAA/wAAAAAAAAD/AAAAAAAAAP8AAAAAAQCAAQADgAOAABMAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAYABAAAA/4AAAAGAAAD+gAAAAIAAAP8AAAD/gAAA/4AAAACAAAAAgAOAAAD/gAAA/4AAAP+AAAD/gAAA/4AAAACAAAAAgAAAAIAAAACAAAAAAAABAQABAAOABAAAEwAAAQEBAQEBAQEBAQEBAQEBAQEBAQECAACAAAAAgAAAAIAAAP+AAAD/gAAA/4AAAP+AAAD/gAAAAIAAAACABAAAAP+AAAD/gAAA/wAAAACAAAD+gAAAAYAAAP+AAAABAAAAAIAAAAAAAAEBAAEABAADgAATAAABAQEBAQEBAQEBAQEBAQEBAQEBAQIAAQAAAACAAAAAgAAA/4AAAP+AAAD/AAAAAIAAAP6AAAABgAAA/4ADgAAA/4AAAP+AAAD/gAAA/4AAAP+AAAAAgAAAAIAAAACAAAAAgAAAAAAAAQEAAIADgAOAABMAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAgAAgAAAAIAAAACAAAD/gAAA/4AAAP+AAAD/gAAA/4AAAACAAAAAgAOAAAD+gAAAAIAAAP8AAAD/gAAA/4AAAACAAAAAgAAAAQAAAP+AAAAAAAABAQAAgAOABAAADwAAAQEBAQEBAQEBAQEBAQEBAQIAAIAAAACAAAAAgAAA/4AAAP6AAAD/gAAAAIAAAACABAAAAP8AAAD/AAAA/wAAAP+AAAAAgAAAAQAAAAEAAAAAAAACAIAAgAOAA4AAAwAJAAABAQEBAQEBAQEBAIADAAAA/QAAgAAAAgAAAP8AAAADgAAA/QAAAAKA/gAAAAEAAAABAAAAAAIAgACABAAEAAAbACcAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQECAACAAAAAgAAAAIAAAACAAAD/gAAA/4AAAP+AAAD/gAAA/4AAAP+AAAD/gAAAAIAAAACAAAAAgAAAAAD/gAAAAIAAAACAAAAAgAAA/4AAAAQAAAD/gAAA/4AAAP+AAAD/gAAA/4AAAP+AAAD/gAAAAIAAAACAAAAAgAAAAIAAAACAAAAAgAAA/4D/gAAA/4AAAP+AAAAAgAAAAIAAAACAAAEAAAIABAADAAADAAABAQEBAAAEAAAA/AADAAAA/wAAAAAAAAEAAAAABAAEAAALAAABAQEBAQEBAQEBAQEAAAQAAAD/gAAA/4AAAP+AAAD/gAAA/gAEAAAA/gAAAP+AAAD/gAAA/4AAAP+AAAAAAAABAAACAAIABAAAAwAAAQEBAQAAAgAAAP4ABAAAAP4AAAAAAAACAQAAgAOAA4AAFwAbAAABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAYABgAAAAIAAAP8AAAAAgAAAAIAAAP8AAAD/gAAA/wAAAACAAAAAgAAA/wAAAACAAIAAAACAAAADgAAA/wAAAP+AAAD/gAAA/4AAAP+AAAAAgAAA/4AAAACAAAAAgAAAAIAAAACAAAAAgP+AAAAAgAADAAAAAAQABAAACwAnADMAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAgAGAAAD/gAAA/4AAAP+AAAD/gAAAAIACgAEAAAD/gAAA/4AAAP+AAAD/gAAA/4AAAP+AAAD/AAAAAIAAAACAAAAAgAAAAIAAAACAAAAAgACAAIAAAP+AAAD+gAAAAIAAAACAAAAAgAQAAAD/gAAA/4AAAP+AAAD/gAAAAYAAAACAAAD/AAAA/4AAAP+AAAD/gAAA/4AAAP+AAAD/gAAAAQAAAACAAAAAgAAAAIAAAACAAAAAgAAA/oAAAP6AAAD/gAAAAIAAAACAAAAAgAAAAAAAAgCAAIADgAQAAA8AHwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAAEAAAABAAAAAIAAAP+AAAD/AAAA/wAAAP+AAAAAgAAAAQAAAAEAAAAAgAAA/4AAAP8AAAD/AAAA/4AAAACABAAAAP+AAAAAgAAA/wAAAP+AAAAAgAAA/4AAAAEAAAD+gAAA/4AAAACAAAD/AAAA/4AAAACAAAD/gAAAAQAAAAABAAAAAAQAA4AACwAAAQEBAQEBAQEBAQEBAQACAAAAAIAAAACAAAD8AAAAAIAAAACAA4AAAP+AAAD/gAAA/YAAAAKAAAAAgAAAAAAAAQAAAAACAAQAAA8AAAEBAQEBAQEBAQEBAQEBAQEAAACAAAAAgAAAAIAAAACAAAD/gAAA/4AAAP+AAAD/gAQAAAD/gAAA/4AAAP+AAAD/AAAA/4AAAP+AAAD/gAAAAAAAAQIAAAAEAAQAAA8AAAEBAQEBAQEBAQEBAQEBAQEDgACAAAD/gAAA/4AAAP+AAAD/gAAAAIAAAACAAAAAgAQAAAD8AAAAAIAAAACAAAAAgAAAAQAAAACAAAAAgAAAAAAAAQCAAIAEAAQAABcAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQIAAIAAAACAAAAAgAAAAIAAAP+AAAD/AAAA/4AAAP8AAAD/gAAAAIAAAACAAAAAgAQAAAD/gAAA/4AAAP+AAAD/gAAA/oAAAAEAAAD/AAAAAYAAAACAAAAAgAAAAIAAAAAAACAAAAAABAAEAAADAAcACwAPABMAFwAbAB8AIwAnACsALwAzADcAOwA/AEMARwBLAE8AUwBXAFsAXwBjAGcAawBvAHMAdwB7AH8AAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAAAAgAAA/4ABAACAAAD/gAEAAIAAAP+AAQAAgAAA/4D9gACAAAD/gAEAAIAAAP+AAQAAgAAA/4ABAACAAAD/gPyAAIAAAP+AAQAAgAAA/4ABAACAAAD/gAEAAIAAAP+A/YAAgAAA/4ABAACAAAD/gAEAAIAAAP+AAQAAgAAA/4D8gACAAAD/gAEAAIAAAP+AAQAAgAAA/4ABAACAAAD/gP2AAIAAAP+AAQAAgAAA/4ABAACAAAD/gAEAAIAAAP+A/IAAgAAA/4ABAACAAAD/gAEAAIAAAP+AAQAAgAAA/4D9gACAAAD/gAEAAIAAAP+AAQAAgAAA/4ABAACAAAD/gAQAAAD/gAAAAIAAAP+AAAAAgAAA/4AAAACAAAD/gAAAAAAAAP+AAAAAgAAA/4AAAACAAAD/gAAAAIAAAP+AAAAAAAAA/4AAAACAAAD/gAAAAIAAAP+AAAAAgAAA/4AAAAAAAAD/gAAAAIAAAP+AAAAAgAAA/4AAAACAAAD/gAAAAAAAAP+AAAAAgAAA/4AAAACAAAD/gAAAAIAAAP+AAAAAAAAA/4AAAACAAAD/gAAAAIAAAP+AAAAAgAAA/4AAAAAAAAD/gAAAAIAAAP+AAAAAgAAA/4AAAACAAAD/gAAAAAAAAP+AAAAAgAAA/4AAAACAAAD/gAAAAIAAAP+AAAAAAQAAAAAEAAQAAAsAAAEBAQEBAQEBAQEBAQAABAAAAP6AAAD/AAAA/4AAAP+AAAD/gAQAAAD8AAAAAIAAAACAAAAAgAAAAQAAAAAAAAEAAAAABAAEAAALAAABAQEBAQEBAQEBAQEAAAQAAAD/gAAA/4AAAP+AAAD/AAAA/oAEAAAA/oAAAP8AAAD/gAAA/4AAAP+AAAAAAAABAAABgAKABAAADwAAAQEBAQEBAQEBAQEBAQEBAQAAAQAAAACAAAAAgAAAAIAAAP8AAAD/gAAA/4AAAP+ABAAAAP+AAAD/gAAA/4AAAP8AAAAAgAAAAIAAAACAAAAAAAABAAAAAAKABAAADwAAAQEBAQEBAQEBAQEBAQEBAQAAAQAAAACAAAAAgAAAAIAAAP8AAAD/gAAA/4AAAP+ABAAAAP+AAAD/gAAA/4AAAP2AAAACAAAAAIAAAACAAAAAAAABAYAAAAQAAoAABQAAAQEBAQEBAYACgAAA/oAAAP8AAoAAAP8AAAD+gAAAAAEAAAAABAAEAAAJAAABAQEBAQEBAQEBAAACgAAAAIAAAACAAAAAgAAA/AAEAAAA/wAAAP8AAAD/AAAA/wAAAAACAAAAAAQABAAAGwAfAAABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQGAAQAAAACAAAAAgAAAAIAAAP+AAAD/gAAA/4AAAP8AAAD/gAAA/4AAAP+AAAAAgAAAAIAAAACAAAAAAAEAAAAEAAAA/4AAAP+AAAD/gAAA/wAAAP+AAAD/gAAA/4AAAACAAAAAgAAAAIAAAAEAAAAAgAAAAIAAAP8A/wAAAAEAAAEBgAGABAAEAAAFAAABAQEBAQEBgAEAAAABgAAA/YAEAAAA/oAAAP8AAAAAAQAAAAACgAKAAA8AAAEBAQEBAQEBAQEBAQEBAQEBgAEAAAD/gAAA/4AAAP+AAAD/AAAAAIAAAACAAAAAgAKAAAD/AAAA/4AAAP+AAAD/gAAAAQAAAACAAAAAgAAAAAAAAQGAAAAEAAQAAA8AAAEBAQEBAQEBAQEBAQEBAQEDAAEAAAD/gAAA/4AAAP+AAAD/AAAAAIAAAACAAAAAgAQAAAD/AAAA/4AAAP+AAAD+AAAAAoAAAACAAAAAgAAAAAAAAQGAAAAEAAKAAA8AAAEBAQEBAQEBAQEBAQEBAQEBgAEAAAAAgAAAAIAAAACAAAD/AAAA/4AAAP+AAAD/gAKAAAD/gAAA/4AAAP+AAAD/AAAAAIAAAACAAAAAgAAAAAAAAQGAAYAEAAQAAA8AAAEBAQEBAQEBAQEBAQEBAQEDAAEAAAD/gAAA/4AAAP+AAAD/AAAAAIAAAACAAAAAgAQAAAD/AAAA/4AAAP+AAAD/gAAAAQAAAACAAAAAgAAAAAAAAQAAAAAEAAQAABsAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAAAEAAAAAgAAAAIAAAACAAAAAgAAAAIAAAACAAAD/AAAA/4AAAP+AAAD/gAAA/4AAAP+AAAD/gAQAAAD/gAAA/4AAAP+AAAD/gAAA/4AAAP+AAAD/AAAAAIAAAACAAAAAgAAAAIAAAACAAAAAgAAAAAAAAQAAAAAEAAQAAB8AAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAAABAAAAAIAAAAEAAAAAgAAAAQAAAP+AAAD/gAAA/4AAAP+AAAD/gAAA/4AAAP8AAAAAgAAAAIAAAP+AAAD/gAQAAAD/gAAA/4AAAACAAAAAgAAA/wAAAP+AAAD/gAAA/4AAAP+AAAD/gAAA/4AAAAEAAAAAgAAAAQAAAACAAAAAAAABAAABgAQABAAADwAAAQEBAQEBAQEBAQEBAQEBAQAAAQAAAACAAAAAgAAAAgAAAP2AAAD/gAAA/4AAAP+ABAAAAP+AAAD/gAAA/4AAAP8AAAAAgAAAAIAAAACAAAAAAAABAAABgAQAAoAAAwAAAQEBAQAABAAAAPwAAoAAAP8AAAAAAAABAYAAAAKABAAAAwAAAQEBAQGAAQAAAP8ABAAAAPwAAAAAAAABAYAAAAQABAAAFwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAwABAAAA/4AAAP+AAAAAgAAAAIAAAP8AAAD/gAAA/4AAAP+AAAAAgAAAAIAAAACABAAAAP8AAAD/gAAA/wAAAP+AAAD/AAAAAIAAAACAAAAAgAAAAQAAAACAAAAAgAAAAAAAAQAAAAAEAAKAAA8AAAEBAQEBAQEBAQEBAQEBAQEAAAKAAAAAgAAAAIAAAACAAAD/AAAA/4AAAP+AAAD+AAKAAAD/gAAA/4AAAP+AAAD/AAAAAIAAAACAAAAAgAAAAAAAAQAAAYAEAAQAAA8AAAEBAQEBAQEBAQEBAQEBAQEDAAEAAAD/gAAA/4AAAP+AAAD9gAAAAgAAAACAAAAAgAQAAAD/AAAA/4AAAP+AAAD/gAAAAQAAAACAAAAAgAAAAAAAAQAAAgAEAAQAAA8AAAEBAQEBAQEBAQEBAQEBAQEAAAQAAAD/gAAA/4AAAP+AAAD/AAAA/4AAAP+AAAD/gAQAAAD/gAAA/4AAAP+AAAD/gAAAAIAAAACAAAAAgAAAAAAAAQAAAYACgAKAAAMAAAEBAQEAAAKAAAD9gAKAAAD/AAAAAAAAAQGAAAACgAKAAAMAAAEBAQEBgAEAAAD/AAKAAAD9gAAAAAAAAQAAAYAEAAQAABcAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQAAAQAAAACAAAABAAAAAIAAAAEAAAD/gAAA/4AAAP+AAAD/AAAA/4AAAP+AAAD/gAQAAAD/gAAA/4AAAACAAAAAgAAA/wAAAP+AAAD/gAAA/4AAAACAAAAAgAAAAIAAAAAAAAEAAAAABAAEAAAJAAABAQEBAQEBAQEBAYACgAAA/AAAAACAAAAAgAAAAIAEAAAA/AAAAAEAAAABAAAAAQAAAAABAAAAAAQABAAAEwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEDAAEAAAD/gAAA/4AAAP+AAAD/AAAA/oAAAAEAAAABAAAAAIAAAACABAAAAP6AAAD/AAAA/4AAAP+AAAD/gAAAAQAAAACAAAAAgAAAAQAAAAAAAAEAAAAABAAEAAATAAABAQEBAQEBAQEBAQEBAQEBAQEBAQAAAQAAAACAAAAAgAAAAQAAAAEAAAD+gAAA/wAAAP+AAAD/gAAA/4AEAAAA/wAAAP8AAAD/gAAA/4AAAP8AAAAAgAAAAIAAAACAAAABAAAAAAAAAQAAAAAEAAQAABsAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEDAAEAAAD/gAAA/4AAAP+AAAD/gAAA/4AAAP+AAAD/AAAAAIAAAACAAAAAgAAAAIAAAACAAAAAgAQAAAD/AAAA/4AAAP+AAAD/gAAA/4AAAP+AAAD/gAAAAQAAAACAAAAAgAAAAIAAAACAAAAAgAAAAAAAAQAAAAACgAQAABcAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQAAAQAAAACAAAAAgAAAAIAAAP+AAAD/gAAA/4AAAP8AAAAAgAAAAIAAAP+AAAD/gAQAAAD/gAAA/4AAAP+AAAD/AAAA/4AAAP+AAAD/gAAAAQAAAACAAAABAAAAAIAAAAAAAAEAAAAABAAEAAAfAAABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQAAAQAAAACAAAAAgAAAAIAAAACAAAAAgAAAAIAAAP8AAAD/gAAA/wAAAP+AAAD/AAAAAIAAAACAAAD/gAAA/4AEAAAA/4AAAP+AAAD/gAAA/4AAAP+AAAD/gAAA/wAAAACAAAAAgAAA/4AAAP+AAAABAAAAAIAAAAEAAAAAgAAAAAAAAQAAAAACgAQAAA8AAAEBAQEBAQEBAQEBAQEBAQEBgAEAAAD/gAAA/4AAAP+AAAD/AAAAAIAAAACAAAAAgAQAAAD9gAAA/4AAAP+AAAD/gAAAAQAAAACAAAAAgAAAAAAAAQGAAAAEAAQAAA8AAAEBAQEBAQEBAQEBAQEBAQEBgAEAAAAAgAAAAIAAAACAAAD/AAAA/4AAAP+AAAD/gAQAAAD+AAAA/4AAAP+AAAD/AAAAAIAAAACAAAAAgAAAAAAAAQAAAAAEAAKAAA8AAAEBAQEBAQEBAQEBAQEBAQEBgAKAAAD+AAAA/4AAAP+AAAD/AAAAAIAAAACAAAAAgAKAAAD/AAAA/4AAAP+AAAD/gAAAAQAAAACAAAAAgAAAAAAAAQGAAYACgAQAAAMAAAEBAQEBgAEAAAD/AAQAAAD9gAAAAAAAAQGAAYAEAAKAAAMAAAEBAQEBgAKAAAD9gAKAAAD/AAAAAAAAAQAAAAAEAAQAAB8AAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAwABAAAA/4AAAP+AAAAAgAAAAIAAAP8AAAD/gAAA/wAAAP+AAAD/AAAAAIAAAACAAAAAgAAAAIAAAACAAAAAgAQAAAD/AAAA/4AAAP8AAAD/gAAA/wAAAACAAAAAgAAA/4AAAP+AAAABAAAAAIAAAACAAAAAgAAAAIAAAACAAAAAAAABAAAAAAQABAAAIwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAAABAAAAAIAAAAEAAAAAgAAAAQAAAP+AAAD/gAAAAIAAAACAAAD/AAAA/4AAAP8AAAD/gAAA/wAAAACAAAAAgAAA/4AAAP+ABAAAAP+AAAD/gAAAAIAAAACAAAD/AAAA/4AAAP8AAAD/gAAA/wAAAACAAAAAgAAA/4AAAP+AAAABAAAAAIAAAAEAAAAAgAAAAAAAAQGAAYACgAKAAAMAAAEBAQEBgAEAAAD/AAKAAAD/AAAAAAAAAQAAAAAEAAKAABcAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQGAAQAAAACAAAAAgAAAAIAAAP8AAAD/gAAA/wAAAP+AAAD/AAAAAIAAAACAAAAAgAKAAAD/gAAA/4AAAP+AAAD/AAAAAIAAAACAAAD/gAAA/4AAAAEAAAAAgAAAAIAAAAAAAAEAAAGAAoAEAAAFAAABAQEBAQEBgAEAAAD9gAAAAYAEAAAA/YAAAAEAAAAAAQAAAAACgAKAAAUAAAEBAQEBAQAAAoAAAP8AAAD+gAKAAAD9gAAAAYAAAAABAAAAAAQABAAAHwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAAAEAAAAAgAAAAQAAAACAAAABAAAA/4AAAP+AAAAAgAAAAIAAAP8AAAD/gAAA/4AAAP+AAAD/gAAA/4AAAP+ABAAAAP+AAAD/gAAAAIAAAACAAAD/AAAA/4AAAP8AAAD/gAAA/wAAAACAAAAAgAAAAIAAAACAAAAAgAAAAIAAAAAAAAEAAAAABAAEAAALAAABAQEBAQEBAQEBAQEBgAEAAAABgAAA/oAAAP8AAAD+gAAAAYAEAAAA/oAAAP8AAAD+gAAAAYAAAAEAAAAAAAABAAAAAAQAAoAABwAAAQEBAQEBAQEAAAQAAAD+gAAA/wAAAP6AAoAAAP8AAAD+gAAAAYAAAAAAAAEBgAAABAAEAAAHAAABAQEBAQEBAQGAAQAAAAGAAAD+gAAA/wAEAAAA/oAAAP8AAAD+gAAAAAAAAQAAAAACgAQAAAcAAAEBAQEBAQEBAYABAAAA/wAAAP6AAAABgAQAAAD8AAAAAYAAAAEAAAAAAAABAAABgAQABAAABwAAAQEBAQEBAQEBgAEAAAABgAAA/AAAAAGABAAAAP6AAAD/AAAAAQAAAAAAAAQBAAEAAwADAAADAAcACwAPAAABAQEBAQEBAQEBAQEBAQEBAYABAAAA/wD/gACAAAD/gAGAAIAAAP+A/wABAAAA/wADAAAA/4AAAAAAAAD/AAAAAQAAAP8AAAAAAAAA/4AAAAACAIAAgAOAA4AACwAPAAABAQEBAQEBAQEBAQEBAQEBAQACAAAAAIAAAP+AAAD+AAAA/4AAAACAAIAAAAEAAAADgAAA/4AAAP4AAAD/gAAAAIAAAAIAAAD/gP8AAAABAAACAAAAAAQABAAAEwAfAAABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAAgAAAACAAAAAgAAA/4AAAP+AAAD+AAAA/4AAAP+AAAAAgAAAAIAAgAAA/4AAAACAAAABAAAAAIAAAP+AAAAEAAAA/4AAAP+AAAD+AAAA/4AAAP+AAAAAgAAAAIAAAAIAAAAAgAAA/4D/gAAA/wAAAP+AAAAAgAAAAQAAAACAABAAAAAABAAEAAADAAcACwAPABMAFwAbAB8AIwAnACsALwAzADcAOwA/AAABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAYAAgAAA/4ACAACAAAD/gP2AAIAAAP+AAgAAgAAA/4D9gACAAAD/gAIAAIAAAP+A/YAAgAAA/4ACAACAAAD/gP+AAIAAAP+AAgAAgAAA/4D9gACAAAD/gAIAAIAAAP+A/YAAgAAA/4ACAACAAAD/gP2AAIAAAP+AAgAAgAAA/4AEAAAA/4AAAACAAAD/gAAAAAAAAP+AAAAAgAAA/4AAAAAAAAD/gAAAAIAAAP+AAAAAAAAA/4AAAACAAAD/gAAAAAAAAP+AAAAAgAAA/4AAAAAAAAD/gAAAAIAAAP+AAAAAAAAA/4AAAACAAAD/gAAAAAAAAP+AAAAAgAAA/4AAAAAQAAAAAAQABAAAAwAHAAsADwATABcAGwAfACMAJwArAC8AMwA3ADsAPwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQAAAIAAAP+AAgAAgAAA/4D+gACAAAD/gAIAAIAAAP+A/oAAgAAA/4ACAACAAAD/gP6AAIAAAP+AAgAAgAAA/4D8gACAAAD/gAIAAIAAAP+A/oAAgAAA/4ACAACAAAD/gP6AAIAAAP+AAgAAgAAA/4D+gACAAAD/gAIAAIAAAP+ABAAAAP+AAAAAgAAA/4AAAAAAAAD/gAAAAIAAAP+AAAAAAAAA/4AAAACAAAD/gAAAAAAAAP+AAAAAgAAA/4AAAAAAAAD/gAAAAIAAAP+AAAAAAAAA/4AAAACAAAD/gAAAAAAAAP+AAAAAgAAA/4AAAAAAAAD/gAAAAIAAAP+AAAAAAwCAAIADgAQAABcAGwAfAAABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQIAAIAAAAEAAAD/AAAAAIAAAP+AAAABAAAA/wAAAP+AAAD/AAAA/4AAAACAAAABAP+AAAAAgAAA/4AAAACAAAAEAAAA/4AAAP+AAAD/gAAA/4AAAP+AAAD/gAAA/4AAAACAAAAAgAAAAYAAAACAAAD/gP+AAAAAgP8A/4AAAACAAAAAAQCAAIADgAOAAA8AAAEBAQEBAQEBAQEBAQEBAQEBAAIAAAAAgAAA/4AAAP+AAAD/AAAA/4AAAP+AAAAAgAOAAAD/gAAA/wAAAP+AAAD/AAAAAQAAAACAAAABAAAAAAAAAgCAAIADgAOAAAMACQAAAQEBAQEBAQEBAQCAAwAAAP0AAYAAAP8AAAACAAAAA4AAAP0AAAACgP8AAAD/AAAAAgAAAAABAIAAgAOAA4AAAwAAAQEBAQCAAwAAAP0AA4AAAP0AAAAAAAACAIAAgAOAA4AAAwALAAABAQEBAQEBAQEBAQEAgAMAAAD9AACAAAACAAAA/4AAAP8AAAADgAAA/QAAAAKA/gAAAAIAAAD/AAAAAQAAAQAAAAAEAAQAABMAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQACAAAAAIAAAACAAAD/gAAA/4AAAP4AAAD/gAAA/4AAAACAAAAAgAQAAAD/gAAA/4AAAP4AAAD/gAAA/4AAAACAAAAAgAAAAgAAAACAAAAAAAABAQABAAMAAwAACwAAAQEBAQEBAQEBAQEBAYABAAAAAIAAAP+AAAD/AAAA/4AAAACAAwAAAP+AAAD/AAAA/4AAAACAAAABAAAAAAAAAQCAAQAEAAQAABsAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQECAACAAAAAgAAAAQAAAP+AAAD/gAAAAIAAAP8AAAD/gAAA/wAAAACAAAD/gAAA/4AAAAEAAAAAgAQAAAD/gAAA/4AAAP+AAAD/gAAA/4AAAP+AAAAAgAAA/4AAAACAAAAAgAAAAIAAAACAAAAAgAAAAAAABgCAAIAEAAQAAAMABwALAA8AEwAXAAABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAgAOAAAD8gAEAAAAAgAAAAIAAAACAAAD+AAAAAIAAAAGAAAAAgAAA/gAAAAGAAAAEAAAA/IAAAAMA/wAAAAEAAAD/AAAAAQD+gP+AAAAAgAAA/4AAAACA/4D/gAAAAIAABgCAAIAEAAQAAAMABwALAA8AEwAXAAABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAgAOAAAD8gAEAAAAAgAAAAIAAAACAAAD+gAAAAYAAAP4AAAAAgAAAAYAAAACAAAAEAAAA/IAAAAMA/wAAAAEAAAD/AAAAAQD+gP+AAAAAgP+A/4AAAACAAAD/gAAAAIAABgCAAIAEAAQAABMAFwAbAB8AIwAnAAABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAgAAgAAAAIAAAAEAAAD/AAAA/4AAAP+AAAD/gAAA/wAAAAEAAAAAgAAAAAAAgAAA/oAAgAAA/4ACAACAAAD/gP4AAIAAAP+AAgAAgAAA/4AEAAAA/wAAAP+AAAD/gAAA/4AAAP8AAAABAAAAAIAAAACAAAAAgAAA/4D/gAAAAIABAAAA/4AAAACAAAD/gAAA/oAAAP+AAAAAgAAA/4AAAAACAQAAgAOABAAAFwAbAAABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAYABgAAAAIAAAP+AAAD/gAAAAIAAAP+AAAD/gAAA/4AAAACAAAD/gAAAAQAAAP8A/4AAgAAA/4AEAAAA/4AAAP8AAAD/gAAA/4AAAP+AAAD/gAAAAIAAAACAAAAAgAAAAIAAAAEAAAAAAAAA/wAAAAACAIAAgAQABAAAFwAbAAABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAYACgAAA/4AAAP+AAAD/gAAAAIAAAP+AAAD+gAAAAQAAAP8AAAABAAAAAIAAAP8A/wAAgAAA/4AEAAAA/gAAAAEAAAD/gAAA/4AAAP8AAAD/gAAAAIAAAAEAAAAAgAAAAIAAAACAAAD+gAAA/wAAAAABAIAAgAQABAAAGwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQIAAIAAAACAAAAAgAAAAIAAAP8AAAD/gAAAAIAAAP6AAAAAgAAA/4AAAP8AAAAAgAAAAIAAAACABAAAAP+AAAD/gAAA/4AAAP8AAAAAgAAA/wAAAP+AAAAAgAAAAQAAAP+AAAABAAAAAIAAAACAAAAAAAABAIAAgAQABAAAGwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQGAAYAAAP+AAAAAgAAAAQAAAP8AAAD/gAAAAIAAAP6AAAAAgAAA/4AAAP8AAAABAAAAAIAAAP+ABAAAAP8AAAD/gAAAAIAAAP6AAAAAgAAA/wAAAP+AAAAAgAAAAQAAAP+AAAABgAAA/4AAAACAAAAAAAABAIAAgAQABAAAFwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQABAAAAAIAAAAEAAAAAgAAA/4AAAP+AAAD/gAAA/4AAAP+AAAD/gAAA/4AAAACABAAAAP+AAAAAgAAA/4AAAP6AAAD/gAAA/4AAAP+AAAAAgAAAAIAAAACAAAABgAAAAAAAAQCAAIAEAAQAABsAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQECAACAAAAAgAAAAIAAAACAAAD/gAAA/4AAAP+AAAD/gAAA/4AAAP+AAAD/gAAAAIAAAACAAAAAgAQAAAD/gAAA/4AAAP+AAAD/gAAA/4AAAP+AAAD/gAAAAIAAAACAAAAAgAAAAIAAAACAAAAAgAAAAAAAAQEAAIADgAQAAAsAAAEBAQEBAQEBAQEBAQIAAYAAAP8AAAD/gAAA/wAAAACAAAAAgAQAAAD/AAAA/gAAAP+AAAABAAAAAIAAAAAAAAEAgACABAAEAAATAAABAQEBAQEBAQEBAQEBAQEBAQEBAQGAAoAAAP+AAAD/AAAAAIAAAACAAAD+gAAA/4AAAP8AAAAAgAAAAIAEAAAA/QAAAP+AAAABAAAAAIAAAAEAAAD+AAAA/4AAAAEAAAAAgAAAAAAAAAAYASYAAQAAAAAAAAAIAAAAAQAAAAAAAQAIAAgAAQAAAAAAAgAHABAAAQAAAAAAAwAIABcAAQAAAAAABAAQAB8AAQAAAAAABQALAC8AAQAAAAAABgAIADoAAQAAAAAACQAJAEIAAQAAAAAACgA6AEsAAQAAAAAADQARAIUAAQAAAAAADgAyAJYAAQAAAAAAEwAMAMgAAwABBAkAAAAQANQAAwABBAkAAQAQAOQAAwABBAkAAgAOAPQAAwABBAkAAwAQAQIAAwABBAkABAAgARIAAwABBAkABQAWATIAAwABBAkABgAQAUgAAwABBAkACQASAVgAAwABBAkACgB0AWoAAwABBAkADQAiAd4AAwABBAkADgBkAgAAAwABBAkAEwAYAmQoYykgMjAyMlVyc2FGb250UmVndWxhclVyc2FGb250VXJzYUZvbnQgUmVndWxhclZlcnNpb24gMS4wVXJzYUZvbnRVcnNhRnJhbmtBbiBvcGVuIGxpY2VuY2UgZ2VuZXJhbCBwdXJwb3NlIHRleHRtb2RlIGZvbnQgYnkgVXJzYUZyYW5rQ0MwIDEuMCBVbml2ZXJzYWxodHRwczovL2NyZWF0aXZlY29tbW9ucy5vcmcvcHVibGljZG9tYWluL3plcm8vMS4wL0hlbGxvIFdvcmxkIQAoAGMAKQAgADIAMAAyADIAVQByAHMAYQBGAG8AbgB0AFIAZQBnAHUAbABhAHIAVQByAHMAYQBGAG8AbgB0AFUAcgBzAGEARgBvAG4AdAAgAFIAZQBnAHUAbABhAHIAVgBlAHIAcwBpAG8AbgAgADEALgAwAFUAcgBzAGEARgBvAG4AdABVAHIAcwBhAEYAcgBhAG4AawBBAG4AIABvAHAAZQBuACAAbABpAGMAZQBuAGMAZQAgAGcAZQBuAGUAcgBhAGwAIABwAHUAcgBwAG8AcwBlACAAdABlAHgAdABtAG8AZABlACAAZgBvAG4AdAAgAGIAeQAgAFUAcgBzAGEARgByAGEAbgBrAEMAQwAwACAAMQAuADAAIABVAG4AaQB2AGUAcgBzAGEAbABoAHQAdABwAHMAOgAvAC8AYwByAGUAYQB0AGkAdgBlAGMAbwBtAG0AbwBuAHMALgBvAHIAZwAvAHAAdQBiAGwAaQBjAGQAbwBtAGEAaQBuAC8AegBlAHIAbwAvADEALgAwAC8ASABlAGwAbABvACAAVwBvAHIAbABkACEAAAADAAAAAAAAAGYAMwAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==\r
 `;
-class FA {
+class DA {
   constructor() {
     // Map of plugin id to plugin instance
     s(this, "_plugins", /* @__PURE__ */ new Map());
@@ -2960,7 +3049,7 @@ class FA {
    */
   register(e) {
     if (this._plugins.has(e.id))
-      throw new Q(`A plugin with ID '${e.id}' is already registered`);
+      throw new n(`A plugin with ID '${e.id}' is already registered`);
     this._plugins.set(e.id, e);
   }
   /**
@@ -3002,7 +3091,7 @@ class FA {
     return Array.from(this._plugins.values());
   }
 }
-const G = class G {
+const Y = class Y {
   /**
    * Creates a new `P5AsciifierManager` instance.
    * @ignore
@@ -3020,9 +3109,9 @@ const G = class G {
     s(this, "_sketchFramebuffer");
     /** The plugin registry instance. */
     s(this, "_pluginRegistry");
-    if (G._instance)
-      throw new Q("P5AsciifierManager is a singleton and cannot be instantiated directly. Use P5AsciifierManager.getInstance() instead.");
-    this._pluginRegistry = new FA(), this._asciifiers = [new gA(this._pluginRegistry)];
+    if (Y._instance)
+      throw new n("P5AsciifierManager is a singleton and cannot be instantiated directly. Use P5AsciifierManager.getInstance() instead.");
+    this._pluginRegistry = new DA(), this._asciifiers = [new aA(this._pluginRegistry)];
   }
   /**
    * Gets the singleton instance of `P5AsciifierManager`.
@@ -3031,7 +3120,7 @@ const G = class G {
    * @returns The singleton instance of `P5AsciifierManager`.
    */
   static getInstance() {
-    return G._instance || (G._instance = new G()), G._instance;
+    return Y._instance || (Y._instance = new Y()), Y._instance;
   }
   /**
    * Initializes the `p5.asciify` library by setting the `p5.js` instance.
@@ -3044,7 +3133,7 @@ const G = class G {
   async init(e) {
     this._p = e;
     try {
-      T(e.VERSION, "2.0.0") < 0 ? (this._p = e, this._p._incrementPreload(), this._baseFont = e.loadFont(EA, (A) => {
+      M(e.VERSION, "2.0.0") < 0 ? (this._p = e, this._p._incrementPreload(), this._baseFont = e.loadFont(EA, (A) => {
         this._asciifiers.forEach((r) => {
           r.init(e, A);
         });
@@ -3093,7 +3182,7 @@ const G = class G {
    */
   asciifier(e = 0) {
     if (e < 0 || e >= this._asciifiers.length)
-      throw new Q(`Invalid asciifier index: ${e}.`);
+      throw new n(`Invalid asciifier index: ${e}.`);
     return this._asciifiers[e];
   }
   /**
@@ -3105,11 +3194,11 @@ const G = class G {
    */
   add(e) {
     if (!this._p)
-      throw new Q("Cannot add asciifier before initializing p5.asciify. Ensure p5.asciify is initialized first.");
-    if (e !== void 0 && !(e instanceof l.Framebuffer))
-      throw new Q("Framebuffer must be an instance of p5.Framebuffer.");
-    const A = new gA(this._pluginRegistry);
-    return T(this._p.VERSION, "2.0.0") < 0 ? (A.init(this._p, this._baseFont), this._p._setupDone && A.setup(e || this._sketchFramebuffer), this._asciifiers.push(A), A) : (async () => (await A.init(this._p, this._baseFont), this._p._setupDone && this._sketchFramebuffer && await A.setup(e || this._sketchFramebuffer), this._asciifiers.push(A), A))();
+      throw new n("Cannot add asciifier before initializing p5.asciify. Ensure p5.asciify is initialized first.");
+    if (e !== void 0 && !(e instanceof _.Framebuffer))
+      throw new n("Framebuffer must be an instance of p5.Framebuffer.");
+    const A = new aA(this._pluginRegistry);
+    return M(this._p.VERSION, "2.0.0") < 0 ? (A.init(this._p, this._baseFont), this._p._setupDone && A.setup(e || this._sketchFramebuffer), this._asciifiers.push(A), A) : (async () => (await A.init(this._p, this._baseFont), this._p._setupDone && this._sketchFramebuffer && await A.setup(e || this._sketchFramebuffer), this._asciifiers.push(A), A))();
   }
   /**
    * Removes a `P5Asciifier` instance.
@@ -3120,12 +3209,12 @@ const G = class G {
     if (typeof e == "number") {
       const A = e;
       if (A < 0 || A >= this._asciifiers.length)
-        throw new Q(`Invalid asciifier index: ${A}.`);
+        throw new n(`Invalid asciifier index: ${A}.`);
       this._asciifiers.splice(A, 1);
     } else {
       const A = e, r = this._asciifiers.indexOf(A);
       if (r === -1)
-        throw new Q("The specified asciifier was not found.");
+        throw new n("The specified asciifier was not found.");
       this._asciifiers.splice(r, 1);
     }
   }
@@ -3175,62 +3264,63 @@ const G = class G {
   }
 };
 /** Singleton instance of the manager */
-s(G, "_instance", null);
-let iA = G;
-const yA = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+s(Y, "_instance", null);
+let sA = Y;
+const MA = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
-  BRIGHTNESS_DEFAULT_OPTIONS: rA,
-  EDGE_DEFAULT_OPTIONS: tA,
-  P5AsciifyAbstractFeatureRenderer2D: Y,
-  P5AsciifyBrightnessRenderer: oA,
-  P5AsciifyEdgeRenderer: BA
-}, Symbol.toStringTag, { value: "Module" })), SA = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  BRIGHTNESS_DEFAULT_OPTIONS: tA,
+  EDGE_DEFAULT_OPTIONS: iA,
+  P5AsciifyAbstractFeatureRenderer2D: R,
+  P5AsciifyBrightnessRenderer: BA,
+  P5AsciifyEdgeRenderer: nA
+}, Symbol.toStringTag, { value: "Module" })), TA = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
-  CUSTOM_DEFAULT_OPTIONS_2D: eA,
-  P5AsciifyRenderer2D: H,
-  feature: yA
-}, Symbol.toStringTag, { value: "Module" })), NA = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  CUSTOM_DEFAULT_OPTIONS_2D: rA,
+  P5AsciifyRenderer2D: $,
+  feature: MA
+}, Symbol.toStringTag, { value: "Module" })), VA = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
-  P5AsciifyDisplayRenderer: lA,
-  P5AsciifyRenderer: sA,
+  P5AsciifyDisplayRenderer: dA,
+  P5AsciifyRenderer: oA,
   P5AsciifyRendererManager: QA,
   RENDERER_TYPES: J,
-  renderer2d: SA
-}, Symbol.toStringTag, { value: "Module" })), HA = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
-  __proto__: null
+  renderer2d: TA
+}, Symbol.toStringTag, { value: "Module" })), jA = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  P5AsciifyPluginRegistry: DA
 }, Symbol.toStringTag, { value: "Module" }));
-if (typeof l < "u" && T(l.prototype.VERSION, "1.8.0") < 0)
-  throw new Q("p5.asciify requires p5.js v1.8.0 or higher to run.");
-const C = iA.getInstance();
-function vA(o, e, A) {
+if (typeof _ < "u" && M(_.prototype.VERSION, "1.8.0") < 0)
+  throw new n("p5.asciify requires p5.js v1.8.0 or higher to run.");
+const I = sA.getInstance();
+function YA(o, e, A) {
   e.setupAsciify = async function() {
   }, e.drawAsciify = async function() {
   }, A.presetup = async function() {
-    await C.init(this);
+    await I.init(this);
   }, A.postsetup = async function() {
     try {
       if (!(this._renderer.drawingContext instanceof WebGLRenderingContext || this._renderer.drawingContext instanceof WebGL2RenderingContext))
-        throw new Q("WebGL renderer is required for p5.asciify to run.");
-      await C.setup(), this.setupAsciify && await this.setupAsciify();
+        throw new n("WebGL renderer is required for p5.asciify to run.");
+      await I.setup(), this.setupAsciify && await this.setupAsciify();
     } catch (r) {
-      throw console.error("Error during p5.asciify initialization:", r), new Q("Failed to initialize p5.asciify: " + (r instanceof Error ? r.message : String(r)));
+      throw console.error("Error during p5.asciify initialization:", r), new n("Failed to initialize p5.asciify: " + (r instanceof Error ? r.message : String(r)));
     }
   }, A.predraw = function() {
-    C.sketchFramebuffer.begin(), this.clear();
+    I.sketchFramebuffer.begin(), this.clear();
   }, A.postdraw = function() {
-    C.sketchFramebuffer.end(), C.asciify(), this.drawAsciify && this.drawAsciify();
+    I.sketchFramebuffer.end(), I.asciify(), this.drawAsciify && this.drawAsciify();
   };
 }
-const MA = (o) => {
-  C.hooksEnabled && C.init(o);
-}, GA = (o) => {
-  C.hooksEnabled && setTimeout(async () => {
+const kA = (o) => {
+  I.hooksEnabled && I.init(o);
+}, RA = (o) => {
+  I.hooksEnabled && setTimeout(async () => {
     if (!(o._renderer.drawingContext instanceof WebGLRenderingContext || o._renderer.drawingContext instanceof WebGL2RenderingContext))
-      throw new Q("WebGL renderer is required for p5.asciify to run.");
-    if (T(o.VERSION, "1.8.0") < 0)
-      throw new Q("p5.asciify requires p5.js v1.8.0 or higher to run.");
-    if (await C.setup(), o.setupAsciify)
-      if (T(o.VERSION, "2.0.0") < 0)
+      throw new n("WebGL renderer is required for p5.asciify to run.");
+    if (M(o.VERSION, "1.8.0") < 0)
+      throw new n("p5.asciify requires p5.js v1.8.0 or higher to run.");
+    if (await I.setup(), o.setupAsciify)
+      if (M(o.VERSION, "2.0.0") < 0)
         try {
           o.setupAsciify();
         } catch (e) {
@@ -3239,21 +3329,21 @@ const MA = (o) => {
       else
         o.setupAsciify();
   }, 0);
-}, TA = (o) => {
-  C.sketchFramebuffer.begin(), o.clear();
-}, YA = (o) => {
-  C.sketchFramebuffer.end(), C.asciify(), o.drawAsciify && o.drawAsciify();
+}, zA = (o) => {
+  I.sketchFramebuffer.begin(), o.clear();
+}, UA = (o) => {
+  I.sketchFramebuffer.end(), I.asciify(), o.drawAsciify && o.drawAsciify();
 };
-typeof l < "u" && typeof l.registerAddon == "function" ? l.registerAddon(vA) : typeof l < "u" && (l.prototype.registerMethod("init", function() {
-  MA(this);
-}), l.prototype.registerMethod("afterSetup", function() {
-  GA(this);
-}), l.prototype.registerMethod("pre", function() {
-  C.hooksEnabled && TA(this);
-}), l.prototype.registerMethod("post", function() {
-  C.hooksEnabled && YA(this);
+typeof _ < "u" && typeof _.registerAddon == "function" ? _.registerAddon(YA) : typeof _ < "u" && (_.prototype.registerMethod("init", function() {
+  kA(this);
+}), _.prototype.registerMethod("afterSetup", function() {
+  RA(this);
+}), _.prototype.registerMethod("pre", function() {
+  I.hooksEnabled && zA(this);
+}), _.prototype.registerMethod("post", function() {
+  I.hooksEnabled && UA(this);
 }));
-const kA = [
+const NA = [
   ["_getImmediateModeShader", "_defaultImmediateModeShader"],
   ["_getNormalShader", "_defaultNormalShader"],
   ["_getColorShader", "_defaultColorShader"],
@@ -3261,9 +3351,9 @@ const kA = [
   ["_getLineShader", "_defaultLineShader"],
   ["_getFontShader", "_defaultFontShader"]
 ];
-for (const [o, e] of kA) {
-  const A = l.RendererGL.prototype[o];
-  l.RendererGL.prototype[o] = function() {
+for (const [o, e] of NA) {
+  const A = _.RendererGL.prototype[o];
+  _.RendererGL.prototype[o] = function() {
     return this[e] || (this[e] = A.call(this), this[e]._vertSrc = this[e]._vertSrc.replace(
       /mediump/g,
       "highp"
@@ -3273,23 +3363,23 @@ for (const [o, e] of kA) {
     )), this[e];
   };
 }
-typeof window < "u" && (window.p5asciify = C, window.P5AsciifyAbstractFeatureRenderer2D = Y, window.P5AsciifyRenderer2D = H, window.P5AsciifyRenderer = sA);
+typeof window < "u" && (window.p5asciify = I, window.P5AsciifyAbstractFeatureRenderer2D = R, window.P5AsciifyRenderer2D = $, window.P5AsciifyRenderer = oA);
 export {
-  gA as P5Asciifier,
-  iA as P5AsciifierManager,
-  Y as P5AsciifyAbstractFeatureRenderer2D,
-  uA as P5AsciifyColorPalette,
-  Q as P5AsciifyError,
-  DA as P5AsciifyFontManager,
-  dA as P5AsciifyGrid,
-  sA as P5AsciifyRenderer,
-  H as P5AsciifyRenderer2D,
-  GA as afterSetupHook,
-  MA as initHook,
-  C as p5asciify,
-  HA as plugins,
-  YA as postDrawHook,
-  TA as preDrawHook,
-  NA as renderers,
-  zA as utils
+  aA as P5Asciifier,
+  sA as P5AsciifierManager,
+  R as P5AsciifyAbstractFeatureRenderer2D,
+  pA as P5AsciifyColorPalette,
+  n as P5AsciifyError,
+  IA as P5AsciifyFontManager,
+  mA as P5AsciifyGrid,
+  oA as P5AsciifyRenderer,
+  $ as P5AsciifyRenderer2D,
+  RA as afterSetupHook,
+  kA as initHook,
+  I as p5asciify,
+  jA as plugins,
+  UA as postDrawHook,
+  zA as preDrawHook,
+  VA as renderers,
+  JA as utils
 };
