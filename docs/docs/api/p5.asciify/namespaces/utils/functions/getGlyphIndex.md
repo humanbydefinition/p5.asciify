@@ -2,7 +2,7 @@
 
 > **getGlyphIndex**(`font`, `codePoint`): `number`
 
-Defined in: [utils/fonts/TyprFontUtils.ts:9](https://github.com/humanbydefinition/p5.asciify/blob/da415d822fbe05fa59dd8bb5f8c6f704edbd5094/src/lib/utils/fonts/TyprFontUtils.ts#L9)
+Defined in: [utils/fonts/TyprFontUtils.ts:9](https://github.com/humanbydefinition/p5.asciify/blob/b4847c3686de8aac8ab85c6df8c62f37e7437142/src/lib/utils/fonts/TyprFontUtils.ts#L9)
 
 Gets the glyph index for a given Unicode code point in a Typr.js font
 

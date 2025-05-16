@@ -59,6 +59,7 @@ const config: Config = {
         dataDomains: "p5.textmode.art",
       }),
     ],
+    'plugin-image-zoom'
   ],
 
   // Even if you don't use internationalization, you can use this field to set
@@ -112,6 +113,11 @@ const config: Config = {
       defaultMode: 'dark',
       disableSwitch: true,
       respectPrefersColorScheme: false,
+    },
+
+    imageZoom: {
+      // CSS selector to apply the plugin to, defaults to '.markdown img'
+      selector: '.markdown img',
     },
 
     navbar: {
