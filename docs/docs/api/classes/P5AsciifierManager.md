@@ -1,6 +1,6 @@
 # Class: P5AsciifierManager
 
-Defined in: [AsciifierManager.ts:22](https://github.com/humanbydefinition/p5.asciify/blob/557c82e1366289f1e9fccdbbe3a328b76a1f9aa9/src/lib/AsciifierManager.ts#L22)
+Defined in: [AsciifierManager.ts:22](https://github.com/humanbydefinition/p5.asciify/blob/4e8d6e8c5e4d380f7f35c2affcac62861935be46/src/lib/AsciifierManager.ts#L22)
 
 Manages the `p5.asciify` library by handling one or more `P5Asciifier` instances.
 
@@ -22,7 +22,7 @@ The manager is responsible for:
 
 > **get** **asciifiers**(): [`P5Asciifier`](P5Asciifier.md)[]
 
-Defined in: [AsciifierManager.ts:256](https://github.com/humanbydefinition/p5.asciify/blob/557c82e1366289f1e9fccdbbe3a328b76a1f9aa9/src/lib/AsciifierManager.ts#L256)
+Defined in: [AsciifierManager.ts:256](https://github.com/humanbydefinition/p5.asciify/blob/4e8d6e8c5e4d380f7f35c2affcac62861935be46/src/lib/AsciifierManager.ts#L256)
 
 Returns the list of `P5Asciifier` instances managed by the library.
 
@@ -38,7 +38,7 @@ Returns the list of `P5Asciifier` instances managed by the library.
 
 > **get** **pluginRegistry**(): `P5AsciifyPluginRegistry`
 
-Defined in: [AsciifierManager.ts:249](https://github.com/humanbydefinition/p5.asciify/blob/557c82e1366289f1e9fccdbbe3a328b76a1f9aa9/src/lib/AsciifierManager.ts#L249)
+Defined in: [AsciifierManager.ts:249](https://github.com/humanbydefinition/p5.asciify/blob/4e8d6e8c5e4d380f7f35c2affcac62861935be46/src/lib/AsciifierManager.ts#L249)
 
 Get the plugin registry
 
@@ -54,7 +54,7 @@ The plugin registry instance
 
 > **add**(`framebuffer?`): [`P5Asciifier`](P5Asciifier.md) \| `Promise`\<[`P5Asciifier`](P5Asciifier.md)\>
 
-Defined in: [AsciifierManager.ts:164](https://github.com/humanbydefinition/p5.asciify/blob/557c82e1366289f1e9fccdbbe3a328b76a1f9aa9/src/lib/AsciifierManager.ts#L164)
+Defined in: [AsciifierManager.ts:164](https://github.com/humanbydefinition/p5.asciify/blob/4e8d6e8c5e4d380f7f35c2affcac62861935be46/src/lib/AsciifierManager.ts#L164)
 
 Adds a new `P5Asciifier` instance to the library.
 
@@ -80,7 +80,7 @@ The newly created `P5Asciifier` instance.
 
 > **asciifier**(`index`): [`P5Asciifier`](P5Asciifier.md)
 
-Defined in: [AsciifierManager.ts:149](https://github.com/humanbydefinition/p5.asciify/blob/557c82e1366289f1e9fccdbbe3a328b76a1f9aa9/src/lib/AsciifierManager.ts#L149)
+Defined in: [AsciifierManager.ts:149](https://github.com/humanbydefinition/p5.asciify/blob/4e8d6e8c5e4d380f7f35c2affcac62861935be46/src/lib/AsciifierManager.ts#L149)
 
 Returns the `P5Asciifier` instance at the specified index.
 
@@ -109,7 +109,7 @@ The `P5Asciifier` instance at the specified index.
 
 > **registerPlugin**(`plugin`): `void`
 
-Defined in: [AsciifierManager.ts:241](https://github.com/humanbydefinition/p5.asciify/blob/557c82e1366289f1e9fccdbbe3a328b76a1f9aa9/src/lib/AsciifierManager.ts#L241)
+Defined in: [AsciifierManager.ts:241](https://github.com/humanbydefinition/p5.asciify/blob/4e8d6e8c5e4d380f7f35c2affcac62861935be46/src/lib/AsciifierManager.ts#L241)
 
 Register a new renderer plugin with p5.asciify
 
@@ -129,7 +129,7 @@ Register a new renderer plugin with p5.asciify
 
 > **remove**(`indexOrAsciifier`): `void`
 
-Defined in: [AsciifierManager.ts:207](https://github.com/humanbydefinition/p5.asciify/blob/557c82e1366289f1e9fccdbbe3a328b76a1f9aa9/src/lib/AsciifierManager.ts#L207)
+Defined in: [AsciifierManager.ts:207](https://github.com/humanbydefinition/p5.asciify/blob/4e8d6e8c5e4d380f7f35c2affcac62861935be46/src/lib/AsciifierManager.ts#L207)
 
 Removes a `P5Asciifier` instance.
 
@@ -153,7 +153,7 @@ Removes a `P5Asciifier` instance.
 
 > `static` **getInstance**(): `P5AsciifierManager`
 
-Defined in: [AsciifierManager.ts:50](https://github.com/humanbydefinition/p5.asciify/blob/557c82e1366289f1e9fccdbbe3a328b76a1f9aa9/src/lib/AsciifierManager.ts#L50)
+Defined in: [AsciifierManager.ts:50](https://github.com/humanbydefinition/p5.asciify/blob/4e8d6e8c5e4d380f7f35c2affcac62861935be46/src/lib/AsciifierManager.ts#L50)
 
 Gets the singleton instance of `P5AsciifierManager`.
 If the instance doesn't exist yet, it creates one.
