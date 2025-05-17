@@ -37,6 +37,7 @@ export class P5AsciifyFontManager {
      * Creates a new `P5AsciifyFontManager` instance.
      * @param _p The p5 instance.
      * @param _font The font to use for ASCII rendering.
+     * @ignore
      */
     constructor(
         private _p: p5,
