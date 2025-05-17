@@ -44,6 +44,7 @@ function setupAsciify() {
     height: 1,
     textureFiltering: NEAREST,
     depthFormat: UNSIGNED_INT,
+    density: 1,
   });
 
   textColorFramebuffer = createFramebuffer({
@@ -51,6 +52,7 @@ function setupAsciify() {
     height: 1,
     textureFiltering: NEAREST,
     depthFormat: UNSIGNED_INT,
+    density: 1,
   });
 
   // Draw glyph colors to the textFramebuffer once
