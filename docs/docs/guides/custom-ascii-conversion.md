@@ -74,13 +74,13 @@ Let's start with the `characterFramebuffer`, which is the most complex one to po
 
 <br />
 
-In here we are using a previously unintroduced property `asciifier.fontManager`, which is the `P5AsciifyFontManager` instance of the `asciifier` instance. The `P5AsciifyFontManager` is responsible for managing the font used in the ASCII representation and provides us with methods to get relevant information about each character in the font, and which color to use for each character.
+In here we are using a previously unintroduced property `asciifier.fontManager`, which is the `P5AsciifyFontManager` instance of the `asciifier` object. The `P5AsciifyFontManager` is responsible for managing the font used in the ASCII representation and provides us with methods to get relevant information about each character in the font, and which color to use for each character.
 
 Using `asciifier.fontManager.glyphColors(string)` we can get an array of RGB colors for each character in the string. Likewise, there is `.glyphColor(char)` to get the RGB colors of a single character.
 
 With this functionality we can easily populate the `characterFramebuffer` with the characters we want to display in the ASCII representation. One good exercise would be to create a reusable class that is able to render a split-flap display animation onto the `characterFramebuffer`.
 
-In this example we are just using the three most relevant framebuffers to get a basic ASCII representation going: The `characterFramebuffer`, the `primaryColorFramebuffer` and the `secondaryColorFramebuffer`. The other three framebuffers are not used in this example, but you can still use them to add more advanced features to your custom renderer.
+In this example we are just using the three most relevant framebuffers to get a basic ASCII representation going: The `characterFramebuffer`, the `primaryColorFramebuffer` and the `secondaryColorFramebuffer`. The other two framebuffers are not used in this example, but you can still use them to add more advanced features to your custom renderer.
 
 #### Populating the `rotationFramebuffer`
 
@@ -88,7 +88,7 @@ Since the `primaryColorFramebuffer` and `secondaryColorFramebuffer` are straight
 
 In general, using the `rotationFramebuffer` makes the most sense when working with monospaced fonts where each character has the same width and height. Additionally, the rotations `0`, `90`, `180` and `270` degrees are the ones that most likely make sense to use, but you can use any degree you want and play around with it.
 
-As seen in the first example, the `rotationFramebuffer` was populated with `background(0, 0, 0);` to basically apply no rotation to all the cells in the ASCII representation.
+As seen in the first example, the `rotationFramebuffer` was populated with `background("rgb(25%, 0%, 0%)")` to apply a `90°` rotation to the character in the corresponding grid cells. 
 
 Let's look at how the other recommended rotations can be applied to the `rotationFramebuffer`:
 - `0°`
@@ -124,9 +124,9 @@ Now that we have a rough idea of how to populate the framebuffers, let's bring i
   template="static"
 />
 
-### Conclusion
+## Conclusion
 
-We have now created a custom ASCII renderer that is able to display the word `"p5.asciify"` in the ASCII representation of our sketch, and animate the text similar to the infamous bouncing DVD logo screensaver! We also learned how to populate the `characterFramebuffer`, `primaryColorFramebuffer`, `secondaryColorFramebuffer`, `rotationFramebuffer`, `inversionFramebuffer` and `flipFramebuffer` to control the properties of each grid cell individually.
+We have now created a custom ASCII renderer that is able to display the word `"p5.asciify"` in the ASCII representation of our sketch, and animate the text similar to the infamous bouncing DVD logo screensaver! We also learned how to populate the `characterFramebuffer`, `primaryColorFramebuffer`, `secondaryColorFramebuffer`, `rotationFramebuffer` and `transformationFramebuffer` to control the properties of each grid cell individually.
 We also learned how to use the `P5AsciifyFontManager` to get the relevant information about each character in the font and how to use it to populate the `characterFramebuffer`.
 
 This is just the beginning, and there are many more possibilities to explore. You can create your own custom ASCII renderers with shaders, or even combine multiple renderers to create complex rendering pipelines. The only limit is your imagination!

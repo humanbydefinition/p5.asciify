@@ -47,7 +47,6 @@ const config: Config = {
         cleanOutputDir: true,
         skipErrorChecking: true,
         formatWithPrettier: true,
-        watch: true,
       },
     ],
     [
@@ -121,8 +120,8 @@ const config: Config = {
       // Optional medium-zoom options
       // see: https://www.npmjs.com/package/medium-zoom#options
       options: {
-        margin: 24,
-        background: '#BADA55',
+        margin: 0,
+        background: 'rgba(25, 25, 25, 0.8)',
         scrollOffset: 0,
       },
     },
