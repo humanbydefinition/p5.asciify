@@ -4,10 +4,14 @@ import p5 from 'p5';
  * @param font The p5.Font object containing Typr.js font data
  * @param codePoint The Unicode code point to look up
  * @returns The glyph index, or 0 if not found
+ *
+ * @ignore
  */
 export declare function getGlyphIndex(font: p5.Font, codePoint: number): number;
 /**
  * Creates an empty path object with the required interface
+ *
+ * @ignore
  */
 export declare function createEmptyPath(): {
     getBoundingBox(): {
@@ -26,6 +30,8 @@ export declare function createEmptyPath(): {
  * @param y The y position
  * @param fontSize The font size
  * @returns A path object with getBoundingBox and toSVG methods
+ *
+ * @ignore
  */
 export declare function createGlyphPath(font: p5.Font, glyphData: any, x: number, y: number, fontSize: number): {
     getBoundingBox(): {
@@ -43,5 +49,7 @@ export declare function createGlyphPath(font: p5.Font, glyphData: any, x: number
  * @param y The y position
  * @param scale The scale factor
  * @returns SVG path string
+ *
+ * @ignore
  */
 export declare function glyphToSVGPath(glyphData: any, x: number, y: number, scale: number): string;
