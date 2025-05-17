@@ -34,6 +34,8 @@ export declare class P5AsciifierManager {
      * If the instance doesn't exist yet, it creates one.
      *
      * @returns The singleton instance of `P5AsciifierManager`.
+     *
+     * @ignore
      */
     static getInstance(): P5AsciifierManager;
     /**

@@ -4,7 +4,7 @@ title: Fundamentals
 description: Learn the fundamentals of the p5.asciify library.
 ---
 
-Before diving into the `p5.asciify` library, it's important to understand the core concepts that will help you make the most of its features. This guide will cover the fundamental aspects of the library, including its purpose, key components, and how to get started with your first project.
+Before diving into the `p5.asciify` library, it's a good idea to understand the core concepts that will help you make the most of its features. The library is deeply engrained in the `p5.js` lifecycle, and it is important to understand how it works in order to use it effectively.
 
 ## The [`p5asciify`](#) object
 
@@ -25,9 +25,6 @@ By default, the pre-defined `P5Asciifier` instance and all instances created by 
 In order of execution, the default rendering pipeline is as follows:
 - [`P5AsciifyBrightnessRenderer`](#) *(only enabled renderer by default)*
     - Applies brightness-based ASCII conversion to the texture.
-
-- [`P5AsciifyAccurateRenderer`](#)
-    - Applies accurate ASCII conversion to the texture, attempting to match the original image as closely as possible with the set characters from a given font.
 
 - [`P5AsciifyEdgeRenderer`](#)
     - Applies edge detection-based ASCII conversion to the texture, highlighting the edges of the image.
@@ -59,5 +56,5 @@ The `drawAsciify()` hook is called once per frame after the user's `draw()` func
 <hr />
 
 :::info
-That's it for the fundamentals! Check out the [next guide](./setup-and-customization.md) to learn how to set up and customize a rendering pipeline using the default `P5Asciifier` instance provided by the library through the `p5asciify` object.
+That's it for the fundamentals! Check out the [**Your first rendering pipeline**](./first-rendering-pipeline.md) guide next to learn how to set up and customize a rendering pipeline using the default `P5Asciifier` instance provided by the library through the `p5asciify` object.
 :::

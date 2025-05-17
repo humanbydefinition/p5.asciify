@@ -55,6 +55,3 @@ export { P5AsciifyColorPalette } from './ColorPalette';
 export { P5AsciifyGrid } from './Grid';
 export { P5AsciifyFontManager } from './FontManager';
 export * from './types';
-export { P5AsciifyAbstractFeatureRenderer2D } from './renderers/2d/feature';
-export { P5AsciifyRenderer2D } from './renderers/2d';
-export { P5AsciifyRenderer } from './renderers';

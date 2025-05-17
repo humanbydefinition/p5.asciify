@@ -46,6 +46,8 @@ export class P5AsciifierManager {
      * If the instance doesn't exist yet, it creates one.
      * 
      * @returns The singleton instance of `P5AsciifierManager`.
+     * 
+     * @ignore
      */
     public static getInstance(): P5AsciifierManager {
         if (!P5AsciifierManager._instance) {

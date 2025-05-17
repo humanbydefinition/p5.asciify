@@ -104,6 +104,34 @@ declare module 'p5' {
     interface Color {
         _array: number[];
     }
+    interface Font {
+        data: {
+            cmap: {
+                tables: {
+                    platformID: number;
+                    encodingID: number;
+                    map: Record<string, number>;
+                    maxGlyphID: number;
+                    glyphIndexMap: Record<string, number>;
+                    [key: string]: any;
+                }[];
+                [key: string]: any;
+            };
+            glyf: {
+                [glyphIndex: number]: any;
+            };
+            hmtx: {
+                aWidth: number[];
+                [key: string]: any;
+            };
+            head: {
+                unitsPerEm: number;
+                [key: string]: any;
+            };
+            [key: string]: any;
+        };
+        [key: string]: any;
+    }
     interface Framebuffer {
         loadPixels(): void;
         updatePixels(): void;
@@ -133,6 +161,7 @@ declare module 'p5' {
         registerMethod(name: 'init' | 'pre' | 'post' | 'remove' | 'afterSetup', f: (this: p5) => void): void;
         createFramebuffer(options?: object): p5.Framebuffer;
     }
+    const registerAddon: (addon: (p5Core: any, fn: any, lifecycles: any) => void) => void;
 }
 /**
  * Extends the `opentype.js` `Glyph` class with r, g, and b properties for color.
@@ -174,10 +203,6 @@ export type P5AsciifyCharacter = {
     unicode: number;
     /**
      * Gets the outline path of this character positioned at specified coordinates.
-     *
-     * This method comes from the `opentype.js` library, which is used by `p5.js` through the `p5.Font` object
-     * throughout the `v1.X.X` versions `p5.asciify` is compatible with.
-     *
      * @param x - The horizontal position to place the character
      * @param y - The vertical position to place the character
      * @param fontSize - The font size to scale the glyph to (in pixels)

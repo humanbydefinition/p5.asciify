@@ -25,13 +25,14 @@
 - **Grid management**: Apply a perfect and responsive grid based on the canvas/texture dimensions, font size, and font metrics, or create a custom grid with a specific number of columns and rows.
 - **WebGL1/WebGL2 support**: All shader code provided by `p5.asciify` is written in `GLSL ES 1.0`, making it compatible with both `WebGL1` and `WebGL2` contexts, allowing for a wide range of devices to run your ASCII projects.
 - **Export functionality**: Export your ASCII art as `.txt`, `.svg` and `.json` files for easy sharing and printing, complementing the native image and GIF saving capabilities of `p5.js`.
+- **Plugin system**: Create reusable custom renderers as plugins and share them with the community!
 
 ## Installation
 
 ### Prerequisites
 
-- `p5.asciify` requires [`p5.js`](https://p5js.org/) versions `1.8.0` to `1.X.X` to run.
-  - `p5.js` versions `2.X.X` are not yet supported, but will be in the future.
+- `p5.asciify` requires [`p5.js`](https://p5js.org/) version `1.8.0` or later.
+  - The library is also compatible with `p5.js` versions `2.x.x`, but only from version `2.0.2` onward.
 - `p5.asciify` only runs in [`WEBGL`](https://p5js.org/reference/#/p5/createCanvas) mode, so make sure to set up your canvas accordingly:
 
 ```javascript

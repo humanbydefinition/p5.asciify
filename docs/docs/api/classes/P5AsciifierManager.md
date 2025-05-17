@@ -1,11 +1,11 @@
 # Class: P5AsciifierManager
 
-Defined in: [AsciifierManager.ts:19](https://github.com/humanbydefinition/p5.asciify/blob/00720ad8f2ef8d8a53f9642532fdf1c23814b144/src/lib/AsciifierManager.ts#L19)
+Defined in: [AsciifierManager.ts:22](https://github.com/humanbydefinition/p5.asciify/blob/d3af5be88fc145426e0e70718d3e9133682ac9b6/src/lib/AsciifierManager.ts#L22)
 
 Manages the `p5.asciify` library by handling one or more `P5Asciifier` instances.
 
 This class is implemented as a singleton, meaning only one instance exists throughout the application.
-Access the instance through the exposed [p5asciify](../variables/p5asciify.md) object or via [P5AsciifierManager.getInstance](#getinstance).
+Access the instance through the exposed [p5asciify](../variables/p5asciify.md) object or via P5AsciifierManager.getInstance.
 
 The manager is responsible for:
 
@@ -22,7 +22,7 @@ The manager is responsible for:
 
 > **get** **asciifiers**(): [`P5Asciifier`](P5Asciifier.md)[]
 
-Defined in: [AsciifierManager.ts:192](https://github.com/humanbydefinition/p5.asciify/blob/00720ad8f2ef8d8a53f9642532fdf1c23814b144/src/lib/AsciifierManager.ts#L192)
+Defined in: [AsciifierManager.ts:258](https://github.com/humanbydefinition/p5.asciify/blob/d3af5be88fc145426e0e70718d3e9133682ac9b6/src/lib/AsciifierManager.ts#L258)
 
 Returns the list of `P5Asciifier` instances managed by the library.
 
@@ -30,13 +30,31 @@ Returns the list of `P5Asciifier` instances managed by the library.
 
 [`P5Asciifier`](P5Asciifier.md)[]
 
+---
+
+### pluginRegistry
+
+#### Get Signature
+
+> **get** **pluginRegistry**(): [`P5AsciifyPluginRegistry`](../p5.asciify/namespaces/plugins/classes/P5AsciifyPluginRegistry.md)
+
+Defined in: [AsciifierManager.ts:251](https://github.com/humanbydefinition/p5.asciify/blob/d3af5be88fc145426e0e70718d3e9133682ac9b6/src/lib/AsciifierManager.ts#L251)
+
+Get the plugin registry
+
+##### Returns
+
+[`P5AsciifyPluginRegistry`](../p5.asciify/namespaces/plugins/classes/P5AsciifyPluginRegistry.md)
+
+The plugin registry instance
+
 ## Methods
 
 ### add()
 
-> **add**(`framebuffer?`): [`P5Asciifier`](P5Asciifier.md)
+> **add**(`framebuffer?`): [`P5Asciifier`](P5Asciifier.md) \| `Promise`\<[`P5Asciifier`](P5Asciifier.md)\>
 
-Defined in: [AsciifierManager.ts:137](https://github.com/humanbydefinition/p5.asciify/blob/00720ad8f2ef8d8a53f9642532fdf1c23814b144/src/lib/AsciifierManager.ts#L137)
+Defined in: [AsciifierManager.ts:166](https://github.com/humanbydefinition/p5.asciify/blob/d3af5be88fc145426e0e70718d3e9133682ac9b6/src/lib/AsciifierManager.ts#L166)
 
 Adds a new `P5Asciifier` instance to the library.
 
@@ -48,7 +66,7 @@ Adds a new `P5Asciifier` instance to the library.
 
 #### Returns
 
-[`P5Asciifier`](P5Asciifier.md)
+[`P5Asciifier`](P5Asciifier.md) \| `Promise`\<[`P5Asciifier`](P5Asciifier.md)\>
 
 The newly created `P5Asciifier` instance.
 
@@ -62,7 +80,7 @@ The newly created `P5Asciifier` instance.
 
 > **asciifier**(`index`): [`P5Asciifier`](P5Asciifier.md)
 
-Defined in: [AsciifierManager.ts:122](https://github.com/humanbydefinition/p5.asciify/blob/00720ad8f2ef8d8a53f9642532fdf1c23814b144/src/lib/AsciifierManager.ts#L122)
+Defined in: [AsciifierManager.ts:151](https://github.com/humanbydefinition/p5.asciify/blob/d3af5be88fc145426e0e70718d3e9133682ac9b6/src/lib/AsciifierManager.ts#L151)
 
 Returns the `P5Asciifier` instance at the specified index.
 
@@ -87,11 +105,31 @@ The `P5Asciifier` instance at the specified index.
 
 ---
 
+### registerPlugin()
+
+> **registerPlugin**(`plugin`): `void`
+
+Defined in: [AsciifierManager.ts:243](https://github.com/humanbydefinition/p5.asciify/blob/d3af5be88fc145426e0e70718d3e9133682ac9b6/src/lib/AsciifierManager.ts#L243)
+
+Register a new renderer plugin with p5.asciify
+
+#### Parameters
+
+| Parameter | Type                                                                                                | Description                     |
+| --------- | --------------------------------------------------------------------------------------------------- | ------------------------------- |
+| `plugin`  | [`P5AsciifyRendererPlugin`](../p5.asciify/namespaces/plugins/interfaces/P5AsciifyRendererPlugin.md) | The renderer plugin to register |
+
+#### Returns
+
+`void`
+
+---
+
 ### remove()
 
 > **remove**(`indexOrAsciifier`): `void`
 
-Defined in: [AsciifierManager.ts:159](https://github.com/humanbydefinition/p5.asciify/blob/00720ad8f2ef8d8a53f9642532fdf1c23814b144/src/lib/AsciifierManager.ts#L159)
+Defined in: [AsciifierManager.ts:209](https://github.com/humanbydefinition/p5.asciify/blob/d3af5be88fc145426e0e70718d3e9133682ac9b6/src/lib/AsciifierManager.ts#L209)
 
 Removes a `P5Asciifier` instance.
 
@@ -108,20 +146,3 @@ Removes a `P5Asciifier` instance.
 #### Throws
 
 [P5AsciifyError](P5AsciifyError.md) If the index is out of bounds or the specified asciifier is not found.
-
----
-
-### getInstance()
-
-> `static` **getInstance**(): `P5AsciifierManager`
-
-Defined in: [AsciifierManager.ts:44](https://github.com/humanbydefinition/p5.asciify/blob/00720ad8f2ef8d8a53f9642532fdf1c23814b144/src/lib/AsciifierManager.ts#L44)
-
-Gets the singleton instance of `P5AsciifierManager`.
-If the instance doesn't exist yet, it creates one.
-
-#### Returns
-
-`P5AsciifierManager`
-
-The singleton instance of `P5AsciifierManager`.
