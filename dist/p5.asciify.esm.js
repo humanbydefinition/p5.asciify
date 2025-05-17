@@ -539,6 +539,7 @@ class IA {
    * Creates a new `P5AsciifyFontManager` instance.
    * @param _p The p5 instance.
    * @param _font The font to use for ASCII rendering.
+   * @ignore
    */
   constructor(e, A) {
     /** An array of supported characters in the font. */
@@ -2597,6 +2598,11 @@ class QA {
  */
 s(QA, "_plugins", /* @__PURE__ */ new Map());
 class aA {
+  /**
+   * Creates a new instance of the `P5Asciifier` class.
+   * @param pluginRegistry The plugin registry instance.
+   * @ignore
+   */
   constructor(e) {
     /** Manages the font and provides methods to access font properties. */
     s(this, "_fontManager");
@@ -2897,8 +2903,11 @@ class aA {
   /**
    * Sets whether the ASCII output should be rendered to the canvas or not.
    * 
-   * If this is set to `false`, the canvas will remain clear/empty until you start drawing stuff again in `drawAsciify()`.
-   * This is because `p5.asciify` wraps your `draw()` loop inside a framebuffer's `begin()` and `end()`, if the canvas is being recorded.
+   * If this is set to `false`, the canvas will remain clear/empty until you start drawing stuff again in `drawAsciify()` after the `draw()`function finishes.
+   * This is because `p5.asciify` wraps your `draw()` loop inside a framebuffer's `begin()` and `end()`.
+   * 
+   * By default, this is set to `true`, meaning the ASCII output will be rendered to the canvas **after** the `draw()` function ends, 
+   * but before the `drawAsciify()` function is called.
    * 
    * @param bool `true` to render to the canvas, `false` to not render.
    */
@@ -3118,6 +3127,8 @@ const Y = class Y {
    * If the instance doesn't exist yet, it creates one.
    * 
    * @returns The singleton instance of `P5AsciifierManager`.
+   * 
+   * @ignore
    */
   static getInstance() {
     return Y._instance || (Y._instance = new Y()), Y._instance;

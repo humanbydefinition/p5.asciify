@@ -29,6 +29,11 @@ export declare class P5Asciifier {
     private _renderToCanvas;
     /** The plugin registry instance. */
     private _pluginRegistry;
+    /**
+     * Creates a new instance of the `P5Asciifier` class.
+     * @param pluginRegistry The plugin registry instance.
+     * @ignore
+     */
     constructor(pluginRegistry: P5AsciifyPluginRegistry);
     /**
      * Initializes the asciifier by setting the `p5.js` instance and loading the font manager with the default font.
@@ -231,8 +236,11 @@ export declare class P5Asciifier {
     /**
      * Sets whether the ASCII output should be rendered to the canvas or not.
      *
-     * If this is set to `false`, the canvas will remain clear/empty until you start drawing stuff again in `drawAsciify()`.
-     * This is because `p5.asciify` wraps your `draw()` loop inside a framebuffer's `begin()` and `end()`, if the canvas is being recorded.
+     * If this is set to `false`, the canvas will remain clear/empty until you start drawing stuff again in `drawAsciify()` after the `draw()`function finishes.
+     * This is because `p5.asciify` wraps your `draw()` loop inside a framebuffer's `begin()` and `end()`.
+     *
+     * By default, this is set to `true`, meaning the ASCII output will be rendered to the canvas **after** the `draw()` function ends,
+     * but before the `drawAsciify()` function is called.
      *
      * @param bool `true` to render to the canvas, `false` to not render.
      */
