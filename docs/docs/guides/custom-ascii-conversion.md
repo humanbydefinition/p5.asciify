@@ -14,7 +14,7 @@ Let's start by looking at how `p5.asciify` performs the conversion of a texture 
 
 ## How does `p5.asciify` convert a texture into an ASCII representation?
 
-At the core, each and every single renderer type provided by `p5.asciify` consists of a range of framebuffers/textures that are used to control the properties of each grid cell individually. While pre-defined renderers like the `P5AsciifyBrightnessRenderer` or `P5AsciifyAccurateRenderer` use these framebuffers on their own, we have to populate those framebuffers manually in our custom renderers within the `draw()` function of our sketch.
+At the core, each and every single renderer type provided by `p5.asciify` consists of a range of framebuffers/textures that are used to control the properties of each grid cell individually. While pre-defined renderers like the `P5AsciifyBrightnessRenderer` or `P5AsciifyEdgeRenderer` use these framebuffers on their own, we have to populate those framebuffers manually in our custom renderers within the `draw()` function of our sketch.
 
 If you have an instance of a custom renderer stored in a variable called `customRenderer`, you can access these framebuffers using the following properties within the `setupAsciify()` function and onward:
 
