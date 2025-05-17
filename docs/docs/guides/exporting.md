@@ -12,7 +12,7 @@ Before we dive into the details of exporting your work, let's take a moment to u
 - **GIF**: Save your sketch as an animated GIF, capturing the motion and transitions in your sketch.
 
 Besides the above formats that can be exported using standard `p5.js` functions, `p5.asciify` provides a few additional export formats that are specific to the library and the ASCII art you create with it:
-- **Text**: Save the ASCII representation of your sketch as a plain text file, preserving the ASCII art format.
+- **Text**: Save the ASCII representation of your sketch as a plain text file, preserving the grid format.
 - **JSON**: Save the ASCII representation of your sketch as a JSON file, allowing for easy sharing and manipulation of the ASCII art data.
 - **SVG**: Save the ASCII representation of your sketch as an SVG file, preserving the vector format and allowing for easy scaling and printing.
 
