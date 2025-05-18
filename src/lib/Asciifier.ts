@@ -65,7 +65,7 @@ export class P5Asciifier {
     public async init(p: p5, baseFont: p5.Font): Promise<void> {
         this._p = p;
         this._fontManager = new P5AsciifyFontManager(p, baseFont);
-        
+
         // Return a resolved promise to ensure the async pattern is consistent
         return Promise.resolve();
     }
@@ -356,8 +356,8 @@ export class P5Asciifier {
         const w = this._grid.cols;
         const h = this._grid.rows;
 
-        // Get characters array from font texture atlas
-        const chars = this._fontManager.characters;
+        // Get characters array from font manager
+        const characterObjects = this._fontManager.characters;
 
         // Build text content
         const lines: string[] = [];
@@ -374,11 +374,11 @@ export class P5Asciifier {
                 let charIndex = r + (g << 8);
 
                 // Clamp character index
-                if (charIndex >= chars.length) {
-                    charIndex = chars.length - 1;
+                if (charIndex >= characterObjects.length) {
+                    charIndex = characterObjects.length - 1;
                 }
 
-                line += chars[charIndex];
+                line += characterObjects[charIndex].character;
                 idx++;
             }
             lines.push(line);
