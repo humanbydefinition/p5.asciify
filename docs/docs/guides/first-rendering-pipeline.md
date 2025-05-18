@@ -39,10 +39,8 @@ In comparison to the previous snippet, we added two new variables and a new func
 
 In `setupAsciify()`, which is called automatically once at the beginning of the sketch after the p5.js `setup()` function, we fetch the relevant objects we want to use throughout the sketch and store them in the variables we created earlier.
 
-Using `asciifier.fontSize(number);`, we can set the font size for all renderers in the pipeline.
-
 :::tip
-During `setupAsciify()`, make sure to store all relevant references to `P5Asciifier` and it's `P5AsciifyRenderer` objects in variables so you can access them later in the `draw()` loop or other functions without having to search for them in potentially larger lists of renderers every time you need them.
+For performance reasons, it is a good idea to store the references to the `P5Asciifier` and `P5AsciifyRenderer` objects in variables, so you can access them later in the `draw()` loop or other functions without having to search for them in potentially larger lists of renderers every time you need them.
 :::
 
 :::tip
@@ -94,6 +92,10 @@ Besides updating the properties by calling a renderers `update()` function, wher
 
 <hr />
 
-:::info
-That's it for this guide! You now know how to set up a simple rendering pipeline using the `p5.asciify` library and some of it's pre-defined renderers. You also learned how to draw on top of the ASCII representation and update properties of the rendering pipeline during runtime. We've only scratched the surface here with those examples, so feel free to experiment with the code and try out different combinations of renderers and properties to create your own unique ASCII art!
-:::
+## Conclusion
+
+That's it for this guide! You now should know how to set up a simple rendering pipeline using the `p5.asciify` library and it's two pre-defined feature renderers. All core concepts mentioned in the [**Fundamentals**](./fundamentals) guide are covered in this guide, including the `setupAsciify()` and `drawAsciify()` hooks, which are used to set up the rendering pipeline and draw on top of the ASCII representation, respectively.
+
+We've only scratched the surface here and `p5.asciify` has a lot more to offer, including the ability to create custom renderers where you control each cells properties individually, and the ability to create and manage multiple `P5Asciifier` instances to apply different rendering pipelines to different textures and the main canvas in parallel. `p5.asciify` even provides a plugin system to make custom renderers reusable and easily shareable with the community!
+
+Those topics and a lot more are covered in the following guides in the sidebar. Feel free to check them out based on your interests and needs. (◕‿◕✿)

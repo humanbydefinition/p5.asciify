@@ -392,8 +392,8 @@ export class P5AsciifyRendererManager {
      * @example
      * ```javascript
      *  function setupAsciify() {
-     *      // Move the `"accurate"` renderer up in the list of renderers.
-     *      p5asciify.asciifier().renderers().moveUp('accurate');
+     *      // Move the `"brightness"` renderer up in the list of renderers.
+     *      p5asciify.asciifier().renderers().moveUp('brightness');
      * 
      *      // Alternatively, you can also pass the renderer instance itself.
      *  }
@@ -463,8 +463,8 @@ export class P5AsciifyRendererManager {
      * @example
      * ```javascript
      *  function setupAsciify() {
-     *      // Swap the positions of the `"brightness"` and `"accurate"` renderers.
-     *      p5asciify.asciifier().renderers().swap('brightness', 'accurate');
+     *      // Swap the positions of the `"brightness"` and `"edge"` renderers.
+     *      p5asciify.asciifier().renderers().swap('brightness', 'edge');
      * 
      *      // Alternatively, you can also pass the renderer instances themselves.
      *  }

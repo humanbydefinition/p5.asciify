@@ -106,33 +106,9 @@ npm run vitest
 
 This command runs the test suite and outputs the results in the terminal. Currently, most functionality is untested through automated tests, so any contributions to the test suite are highly appreciated.
 
-### Running Storybook
-
-`p5.asciify` uses `storybook` for visual testing. To run Storybook, use the following command:
-
-```bash
-npm run storybook
-```
-
-This command starts a local development server at `http://localhost:6006` where you can currently view selected example sketches. The server automatically reloads when you make changes to the source code. Currently, the Storybook setup is minimal, and any contributions to expand it are highly appreciated.
-
 ### Running the documentation
 
-`p5.asciify` uses `typedoc` for generating documentation from the source code. To build the documentation, use the following command:
-
-```bash
-npm run build-docs
-```
-
-Alternatively, you can run the documentation server using the following command, which automatically reloads when you make changes to the source code:
-
-```bash
-npm run dev-docs
-```
-
-`typedoc` generates the documentation in the `docs` directory as `.md` files. As of now, there is definitely room for improvement in some areas, so all contributions to the documentation are welcome! There are also some settings that need to be adjusted to generate a more comprehensive documentation. 
-
-Besides the automated documentation, the `.md` files in `./repo_assets/wiki/` are manually maintained and pasted into the GitHub wiki when changes are made.
+todo
 
 ## Submitting a pull request
 

@@ -47,6 +47,7 @@ const config: Config = {
         cleanOutputDir: true,
         skipErrorChecking: true,
         formatWithPrettier: true,
+        watch: true,
       },
     ],
     [
@@ -58,6 +59,7 @@ const config: Config = {
         dataDomains: "p5.textmode.art",
       }),
     ],
+    'plugin-image-zoom'
   ],
 
   // Even if you don't use internationalization, you can use this field to set

@@ -1,6 +1,6 @@
 import { P5AsciifyRendererPlugin } from './RendererPlugin';
 /**
- * Registry that manages renderer plugins for p5.asciify
+ * Registry that manages renderer plugins for p5.asciify.
  */
 export declare class P5AsciifyPluginRegistry {
     private _plugins;

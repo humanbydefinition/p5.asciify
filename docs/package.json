@@ -24,6 +24,7 @@
     "clsx": "^2.0.0",
     "p5": "1.11.5",
     "p5.asciify": "0.9.0-beta.5",
+    "plugin-image-zoom": "github:flexanalytics/plugin-image-zoom",
     "prism-react-renderer": "^2.3.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

@@ -1,9 +1,10 @@
-# p5.asciify v0.9.0
+# p5.asciify v0.9.5-beta.2
 
 ## Namespaces
 
 | Namespace                                             | Description                                                              |
 | ----------------------------------------------------- | ------------------------------------------------------------------------ |
+| [plugins](p5.asciify/namespaces/plugins/index.md)     | Contains plugin interfaces to implement against.                         |
 | [renderers](p5.asciify/namespaces/renderers/index.md) | Contains functionality relevant to the ASCII rendering.                  |
 | [utils](p5.asciify/namespaces/utils/index.md)         | Contains utility functions and classes used by the `p5.asciify` library. |
 

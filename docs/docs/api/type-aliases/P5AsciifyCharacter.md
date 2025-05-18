@@ -2,7 +2,7 @@
 
 > **P5AsciifyCharacter** = `object`
 
-Defined in: [types.ts:180](https://github.com/humanbydefinition/p5.asciify/blob/00720ad8f2ef8d8a53f9642532fdf1c23814b144/src/lib/types.ts#L180)
+Defined in: [types.ts:217](https://github.com/humanbydefinition/p5.asciify/blob/d3af5be88fc145426e0e70718d3e9133682ac9b6/src/lib/types.ts#L217)
 
 Each character from a loaded font is represented as a `P5AsciifyCharacter` object.
 
@@ -14,7 +14,7 @@ To receive the list of characters from a loaded font, use the [P5AsciifyFontMana
 
 > **advanceWidth**: `number`
 
-Defined in: [types.ts:204](https://github.com/humanbydefinition/p5.asciify/blob/00720ad8f2ef8d8a53f9642532fdf1c23814b144/src/lib/types.ts#L204)
+Defined in: [types.ts:237](https://github.com/humanbydefinition/p5.asciify/blob/d3af5be88fc145426e0e70718d3e9133682ac9b6/src/lib/types.ts#L237)
 
 The advance width of the character. Only relevant for SVG export. To be removed in the future hopefully.
 
@@ -24,7 +24,7 @@ The advance width of the character. Only relevant for SVG export. To be removed 
 
 > **b**: `number`
 
-Defined in: [types.ts:213](https://github.com/humanbydefinition/p5.asciify/blob/00720ad8f2ef8d8a53f9642532fdf1c23814b144/src/lib/types.ts#L213)
+Defined in: [types.ts:246](https://github.com/humanbydefinition/p5.asciify/blob/d3af5be88fc145426e0e70718d3e9133682ac9b6/src/lib/types.ts#L246)
 
 The blue component of the character color.
 
@@ -34,7 +34,7 @@ The blue component of the character color.
 
 > **character**: `string`
 
-Defined in: [types.ts:182](https://github.com/humanbydefinition/p5.asciify/blob/00720ad8f2ef8d8a53f9642532fdf1c23814b144/src/lib/types.ts#L182)
+Defined in: [types.ts:219](https://github.com/humanbydefinition/p5.asciify/blob/d3af5be88fc145426e0e70718d3e9133682ac9b6/src/lib/types.ts#L219)
 
 The character represented by this glyph.
 
@@ -44,7 +44,7 @@ The character represented by this glyph.
 
 > **g**: `number`
 
-Defined in: [types.ts:210](https://github.com/humanbydefinition/p5.asciify/blob/00720ad8f2ef8d8a53f9642532fdf1c23814b144/src/lib/types.ts#L210)
+Defined in: [types.ts:243](https://github.com/humanbydefinition/p5.asciify/blob/d3af5be88fc145426e0e70718d3e9133682ac9b6/src/lib/types.ts#L243)
 
 The green component of the character color.
 
@@ -54,7 +54,7 @@ The green component of the character color.
 
 > **r**: `number`
 
-Defined in: [types.ts:207](https://github.com/humanbydefinition/p5.asciify/blob/00720ad8f2ef8d8a53f9642532fdf1c23814b144/src/lib/types.ts#L207)
+Defined in: [types.ts:240](https://github.com/humanbydefinition/p5.asciify/blob/d3af5be88fc145426e0e70718d3e9133682ac9b6/src/lib/types.ts#L240)
 
 The red component of the character color.
 
@@ -64,7 +64,7 @@ The red component of the character color.
 
 > **unicode**: `number`
 
-Defined in: [types.ts:185](https://github.com/humanbydefinition/p5.asciify/blob/00720ad8f2ef8d8a53f9642532fdf1c23814b144/src/lib/types.ts#L185)
+Defined in: [types.ts:222](https://github.com/humanbydefinition/p5.asciify/blob/d3af5be88fc145426e0e70718d3e9133682ac9b6/src/lib/types.ts#L222)
 
 The unicode value of the character.
 
@@ -74,12 +74,9 @@ The unicode value of the character.
 
 > **getPath**(`x`, `y`, `fontSize`): `object`
 
-Defined in: [types.ts:198](https://github.com/humanbydefinition/p5.asciify/blob/00720ad8f2ef8d8a53f9642532fdf1c23814b144/src/lib/types.ts#L198)
+Defined in: [types.ts:231](https://github.com/humanbydefinition/p5.asciify/blob/d3af5be88fc145426e0e70718d3e9133682ac9b6/src/lib/types.ts#L231)
 
 Gets the outline path of this character positioned at specified coordinates.
-
-This method comes from the `opentype.js` library, which is used by `p5.js` through the `p5.Font` object
-throughout the `v1.X.X` versions `p5.asciify` is compatible with.
 
 #### Parameters
 
@@ -97,5 +94,5 @@ An object with methods to get the bounding box and SVG representation of the cha
 
 | Name               | Type           | Defined in                                                                                                                          |
 | ------------------ | -------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| `getBoundingBox()` | () => `object` | [types.ts:199](https://github.com/humanbydefinition/p5.asciify/blob/00720ad8f2ef8d8a53f9642532fdf1c23814b144/src/lib/types.ts#L199) |
-| `toSVG()`          | () => `string` | [types.ts:200](https://github.com/humanbydefinition/p5.asciify/blob/00720ad8f2ef8d8a53f9642532fdf1c23814b144/src/lib/types.ts#L200) |
+| `getBoundingBox()` | () => `object` | [types.ts:232](https://github.com/humanbydefinition/p5.asciify/blob/d3af5be88fc145426e0e70718d3e9133682ac9b6/src/lib/types.ts#L232) |
+| `toSVG()`          | () => `string` | [types.ts:233](https://github.com/humanbydefinition/p5.asciify/blob/d3af5be88fc145426e0e70718d3e9133682ac9b6/src/lib/types.ts#L233) |

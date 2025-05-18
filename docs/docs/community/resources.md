@@ -18,7 +18,7 @@ If you discover a font that works particularly well with `p5.asciify`, please co
   fonts={[
     {
       name: "UrsaFont", 
-      image: "https://img.itch.zone/aW1nLzg1NzE1NTkucG5n/original/LYwLGy.png",
+      image: "/img/font_previews/UrsaFont.png",
       description: "desc",
       downloadUrl: "https://ursafrank.itch.io/ursafont",
       glyphCount: 256,
@@ -26,7 +26,7 @@ If you discover a font that works particularly well with `p5.asciify`, please co
     },
     {
       name: "C64 Pro Mono",
-      image: "https://style64.org/file/image/projects/c64_truetype.png",
+      image: "/img/font_previews/c64_truetype.png",
       description: "desc",
       downloadUrl: "https://style64.org/c64-truetype",
       glyphCount: 304,
@@ -34,7 +34,7 @@ If you discover a font that works particularly well with `p5.asciify`, please co
     },
     {
       name: "FROGBLOCK-V2.1",
-      image: "https://img.itch.zone/aW1hZ2UvMTMwMDU3NC84NjY1ODk0LnBuZw==/347x500/xhT0Rv.png",
+      image: "/img/font_previews/FROGBLOCK.png",
       description: "desc",
       downloadUrl: "https://polyducks.itch.io/frogblock",
       glyphCount: 256,
@@ -42,7 +42,7 @@ If you discover a font that works particularly well with `p5.asciify`, please co
     },
     {
       name: "CHUNKY",
-      image: "https://img.itch.zone/aW1hZ2UvMTI2Mzg0OC83NDAyMDk5LnBuZw==/347x500/zOONm8.png",
+      image: "/img/font_previews/CHUNKY.png",
       description: "desc",
       downloadUrl: "https://batfeula.itch.io/chunky",
       glyphCount: 366,
@@ -50,7 +50,7 @@ If you discover a font that works particularly well with `p5.asciify`, please co
     },
     {
       name: "Kitchen Sink",
-      image: "https://img.itch.zone/aW1hZ2UvOTE2MjE2LzUxOTY0NTUucG5n/347x500/asHL%2Bq.png",
+      image: "/img/font_previews/Kitchen_Sink.png",
       description: "desc",
       downloadUrl: "https://polyducks.itch.io/kitchen-sink-textmode-font",
       glyphCount: 256,
@@ -58,7 +58,7 @@ If you discover a font that works particularly well with `p5.asciify`, please co
     },
     {
       name: "PetMe64",
-      image: "https://www.kreativekorp.com/software/fonts/samples/retro/petme64-latin-bd-slc.png",
+      image: "/img/font_previews/petme64.png",
       description: "desc",
       downloadUrl: "https://www.kreativekorp.com/software/fonts/c64/",
       glyphCount: "?",
@@ -66,7 +66,7 @@ If you discover a font that works particularly well with `p5.asciify`, please co
     },
     {
       name: "ATASCII",
-      image: "https://damianvila.com/atascii/chars-all.png",
+      image: "/img/font_previews/atascii.png",
       description: "desc",
       downloadUrl: "https://codeberg.org/Dmian/font-atascii",
       glyphCount: "?",
@@ -74,7 +74,7 @@ If you discover a font that works particularly well with `p5.asciify`, please co
     },
     {
       name: "BESCII",
-      image: "https://codeberg.org/Dmian/font-bescii/media/branch/main/images/bescii-chars.png?raw=true",
+      image: "/img/font_previews/bescii.png",
       description: "desc",
       downloadUrl: "https://codeberg.org/Dmian/font-bescii",
       glyphCount: "?",
@@ -82,7 +82,7 @@ If you discover a font that works particularly well with `p5.asciify`, please co
     },
     {
       name: "CPC464",
-      image: "https://damianvila.com/cpc464/chars-all.png",
+      image: "/img/font_previews/cpc64.png",
       description: "desc",
       downloadUrl: "https://codeberg.org/Dmian/font-cpc464",
       glyphCount: "?",
