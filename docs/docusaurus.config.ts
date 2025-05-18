@@ -113,6 +113,18 @@ const config: Config = {
       respectPrefersColorScheme: false,
     },
 
+    imageZoom: {
+      // CSS selector to apply the plugin to, defaults to '.markdown img'
+      selector: '.markdown img',
+      // Optional medium-zoom options
+      // see: https://www.npmjs.com/package/medium-zoom#options
+      options: {
+        margin: 0,
+        background: 'rgba(25, 25, 25, 0.8)',
+        scrollOffset: 0,
+      },
+    },
+
     navbar: {
       title: 'p5.textmode.art',
       logo: {
