@@ -1,6 +1,6 @@
 # Class: P5AsciifyRendererManager
 
-Defined in: [renderers/RendererManager.ts:26](https://github.com/humanbydefinition/p5.asciify/blob/83e8b7818c9be8a215447816688507696d7a7c7a/src/lib/renderers/RendererManager.ts#L26)
+Defined in: [renderers/RendererManager.ts:26](https://github.com/humanbydefinition/p5.asciify/blob/99d3f6c197a787ee5b4a4d6f65a38a280d95a3bd/src/lib/renderers/RendererManager.ts#L26)
 
 Manages the whole ASCII rendering pipeline.
 
@@ -12,7 +12,7 @@ Manages the whole ASCII rendering pipeline.
 
 > **get** **asciiDisplayRenderer**(): [`P5AsciifyDisplayRenderer`](P5AsciifyDisplayRenderer.md)
 
-Defined in: [renderers/RendererManager.ts:554](https://github.com/humanbydefinition/p5.asciify/blob/83e8b7818c9be8a215447816688507696d7a7c7a/src/lib/renderers/RendererManager.ts#L554)
+Defined in: [renderers/RendererManager.ts:554](https://github.com/humanbydefinition/p5.asciify/blob/99d3f6c197a787ee5b4a4d6f65a38a280d95a3bd/src/lib/renderers/RendererManager.ts#L554)
 
 Returns the [P5AsciifyDisplayRenderer](P5AsciifyDisplayRenderer.md) instance which performs the final ASCII conversion.
 
@@ -28,7 +28,7 @@ Returns the [P5AsciifyDisplayRenderer](P5AsciifyDisplayRenderer.md) instance whi
 
 > **get** **hasEnabledRenderers**(): `boolean`
 
-Defined in: [renderers/RendererManager.ts:594](https://github.com/humanbydefinition/p5.asciify/blob/83e8b7818c9be8a215447816688507696d7a7c7a/src/lib/renderers/RendererManager.ts#L594)
+Defined in: [renderers/RendererManager.ts:594](https://github.com/humanbydefinition/p5.asciify/blob/99d3f6c197a787ee5b4a4d6f65a38a280d95a3bd/src/lib/renderers/RendererManager.ts#L594)
 
 Returns a boolean indicating whether any renderers are enabled in the pipeline.
 
@@ -44,7 +44,7 @@ Returns a boolean indicating whether any renderers are enabled in the pipeline.
 
 > **get** **renderers**(): `object`[]
 
-Defined in: [renderers/RendererManager.ts:549](https://github.com/humanbydefinition/p5.asciify/blob/83e8b7818c9be8a215447816688507696d7a7c7a/src/lib/renderers/RendererManager.ts#L549)
+Defined in: [renderers/RendererManager.ts:549](https://github.com/humanbydefinition/p5.asciify/blob/99d3f6c197a787ee5b4a4d6f65a38a280d95a3bd/src/lib/renderers/RendererManager.ts#L549)
 
 Returns the list of renderers in the pipeline.
 
@@ -60,7 +60,7 @@ The first renderer in the list is executed last, and the last renderer in the li
 
 > **add**(`name`, `type`, `options`): [`P5AsciifyRenderer`](P5AsciifyRenderer.md)
 
-Defined in: [renderers/RendererManager.ts:271](https://github.com/humanbydefinition/p5.asciify/blob/83e8b7818c9be8a215447816688507696d7a7c7a/src/lib/renderers/RendererManager.ts#L271)
+Defined in: [renderers/RendererManager.ts:271](https://github.com/humanbydefinition/p5.asciify/blob/99d3f6c197a787ee5b4a4d6f65a38a280d95a3bd/src/lib/renderers/RendererManager.ts#L271)
 
 Adds a new renderer to the list of renderers.
 
@@ -113,7 +113,7 @@ function setupAsciify() {
 
 > **clear**(): `void`
 
-Defined in: [renderers/RendererManager.ts:453](https://github.com/humanbydefinition/p5.asciify/blob/83e8b7818c9be8a215447816688507696d7a7c7a/src/lib/renderers/RendererManager.ts#L453)
+Defined in: [renderers/RendererManager.ts:453](https://github.com/humanbydefinition/p5.asciify/blob/99d3f6c197a787ee5b4a4d6f65a38a280d95a3bd/src/lib/renderers/RendererManager.ts#L453)
 
 Clears the list of renderers.
 Can be useful when you want to start fresh without the default renderers provided by the library.
@@ -140,7 +140,7 @@ function setupAsciify() {
 
 > **disable**(): `void`
 
-Defined in: [renderers/RendererManager.ts:512](https://github.com/humanbydefinition/p5.asciify/blob/83e8b7818c9be8a215447816688507696d7a7c7a/src/lib/renderers/RendererManager.ts#L512)
+Defined in: [renderers/RendererManager.ts:512](https://github.com/humanbydefinition/p5.asciify/blob/99d3f6c197a787ee5b4a4d6f65a38a280d95a3bd/src/lib/renderers/RendererManager.ts#L512)
 
 Disables all renderers in the list of renderers at once.
 
@@ -163,7 +163,7 @@ function setupAsciify() {
 
 > **enable**(): `void`
 
-Defined in: [renderers/RendererManager.ts:497](https://github.com/humanbydefinition/p5.asciify/blob/83e8b7818c9be8a215447816688507696d7a7c7a/src/lib/renderers/RendererManager.ts#L497)
+Defined in: [renderers/RendererManager.ts:497](https://github.com/humanbydefinition/p5.asciify/blob/99d3f6c197a787ee5b4a4d6f65a38a280d95a3bd/src/lib/renderers/RendererManager.ts#L497)
 
 Enables all renderers in the list of renderers at once.
 
@@ -186,7 +186,7 @@ function setupAsciify() {
 
 > **enabled**(`enabled`): `void`
 
-Defined in: [renderers/RendererManager.ts:528](https://github.com/humanbydefinition/p5.asciify/blob/83e8b7818c9be8a215447816688507696d7a7c7a/src/lib/renderers/RendererManager.ts#L528)
+Defined in: [renderers/RendererManager.ts:528](https://github.com/humanbydefinition/p5.asciify/blob/99d3f6c197a787ee5b4a4d6f65a38a280d95a3bd/src/lib/renderers/RendererManager.ts#L528)
 
 Enables or disables all renderers in the list of renderers at once.
 
@@ -215,7 +215,7 @@ function setupAsciify() {
 
 > **get**(`rendererName`): [`P5AsciifyRenderer`](P5AsciifyRenderer.md)
 
-Defined in: [renderers/RendererManager.ts:337](https://github.com/humanbydefinition/p5.asciify/blob/83e8b7818c9be8a215447816688507696d7a7c7a/src/lib/renderers/RendererManager.ts#L337)
+Defined in: [renderers/RendererManager.ts:337](https://github.com/humanbydefinition/p5.asciify/blob/99d3f6c197a787ee5b4a4d6f65a38a280d95a3bd/src/lib/renderers/RendererManager.ts#L337)
 
 Gets the ASCII renderer instance with the given name.
 
@@ -251,7 +251,7 @@ function setupAsciify() {
 
 > **getAvailableRendererTypes**(): `string`[]
 
-Defined in: [renderers/RendererManager.ts:353](https://github.com/humanbydefinition/p5.asciify/blob/83e8b7818c9be8a215447816688507696d7a7c7a/src/lib/renderers/RendererManager.ts#L353)
+Defined in: [renderers/RendererManager.ts:353](https://github.com/humanbydefinition/p5.asciify/blob/99d3f6c197a787ee5b4a4d6f65a38a280d95a3bd/src/lib/renderers/RendererManager.ts#L353)
 
 Gets a list of all available renderer types (built-in and plugins)
 
@@ -267,7 +267,7 @@ An array of available renderer type IDs
 
 > **moveDown**(`renderer`): `void`
 
-Defined in: [renderers/RendererManager.ts:374](https://github.com/humanbydefinition/p5.asciify/blob/83e8b7818c9be8a215447816688507696d7a7c7a/src/lib/renderers/RendererManager.ts#L374)
+Defined in: [renderers/RendererManager.ts:374](https://github.com/humanbydefinition/p5.asciify/blob/99d3f6c197a787ee5b4a4d6f65a38a280d95a3bd/src/lib/renderers/RendererManager.ts#L374)
 
 Moves a renderer down in the list of renderers, meaning it will be rendered earlier in the pipeline.
 
@@ -298,7 +298,7 @@ function setupAsciify() {
 
 > **moveUp**(`renderer`): `void`
 
-Defined in: [renderers/RendererManager.ts:402](https://github.com/humanbydefinition/p5.asciify/blob/83e8b7818c9be8a215447816688507696d7a7c7a/src/lib/renderers/RendererManager.ts#L402)
+Defined in: [renderers/RendererManager.ts:402](https://github.com/humanbydefinition/p5.asciify/blob/99d3f6c197a787ee5b4a4d6f65a38a280d95a3bd/src/lib/renderers/RendererManager.ts#L402)
 
 Moves a renderer up in the list of renderers, meaning it will be rendered later in the pipeline.
 
@@ -329,7 +329,7 @@ function setupAsciify() {
 
 > **remove**(`renderer`): `void`
 
-Defined in: [renderers/RendererManager.ts:430](https://github.com/humanbydefinition/p5.asciify/blob/83e8b7818c9be8a215447816688507696d7a7c7a/src/lib/renderers/RendererManager.ts#L430)
+Defined in: [renderers/RendererManager.ts:430](https://github.com/humanbydefinition/p5.asciify/blob/99d3f6c197a787ee5b4a4d6f65a38a280d95a3bd/src/lib/renderers/RendererManager.ts#L430)
 
 Removes a renderer from the list of renderers.
 
@@ -360,7 +360,7 @@ function setupAsciify() {
 
 > **swap**(`renderer1`, `renderer2`): `void`
 
-Defined in: [renderers/RendererManager.ts:473](https://github.com/humanbydefinition/p5.asciify/blob/83e8b7818c9be8a215447816688507696d7a7c7a/src/lib/renderers/RendererManager.ts#L473)
+Defined in: [renderers/RendererManager.ts:473](https://github.com/humanbydefinition/p5.asciify/blob/99d3f6c197a787ee5b4a4d6f65a38a280d95a3bd/src/lib/renderers/RendererManager.ts#L473)
 
 Swaps the positions of two renderers in the renderer list.
 

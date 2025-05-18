@@ -77,19 +77,7 @@ const config: Config = {
           editUrl:
             'https://github.com/humanbydefinition/p5.asciify/edit/main/docs/',
         },
-        blog: {
-          showReadingTime: true,
-          feedOptions: {
-            type: ['rss', 'atom'],
-            xslt: true,
-          },
-          editUrl:
-            'https://github.com/humanbydefinition/p5.asciify/edit/main/docs/',
-          // Useful options to enforce blogging best practices
-          onInlineTags: 'warn',
-          onInlineAuthors: 'warn',
-          onUntruncatedBlogPosts: 'warn',
-        },
+ 
         theme: {
           customCss: './src/css/custom.css',
         },
@@ -134,7 +122,6 @@ const config: Config = {
           position: 'left',
           label: 'API',
         },
-        { to: '/blog', label: 'Blog', position: 'left' },
         {
           type: 'doc',
           docId: 'community/support',
@@ -202,10 +189,6 @@ const config: Config = {
         {
           title: 'More',
           items: [
-            {
-              label: 'Blog',
-              to: '/blog',
-            },
             {
               label: 'Donate',
               to: '/docs/donate/',
