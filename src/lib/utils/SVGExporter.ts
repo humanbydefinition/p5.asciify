@@ -184,8 +184,7 @@ export class P5AsciifySVGExporter {
 
                 // Calculate rotation angle from rotationFramebuffer
                 const rotationRed = rotationPixels[pixelIdx];
-                const rotationGreen = rotationPixels[pixelIdx + 1];
-                const rotationAngle = rotationRed + (rotationGreen * 256 / 15);
+                const rotationAngle = rotationRed * (360 / 256);
 
                 // Calculate position for this cell
                 const cellX = x * cellWidth;

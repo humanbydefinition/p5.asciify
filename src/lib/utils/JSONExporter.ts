@@ -173,10 +173,8 @@ export class P5AsciifyJSONExporter {
                 }
 
                 // Calculate rotation angle from rotationFramebuffer
-                // Red channel for degrees up to 255, green channel for additional degrees
                 const rotationRed = rotationPixels[pixelIdx];
-                const rotationGreen = rotationPixels[pixelIdx + 1];
-                const rotationAngle = rotationRed + rotationGreen;
+                const rotationAngle = rotationRed * (360 / 256);
 
                 // Convert colors to hex format
                 const primaryColorHex = this.rgbaToHex(
@@ -206,7 +204,7 @@ export class P5AsciifyJSONExporter {
                     flipHorizontal: flipH,
                     flipVertical: flipV
                 });
-                
+
                 idx++;
             }
         }
