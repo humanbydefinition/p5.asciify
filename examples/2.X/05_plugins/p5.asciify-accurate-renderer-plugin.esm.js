@@ -1,7 +1,7 @@
 var d = Object.defineProperty;
 var m = (e, r, t) => r in e ? d(e, r, { enumerable: !0, configurable: !0, writable: !0, value: t }) : e[r] = t;
 var i = (e, r, t) => m(e, typeof r != "symbol" ? r + "" : r, t);
-import { P5AsciifyAbstractFeatureRenderer2D as h } from "p5.asciify";
+import { renderers as h } from "p5.asciify";
 const l = (e) => `
 precision mediump float;uniform sampler2D u_characterTexture;uniform float u_charsetCols,u_charsetRows;uniform sampler2D u_sketchTexture;uniform vec2 u_gridPixelDimensions,u_gridCellDimensions;uniform sampler2D u_charPaletteTexture;uniform vec2 u_charPaletteSize;const float u=float(${e}),f=u*u;void main(){vec2 v=floor(floor(gl_FragCoord.xy).xy),r=u_gridPixelDimensions/u_gridCellDimensions,e=v*r/u_gridPixelDimensions;v=(v+vec2(1))*r/u_gridPixelDimensions-e;bool s=true;float k=1./u;for(int u=0;u<${e};u++){if(!s)break;for(int f=0;f<${e};f++){if(!s)break;vec2 r=vec2(float(f)+.5,float(u)+.5)*k;vec4 i=texture2D(u_sketchTexture,e+r*v);if(i.w>0.)s=false;}}if(s){gl_FragColor=vec4(0);return;}float i=1e20,g=0.,t=u_charPaletteSize.x;for(int u=0;u<1024;u++){if(float(u)>=t)break;vec2 s=vec2((float(u)+.5)/t,.5/u_charPaletteSize.y);vec4 r=texture2D(u_charPaletteTexture,s);float m=r.x*255.+r.y*255.*256.+r.z*255.*65536.,y=floor(m/u_charsetCols);s=vec2((m-u_charsetCols*y)/u_charsetCols,y/u_charsetRows);vec2 C=vec2(1./u_charsetCols,1./u_charsetRows);y=0.;for(int u=0;u<${e};u++)for(int f=0;f<${e};f++){vec2 r=vec2(float(f)+.5,float(u)+.5)*k;float m=texture2D(u_sketchTexture,e+r*v).x-texture2D(u_characterTexture,s+r*C).x;y+=m*m;}y/=f;if(y<i)i=y,g=m;}i=mod(g,256.);g=floor(g/256.);gl_FragColor=vec4(i/255.,g/255.,0,1);}
 `, u = (e, r) => `
@@ -94,8 +94,8 @@ void main() {\r
   /** Flip the ASCII characters vertically */
   flipVertically: !1
 }, S = () => {
-  if (typeof h < "u")
-    return h;
+  if (typeof h.renderer2d.feature.P5AsciifyAbstractFeatureRenderer2D < "u")
+    return h.renderer2d.feature.P5AsciifyAbstractFeatureRenderer2D;
   if (typeof window < "u" && window.P5AsciifyAbstractFeatureRenderer2D)
     return window.P5AsciifyAbstractFeatureRenderer2D;
   throw console.error("P5AsciifyAbstractFeatureRenderer2D not found. Ensure p5.asciify is properly loaded."), new Error("`P5AsciifyAbstractFeatureRenderer2D` not found. Please ensure p5.asciify is loaded before this plugin.");
@@ -130,7 +130,7 @@ class b extends S() {
       height: this._captureFramebuffer.height,
       depthFormat: this._p.UNSIGNED_INT,
       textureFiltering: this._p.NEAREST
-    }), console.log();
+    });
   }
   resizeFramebuffers() {
     super.resizeFramebuffers(), this._brightnessSampleFramebuffer.resize(this._grid.cols, this._grid.rows), this._brightnessSplitFramebuffer.resize(this._captureFramebuffer.width, this._captureFramebuffer.height);
@@ -147,6 +147,7 @@ const v = {
   name: "Accurate ASCII Renderer",
   description: "An ASCII renderer that attempts picking the most fitting ASCII representation to accurately represent the input sketch using the available ASCII characters.",
   version: "1.0.0",
+  author: "humanbydefinition",
   /**
    * Creates a new instance of the accurate ASCII renderer.
    * @param p The p5 instance.
