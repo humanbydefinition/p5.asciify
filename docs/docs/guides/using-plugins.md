@@ -12,7 +12,7 @@ In the following guide, we'll walk through the process of installing and using t
 ## Installing plugins
 
 ### Prerequisites
-- Plugins renderers require `p5.asciify` version `0.9.5` or later.
+- Plugins renderers require `p5.asciify` version [`0.9.5`](https://github.com/humanbydefinition/p5.asciify/releases/tag/v0.9.5) or later.
 - Plugins support the same `p5.js` versions as `p5.asciify`.
 - Plugins work in both `GLOBAL` and `INSTANCE` mode.
 
@@ -20,7 +20,7 @@ In the following guide, we'll walk through the process of installing and using t
 
 #### Global mode
 
-Download the latest `umd` bundle of the plugin from the [**GitHub releases page**](https://github.com/humanbydefinition/p5.asciify-accurate-renderer-plugin/releases/tag/v1.0.0) or import it directly from a CDN like [**jsDelivr**](https://www.jsdelivr.com/package/npm/p5.asciify-accurate-renderer-plugin). The plugin is distributed as a single JavaScript file, which you can include in your project by adding the following script tag to your HTML file <u>after</u> importing `p5.asciify`:
+Download the latest `umd` bundle of the plugin from the [**GitHub releases page**](https://github.com/humanbydefinition/p5.asciify-accurate-renderer-plugin/releases/) or import it directly from a CDN like [**jsDelivr**](https://www.jsdelivr.com/package/npm/p5.asciify-accurate-renderer-plugin). The plugin is distributed as a single JavaScript file, which you can include in your project by adding the following script tag to your HTML file <u>after</u> importing `p5.asciify`:
 
 ```html
 <!-- Import p5.js before p5.asciify -->
@@ -35,7 +35,7 @@ Download the latest `umd` bundle of the plugin from the [**GitHub releases page*
 
 #### Instance mode
 
-Download the latest `esm` version of this plugin from the [**GitHub releases page**](https://github.com/humanbydefinition/p5.asciify-accurate-renderer-plugin/releases/tag/v1.0.0), import it directly from a CDN like [**jsDelivr**](https://www.jsdelivr.com/package/npm/p5.asciify-accurate-renderer-plugin), or install it using `npm`:
+Download the latest `esm` version of this plugin from the [**GitHub releases page**](https://github.com/humanbydefinition/p5.asciify-accurate-renderer-plugin/releases/), import it directly from a CDN like [**jsDelivr**](https://www.jsdelivr.com/package/npm/p5.asciify-accurate-renderer-plugin), or install it using `npm`:
 
 ```bash
 npm install p5.asciify-accurate-renderer-plugin
@@ -78,7 +78,7 @@ let myp5 = new p5(sketch);
 
 ## Usage
 
-To use the `"accurate"` renderer, you need to register the plugin with `p5.asciify` using `p5asciify.registerPlugin(AccurateRendererPlugin)` within `setupAsciify()`, and add it to a rendering pipeline of a `P5Asciifier` instance. The `"accurate"` renderer can then be used in the same way as the pre-defined `"brightness"` renderer, since it uses the exact same API.
+To use the `"accurate"` renderer, you need to register the plugin with `p5.asciify` using [`p5asciify.registerPlugin(AccurateRendererPlugin)`](../api/classes/P5AsciifierManager#registerplugin) within [`setupAsciify()`](../api/interfaces/P5AsciifyExtensions#setupasciify), and add it to a rendering pipeline of a [`P5Asciifier`](../api/classes/P5Asciifier) instance. The `"accurate"` renderer can then be used in the same way as the pre-defined `"brightness"` renderer, since it uses the exact same API.
 
 ```javascript
 let asciifier;

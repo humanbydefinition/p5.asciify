@@ -18,7 +18,7 @@ Besides the above formats that can be exported using standard `p5.js` functions,
 
 ## Exporting static images
 
-To export your sketch as a static image, you can use the `saveCanvas()` function provided by `p5.js`. This function allows you to save your sketch as a PNG or JPEG file. Here's an example of how to use it:
+To export your sketch as a static image, you can use the [`saveCanvas()`](https://p5js.org/reference/p5/saveCanvas/) function provided by `p5.js`. This function allows you to save your sketch as a PNG or JPEG file. Here's an example of how to use it:
 
 ```javascript
 function keyPressed() {
@@ -32,7 +32,7 @@ In this example, pressing the 's' key will save the current frame of your sketch
 
 ## Exporting animated GIFs
 
-To export your sketch as an animated GIF, you can use the `saveGif()` function provided by `p5.js`. This function allows you to capture a series of frames and save them as a GIF file. Here's an example of how to use it:
+To export your sketch as an animated GIF, you can use the [`saveGif()`](https://p5js.org/reference/p5/saveGif/) function provided by `p5.js`. This function allows you to capture a series of frames and save them as a GIF file. Here's an example of how to use it:
 
 ```javascript
 // Save a 5-second gif when the user presses the 's' key.
@@ -49,7 +49,7 @@ The GIF export might fail if your canvas is too large or if the animation is too
 
 ## Exporting text files
 
-To export the ASCII representation of your sketch as a text file, you can use `asciifier.saveStrings()` to save the ASCII representation of your sketch as a plain text file. Here's an example of how to use it:
+To export the ASCII representation of your sketch as a text file, you can use [`asciifier.saveStrings()`](../api/classes/P5Asciifier#savestrings) to save the ASCII representation of your sketch as a plain text file. Here's an example of how to use it:
 
 ```javascript
 function keyPressed() {
@@ -60,12 +60,12 @@ function keyPressed() {
 ```
 
 :::tip
-Using `asciifier.toString()`, you can draw the ASCII representation of your sketch to the console.
+Using [`asciifier.toString()`](../api/classes/P5Asciifier#tostring), you can draw the ASCII representation of your sketch to the console.
 :::
 
 ## Exporting JSON files
 
-To export the ASCII representation of your sketch as a JSON file, you can use `asciifier.saveJSON()` to save the ASCII representation of your sketch as a JSON file. Here's an example of how to use it:
+To export the ASCII representation of your sketch as a JSON file, you can use [`asciifier.saveJSON()`](../api/classes/P5Asciifier#savejson) to save the ASCII representation of your sketch as a JSON file. Here's an example of how to use it:
 
 ```javascript
 function keyPressed() {
@@ -127,7 +127,7 @@ The output format looks like this:
 
 ## Exporting SVG files
 
-To export the ASCII representation of your sketch as an SVG file, you can use `asciifier.saveSVG()` to save the ASCII representation of your sketch as an SVG file. Here's an example of how to use it:
+To export the ASCII representation of your sketch as an SVG file, you can use [`asciifier.saveSVG()`](../api/classes/P5Asciifier#savesvg) to save the ASCII representation of your sketch as an SVG file. Here's an example of how to use it:
 
 ```javascript
 function keyPressed() {

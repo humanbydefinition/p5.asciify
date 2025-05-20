@@ -45,7 +45,7 @@ Just paste your favorite p5.js sketch into the editor below and watch the magic 
 
 ## Credits
 
-Behind every great library stands the work of talented individuals and resources that make it all possible. `p5.asciify` wouldn't be what it is today without these valuable contributions. While the [Contributors](/contributors) page honors the amazing people who've helped shape this project, this section celebrates the outstanding resources that are woven directly into the fabric of the `p5.asciify` codebase.
+Behind every great library stands the work of talented individuals and resources that make it all possible. `p5.asciify` wouldn't be what it is today without these valuable contributions. While the [Contributors](/docs/community/contributors) page honors the amazing people who've helped shape this project, this section celebrates the outstanding resources that are woven directly into the fabric of the `p5.asciify` codebase.
 
 The development of `p5.asciify` owes tremendous gratitude to the creators who've shared their work under generous licenses, making this library possible. These core components deserve a spotlight of their own:
 

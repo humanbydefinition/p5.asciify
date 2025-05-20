@@ -12,16 +12,16 @@ import SandpackEditor from '@site/src/components/SandpackEditor/SandpackEditor';
 
 :::info
 Now it's time to set up your first rendering pipeline! In this guide, we'll walk you through the process of creating a simple rendering pipeline using the `p5.asciify` library. We'll cover the following steps:
-- Setting up and configuring a simple rendering pipeline through the `setupAsciify()` function.
+- Setting up and configuring a simple rendering pipeline through the [`setupAsciify()`](../api/interfaces/P5AsciifyExtensions#setupasciify) function.
 - Updating properties of the rendering pipeline during the draw loop.
-- Applying a filter to the ASCII representation drawn to the main canvas using the `drawAsciify()` function.
+- Applying a filter to the ASCII representation drawn to the main canvas using the [`drawAsciify()`](../api/interfaces/P5AsciifyExtensions#drawasciify) function.
 :::
 
 ## Setting up the brightness-based ASCII conversion renderer
 
-Looking back at the first snippet given in the [`Introduction`](#) section, we saw that the `p5.asciify` library applied ASCII conversion to the main canvas by default without using any functions provided by `p5.asciify`, just plain `p5.js` code.
+Looking back at the first snippet given in the [`Introduction`](../intro) section, we saw that the `p5.asciify` library applied ASCII conversion to the main canvas by default without using any functions provided by `p5.asciify`, just plain `p5.js` code.
 
-Now, let's start introducing the `setupAsciify()` function to this sketch to set up and customize the already pre-enabled brightness-based ASCII conversion renderer to our liking.
+Now, let's start introducing the [`setupAsciify()`](../api/interfaces/P5AsciifyExtensions#setupasciify) function to this sketch to set up and customize the already pre-enabled brightness-based ASCII conversion renderer to our liking.
 
 <SandpackEditor
   sketch={BrightnessRendererSketch}
@@ -30,21 +30,21 @@ Now, let's start introducing the `setupAsciify()` function to this sketch to set
 
 <br />
 
-In comparison to the previous snippet, we added two new variables and a new function `setupAsciify()` to the sketch:
+In comparison to the previous snippet, we added two new variables and a new function [`setupAsciify()`](../api/interfaces/P5AsciifyExtensions#setupasciify) to the sketch:
 - `asciifier`
-    - This variable will hold the reference to the `P5Asciifier` object that is provided by default through the `p5asciify` object, allowing us to manage the rendering pipeline and its renderers.
+    - This variable will hold the reference to the [`P5Asciifier`](../api/classes/P5Asciifier) object that is provided by default through the [`p5asciify`](../api/variables/p5asciify) object, allowing us to manage the rendering pipeline and its renderers.
 
 - `brightnessRenderer`
-    - This variable will hold the reference to a brightness-based `P5AsciifyBrightnessRenderer`, which is part of the `asciifier`s rendering pipeline.
+    - This variable will hold the reference to a brightness-based [`P5AsciifyBrightnessRenderer`](../api/p5.asciify/namespaces/renderers/namespaces/renderer2d/namespaces/feature/classes/P5AsciifyBrightnessRenderer), which is part of the `asciifier`s rendering pipeline.
 
-In `setupAsciify()`, which is called automatically once at the beginning of the sketch after the p5.js `setup()` function, we fetch the relevant objects we want to use throughout the sketch and store them in the variables we created earlier.
+In [`setupAsciify()`](../api/interfaces/P5AsciifyExtensions#setupasciify), which is called automatically once at the beginning of the sketch after the p5.js `setup()` function, we fetch the relevant objects we want to use throughout the sketch and store them in the variables we created earlier.
 
 :::tip
-For performance reasons, it is a good idea to store the references to the `P5Asciifier` and `P5AsciifyRenderer` objects in variables, so you can access them later in the `draw()` loop or other functions without having to search for them in potentially larger lists of renderers every time you need them.
+For performance reasons, it is a good idea to store the references to the [`P5Asciifier`](../api/classes/P5Asciifier) and [`P5AsciifyRenderer`](../api/p5.asciify/namespaces/renderers/classes/P5AsciifyRenderer) objects in variables, so you can access them later in the `draw()` loop or other functions without having to search for them in potentially larger lists of renderers every time you need them.
 :::
 
 :::tip
-The `asciifier` object also provides a lot of other functions and properties to manage the rendering pipeline, such as `asciifier.font(p5.Font);` to set the font for all renderers in the pipeline. Make sure to check the [`P5Asciifier API documentation`](#) for more information on the available functions and properties.
+The `asciifier` object also provides a lot of other functions and properties to manage the rendering pipeline, such as [`asciifier.font(p5.Font)`](../api/classes/P5Asciifier#font) to set the font for all renderers in the pipeline. Make sure to check the [`P5Asciifier API documentation`](../api/) for more information on the available functions and properties.
 :::
 
 ## Adding the edge detection-based ASCII conversion renderer on top
@@ -64,7 +64,7 @@ The set up is similar to the previous one, but now we have two renderers in the 
 
 ## Drawing on top of the ASCII representation
 
-Since `p5.asciify` encapsulates everything that happens in the `draw()` loop, we need to use the `drawAsciify()` function to draw on top of the ASCII representation that is being rendered to the main canvas. This function is called automatically once per frame after the ASCII representation is drawn to the main canvas.
+Since `p5.asciify` encapsulates everything that happens in the [`draw()`](https://p5js.org/reference/p5/draw/) loop, we need to use the [`drawAsciify()`](../api/interfaces/P5AsciifyExtensions#drawasciify) function to draw on top of the ASCII representation that is being rendered to the main canvas. This function is called automatically once per frame after the ASCII representation is drawn to the main canvas.
 
 <SandpackEditor
   sketch={DrawAsciifySketch}
@@ -73,15 +73,15 @@ Since `p5.asciify` encapsulates everything that happens in the `draw()` loop, we
 
 <br />
 
-In this sketch, we use the `drawAsciify()` function to apply an inversion filter to the main canvas, which is done using the `p5.js` function `filter(INVERT);`. This will invert the colors of the ASCII representation, making it look like a negative image. 
+In this sketch, we use the [`drawAsciify()`](../api/interfaces/P5AsciifyExtensions#drawasciify) function to apply an inversion filter to the main canvas, which is done using the `p5.js` function [`filter(INVERT)`](https://p5js.org/reference/p5/filter/). This will invert the colors of the ASCII representation, making it look like a negative image. 
 
-You can use `drawAsciify()` similarly to the `draw()` function in `p5.js`, so there are no limitations on what you can do with it. Since we are in a `WebGL` context, we could also apply the asciified texture to a 3D shape using `texture(asciifier.texture);` and `box();`, for example. This way, you can create complex 3D scenes with ASCII representations of textures applied to them.
+You can use [`drawAsciify()`](../api/interfaces/P5AsciifyExtensions#drawasciify) similarly to the [`draw()`](https://p5js.org/reference/p5/draw/) function in `p5.js`, so there are no limitations on what you can do with it. Since we are in a `WebGL` context, we could also apply the asciified texture to a 3D shape using [`texture(asciifier.texture)`](https://p5js.org/reference/p5/texture/) and [`box()`](https://p5js.org/reference/p5/box/), for example. This way, you can create complex 3D scenes with ASCII representations of textures applied to them.
 
 ## Updating properties during runtime
 
-Since we just learned that `p5.asciify` encapsulates everything that happens in the `draw()` loop, with the ASCII representation being generated and drawn to the main canvas *afterwards*, it makes sense to update the properties of the rendering pipeline during the `draw()` loop to see the changes in the frame that's rendered next. Changes to the properties being done in the `drawAsciify()` function will be applied to the frame after the one being rendered at the moment.
+Since we just learned that `p5.asciify` encapsulates everything that happens in the [`draw()`](https://p5js.org/reference/p5/draw/) loop, with the ASCII representation being generated and drawn to the main canvas *afterwards*, it makes sense to update the properties of the rendering pipeline during the [`draw()`](https://p5js.org/reference/p5/draw/) loop to see the changes in the frame that's rendered next. Changes to the properties being done in the [`drawAsciify()`](../api/interfaces/P5AsciifyExtensions#drawasciify) function will be applied to the frame after the one being rendered at the moment.
 
-Besides updating the properties by calling a renderers `update()` function, where we can pass any number of properties to update, we can also call individual functions like `.enabled(boolean)` or `.flipVertically(boolean)` to update the properties of the renderer.
+Besides updating the properties by calling a renderers [`update()`](../api/p5.asciify/namespaces/renderers/classes/P5AsciifyRenderer#update) function, where we can pass any number of properties to update, we can also call individual functions like [`enabled(boolean)`](../api/p5.asciify/namespaces/renderers/classes/P5AsciifyRenderer#enabled) or [`flipVertically(boolean)`](../api/p5.asciify/namespaces/renderers/namespaces/renderer2d/namespaces/feature/classes/P5AsciifyAbstractFeatureRenderer2D#flipvertically) to update the properties of the renderer.
 
 <SandpackEditor
   sketch={UpdateSketch}
@@ -94,8 +94,8 @@ Besides updating the properties by calling a renderers `update()` function, wher
 
 ## Conclusion
 
-That's it for this guide! You now should know how to set up a simple rendering pipeline using the `p5.asciify` library and it's two pre-defined feature renderers. All core concepts mentioned in the [**Fundamentals**](./fundamentals) guide are covered in this guide, including the `setupAsciify()` and `drawAsciify()` hooks, which are used to set up the rendering pipeline and draw on top of the ASCII representation, respectively.
+That's it for this guide! You now should know how to set up a simple rendering pipeline using the `p5.asciify` library and it's two pre-defined feature renderers. All core concepts mentioned in the [**Fundamentals**](./fundamentals) guide are covered in this guide, including the [`setupAsciify()`](../api/interfaces/P5AsciifyExtensions#setupasciify) and [`drawAsciify()`](../api/interfaces/P5AsciifyExtensions#drawasciify) hooks, which are used to set up the rendering pipeline and draw on top of the ASCII representation, respectively.
 
-We've only scratched the surface here and `p5.asciify` has a lot more to offer, including the ability to create custom renderers where you control each cells properties individually, and the ability to create and manage multiple `P5Asciifier` instances to apply different rendering pipelines to different textures and the main canvas in parallel. `p5.asciify` even provides a plugin system to make custom renderers reusable and easily shareable with the community!
+We've only scratched the surface here and `p5.asciify` has a lot more to offer, including the ability to create custom renderers where you control each cells properties individually, and the ability to create and manage multiple [`P5Asciifier`](../api/classes/P5Asciifier) instances to apply different rendering pipelines to different textures and the main canvas in parallel. `p5.asciify` even provides a plugin system to make custom renderers reusable and easily shareable with the community!
 
 Those topics and a lot more are covered in the following guides in the sidebar. Feel free to check them out based on your interests and needs. (◕‿◕✿)

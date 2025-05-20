@@ -32,7 +32,7 @@
 ### Prerequisites
 
 - `p5.asciify` requires [`p5.js`](https://p5js.org/) version `1.8.0` or later.
-  - The library is also compatible with `p5.js` versions `2.x.x`, but only from version `2.0.2` onward.
+  - The library is also compatible with `p5.js` versions `2.x.x`, but only from version [`2.0.2`](https://github.com/processing/p5.js/releases/tag/v2.0.2) onward.
 - `p5.asciify` only runs in [`WEBGL`](https://p5js.org/reference/#/p5/createCanvas) mode, so make sure to set up your canvas accordingly:
 
 ```javascript
