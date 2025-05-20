@@ -137,6 +137,12 @@ export class P5Asciifier {
      * ```
      */
     public fontSize(fontSize: number): void {
+
+        // Early return if the font size is the same
+        if (this._fontSize === fontSize) {
+            return;
+        }
+
         this._fontSize = fontSize;
 
         if (this._p._setupDone) {
@@ -199,6 +205,11 @@ export class P5Asciifier {
         font: p5.Font,
         options = { updateCharacters: true },
     ): void {
+        // Early return if the font is the same
+        if (this._fontManager.font === font) {
+            return;
+        }
+
         this._fontManager.loadFont(font);
 
         if (this._p._setupDone) {
@@ -264,9 +275,14 @@ export class P5Asciifier {
      *      p5asciify.asciifier().gridDimensions(100, 50);
      *  }
      * ```
-     * 
      */
     public gridDimensions(gridCols: number, gridRows: number) {
+
+        // Early return if the grid dimensions are the same
+        if(this._grid.cols === gridCols && this._grid.rows === gridRows) {
+            return;
+        }
+
         this._grid.resizeGridDimensions(gridCols, gridRows);
         this._rendererManager.resetRendererDimensions();
     }
