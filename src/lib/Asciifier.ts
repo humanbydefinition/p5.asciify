@@ -467,6 +467,18 @@ export class P5Asciifier {
         this._renderToCanvas = bool;
     }
 
+    /**
+     * Loads a JSON string or object and returns the framebuffers for the character, primary color, secondary color, transform, and rotation.
+     * 
+     * This method is useful for loading JSON exports from the {@link saveJSON} method in custom renderers.
+     * The framebuffers match the dimensions of the grid defined in the JSON.
+     * Each framebuffer contains the pixel data for the respective properties, 
+     * which can be drawn to the respective custom renderers framebuffers via the `image()` function.
+     * 
+     * @param json The JSON string or object to load.
+     * @returns An object containing the framebuffers for character, primary color, secondary color, transform, and rotation.
+     * @throws {@link P5AsciifyError} - If the JSON format is invalid or unsupported.
+     */
     public loadJSON(json: string | object): {
         characterFramebuffer: p5.Framebuffer,
         primaryColorFramebuffer: p5.Framebuffer,
