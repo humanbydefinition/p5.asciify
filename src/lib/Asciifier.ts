@@ -510,46 +510,21 @@ export class P5Asciifier {
         const cols = gridSize.cols;
         const rows = gridSize.rows;
 
+
         // Create new framebuffers with the dimensions from the JSON
-        const characterFramebuffer = this._p.createFramebuffer({
+        const fbSettings = {
             width: cols,
             height: rows,
             antialias: false,
             textureFiltering: this._p.NEAREST,
             depthFormat: this._p.UNSIGNED_INT,
-        });
+        };
 
-        const primaryColorFramebuffer = this._p.createFramebuffer({
-            width: cols,
-            height: rows,
-            antialias: false,
-            textureFiltering: this._p.NEAREST,
-            depthFormat: this._p.UNSIGNED_INT,
-        });
-
-        const secondaryColorFramebuffer = this._p.createFramebuffer({
-            width: cols,
-            height: rows,
-            antialias: false,
-            textureFiltering: this._p.NEAREST,
-            depthFormat: this._p.UNSIGNED_INT,
-        });
-
-        const transformFramebuffer = this._p.createFramebuffer({
-            width: cols,
-            height: rows,
-            antialias: false,
-            textureFiltering: this._p.NEAREST,
-            depthFormat: this._p.UNSIGNED_INT,
-        });
-
-        const rotationFramebuffer = this._p.createFramebuffer({
-            width: cols,
-            height: rows,
-            antialias: false,
-            textureFiltering: this._p.NEAREST,
-            depthFormat: this._p.UNSIGNED_INT,
-        });
+        const characterFramebuffer = this._p.createFramebuffer(fbSettings);
+        const primaryColorFramebuffer = this._p.createFramebuffer(fbSettings);
+        const secondaryColorFramebuffer = this._p.createFramebuffer(fbSettings);
+        const transformFramebuffer = this._p.createFramebuffer(fbSettings);
+        const rotationFramebuffer = this._p.createFramebuffer(fbSettings);
 
         // Helper function to set a pixel at specific coordinates
         const setPixel = (fb: p5.Framebuffer, x: number, y: number, color: any) => {
