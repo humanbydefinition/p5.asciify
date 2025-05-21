@@ -279,7 +279,7 @@ export class P5Asciifier {
     public gridDimensions(gridCols: number, gridRows: number) {
 
         // Early return if the grid dimensions are the same
-        if(this._grid.cols === gridCols && this._grid.rows === gridRows) {
+        if (this._grid.cols === gridCols && this._grid.rows === gridRows) {
             return;
         }
 
@@ -465,6 +465,153 @@ export class P5Asciifier {
         }
 
         this._renderToCanvas = bool;
+    }
+
+    public loadJSON(json: string | object): {
+        characterFramebuffer: p5.Framebuffer,
+        primaryColorFramebuffer: p5.Framebuffer,
+        secondaryColorFramebuffer: p5.Framebuffer,
+        transformFramebuffer: p5.Framebuffer,
+        rotationFramebuffer: p5.Framebuffer
+    } {
+        let jsonData;
+
+        try {
+            // Parse the JSON string if it's a string
+            jsonData = typeof json === 'string' ? JSON.parse(json) : json;
+        } catch (e) {
+            throw new P5AsciifyError(`Invalid JSON format: ${(e as Error).message}`);
+        }
+
+        // Validate the JSON structure
+        if (!jsonData.metadata || !jsonData.cells) {
+            throw new P5AsciifyError('Invalid JSON format: missing metadata or cells');
+        }
+
+        // Validate version
+        if (jsonData.metadata.version !== "1.0") {
+            throw new P5AsciifyError(`Unsupported JSON version: ${jsonData.metadata.version}`);
+        }
+
+        // Get grid dimensions from JSON
+        const gridSize = jsonData.metadata.gridSize;
+        const cols = gridSize.cols;
+        const rows = gridSize.rows;
+
+        // Create new framebuffers with the dimensions from the JSON
+        const characterFramebuffer = this._p.createFramebuffer({
+            width: cols,
+            height: rows,
+            antialias: false,
+            textureFiltering: this._p.NEAREST,
+            depthFormat: this._p.UNSIGNED_INT,
+        });
+
+        const primaryColorFramebuffer = this._p.createFramebuffer({
+            width: cols,
+            height: rows,
+            antialias: false,
+            textureFiltering: this._p.NEAREST,
+            depthFormat: this._p.UNSIGNED_INT,
+        });
+
+        const secondaryColorFramebuffer = this._p.createFramebuffer({
+            width: cols,
+            height: rows,
+            antialias: false,
+            textureFiltering: this._p.NEAREST,
+            depthFormat: this._p.UNSIGNED_INT,
+        });
+
+        const transformFramebuffer = this._p.createFramebuffer({
+            width: cols,
+            height: rows,
+            antialias: false,
+            textureFiltering: this._p.NEAREST,
+            depthFormat: this._p.UNSIGNED_INT,
+        });
+
+        const rotationFramebuffer = this._p.createFramebuffer({
+            width: cols,
+            height: rows,
+            antialias: false,
+            textureFiltering: this._p.NEAREST,
+            depthFormat: this._p.UNSIGNED_INT,
+        });
+
+        // Helper function to set a pixel at specific coordinates
+        const setPixel = (fb: p5.Framebuffer, x: number, y: number, color: any) => {
+            fb.begin();
+            this._p.push();
+            this._p.noStroke();
+            this._p.fill(color);
+
+            // Calculate position in WebGL coordinates (center-based)
+            const xPos = x - (cols / 2) + 0.5; // +0.5 centers in cell
+            const yPos = y - (rows / 2) + 0.5; // +0.5 centers in cell
+
+            this._p.rect(xPos, yPos, 1, 1);
+            this._p.pop();
+            fb.end();
+        };
+
+        // Process each cell in the JSON
+        for (const cell of jsonData.cells) {
+            // Skip invalid cells
+            if (cell.x < 0 || cell.y < 0 || cell.x >= cols || cell.y >= rows) {
+                continue;
+            }
+
+            // Set character data using the fontManager's glyphColor method
+            if (cell.character) {
+                const charColor = this._fontManager.glyphColor(cell.character);
+                setPixel(characterFramebuffer, cell.x, cell.y, charColor);
+            }
+
+            // Set color data
+            if (cell.color) {
+                setPixel(primaryColorFramebuffer, cell.x, cell.y, cell.color);
+            }
+
+            // Set background color
+            if (cell.backgroundColor) {
+                setPixel(secondaryColorFramebuffer, cell.x, cell.y, cell.backgroundColor);
+            }
+
+            // Set rotation data (0, 90, 180, or 270 degrees)
+            if (cell.rotation !== undefined) {
+                let rotationValue;
+
+                // Map rotation degrees to 0-255 value range
+                const rotationNormalized = Math.round((cell.rotation % 360) * (255 / 360));
+                rotationValue = `rgb(${rotationNormalized}%, 0%, 0%)`;
+
+                setPixel(rotationFramebuffer, cell.x, cell.y, rotationNormalized);
+            }
+
+            // Set transform data (flipping and inversion)
+            if (cell.flipHorizontal !== undefined || cell.flipVertical !== undefined || cell.inverted !== undefined) {
+                const inverted = cell.inverted === true;
+                const flipH = cell.flipHorizontal === true;
+                const flipV = cell.flipVertical === true;
+
+                setPixel(transformFramebuffer, cell.x, cell.y, [
+                    inverted ? 255 : 0,
+                    flipH ? 255 : 0,
+                    flipV ? 255 : 0,
+                    255
+                ]);
+            }
+        }
+
+        // Return all the framebuffers for use by the renderer
+        return {
+            characterFramebuffer,
+            primaryColorFramebuffer,
+            secondaryColorFramebuffer,
+            transformFramebuffer,
+            rotationFramebuffer
+        };
     }
 
     /**
