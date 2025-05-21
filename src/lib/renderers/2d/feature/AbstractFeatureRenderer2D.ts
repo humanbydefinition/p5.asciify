@@ -55,6 +55,11 @@ export abstract class P5AsciifyAbstractFeatureRenderer2D<T extends FeatureAsciiR
             throw new P5AsciifyError('Characters must be a string.');
         }
 
+        // Return early if the characters are the same as the current ones
+        if (characters === this._options.characters) {
+            return;
+        }
+
         this._fontManager.validateCharacters(characters);
 
         this._characterColorPalette.setColors(this._fontManager.glyphColors(characters));
