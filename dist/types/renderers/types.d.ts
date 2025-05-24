@@ -30,6 +30,13 @@ export interface FeatureAsciiRendererOptions extends AsciiRendererOptions {
     flipVertically?: boolean;
 }
 /**
+ * Options specific to the {@link P5AsciifyBrightnessRenderer} class.
+ */
+export interface BrightnessAsciiRendererOptions extends FeatureAsciiRendererOptions {
+    /** The range of brightness values to map to ASCII characters. */
+    brightnessRange?: [number, number];
+}
+/**
  * Options specific to the {@link P5AsciifyEdgeRenderer} class.
  */
 export interface EdgeAsciiRendererOptions extends FeatureAsciiRendererOptions {

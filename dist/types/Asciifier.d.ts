@@ -152,7 +152,6 @@ export declare class P5Asciifier {
      *      p5asciify.asciifier().gridDimensions(100, 50);
      *  }
      * ```
-     *
      */
     gridDimensions(gridCols: number, gridRows: number): void;
     /**
@@ -245,6 +244,35 @@ export declare class P5Asciifier {
      * @param bool `true` to render to the canvas, `false` to not render.
      */
     renderToCanvas(bool: boolean): void;
+    /**
+     * Sets the background mode for the ASCII output.
+     *
+     * If the mode is set to `fixed`, the background color set via {@link background} will be used for transparent cells.
+     *
+     * If the mode is set to `sampled`, the background color will be sampled from the pixel data of the texture that is being sampled from.
+     *
+     * @param mode The background mode to set. Can be either `"fixed"` or `"sampled"`.
+     */
+    backgroundMode(mode?: "fixed" | "sampled"): void;
+    /**
+     * Loads a JSON string or object and returns the framebuffers for the character, primary color, secondary color, transform, and rotation.
+     *
+     * This method is useful for loading JSON exports from the {@link saveJSON} method in custom renderers.
+     * The framebuffers match the dimensions of the grid defined in the JSON.
+     * Each framebuffer contains the pixel data for the respective properties,
+     * which can be drawn to the respective custom renderers framebuffers via the `image()` function.
+     *
+     * @param json The JSON string or object to load.
+     * @returns An object containing the framebuffers for character, primary color, secondary color, transform, and rotation.
+     * @throws {@link P5AsciifyError} - If the JSON format is invalid or unsupported.
+     */
+    loadJSON(json: string | object): {
+        characterFramebuffer: p5.Framebuffer;
+        primaryColorFramebuffer: p5.Framebuffer;
+        secondaryColorFramebuffer: p5.Framebuffer;
+        transformFramebuffer: p5.Framebuffer;
+        rotationFramebuffer: p5.Framebuffer;
+    };
     /**
      * Sets the p5.js `fill()` color to the color of the given character in the font texture atlas.
      *

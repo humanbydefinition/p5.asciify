@@ -2,7 +2,7 @@ import p5 from 'p5';
 import { P5AsciifyAbstractFeatureRenderer2D } from '../AbstractFeatureRenderer2D';
 import { P5AsciifyGrid } from '../../../../Grid';
 import { P5AsciifyFontManager } from '../../../../FontManager';
-import { FeatureAsciiRendererOptions } from '../../../types';
+import { BrightnessAsciiRendererOptions } from '../../../types';
 /**
  * Default configuration options for `"brightness"` ASCII renderer.
  *
@@ -29,11 +29,13 @@ export declare const BRIGHTNESS_DEFAULT_OPTIONS: {
     flipHorizontally: boolean;
     /** Flip the ASCII characters vertically */
     flipVertically: boolean;
+    /** Range of brightness values to map to ASCII characters */
+    brightnessRange: [number, number];
 };
 /**
  * ASCII Renderer that uses brightness to determine the ASCII characters to use from the 1D character set.
  */
-export declare class P5AsciifyBrightnessRenderer extends P5AsciifyAbstractFeatureRenderer2D {
+export declare class P5AsciifyBrightnessRenderer extends P5AsciifyAbstractFeatureRenderer2D<BrightnessAsciiRendererOptions> {
     private colorSampleShader;
     private asciiCharacterShader;
     private colorSampleFramebuffer;
@@ -45,8 +47,28 @@ export declare class P5AsciifyBrightnessRenderer extends P5AsciifyAbstractFeatur
      * @param options The options for the ASCII renderer.
      * @ignore
      */
-    constructor(p5Instance: p5, captureFramebuffer: p5.Framebuffer, grid: P5AsciifyGrid, fontManager: P5AsciifyFontManager, options?: FeatureAsciiRendererOptions);
+    constructor(p5Instance: p5, captureFramebuffer: p5.Framebuffer, grid: P5AsciifyGrid, fontManager: P5AsciifyFontManager, options?: BrightnessAsciiRendererOptions);
     resetShaders(): void;
     resizeFramebuffers(): void;
+    update(newOptions: Partial<BrightnessAsciiRendererOptions>): void;
+    /**
+     * Sets the brightness range for the ASCII character mapping.
+     * This range defines the minimum and maximum brightness values that will be mapped to ASCII characters.
+     *
+     * If a pixel's brightness is not within the range, the corresponding cell will be left transparent,
+     * rendering whatever is behind it, like the canvas bit or the set background color.
+     *
+     * @example
+     * ```javascript
+     * function setupAsciify() {
+     *      // Set the brightness range for the renderer
+     *      p5asciify.renderers().get("brightness").brightnessRange([50, 200]);
+     *  }
+     * ```
+     *
+     * @param range A tuple [min, max] representing the brightness range.
+     * @throws {P5AsciifyError} If the start value is greater than the end value, or if the values are not within the range of 0 to 255.
+     */
+    brightnessRange(range: [number, number]): void;
     render(): void;
 }
