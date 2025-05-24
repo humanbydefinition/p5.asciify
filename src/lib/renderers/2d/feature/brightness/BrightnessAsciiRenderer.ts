@@ -4,11 +4,12 @@ import { P5AsciifyAbstractFeatureRenderer2D } from '../AbstractFeatureRenderer2D
 import { P5AsciifyGrid } from '../../../../Grid';
 import { P5AsciifyFontManager } from '../../../../FontManager';
 
-import { FeatureAsciiRendererOptions } from '../../../types';
+import { BrightnessAsciiRendererOptions } from '../../../types';
 
 import vertexShader from '../../../../assets/shaders/vert/shader.vert';
 import colorSampleShader from './shaders/colorSample.frag';
 import asciiCharacterShader from './shaders/asciiCharacter.frag';
+import { P5AsciifyError } from '../../../../AsciifyError';
 
 /** 
  * Default configuration options for `"brightness"` ASCII renderer. 
@@ -36,12 +37,14 @@ export const BRIGHTNESS_DEFAULT_OPTIONS = {
     flipHorizontally: false,
     /** Flip the ASCII characters vertically */
     flipVertically: false,
+    /** Range of brightness values to map to ASCII characters */
+    brightnessRange: [0, 255] as [number, number],
 };
 
 /**
  * ASCII Renderer that uses brightness to determine the ASCII characters to use from the 1D character set.
  */
-export class P5AsciifyBrightnessRenderer extends P5AsciifyAbstractFeatureRenderer2D {
+export class P5AsciifyBrightnessRenderer extends P5AsciifyAbstractFeatureRenderer2D<BrightnessAsciiRendererOptions> {
     private colorSampleShader: p5.Shader;
     private asciiCharacterShader: p5.Shader;
     private colorSampleFramebuffer: p5.Framebuffer;
@@ -54,7 +57,7 @@ export class P5AsciifyBrightnessRenderer extends P5AsciifyAbstractFeatureRendere
      * @param options The options for the ASCII renderer.
      * @ignore
      */
-    constructor(p5Instance: p5, captureFramebuffer: p5.Framebuffer, grid: P5AsciifyGrid, fontManager: P5AsciifyFontManager, options: FeatureAsciiRendererOptions = BRIGHTNESS_DEFAULT_OPTIONS) {
+    constructor(p5Instance: p5, captureFramebuffer: p5.Framebuffer, grid: P5AsciifyGrid, fontManager: P5AsciifyFontManager, options: BrightnessAsciiRendererOptions = BRIGHTNESS_DEFAULT_OPTIONS) {
         super(p5Instance, captureFramebuffer, grid, fontManager, { ...BRIGHTNESS_DEFAULT_OPTIONS, ...options });
 
         this.colorSampleShader = this._p.createShader(vertexShader, colorSampleShader);
@@ -74,6 +77,46 @@ export class P5AsciifyBrightnessRenderer extends P5AsciifyAbstractFeatureRendere
     resizeFramebuffers(): void {
         super.resizeFramebuffers();
         this.colorSampleFramebuffer.resize(this._grid.cols, this._grid.rows);
+    }
+
+    public update(newOptions: Partial<BrightnessAsciiRendererOptions>): void {
+        super.update(newOptions);
+
+        if (newOptions.brightnessRange !== undefined) {
+            this.brightnessRange(newOptions.brightnessRange);
+        }
+    }
+
+    /**
+     * Sets the brightness range for the ASCII character mapping.
+     * This range defines the minimum and maximum brightness values that will be mapped to ASCII characters.
+     * 
+     * If a pixel's brightness is not within the range, the corresponding cell will be left transparent,
+     * rendering whatever is behind it, like the canvas bit or the set background color.
+     * 
+     * @example
+     * ```javascript
+     * function setupAsciify() {
+     *      // Set the brightness range for the renderer
+     *      p5asciify.renderers().get("brightness").brightnessRange([50, 200]);
+     *  }
+     * ```
+     * 
+     * @param range A tuple [min, max] representing the brightness range.
+     * @throws {P5AsciifyError} If the start value is greater than the end value, or if the values are not within the range of 0 to 255.
+     */
+    public brightnessRange(range: [number, number]): void {
+        const [start, end] = range;
+
+        if (start < 0 || start > 255 || end < 0 || end > 255) {
+            throw new P5AsciifyError('Brightness values must be between 0 and 255.');
+        }
+
+        if (start > end) {
+            throw new P5AsciifyError('Start value must be less than or equal to the end value.');
+        }
+
+        this._options.brightnessRange = [start, end];
     }
 
     render(): void {
@@ -118,6 +161,7 @@ export class P5AsciifyBrightnessRenderer extends P5AsciifyAbstractFeatureRendere
         this.asciiCharacterShader.setUniform('u_colorSampleFramebuffer', this.colorSampleFramebuffer);
         this.asciiCharacterShader.setUniform('u_charPaletteTexture', this._characterColorPalette.framebuffer);
         this.asciiCharacterShader.setUniform('u_charPaletteSize', [this._characterColorPalette.colors.length, 1]);
+        this.asciiCharacterShader.setUniform('u_brightnessRange', this._options.brightnessRange!);
         this._p.rect(0, 0, this._characterFramebuffer.width, this._characterFramebuffer.height);
         this._characterFramebuffer.end();
     }

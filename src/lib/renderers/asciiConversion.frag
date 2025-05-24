@@ -10,6 +10,10 @@ uniform sampler2D u_transformTexture;
 uniform sampler2D u_asciiCharacterTexture;
 uniform sampler2D u_rotationTexture;
 
+uniform sampler2D u_captureTexture;
+uniform vec2 u_captureDimensions;
+uniform int u_backgroundMode; // 0 for transparent, 1 for sample from capture texture
+
 uniform vec2 u_gridCellDimensions;
 uniform vec2 u_gridPixelDimensions;
 
@@ -51,8 +55,13 @@ void main() {
     // Sample the character index from the ASCII character texture
     vec4 encodedIndexVec = texture2D(u_asciiCharacterTexture, charIndexTexCoord);
 
-    if(encodedIndexVec.r < 0.01 && encodedIndexVec.g < 0.01) {
-        gl_FragColor = vec4(0.0);
+    if(encodedIndexVec.a < 0.01) {
+        if(u_backgroundMode == 0) {
+            gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0);
+        } else if(u_backgroundMode == 1) {
+            vec2 captureTexCoord = logicalFragCoord / u_captureDimensions;
+            gl_FragColor = texture2D(u_captureTexture, captureTexCoord);
+        }
         return;
     }
 
@@ -69,7 +78,7 @@ void main() {
     // Sample rotation texture and decode angle
     vec4 rotationColor = texture2D(u_rotationTexture, charIndexTexCoord);
 
-// Or map directly to radians (0-2π)
+    // Or map directly to radians (0-2π)
     float rotationAngle = rotationColor.r * 2.0 * 3.14159265359;
 
     // Calculate fractional part and apply rotation
