@@ -12,33 +12,7 @@
 import p5 from 'p5';
 import { p5asciify } from '../../../src/lib/index';
 
-export const DEFAULT_BRIGHTNESS_OPTIONS = {
-  enabled: true,
-  characters: " .:-=+*#%@",
-  characterColor: "#ffffff",
-  characterColorMode: 'sampled',
-  backgroundColor: "#000000",
-  backgroundColorMode: 'fixed',
-  invertMode: false,
-  fontSize: 16,
-  rotationAngle: 0
-};
-
-export const CUSTOM_BRIGHTNESS_OPTIONS = {
-  enabled: true,
-  characters: " .:oO@",
-  characterColor: "#ffffff",
-  characterColorMode: 'sampled',
-  backgroundColor: "#000000",
-  backgroundColorMode: 'fixed',
-  invertMode: true,
-  fontSize: 32,
-  rotationAngle: 0
-};
-
 export const createSketch = (options = {}) => {
-  const finalDefaultOptions = { ...DEFAULT_BRIGHTNESS_OPTIONS, ...options };
-  const finalCustomOptions = { ...CUSTOM_BRIGHTNESS_OPTIONS, ...options };
   let p5Instance = null;
 
   const sketch = (p) => {
@@ -65,36 +39,39 @@ export const createSketch = (options = {}) => {
       customAsciifier = p5asciify.add(customFramebuffer);
 
       // Set the font size for both asciifiers
-      defaultAsciifier.fontSize(finalDefaultOptions.fontSize);
-      customAsciifier.fontSize(finalCustomOptions.fontSize);
+      defaultAsciifier.fontSize(16);
+      customAsciifier.fontSize(32);
 
       // Update the default asciifiers default 'brightness' renderer with the provided options
       defaultAsciifier.renderers().get("brightness").update({
-        enabled: finalDefaultOptions.enabled,
-        characters: finalDefaultOptions.characters,
-        characterColor: finalDefaultOptions.characterColor,
-        characterColorMode: finalDefaultOptions.characterColorMode,
-        backgroundColor: finalDefaultOptions.backgroundColor,
-        backgroundColorMode: finalDefaultOptions.backgroundColorMode,
-        invertMode: finalDefaultOptions.invertMode,
-        rotationAngle: finalDefaultOptions.rotationAngle
+        enabled: true,
+        characters: " .:-=+*#%@",
+        characterColor: "#ffffff",
+        characterColorMode: 'sampled',
+        backgroundColor: "#000000",
+        backgroundColorMode: 'fixed',
+        invertMode: false,
+        fontSize: 16,
+        rotationAngle: 0,
+        brightnessRange: [0, 255],
       });
 
       // Update the custom asciifiers default 'brightness' renderer with the provided options
       customAsciifier.renderers().get("brightness").update({
-        enabled: finalCustomOptions.enabled,
-        characters: finalCustomOptions.characters,
-        characterColor: finalCustomOptions.characterColor,
-        characterColorMode: finalCustomOptions.characterColorMode,
-        backgroundColor: finalCustomOptions.backgroundColor,
-        backgroundColorMode: finalCustomOptions.backgroundColorMode,
-        invertMode: finalCustomOptions.invertMode,
-        rotationAngle: finalCustomOptions.rotationAngle
+        enabled: true,
+        characters: " .:oO@",
+        characterColor: "#ffffff",
+        characterColorMode: 'sampled',
+        backgroundColor: "#000000",
+        backgroundColorMode: 'fixed',
+        invertMode: true,
+        fontSize: 32,
+        rotationAngle: 0,
+        brightnessRange: [0, 255],
       });
 
-      // Make the background of both asciifiers fully transparent.
-      defaultAsciifier.background([0, 0, 0, 0]);
-      customAsciifier.background([0, 0, 0, 0]);
+      defaultAsciifier.backgroundMode('fixed'); // or 'sampled'
+      customAsciifier.backgroundMode('fixed'); // or 'sampled'
     };
 
     p.draw = () => {
