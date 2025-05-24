@@ -189,6 +189,7 @@ export class P5AsciifyRendererManager {
             this._secondaryColorFramebuffer,
             this._transformFramebuffer,
             this._rotationFramebuffer,
+            this._captureFramebuffer
         );
 
         this.checkCanvasDimensions();

@@ -468,6 +468,23 @@ export class P5Asciifier {
     }
 
     /**
+     * Sets the background mode for the ASCII output.
+     * 
+     * If the mode is set to `fixed`, the background color set via {@link background} will be used for transparent cells.
+     * 
+     * If the mode is set to `sampled`, the background color will be sampled from the pixel data of the texture that is being sampled from.
+     * 
+     * @param mode The background mode to set. Can be either `"fixed"` or `"sampled"`.
+     */
+    public backgroundMode(mode: "fixed" | "sampled" = "fixed"): void {
+        if (mode !== "fixed" && mode !== "sampled") {
+            throw new P5AsciifyError(`Invalid background mode: ${mode}. Expected "fixed" or "sampled".`);
+        }
+
+        this._rendererManager.asciiDisplayRenderer.backgroundMode(mode === "fixed" ? 0 : 1);
+    }
+
+    /**
      * Loads a JSON string or object and returns the framebuffers for the character, primary color, secondary color, transform, and rotation.
      * 
      * This method is useful for loading JSON exports from the {@link saveJSON} method in custom renderers.
