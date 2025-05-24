@@ -11,23 +11,7 @@
 import p5 from 'p5';
 import { p5asciify } from '../../../src/lib/index';
 
-// Define options for the brightness renderer
-export const BRIGHTNESS_OPTIONS = {
-  enabled: true,
-  characters: " .:-=+*#%@",
-  characterColor: "#ffffff",
-  characterColorMode: 'sampled',
-  backgroundColor: "#000000",
-  backgroundColorMode: 'fixed',
-  invertMode: false,
-  fontSize: 16,
-  rotationAngle: 0,
-  flipHorizontally: false,
-  flipVertically: false,
-};
-
 export const createSketch = (options = {}) => {
-  const finalOptions = { ...BRIGHTNESS_OPTIONS, ...options };
   let p5Instance = null;
 
   const sketch = (p) => {
@@ -45,22 +29,23 @@ export const createSketch = (options = {}) => {
       // Fetch the default `P5Asciifier` instance provided by the library
       asciifier = p5asciify.asciifier();
 
-      if (finalOptions.fontSize) { // If a `fontSize` is provided, set it in the `asciifier` instance
-        asciifier.fontSize(finalOptions.fontSize);
-      }
+      asciifier.fontSize(16);
+
+      asciifier.backgroundMode('fixed'); // or 'sampled'
 
       // Update the pre-defined `brightness` renderer with the provided options
       asciifier.renderers().get("brightness").update({
-        enabled: finalOptions.enabled,
-        characters: finalOptions.characters,
-        characterColor: finalOptions.characterColor,
-        characterColorMode: finalOptions.characterColorMode,
-        backgroundColor: finalOptions.backgroundColor,
-        backgroundColorMode: finalOptions.backgroundColorMode,
-        invertMode: finalOptions.invertMode,
-        rotationAngle: finalOptions.rotationAngle,
-        flipHorizontally: finalOptions.flipHorizontally,
-        flipVertically: finalOptions.flipVertically,
+        enabled: true,
+        characters: " .:-=+*#%@",
+        characterColor: "#ffffff",
+        characterColorMode: 'sampled',
+        backgroundColor: "#000000",
+        backgroundColorMode: 'fixed',
+        invertMode: false,
+        rotationAngle: 0,
+        flipHorizontally: false,
+        flipVertically: false,
+        brightnessRange: [0, 255],
       });
     };
 
