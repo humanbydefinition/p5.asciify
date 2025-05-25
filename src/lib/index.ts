@@ -18,9 +18,10 @@ export const p5asciify = P5AsciifierManager.getInstance();
 
 // p5.js v2.0.0+ compatibility using the new addon system
 function p5AsciifyAddon(p5Core: any, fn: any, lifecycles: any) {
+  
   // These will store references to user's functions once identified
-  let cachedSetupAsciifyFn = null;
-  let cachedDrawAsciifyFn = null;
+  let cachedSetupAsciifyFn: (() => void | Promise<void>) | null = null;
+  let cachedDrawAsciifyFn: (() => void | Promise<void>) | null = null;
 
   lifecycles.presetup = async function () { // `this` refers to the p5 instance
     await p5asciify.init(this);
