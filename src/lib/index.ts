@@ -18,13 +18,16 @@ export const p5asciify = P5AsciifierManager.getInstance();
 
 // p5.js v2.0.0+ compatibility using the new addon system
 function p5AsciifyAddon(p5Core: any, fn: any, lifecycles: any) {
+  // These will store references to user's functions once identified
+  let cachedSetupAsciifyFn = null;
+  let cachedDrawAsciifyFn = null;
 
-  lifecycles.presetup = async function () {
+  lifecycles.presetup = async function () { // `this` refers to the p5 instance
     await p5asciify.init(this);
   }
 
   // Register lifecycles for p5.js v2.0.0+
-  lifecycles.postsetup = async function () {
+  lifecycles.postsetup = async function () { // `this` refers to the p5 instance
     try {
       // Ensure WebGL renderer is used
       if (!(this._renderer.drawingContext instanceof WebGLRenderingContext ||
@@ -32,12 +35,27 @@ function p5AsciifyAddon(p5Core: any, fn: any, lifecycles: any) {
         throw new P5AsciifyError("WebGL renderer is required for p5.asciify to run.");
       }
 
-      // Wait for setup to complete
+      // Wait for library's internal setup to complete
       await p5asciify.setup();
 
-      // Only call setupAsciify after everything else is done
-      if (this.setupAsciify) {
-        await this.setupAsciify();
+      // Find and cache setupAsciify function reference
+      cachedSetupAsciifyFn = this.setupAsciify; // Check instance first (for instance mode)
+      if (!cachedSetupAsciifyFn && this._isGlobal && typeof window !== 'undefined' && typeof window.setupAsciify === 'function') {
+        // If in global mode and not on instance, check window.setupAsciify
+        cachedSetupAsciifyFn = window.setupAsciify;
+      }
+
+      // Find and cache drawAsciify function reference
+      cachedDrawAsciifyFn = this.drawAsciify; // Check instance first
+      if (!cachedDrawAsciifyFn && this._isGlobal && typeof window !== 'undefined' && typeof window.drawAsciify === 'function') {
+        // If in global mode and not on instance, check window.drawAsciify
+        cachedDrawAsciifyFn = window.drawAsciify;
+      }
+
+      // Call setupAsciify if found
+      if (typeof cachedSetupAsciifyFn === 'function') {
+        // Call with the p5 instance as `this` context
+        await cachedSetupAsciifyFn.call(this);
       }
     } catch (error) {
       console.error("Error during p5.asciify initialization:", error);
@@ -45,17 +63,19 @@ function p5AsciifyAddon(p5Core: any, fn: any, lifecycles: any) {
     }
   };
 
-  lifecycles.predraw = function () {
+  lifecycles.predraw = function () { // `this` refers to the p5 instance
     p5asciify.sketchFramebuffer.begin();
-    this.clear();
+    this.clear(); // `this.clear()` refers to p5 instance's clear method
   };
 
-  lifecycles.postdraw = function () {
+  lifecycles.postdraw = function () { // `this` refers to the p5 instance
     p5asciify.sketchFramebuffer.end();
     p5asciify.asciify();
 
-    if (this.drawAsciify) {
-      this.drawAsciify();
+    // Use the cached drawAsciify function
+    if (typeof cachedDrawAsciifyFn === 'function') {
+      // Call with the p5 instance as `this` context
+      cachedDrawAsciifyFn.call(this);
     }
   };
 }
@@ -98,6 +118,7 @@ export const afterSetupHook = (p: p5) => {
 
     if (p.setupAsciify) {
       p.setupAsciify();
+
     }
   }, 0);
 };
