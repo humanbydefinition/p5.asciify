@@ -18,11 +18,12 @@ Contains functionality relevant to the ASCII rendering.
 
 ## Interfaces
 
-| Interface                                                                | Description                                                                                                                                                                                            |
-| ------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| [AsciiRendererOptions](interfaces/AsciiRendererOptions.md)               | Base ASCII renderer options, applicable to all ASCII renderers.                                                                                                                                        |
-| [EdgeAsciiRendererOptions](interfaces/EdgeAsciiRendererOptions.md)       | Options specific to the [P5AsciifyEdgeRenderer](namespaces/renderer2d/namespaces/feature/classes/P5AsciifyEdgeRenderer.md) class.                                                                      |
-| [FeatureAsciiRendererOptions](interfaces/FeatureAsciiRendererOptions.md) | Base options for all feature-based ASCII renderers that extend the [P5AsciifyAbstractFeatureRenderer2D](namespaces/renderer2d/namespaces/feature/classes/P5AsciifyAbstractFeatureRenderer2D.md) class. |
+| Interface                                                                      | Description                                                                                                                                                                                            |
+| ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| [AsciiRendererOptions](interfaces/AsciiRendererOptions.md)                     | Base ASCII renderer options, applicable to all ASCII renderers.                                                                                                                                        |
+| [BrightnessAsciiRendererOptions](interfaces/BrightnessAsciiRendererOptions.md) | Options specific to the P5AsciifyBrightnessRenderer class.                                                                                                                                             |
+| [EdgeAsciiRendererOptions](interfaces/EdgeAsciiRendererOptions.md)             | Options specific to the [P5AsciifyEdgeRenderer](namespaces/renderer2d/namespaces/feature/classes/P5AsciifyEdgeRenderer.md) class.                                                                      |
+| [FeatureAsciiRendererOptions](interfaces/FeatureAsciiRendererOptions.md)       | Base options for all feature-based ASCII renderers that extend the [P5AsciifyAbstractFeatureRenderer2D](namespaces/renderer2d/namespaces/feature/classes/P5AsciifyAbstractFeatureRenderer2D.md) class. |
 
 ## Variables
 

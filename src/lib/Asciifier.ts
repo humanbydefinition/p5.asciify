@@ -472,7 +472,7 @@ export class P5Asciifier {
      * 
      * If the mode is set to `fixed`, the background color set via {@link background} will be used for transparent cells.
      * 
-     * If the mode is set to `sampled`, the background color will be sampled from the pixel data of the texture that is being sampled from.
+     * If the mode is set to `sampled`, the background color will be sampled from the pixel data of the texture that is being captured.
      * 
      * @param mode The background mode to set. Can be either `"fixed"` or `"sampled"`.
      */
