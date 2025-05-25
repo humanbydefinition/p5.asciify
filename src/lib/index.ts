@@ -19,9 +19,6 @@ export const p5asciify = P5AsciifierManager.getInstance();
 // p5.js v2.0.0+ compatibility using the new addon system
 function p5AsciifyAddon(p5Core: any, fn: any, lifecycles: any) {
 
-  fn.setupAsciify = async function () { };
-  fn.drawAsciify = async function () { };
-
   lifecycles.presetup = async function () {
     await p5asciify.init(this);
   }
@@ -69,7 +66,7 @@ function p5AsciifyAddon(p5Core: any, fn: any, lifecycles: any) {
  * @ignore
  */
 export const initHook = (p: p5) => {
-  if (!p5asciify.hooksEnabled) return;  
+  if (!p5asciify.hooksEnabled) return;
   p5asciify.init(p);
 };
 
@@ -83,7 +80,7 @@ export const initHook = (p: p5) => {
  * @ignore
  */
 export const afterSetupHook = (p: p5) => {
-  if (!p5asciify.hooksEnabled) return;  
+  if (!p5asciify.hooksEnabled) return;
 
   setTimeout(async () => {
     // Ensure WebGL renderer is used
@@ -100,16 +97,7 @@ export const afterSetupHook = (p: p5) => {
     await p5asciify.setup();
 
     if (p.setupAsciify) {
-      // For p5.js 1.x, the setup might already be done during init
-      if (compareVersions(p.VERSION, "2.0.0") < 0) {
-        try {
-          p.setupAsciify();
-        } catch (error) {
-          console.error("Error in setupAsciify:", error);
-        }
-      } else {
-        p.setupAsciify();
-      }
+      p.setupAsciify();
     }
   }, 0);
 };
