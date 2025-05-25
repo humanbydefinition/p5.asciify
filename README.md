@@ -57,7 +57,7 @@ Download the latest `umd` version of `p5.asciify` from the [**GitHub releases pa
 <script src="path/to/library/p5.asciify.umd.js"></script>
 
 <!-- Or import it directly from a CDN like jsDelivr
-<script src="https://cdn.jsdelivr.net/npm/p5.asciify@0.9.7/dist/p5.asciify.umd.min.js"></script> 
+<script src="https://cdn.jsdelivr.net/npm/p5.asciify@0.9.8/dist/p5.asciify.umd.min.js"></script> 
 -->
 ```
 
