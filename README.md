@@ -108,6 +108,3 @@ Explore the comprehensive documentation at [p5.textmode.art](https://p5.textmode
 - ... and much more!
 
 The documentation will help you unlock the full potential of p5.asciify in your creative coding projects.
-
-> [!NOTE]
-> While the API reference is complete and always up-to-date, the documentation is still a work in progress. If you have any questions or need assistance, feel free to reach out on [Discord](https://discord.gg/sjrw8QXNks) or open an issue on GitHub.
