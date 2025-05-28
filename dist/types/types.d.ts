@@ -12,6 +12,8 @@ declare global {
         P5AsciifyAbstractFeatureRenderer2D: typeof P5AsciifyAbstractFeatureRenderer2D;
         P5AsciifyRenderer2D: typeof P5AsciifyRenderer2D;
         P5AsciifyRenderer: typeof P5AsciifyRenderer;
+        setupAsciify?: () => void;
+        drawAsciify?: () => void;
     }
 }
 /**
