@@ -1,7 +1,8 @@
 ---
 sidebar_position: 2
 title: Donate
-description: Support the development of p5.asciify and related projects by donating.
+description: Support the development of p5.asciify and related projects by donating. Learn about different ways to contribute financially and emotionally to the open-source ASCII art library for p5.js.
+keywords: [donate p5.asciify, support p5.asciify development, p5.asciify donation, fund ASCII art library, contribute to p5.asciify, p5.asciify financial support, open source donation, textmode art funding, p5.js ASCII library support, creative coding project donation]
 ---
 
 import DonationGrid from '@site/src/components/DonationGrid/DonationGrid';

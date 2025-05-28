@@ -2,11 +2,13 @@
 id: contributors
 title: Contributors
 sidebar_position: 4
+description: Meet the contributors who have helped build p5.asciify. Discover the community behind the ASCII art library and learn how you can contribute to this open-source p5.js project.
+keywords: [p5.asciify contributors, p5.asciify community, open source contributors, p5.js ASCII library team, p5.asciify development team, contribute to p5.asciify, p5.asciify open source, ASCII art library contributors, creative coding community, p5.asciify acknowledgments]
 ---
 
 import Contributors from '@site/src/components/Contributors/Contributors';
 
-`p5.asciify` is an ongoing open-source project, welcoming and valuing all kinds of contributions from the community! If you're interested in contributing, please check out our [**Contributing Guide**](#) for more information on how to get started.
+`p5.asciify` is an ongoing open-source project, welcoming and valuing all kinds of contributions from the community! If you're interested in contributing, please check out our [**Contributing Guide**](./contributing.md) for more information on how to get started.
 
 ## Current and past contributors
 :::note

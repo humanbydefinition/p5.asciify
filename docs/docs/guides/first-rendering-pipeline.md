@@ -1,7 +1,8 @@
 ---
 sidebar_position: 2
 title: Your first rendering pipeline
-description: Learn how to set up your first rendering pipeline with p5.asciify.
+description: Create your first ASCII rendering pipeline with p5.asciify. Learn to set up brightness and edge detection renderers, manage the pipeline, update properties during runtime, and draw effects on top of ASCII art.
+keywords: [p5.asciify rendering pipeline, first ASCII renderer, brightness renderer, edge detection ASCII, setupAsciify function, drawAsciify tutorial, ASCII pipeline management, renderer configuration, p5.js ASCII tutorial]
 ---
 
 import BrightnessRendererSketch from '!!raw-loader!./sketches/00_brightness_setup_sketch.js';

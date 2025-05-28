@@ -1,5 +1,8 @@
 ---
 sidebar_position: 1
+title: Introduction
+description: Learn how p5.asciify transforms WEBGL p5.js sketches into ASCII art. Explore features, try the interactive playground, and discover renderer management, custom effects, and export capabilities.
+keywords: [p5.asciify introduction, ASCII art tutorial, p5.js ASCII conversion, WEBGL to ASCII, interactive ASCII playground, renderer management, custom ASCII effects, ASCII art export, textmode art library, creative coding tutorial]
 ---
 
 import SandboxSketch from '!!raw-loader!./sandbox_sketch.js';

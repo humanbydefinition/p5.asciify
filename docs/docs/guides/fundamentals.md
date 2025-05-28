@@ -1,7 +1,8 @@
 ---
 sidebar_position: 1
 title: Fundamentals
-description: Learn the fundamentals of the p5.asciify library.
+description: Learn the fundamentals of p5.asciify library. Understand P5Asciifier instances, rendering pipelines, setupAsciify and drawAsciify hooks, and the default brightness, edge, and custom 2D renderers.
+keywords: [p5.asciify fundamentals, P5Asciifier class, rendering pipeline basics, setupAsciify hook, drawAsciify hook, ASCII conversion concepts, p5asciify object, brightness renderer, edge renderer, custom 2D renderer]
 ---
 
 Before diving into the `p5.asciify` library, it's a good idea to understand the core concepts that will help you make the most of its features. The library is deeply engrained in the `p5.js` lifecycle, and it is important to understand how it works in order to use it effectively.

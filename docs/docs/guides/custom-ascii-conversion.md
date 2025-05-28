@@ -1,6 +1,8 @@
 ---
 sidebar_position: 3
 title: Custom ASCII Renderers
+description: Master custom ASCII renderers in p5.asciify. Learn to control individual grid cells, populate framebuffers, and create advanced effects like the bouncing DVD logo animation with character transformations.
+keywords: [custom ASCII renderer,  ASCII animation tutorial, grid cell control, ASCII transformations, custom effects p5.js, advanced ASCII art, DVD logo animation, ASCII renderer development]
 ---
 
 import CustomRendererSetupSketch from '!!raw-loader!./sketches/customRenderer/00_custom_setup_sketch.js';

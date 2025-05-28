@@ -1,6 +1,8 @@
 ---
 sidebar_position: 4
 title: Running multiple rendering pipelines in parallel
+description: Learn to create and manage multiple P5Asciifier instances in p5.asciify. Run different ASCII rendering pipelines in parallel on various textures with unique fonts, grid sizes, and effects for complex visual compositions.
+keywords: [multiple P5Asciifier instances, parallel ASCII pipelines, p5asciify add method, multiple textures ASCII, parallel rendering p5.asciify, custom asciifier configuration, advanced ASCII effects, texture-based ASCII conversion]
 ---
 
 import MultipleAsciifiersSketch from '!!raw-loader!./sketches/multiple-asciifiers/00_multiple_asciifiers_sketch.js';

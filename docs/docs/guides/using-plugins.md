@@ -1,6 +1,8 @@
 ---
 sidebar_position: 6
 title: Using renderer plugins
+description: Learn how to install and use renderer plugins in p5.asciify. Discover how to extend the library with community-created renderers like the accurate renderer plugin for enhanced ASCII conversion capabilities.
+keywords: [p5.asciify plugins, renderer plugins, accurate renderer plugin, p5asciify registerPlugin, custom ASCII renderers, p5.asciify extensions, plugin system p5.asciify, community renderers, reusable ASCII effects, ASCII plugin installation]
 ---
 
 `p5.asciify` offers a plugin system that allows you to register reusable renderer plugins, which can be added to any rendering pipeline, similar to other pre-defined renderers like the brightness-based ASCII renderer.

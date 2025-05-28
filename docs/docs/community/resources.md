@@ -2,6 +2,8 @@
 id: resources
 title: Resources
 sidebar_position: 2
+description: Discover curated resources for p5.asciify including textmode fonts, pixel fonts, and ASCII art assets. Find free fonts tested with p5.asciify like UrsaFont, C64 Pro Mono, and FROGBLOCK for your creative coding projects.
+keywords: [p5.asciify fonts, textmode fonts, pixel fonts p5.asciify, ASCII art fonts, UrsaFont p5.asciify, C64 Pro Mono, FROGBLOCK font, free ASCII fonts, p5.asciify resources, textmode art assets, retro computing fonts, creative coding fonts]
 ---
 
 import FontGrid from '@site/src/components/FontGrid/FontGrid';

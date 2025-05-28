@@ -1,8 +1,9 @@
 ---
 sidebar_position: 2
 title: Playgrounds
+description: Test p5.asciify in your browser without installation. Access interactive playgrounds on p5.js Web Editor, OpenProcessing, CodeSandbox, and StackBlitz to experiment with ASCII art features and share sketches.
+keywords: [p5.asciify playground, p5.js web editor p5.asciify, OpenProcessing ASCII art, CodeSandbox p5.asciify, StackBlitz p5.asciify, online ASCII editor, p5.asciify examples, browser ASCII testing, p5.asciify demo, interactive ASCII playground]
 ---
-
 import PlaygroundGrid from '@site/src/components/PlaygroundGrid/PlaygroundGrid';
 
 

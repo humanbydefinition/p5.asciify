@@ -1,6 +1,8 @@
 ---
 sidebar_position: 5
 title: Exporting your work
+description: Learn how to export your p5.asciify ASCII art in multiple formats. Save as plain text files, structured JSON data, scalable SVG graphics, or traditional PNG/GIF images with comprehensive export options.
+keywords: [p5.asciify export, ASCII art export, save ASCII text, JSON export ASCII, SVG ASCII art, PNG GIF export, ASCII file formats, p5.js save canvas, ASCII art sharing, textmode export options]
 ---
 
 Before we dive into the details of exporting your work, let's take a moment to understand the different export formats available in `p5.js` and `p5.asciify`.

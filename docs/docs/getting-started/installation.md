@@ -1,8 +1,9 @@
 ---
 sidebar_position: 1
 title: Installation
+description: Install p5.asciify for p5.js ASCII art conversion. Learn prerequisites, import methods for global and instance modes, CDN usage, npm installation, and setup requirements for WEBGL mode compatibility.
+keywords: [p5.asciify installation, p5.js ASCII library setup, WEBGL mode p5.asciify, npm install p5.asciify, CDN p5.asciify import, p5.js 1.8.0 compatibility, global mode p5.asciify, instance mode p5.asciify, jsDelivr p5.asciify, p5.asciify getting started]
 ---
-
 ## Prerequisites
 
 - `p5.asciify` requires [`p5.js`](https://p5js.org/) version `1.8.0` or later.
