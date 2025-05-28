@@ -230,8 +230,6 @@ export { P5AsciifyGrid } from './Grid';
 export { P5AsciifyFontManager } from './FontManager';
 export * from './types';
 
-
-
 if (typeof window !== 'undefined') {
   window.p5asciify = p5asciify;
   window.P5AsciifyAbstractFeatureRenderer2D = P5AsciifyAbstractFeatureRenderer2D;
