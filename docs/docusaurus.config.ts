@@ -101,6 +101,26 @@ const config: Config = {
       respectPrefersColorScheme: false,
     },
 
+    algolia: {
+      // The application ID provided by Algolia
+      appId: '1MOHTBWX3U',
+
+      // Public API key: it is safe to commit it
+      apiKey: '6780498578935c810e7465a0e23480c7',
+
+      indexName: 'p5-textmode',
+      contextualSearch: true,
+
+      // Optional: Algolia search parameters
+      searchParameters: {},
+
+      // Optional: path for search page that enabled by default (`false` to disable it)
+      searchPagePath: 'search',
+
+      // Optional: whether the insights feature is enabled or not on Docsearch (`false` by default)
+      insights: true,
+    },
+
     navbar: {
       title: 'p5.textmode.art',
       logo: {
