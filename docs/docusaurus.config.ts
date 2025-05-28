@@ -100,12 +100,12 @@ const config: Config = {
       { name: 'twitter:site', content: '@textmode_art' },
       { name: 'twitter:creator', content: '@textmode_art' },
       { name: 'twitter:title', content: 'p5.asciify - Real-time ASCII conversion for p5.js' },
-      { name: 'twitter:description', content: 'Transform your WEBGL p5.js sketches into dynamic ASCII art instantly with the most advanced open-source ASCII conversion library' },
+      { name: 'twitter:description', content: 'Transform your WEBGL p5.js sketches into dynamic ASCII art instantly with the most advanced open-source ASCII conversion library.' },
 
       // Open Graph metadata
       { property: 'og:type', content: 'website' },
       { property: 'og:title', content: 'p5.asciify - Real-time ASCII conversion for p5.js' },
-      { property: 'og:description', content: 'Transform your WEBGL p5.js sketches into dynamic ASCII art instantly with the most advanced open-source ASCII conversion library' },
+      { property: 'og:description', content: 'Transform your WEBGL p5.js sketches into dynamic ASCII art instantly with the most advanced open-source ASCII conversion library.' },
       { property: 'og:url', content: 'https://p5.textmode.art' },
       { property: 'og:site_name', content: 'p5.asciify documentation' },
     ],
