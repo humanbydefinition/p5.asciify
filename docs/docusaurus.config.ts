@@ -77,7 +77,7 @@ const config: Config = {
           editUrl:
             'https://github.com/humanbydefinition/p5.asciify/edit/main/docs/',
         },
- 
+
         theme: {
           customCss: './src/css/custom.css',
         },
@@ -88,6 +88,60 @@ const config: Config = {
   themeConfig: {
     // Replace with your project's social card
     //image: 'img/docusaurus-social-card.jpg',
+
+    // SEO metadata
+    metadata: [
+      { name: 'keywords', content: 'p5.js, ascii, ascii art, textmode, textmode art, petscii, ansi, creative coding, webgl, javascript, open source, real-time conversion, generative, generative art, interactive art' },
+      { name: 'description', content: 'p5.asciify is the most advanced ASCII conversion library available, powered by p5.js. Transform WEBGL canvases into dynamic ASCII art in real-time for interactive experiences and generative art.' },
+      { name: 'author', content: 'humanbydefinition' },
+
+      // Twitter Card metadata
+      { name: 'twitter:card', content: 'summary' },
+      { name: 'twitter:site', content: '@textmode_art' },
+      { name: 'twitter:creator', content: '@textmode_art' },
+      { name: 'twitter:title', content: 'p5.asciify - Real-time ASCII conversion for p5.js' },
+      { name: 'twitter:description', content: 'Transform your WEBGL p5.js sketches into dynamic ASCII art instantly with the most advanced open-source ASCII conversion library' },
+
+      // Open Graph metadata
+      { property: 'og:type', content: 'website' },
+      { property: 'og:title', content: 'p5.asciify - Real-time ASCII conversion for p5.js' },
+      { property: 'og:description', content: 'Transform your WEBGL p5.js sketches into dynamic ASCII art instantly with the most advanced open-source ASCII conversion library' },
+      { property: 'og:url', content: 'https://p5.textmode.art' },
+      { property: 'og:site_name', content: 'p5.asciify documentation' },
+    ],
+
+    headTags: [
+      {
+        tagName: 'script',
+        attributes: {
+          type: 'application/ld+json',
+        },
+        innerHTML: JSON.stringify({
+          '@context': 'https://schema.org/',
+          '@type': 'SoftwareLibrary',
+          name: 'p5.asciify',
+          author: {
+            '@type': 'Person',
+            name: 'humanbydefinition',
+            url: 'https://github.com/humanbydefinition'
+          },
+          description: 'p5.asciify is the most advanced ASCII conversion library available, powered by p5.js. Transform WEBGL canvases into dynamic ASCII art in real-time for interactive experiences and generative art.',
+          url: 'https://p5.textmode.art',
+          downloadUrl: 'https://github.com/humanbydefinition/p5.asciify/releases',
+          license: 'https://github.com/humanbydefinition/p5.asciify/blob/main/LICENSE',
+          codeRepository: 'https://github.com/humanbydefinition/p5.asciify',
+          programmingLanguage: 'TypeScript',
+          runtimePlatform: 'Web Browser',
+          targetProduct: {
+            '@type': 'SoftwareLibrary',
+            name: 'p5.js',
+            url: 'https://p5js.org'
+          },
+          applicationCategory: 'DeveloperApplication',
+          keywords: 'p5.js, ascii, ascii art, textmode, textmode art, petscii, ansi, creative coding, webgl, javascript, open source, real-time conversion, generative, generative art, interactive art',
+        }),
+      },
+    ],
 
     docs: {
       sidebar: {
@@ -126,8 +180,8 @@ const config: Config = {
       logo: {
         alt: 'p5.textmode.art logo',
         src: 'img/doc_logo.svg',
-        width: 22, // specify desired width in pixels
-        height: 22, // specify desired height in pixels
+        width: 22,
+        height: 22,
       },
       items: [
         {
