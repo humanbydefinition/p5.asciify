@@ -1,4 +1,4 @@
-import { P5AsciifierManager } from './managers/AsciifierManager';
+import { P5AsciifierManager } from './AsciifierManager';
 import { P5AsciifyFontManager } from './managers/FontManager';
 
 import p5 from 'p5';
@@ -15,6 +15,8 @@ declare global {
         P5AsciifyAbstractFeatureRenderer2D: typeof P5AsciifyAbstractFeatureRenderer2D;
         P5AsciifyRenderer2D: typeof P5AsciifyRenderer2D;
         P5AsciifyRenderer: typeof P5AsciifyRenderer;
+
+        preload?: () => void;
 
         setupAsciify?: () => void;
         drawAsciify?: () => void;
@@ -178,6 +180,11 @@ declare module 'p5' {
         _decrementPreload(): void;
 
         registerMethod(
+            name: 'init' | 'pre' | 'post' | 'remove' | 'afterSetup',
+            f: (this: p5) => void
+        ): void;
+
+        unregisterMethod(
             name: 'init' | 'pre' | 'post' | 'remove' | 'afterSetup',
             f: (this: p5) => void
         ): void;
