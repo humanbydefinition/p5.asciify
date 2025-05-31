@@ -173,6 +173,7 @@ declare module 'p5' {
 
     interface p5InstanceExtensions extends P5AsciifyExtensions {
         _setupDone: boolean;
+        _isGlobal: boolean;
         _renderer: {
             drawingContext: WebGLRenderingContext | WebGL2RenderingContext;
         };
@@ -180,12 +181,12 @@ declare module 'p5' {
         _decrementPreload(): void;
 
         registerMethod(
-            name: 'init' | 'pre' | 'post' | 'remove' | 'afterSetup',
+            name: 'init' | 'beforePreload' | 'afterPreload' | 'beforeSetup' | 'afterSetup' | 'pre' | 'post' | 'remove',
             f: (this: p5) => void
         ): void;
 
         unregisterMethod(
-            name: 'init' | 'pre' | 'post' | 'remove' | 'afterSetup',
+            name: 'init' | 'beforePreload' | 'afterPreload' | 'beforeSetup' | 'afterSetup' | 'pre' | 'post' | 'remove',
             f: (this: p5) => void
         ): void;
 
