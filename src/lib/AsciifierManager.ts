@@ -1,11 +1,11 @@
 import p5 from 'p5';
-import { P5Asciifier } from '../Asciifier';
-import { P5AsciifyError } from '../AsciifyError';
+import { P5Asciifier } from './Asciifier';
+import { P5AsciifyError } from './AsciifyError';
 
-import URSAFONT_BASE64 from '../assets/fonts/ursafont_base64.txt?raw';
-import { P5AsciifyRendererPlugin } from '../plugins/RendererPlugin';
-import { P5AsciifyPluginRegistry } from '../plugins/PluginRegistry';
-import { compareVersions } from '../utils';
+import URSAFONT_BASE64 from './assets/fonts/ursafont_base64.txt?raw';
+import { P5AsciifyRendererPlugin } from './plugins/RendererPlugin';
+import { P5AsciifyPluginRegistry } from './plugins/PluginRegistry';
+import { compareVersions } from './utils';
 
 /**
  * Manages the `p5.asciify` library by handling one or more `P5Asciifier` instances.
@@ -31,9 +31,6 @@ export class P5AsciifierManager {
 
     /** The base font used by the library. */
     private _baseFont!: p5.Font;
-
-    /** Defines whether the hooks are enabled or not. */
-    private _hooksEnabled: boolean = true;
 
     /** Contains the content that has been drawn to the `p5.js` canvas throughout the `draw()` loop. */
     private _sketchFramebuffer!: p5.Framebuffer;
@@ -80,6 +77,8 @@ export class P5AsciifierManager {
      */
     public async init(p: p5): Promise<void> {
         this._p = p;
+
+        this._p.preload = () => { };
 
         try {
             if (compareVersions(p.VERSION, "2.0.0") < 0) {
@@ -226,17 +225,6 @@ export class P5AsciifierManager {
     }
 
     /**
-     * Sets hooks status. This method should be called if you need to manually 
-     * enable or disable the automatic pre/post draw hooks.
-     * 
-     * @param enabled Whether the hooks should be enabled
-     * @ignore
-     */
-    public setHooksEnabled(enabled: boolean): void {
-        this._hooksEnabled = enabled;
-    }
-
-    /**
      * Register a new renderer plugin with p5.asciify
      * @param plugin The renderer plugin to register
      */
@@ -256,12 +244,6 @@ export class P5AsciifierManager {
      * Returns the list of `P5Asciifier` instances managed by the library.
      */
     get asciifiers(): P5Asciifier[] { return this._asciifiers; }
-
-    /**
-     * Returns `true` if the hooks are enabled, `false` otherwise.
-     * @ignore
-     */
-    get hooksEnabled(): boolean { return this._hooksEnabled; }
 
     /**
      * Returns the sketch framebuffer used to store the content drawn to the `p5.js` canvas.
