@@ -1,4 +1,4 @@
 export { compareVersions } from './utils';
-export * from './SVGExporter';
-export * from './JSONExporter';
-export * from './fonts';
+export * from './export/SVGExporter';
+export * from './export/JSONExporter';
+export * from './fonts/TyprFontUtils';

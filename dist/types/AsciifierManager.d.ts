@@ -1,5 +1,6 @@
 import p5 from 'p5';
 import { P5Asciifier } from './Asciifier';
+import { P5HookManager, HookType } from './HookManager';
 import { P5AsciifyRendererPlugin } from './plugins/RendererPlugin';
 import { P5AsciifyPluginRegistry } from './plugins/PluginRegistry';
 /**
@@ -13,6 +14,7 @@ import { P5AsciifyPluginRegistry } from './plugins/PluginRegistry';
  * - Managing multiple asciifier instances
  * - Coordinating with p5.js rendering lifecycle
  * - Providing an API for creating, accessing, and removing asciifiers
+ * - Managing p5.js lifecycle hooks
  */
 export declare class P5AsciifierManager {
     /** Singleton instance of the manager */
@@ -23,12 +25,15 @@ export declare class P5AsciifierManager {
     private _asciifiers;
     /** The base font used by the library. */
     private _baseFont;
-    /** Defines whether the hooks are enabled or not. */
-    private _hooksEnabled;
     /** Contains the content that has been drawn to the `p5.js` canvas throughout the `draw()` loop. */
     private _sketchFramebuffer;
     /** The plugin registry instance. */
     private _pluginRegistry;
+    /** The hook manager instance. */
+    private _hookManager;
+    /** Cache for user functions */
+    private _cachedSetupAsciifyFn;
+    private _cachedDrawAsciifyFn;
     /**
      * Gets the singleton instance of `P5AsciifierManager`.
      * If the instance doesn't exist yet, it creates one.
@@ -43,6 +48,21 @@ export declare class P5AsciifierManager {
      * @ignore
      */
     private constructor();
+    /**
+     * Register the core p5.asciify hooks
+     * @private
+     */
+    private _registerCoreHooks;
+    /**
+     * Get the addon configuration for p5.js 2.x.x
+     * @internal
+     */
+    getAddonConfig(): {
+        presetup: (this: p5) => Promise<void>;
+        postsetup: (this: p5) => Promise<void>;
+        predraw: (this: p5) => void;
+        postdraw: (this: p5) => void;
+    };
     /**
      * Initializes the `p5.asciify` library by setting the `p5.js` instance.
      *
@@ -93,32 +113,34 @@ export declare class P5AsciifierManager {
      */
     remove(indexOrAsciifier: number | P5Asciifier): void;
     /**
-     * Sets hooks status. This method should be called if you need to manually
-     * enable or disable the automatic pre/post draw hooks.
-     *
-     * @param enabled Whether the hooks should be enabled
-     * @ignore
-     */
-    setHooksEnabled(enabled: boolean): void;
-    /**
      * Register a new renderer plugin with p5.asciify
      * @param plugin The renderer plugin to register
      */
     registerPlugin(plugin: P5AsciifyRendererPlugin): void;
+    /**
+      * Activate a registered hook
+      * @param hookType The type of hook to activate
+      */
+    activateHook(hookType: HookType): void;
+    /**
+     * Deactivate a hook without unregistering it
+     * @param hookType The type of hook to deactivate
+     */
+    deactivateHook(hookType: HookType): void;
     /**
      * Get the plugin registry
      * @returns The plugin registry instance
      */
     get pluginRegistry(): P5AsciifyPluginRegistry;
     /**
+     * Get the hook manager
+     * @returns The hook manager instance
+     */
+    get hookManager(): P5HookManager;
+    /**
      * Returns the list of `P5Asciifier` instances managed by the library.
      */
     get asciifiers(): P5Asciifier[];
-    /**
-     * Returns `true` if the hooks are enabled, `false` otherwise.
-     * @ignore
-     */
-    get hooksEnabled(): boolean;
     /**
      * Returns the sketch framebuffer used to store the content drawn to the `p5.js` canvas.
      * @ignore

@@ -2,8 +2,8 @@ import p5 from 'p5';
 import { P5AsciifyGrid } from './Grid';
 import { P5AsciifyFontManager } from './FontManager';
 import { P5AsciifyRendererManager } from './renderers/RendererManager';
-import { SVGExportOptions } from './utils/SVGExporter';
-import { JSONExportOptions } from './utils/JSONExporter';
+import { SVGExportOptions } from './utils/export/SVGExporter';
+import { JSONExportOptions } from './utils/export/JSONExporter';
 import { P5AsciifyPluginRegistry } from './plugins/PluginRegistry';
 /**
  * Manages a rendering pipeline for ASCII conversion, including font management, grid calculations, and ASCII renderers,

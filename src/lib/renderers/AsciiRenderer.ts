@@ -1,7 +1,7 @@
 import p5 from 'p5';
 import { P5AsciifyGrid } from '../Grid';
 import { P5AsciifyError } from '../AsciifyError';
-import { P5AsciifyFontManager } from '../managers/FontManager';
+import { P5AsciifyFontManager } from '../FontManager';
 
 import { AsciiRendererOptions } from './types';
 

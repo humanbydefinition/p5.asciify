@@ -8,7 +8,7 @@ import { P5AsciifyEdgeRenderer } from './2d/feature/edge/EdgeAsciiRenderer';
 import { P5AsciifyDisplayRenderer } from './AsciiDisplayRenderer';
 
 import { P5AsciifyGrid } from '../Grid';
-import { P5AsciifyFontManager } from '../managers/FontManager';
+import { P5AsciifyFontManager } from '../FontManager';
 
 import { P5AsciifyError } from '../AsciifyError';
 

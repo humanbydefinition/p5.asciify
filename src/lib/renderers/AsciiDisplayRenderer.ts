@@ -1,6 +1,6 @@
 import p5 from 'p5';
 import { P5AsciifyGrid } from '../Grid';
-import { P5AsciifyFontManager } from '../managers/FontManager';
+import { P5AsciifyFontManager } from '../FontManager';
 import vertexShader from '../assets/shaders/vert/shader.vert';
 import asciiConversionShader from './asciiConversion.frag';
 

@@ -2,7 +2,7 @@ import p5 from 'p5';
 
 import { P5AsciifyAbstractFeatureRenderer2D } from '../AbstractFeatureRenderer2D';
 import { P5AsciifyGrid } from '../../../../Grid';
-import { P5AsciifyFontManager } from '../../../../managers/FontManager';
+import { P5AsciifyFontManager } from '../../../../FontManager';
 
 import { BrightnessAsciiRendererOptions } from '../../../types';
 

@@ -12,6 +12,7 @@ declare global {
         P5AsciifyAbstractFeatureRenderer2D: typeof P5AsciifyAbstractFeatureRenderer2D;
         P5AsciifyRenderer2D: typeof P5AsciifyRenderer2D;
         P5AsciifyRenderer: typeof P5AsciifyRenderer;
+        preload?: () => void;
         setupAsciify?: () => void;
         drawAsciify?: () => void;
     }
@@ -155,12 +156,14 @@ declare module 'p5' {
     let RendererGL: RendererGLConstructor;
     interface p5InstanceExtensions extends P5AsciifyExtensions {
         _setupDone: boolean;
+        _isGlobal: boolean;
         _renderer: {
             drawingContext: WebGLRenderingContext | WebGL2RenderingContext;
         };
         _incrementPreload(): void;
         _decrementPreload(): void;
-        registerMethod(name: 'init' | 'pre' | 'post' | 'remove' | 'afterSetup', f: (this: p5) => void): void;
+        registerMethod(name: 'init' | 'beforePreload' | 'afterPreload' | 'beforeSetup' | 'afterSetup' | 'pre' | 'post' | 'remove', f: (this: p5) => void): void;
+        unregisterMethod(name: 'init' | 'beforePreload' | 'afterPreload' | 'beforeSetup' | 'afterSetup' | 'pre' | 'post' | 'remove', f: (this: p5) => void): void;
         createFramebuffer(options?: object): p5.Framebuffer;
     }
     const registerAddon: (addon: (p5Core: any, fn: any, lifecycles: any) => void) => void;
