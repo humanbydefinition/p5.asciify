@@ -1,9 +1,9 @@
 import p5 from 'p5';
-import { P5AsciifyGrid } from '../Grid';
-import { P5AsciifyFontManager } from '../FontManager';
-import { P5AsciifyRendererManager } from '../renderers/RendererManager';
-import { P5AsciifyCharacter } from '../types';
-import { compareVersions } from './utils';
+import { P5AsciifyGrid } from '../../Grid';
+import { P5AsciifyFontManager } from '../../managers/FontManager';
+import { P5AsciifyRendererManager } from '../../renderers/RendererManager';
+import { P5AsciifyCharacter } from '../../types';
+import { compareVersions } from '../utils';
 
 /**
  * Options for SVG export.

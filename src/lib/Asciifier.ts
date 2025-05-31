@@ -1,12 +1,12 @@
 import p5 from 'p5';
 
 import { P5AsciifyGrid } from './Grid';
-import { P5AsciifyFontManager } from './FontManager';
+import { P5AsciifyFontManager } from './managers/FontManager';
 import { P5AsciifyRendererManager } from './renderers/RendererManager';
 import { P5AsciifyError } from './AsciifyError';
 import { P5AsciifyAbstractFeatureRenderer2D } from './renderers/2d/feature/AbstractFeatureRenderer2D';
-import { P5AsciifySVGExporter, SVGExportOptions } from './utils/SVGExporter';
-import { JSONExportOptions, P5AsciifyJSONExporter } from './utils/JSONExporter';
+import { P5AsciifySVGExporter, SVGExportOptions } from './utils/export/SVGExporter';
+import { JSONExportOptions, P5AsciifyJSONExporter } from './utils/export/JSONExporter';
 import { P5AsciifyPluginRegistry } from './plugins/PluginRegistry';
 import { compareVersions } from './utils';
 

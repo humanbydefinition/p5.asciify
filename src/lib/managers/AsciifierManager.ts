@@ -1,11 +1,11 @@
 import p5 from 'p5';
-import { P5Asciifier } from './Asciifier';
-import { P5AsciifyError } from './AsciifyError';
+import { P5Asciifier } from '../Asciifier';
+import { P5AsciifyError } from '../AsciifyError';
 
-import URSAFONT_BASE64 from './assets/fonts/ursafont_base64.txt?raw';
-import { P5AsciifyRendererPlugin } from './plugins/RendererPlugin';
-import { P5AsciifyPluginRegistry } from './plugins/PluginRegistry';
-import { compareVersions } from './utils';
+import URSAFONT_BASE64 from '../assets/fonts/ursafont_base64.txt?raw';
+import { P5AsciifyRendererPlugin } from '../plugins/RendererPlugin';
+import { P5AsciifyPluginRegistry } from '../plugins/PluginRegistry';
+import { compareVersions } from '../utils';
 
 /**
  * Manages the `p5.asciify` library by handling one or more `P5Asciifier` instances.

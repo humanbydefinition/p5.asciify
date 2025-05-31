@@ -1,5 +1,5 @@
 import p5 from 'p5';
-import { P5AsciifierManager } from './AsciifierManager';
+import { P5AsciifierManager } from './managers/AsciifierManager';
 import { P5AsciifyError } from './AsciifyError';
 import { compareVersions } from './utils/utils';
 import { P5AsciifyAbstractFeatureRenderer2D } from './renderers/2d/feature';
@@ -163,7 +163,7 @@ export const postDrawHook = (p: p5) => {
 if (typeof p5 !== 'undefined' && typeof p5.registerAddon === 'function') {
   p5.registerAddon(p5AsciifyAddon);
 } else if (typeof p5 !== 'undefined') {
-  // Legacy hooks for p5.js v1.8.0-1.x
+  // Legacy hooks for p5.js v1.8.0-1.x.x
   p5.prototype.registerMethod('init', function (this: p5) { initHook(this); });
   p5.prototype.registerMethod('afterSetup', function (this: p5) { afterSetupHook(this); });
 
@@ -222,12 +222,12 @@ export * as utils from './utils';
 /** Contains plugin interfaces to implement against. */
 export * as plugins from './plugins';
 
-export { P5AsciifierManager } from './AsciifierManager';
+export { P5AsciifierManager } from './managers/AsciifierManager';
 export { P5AsciifyError } from './AsciifyError';
 export { P5Asciifier } from './Asciifier';
 export { P5AsciifyColorPalette } from './ColorPalette';
 export { P5AsciifyGrid } from './Grid';
-export { P5AsciifyFontManager } from './FontManager';
+export { P5AsciifyFontManager } from './managers/FontManager';
 export * from './types';
 
 if (typeof window !== 'undefined') {

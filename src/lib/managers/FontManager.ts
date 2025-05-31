@@ -1,9 +1,9 @@
 import p5 from 'p5';
-import { P5AsciifyError } from './AsciifyError';
-import { OpenTypeGlyph, P5AsciifyCharacter } from './types';
-import { compareVersions } from './utils';
+import { P5AsciifyError } from '../AsciifyError';
+import { OpenTypeGlyph, P5AsciifyCharacter } from '../types';
+import { compareVersions } from '../utils';
 
-import { createGlyphPath, getGlyphIndex, createEmptyPath } from './utils/fonts/TyprFontUtils';
+import { createGlyphPath, getGlyphIndex, createEmptyPath } from '../utils/fonts/TyprFontUtils';
 
 /**
  * Manages the font used for the ASCII rendering pipeline and provides methods for working with the font.

@@ -1,5 +1,5 @@
-import { P5AsciifierManager } from './AsciifierManager';
-import { P5AsciifyFontManager } from './FontManager';
+import { P5AsciifierManager } from './managers/AsciifierManager';
+import { P5AsciifyFontManager } from './managers/FontManager';
 
 import p5 from 'p5';
 import { P5AsciifyAbstractFeatureRenderer2D } from './renderers/2d/feature';
