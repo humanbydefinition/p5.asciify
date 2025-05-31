@@ -1,5 +1,5 @@
 import p5 from 'p5';
-import { P5AsciifierManager } from './managers/AsciifierManager';
+import { P5AsciifierManager } from './AsciifierManager';
 import { P5AsciifyError } from './AsciifyError';
 import { compareVersions } from './utils/utils';
 import { P5AsciifyAbstractFeatureRenderer2D } from './renderers/2d/feature';
@@ -18,7 +18,7 @@ export const p5asciify = P5AsciifierManager.getInstance();
 
 // p5.js v2.0.0+ compatibility using the new addon system
 function p5AsciifyAddon(p5Core: any, fn: any, lifecycles: any) {
-  
+
   // These will store references to user's functions once identified
   let cachedSetupAsciifyFn: (() => void | Promise<void>) | null = null;
   let cachedDrawAsciifyFn: (() => void | Promise<void>) | null = null;
@@ -87,7 +87,6 @@ function p5AsciifyAddon(p5Core: any, fn: any, lifecycles: any) {
  * @ignore
  */
 export const initHook = (p: p5) => {
-  if (!p5asciify.hooksEnabled) return;
   p5asciify.init(p);
 };
 
@@ -101,9 +100,6 @@ export const initHook = (p: p5) => {
  * @ignore
  */
 export const afterSetupHook = (p: p5) => {
-  if (!p5asciify.hooksEnabled) return;
-
-  setTimeout(async () => {
     // Ensure WebGL renderer is used
     if (!(p._renderer.drawingContext instanceof WebGLRenderingContext ||
       p._renderer.drawingContext instanceof WebGL2RenderingContext)) {
@@ -115,13 +111,11 @@ export const afterSetupHook = (p: p5) => {
       throw new P5AsciifyError("p5.asciify requires p5.js v1.8.0 or higher to run.");
     }
 
-    await p5asciify.setup();
+    p5asciify.setup();
 
     if (p.setupAsciify) {
       p.setupAsciify();
-
     }
-  }, 0);
 };
 
 /**
@@ -169,12 +163,10 @@ if (typeof p5 !== 'undefined' && typeof p5.registerAddon === 'function') {
 
   // Register the pre and post draw hooks
   p5.prototype.registerMethod('pre', function (this: p5) {
-    if (!p5asciify.hooksEnabled) return;
     preDrawHook(this);
   });
 
   p5.prototype.registerMethod('post', function (this: p5) {
-    if (!p5asciify.hooksEnabled) return;
     postDrawHook(this);
   });
 }
@@ -222,16 +214,17 @@ export * as utils from './utils';
 /** Contains plugin interfaces to implement against. */
 export * as plugins from './plugins';
 
-export { P5AsciifierManager } from './managers/AsciifierManager';
+export { P5AsciifierManager } from './AsciifierManager';
 export { P5AsciifyError } from './AsciifyError';
 export { P5Asciifier } from './Asciifier';
 export { P5AsciifyColorPalette } from './ColorPalette';
 export { P5AsciifyGrid } from './Grid';
-export { P5AsciifyFontManager } from './managers/FontManager';
+export { P5AsciifyFontManager } from './FontManager';
 export * from './types';
 
 if (typeof window !== 'undefined') {
   window.p5asciify = p5asciify;
+  window.preload = function () { };
   window.P5AsciifyAbstractFeatureRenderer2D = P5AsciifyAbstractFeatureRenderer2D;
   window.P5AsciifyRenderer2D = P5AsciifyRenderer2D;
   window.P5AsciifyRenderer = P5AsciifyRenderer;
