@@ -45,6 +45,17 @@ export declare class P5AsciifySVGExporter {
      */
     constructor(p: p5);
     /**
+     * Generates the current ASCII output as an SVG string without downloading.
+     * @param rendererManager The renderer manager containing framebuffers with ASCII data
+     * @param grid The grid information for dimensions and cell sizes
+     * @param fontManager The font manager with character data
+     * @param backgroundColor The background color for the SVG
+     * @param options Options for SVG generation (excludes filename)
+     * @returns SVG string representation of the ASCII output
+     * @throws {@link P5AsciifyError} - If no renderer is available to fetch ASCII output from.
+     */
+    generateSVG(rendererManager: P5AsciifyRendererManager, grid: P5AsciifyGrid, fontManager: P5AsciifyFontManager, backgroundColor: p5.Color, options?: Omit<SVGExportOptions, 'filename'>): string;
+    /**
      * Exports the current ASCII output as an SVG file.
      * @param rendererManager The renderer manager containing framebuffers with ASCII data
      * @param grid The grid information for dimensions and cell sizes

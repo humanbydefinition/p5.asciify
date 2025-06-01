@@ -189,11 +189,65 @@ export declare class P5Asciifier {
      */
     saveSVG(options?: SVGExportOptions): void;
     /**
+     * Returns the current ASCII output as an SVG string.
+     * @param options Options for SVG generation (same as saveSVG options except filename)
+     * @returns SVG string representation of the ASCII output
+     * @throws {@link P5AsciifyError} - If no renderer is available to fetch ASCII output from.
+     *
+     * @example
+     * ```javascript
+     *  function drawAsciify() {
+     *      // Get the ASCII output as an SVG string
+     *      if (frameCount === 60) {
+     *          const svgString = p5asciify.asciifier().toSVG();
+     *          console.log(svgString);
+     *      }
+     *
+     *      // Get SVG without background rectangles and in text mode
+     *      if (frameCount === 120) {
+     *          const svgString = p5asciify.asciifier().toSVG({
+     *              includeBackgroundRectangles: false,
+     *              drawMode: 'text'
+     *          });
+     *          console.log(svgString);
+     *      }
+     *  }
+     * ```
+     */
+    toSVG(options?: Omit<SVGExportOptions, 'filename'>): string;
+    /**
      * Saves the current ASCII output as a JSON file.
      * @param options The options for saving the JSON file.
      * @throws {@link P5AsciifyError} - If no renderer is available to fetch ASCII output from.
      */
     saveJSON(options?: JSONExportOptions): void;
+    /**
+     * Returns the current ASCII output as a JSON string.
+     * @param options Options for JSON generation (same as saveJSON options except filename)
+     * @returns JSON string representation of the ASCII output
+     * @throws {@link P5AsciifyError} - If no renderer is available to fetch ASCII output from.
+     *
+     * @example
+     * ```javascript
+     *  function drawAsciify() {
+     *      // Get the ASCII output as a JSON string
+     *      if (frameCount === 60) {
+     *          const jsonString = p5asciify.asciifier().toJSON();
+     *          console.log(jsonString);
+     *      }
+     *
+     *      // Get JSON without empty cells and without pretty printing
+     *      if (frameCount === 120) {
+     *          const compactJson = p5asciify.asciifier().toJSON({
+     *              includeEmptyCells: false,
+     *              prettyPrint: false
+     *          });
+     *          console.log(compactJson);
+     *      }
+     *  }
+     * ```
+     */
+    toJSON(options?: Omit<JSONExportOptions, 'filename'>): string;
     /**
      * Generates the ASCII output as an array of string rows.
      * @returns Array of strings representing ASCII output.

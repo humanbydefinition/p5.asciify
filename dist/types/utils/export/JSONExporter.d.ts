@@ -36,6 +36,16 @@ export declare class P5AsciifyJSONExporter {
      */
     constructor(p: p5);
     /**
+     * Generates the current ASCII output as a JSON string without downloading.
+     * @param rendererManager The renderer manager containing framebuffers with ASCII data
+     * @param grid The grid information for dimensions and cell sizes
+     * @param fontManager The font manager with character data
+     * @param options Options for JSON generation (excludes filename)
+     * @returns JSON string representation of the ASCII output
+     * @throws {@link P5AsciifyError} - If no renderer is available to fetch ASCII output from.
+     */
+    generateJSON(rendererManager: P5AsciifyRendererManager, grid: P5AsciifyGrid, fontManager: P5AsciifyFontManager, options?: Omit<JSONExportOptions, 'filename'>): string;
+    /**
      * Exports the current ASCII output as a JSON file.
      * @param rendererManager The renderer manager containing framebuffers with ASCII data
      * @param grid The grid information for dimensions and cell sizes
