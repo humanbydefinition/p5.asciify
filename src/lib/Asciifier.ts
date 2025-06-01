@@ -339,6 +339,43 @@ export class P5Asciifier {
     }
 
     /**
+     * Returns the current ASCII output as an SVG string.
+     * @param options Options for SVG generation (same as saveSVG options except filename)
+     * @returns SVG string representation of the ASCII output
+     * @throws {@link P5AsciifyError} - If no renderer is available to fetch ASCII output from.
+     * 
+     * @example
+     * ```javascript
+     *  function drawAsciify() {
+     *      // Get the ASCII output as an SVG string
+     *      if (frameCount === 60) {
+     *          const svgString = p5asciify.asciifier().toSVG();
+     *          console.log(svgString);
+     *      }
+     *      
+     *      // Get SVG without background rectangles and in text mode
+     *      if (frameCount === 120) {
+     *          const svgString = p5asciify.asciifier().toSVG({
+     *              includeBackgroundRectangles: false,
+     *              drawMode: 'text'
+     *          });
+     *          console.log(svgString);
+     *      }
+     *  }
+     * ```
+     */
+    public toSVG(options: Omit<SVGExportOptions, 'filename'> = {}): string {
+        const svgExporter = new P5AsciifySVGExporter(this._p);
+        return svgExporter.generateSVG(
+            this._rendererManager,
+            this._grid,
+            this._fontManager,
+            this._backgroundColor as p5.Color,
+            options
+        );
+    }
+
+    /**
      * Saves the current ASCII output as a JSON file.
      * @param options The options for saving the JSON file.
      * @throws {@link P5AsciifyError} - If no renderer is available to fetch ASCII output from.
