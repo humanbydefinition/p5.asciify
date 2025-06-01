@@ -44,33 +44,26 @@ export class P5AsciifyJSONExporter {
     }
 
     /**
-     * Exports the current ASCII output as a JSON file.
+     * Generates the current ASCII output as a JSON string without downloading.
      * @param rendererManager The renderer manager containing framebuffers with ASCII data
      * @param grid The grid information for dimensions and cell sizes
      * @param fontManager The font manager with character data
-     * @param options Options for JSON export
+     * @param options Options for JSON generation (excludes filename)
+     * @returns JSON string representation of the ASCII output
      * @throws {@link P5AsciifyError} - If no renderer is available to fetch ASCII output from.
      */
-    public saveJSON(
+    public generateJSON(
         rendererManager: P5AsciifyRendererManager,
         grid: P5AsciifyGrid,
         fontManager: P5AsciifyFontManager,
-        options: JSONExportOptions = {}
-    ): void {
+        options: Omit<JSONExportOptions, 'filename'> = {}
+    ): string {
         // Set defaults for options
-        const exportOptions: JSONExportOptions = {
+        const exportOptions = {
             includeEmptyCells: true,
             prettyPrint: true,
             ...options
         };
-
-        // Generate default filename if none provided
-        if (!exportOptions.filename) {
-            const now = new Date();
-            const date = now.toISOString().split('T')[0];
-            const time = now.toTimeString().split(' ')[0].replace(/:/g, '-');
-            exportOptions.filename = `asciify_output_${date}_${time}`;
-        }
 
         // Access the framebuffers
         const characterFramebuffer = rendererManager.characterFramebuffer;
@@ -113,7 +106,7 @@ export class P5AsciifyJSONExporter {
             }
         };
 
-        // Create the cells array with its structure defined inline
+        // Create the cells array
         const cells = [];
 
         // Iterate through the grid to extract cell data
@@ -164,9 +157,8 @@ export class P5AsciifyJSONExporter {
                 const flipH = transformG === 255;
                 const flipV = transformB === 255;
 
-                // The rest of color swapping logic remains the same
+                // Swap colors if inverted
                 if (isInverted) {
-                    // Swap primary and secondary colors
                     const tempColor = primaryColor;
                     primaryColor = secondaryColor;
                     secondaryColor = tempColor;
@@ -191,7 +183,7 @@ export class P5AsciifyJSONExporter {
                     secondaryColor.a
                 );
 
-                // Create the cell object without requiring an interface/type
+                // Create the cell object
                 cells.push({
                     x: x,
                     y: y,
@@ -215,15 +207,41 @@ export class P5AsciifyJSONExporter {
             cells: cells
         };
 
-        // Convert to JSON string
-        const jsonString = JSON.stringify(
+        // Convert to JSON string and return
+        return JSON.stringify(
             jsonOutput,
             null,
             exportOptions.prettyPrint ? 2 : 0
         );
+    }
+
+    /**
+     * Exports the current ASCII output as a JSON file.
+     * @param rendererManager The renderer manager containing framebuffers with ASCII data
+     * @param grid The grid information for dimensions and cell sizes
+     * @param fontManager The font manager with character data
+     * @param options Options for JSON export
+     * @throws {@link P5AsciifyError} - If no renderer is available to fetch ASCII output from.
+     */
+    public saveJSON(
+        rendererManager: P5AsciifyRendererManager,
+        grid: P5AsciifyGrid,
+        fontManager: P5AsciifyFontManager,
+        options: JSONExportOptions = {}
+    ): void {
+        // Generate default filename if none provided
+        if (!options.filename) {
+            const now = new Date();
+            const date = now.toISOString().split('T')[0];
+            const time = now.toTimeString().split(' ')[0].replace(/:/g, '-');
+            options.filename = `asciify_output_${date}_${time}`;
+        }
+
+        // Generate JSON string using the new method
+        const jsonString = this.generateJSON(rendererManager, grid, fontManager, options);
 
         // Download the JSON file
-        this.downloadJSON(jsonString, exportOptions.filename);
+        this.downloadJSON(jsonString, options.filename);
     }
 
     /**

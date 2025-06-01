@@ -354,6 +354,42 @@ export class P5Asciifier {
     }
 
     /**
+     * Returns the current ASCII output as a JSON string.
+     * @param options Options for JSON generation (same as saveJSON options except filename)
+     * @returns JSON string representation of the ASCII output
+     * @throws {@link P5AsciifyError} - If no renderer is available to fetch ASCII output from.
+     * 
+     * @example
+     * ```javascript
+     *  function drawAsciify() {
+     *      // Get the ASCII output as a JSON string
+     *      if (frameCount === 60) {
+     *          const jsonString = p5asciify.asciifier().toJSON();
+     *          console.log(jsonString);
+     *      }
+     *      
+     *      // Get JSON without empty cells and without pretty printing
+     *      if (frameCount === 120) {
+     *          const compactJson = p5asciify.asciifier().toJSON({
+     *              includeEmptyCells: false,
+     *              prettyPrint: false
+     *          });
+     *          console.log(compactJson);
+     *      }
+     *  }
+     * ```
+     */
+    public toJSON(options: Omit<JSONExportOptions, 'filename'> = {}): string {
+        const jsonExporter = new P5AsciifyJSONExporter(this._p);
+        return jsonExporter.generateJSON(
+            this._rendererManager,
+            this._grid,
+            this._fontManager,
+            options
+        );
+    }
+
+    /**
      * Generates the ASCII output as an array of string rows.
      * @returns Array of strings representing ASCII output.
      * @throws {@link P5AsciifyError} - If no renderer is available.
