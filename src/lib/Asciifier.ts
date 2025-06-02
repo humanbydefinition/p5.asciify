@@ -44,6 +44,8 @@ export class P5Asciifier {
     /** The plugin registry instance. */
     private _pluginRegistry: P5AsciifyPluginRegistry;
 
+    private _setupDone: boolean = false;
+
     /**
      * Creates a new instance of the `P5Asciifier` class.
      * @param pluginRegistry The plugin registry instance.
@@ -65,9 +67,6 @@ export class P5Asciifier {
     public async init(p: p5, baseFont: p5.Font): Promise<void> {
         this._p = p;
         this._fontManager = new P5AsciifyFontManager(p, baseFont);
-
-        // Return a resolved promise to ensure the async pattern is consistent
-        return Promise.resolve();
     }
 
     /**
@@ -100,7 +99,7 @@ export class P5Asciifier {
             this._pluginRegistry,
         );
 
-        return Promise.resolve();
+        this._setupDone = true;
     }
 
     /**
@@ -143,9 +142,8 @@ export class P5Asciifier {
             return;
         }
 
-        this._fontSize = fontSize;
-
-        if (this._p._setupDone) {
+        if (this._setupDone) {
+            this._fontSize = fontSize;
             this._fontManager.setFontSize(fontSize);
             this._grid.resizeCellPixelDimensions(
                 this._fontManager.maxGlyphDimensions.width,
@@ -212,7 +210,7 @@ export class P5Asciifier {
 
         this._fontManager.loadFont(font);
 
-        if (this._p._setupDone) {
+        if (this._setupDone) {
 
             this._fontManager.reset();
 

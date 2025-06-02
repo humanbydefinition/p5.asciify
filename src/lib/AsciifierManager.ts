@@ -47,6 +47,8 @@ export class P5AsciifierManager {
     private _cachedSetupAsciifyFn: (() => void | Promise<void>) | null = null;
     private _cachedDrawAsciifyFn: (() => void | Promise<void>) | null = null;
 
+    private _setupDone: boolean = false;
+
     /**
      * Gets the singleton instance of `P5AsciifierManager`.
      * If the instance doesn't exist yet, it creates one.
@@ -268,6 +270,8 @@ export class P5AsciifierManager {
                 await asciifier.setup(this._sketchFramebuffer);
             }
         }
+
+        this._setupDone = true;
     }
 
     /**
@@ -325,7 +329,7 @@ export class P5AsciifierManager {
             asciifier.init(this._p, this._baseFont);
 
             // If setup is done, immediately set up the asciifier
-            if (this._p._setupDone) {
+            if (this._setupDone) {
                 asciifier.setup(framebuffer ? framebuffer : this._sketchFramebuffer);
             }
 
@@ -336,7 +340,7 @@ export class P5AsciifierManager {
             return (async () => {
                 await asciifier.init(this._p, this._baseFont);
 
-                if (this._p._setupDone && this._sketchFramebuffer) {
+                if (this._setupDone && this._sketchFramebuffer) {
                     await asciifier.setup(framebuffer ? framebuffer : this._sketchFramebuffer);
                 }
 
