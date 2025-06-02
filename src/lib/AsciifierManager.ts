@@ -84,42 +84,81 @@ export class P5AsciifierManager {
      * Register the core p5.asciify hooks
      * @private
      */
+    /**
+ * Register the core p5.asciify hooks
+ * @private
+ */
     private _registerCoreHooks(): void {
         // Core init hook - cannot be unregistered
-        this._hookManager.registerHook('init', async function (this: p5) {
-            await P5AsciifierManager.getInstance().init(this);
+        this._hookManager.registerHook('init', function (this: p5) {
+            const manager = P5AsciifierManager.getInstance();
+
+            if (compareVersions(this.VERSION, "2.0.0") >= 0) {
+                // p5.js 2.x.x - use async/await
+                return manager.init(this);
+            } else {
+                // p5.js 1.x.x - use synchronous pattern
+                manager.init(this);
+            }
         }, true, true);
 
         // Core setup hook
-        this._hookManager.registerHook('afterSetup', async function (this: p5) {
+        this._hookManager.registerHook('afterSetup', function (this: p5) {
             const manager = P5AsciifierManager.getInstance();
 
-            // Ensure WebGL renderer is used
-            if (!(this._renderer.drawingContext instanceof WebGLRenderingContext ||
-                this._renderer.drawingContext instanceof WebGL2RenderingContext)) {
-                throw new P5AsciifyError("WebGL renderer is required for p5.asciify to run.");
-            }
+            if (compareVersions(this.VERSION, "2.0.0") >= 0) {
+                // p5.js 2.x.x - use async/await
+                return (async () => {
+                    // Ensure WebGL renderer is used
+                    if (!(this._renderer.drawingContext instanceof WebGLRenderingContext ||
+                        this._renderer.drawingContext instanceof WebGL2RenderingContext)) {
+                        throw new P5AsciifyError("WebGL renderer is required for p5.asciify to run.");
+                    }
 
-            // Wait for library's internal setup to complete
-            await manager.setup();
+                    // Wait for library's internal setup to complete
+                    await manager.setup();
 
-            // Cache user functions
-            manager._cachedSetupAsciifyFn = this.setupAsciify ||
-                (this._isGlobal && typeof window !== 'undefined' && typeof window.setupAsciify === 'function' ? window.setupAsciify : null);
+                    // Cache user functions
+                    manager._cachedSetupAsciifyFn = this.setupAsciify ||
+                        (this._isGlobal && typeof window !== 'undefined' && typeof window.setupAsciify === 'function' ? window.setupAsciify : null);
 
-            manager._cachedDrawAsciifyFn = this.drawAsciify ||
-                (this._isGlobal && typeof window !== 'undefined' && typeof window.drawAsciify === 'function' ? window.drawAsciify : null);
+                    manager._cachedDrawAsciifyFn = this.drawAsciify ||
+                        (this._isGlobal && typeof window !== 'undefined' && typeof window.drawAsciify === 'function' ? window.drawAsciify : null);
 
-            // Call setupAsciify if found
-            if (typeof manager._cachedSetupAsciifyFn === 'function') {
-                await manager._cachedSetupAsciifyFn.call(this);
+                    // Call setupAsciify if found
+                    if (typeof manager._cachedSetupAsciifyFn === 'function') {
+                        await manager._cachedSetupAsciifyFn.call(this);
+                    }
+                })();
+            } else {
+                // p5.js 1.x.x - use synchronous pattern
+                // Ensure WebGL renderer is used
+                if (!(this._renderer.drawingContext instanceof WebGLRenderingContext ||
+                    this._renderer.drawingContext instanceof WebGL2RenderingContext)) {
+                    throw new P5AsciifyError("WebGL renderer is required for p5.asciify to run.");
+                }
+
+                // Call library's internal setup
+                manager.setup();
+
+                // Cache user functions
+                manager._cachedSetupAsciifyFn = this.setupAsciify ||
+                    (this._isGlobal && typeof window !== 'undefined' && typeof window.setupAsciify === 'function' ? window.setupAsciify : null);
+
+                manager._cachedDrawAsciifyFn = this.drawAsciify ||
+                    (this._isGlobal && typeof window !== 'undefined' && typeof window.drawAsciify === 'function' ? window.drawAsciify : null);
+
+                // Call setupAsciify if found
+                if (typeof manager._cachedSetupAsciifyFn === 'function') {
+                    manager._cachedSetupAsciifyFn.call(this);
+                }
             }
         }, true, false);
 
         // Core pre-draw hook
         this._hookManager.registerHook('pre', function (this: p5) {
             const manager = P5AsciifierManager.getInstance();
-            
+
             manager.sketchFramebuffer.begin();
             this.clear();
         }, true, false);
@@ -184,24 +223,24 @@ export class P5AsciifierManager {
      */
     public async init(p: p5): Promise<void> {
         this._p = p;
-            if (compareVersions(p.VERSION, "2.0.0") < 0) {
-                // For p5.js 1.x - use preload increment and callback
-                this._p.preload = () => { };
-                this._p._incrementPreload();
-                this._baseFont = p.loadFont(URSAFONT_BASE64, (font) => {
-                    this._asciifiers.forEach((asciifier) => {
-                        asciifier.init(p, font);
-                    });
+        if (compareVersions(p.VERSION, "2.0.0") < 0) {
+            // For p5.js 1.x - use preload increment and callback
+            this._p.preload = () => { };
+            this._p._incrementPreload();
+            this._baseFont = p.loadFont(URSAFONT_BASE64, (font) => {
+                this._asciifiers.forEach((asciifier) => {
+                    asciifier.init(p, font);
                 });
-            } else {
-                // For p5.js 2.0.0+ - use the Promise-based approach
-                this._baseFont = await this._p.loadFont(URSAFONT_BASE64);
+            });
+        } else {
+            // For p5.js 2.0.0+ - use the Promise-based approach
+            this._baseFont = await this._p.loadFont(URSAFONT_BASE64);
 
-                // Create and wait for all initialization promises to complete
-                await Promise.all(
-                    this._asciifiers.map(asciifier => asciifier.init(p, this._baseFont))
-                );
-            }
+            // Create and wait for all initialization promises to complete
+            await Promise.all(
+                this._asciifiers.map(asciifier => asciifier.init(p, this._baseFont))
+            );
+        }
     }
 
     /**
@@ -211,14 +250,23 @@ export class P5AsciifierManager {
      * @ignore
      */
     public async setup(): Promise<void> {
+
         this._sketchFramebuffer = this._p.createFramebuffer({
             depthFormat: this._p.UNSIGNED_INT,
             textureFiltering: this._p.NEAREST
         });
 
-        // Then set up each asciifier sequentially to avoid WebGL context conflicts
-        for (const asciifier of this._asciifiers) {
-            await asciifier.setup(this._sketchFramebuffer);
+        // Check p5.js version to determine sync vs async setup
+        if (compareVersions(this._p.VERSION, "2.0.0") < 0) {
+            // For p5.js 1.x - synchronous setup
+            for (const asciifier of this._asciifiers) {
+                asciifier.setup(this._sketchFramebuffer);
+            }
+        } else {
+            // For p5.js 2.0+ - asynchronous setup
+            for (const asciifier of this._asciifiers) {
+                await asciifier.setup(this._sketchFramebuffer);
+            }
         }
     }
 
