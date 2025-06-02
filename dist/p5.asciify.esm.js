@@ -139,7 +139,7 @@ class a extends Error {
     super(e), this.name = "P5AsciifyError";
   }
 }
-const k = (Q, e) => {
+const F = (Q, e) => {
   const [A, r] = [Q, e].map((t) => t.split(".").map(Number));
   for (let t = 0; t < Math.max(A.length, r.length); t++) {
     const i = A[t] ?? 0, o = r[t] ?? 0;
@@ -177,21 +177,21 @@ class X {
       ...i
     }, g = e.characterFramebuffer, E = e.primaryColorFramebuffer, h = e.secondaryColorFramebuffer, c = e.transformFramebuffer, l = e.rotationFramebuffer;
     g.loadPixels(), E.loadPixels(), h.loadPixels(), c.loadPixels(), l.loadPixels();
-    const f = g.pixels, n = E.pixels, B = h.pixels, m = c.pixels, _ = l.pixels, I = A.cols, d = A.rows, F = A.cellWidth, u = A.cellHeight, w = A.width, T = A.height, y = r.characters;
-    let v = this.generateSVGHeader(w, T);
+    const f = g.pixels, n = E.pixels, B = h.pixels, m = c.pixels, _ = l.pixels, I = A.cols, d = A.rows, y = A.cellWidth, C = A.cellHeight, w = A.width, T = A.height, v = r.characters;
+    let S = this.generateSVGHeader(w, T);
     if (o.includeBackgroundRectangles) {
-      const M = t, b = this.p.color(M), D = `rgba(${b._array[0] * 255},${b._array[1] * 255},${b._array[2] * 255},${b._array[3]})`;
-      v += `
+      const G = t, b = this.p.color(G), D = `rgba(${b._array[0] * 255},${b._array[1] * 255},${b._array[2] * 255},${b._array[3]})`;
+      S += `
 <rect width="${w}" height="${T}" fill="${D}" />`;
     }
-    v += `
+    S += `
 <g id="ascii-cells">`;
-    let C = 0;
-    for (let M = 0; M < d; M++)
+    let u = 0;
+    for (let G = 0; G < d; G++)
       for (let b = 0; b < I; b++) {
-        const D = C * 4, R = f[D], G = f[D + 1];
-        let x = R + (G << 8);
-        x >= y.length && (x = y.length - 1);
+        const D = u * 4, R = f[D], k = f[D + 1];
+        let x = R + (k << 8);
+        x >= v.length && (x = v.length - 1);
         let z = {
           r: n[D],
           g: n[D + 1],
@@ -205,29 +205,29 @@ class X {
         };
         const V = m[D], H = m[D + 1], O = m[D + 2], j = V === 255, nA = H === 255, L = O === 255;
         if (j) {
-          const uA = z;
-          z = U, U = uA;
+          const CA = z;
+          z = U, U = CA;
         }
-        const W = _[D] * (360 / 256), K = b * F, CA = M * u;
-        v += this.generateSVGCellContent(
+        const W = _[D] * (360 / 256), K = b * y, uA = G * C;
+        S += this.generateSVGCellContent(
           x,
           z,
           U,
           K,
-          CA,
-          F,
-          u,
+          uA,
+          y,
+          C,
           W,
           nA,
           L,
           r,
-          y[x],
+          v[x],
           o
-        ), C++;
+        ), u++;
       }
-    return v += `
+    return S += `
 </g>
-</svg>`, v;
+</svg>`, S;
   }
   /**
    * Exports the current ASCII output as an SVG file.
@@ -277,36 +277,36 @@ class X {
   generateSVGCellContent(e, A, r, t, i, o, g, E, h, c, l, f, n) {
     let B = "";
     if (n.includeBackgroundRectangles && r.a > 0) {
-      const u = `rgba(${r.r},${r.g},${r.b},${r.a / 255})`;
+      const C = `rgba(${r.r},${r.g},${r.b},${r.a / 255})`;
       n.drawMode === "stroke" ? B += `
-  <rect x="${t}" y="${i}" width="${o}" height="${g}" stroke="${u}" fill="none" stroke-width="${n.strokeWidth || 1}" />` : B += `
-  <rect x="${t}" y="${i}" width="${o}" height="${g}" fill="${u}" />`;
+  <rect x="${t}" y="${i}" width="${o}" height="${g}" stroke="${C}" fill="none" stroke-width="${n.strokeWidth || 1}" />` : B += `
+  <rect x="${t}" y="${i}" width="${o}" height="${g}" fill="${C}" />`;
     }
     const m = t + o / 2, _ = i + g / 2, I = `rgba(${A.r},${A.g},${A.b},${A.a / 255})`, d = [];
     if (h || c) {
-      const u = h ? -1 : 1, w = c ? -1 : 1;
-      d.push(`translate(${m} ${_})`), d.push(`scale(${u} ${w})`), d.push(`translate(${-m} ${-_})`);
+      const C = h ? -1 : 1, w = c ? -1 : 1;
+      d.push(`translate(${m} ${_})`), d.push(`scale(${C} ${w})`), d.push(`translate(${-m} ${-_})`);
     }
     E && d.push(`rotate(${E} ${m} ${_})`);
-    const F = d.length ? ` transform="${d.join(" ")}"` : "";
+    const y = d.length ? ` transform="${d.join(" ")}"` : "";
     if (n.drawMode === "text") {
-      const u = Math.min(o, g) * 0.8;
+      const C = Math.min(o, g) * 0.8;
       B += `
-  <text x="${m}" y="${_}" font-family="monospace" font-size="${u}px" fill="${I}" text-anchor="middle" dominant-baseline="middle"${F}>${this.escapeXml(f.character)}</text>`;
+  <text x="${m}" y="${_}" font-family="monospace" font-size="${C}px" fill="${I}" text-anchor="middle" dominant-baseline="middle"${y}>${this.escapeXml(f.character)}</text>`;
     } else {
-      let u = 1;
-      k(this.p.VERSION, "2.0.0") < 0 ? u = l.fontSize / l.font.font.unitsPerEm : u = l.fontSize / l.font.data.head.unitsPerEm;
-      const w = t + (o - f.advanceWidth * u) / 2, T = i + (g + l.fontSize * 0.7) / 2, C = f.getPath(w, T, l.fontSize).toSVG().match(/d="([^"]+)"/);
-      if (C && C[1]) {
-        if (F && (B += `
-  <g${F}>`), n.drawMode === "stroke") {
-          const M = n.strokeWidth || 1, b = `path-${e}-${t}-${i}`.replace(/\./g, "-");
+      let C = 1;
+      F(this.p.VERSION, "2.0.0") < 0 ? C = l.fontSize / l.font.font.unitsPerEm : C = l.fontSize / l.font.data.head.unitsPerEm;
+      const w = t + (o - f.advanceWidth * C) / 2, T = i + (g + l.fontSize * 0.7) / 2, u = f.getPath(w, T, l.fontSize).toSVG().match(/d="([^"]+)"/);
+      if (u && u[1]) {
+        if (y && (B += `
+  <g${y}>`), n.drawMode === "stroke") {
+          const G = n.strokeWidth || 1, b = `path-${e}-${t}-${i}`.replace(/\./g, "-");
           B += `
-    <path id="${b}" d="${C[1]}" stroke="${I}" stroke-width="${M}" fill="none" />`;
+    <path id="${b}" d="${u[1]}" stroke="${I}" stroke-width="${G}" fill="none" />`;
         } else
           B += `
-    <path d="${C[1]}" fill="${I}" />`;
-        F && (B += `
+    <path d="${u[1]}" fill="${I}" />`;
+        y && (B += `
   </g>`);
       }
     }
@@ -358,7 +358,7 @@ class Z {
       ...t
     }, o = e.characterFramebuffer, g = e.primaryColorFramebuffer, E = e.secondaryColorFramebuffer, h = e.transformFramebuffer, c = e.rotationFramebuffer;
     o.loadPixels(), g.loadPixels(), E.loadPixels(), h.loadPixels(), c.loadPixels();
-    const l = o.pixels, f = g.pixels, n = E.pixels, B = h.pixels, m = c.pixels, _ = A.cols, I = A.rows, d = r.characters, F = {
+    const l = o.pixels, f = g.pixels, n = E.pixels, B = h.pixels, m = c.pixels, _ = A.cols, I = A.rows, d = r.characters, y = {
       version: "1.0",
       created: (/* @__PURE__ */ new Date()).toISOString(),
       gridSize: {
@@ -369,48 +369,48 @@ class Z {
         width: A.width,
         height: A.height
       }
-    }, u = [];
+    }, C = [];
     let w = 0;
-    for (let y = 0; y < I; y++)
-      for (let v = 0; v < _; v++) {
-        const C = w * 4, M = l[C], b = l[C + 1];
-        let D = M + (b << 8);
+    for (let v = 0; v < I; v++)
+      for (let S = 0; S < _; S++) {
+        const u = w * 4, G = l[u], b = l[u + 1];
+        let D = G + (b << 8);
         D >= d.length && (D = d.length - 1);
         const R = d[D];
         if (!i.includeEmptyCells && (R.character === " " || R.character === "")) {
           w++;
           continue;
         }
-        let G = {
-          r: f[C],
-          g: f[C + 1],
-          b: f[C + 2],
-          a: f[C + 3]
+        let k = {
+          r: f[u],
+          g: f[u + 1],
+          b: f[u + 2],
+          a: f[u + 3]
         }, x = {
-          r: n[C],
-          g: n[C + 1],
-          b: n[C + 2],
-          a: n[C + 3]
+          r: n[u],
+          g: n[u + 1],
+          b: n[u + 2],
+          a: n[u + 3]
         };
-        const z = B[C], U = B[C + 1], V = B[C + 2], H = z === 255, O = U === 255, j = V === 255;
+        const z = B[u], U = B[u + 1], V = B[u + 2], H = z === 255, O = U === 255, j = V === 255;
         if (H) {
-          const K = G;
-          G = x, x = K;
+          const K = k;
+          k = x, x = K;
         }
-        const L = m[C] * (360 / 256), aA = this.rgbaToHex(
-          G.r,
-          G.g,
-          G.b,
-          G.a
+        const L = m[u] * (360 / 256), aA = this.rgbaToHex(
+          k.r,
+          k.g,
+          k.b,
+          k.a
         ), W = this.rgbaToHex(
           x.r,
           x.g,
           x.b,
           x.a
         );
-        u.push({
-          x: v,
-          y,
+        C.push({
+          x: S,
+          y: v,
           character: R.character,
           unicode: R.unicode,
           color: aA,
@@ -423,8 +423,8 @@ class Z {
       }
     return JSON.stringify(
       {
-        metadata: F,
-        cells: u
+        metadata: y,
+        cells: C
       },
       null,
       i.prettyPrint ? 2 : 0
@@ -534,11 +534,11 @@ function lA(Q, e, A, r) {
             const _ = e + t[B] * r, I = A - i[B] * r;
             let d = B + 1 > l ? h : B + 1;
             if ((g[d] & 1) !== 0) {
-              const u = e + t[d] * r, w = A - i[d] * r;
-              E += `Q${_.toFixed(2)},${I.toFixed(2)} ${u.toFixed(2)},${w.toFixed(2)}`, B = d + 1;
+              const C = e + t[d] * r, w = A - i[d] * r;
+              E += `Q${_.toFixed(2)},${I.toFixed(2)} ${C.toFixed(2)},${w.toFixed(2)}`, B = d + 1;
             } else {
-              const u = e + t[d] * r, w = A - i[d] * r, T = (_ + u) / 2, y = (I + w) / 2;
-              E += `Q${_.toFixed(2)},${I.toFixed(2)} ${T.toFixed(2)},${y.toFixed(2)}`, B = d;
+              const C = e + t[d] * r, w = A - i[d] * r, T = (_ + C) / 2, v = (I + w) / 2;
+              E += `Q${_.toFixed(2)},${I.toFixed(2)} ${T.toFixed(2)},${v.toFixed(2)}`, B = d;
             }
           }
         E += "Z";
@@ -552,7 +552,7 @@ const UA = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   P5AsciifyJSONExporter: Z,
   P5AsciifySVGExporter: X,
-  compareVersions: k,
+  compareVersions: F,
   createEmptyPath: J,
   createGlyphPath: hA,
   getGlyphIndex: EA,
@@ -593,7 +593,7 @@ class PA {
    * Initializes the character glyphs and characters array.
    */
   _initializeGlyphsAndCharacters() {
-    if (k(this._p.VERSION, "2.0.0") < 0) {
+    if (F(this._p.VERSION, "2.0.0") < 0) {
       const e = Object.values(this._font.font.glyphs.glyphs);
       this._characters = [], e.forEach((A, r) => {
         if (!A.unicode && (!A.unicodes || !A.unicodes.length))
@@ -1579,7 +1579,7 @@ class Y extends N {
     return this._characterColorPalette;
   }
 }
-var S = `precision mediump float;
+var M = `precision mediump float;
 
 attribute vec3 aPosition;\r
 attribute vec2 aTexCoord;
@@ -1698,7 +1698,7 @@ class iA extends Y {
     s(this, "colorSampleShader");
     s(this, "asciiCharacterShader");
     s(this, "colorSampleFramebuffer");
-    this.colorSampleShader = this._p.createShader(S, pA), this.asciiCharacterShader = this._p.createShader(S, wA), this.colorSampleFramebuffer = this._p.createFramebuffer({
+    this.colorSampleShader = this._p.createShader(M, pA), this.asciiCharacterShader = this._p.createShader(M, wA), this.colorSampleFramebuffer = this._p.createFramebuffer({
       density: 1,
       width: this._grid.cols,
       height: this._grid.rows,
@@ -1973,7 +1973,7 @@ class sA extends Y {
     s(this, "asciiCharacterShader");
     s(this, "sobelFramebuffer");
     s(this, "sampleFramebuffer");
-    this.sobelShader = this._p.createShader(S, vA), this.sampleShader = this._p.createShader(S, gA(16, this._grid.cellHeight, this._grid.cellWidth)), this.colorSampleShader = this._p.createShader(S, bA), this.transformShader = this._p.createShader(S, xA), this.rotationShader = this._p.createShader(S, FA), this.asciiCharacterShader = this._p.createShader(S, yA), this.sobelFramebuffer = this._p.createFramebuffer({
+    this.sobelShader = this._p.createShader(M, vA), this.sampleShader = this._p.createShader(M, gA(16, this._grid.cellHeight, this._grid.cellWidth)), this.colorSampleShader = this._p.createShader(M, bA), this.transformShader = this._p.createShader(M, xA), this.rotationShader = this._p.createShader(M, FA), this.asciiCharacterShader = this._p.createShader(M, yA), this.sobelFramebuffer = this._p.createFramebuffer({
       density: 1,
       width: this._captureFramebuffer.width,
       height: this._captureFramebuffer.height,
@@ -1991,7 +1991,7 @@ class sA extends Y {
     super.resizeFramebuffers(), this.sampleFramebuffer.resize(this._grid.cols, this._grid.rows), this.sobelFramebuffer.resize(this._captureFramebuffer.width, this._captureFramebuffer.height);
   }
   resetShaders() {
-    this.sampleShader = this._p.createShader(S, gA(16, this._grid.cellHeight, this._grid.cellWidth));
+    this.sampleShader = this._p.createShader(M, gA(16, this._grid.cellHeight, this._grid.cellWidth));
   }
   /**
    * Set the threshold value for the Sobel edge detection algorithm.
@@ -2182,7 +2182,7 @@ class cA {
     s(this, "_shader");
     /** Background mode: 0 for fixed background color, 1 for sampled background color */
     s(this, "_backgroundMode", 0);
-    this._p = e, this._grid = A, this._fontManager = r, this._shader = this._p.createShader(S, SA), this._resultFramebuffer = this._p.createFramebuffer({
+    this._p = e, this._grid = A, this._fontManager = r, this._shader = this._p.createShader(M, SA), this._resultFramebuffer = this._p.createFramebuffer({
       width: this._grid.width,
       height: this._grid.height,
       depthFormat: this._p.UNSIGNED_INT,
@@ -2737,7 +2737,7 @@ class BA {
    * @ignore
    */
   async setup(e) {
-    return this._captureFramebuffer = e, k(this._p.VERSION, "2.0.0") < 0 ? this._fontManager.setup(this._fontSize) : await this._fontManager.setup(this._fontSize), this._grid = new mA(
+    return this._captureFramebuffer = e, F(this._p.VERSION, "2.0.0") < 0 ? this._fontManager.setup(this._fontSize) : await this._fontManager.setup(this._fontSize), this._grid = new mA(
       this._captureFramebuffer,
       this._fontManager.maxGlyphDimensions.width,
       this._fontManager.maxGlyphDimensions.height
@@ -3286,7 +3286,7 @@ class MA {
   constructor() {
     s(this, "registeredHooks", /* @__PURE__ */ new Map());
     s(this, "isP5v2", !1);
-    this.isP5v2 = k(P.prototype.VERSION, "2.0.0") >= 0;
+    this.isP5v2 = F(P.prototype.VERSION, "2.0.0") >= 0;
   }
   /**
    * Register a hook function
@@ -3439,14 +3439,27 @@ const p = class p {
    * Register the core p5.asciify hooks
    * @private
    */
+  /**
+  * Register the core p5.asciify hooks
+  * @private
+  */
   _registerCoreHooks() {
-    this._hookManager.registerHook("init", async function() {
-      await p.getInstance().init(this);
-    }, !0, !0), this._hookManager.registerHook("afterSetup", async function() {
+    this._hookManager.registerHook("init", function() {
       const e = p.getInstance();
+      if (F(this.VERSION, "2.0.0") >= 0)
+        return e.init(this);
+      e.init(this);
+    }, !0, !0), this._hookManager.registerHook("afterSetup", function() {
+      const e = p.getInstance();
+      if (F(this.VERSION, "2.0.0") >= 0)
+        return (async () => {
+          if (!(this._renderer.drawingContext instanceof WebGLRenderingContext || this._renderer.drawingContext instanceof WebGL2RenderingContext))
+            throw new a("WebGL renderer is required for p5.asciify to run.");
+          await e.setup(), e._cachedSetupAsciifyFn = this.setupAsciify || (this._isGlobal && typeof window < "u" && typeof window.setupAsciify == "function" ? window.setupAsciify : null), e._cachedDrawAsciifyFn = this.drawAsciify || (this._isGlobal && typeof window < "u" && typeof window.drawAsciify == "function" ? window.drawAsciify : null), typeof e._cachedSetupAsciifyFn == "function" && await e._cachedSetupAsciifyFn.call(this);
+        })();
       if (!(this._renderer.drawingContext instanceof WebGLRenderingContext || this._renderer.drawingContext instanceof WebGL2RenderingContext))
         throw new a("WebGL renderer is required for p5.asciify to run.");
-      await e.setup(), e._cachedSetupAsciifyFn = this.setupAsciify || (this._isGlobal && typeof window < "u" && typeof window.setupAsciify == "function" ? window.setupAsciify : null), e._cachedDrawAsciifyFn = this.drawAsciify || (this._isGlobal && typeof window < "u" && typeof window.drawAsciify == "function" ? window.drawAsciify : null), typeof e._cachedSetupAsciifyFn == "function" && await e._cachedSetupAsciifyFn.call(this);
+      e.setup(), e._cachedSetupAsciifyFn = this.setupAsciify || (this._isGlobal && typeof window < "u" && typeof window.setupAsciify == "function" ? window.setupAsciify : null), e._cachedDrawAsciifyFn = this.drawAsciify || (this._isGlobal && typeof window < "u" && typeof window.drawAsciify == "function" ? window.drawAsciify : null), typeof e._cachedSetupAsciifyFn == "function" && e._cachedSetupAsciifyFn.call(this);
     }, !0, !1), this._hookManager.registerHook("pre", function() {
       p.getInstance().sketchFramebuffer.begin(), this.clear();
     }, !0, !1), this._hookManager.registerHook("post", function() {
@@ -3491,7 +3504,7 @@ const p = class p {
    * @ignore
    */
   async init(e) {
-    this._p = e, k(e.VERSION, "2.0.0") < 0 ? (this._p.preload = () => {
+    this._p = e, F(e.VERSION, "2.0.0") < 0 ? (this._p.preload = () => {
     }, this._p._incrementPreload(), this._baseFont = e.loadFont(QA, (A) => {
       this._asciifiers.forEach((r) => {
         r.init(e, A);
@@ -3507,12 +3520,15 @@ const p = class p {
    * @ignore
    */
   async setup() {
-    this._sketchFramebuffer = this._p.createFramebuffer({
+    if (this._sketchFramebuffer = this._p.createFramebuffer({
       depthFormat: this._p.UNSIGNED_INT,
       textureFiltering: this._p.NEAREST
-    });
-    for (const e of this._asciifiers)
-      await e.setup(this._sketchFramebuffer);
+    }), F(this._p.VERSION, "2.0.0") < 0)
+      for (const e of this._asciifiers)
+        e.setup(this._sketchFramebuffer);
+    else
+      for (const e of this._asciifiers)
+        await e.setup(this._sketchFramebuffer);
   }
   /**
    * Executes the ASCII conversion rendering pipelines for each `P5Asciifier` instance managed by the library.
@@ -3554,7 +3570,7 @@ const p = class p {
     if (e !== void 0 && !(e instanceof P.Framebuffer))
       throw new a("Framebuffer must be an instance of p5.Framebuffer.");
     const A = new BA(this._pluginRegistry);
-    return k(this._p.VERSION, "2.0.0") < 0 ? (A.init(this._p, this._baseFont), this._p._setupDone && A.setup(e || this._sketchFramebuffer), this._asciifiers.push(A), A) : (async () => (await A.init(this._p, this._baseFont), this._p._setupDone && this._sketchFramebuffer && await A.setup(e || this._sketchFramebuffer), this._asciifiers.push(A), A))();
+    return F(this._p.VERSION, "2.0.0") < 0 ? (A.init(this._p, this._baseFont), this._p._setupDone && A.setup(e || this._sketchFramebuffer), this._asciifiers.push(A), A) : (async () => (await A.init(this._p, this._baseFont), this._p._setupDone && this._sketchFramebuffer && await A.setup(e || this._sketchFramebuffer), this._asciifiers.push(A), A))();
   }
   /**
    * Removes a `P5Asciifier` instance.
@@ -3649,7 +3665,7 @@ const GA = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   P5AsciifyPluginRegistry: fA
 }, Symbol.toStringTag, { value: "Module" }));
-if (typeof P < "u" && k(P.prototype.VERSION, "1.8.0") < 0)
+if (typeof P < "u" && F(P.prototype.VERSION, "1.8.0") < 0)
   throw new a("p5.asciify requires p5.js v1.8.0 or higher to run.");
 const dA = rA.getInstance();
 function TA(Q, e, A) {

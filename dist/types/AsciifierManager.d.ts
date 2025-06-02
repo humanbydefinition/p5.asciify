@@ -52,6 +52,10 @@ export declare class P5AsciifierManager {
      * Register the core p5.asciify hooks
      * @private
      */
+    /**
+ * Register the core p5.asciify hooks
+ * @private
+ */
     private _registerCoreHooks;
     /**
      * Get the addon configuration for p5.js 2.x.x
