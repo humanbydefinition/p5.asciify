@@ -17,27 +17,6 @@ if (typeof p5 !== 'undefined' && compareVersions(p5.prototype.VERSION, "1.8.0") 
 export const p5asciify = P5AsciifierManager.getInstance();
 
 /**
- * p5.js v2.0.0+ addon configuration
- */
-function p5AsciifyAddon(p5Core: any, fn: any, lifecycles: any) {
-  const addonConfig = p5asciify.getAddonConfig();
-
-  // Set up lifecycles using the manager's configuration
-  lifecycles.presetup = addonConfig.presetup;
-  lifecycles.postsetup = addonConfig.postsetup;
-  lifecycles.predraw = addonConfig.predraw;
-  lifecycles.postdraw = addonConfig.postdraw;
-}
-
-// Initialize p5.js integration based on version
-if (typeof p5 !== 'undefined') {
-  if (typeof p5.registerAddon === 'function') {
-    // p5.js v2.0.0+ - use addon system
-    p5.registerAddon(p5AsciifyAddon);
-  }
-}
-
-/**
  * A fix for the p5.js shaders to use highp precision instead of mediump.
  * This is necessary for p5.asciify to work on Android devices.
  * Generally, this is fixed in p5.js v1.11.3, but this is a workaround for older versions.

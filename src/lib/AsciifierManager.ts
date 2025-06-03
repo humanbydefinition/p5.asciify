@@ -19,7 +19,7 @@ import { compareVersions } from './utils';
  * - Managing multiple asciifier instances
  * - Coordinating with p5.js rendering lifecycle
  * - Providing an API for creating, accessing, and removing asciifiers
- * - Managing p5.js lifecycle hooks
+ * - Managing p5.js lifecycle hooks through HookManager
  */
 export class P5AsciifierManager {
     /** Singleton instance of the manager */
@@ -42,10 +42,6 @@ export class P5AsciifierManager {
 
     /** The hook manager instance. */
     private _hookManager: P5HookManager;
-
-    /** Cache for user functions */
-    private _cachedSetupAsciifyFn: (() => void | Promise<void>) | null = null;
-    private _cachedDrawAsciifyFn: (() => void | Promise<void>) | null = null;
 
     private _setupDone: boolean = false;
 
@@ -78,121 +74,8 @@ export class P5AsciifierManager {
         this._asciifiers = [new P5Asciifier(this._pluginRegistry)];
         this._hookManager = new P5HookManager();
 
-        // Register core hooks
-        this._registerCoreHooks();
-    }
-
-    /**
-     * Register the core p5.asciify hooks
-     * @private
-     */
-    private _registerCoreHooks(): void {
-        const manager = this;
-
-        try {
-            // Core init hook - cannot be deactivated
-            const initHook = function (this: p5) {
-                try {
-                    if (compareVersions(this.VERSION, "2.0.0") >= 0) {
-                        return manager.init(this);
-                    } else {
-                        manager.init(this);
-                    }
-                } catch (error) {
-                    console.error('Error in init hook:', error);
-                    throw error;
-                }
-            };
-
-            this._hookManager.registerHook('init', initHook, true, true);
-
-            // Core setup hook
-            const afterSetupHook = function (this: p5) {
-                try {
-                    if (compareVersions(this.VERSION, "2.0.0") >= 0) {
-                        return (async () => {
-                            if (!(this._renderer.drawingContext instanceof WebGLRenderingContext ||
-                                this._renderer.drawingContext instanceof WebGL2RenderingContext)) {
-                                throw new P5AsciifyError("WebGL renderer is required for p5.asciify to run.");
-                            }
-
-                            await manager.setup();
-
-                            manager._cachedSetupAsciifyFn = this.setupAsciify ||
-                                (this._isGlobal && typeof window !== 'undefined' && typeof window.setupAsciify === 'function' ? window.setupAsciify : null);
-
-                            manager._cachedDrawAsciifyFn = this.drawAsciify ||
-                                (this._isGlobal && typeof window !== 'undefined' && typeof window.drawAsciify === 'function' ? window.drawAsciify : null);
-
-                            if (typeof manager._cachedSetupAsciifyFn === 'function') {
-                                await manager._cachedSetupAsciifyFn.call(this);
-                            }
-                        })();
-                    } else {
-                        if (!(this._renderer.drawingContext instanceof WebGLRenderingContext ||
-                            this._renderer.drawingContext instanceof WebGL2RenderingContext)) {
-                            throw new P5AsciifyError("WebGL renderer is required for p5.asciify to run.");
-                        }
-
-                        manager.setup();
-
-                        manager._cachedSetupAsciifyFn = this.setupAsciify ||
-                            (this._isGlobal && typeof window !== 'undefined' && typeof window.setupAsciify === 'function' ? window.setupAsciify : null);
-
-                        manager._cachedDrawAsciifyFn = this.drawAsciify ||
-                            (this._isGlobal && typeof window !== 'undefined' && typeof window.drawAsciify === 'function' ? window.drawAsciify : null);
-
-                        if (typeof manager._cachedSetupAsciifyFn === 'function') {
-                            manager._cachedSetupAsciifyFn.call(this);
-                        }
-                    }
-                } catch (error) {
-                    console.error('Error in afterSetup hook:', error);
-                    throw error;
-                }
-            };
-
-            this._hookManager.registerHook('afterSetup', afterSetupHook, true, false);
-
-            // Core pre-draw hook
-            const preHook = function (this: p5) {
-                try {
-                    if (manager._sketchFramebuffer) {
-                        manager._sketchFramebuffer.begin();
-                        this.clear();
-                    }
-                } catch (error) {
-                    console.error('Error in pre hook:', error);
-                    throw error;
-                }
-            };
-
-            this._hookManager.registerHook('pre', preHook, true, false);
-
-            // Core post-draw hook
-            const postHook = function (this: p5) {
-                try {
-                    if (manager._sketchFramebuffer) {
-                        manager._sketchFramebuffer.end();
-                        manager.asciify();
-                    }
-
-                    if (typeof manager._cachedDrawAsciifyFn === 'function') {
-                        manager._cachedDrawAsciifyFn.call(this);
-                    }
-                } catch (error) {
-                    console.error('Error in post hook:', error);
-                    throw error;
-                }
-            };
-
-            this._hookManager.registerHook('post', postHook, true, false);
-
-            console.log('Successfully registered all core hooks');
-        } catch (error) {
-            console.error('Failed to register core hooks:', error);
-            throw new P5AsciifyError(`Failed to register core hooks: ${error.message}`);
-        }
+        // Initialize hook manager with core hooks and p5.js integration
+        this._hookManager.initialize(this);
     }
 
     /**
@@ -200,36 +83,7 @@ export class P5AsciifierManager {
      * @internal
      */
     public getAddonConfig() {
-        return {
-            presetup: async function (this: p5) {
-                const manager = P5AsciifierManager.getInstance();
-                const hooks = manager._hookManager.getHooks('init');
-                for (const hook of hooks) {
-                    await hook.fn.call(this);
-                }
-            },
-            postsetup: async function (this: p5) {
-                const manager = P5AsciifierManager.getInstance();
-                const hooks = manager._hookManager.getHooks('afterSetup');
-                for (const hook of hooks) {
-                    await hook.fn.call(this);
-                }
-            },
-            predraw: function (this: p5) {
-                const manager = P5AsciifierManager.getInstance();
-                const hooks = manager._hookManager.getHooks('pre');
-                for (const hook of hooks) {
-                    hook.fn.call(this);
-                }
-            },
-            postdraw: function (this: p5) {
-                const manager = P5AsciifierManager.getInstance();
-                const hooks = manager._hookManager.getHooks('post');
-                for (const hook of hooks) {
-                    hook.fn.call(this);
-                }
-            }
-        };
+        return this._hookManager.getAddonConfig();
     }
 
     /**
@@ -242,6 +96,7 @@ export class P5AsciifierManager {
      */
     public async init(p: p5): Promise<void> {
         this._p = p;
+
         if (compareVersions(p.VERSION, "2.0.0") < 0) {
             // For p5.js 1.x - use preload increment and callback
             this._p.preload = () => { };
