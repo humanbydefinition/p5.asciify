@@ -5,8 +5,8 @@ import { P5AsciifyFontManager } from './FontManager';
 import { P5AsciifyRendererManager } from './renderers/RendererManager';
 import { P5AsciifyError } from './AsciifyError';
 import { P5AsciifyAbstractFeatureRenderer2D } from './renderers/2d/feature/AbstractFeatureRenderer2D';
-import { P5AsciifySVGExporter, SVGExportOptions } from './utils/SVGExporter';
-import { JSONExportOptions, P5AsciifyJSONExporter } from './utils/JSONExporter';
+import { P5AsciifySVGExporter, SVGExportOptions } from './utils/export/SVGExporter';
+import { JSONExportOptions, P5AsciifyJSONExporter } from './utils/export/JSONExporter';
 import { P5AsciifyPluginRegistry } from './plugins/PluginRegistry';
 import { compareVersions } from './utils';
 
@@ -44,6 +44,8 @@ export class P5Asciifier {
     /** The plugin registry instance. */
     private _pluginRegistry: P5AsciifyPluginRegistry;
 
+    private _setupDone: boolean = false;
+
     /**
      * Creates a new instance of the `P5Asciifier` class.
      * @param pluginRegistry The plugin registry instance.
@@ -65,9 +67,6 @@ export class P5Asciifier {
     public async init(p: p5, baseFont: p5.Font): Promise<void> {
         this._p = p;
         this._fontManager = new P5AsciifyFontManager(p, baseFont);
-
-        // Return a resolved promise to ensure the async pattern is consistent
-        return Promise.resolve();
     }
 
     /**
@@ -100,7 +99,7 @@ export class P5Asciifier {
             this._pluginRegistry,
         );
 
-        return Promise.resolve();
+        this._setupDone = true;
     }
 
     /**
@@ -127,6 +126,7 @@ export class P5Asciifier {
     /**
      * Sets the font size for the ASCII renderers of the asciifier.
      * @param fontSize The font size to set.
+     * @throws {@link P5AsciifyError} - If the font size is not a positive number.
      * 
      * @example
      * ```javascript
@@ -138,14 +138,17 @@ export class P5Asciifier {
      */
     public fontSize(fontSize: number): void {
 
+        if (typeof fontSize !== 'number' || fontSize <= 0) {
+            throw new P5AsciifyError(`Invalid font size: ${fontSize}. Expected a positive number.`);
+        }
+
         // Early return if the font size is the same
         if (this._fontSize === fontSize) {
             return;
         }
 
-        this._fontSize = fontSize;
-
-        if (this._p._setupDone) {
+        if (this._setupDone) {
+            this._fontSize = fontSize;
             this._fontManager.setFontSize(fontSize);
             this._grid.resizeCellPixelDimensions(
                 this._fontManager.maxGlyphDimensions.width,
@@ -212,7 +215,7 @@ export class P5Asciifier {
 
         this._fontManager.loadFont(font);
 
-        if (this._p._setupDone) {
+        if (this._setupDone) {
 
             this._fontManager.reset();
 
@@ -339,6 +342,43 @@ export class P5Asciifier {
     }
 
     /**
+     * Returns the current ASCII output as an SVG string.
+     * @param options Options for SVG generation (same as saveSVG options except filename)
+     * @returns SVG string representation of the ASCII output
+     * @throws {@link P5AsciifyError} - If no renderer is available to fetch ASCII output from.
+     * 
+     * @example
+     * ```javascript
+     *  function drawAsciify() {
+     *      // Get the ASCII output as an SVG string
+     *      if (frameCount === 60) {
+     *          const svgString = p5asciify.asciifier().toSVG();
+     *          console.log(svgString);
+     *      }
+     *      
+     *      // Get SVG without background rectangles and in text mode
+     *      if (frameCount === 120) {
+     *          const svgString = p5asciify.asciifier().toSVG({
+     *              includeBackgroundRectangles: false,
+     *              drawMode: 'text'
+     *          });
+     *          console.log(svgString);
+     *      }
+     *  }
+     * ```
+     */
+    public toSVG(options: Omit<SVGExportOptions, 'filename'> = {}): string {
+        const svgExporter = new P5AsciifySVGExporter(this._p);
+        return svgExporter.generateSVG(
+            this._rendererManager,
+            this._grid,
+            this._fontManager,
+            this._backgroundColor as p5.Color,
+            options
+        );
+    }
+
+    /**
      * Saves the current ASCII output as a JSON file.
      * @param options The options for saving the JSON file.
      * @throws {@link P5AsciifyError} - If no renderer is available to fetch ASCII output from.
@@ -346,6 +386,42 @@ export class P5Asciifier {
     public saveJSON(options: JSONExportOptions = {}): void {
         const svgExporter = new P5AsciifyJSONExporter(this._p);
         svgExporter.saveJSON(
+            this._rendererManager,
+            this._grid,
+            this._fontManager,
+            options
+        );
+    }
+
+    /**
+     * Returns the current ASCII output as a JSON string.
+     * @param options Options for JSON generation (same as saveJSON options except filename)
+     * @returns JSON string representation of the ASCII output
+     * @throws {@link P5AsciifyError} - If no renderer is available to fetch ASCII output from.
+     * 
+     * @example
+     * ```javascript
+     *  function drawAsciify() {
+     *      // Get the ASCII output as a JSON string
+     *      if (frameCount === 60) {
+     *          const jsonString = p5asciify.asciifier().toJSON();
+     *          console.log(jsonString);
+     *      }
+     *      
+     *      // Get JSON without empty cells and without pretty printing
+     *      if (frameCount === 120) {
+     *          const compactJson = p5asciify.asciifier().toJSON({
+     *              includeEmptyCells: false,
+     *              prettyPrint: false
+     *          });
+     *          console.log(compactJson);
+     *      }
+     *  }
+     * ```
+     */
+    public toJSON(options: Omit<JSONExportOptions, 'filename'> = {}): string {
+        const jsonExporter = new P5AsciifyJSONExporter(this._p);
+        return jsonExporter.generateJSON(
             this._rendererManager,
             this._grid,
             this._fontManager,

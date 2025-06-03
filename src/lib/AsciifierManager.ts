@@ -1,6 +1,8 @@
 import p5 from 'p5';
 import { P5Asciifier } from './Asciifier';
 import { P5AsciifyError } from './AsciifyError';
+import { P5AsciifyHookManager } from './HookManager';
+import { HookType, P5AsciifyHookHandlers } from './types';
 
 import URSAFONT_BASE64 from './assets/fonts/ursafont_base64.txt?raw';
 import { P5AsciifyRendererPlugin } from './plugins/RendererPlugin';
@@ -18,6 +20,7 @@ import { compareVersions } from './utils';
  * - Managing multiple asciifier instances
  * - Coordinating with p5.js rendering lifecycle
  * - Providing an API for creating, accessing, and removing asciifiers
+ * - Managing p5.js lifecycle hooks through HookManager
  */
 export class P5AsciifierManager {
     /** Singleton instance of the manager */
@@ -32,22 +35,19 @@ export class P5AsciifierManager {
     /** The base font used by the library. */
     private _baseFont!: p5.Font;
 
-    /** Defines whether the hooks are enabled or not. */
-    private _hooksEnabled: boolean = true;
-
     /** Contains the content that has been drawn to the `p5.js` canvas throughout the `draw()` loop. */
     private _sketchFramebuffer!: p5.Framebuffer;
 
     /** The plugin registry instance. */
     private _pluginRegistry: P5AsciifyPluginRegistry;
 
+    /** The hook manager instance. */
+    private _hookManager: P5AsciifyHookManager;
+
+    private _setupDone: boolean = false;
+
     /**
      * Gets the singleton instance of `P5AsciifierManager`.
-     * If the instance doesn't exist yet, it creates one.
-     * 
-     * @returns The singleton instance of `P5AsciifierManager`.
-     * 
-     * @ignore
      */
     public static getInstance(): P5AsciifierManager {
         if (!P5AsciifierManager._instance) {
@@ -58,7 +58,6 @@ export class P5AsciifierManager {
 
     /**
      * Creates a new `P5AsciifierManager` instance.
-     * @ignore
      */
     private constructor() {
         // Only allow one instance
@@ -68,6 +67,48 @@ export class P5AsciifierManager {
 
         this._pluginRegistry = new P5AsciifyPluginRegistry();
         this._asciifiers = [new P5Asciifier(this._pluginRegistry)];
+        this._hookManager = P5AsciifyHookManager.getInstance();
+
+        // Initialize hook manager with dependency injection
+        this._hookManager.initialize(this);
+    }
+
+    /**
+     * Handle initialization hook
+     * @ignore
+     */
+    public async handleInit(p: p5): Promise<void> {
+        return await this.init(p);
+    }
+
+    /**
+     * Handle setup hook
+     * @ignore
+     */
+    public async handleSetup(p: p5): Promise<void> {
+        return await this.setup();
+    }
+
+    /**
+     * Handle pre-draw hook
+     * @ignore
+     */
+    public handlePreDraw(p: p5): void {
+        if (this._sketchFramebuffer) {
+            this._sketchFramebuffer.begin();
+            p.clear();
+        }
+    }
+
+    /**
+     * Handle post-draw hook
+     * @ignore
+     */
+    public handlePostDraw(p: p5): void {
+        if (this._sketchFramebuffer) {
+            this._sketchFramebuffer.end();
+            this.asciify();
+        }
     }
 
     /**
@@ -81,28 +122,27 @@ export class P5AsciifierManager {
     public async init(p: p5): Promise<void> {
         this._p = p;
 
-        try {
-            if (compareVersions(p.VERSION, "2.0.0") < 0) {
-                // For p5.js 1.x - use preload increment and callback
-                this._p = p;
-                this._p._incrementPreload();
-                this._baseFont = p.loadFont(URSAFONT_BASE64, (font) => {
-                    this._asciifiers.forEach((asciifier) => {
-                        asciifier.init(p, font);
-                    });
-                });
-            } else {
-                // For p5.js 2.0.0+ - use the Promise-based approach
-                this._baseFont = await this._p.loadFont(URSAFONT_BASE64);
-
-                // Create and wait for all initialization promises to complete
-                await Promise.all(
-                    this._asciifiers.map(asciifier => asciifier.init(p, this._baseFont))
-                );
+        if (compareVersions(p.VERSION, "2.0.0") < 0) {
+            // For p5.js 1.x - use preload increment and callback
+            // Check if we're in global mode to avoid conflicts
+            if (!p._isGlobal) {
+                this._p.preload = () => { };
             }
-        } catch (error) {
-            console.error("Error during p5.asciify initialization:", error);
-            throw error;
+
+            this._p._incrementPreload();
+            this._baseFont = p.loadFont(URSAFONT_BASE64, (font) => {
+                this._asciifiers.forEach((asciifier) => {
+                    asciifier.init(p, font);
+                });
+            });
+        } else {
+            // For p5.js 2.0.0+ - use the Promise-based approach
+            this._baseFont = await this._p.loadFont(URSAFONT_BASE64);
+
+            // Create and wait for all initialization promises to complete
+            await Promise.all(
+                this._asciifiers.map(asciifier => asciifier.init(p, this._baseFont))
+            );
         }
     }
 
@@ -119,10 +159,20 @@ export class P5AsciifierManager {
             textureFiltering: this._p.NEAREST
         });
 
-        // Then set up each asciifier sequentially to avoid WebGL context conflicts
-        for (const asciifier of this._asciifiers) {
-            await asciifier.setup(this._sketchFramebuffer);
+        // Check p5.js version to determine sync vs async setup
+        if (compareVersions(this._p.VERSION, "2.0.0") < 0) {
+            // For p5.js 1.x - synchronous setup
+            for (const asciifier of this._asciifiers) {
+                asciifier.setup(this._sketchFramebuffer);
+            }
+        } else {
+            // For p5.js 2.0+ - asynchronous setup
+            for (const asciifier of this._asciifiers) {
+                await asciifier.setup(this._sketchFramebuffer);
+            }
         }
+
+        this._setupDone = true;
     }
 
     /**
@@ -180,7 +230,7 @@ export class P5AsciifierManager {
             asciifier.init(this._p, this._baseFont);
 
             // If setup is done, immediately set up the asciifier
-            if (this._p._setupDone) {
+            if (this._setupDone) {
                 asciifier.setup(framebuffer ? framebuffer : this._sketchFramebuffer);
             }
 
@@ -191,7 +241,7 @@ export class P5AsciifierManager {
             return (async () => {
                 await asciifier.init(this._p, this._baseFont);
 
-                if (this._p._setupDone && this._sketchFramebuffer) {
+                if (this._setupDone && this._sketchFramebuffer) {
                     await asciifier.setup(framebuffer ? framebuffer : this._sketchFramebuffer);
                 }
 
@@ -226,22 +276,27 @@ export class P5AsciifierManager {
     }
 
     /**
-     * Sets hooks status. This method should be called if you need to manually 
-     * enable or disable the automatic pre/post draw hooks.
-     * 
-     * @param enabled Whether the hooks should be enabled
-     * @ignore
-     */
-    public setHooksEnabled(enabled: boolean): void {
-        this._hooksEnabled = enabled;
-    }
-
-    /**
      * Register a new renderer plugin with p5.asciify
      * @param plugin The renderer plugin to register
      */
     public registerPlugin(plugin: P5AsciifyRendererPlugin): void {
         this._pluginRegistry.register(plugin);
+    }
+
+    /**
+     * Activate a registered hook
+     * @param hookType The type of hook to activate
+     */
+    public activateHook(hookType: HookType): void {
+        this._hookManager.activateHook(hookType);
+    }
+
+    /**
+     * Deactivate a registered hook
+     * @param hookType The type of hook to deactivate
+     */
+    public deactivateHook(hookType: HookType): void {
+        this._hookManager.deactivateHook(hookType);
     }
 
     /**
@@ -253,15 +308,17 @@ export class P5AsciifierManager {
     }
 
     /**
+     * Get the hook manager
+     * @returns The hook manager instance
+     */
+    public get hookManager(): P5AsciifyHookManager {
+        return this._hookManager;
+    }
+
+    /**
      * Returns the list of `P5Asciifier` instances managed by the library.
      */
     get asciifiers(): P5Asciifier[] { return this._asciifiers; }
-
-    /**
-     * Returns `true` if the hooks are enabled, `false` otherwise.
-     * @ignore
-     */
-    get hooksEnabled(): boolean { return this._hooksEnabled; }
 
     /**
      * Returns the sketch framebuffer used to store the content drawn to the `p5.js` canvas.

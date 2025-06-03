@@ -7,6 +7,21 @@ import { P5AsciifyRenderer2D } from './renderers/2d';
 import { P5AsciifyRenderer } from './renderers';
 
 /**
+ * Hook types supported by the p5.asciify hook manager
+ */
+export type HookType = 'init' | 'afterSetup' | 'pre' | 'post';
+
+/**
+ * Type for core hook handlers
+ */
+export type P5AsciifyHookHandlers = {
+    handleInit: (p: p5) => void | Promise<void>;
+    handleSetup: (p: p5) => void | Promise<void>;
+    handlePreDraw: (p: p5) => void;
+    handlePostDraw: (p: p5) => void;
+};
+
+/**
  * Extends the global window object with a preload function, in case the user doesn't provide one.
  */
 declare global {
@@ -15,6 +30,8 @@ declare global {
         P5AsciifyAbstractFeatureRenderer2D: typeof P5AsciifyAbstractFeatureRenderer2D;
         P5AsciifyRenderer2D: typeof P5AsciifyRenderer2D;
         P5AsciifyRenderer: typeof P5AsciifyRenderer;
+
+        preload?: () => void;
 
         setupAsciify?: () => void;
         drawAsciify?: () => void;
@@ -171,6 +188,7 @@ declare module 'p5' {
 
     interface p5InstanceExtensions extends P5AsciifyExtensions {
         _setupDone: boolean;
+        _isGlobal: boolean;
         _renderer: {
             drawingContext: WebGLRenderingContext | WebGL2RenderingContext;
         };
@@ -178,7 +196,12 @@ declare module 'p5' {
         _decrementPreload(): void;
 
         registerMethod(
-            name: 'init' | 'pre' | 'post' | 'remove' | 'afterSetup',
+            name: 'init' | 'beforePreload' | 'afterPreload' | 'beforeSetup' | 'afterSetup' | 'pre' | 'post' | 'remove',
+            f: (this: p5) => void
+        ): void;
+
+        unregisterMethod(
+            name: 'init' | 'beforePreload' | 'afterPreload' | 'beforeSetup' | 'afterSetup' | 'pre' | 'post' | 'remove',
             f: (this: p5) => void
         ): void;
 
