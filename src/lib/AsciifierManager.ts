@@ -1,7 +1,7 @@
 import p5 from 'p5';
 import { P5Asciifier } from './Asciifier';
 import { P5AsciifyError } from './AsciifyError';
-import { P5HookManager, HookType } from './HookManager';
+import { P5AsciifyHookManager, HookType } from './HookManager';
 
 import URSAFONT_BASE64 from './assets/fonts/ursafont_base64.txt?raw';
 import { P5AsciifyRendererPlugin } from './plugins/RendererPlugin';
@@ -41,7 +41,7 @@ export class P5AsciifierManager {
     private _pluginRegistry: P5AsciifyPluginRegistry;
 
     /** The hook manager instance. */
-    private _hookManager: P5HookManager;
+    private _hookManager: P5AsciifyHookManager;
 
     private _setupDone: boolean = false;
 
@@ -72,7 +72,7 @@ export class P5AsciifierManager {
 
         this._pluginRegistry = new P5AsciifyPluginRegistry();
         this._asciifiers = [new P5Asciifier(this._pluginRegistry)];
-        this._hookManager = new P5HookManager();
+        this._hookManager = P5AsciifyHookManager.getInstance();
 
         // Initialize hook manager with core hooks and p5.js integration
         this._hookManager.initialize(this);
@@ -282,7 +282,7 @@ export class P5AsciifierManager {
      * Get the hook manager
      * @returns The hook manager instance
      */
-    public get hookManager(): P5HookManager {
+    public get hookManager(): P5AsciifyHookManager {
         return this._hookManager;
     }
 
