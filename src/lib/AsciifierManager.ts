@@ -1,7 +1,8 @@
 import p5 from 'p5';
 import { P5Asciifier } from './Asciifier';
 import { P5AsciifyError } from './AsciifyError';
-import { P5AsciifyHookManager, HookType } from './HookManager';
+import { P5AsciifyHookManager } from './HookManager';
+import { HookType, P5AsciifyHookHandlers } from './types';
 
 import URSAFONT_BASE64 from './assets/fonts/ursafont_base64.txt?raw';
 import { P5AsciifyRendererPlugin } from './plugins/RendererPlugin';
@@ -21,7 +22,7 @@ import { compareVersions } from './utils';
  * - Providing an API for creating, accessing, and removing asciifiers
  * - Managing p5.js lifecycle hooks through HookManager
  */
-export class P5AsciifierManager {
+export class P5AsciifierManager implements P5AsciifyHookHandlers {
     /** Singleton instance of the manager */
     private static _instance: P5AsciifierManager | null = null;
 

@@ -1,8 +1,7 @@
 import p5 from 'p5';
 import { P5AsciifyError } from './AsciifyError';
 import { compareVersions } from './utils/utils';
-
-export type HookType = 'init' | 'beforePreload' | 'afterPreload' | 'beforeSetup' | 'afterSetup' | 'pre' | 'post' | 'remove';
+import { HookType, P5AsciifyHookHandlers } from './types';
 
 export interface HookFunction {
     originalFn: (this: p5) => void | Promise<void>;
@@ -10,16 +9,6 @@ export interface HookFunction {
     active: boolean;
     isCore: boolean;
     registered: boolean;
-}
-
-/**
- * Interface for core hook handlers - eliminates circular dependency
- */
-export interface P5AsciifyHookHandlers {
-    handleInit: (p: p5) => void | Promise<void>;
-    handleSetup: (p: p5) => void | Promise<void>;
-    handlePreDraw: (p: p5) => void;
-    handlePostDraw: (p: p5) => void;
 }
 
 /**
