@@ -1,6 +1,6 @@
 var _A = Object.defineProperty;
-var mA = (B, e, A) => e in B ? _A(B, e, { enumerable: !0, configurable: !0, writable: !0, value: A }) : B[e] = A;
-var o = (B, e, A) => mA(B, typeof e != "symbol" ? e + "" : e, A);
+var mA = (Q, e, A) => e in Q ? _A(Q, e, { enumerable: !0, configurable: !0, writable: !0, value: A }) : Q[e] = A;
+var o = (Q, e, A) => mA(Q, typeof e != "symbol" ? e + "" : e, A);
 import P from "p5";
 class PA {
   /**
@@ -139,8 +139,8 @@ class g extends Error {
     super(e), this.name = "P5AsciifyError";
   }
 }
-const F = (B, e) => {
-  const [A, r] = [B, e].map((t) => t.split(".").map(Number));
+const F = (Q, e) => {
+  const [A, r] = [Q, e].map((t) => t.split(".").map(Number));
   for (let t = 0; t < Math.max(A.length, r.length); t++) {
     const i = A[t] ?? 0, s = r[t] ?? 0;
     if (i !== s) return i > s ? 1 : -1;
@@ -177,7 +177,7 @@ class Z {
       ...i
     }, n = e.characterFramebuffer, E = e.primaryColorFramebuffer, h = e.secondaryColorFramebuffer, c = e.transformFramebuffer, l = e.rotationFramebuffer;
     n.loadPixels(), E.loadPixels(), h.loadPixels(), c.loadPixels(), l.loadPixels();
-    const f = n.pixels, a = E.pixels, Q = h.pixels, m = c.pixels, _ = l.pixels, I = A.cols, d = A.rows, y = A.cellWidth, C = A.cellHeight, w = A.width, Y = A.height, v = r.characters;
+    const f = n.pixels, a = E.pixels, B = h.pixels, m = c.pixels, _ = l.pixels, I = A.cols, d = A.rows, y = A.cellWidth, C = A.cellHeight, w = A.width, Y = A.height, v = r.characters;
     let S = this.generateSVGHeader(w, Y);
     if (s.includeBackgroundRectangles) {
       const k = t, b = this.p.color(k), D = `rgba(${b._array[0] * 255},${b._array[1] * 255},${b._array[2] * 255},${b._array[3]})`;
@@ -198,10 +198,10 @@ class Z {
           b: a[D + 2],
           a: a[D + 3]
         }, H = {
-          r: Q[D],
-          g: Q[D + 1],
-          b: Q[D + 2],
-          a: Q[D + 3]
+          r: B[D],
+          g: B[D + 1],
+          b: B[D + 2],
+          a: B[D + 3]
         };
         const O = m[D], $ = m[D + 1], j = m[D + 2], L = O === 255, gA = $ === 255, W = j === 255;
         if (L) {
@@ -275,11 +275,11 @@ class Z {
    * @returns The SVG content for the cell
    */
   generateSVGCellContent(e, A, r, t, i, s, n, E, h, c, l, f, a) {
-    let Q = "";
+    let B = "";
     if (a.includeBackgroundRectangles && r.a > 0) {
       const C = `rgba(${r.r},${r.g},${r.b},${r.a / 255})`;
-      a.drawMode === "stroke" ? Q += `
-  <rect x="${t}" y="${i}" width="${s}" height="${n}" stroke="${C}" fill="none" stroke-width="${a.strokeWidth || 1}" />` : Q += `
+      a.drawMode === "stroke" ? B += `
+  <rect x="${t}" y="${i}" width="${s}" height="${n}" stroke="${C}" fill="none" stroke-width="${a.strokeWidth || 1}" />` : B += `
   <rect x="${t}" y="${i}" width="${s}" height="${n}" fill="${C}" />`;
     }
     const m = t + s / 2, _ = i + n / 2, I = `rgba(${A.r},${A.g},${A.b},${A.a / 255})`, d = [];
@@ -291,26 +291,26 @@ class Z {
     const y = d.length ? ` transform="${d.join(" ")}"` : "";
     if (a.drawMode === "text") {
       const C = Math.min(s, n) * 0.8;
-      Q += `
+      B += `
   <text x="${m}" y="${_}" font-family="monospace" font-size="${C}px" fill="${I}" text-anchor="middle" dominant-baseline="middle"${y}>${this.escapeXml(f.character)}</text>`;
     } else {
       let C = 1;
       F(this.p.VERSION, "2.0.0") < 0 ? C = l.fontSize / l.font.font.unitsPerEm : C = l.fontSize / l.font.data.head.unitsPerEm;
       const w = t + (s - f.advanceWidth * C) / 2, Y = i + (n + l.fontSize * 0.7) / 2, u = f.getPath(w, Y, l.fontSize).toSVG().match(/d="([^"]+)"/);
       if (u && u[1]) {
-        if (y && (Q += `
+        if (y && (B += `
   <g${y}>`), a.drawMode === "stroke") {
           const k = a.strokeWidth || 1, b = `path-${e}-${t}-${i}`.replace(/\./g, "-");
-          Q += `
+          B += `
     <path id="${b}" d="${u[1]}" stroke="${I}" stroke-width="${k}" fill="none" />`;
         } else
-          Q += `
+          B += `
     <path d="${u[1]}" fill="${I}" />`;
-        y && (Q += `
+        y && (B += `
   </g>`);
       }
     }
-    return Q;
+    return B;
   }
   /**
    * Escapes special XML characters in a string
@@ -358,7 +358,7 @@ class q {
       ...t
     }, s = e.characterFramebuffer, n = e.primaryColorFramebuffer, E = e.secondaryColorFramebuffer, h = e.transformFramebuffer, c = e.rotationFramebuffer;
     s.loadPixels(), n.loadPixels(), E.loadPixels(), h.loadPixels(), c.loadPixels();
-    const l = s.pixels, f = n.pixels, a = E.pixels, Q = h.pixels, m = c.pixels, _ = A.cols, I = A.rows, d = r.characters, y = {
+    const l = s.pixels, f = n.pixels, a = E.pixels, B = h.pixels, m = c.pixels, _ = A.cols, I = A.rows, d = r.characters, y = {
       version: "1.0",
       created: (/* @__PURE__ */ new Date()).toISOString(),
       gridSize: {
@@ -392,7 +392,7 @@ class q {
           b: a[u + 2],
           a: a[u + 3]
         };
-        const U = Q[u], H = Q[u + 1], O = Q[u + 2], $ = U === 255, j = H === 255, L = O === 255;
+        const U = B[u], H = B[u + 1], O = B[u + 2], $ = U === 255, j = H === 255, L = O === 255;
         if ($) {
           const X = G;
           G = x, x = X;
@@ -471,8 +471,8 @@ class q {
     i.href = t, i.download = `${A}.json`, document.body.appendChild(i), i.click(), document.body.removeChild(i), URL.revokeObjectURL(t);
   }
 }
-function lA(B, e) {
-  const A = B.data.cmap;
+function lA(Q, e) {
+  const A = Q.data.cmap;
   if (!A || !A.tables) return 0;
   for (const r of A.tables)
     if (r.format === 4) {
@@ -498,10 +498,10 @@ function V() {
     toSVG: () => ""
   };
 }
-function cA(B, e, A, r, t) {
+function cA(Q, e, A, r, t) {
   if (!e || !e.xs || e.xs.length === 0)
     return V();
-  const i = t / B.data.head.unitsPerEm;
+  const i = t / Q.data.head.unitsPerEm;
   return {
     getBoundingBox: () => ({
       x1: A + e.xMin * i,
@@ -514,9 +514,9 @@ function cA(B, e, A, r, t) {
     toSVG: () => fA(e, A, r, i)
   };
 }
-function fA(B, e, A, r) {
-  if (!B || !B.xs) return "";
-  const { xs: t, ys: i, endPts: s, flags: n } = B;
+function fA(Q, e, A, r) {
+  if (!Q || !Q.xs) return "";
+  const { xs: t, ys: i, endPts: s, flags: n } = Q;
   if (!t || !i || !s || !n) return "";
   let E = "", h = 0;
   for (let c = 0; c < s.length; c++) {
@@ -525,20 +525,20 @@ function fA(B, e, A, r) {
       if (l >= h) {
         const f = e + t[h] * r, a = A - i[h] * r;
         E += `M${f.toFixed(2)},${a.toFixed(2)}`;
-        let Q = h + 1;
-        for (; Q <= l; )
-          if ((n[Q] & 1) !== 0) {
-            const _ = e + t[Q] * r, I = A - i[Q] * r;
-            E += `L${_.toFixed(2)},${I.toFixed(2)}`, Q++;
+        let B = h + 1;
+        for (; B <= l; )
+          if ((n[B] & 1) !== 0) {
+            const _ = e + t[B] * r, I = A - i[B] * r;
+            E += `L${_.toFixed(2)},${I.toFixed(2)}`, B++;
           } else {
-            const _ = e + t[Q] * r, I = A - i[Q] * r;
-            let d = Q + 1 > l ? h : Q + 1;
+            const _ = e + t[B] * r, I = A - i[B] * r;
+            let d = B + 1 > l ? h : B + 1;
             if ((n[d] & 1) !== 0) {
               const C = e + t[d] * r, w = A - i[d] * r;
-              E += `Q${_.toFixed(2)},${I.toFixed(2)} ${C.toFixed(2)},${w.toFixed(2)}`, Q = d + 1;
+              E += `Q${_.toFixed(2)},${I.toFixed(2)} ${C.toFixed(2)},${w.toFixed(2)}`, B = d + 1;
             } else {
               const C = e + t[d] * r, w = A - i[d] * r, Y = (_ + C) / 2, v = (I + w) / 2;
-              E += `Q${_.toFixed(2)},${I.toFixed(2)} ${Y.toFixed(2)},${v.toFixed(2)}`, Q = d;
+              E += `Q${_.toFixed(2)},${I.toFixed(2)} ${Y.toFixed(2)},${v.toFixed(2)}`, B = d;
             }
           }
         E += "Z";
@@ -632,10 +632,10 @@ class IA {
           character: t,
           unicode: s,
           // Create a path generator for this glyph
-          getPath: (f, a, Q) => {
+          getPath: (f, a, B) => {
             if (n === void 0) return V();
             const m = this._font.data.glyf[n];
-            return m ? cA(this._font, m, f, a, Q) : V();
+            return m ? cA(this._font, m, f, a, B) : V();
           },
           advanceWidth: E,
           r: h,
@@ -1926,8 +1926,8 @@ void main() {\r
 
     gl_FragColor = edgeColor;\r
 }`;
-const QA = (B, e, A) => `
-precision mediump float;uniform sampler2D u_image;uniform vec2 u_imageSize,u_gridCellDimensions;uniform int u_threshold;const vec3 i=vec3(0);vec3 f[${B}];int u[${B}];float r(float i){return floor(i+.5);}void main(){vec2 v=floor(gl_FragCoord.xy);ivec2 b=ivec2(v);v=u_imageSize/u_gridCellDimensions;b=ivec2(r(float(b.x)*v.x),r(float(b.y)*v.y));int m=0;for(int b=0;b<${B};b++)f[b]=i,u[b]=0;for(int v=0;v<${A};v++)for(int r=0;r<${e};r++){ivec2 y=b+ivec2(r,v);if(y.x<0||y.y<0||y.x>=int(u_imageSize.x)||y.y>=int(u_imageSize.y))continue;vec3 e=texture2D(u_image,(vec2(y)+.5)/u_imageSize).xyz;if(length(e-i)<.001)continue;m++;bool x=false;for(int b=0;b<${B};b++)if(length(e-f[b])<.001){u[b]++;x=true;break;}if(!x)for(int b=0;b<${B};b++)if(u[b]==0){f[b]=e;u[b]=1;break;}}vec3 e=i;int x=0;for(int b=0;b<${B};b++)if(u[b]>x)e=f[b],x=u[b];gl_FragColor=m<u_threshold?vec4(i,0):vec4(e,1);}
+const QA = (Q, e, A) => `
+precision mediump float;uniform sampler2D u_image;uniform vec2 u_imageSize,u_gridCellDimensions;uniform int u_threshold;const vec3 i=vec3(0);vec3 f[${Q}];int u[${Q}];float r(float i){return floor(i+.5);}void main(){vec2 v=floor(gl_FragCoord.xy);ivec2 b=ivec2(v);v=u_imageSize/u_gridCellDimensions;b=ivec2(r(float(b.x)*v.x),r(float(b.y)*v.y));int m=0;for(int b=0;b<${Q};b++)f[b]=i,u[b]=0;for(int v=0;v<${A};v++)for(int r=0;r<${e};r++){ivec2 y=b+ivec2(r,v);if(y.x<0||y.y<0||y.x>=int(u_imageSize.x)||y.y>=int(u_imageSize.y))continue;vec3 e=texture2D(u_image,(vec2(y)+.5)/u_imageSize).xyz;if(length(e-i)<.001)continue;m++;bool x=false;for(int b=0;b<${Q};b++)if(length(e-f[b])<.001){u[b]++;x=true;break;}if(!x)for(int b=0;b<${Q};b++)if(u[b]==0){f[b]=e;u[b]=1;break;}}vec3 e=i;int x=0;for(int b=0;b<${Q};b++)if(u[b]>x)e=f[b],x=u[b];gl_FragColor=m<u_threshold?vec4(i,0):vec4(e,1);}
 `, rA = {
   /** Enable/disable the renderer */
   enabled: !1,
@@ -3018,8 +3018,8 @@ class EA {
       let h = "";
       for (let c = 0; c < r; c++) {
         const l = n * 4, f = A[l], a = A[l + 1];
-        let Q = f + (a << 8);
-        Q >= i.length && (Q = i.length - 1), h += i[Q].character, n++;
+        let B = f + (a << 8);
+        B >= i.length && (B = i.length - 1), h += i[B].character, n++;
       }
       s.push(h);
     }
@@ -3125,25 +3125,25 @@ class EA {
       antialias: !1,
       textureFiltering: this._p.NEAREST,
       depthFormat: this._p.UNSIGNED_INT
-    }, n = this._p.createFramebuffer(s), E = this._p.createFramebuffer(s), h = this._p.createFramebuffer(s), c = this._p.createFramebuffer(s), l = this._p.createFramebuffer(s), f = (a, Q, m, _) => {
+    }, n = this._p.createFramebuffer(s), E = this._p.createFramebuffer(s), h = this._p.createFramebuffer(s), c = this._p.createFramebuffer(s), l = this._p.createFramebuffer(s), f = (a, B, m, _) => {
       a.begin(), this._p.push(), this._p.noStroke(), this._p.fill(_);
-      const I = Q - t / 2 + 0.5, d = m - i / 2 + 0.5;
+      const I = B - t / 2 + 0.5, d = m - i / 2 + 0.5;
       this._p.rect(I, d, 1, 1), this._p.pop(), a.end();
     };
     for (const a of A.cells)
       if (!(a.x < 0 || a.y < 0 || a.x >= t || a.y >= i)) {
         if (a.character) {
-          const Q = this._fontManager.glyphColor(a.character);
-          f(n, a.x, a.y, Q);
+          const B = this._fontManager.glyphColor(a.character);
+          f(n, a.x, a.y, B);
         }
         if (a.color && f(E, a.x, a.y, a.color), a.backgroundColor && f(h, a.x, a.y, a.backgroundColor), a.rotation !== void 0) {
-          const Q = Math.round(a.rotation % 360 * 0.7083333333333334);
-          f(l, a.x, a.y, Q);
+          const B = Math.round(a.rotation % 360 * 0.7083333333333334);
+          f(l, a.x, a.y, B);
         }
         if (a.flipHorizontal !== void 0 || a.flipVertical !== void 0 || a.inverted !== void 0) {
-          const Q = a.inverted === !0, m = a.flipHorizontal === !0, _ = a.flipVertical === !0;
+          const B = a.inverted === !0, m = a.flipHorizontal === !0, _ = a.flipVertical === !0;
           f(c, a.x, a.y, [
-            Q ? 255 : 0,
+            B ? 255 : 0,
             m ? 255 : 0,
             _ ? 255 : 0,
             255
@@ -3605,8 +3605,8 @@ const T = class T {
    * @ignore
    */
   async init(e) {
-    this._p = e, F(e.VERSION, "2.0.0") < 0 ? (this._p.preload = () => {
-    }, this._p._incrementPreload(), this._baseFont = e.loadFont(hA, (A) => {
+    this._p = e, F(e.VERSION, "2.0.0") < 0 ? (e._isGlobal || (this._p.preload = () => {
+    }), this._p._incrementPreload(), this._baseFont = e.loadFont(hA, (A) => {
       this._asciifiers.forEach((r) => {
         r.init(e, A);
       });
@@ -3777,9 +3777,9 @@ const TA = iA.getInstance(), YA = [
   ["_getLineShader", "_defaultLineShader"],
   ["_getFontShader", "_defaultFontShader"]
 ];
-for (const [B, e] of YA) {
-  const A = P.RendererGL.prototype[B];
-  P.RendererGL.prototype[B] = function() {
+for (const [Q, e] of YA) {
+  const A = P.RendererGL.prototype[Q];
+  P.RendererGL.prototype[Q] = function() {
     return this[e] || (this[e] = A.call(this), this[e]._vertSrc = this[e]._vertSrc.replace(
       /mediump/g,
       "highp"
@@ -3789,16 +3789,8 @@ for (const [B, e] of YA) {
     )), this[e];
   };
 }
-if (typeof window < "u") {
-  if (window.p5asciify = TA, typeof P < "u" && typeof P.registerAddon != "function") {
-    const B = () => {
-      typeof window.preload > "u" && (window.preload = function() {
-      });
-    };
-    document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", B) : setTimeout(B, 0);
-  }
-  window.P5AsciifyAbstractFeatureRenderer2D = R, window.P5AsciifyRenderer2D = N, window.P5AsciifyRenderer = sA;
-}
+typeof window < "u" && (window.p5asciify = TA, typeof P < "u" && typeof P.registerAddon != "function" && typeof window.preload > "u" && (window.preload = function() {
+}), window.P5AsciifyAbstractFeatureRenderer2D = R, window.P5AsciifyRenderer2D = N, window.P5AsciifyRenderer = sA);
 export {
   EA as P5Asciifier,
   iA as P5AsciifierManager,
