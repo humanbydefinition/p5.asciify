@@ -128,7 +128,11 @@ export class P5AsciifierManager implements P5AsciifyHookHandlers {
 
         if (compareVersions(p.VERSION, "2.0.0") < 0) {
             // For p5.js 1.x - use preload increment and callback
-            this._p.preload = () => { };
+            // Check if we're in global mode to avoid conflicts
+            if (!p._isGlobal) {
+                this._p.preload = () => { };
+            }
+
             this._p._incrementPreload();
             this._baseFont = p.loadFont(URSAFONT_BASE64, (font) => {
                 this._asciifiers.forEach((asciifier) => {
