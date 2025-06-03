@@ -5,13 +5,16 @@ import { compareVersions } from './utils/utils';
 export type HookType = 'init' | 'beforePreload' | 'afterPreload' | 'beforeSetup' | 'afterSetup' | 'pre' | 'post' | 'remove';
 
 export interface HookFunction {
-    fn: (this: p5) => void | Promise<void>;
-    registered: boolean;
+    originalFn: (this: p5) => void | Promise<void>;
+    proxyFn: (this: p5) => void | Promise<void>;
+    active: boolean;
     isCore: boolean;
+    registered: boolean;
 }
 
 /**
  * Manages p5.js lifecycle hooks for both 1.x.x and 2.x.x versions
+ * Uses a proxy-based approach to control hook execution without relying on p5.js unregistration
  */
 export class P5HookManager {
     private registeredHooks: Map<HookType, HookFunction> = new Map();
@@ -22,11 +25,11 @@ export class P5HookManager {
     }
 
     /**
-     * Register a hook function
+     * Register a hook function with proxy-based activation control
      * @param hookType The type of hook to register
      * @param fn The function to execute
      * @param autoRegister Whether to immediately register with p5.js (default: true)
-     * @param isCore Whether this is a core hook (protected from unregistration)
+     * @param isCore Whether this is a core hook (protected from deactivation)
      */
     public registerHook(
         hookType: HookType,
@@ -38,10 +41,23 @@ export class P5HookManager {
             throw new P5AsciifyError(`Hook '${hookType}' is already registered.`);
         }
 
+        // Create a proxy function with direct closure reference to this manager instance
+        const manager = this; // Capture manager reference in closure
+        const proxyFn = function (this: p5) {
+            const hookFunction = manager.registeredHooks.get(hookType);
+            if (hookFunction && hookFunction.active) {
+                return hookFunction.originalFn.call(this);
+
+            }
+            // If hook is inactive, do nothing
+        };
+
         const hookFunction: HookFunction = {
-            fn,
-            registered: false,
-            isCore
+            originalFn: fn,
+            proxyFn: proxyFn,
+            active: true, // Start active by default
+            isCore,
+            registered: false
         };
 
         this.registeredHooks.set(hookType, hookFunction);
@@ -52,7 +68,7 @@ export class P5HookManager {
     }
 
     /**
-     * Activate a registered hook with p5.js
+     * Register the proxy function with p5.js (one-time registration)
      * @param hookType The type of hook to activate
      */
     public activateHook(hookType: HookType): void {
@@ -61,19 +77,19 @@ export class P5HookManager {
             throw new P5AsciifyError(`Hook '${hookType}' not found.`);
         }
 
-        if (hookFunction.registered) {
-            return; // Already activated
-        }
+        // Always set to active (proxy will execute the function)
+        hookFunction.active = true;
 
-        if (!this.isP5v2) {
-            // For p5.js 1.x.x, register directly with p5.js
-            p5.prototype.registerMethod(hookType, hookFunction.fn);
+        // Register with p5.js only once
+        if (!hookFunction.registered && !this.isP5v2) {
+            p5.prototype.registerMethod(hookType, hookFunction.proxyFn);
             hookFunction.registered = true;
+
         }
     }
 
     /**
-     * Deactivate a hook from p5.js without unregistering it from the manager
+     * Deactivate a hook by setting its proxy to inactive (without unregistering from p5.js)
      * @param hookType The type of hook to deactivate
      */
     public deactivateHook(hookType: HookType): void {
@@ -86,34 +102,30 @@ export class P5HookManager {
             throw new P5AsciifyError(`Core hook '${hookType}' cannot be deactivated.`);
         }
 
-        if (!hookFunction.registered) {
-            return; // Already deactivated
-        }
+        // Simply set to inactive - the proxy will handle the rest
+        hookFunction.active = false;
+    }
 
-        if (!this.isP5v2) {
-            p5.prototype.unregisterMethod(hookType, hookFunction.fn);
-
-            console.log(`Deactivated hook '${hookType}' from p5.js.`);
-            hookFunction.registered = false;
-        }
-        // For p5.js 2.x.x, we can't deactivate individual hooks from the addon system
+    /**
+     * Check if a hook is currently active
+     * @param hookType The type of hook to check
+     * @returns Whether the hook is active
+     */
+    public isHookActive(hookType: HookType): boolean {
+        const hookFunction = this.registeredHooks.get(hookType);
+        return hookFunction ? hookFunction.active : false;
     }
 
     /**
      * Get all hooks for a specific type (used internally by addon system)
      * @param hookType The type of hooks to retrieve
-     * @returns Array of hook functions
+     * @returns Array of active hook functions
      */
-    public getHooks(hookType: HookType): HookFunction[] {
+    public getHooks(hookType: HookType): Array<{ fn: (this: p5) => void | Promise<void> }> {
         const hookFunction = this.registeredHooks.get(hookType);
-        return hookFunction ? [hookFunction] : [];
-    }
-
-
-    /**
-     * Check if we're using p5.js 2.x.x
-     */
-    public get isP5Version2(): boolean {
-        return this.isP5v2;
+        if (hookFunction && hookFunction.active) {
+            return [{ fn: hookFunction.originalFn }];
+        }
+        return [];
     }
 }
