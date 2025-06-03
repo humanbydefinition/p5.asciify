@@ -126,6 +126,7 @@ export class P5Asciifier {
     /**
      * Sets the font size for the ASCII renderers of the asciifier.
      * @param fontSize The font size to set.
+     * @throws {@link P5AsciifyError} - If the font size is not a positive number.
      * 
      * @example
      * ```javascript
@@ -136,6 +137,10 @@ export class P5Asciifier {
      * ```
      */
     public fontSize(fontSize: number): void {
+
+        if (typeof fontSize !== 'number' || fontSize <= 0) {
+            throw new P5AsciifyError(`Invalid font size: ${fontSize}. Expected a positive number.`);
+        }
 
         // Early return if the font size is the same
         if (this._fontSize === fontSize) {
