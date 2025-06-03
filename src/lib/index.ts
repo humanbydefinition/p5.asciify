@@ -73,7 +73,10 @@ if (typeof window !== 'undefined') {
 
   // Only expose dummy preload for p5.js v1.x.x (not v2.x.x which has addon system)
   if (typeof p5 !== 'undefined' && typeof p5.registerAddon !== 'function') {
-    window.preload = function () { };
+    // Check if preload already exists before creating dummy
+    if (typeof window.preload === 'undefined') {
+      window.preload = function () { };
+    }
   }
 
   window.P5AsciifyAbstractFeatureRenderer2D = P5AsciifyAbstractFeatureRenderer2D;

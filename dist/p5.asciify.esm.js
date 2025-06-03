@@ -3792,7 +3792,7 @@ for (const [E, e] of YA) {
     )), this[e];
   };
 }
-typeof window < "u" && (window.p5asciify = TA, typeof m < "u" && typeof m.registerAddon != "function" && (window.preload = function() {
+typeof window < "u" && (window.p5asciify = TA, typeof m < "u" && typeof m.registerAddon != "function" && typeof window.preload > "u" && (window.preload = function() {
 }), window.P5AsciifyAbstractFeatureRenderer2D = R, window.P5AsciifyRenderer2D = N, window.P5AsciifyRenderer = sA);
 export {
   EA as P5Asciifier,
