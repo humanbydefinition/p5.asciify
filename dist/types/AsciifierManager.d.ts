@@ -1,6 +1,7 @@
 import p5 from 'p5';
 import { P5Asciifier } from './Asciifier';
-import { P5HookManager, HookType } from './HookManager';
+import { P5AsciifyHookManager } from './HookManager';
+import { HookType, P5AsciifyHookHandlers } from './types';
 import { P5AsciifyRendererPlugin } from './plugins/RendererPlugin';
 import { P5AsciifyPluginRegistry } from './plugins/PluginRegistry';
 /**
@@ -16,7 +17,7 @@ import { P5AsciifyPluginRegistry } from './plugins/PluginRegistry';
  * - Providing an API for creating, accessing, and removing asciifiers
  * - Managing p5.js lifecycle hooks through HookManager
  */
-export declare class P5AsciifierManager {
+export declare class P5AsciifierManager implements P5AsciifyHookHandlers {
     /** Singleton instance of the manager */
     private static _instance;
     /** The p5.js instance used by the library. */
@@ -34,18 +35,28 @@ export declare class P5AsciifierManager {
     private _setupDone;
     /**
      * Gets the singleton instance of `P5AsciifierManager`.
-     * If the instance doesn't exist yet, it creates one.
-     *
-     * @returns The singleton instance of `P5AsciifierManager`.
-     *
-     * @ignore
      */
     static getInstance(): P5AsciifierManager;
     /**
      * Creates a new `P5AsciifierManager` instance.
-     * @ignore
      */
     private constructor();
+    /**
+     * Handle initialization hook
+     */
+    handleInit(p: p5): Promise<void>;
+    /**
+     * Handle setup hook
+     */
+    handleSetup(p: p5): Promise<void>;
+    /**
+     * Handle pre-draw hook
+     */
+    handlePreDraw(p: p5): void;
+    /**
+     * Handle post-draw hook
+     */
+    handlePostDraw(p: p5): void;
     /**
      * Get the addon configuration for p5.js 2.x.x
      * @internal
@@ -129,7 +140,7 @@ export declare class P5AsciifierManager {
      * Get the hook manager
      * @returns The hook manager instance
      */
-    get hookManager(): P5HookManager;
+    get hookManager(): P5AsciifyHookManager;
     /**
      * Returns the list of `P5Asciifier` instances managed by the library.
      */

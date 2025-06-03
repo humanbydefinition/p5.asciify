@@ -1,5 +1,5 @@
 import p5 from 'p5';
-export type HookType = 'init' | 'beforePreload' | 'afterPreload' | 'beforeSetup' | 'afterSetup' | 'pre' | 'post' | 'remove';
+import { HookType, P5AsciifyHookHandlers } from './types';
 export interface HookFunction {
     originalFn: (this: p5) => void | Promise<void>;
     proxyFn: (this: p5) => void | Promise<void>;
@@ -8,23 +8,25 @@ export interface HookFunction {
     registered: boolean;
 }
 /**
- * Manages p5.js lifecycle hooks for both 1.x.x and 2.x.x versions
- * Handles automatic registration with p5.js and provides unified hook management
+ * Manages `p5.js` lifecycle hooks for both `1.x.x` and `2.x.x` versions.
+ * Handles automatic registration with `p5.js` and provides unified hook management
  */
-export declare class P5HookManager {
+export declare class P5AsciifyHookManager {
     private registeredHooks;
-    private isP5v2;
     private p5AddonRegistered;
+    private hookHandlers;
     private _cachedSetupAsciifyFn;
     private _cachedDrawAsciifyFn;
-    constructor();
+    private static _instance;
+    static getInstance(): P5AsciifyHookManager;
+    private constructor();
     /**
-     * Initialize the hook manager and register with p5.js
-     * @param asciifierManager Reference to the manager for core functionality
+     * Initialize the hook manager with dependency injection
+     * @param handlers The hook handlers that implement core functionality
      */
-    initialize(asciifierManager: any): void;
+    initialize(handlers: P5AsciifyHookHandlers): void;
     /**
-     * Register the core p5.asciify hooks
+     * Register the core p5.asciify hooks using injected handlers
      * @private
      */
     private _registerCoreHooks;
@@ -47,10 +49,9 @@ export declare class P5HookManager {
      * Register a hook function with proxy-based activation control
      * @param hookType The type of hook to register
      * @param fn The function to execute
-     * @param autoRegister Whether to immediately register with p5.js (default: true)
      * @param isCore Whether this is a core hook (protected from deactivation)
      */
-    registerHook(hookType: HookType, fn: (this: p5) => void | Promise<void>, autoRegister?: boolean, isCore?: boolean): void;
+    registerHook(hookType: HookType, fn: (this: p5) => void | Promise<void>, isCore?: boolean): void;
     /**
      * Register the proxy function with p5.js (one-time registration)
      * @param hookType The type of hook to activate
@@ -77,7 +78,6 @@ export declare class P5HookManager {
     }>;
     /**
      * Get the addon configuration for p5.js 2.x.x (used by AsciifierManager)
-     * @internal
      */
     getAddonConfig(): {
         presetup: (this: p5) => Promise<void>;
@@ -85,6 +85,4 @@ export declare class P5HookManager {
         predraw: (this: p5) => void;
         postdraw: (this: p5) => void;
     };
-    private static _instance;
-    static getInstance(): P5HookManager;
 }

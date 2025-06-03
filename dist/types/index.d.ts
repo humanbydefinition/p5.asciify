@@ -15,5 +15,5 @@ export { P5Asciifier } from './Asciifier';
 export { P5AsciifyColorPalette } from './ColorPalette';
 export { P5AsciifyGrid } from './Grid';
 export { P5AsciifyFontManager } from './FontManager';
-export { P5HookManager, type HookType } from './HookManager';
+export { P5AsciifyHookManager } from './HookManager';
 export * from './types';
