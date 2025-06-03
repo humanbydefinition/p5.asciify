@@ -73,17 +73,9 @@ if (typeof window !== 'undefined') {
 
   // Only expose dummy preload for p5.js v1.x.x (not v2.x.x which has addon system)
   if (typeof p5 !== 'undefined' && typeof p5.registerAddon !== 'function') {
-    const ensureDummyPreload = () => {
-      if (typeof window.preload === 'undefined') {
-        window.preload = function () { };
-      }
-    };
-
-    // Check if p5 is already initialized, if not wait for DOM ready
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', ensureDummyPreload);
-    } else {
-      setTimeout(ensureDummyPreload, 0);
+    // Check if preload already exists before creating dummy
+    if (typeof window.preload === 'undefined') {
+      window.preload = function () { };
     }
   }
 
