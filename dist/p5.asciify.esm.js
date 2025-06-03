@@ -1,7 +1,7 @@
 var _A = Object.defineProperty;
 var mA = (Q, e, A) => e in Q ? _A(Q, e, { enumerable: !0, configurable: !0, writable: !0, value: A }) : Q[e] = A;
 var o = (Q, e, A) => mA(Q, typeof e != "symbol" ? e + "" : e, A);
-import P from "p5";
+import I from "p5";
 class PA {
   /**
    * Create a new grid instance.
@@ -177,20 +177,20 @@ class Z {
       ...i
     }, n = e.characterFramebuffer, E = e.primaryColorFramebuffer, h = e.secondaryColorFramebuffer, c = e.transformFramebuffer, l = e.rotationFramebuffer;
     n.loadPixels(), E.loadPixels(), h.loadPixels(), c.loadPixels(), l.loadPixels();
-    const f = n.pixels, a = E.pixels, B = h.pixels, m = c.pixels, _ = l.pixels, I = A.cols, d = A.rows, y = A.cellWidth, C = A.cellHeight, w = A.width, Y = A.height, v = r.characters;
+    const f = n.pixels, a = E.pixels, B = h.pixels, m = c.pixels, _ = l.pixels, P = A.cols, d = A.rows, y = A.cellWidth, C = A.cellHeight, w = A.width, Y = A.height, v = r.characters;
     let S = this.generateSVGHeader(w, Y);
     if (s.includeBackgroundRectangles) {
-      const k = t, b = this.p.color(k), D = `rgba(${b._array[0] * 255},${b._array[1] * 255},${b._array[2] * 255},${b._array[3]})`;
+      const G = t, b = this.p.color(G), D = `rgba(${b._array[0] * 255},${b._array[1] * 255},${b._array[2] * 255},${b._array[3]})`;
       S += `
 <rect width="${w}" height="${Y}" fill="${D}" />`;
     }
     S += `
 <g id="ascii-cells">`;
     let u = 0;
-    for (let k = 0; k < d; k++)
-      for (let b = 0; b < I; b++) {
-        const D = u * 4, z = f[D], G = f[D + 1];
-        let x = z + (G << 8);
+    for (let G = 0; G < d; G++)
+      for (let b = 0; b < P; b++) {
+        const D = u * 4, z = f[D], k = f[D + 1];
+        let x = z + (k << 8);
         x >= v.length && (x = v.length - 1);
         let U = {
           r: a[D],
@@ -208,7 +208,7 @@ class Z {
           const DA = U;
           U = H, H = DA;
         }
-        const K = _[D] * (360 / 256), X = b * y, CA = k * C;
+        const K = _[D] * (360 / 256), X = b * y, CA = G * C;
         S += this.generateSVGCellContent(
           x,
           U,
@@ -282,7 +282,7 @@ class Z {
   <rect x="${t}" y="${i}" width="${s}" height="${n}" stroke="${C}" fill="none" stroke-width="${a.strokeWidth || 1}" />` : B += `
   <rect x="${t}" y="${i}" width="${s}" height="${n}" fill="${C}" />`;
     }
-    const m = t + s / 2, _ = i + n / 2, I = `rgba(${A.r},${A.g},${A.b},${A.a / 255})`, d = [];
+    const m = t + s / 2, _ = i + n / 2, P = `rgba(${A.r},${A.g},${A.b},${A.a / 255})`, d = [];
     if (h || c) {
       const C = h ? -1 : 1, w = c ? -1 : 1;
       d.push(`translate(${m} ${_})`), d.push(`scale(${C} ${w})`), d.push(`translate(${-m} ${-_})`);
@@ -292,7 +292,7 @@ class Z {
     if (a.drawMode === "text") {
       const C = Math.min(s, n) * 0.8;
       B += `
-  <text x="${m}" y="${_}" font-family="monospace" font-size="${C}px" fill="${I}" text-anchor="middle" dominant-baseline="middle"${y}>${this.escapeXml(f.character)}</text>`;
+  <text x="${m}" y="${_}" font-family="monospace" font-size="${C}px" fill="${P}" text-anchor="middle" dominant-baseline="middle"${y}>${this.escapeXml(f.character)}</text>`;
     } else {
       let C = 1;
       F(this.p.VERSION, "2.0.0") < 0 ? C = l.fontSize / l.font.font.unitsPerEm : C = l.fontSize / l.font.data.head.unitsPerEm;
@@ -300,12 +300,12 @@ class Z {
       if (u && u[1]) {
         if (y && (B += `
   <g${y}>`), a.drawMode === "stroke") {
-          const k = a.strokeWidth || 1, b = `path-${e}-${t}-${i}`.replace(/\./g, "-");
+          const G = a.strokeWidth || 1, b = `path-${e}-${t}-${i}`.replace(/\./g, "-");
           B += `
-    <path id="${b}" d="${u[1]}" stroke="${I}" stroke-width="${k}" fill="none" />`;
+    <path id="${b}" d="${u[1]}" stroke="${P}" stroke-width="${G}" fill="none" />`;
         } else
           B += `
-    <path d="${u[1]}" fill="${I}" />`;
+    <path d="${u[1]}" fill="${P}" />`;
         y && (B += `
   </g>`);
       }
@@ -358,12 +358,12 @@ class q {
       ...t
     }, s = e.characterFramebuffer, n = e.primaryColorFramebuffer, E = e.secondaryColorFramebuffer, h = e.transformFramebuffer, c = e.rotationFramebuffer;
     s.loadPixels(), n.loadPixels(), E.loadPixels(), h.loadPixels(), c.loadPixels();
-    const l = s.pixels, f = n.pixels, a = E.pixels, B = h.pixels, m = c.pixels, _ = A.cols, I = A.rows, d = r.characters, y = {
+    const l = s.pixels, f = n.pixels, a = E.pixels, B = h.pixels, m = c.pixels, _ = A.cols, P = A.rows, d = r.characters, y = {
       version: "1.0",
       created: (/* @__PURE__ */ new Date()).toISOString(),
       gridSize: {
         cols: _,
-        rows: I,
+        rows: P,
         cellWidth: A.cellWidth,
         cellHeight: A.cellHeight,
         width: A.width,
@@ -371,17 +371,17 @@ class q {
       }
     }, C = [];
     let w = 0;
-    for (let v = 0; v < I; v++)
+    for (let v = 0; v < P; v++)
       for (let S = 0; S < _; S++) {
-        const u = w * 4, k = l[u], b = l[u + 1];
-        let D = k + (b << 8);
+        const u = w * 4, G = l[u], b = l[u + 1];
+        let D = G + (b << 8);
         D >= d.length && (D = d.length - 1);
         const z = d[D];
         if (!i.includeEmptyCells && (z.character === " " || z.character === "")) {
           w++;
           continue;
         }
-        let G = {
+        let k = {
           r: f[u],
           g: f[u + 1],
           b: f[u + 2],
@@ -394,14 +394,14 @@ class q {
         };
         const U = B[u], H = B[u + 1], O = B[u + 2], $ = U === 255, j = H === 255, L = O === 255;
         if ($) {
-          const X = G;
-          G = x, x = X;
+          const X = k;
+          k = x, x = X;
         }
         const W = m[u] * (360 / 256), BA = this.rgbaToHex(
-          G.r,
-          G.g,
-          G.b,
-          G.a
+          k.r,
+          k.g,
+          k.b,
+          k.a
         ), K = this.rgbaToHex(
           x.r,
           x.g,
@@ -528,17 +528,17 @@ function fA(Q, e, A, r) {
         let B = h + 1;
         for (; B <= l; )
           if ((n[B] & 1) !== 0) {
-            const _ = e + t[B] * r, I = A - i[B] * r;
-            E += `L${_.toFixed(2)},${I.toFixed(2)}`, B++;
+            const _ = e + t[B] * r, P = A - i[B] * r;
+            E += `L${_.toFixed(2)},${P.toFixed(2)}`, B++;
           } else {
-            const _ = e + t[B] * r, I = A - i[B] * r;
+            const _ = e + t[B] * r, P = A - i[B] * r;
             let d = B + 1 > l ? h : B + 1;
             if ((n[d] & 1) !== 0) {
               const C = e + t[d] * r, w = A - i[d] * r;
-              E += `Q${_.toFixed(2)},${I.toFixed(2)} ${C.toFixed(2)},${w.toFixed(2)}`, B = d + 1;
+              E += `Q${_.toFixed(2)},${P.toFixed(2)} ${C.toFixed(2)},${w.toFixed(2)}`, B = d + 1;
             } else {
-              const C = e + t[d] * r, w = A - i[d] * r, Y = (_ + C) / 2, v = (I + w) / 2;
-              E += `Q${_.toFixed(2)},${I.toFixed(2)} ${Y.toFixed(2)},${v.toFixed(2)}`, B = d;
+              const C = e + t[d] * r, w = A - i[d] * r, Y = (_ + C) / 2, v = (P + w) / 2;
+              E += `Q${_.toFixed(2)},${P.toFixed(2)} ${Y.toFixed(2)},${v.toFixed(2)}`, B = d;
             }
           }
         E += "Z";
@@ -656,7 +656,7 @@ class IA {
    * @ignore
    */
   loadFont(e) {
-    if (!(e instanceof P.Font))
+    if (!(e instanceof I.Font))
       throw new g("Invalid font parameter. Expected a path, base64 string, blob URL, or p5.Font object.");
     this._font = e, this._initializeGlyphsAndCharacters();
   }
@@ -1466,7 +1466,7 @@ class R extends N {
    * ```
    */
   characterColor(A) {
-    if (!A || !(A instanceof P.Color))
+    if (!A || !(A instanceof I.Color))
       throw new g("Character color must be a valid p5.Color object");
     this._options.characterColor = A;
   }
@@ -1505,7 +1505,7 @@ class R extends N {
    * ```
    */
   backgroundColor(A) {
-    if (!A || !(A instanceof P.Color))
+    if (!A || !(A instanceof I.Color))
       throw new g("Background color must be a valid p5.Color object");
     this._options.backgroundColor = A;
   }
@@ -2852,7 +2852,7 @@ class EA {
    * ```
    */
   background(e) {
-    if (typeof e != "string" && !Array.isArray(e) && !(e instanceof P.Color))
+    if (typeof e != "string" && !Array.isArray(e) && !(e instanceof I.Color))
       throw new g(`Invalid color type: ${typeof e}. Expected string, array or p5.Color.`);
     this._backgroundColor = e;
   }
@@ -3127,8 +3127,8 @@ class EA {
       depthFormat: this._p.UNSIGNED_INT
     }, n = this._p.createFramebuffer(s), E = this._p.createFramebuffer(s), h = this._p.createFramebuffer(s), c = this._p.createFramebuffer(s), l = this._p.createFramebuffer(s), f = (a, B, m, _) => {
       a.begin(), this._p.push(), this._p.noStroke(), this._p.fill(_);
-      const I = B - t / 2 + 0.5, d = m - i / 2 + 0.5;
-      this._p.rect(I, d, 1, 1), this._p.pop(), a.end();
+      const P = B - t / 2 + 0.5, d = m - i / 2 + 0.5;
+      this._p.rect(P, d, 1, 1), this._p.pop(), a.end();
     };
     for (const a of A.cells)
       if (!(a.x < 0 || a.y < 0 || a.x >= t || a.y >= i)) {
@@ -3350,7 +3350,7 @@ const p = class p {
    * @private
    */
   _integrateWithP5() {
-    typeof P > "u" || (F(P.prototype.VERSION, "2.0.0") >= 0 && typeof P.registerAddon == "function" ? this.p5AddonRegistered || (P.registerAddon(this._createP5Addon()), this.p5AddonRegistered = !0) : this._registerLegacyHooks());
+    typeof I > "u" || (F(I.prototype.VERSION, "2.0.0") >= 0 && typeof I.registerAddon == "function" ? this.p5AddonRegistered || (I.registerAddon(this._createP5Addon()), this.p5AddonRegistered = !0) : this._registerLegacyHooks());
   }
   /**
    * Create p5.js v2.0.0+ addon configuration
@@ -3384,7 +3384,7 @@ const p = class p {
    */
   _registerLegacyHooks() {
     this.registeredHooks.forEach((e, A) => {
-      e.registered || (P.prototype.registerMethod(A, e.proxyFn), e.registered = !0);
+      e.registered || (I.prototype.registerMethod(A, e.proxyFn), e.registered = !0);
     });
   }
   /**
@@ -3418,7 +3418,7 @@ const p = class p {
     const A = this.registeredHooks.get(e);
     if (!A)
       throw new g(`Hook '${e}' not found.`);
-    A.active = !0, !A.registered && !(F(P.prototype.VERSION, "2.0.0") >= 0) && (P.prototype.registerMethod(e, A.proxyFn), A.registered = !0);
+    A.active = !0, !A.registered && !(F(I.prototype.VERSION, "2.0.0") >= 0) && (I.prototype.registerMethod(e, A.proxyFn), A.registered = !0);
   }
   /**
    * Deactivate a hook by setting its proxy to inactive (without unregistering from p5.js)
@@ -3605,7 +3605,7 @@ const T = class T {
    * @ignore
    */
   async init(e) {
-    this._p = e, F(e.VERSION, "2.0.0") < 0 ? (e._isGlobal || (this._p.preload = () => {
+    this._p = e, F(e.VERSION, "2.0.0") < 0 ? (console.log("p._isGlobal", e._isGlobal), e._isGlobal || (this._p.preload = () => {
     }), this._p._incrementPreload(), this._baseFont = e.loadFont(hA, (A) => {
       this._asciifiers.forEach((r) => {
         r.init(e, A);
@@ -3669,7 +3669,7 @@ const T = class T {
   add(e) {
     if (!this._p)
       throw new g("Cannot add asciifier before initializing p5.asciify. Ensure p5.asciify is initialized first.");
-    if (e !== void 0 && !(e instanceof P.Framebuffer))
+    if (e !== void 0 && !(e instanceof I.Framebuffer))
       throw new g("Framebuffer must be an instance of p5.Framebuffer.");
     const A = new EA(this._pluginRegistry);
     return F(this._p.VERSION, "2.0.0") < 0 ? (A.init(this._p, this._baseFont), this._setupDone && A.setup(e || this._sketchFramebuffer), this._asciifiers.push(A), A) : (async () => (await A.init(this._p, this._baseFont), this._setupDone && this._sketchFramebuffer && await A.setup(e || this._sketchFramebuffer), this._asciifiers.push(A), A))();
@@ -3744,30 +3744,30 @@ const T = class T {
 /** Singleton instance of the manager */
 o(T, "_instance", null);
 let iA = T;
-const kA = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const GA = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   BRIGHTNESS_DEFAULT_OPTIONS: eA,
   EDGE_DEFAULT_OPTIONS: rA,
   P5AsciifyAbstractFeatureRenderer2D: R,
   P5AsciifyBrightnessRenderer: oA,
   P5AsciifyEdgeRenderer: nA
-}, Symbol.toStringTag, { value: "Module" })), GA = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+}, Symbol.toStringTag, { value: "Module" })), kA = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   CUSTOM_DEFAULT_OPTIONS_2D: AA,
   P5AsciifyRenderer2D: N,
-  feature: kA
+  feature: GA
 }, Symbol.toStringTag, { value: "Module" })), HA = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   P5AsciifyDisplayRenderer: dA,
   P5AsciifyRenderer: sA,
   P5AsciifyRendererManager: aA,
   RENDERER_TYPES: J,
-  renderer2d: GA
+  renderer2d: kA
 }, Symbol.toStringTag, { value: "Module" })), NA = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   P5AsciifyPluginRegistry: uA
 }, Symbol.toStringTag, { value: "Module" }));
-if (typeof P < "u" && F(P.prototype.VERSION, "1.8.0") < 0)
+if (typeof I < "u" && F(I.prototype.VERSION, "1.8.0") < 0)
   throw new g("p5.asciify requires p5.js v1.8.0 or higher to run.");
 const TA = iA.getInstance(), YA = [
   ["_getImmediateModeShader", "_defaultImmediateModeShader"],
@@ -3778,8 +3778,8 @@ const TA = iA.getInstance(), YA = [
   ["_getFontShader", "_defaultFontShader"]
 ];
 for (const [Q, e] of YA) {
-  const A = P.RendererGL.prototype[Q];
-  P.RendererGL.prototype[Q] = function() {
+  const A = I.RendererGL.prototype[Q];
+  I.RendererGL.prototype[Q] = function() {
     return this[e] || (this[e] = A.call(this), this[e]._vertSrc = this[e]._vertSrc.replace(
       /mediump/g,
       "highp"
@@ -3789,8 +3789,7 @@ for (const [Q, e] of YA) {
     )), this[e];
   };
 }
-typeof window < "u" && (window.p5asciify = TA, typeof P < "u" && typeof P.registerAddon != "function" && typeof window.preload > "u" && (window.preload = function() {
-}), window.P5AsciifyAbstractFeatureRenderer2D = R, window.P5AsciifyRenderer2D = N, window.P5AsciifyRenderer = sA);
+typeof window < "u" && (window.p5asciify = TA, window.P5AsciifyAbstractFeatureRenderer2D = R, window.P5AsciifyRenderer2D = N, window.P5AsciifyRenderer = sA);
 export {
   EA as P5Asciifier,
   iA as P5AsciifierManager,
