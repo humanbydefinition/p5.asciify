@@ -47,11 +47,6 @@ export class P5AsciifierManager {
 
     /**
      * Gets the singleton instance of `P5AsciifierManager`.
-     * If the instance doesn't exist yet, it creates one.
-     * 
-     * @returns The singleton instance of `P5AsciifierManager`.
-     * 
-     * @ignore
      */
     public static getInstance(): P5AsciifierManager {
         if (!P5AsciifierManager._instance) {
@@ -62,7 +57,6 @@ export class P5AsciifierManager {
 
     /**
      * Creates a new `P5AsciifierManager` instance.
-     * @ignore
      */
     private constructor() {
         // Only allow one instance
@@ -74,8 +68,42 @@ export class P5AsciifierManager {
         this._asciifiers = [new P5Asciifier(this._pluginRegistry)];
         this._hookManager = P5AsciifyHookManager.getInstance();
 
-        // Initialize hook manager with core hooks and p5.js integration
+        // Initialize hook manager with dependency injection (this eliminates circular dependency)
         this._hookManager.initialize(this);
+    }
+
+    /**
+     * Handle initialization hook
+     */
+    public async handleInit(p: p5): Promise<void> {
+        return await this.init(p);
+    }
+
+    /**
+     * Handle setup hook
+     */
+    public async handleSetup(p: p5): Promise<void> {
+        return await this.setup();
+    }
+
+    /**
+     * Handle pre-draw hook
+     */
+    public handlePreDraw(p: p5): void {
+        if (this._sketchFramebuffer) {
+            this._sketchFramebuffer.begin();
+            p.clear();
+        }
+    }
+
+    /**
+     * Handle post-draw hook
+     */
+    public handlePostDraw(p: p5): void {
+        if (this._sketchFramebuffer) {
+            this._sketchFramebuffer.end();
+            this.asciify();
+        }
     }
 
     /**
