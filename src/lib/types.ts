@@ -9,17 +9,17 @@ import { P5AsciifyRenderer } from './renderers';
 /**
  * Hook types supported by the p5.asciify hook manager
  */
-export type HookType = 'init' | 'afterSetup' | 'pre' | 'post' ;
+export type HookType = 'init' | 'afterSetup' | 'pre' | 'post';
 
 /**
- * Interface for core hook handlers
+ * Type for core hook handlers
  */
-export interface P5AsciifyHookHandlers {
+export type P5AsciifyHookHandlers = {
     handleInit: (p: p5) => void | Promise<void>;
     handleSetup: (p: p5) => void | Promise<void>;
     handlePreDraw: (p: p5) => void;
     handlePostDraw: (p: p5) => void;
-}
+};
 
 /**
  * Extends the global window object with a preload function, in case the user doesn't provide one.

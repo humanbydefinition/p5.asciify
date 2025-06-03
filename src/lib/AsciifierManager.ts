@@ -22,7 +22,7 @@ import { compareVersions } from './utils';
  * - Providing an API for creating, accessing, and removing asciifiers
  * - Managing p5.js lifecycle hooks through HookManager
  */
-export class P5AsciifierManager implements P5AsciifyHookHandlers {
+export class P5AsciifierManager {
     /** Singleton instance of the manager */
     private static _instance: P5AsciifierManager | null = null;
 
