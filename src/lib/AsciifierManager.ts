@@ -69,12 +69,13 @@ export class P5AsciifierManager implements P5AsciifyHookHandlers {
         this._asciifiers = [new P5Asciifier(this._pluginRegistry)];
         this._hookManager = P5AsciifyHookManager.getInstance();
 
-        // Initialize hook manager with dependency injection (this eliminates circular dependency)
+        // Initialize hook manager with dependency injection
         this._hookManager.initialize(this);
     }
 
     /**
      * Handle initialization hook
+     * @ignore
      */
     public async handleInit(p: p5): Promise<void> {
         return await this.init(p);
@@ -82,6 +83,7 @@ export class P5AsciifierManager implements P5AsciifyHookHandlers {
 
     /**
      * Handle setup hook
+     * @ignore
      */
     public async handleSetup(p: p5): Promise<void> {
         return await this.setup();
@@ -89,6 +91,7 @@ export class P5AsciifierManager implements P5AsciifyHookHandlers {
 
     /**
      * Handle pre-draw hook
+     * @ignore
      */
     public handlePreDraw(p: p5): void {
         if (this._sketchFramebuffer) {
@@ -99,20 +102,13 @@ export class P5AsciifierManager implements P5AsciifyHookHandlers {
 
     /**
      * Handle post-draw hook
+     * @ignore
      */
     public handlePostDraw(p: p5): void {
         if (this._sketchFramebuffer) {
             this._sketchFramebuffer.end();
             this.asciify();
         }
-    }
-
-    /**
-     * Get the addon configuration for p5.js 2.x.x
-     * @internal
-     */
-    public getAddonConfig() {
-        return this._hookManager.getAddonConfig();
     }
 
     /**
@@ -296,7 +292,7 @@ export class P5AsciifierManager implements P5AsciifyHookHandlers {
     }
 
     /**
-     * Deactivate a hook without unregistering it
+     * Deactivate a registered hook
      * @param hookType The type of hook to deactivate
      */
     public deactivateHook(hookType: HookType): void {

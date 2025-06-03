@@ -12,7 +12,7 @@ import { P5AsciifyRenderer } from './renderers';
 export type HookType = 'init' | 'afterSetup' | 'pre' | 'post' ;
 
 /**
- * Interface for core hook handlers - eliminates circular dependency
+ * Interface for core hook handlers
  */
 export interface P5AsciifyHookHandlers {
     handleInit: (p: p5) => void | Promise<void>;

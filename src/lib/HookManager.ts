@@ -44,6 +44,7 @@ export class P5AsciifyHookManager {
     /**
      * Initialize the hook manager with dependency injection
      * @param handlers The hook handlers that implement core functionality
+     * @ignore
      */
     public initialize(handlers: P5AsciifyHookHandlers): void {
         this.hookHandlers = handlers;
@@ -204,6 +205,7 @@ export class P5AsciifyHookManager {
      * @param hookType The type of hook to register
      * @param fn The function to execute
      * @param isCore Whether this is a core hook (protected from deactivation)
+     * @ignore
      */
     public registerHook(
         hookType: HookType,
@@ -236,7 +238,7 @@ export class P5AsciifyHookManager {
     }
 
     /**
-     * Register the proxy function with p5.js (one-time registration)
+     * Activate a hook by setting its proxy to active
      * @param hookType The type of hook to activate
      */
     public activateHook(hookType: HookType): void {
@@ -247,16 +249,10 @@ export class P5AsciifyHookManager {
 
         // Always set to active (proxy will execute the function)
         hookFunction.active = true;
-
-        // Register with p5.js only once for v1.x.x
-        if (!hookFunction.registered && !(compareVersions(p5.prototype.VERSION, "2.0.0") >= 0)) {
-            p5.prototype.registerMethod(hookType, hookFunction.proxyFn);
-            hookFunction.registered = true;
-        }
     }
 
     /**
-     * Deactivate a hook by setting its proxy to inactive (without unregistering from p5.js)
+     * Deactivate a hook by setting its proxy to inactive
      * @param hookType The type of hook to deactivate
      */
     public deactivateHook(hookType: HookType): void {
@@ -287,6 +283,7 @@ export class P5AsciifyHookManager {
      * Get all hooks for a specific type (used internally by addon system)
      * @param hookType The type of hooks to retrieve
      * @returns Array of active hook functions
+     * @ignore
      */
     public getHooks(hookType: HookType): Array<{ fn: (this: p5) => void | Promise<void> }> {
         const hookFunction = this.registeredHooks.get(hookType);
@@ -294,41 +291,5 @@ export class P5AsciifyHookManager {
             return [{ fn: hookFunction.originalFn }];
         }
         return [];
-    }
-
-    /**
-     * Get the addon configuration for p5.js 2.x.x (used by AsciifierManager)
-     */
-    public getAddonConfig() {
-        return {
-            presetup: async function (this: p5) {
-                const manager = P5AsciifyHookManager.getInstance();
-                const hooks = manager.getHooks('init');
-                for (const hook of hooks) {
-                    await hook.fn.call(this);
-                }
-            },
-            postsetup: async function (this: p5) {
-                const manager = P5AsciifyHookManager.getInstance();
-                const hooks = manager.getHooks('afterSetup');
-                for (const hook of hooks) {
-                    await hook.fn.call(this);
-                }
-            },
-            predraw: function (this: p5) {
-                const manager = P5AsciifyHookManager.getInstance();
-                const hooks = manager.getHooks('pre');
-                for (const hook of hooks) {
-                    hook.fn.call(this);
-                }
-            },
-            postdraw: function (this: p5) {
-                const manager = P5AsciifyHookManager.getInstance();
-                const hooks = manager.getHooks('post');
-                for (const hook of hooks) {
-                    hook.fn.call(this);
-                }
-            }
-        };
     }
 }
