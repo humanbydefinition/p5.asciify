@@ -1,7 +1,7 @@
 import p5 from 'p5';
 import { P5Asciifier } from './Asciifier';
 import { P5AsciifyHookManager } from './HookManager';
-import { HookType, P5AsciifyHookHandlers } from './types';
+import { HookType } from './types';
 import { P5AsciifyRendererPlugin } from './plugins/RendererPlugin';
 import { P5AsciifyPluginRegistry } from './plugins/PluginRegistry';
 /**
@@ -17,7 +17,7 @@ import { P5AsciifyPluginRegistry } from './plugins/PluginRegistry';
  * - Providing an API for creating, accessing, and removing asciifiers
  * - Managing p5.js lifecycle hooks through HookManager
  */
-export declare class P5AsciifierManager implements P5AsciifyHookHandlers {
+export declare class P5AsciifierManager {
     /** Singleton instance of the manager */
     private static _instance;
     /** The p5.js instance used by the library. */
@@ -43,30 +43,24 @@ export declare class P5AsciifierManager implements P5AsciifyHookHandlers {
     private constructor();
     /**
      * Handle initialization hook
+     * @ignore
      */
     handleInit(p: p5): Promise<void>;
     /**
      * Handle setup hook
+     * @ignore
      */
     handleSetup(p: p5): Promise<void>;
     /**
      * Handle pre-draw hook
+     * @ignore
      */
     handlePreDraw(p: p5): void;
     /**
      * Handle post-draw hook
+     * @ignore
      */
     handlePostDraw(p: p5): void;
-    /**
-     * Get the addon configuration for p5.js 2.x.x
-     * @internal
-     */
-    getAddonConfig(): {
-        presetup: (this: p5) => Promise<void>;
-        postsetup: (this: p5) => Promise<void>;
-        predraw: (this: p5) => void;
-        postdraw: (this: p5) => void;
-    };
     /**
      * Initializes the `p5.asciify` library by setting the `p5.js` instance.
      *
@@ -127,7 +121,7 @@ export declare class P5AsciifierManager implements P5AsciifyHookHandlers {
      */
     activateHook(hookType: HookType): void;
     /**
-     * Deactivate a hook without unregistering it
+     * Deactivate a registered hook
      * @param hookType The type of hook to deactivate
      */
     deactivateHook(hookType: HookType): void;

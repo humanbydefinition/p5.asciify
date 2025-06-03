@@ -23,6 +23,7 @@ export declare class P5AsciifyHookManager {
     /**
      * Initialize the hook manager with dependency injection
      * @param handlers The hook handlers that implement core functionality
+     * @ignore
      */
     initialize(handlers: P5AsciifyHookHandlers): void;
     /**
@@ -50,15 +51,16 @@ export declare class P5AsciifyHookManager {
      * @param hookType The type of hook to register
      * @param fn The function to execute
      * @param isCore Whether this is a core hook (protected from deactivation)
+     * @ignore
      */
     registerHook(hookType: HookType, fn: (this: p5) => void | Promise<void>, isCore?: boolean): void;
     /**
-     * Register the proxy function with p5.js (one-time registration)
+     * Activate a hook by setting its proxy to active
      * @param hookType The type of hook to activate
      */
     activateHook(hookType: HookType): void;
     /**
-     * Deactivate a hook by setting its proxy to inactive (without unregistering from p5.js)
+     * Deactivate a hook by setting its proxy to inactive
      * @param hookType The type of hook to deactivate
      */
     deactivateHook(hookType: HookType): void;
@@ -72,17 +74,9 @@ export declare class P5AsciifyHookManager {
      * Get all hooks for a specific type (used internally by addon system)
      * @param hookType The type of hooks to retrieve
      * @returns Array of active hook functions
+     * @ignore
      */
     getHooks(hookType: HookType): Array<{
         fn: (this: p5) => void | Promise<void>;
     }>;
-    /**
-     * Get the addon configuration for p5.js 2.x.x (used by AsciifierManager)
-     */
-    getAddonConfig(): {
-        presetup: (this: p5) => Promise<void>;
-        postsetup: (this: p5) => Promise<void>;
-        predraw: (this: p5) => void;
-        postdraw: (this: p5) => void;
-    };
 }
