@@ -2,7 +2,7 @@
 
 > `const` **RENDERER_TYPES**: `object`
 
-Defined in: [renderers/constants.ts:8](https://github.com/humanbydefinition/p5.asciify/blob/1d60e62023a2aba1aa36d33e65b6e6bdb8d656dc/src/lib/renderers/constants.ts#L8)
+Defined in: [renderers/constants.ts:8](https://github.com/humanbydefinition/p5.asciify/blob/f7ea3aaf85f74af4820425d6e8a41eecf5d02d32/src/lib/renderers/constants.ts#L8)
 
 Dictionary of ASCII renderer types that can be added via the [P5AsciifyRendererManager.add](../classes/P5AsciifyRendererManager.md#add) method by name.
 
@@ -10,6 +10,6 @@ Dictionary of ASCII renderer types that can be added via the [P5AsciifyRendererM
 
 | Name                                 | Type                                                                                                                         | Default value                 | Defined in                                                                                                                                                    |
 | ------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------- | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| <a id="brightness"></a> `brightness` | _typeof_ [`P5AsciifyBrightnessRenderer`](../namespaces/renderer2d/namespaces/feature/classes/P5AsciifyBrightnessRenderer.md) | `P5AsciifyBrightnessRenderer` | [renderers/constants.ts:9](https://github.com/humanbydefinition/p5.asciify/blob/1d60e62023a2aba1aa36d33e65b6e6bdb8d656dc/src/lib/renderers/constants.ts#L9)   |
-| <a id="custom2d"></a> `custom2D`     | _typeof_ [`P5AsciifyRenderer2D`](../namespaces/renderer2d/classes/P5AsciifyRenderer2D.md)                                    | `P5AsciifyRenderer2D`         | [renderers/constants.ts:11](https://github.com/humanbydefinition/p5.asciify/blob/1d60e62023a2aba1aa36d33e65b6e6bdb8d656dc/src/lib/renderers/constants.ts#L11) |
-| <a id="edge"></a> `edge`             | _typeof_ [`P5AsciifyEdgeRenderer`](../namespaces/renderer2d/namespaces/feature/classes/P5AsciifyEdgeRenderer.md)             | `P5AsciifyEdgeRenderer`       | [renderers/constants.ts:10](https://github.com/humanbydefinition/p5.asciify/blob/1d60e62023a2aba1aa36d33e65b6e6bdb8d656dc/src/lib/renderers/constants.ts#L10) |
+| <a id="brightness"></a> `brightness` | _typeof_ [`P5AsciifyBrightnessRenderer`](../namespaces/renderer2d/namespaces/feature/classes/P5AsciifyBrightnessRenderer.md) | `P5AsciifyBrightnessRenderer` | [renderers/constants.ts:9](https://github.com/humanbydefinition/p5.asciify/blob/f7ea3aaf85f74af4820425d6e8a41eecf5d02d32/src/lib/renderers/constants.ts#L9)   |
+| <a id="custom2d"></a> `custom2D`     | _typeof_ [`P5AsciifyRenderer2D`](../namespaces/renderer2d/classes/P5AsciifyRenderer2D.md)                                    | `P5AsciifyRenderer2D`         | [renderers/constants.ts:11](https://github.com/humanbydefinition/p5.asciify/blob/f7ea3aaf85f74af4820425d6e8a41eecf5d02d32/src/lib/renderers/constants.ts#L11) |
+| <a id="edge"></a> `edge`             | _typeof_ [`P5AsciifyEdgeRenderer`](../namespaces/renderer2d/namespaces/feature/classes/P5AsciifyEdgeRenderer.md)             | `P5AsciifyEdgeRenderer`       | [renderers/constants.ts:10](https://github.com/humanbydefinition/p5.asciify/blob/f7ea3aaf85f74af4820425d6e8a41eecf5d02d32/src/lib/renderers/constants.ts#L10) |

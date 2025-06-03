@@ -1,6 +1,6 @@
 # Class: P5AsciifyHookManager
 
-Defined in: [HookManager.ts:18](https://github.com/humanbydefinition/p5.asciify/blob/1d60e62023a2aba1aa36d33e65b6e6bdb8d656dc/src/lib/HookManager.ts#L18)
+Defined in: [HookManager.ts:18](https://github.com/humanbydefinition/p5.asciify/blob/f7ea3aaf85f74af4820425d6e8a41eecf5d02d32/src/lib/HookManager.ts#L18)
 
 Manages `p5.js` lifecycle hooks for both `1.x.x` and `2.x.x` versions.
 Handles automatic registration with `p5.js` and provides unified hook management
@@ -11,7 +11,7 @@ Handles automatic registration with `p5.js` and provides unified hook management
 
 > **activateHook**(`hookType`): `void`
 
-Defined in: [HookManager.ts:244](https://github.com/humanbydefinition/p5.asciify/blob/1d60e62023a2aba1aa36d33e65b6e6bdb8d656dc/src/lib/HookManager.ts#L244)
+Defined in: [HookManager.ts:244](https://github.com/humanbydefinition/p5.asciify/blob/f7ea3aaf85f74af4820425d6e8a41eecf5d02d32/src/lib/HookManager.ts#L244)
 
 Activate a hook by setting its proxy to active
 
@@ -31,7 +31,7 @@ Activate a hook by setting its proxy to active
 
 > **deactivateHook**(`hookType`): `void`
 
-Defined in: [HookManager.ts:258](https://github.com/humanbydefinition/p5.asciify/blob/1d60e62023a2aba1aa36d33e65b6e6bdb8d656dc/src/lib/HookManager.ts#L258)
+Defined in: [HookManager.ts:258](https://github.com/humanbydefinition/p5.asciify/blob/f7ea3aaf85f74af4820425d6e8a41eecf5d02d32/src/lib/HookManager.ts#L258)
 
 Deactivate a hook by setting its proxy to inactive
 
@@ -51,7 +51,7 @@ Deactivate a hook by setting its proxy to inactive
 
 > **isHookActive**(`hookType`): `boolean`
 
-Defined in: [HookManager.ts:277](https://github.com/humanbydefinition/p5.asciify/blob/1d60e62023a2aba1aa36d33e65b6e6bdb8d656dc/src/lib/HookManager.ts#L277)
+Defined in: [HookManager.ts:277](https://github.com/humanbydefinition/p5.asciify/blob/f7ea3aaf85f74af4820425d6e8a41eecf5d02d32/src/lib/HookManager.ts#L277)
 
 Check if a hook is currently active
 
@@ -73,7 +73,7 @@ Whether the hook is active
 
 > `static` **getInstance**(): `P5AsciifyHookManager`
 
-Defined in: [HookManager.ts:30](https://github.com/humanbydefinition/p5.asciify/blob/1d60e62023a2aba1aa36d33e65b6e6bdb8d656dc/src/lib/HookManager.ts#L30)
+Defined in: [HookManager.ts:30](https://github.com/humanbydefinition/p5.asciify/blob/f7ea3aaf85f74af4820425d6e8a41eecf5d02d32/src/lib/HookManager.ts#L30)
 
 #### Returns
 
