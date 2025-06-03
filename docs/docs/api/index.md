@@ -1,4 +1,4 @@
-# p5.asciify v0.9.9-beta.7
+# p5.asciify v0.9.9-beta.8
 
 ## Namespaces
 
@@ -22,17 +22,17 @@
 
 ## Interfaces
 
-| Interface                                                    | Description                                                                                                |
-| ------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------- |
-| [P5AsciifyExtensions](interfaces/P5AsciifyExtensions.md)     | Interface for additional properties and methods added to the `p5.js` instance by the `p5.asciify` library. |
-| [P5AsciifyHookHandlers](interfaces/P5AsciifyHookHandlers.md) | Interface for core hook handlers                                                                           |
+| Interface                                                | Description                                                                                                |
+| -------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| [P5AsciifyExtensions](interfaces/P5AsciifyExtensions.md) | Interface for additional properties and methods added to the `p5.js` instance by the `p5.asciify` library. |
 
 ## Type Aliases
 
-| Type Alias                                               | Description                                                                        |
-| -------------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| [HookType](type-aliases/HookType.md)                     | Hook types supported by the p5.asciify hook manager                                |
-| [P5AsciifyCharacter](type-aliases/P5AsciifyCharacter.md) | Each character from a loaded font is represented as a `P5AsciifyCharacter` object. |
+| Type Alias                                                     | Description                                                                        |
+| -------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| [HookType](type-aliases/HookType.md)                           | Hook types supported by the p5.asciify hook manager                                |
+| [P5AsciifyCharacter](type-aliases/P5AsciifyCharacter.md)       | Each character from a loaded font is represented as a `P5AsciifyCharacter` object. |
+| [P5AsciifyHookHandlers](type-aliases/P5AsciifyHookHandlers.md) | Type for core hook handlers                                                        |
 
 ## Variables
 
