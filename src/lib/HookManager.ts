@@ -13,8 +13,8 @@ export interface HookFunction {
 }
 
 /**
- * Manages p5.js lifecycle hooks for both 1.x.x and 2.x.x versions
- * Handles automatic registration with p5.js and provides unified hook management
+ * Manages `p5.js` lifecycle hooks for both `1.x.x` and `2.x.x` versions.
+ * Handles automatic registration with `p5.js` and provides unified hook management
  */
 export class P5AsciifyHookManager {
     private registeredHooks: Map<HookType, HookFunction> = new Map();

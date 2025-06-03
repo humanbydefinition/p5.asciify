@@ -1,4 +1,4 @@
-# p5.asciify v0.9.8
+# p5.asciify v0.9.9-beta.5
 
 ## Namespaces
 
@@ -18,6 +18,7 @@
 | [P5AsciifyError](classes/P5AsciifyError.md)               | Simple error class, representing errors specific to `p5.asciify`.                                                                                                                      |
 | [P5AsciifyFontManager](classes/P5AsciifyFontManager.md)   | Manages the font used for the ASCII rendering pipeline and provides methods for working with the font.                                                                                 |
 | [P5AsciifyGrid](classes/P5AsciifyGrid.md)                 | Manages the grid for the ASCII rendering pipeline of an [P5Asciifier](classes/P5Asciifier.md) instance.                                                                                |
+| [P5AsciifyHookManager](classes/P5AsciifyHookManager.md)   | Manages `p5.js` lifecycle hooks for both `1.x.x` and `2.x.x` versions. Handles automatic registration with `p5.js` and provides unified hook management                                |
 
 ## Interfaces
 
@@ -29,6 +30,7 @@
 
 | Type Alias                                               | Description                                                                        |
 | -------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| [HookType](type-aliases/HookType.md)                     | -                                                                                  |
 | [P5AsciifyCharacter](type-aliases/P5AsciifyCharacter.md) | Each character from a loaded font is represented as a `P5AsciifyCharacter` object. |
 
 ## Variables
