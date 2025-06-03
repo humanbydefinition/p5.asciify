@@ -29,6 +29,7 @@ export declare class P5Asciifier {
     private _renderToCanvas;
     /** The plugin registry instance. */
     private _pluginRegistry;
+    private _setupDone;
     /**
      * Creates a new instance of the `P5Asciifier` class.
      * @param pluginRegistry The plugin registry instance.
@@ -64,6 +65,7 @@ export declare class P5Asciifier {
     /**
      * Sets the font size for the ASCII renderers of the asciifier.
      * @param fontSize The font size to set.
+     * @throws {@link P5AsciifyError} - If the font size is not a positive number.
      *
      * @example
      * ```javascript
