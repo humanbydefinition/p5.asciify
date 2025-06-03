@@ -31,9 +31,6 @@ export const createSketch = (options = {}) => {
 
       asciifier.fontSize(16);
 
-      p5asciify.deactivateHook('pre');
-      p5asciify.deactivateHook('post');
-
       asciifier.backgroundMode('fixed'); // or 'sampled'
 
       // Update the pre-defined `brightness` renderer with the provided options
