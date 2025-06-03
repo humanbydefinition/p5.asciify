@@ -71,11 +71,6 @@ export class P5HookManager {
                             throw new P5AsciifyError("WebGL renderer is required for p5.asciify to run.");
                         }
 
-                        // Ensure p5.js version is 1.8.0 or higher
-                        if (compareVersions(this.VERSION, "1.8.0") < 0) {
-                            throw new P5AsciifyError("p5.asciify requires p5.js v1.8.0 or higher to run.");
-                        }
-
                         await manager.setup();
 
                         // Cache user functions
@@ -95,11 +90,6 @@ export class P5HookManager {
                     if (!(this._renderer.drawingContext instanceof WebGLRenderingContext ||
                         this._renderer.drawingContext instanceof WebGL2RenderingContext)) {
                         throw new P5AsciifyError("WebGL renderer is required for p5.asciify to run.");
-                    }
-
-                    // Ensure p5.js version is 1.8.0 or higher
-                    if (compareVersions(this.VERSION, "1.8.0") < 0) {
-                        throw new P5AsciifyError("p5.asciify requires p5.js v1.8.0 or higher to run.");
                     }
 
                     setTimeout(async () => {
