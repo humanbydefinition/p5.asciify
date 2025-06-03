@@ -339,6 +339,4 @@ export class P5AsciifyHookManager {
             }
         };
     }
-
-    
 }
