@@ -59,6 +59,12 @@ export declare class P5AsciifyGrid {
      */
     resetGridDimensions(): void;
     /**
+     * Update the texture used by the grid, and reset the grid dimensions.
+     * @param texture The new framebuffer texture to use for the grid.
+     * @ignore
+     */
+    updateTexture(texture: p5.Framebuffer): void;
+    /**
      * Returns the width of each cell in the grid.
      */
     get cellWidth(): number;

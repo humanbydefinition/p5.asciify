@@ -78,6 +78,7 @@ export declare class P5AsciifyRendererManager {
      * and the canvas dimensions are different to the previous {@link render} call.
      */
     private checkCanvasDimensions;
+    updateCaptureFramebuffer(newCaptureFramebuffer: p5.Framebuffer): void;
     /**
      * Resets the dimensions of all renderers.
      *

@@ -48,6 +48,11 @@ export declare abstract class P5AsciifyRenderer<T extends AsciiRendererOptions =
      */
     abstract resizeFramebuffers(): void;
     /**
+     * Reset the shaders used by the renderer.
+     * @ignore
+     */
+    abstract resetShaders(): void;
+    /**
      * Updates renderer options.
      * @param newOptions - The new options to update.
      *
@@ -68,6 +73,7 @@ export declare abstract class P5AsciifyRenderer<T extends AsciiRendererOptions =
      * ```
      */
     update(newOptions: T): void;
+    updateCaptureFramebuffer(newCaptureFramebuffer: p5.Framebuffer): void;
     /**
      * Enable or disable the renderer.
      * @param enabled - Whether to enable or disable the renderer.

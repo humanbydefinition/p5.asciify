@@ -25,6 +25,7 @@ export declare class P5AsciifyRenderer2D<T extends AsciiRendererOptions = AsciiR
      * @ignore
      */
     constructor(p: p5, captureFramebuffer: p5.Framebuffer, grid: P5AsciifyGrid, fontManager: P5AsciifyFontManager, options?: T);
+    resetShaders(): void;
     /**
      * Resize the framebuffers to match the 2D grid size based on the number of rows and columns.
      * @ignore
