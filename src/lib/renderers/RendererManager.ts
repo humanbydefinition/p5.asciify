@@ -208,6 +208,16 @@ export class P5AsciifyRendererManager {
         }
     }
 
+    public updateCaptureFramebuffer(newCaptureFramebuffer: p5.Framebuffer): void {
+
+        this._captureFramebuffer = newCaptureFramebuffer;
+        this.resetRendererDimensions();
+
+        this._renderers.forEach(renderer => {
+            renderer.renderer.updateCaptureFramebuffer(newCaptureFramebuffer);
+        });
+    }
+
     /**
      * Resets the dimensions of all renderers.
      * 

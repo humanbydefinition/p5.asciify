@@ -189,6 +189,10 @@ export class P5Asciifier {
         }
 
         this._captureFramebuffer = captureFramebuffer;
+
+        // Reset grid dimensions based on new framebuffer
+        this._grid.updateTexture(captureFramebuffer);
+        this._rendererManager.updateCaptureFramebuffer(captureFramebuffer);
     }
 
     /**

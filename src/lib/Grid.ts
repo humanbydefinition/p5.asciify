@@ -97,6 +97,21 @@ export class P5AsciifyGrid {
     }
 
     /**
+     * Update the texture used by the grid, and reset the grid dimensions.
+     * @param texture The new framebuffer texture to use for the grid.
+     * @ignore
+     */
+    public updateTexture(texture: p5.Framebuffer): void {
+        this._texture = texture;
+
+        if (!this._fixedDimensions) {
+            this.reset();
+        } else {
+            this._resizeGrid();
+        }
+    }
+
+    /**
      * Returns the width of each cell in the grid.
      */
     get cellWidth() { return this._cellWidth; }

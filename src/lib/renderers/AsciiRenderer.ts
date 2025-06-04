@@ -72,6 +72,12 @@ export abstract class P5AsciifyRenderer<T extends AsciiRendererOptions = AsciiRe
     public abstract resizeFramebuffers(): void;
 
     /**
+     * Reset the shaders used by the renderer.
+     * @ignore
+     */
+    public abstract resetShaders(): void;
+
+    /**
      * Updates renderer options.
      * @param newOptions - The new options to update.
      * 
@@ -95,6 +101,12 @@ export abstract class P5AsciifyRenderer<T extends AsciiRendererOptions = AsciiRe
         if (newOptions?.enabled !== undefined) {
             this.enabled(newOptions.enabled);
         }
+    }
+
+    public updateCaptureFramebuffer(newCaptureFramebuffer: p5.Framebuffer): void {
+        this._captureFramebuffer = newCaptureFramebuffer;
+        this.resizeFramebuffers();
+        this.resetShaders();
     }
 
     /**

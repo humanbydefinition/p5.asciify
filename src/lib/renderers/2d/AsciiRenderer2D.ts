@@ -37,6 +37,8 @@ export class P5AsciifyRenderer2D<T extends AsciiRendererOptions = AsciiRendererO
         super(p, captureFramebuffer, grid, {width: grid.cols, height: grid.rows}, fontManager, { ...CUSTOM_DEFAULT_OPTIONS_2D, ...options });
     }
 
+    public resetShaders(): void { };
+
     /**
      * Resize the framebuffers to match the 2D grid size based on the number of rows and columns.
      * @ignore
