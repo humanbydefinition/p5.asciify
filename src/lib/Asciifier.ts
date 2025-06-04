@@ -182,6 +182,15 @@ export class P5Asciifier {
         return this._rendererManager;
     }
 
+    public updateCaptureFramebuffer(captureFramebuffer: p5.Framebuffer): void {
+        // Early return if the framebuffer is the same
+        if (this._captureFramebuffer === captureFramebuffer) {
+            return;
+        }
+
+        this._captureFramebuffer = captureFramebuffer;
+    }
+
     /**
      * Sets the font for the ascii renderers in the rendering pipeline of the asciifier.
      * @param font The `p5.Font` object to use for ASCII rendering.
