@@ -44,6 +44,7 @@ export class P5Asciifier {
     /** The plugin registry instance. */
     private _pluginRegistry: P5AsciifyPluginRegistry;
 
+    /** Indicates if the setup has been completed. */
     private _setupDone: boolean = false;
 
     /**
