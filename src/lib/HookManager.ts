@@ -67,7 +67,7 @@ export class P5AsciifyHookManager {
         const initHook = function (this: p5) {
             return handlers.handleInit(this);
         };
-        this.registerHook('init', initHook, true);
+        this.registerHook('init', initHook, false);
 
         // Core setup hook
         const afterSetupHook = function (this: p5) {
