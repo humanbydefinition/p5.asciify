@@ -41,10 +41,6 @@ export declare class P5AsciifyRendererManager {
     /** Whether any renderers are enabled. */
     private _hasEnabledRenderers;
     /**
-     * Registered plugin renderers
-     */
-    private static _plugins;
-    /**
      * Creates a new ASCII renderer manager instance.
      * @param _p The p5 instance.
      * @param _grid The grid instance.

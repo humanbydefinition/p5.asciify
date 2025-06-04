@@ -22,6 +22,7 @@ export declare class P5Asciifier {
     private _rendererManager;
     /** The font size for the ASCII renderers. */
     private _fontSize;
+    /** The background color for the ASCII output, which is used to fill the space not covered by cells in the grid. */
     private _backgroundColor;
     /** The `p5.js` instance. */
     private _p;
@@ -29,6 +30,7 @@ export declare class P5Asciifier {
     private _renderToCanvas;
     /** The plugin registry instance. */
     private _pluginRegistry;
+    /** Indicates if the setup has been completed. */
     private _setupDone;
     /**
      * Creates a new instance of the `P5Asciifier` class.
@@ -94,6 +96,7 @@ export declare class P5Asciifier {
      * ```
      */
     renderers(): P5AsciifyRendererManager;
+    updateCaptureFramebuffer(captureFramebuffer: p5.Framebuffer): void;
     /**
      * Sets the font for the ascii renderers in the rendering pipeline of the asciifier.
      * @param font The `p5.Font` object to use for ASCII rendering.
