@@ -33,6 +33,7 @@ export class P5Asciifier {
     /** The font size for the ASCII renderers. */
     private _fontSize: number = 16;
 
+    /** The background color for the ASCII output, which is used to fill the space not covered by cells in the grid. */
     private _backgroundColor: string | p5.Color | [number, number?, number?, number?] = "#000000";
 
     /** The `p5.js` instance. */
