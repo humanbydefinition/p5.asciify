@@ -3337,7 +3337,7 @@ const x = class x {
     const A = this.hookHandlers, e = function() {
       return A.handleInit(this);
     };
-    this.registerHook("init", e, !0);
+    this.registerHook("init", e, !1);
     const r = function() {
       if (!(this._renderer.drawingContext instanceof WebGLRenderingContext || this._renderer.drawingContext instanceof WebGL2RenderingContext))
         throw new g("WebGL renderer is required for p5.asciify to run.");
