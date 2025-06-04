@@ -1,6 +1,6 @@
 # Class: P5AsciifyPluginRegistry
 
-Defined in: [plugins/PluginRegistry.ts:7](https://github.com/humanbydefinition/p5.asciify/blob/f7ea3aaf85f74af4820425d6e8a41eecf5d02d32/src/lib/plugins/PluginRegistry.ts#L7)
+Defined in: [plugins/PluginRegistry.ts:7](https://github.com/humanbydefinition/p5.asciify/blob/d2d077c11ae8590b274a069af51d844232880b9e/src/lib/plugins/PluginRegistry.ts#L7)
 
 Registry that manages renderer plugins for p5.asciify.
 
@@ -20,7 +20,7 @@ Registry that manages renderer plugins for p5.asciify.
 
 > **get**(`id`): `undefined` \| [`P5AsciifyRendererPlugin`](../interfaces/P5AsciifyRendererPlugin.md)
 
-Defined in: [plugins/PluginRegistry.ts:38](https://github.com/humanbydefinition/p5.asciify/blob/f7ea3aaf85f74af4820425d6e8a41eecf5d02d32/src/lib/plugins/PluginRegistry.ts#L38)
+Defined in: [plugins/PluginRegistry.ts:38](https://github.com/humanbydefinition/p5.asciify/blob/d2d077c11ae8590b274a069af51d844232880b9e/src/lib/plugins/PluginRegistry.ts#L38)
 
 Get a plugin by its ID
 
@@ -42,7 +42,7 @@ The plugin instance or undefined if not found
 
 > **getAll**(): [`P5AsciifyRendererPlugin`](../interfaces/P5AsciifyRendererPlugin.md)[]
 
-Defined in: [plugins/PluginRegistry.ts:63](https://github.com/humanbydefinition/p5.asciify/blob/f7ea3aaf85f74af4820425d6e8a41eecf5d02d32/src/lib/plugins/PluginRegistry.ts#L63)
+Defined in: [plugins/PluginRegistry.ts:63](https://github.com/humanbydefinition/p5.asciify/blob/d2d077c11ae8590b274a069af51d844232880b9e/src/lib/plugins/PluginRegistry.ts#L63)
 
 Get all registered plugins
 
@@ -58,7 +58,7 @@ Array of plugin instances
 
 > **getIds**(): `string`[]
 
-Defined in: [plugins/PluginRegistry.ts:55](https://github.com/humanbydefinition/p5.asciify/blob/f7ea3aaf85f74af4820425d6e8a41eecf5d02d32/src/lib/plugins/PluginRegistry.ts#L55)
+Defined in: [plugins/PluginRegistry.ts:55](https://github.com/humanbydefinition/p5.asciify/blob/d2d077c11ae8590b274a069af51d844232880b9e/src/lib/plugins/PluginRegistry.ts#L55)
 
 Get all registered plugin IDs
 
@@ -74,7 +74,7 @@ Array of plugin IDs
 
 > **has**(`id`): `boolean`
 
-Defined in: [plugins/PluginRegistry.ts:29](https://github.com/humanbydefinition/p5.asciify/blob/f7ea3aaf85f74af4820425d6e8a41eecf5d02d32/src/lib/plugins/PluginRegistry.ts#L29)
+Defined in: [plugins/PluginRegistry.ts:29](https://github.com/humanbydefinition/p5.asciify/blob/d2d077c11ae8590b274a069af51d844232880b9e/src/lib/plugins/PluginRegistry.ts#L29)
 
 Check if a plugin with the given ID is registered
 
@@ -96,7 +96,7 @@ True if the plugin exists, false otherwise
 
 > **register**(`plugin`): `void`
 
-Defined in: [plugins/PluginRegistry.ts:16](https://github.com/humanbydefinition/p5.asciify/blob/f7ea3aaf85f74af4820425d6e8a41eecf5d02d32/src/lib/plugins/PluginRegistry.ts#L16)
+Defined in: [plugins/PluginRegistry.ts:16](https://github.com/humanbydefinition/p5.asciify/blob/d2d077c11ae8590b274a069af51d844232880b9e/src/lib/plugins/PluginRegistry.ts#L16)
 
 Registers a new renderer plugin.
 
@@ -120,7 +120,7 @@ Registers a new renderer plugin.
 
 > **unregister**(`id`): `boolean`
 
-Defined in: [plugins/PluginRegistry.ts:47](https://github.com/humanbydefinition/p5.asciify/blob/f7ea3aaf85f74af4820425d6e8a41eecf5d02d32/src/lib/plugins/PluginRegistry.ts#L47)
+Defined in: [plugins/PluginRegistry.ts:47](https://github.com/humanbydefinition/p5.asciify/blob/d2d077c11ae8590b274a069af51d844232880b9e/src/lib/plugins/PluginRegistry.ts#L47)
 
 Unregister a plugin by its ID
 
