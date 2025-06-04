@@ -56,11 +56,6 @@ export class P5AsciifyRendererManager {
     private _hasEnabledRenderers: boolean = false;
 
     /**
-     * Registered plugin renderers
-     */
-    private static _plugins = new Map<string, P5AsciifyRendererPlugin>();
-
-    /**
      * Creates a new ASCII renderer manager instance.
      * @param _p The p5 instance.
      * @param _grid The grid instance.
