@@ -6,11 +6,6 @@ import { P5AsciifyAbstractFeatureRenderer2D } from './renderers/2d/feature';
 import { P5AsciifyRenderer2D } from './renderers/2d';
 import { P5AsciifyRenderer } from './renderers';
 
-// Check if p5.js version is 1.8.0 or higher
-if (typeof p5 !== 'undefined' && compareVersions(p5.prototype.VERSION, "1.8.0") < 0) {
-  throw new P5AsciifyError("p5.asciify requires p5.js v1.8.0 or higher to run.");
-}
-
 /**
  * Main instance of p5.asciify *({@link P5AsciifierManager})* providing full access to the library.
  */

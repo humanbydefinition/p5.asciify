@@ -77,6 +77,11 @@ export class P5AsciifyHookManager {
                 throw new P5AsciifyError("WebGL renderer is required for p5.asciify to run.");
             }
 
+            // Ensure p5.js version is 1.8.0 or higherAdd commentMore actions
+            if (compareVersions(this.VERSION, "1.8.0") < 0) {
+                throw new P5AsciifyError("p5.asciify requires p5.js v1.8.0 or higher to run.");
+            }
+
             if (compareVersions(this.VERSION, "2.0.0") >= 0) {
                 return (async () => {
                     await handlers.handleSetup(this);
