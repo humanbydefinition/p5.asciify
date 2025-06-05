@@ -139,7 +139,11 @@ export class P5AsciifyHookManager {
      * @private
      */
     private _integrateWithP5(): void {
+        // Early return if p5 is not available
         if (typeof p5 === 'undefined') return;
+
+        // Early return if p5 doesn't have a prototype property
+        if (!p5.prototype) return;
 
         if (compareVersions(p5.prototype.VERSION, "2.0.0") >= 0 && typeof p5.registerAddon === 'function') {
             // p5.js v2.0.0+ - use addon system
