@@ -1,7 +1,7 @@
 var _A = Object.defineProperty;
 var mA = (Q, A, e) => A in Q ? _A(Q, A, { enumerable: !0, configurable: !0, writable: !0, value: e }) : Q[A] = e;
 var o = (Q, A, e) => mA(Q, typeof A != "symbol" ? A + "" : A, e);
-import p from "p5";
+import w from "p5";
 class PA {
   /**
    * Create a new grid instance.
@@ -188,7 +188,7 @@ class Z {
     const f = n.pixels, a = E.pixels, B = h.pixels, m = c.pixels, _ = l.pixels, P = e.cols, d = e.rows, F = e.cellWidth, C = e.cellHeight, I = e.width, Y = e.height, y = r.characters;
     let v = this.generateSVGHeader(I, Y);
     if (s.includeBackgroundRectangles) {
-      const G = t, w = this.p.color(G), D = `rgba(${w._array[0] * 255},${w._array[1] * 255},${w._array[2] * 255},${w._array[3]})`;
+      const G = t, p = this.p.color(G), D = `rgba(${p._array[0] * 255},${p._array[1] * 255},${p._array[2] * 255},${p._array[3]})`;
       v += `
 <rect width="${I}" height="${Y}" fill="${D}" />`;
     }
@@ -196,7 +196,7 @@ class Z {
 <g id="ascii-cells">`;
     let u = 0;
     for (let G = 0; G < d; G++)
-      for (let w = 0; w < P; w++) {
+      for (let p = 0; p < P; p++) {
         const D = u * 4, z = f[D], k = f[D + 1];
         let b = z + (k << 8);
         b >= y.length && (b = y.length - 1);
@@ -216,7 +216,7 @@ class Z {
           const DA = U;
           U = H, H = DA;
         }
-        const K = _[D] * (360 / 256), X = w * F, CA = G * C;
+        const K = _[D] * (360 / 256), X = p * F, CA = G * C;
         v += this.generateSVGCellContent(
           b,
           U,
@@ -308,9 +308,9 @@ class Z {
       if (u && u[1]) {
         if (F && (B += `
   <g${F}>`), a.drawMode === "stroke") {
-          const G = a.strokeWidth || 1, w = `path-${A}-${t}-${i}`.replace(/\./g, "-");
+          const G = a.strokeWidth || 1, p = `path-${A}-${t}-${i}`.replace(/\./g, "-");
           B += `
-    <path id="${w}" d="${u[1]}" stroke="${P}" stroke-width="${G}" fill="none" />`;
+    <path id="${p}" d="${u[1]}" stroke="${P}" stroke-width="${G}" fill="none" />`;
         } else
           B += `
     <path d="${u[1]}" fill="${P}" />`;
@@ -381,8 +381,8 @@ class q {
     let I = 0;
     for (let y = 0; y < P; y++)
       for (let v = 0; v < _; v++) {
-        const u = I * 4, G = l[u], w = l[u + 1];
-        let D = G + (w << 8);
+        const u = I * 4, G = l[u], p = l[u + 1];
+        let D = G + (p << 8);
         D >= d.length && (D = d.length - 1);
         const z = d[D];
         if (!i.includeEmptyCells && (z.character === " " || z.character === "")) {
@@ -664,7 +664,7 @@ class IA {
    * @ignore
    */
   loadFont(A) {
-    if (!(A instanceof p.Font))
+    if (!(A instanceof w.Font))
       throw new g("Invalid font parameter. Expected a path, base64 string, blob URL, or p5.Font object.");
     this._font = A, this._initializeGlyphsAndCharacters();
   }
@@ -1479,7 +1479,7 @@ class R extends N {
    * ```
    */
   characterColor(e) {
-    if (!e || !(e instanceof p.Color))
+    if (!e || !(e instanceof w.Color))
       throw new g("Character color must be a valid p5.Color object");
     this._options.characterColor = e;
   }
@@ -1518,7 +1518,7 @@ class R extends N {
    * ```
    */
   backgroundColor(e) {
-    if (!e || !(e instanceof p.Color))
+    if (!e || !(e instanceof w.Color))
       throw new g("Background color must be a valid p5.Color object");
     this._options.backgroundColor = e;
   }
@@ -2871,7 +2871,7 @@ class QA {
    * ```
    */
   background(A) {
-    if (typeof A != "string" && !Array.isArray(A) && !(A instanceof p.Color))
+    if (typeof A != "string" && !Array.isArray(A) && !(A instanceof w.Color))
       throw new g(`Invalid color type: ${typeof A}. Expected string, array or p5.Color.`);
     this._backgroundColor = A;
   }
@@ -3341,6 +3341,8 @@ const x = class x {
     const r = function() {
       if (!(this._renderer.drawingContext instanceof WebGLRenderingContext || this._renderer.drawingContext instanceof WebGL2RenderingContext))
         throw new g("WebGL renderer is required for p5.asciify to run.");
+      if (M(this.VERSION, "1.8.0") < 0)
+        throw new g("p5.asciify requires p5.js v1.8.0 or higher to run.");
       if (M(this.VERSION, "2.0.0") >= 0)
         return (async () => {
           await A.handleSetup(this);
@@ -3370,7 +3372,7 @@ const x = class x {
    * @private
    */
   _integrateWithP5() {
-    typeof p > "u" || (M(p.prototype.VERSION, "2.0.0") >= 0 && typeof p.registerAddon == "function" ? this.p5AddonRegistered || (p.registerAddon(this._createP5Addon()), this.p5AddonRegistered = !0) : this._registerLegacyHooks());
+    typeof w > "u" || (M(w.prototype.VERSION, "2.0.0") >= 0 && typeof w.registerAddon == "function" ? this.p5AddonRegistered || (w.registerAddon(this._createP5Addon()), this.p5AddonRegistered = !0) : this._registerLegacyHooks());
   }
   /**
    * Create p5.js v2.0.0+ addon configuration
@@ -3404,7 +3406,7 @@ const x = class x {
    */
   _registerLegacyHooks() {
     this.registeredHooks.forEach((A, e) => {
-      A.registered || (p.prototype.registerMethod(e, A.proxyFn), A.registered = !0);
+      A.registered || (w.prototype.registerMethod(e, A.proxyFn), A.registered = !0);
     });
   }
   /**
@@ -3661,7 +3663,7 @@ const T = class T {
   add(A) {
     if (!this._p)
       throw new g("Cannot add asciifier before initializing p5.asciify. Ensure p5.asciify is initialized first.");
-    if (A !== void 0 && !(A instanceof p.Framebuffer))
+    if (A !== void 0 && !(A instanceof w.Framebuffer))
       throw new g("Framebuffer must be an instance of p5.Framebuffer.");
     const e = new QA(this._pluginRegistry);
     return M(this._p.VERSION, "2.0.0") < 0 ? (e.init(this._p, this._baseFont), this._setupDone && e.setup(A || this._sketchFramebuffer), this._asciifiers.push(e), e) : (async () => (await e.init(this._p, this._baseFont), this._setupDone && this._sketchFramebuffer && await e.setup(A || this._sketchFramebuffer), this._asciifiers.push(e), e))();
@@ -3758,10 +3760,7 @@ const GA = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
 }, Symbol.toStringTag, { value: "Module" })), NA = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   P5AsciifyPluginRegistry: uA
-}, Symbol.toStringTag, { value: "Module" }));
-if (typeof p < "u" && M(p.prototype.VERSION, "1.8.0") < 0)
-  throw new g("p5.asciify requires p5.js v1.8.0 or higher to run.");
-const TA = iA.getInstance(), YA = [
+}, Symbol.toStringTag, { value: "Module" })), TA = iA.getInstance(), YA = [
   ["_getImmediateModeShader", "_defaultImmediateModeShader"],
   ["_getNormalShader", "_defaultNormalShader"],
   ["_getColorShader", "_defaultColorShader"],
@@ -3770,8 +3769,8 @@ const TA = iA.getInstance(), YA = [
   ["_getFontShader", "_defaultFontShader"]
 ];
 for (const [Q, A] of YA) {
-  const e = p.RendererGL.prototype[Q];
-  p.RendererGL.prototype[Q] = function() {
+  const e = w.RendererGL.prototype[Q];
+  w.RendererGL.prototype[Q] = function() {
     return this[A] || (this[A] = e.call(this), this[A]._vertSrc = this[A]._vertSrc.replace(
       /mediump/g,
       "highp"
