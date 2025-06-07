@@ -40,7 +40,7 @@ export abstract class P5AsciifyRenderer<T extends AsciiRendererOptions = AsciiRe
      */
     constructor(
         protected _p: p5,
-        protected _captureFramebuffer: p5.Framebuffer,
+        protected _captureFramebuffer: p5.Framebuffer | p5.Graphics,
         protected _grid: P5AsciifyGrid,
         protected initialFramebufferDimensions: {
             width: number,
@@ -103,7 +103,12 @@ export abstract class P5AsciifyRenderer<T extends AsciiRendererOptions = AsciiRe
         }
     }
 
-    public updateCaptureFramebuffer(newCaptureFramebuffer: p5.Framebuffer): void {
+    /**
+     * Update the capture framebuffer used by the renderer.
+     * @param newCaptureFramebuffer - The new capture framebuffer or graphics to use.
+     * @ignore
+     */
+    public updateCaptureFramebuffer(newCaptureFramebuffer: p5.Framebuffer | p5.Graphics): void {
         this._captureFramebuffer = newCaptureFramebuffer;
         this.resizeFramebuffers();
         this.resetShaders();

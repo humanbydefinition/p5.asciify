@@ -25,7 +25,7 @@ export abstract class P5AsciifyAbstractFeatureRenderer2D<T extends FeatureAsciiR
      */
     constructor(
         p: p5,
-        captureFramebuffer: p5.Framebuffer,
+        captureFramebuffer: p5.Framebuffer | p5.Graphics,
         grid: P5AsciifyGrid,
         fontManager: P5AsciifyFontManager,
         options: T

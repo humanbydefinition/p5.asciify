@@ -70,7 +70,7 @@ export class P5AsciifyEdgeRenderer extends P5AsciifyAbstractFeatureRenderer2D<Ed
      */
     constructor(
         p5Instance: p5,
-        captureFramebuffer: p5.Framebuffer,
+        captureFramebuffer: p5.Framebuffer | p5.Graphics,
         grid: P5AsciifyGrid,
         fontManager: P5AsciifyFontManager,
         options: EdgeAsciiRendererOptions = EDGE_DEFAULT_OPTIONS

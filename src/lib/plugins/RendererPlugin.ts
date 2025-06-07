@@ -36,7 +36,7 @@ export interface P5AsciifyRendererPlugin {
      */
     create(
         p: p5, 
-        captureFramebuffer: p5.Framebuffer, 
+        captureFramebuffer: p5.Framebuffer | p5.Graphics, 
         grid: P5AsciifyGrid, 
         fontManager: P5AsciifyFontManager, 
         options?: FeatureAsciiRendererOptions

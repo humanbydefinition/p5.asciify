@@ -60,7 +60,7 @@ export class P5AsciifyDisplayRenderer {
         secondaryColorFramebuffer: p5.Framebuffer,
         transformFramebuffer: p5.Framebuffer,
         rotationFramebuffer: p5.Framebuffer,
-        captureFramebuffer: p5.Framebuffer,
+        captureFramebuffer: p5.Framebuffer | p5.Graphics,
         backgroundColor: string | p5.Color | [number, number?, number?, number?] = "#000000"
     ) {
         this._resultFramebuffer.begin();

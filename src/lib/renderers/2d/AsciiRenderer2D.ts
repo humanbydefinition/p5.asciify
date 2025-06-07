@@ -29,7 +29,7 @@ export class P5AsciifyRenderer2D<T extends AsciiRendererOptions = AsciiRendererO
      */
     constructor(
         p: p5,
-        captureFramebuffer: p5.Framebuffer,
+        captureFramebuffer: p5.Framebuffer | p5.Graphics,
         grid: P5AsciifyGrid,
         fontManager: P5AsciifyFontManager,
         options: T = CUSTOM_DEFAULT_OPTIONS_2D as T

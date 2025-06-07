@@ -57,7 +57,13 @@ export class P5AsciifyBrightnessRenderer extends P5AsciifyAbstractFeatureRendere
      * @param options The options for the ASCII renderer.
      * @ignore
      */
-    constructor(p5Instance: p5, captureFramebuffer: p5.Framebuffer, grid: P5AsciifyGrid, fontManager: P5AsciifyFontManager, options: BrightnessAsciiRendererOptions = BRIGHTNESS_DEFAULT_OPTIONS) {
+    constructor(
+        p5Instance: p5,
+        captureFramebuffer: p5.Framebuffer | p5.Graphics,
+        grid: P5AsciifyGrid,
+        fontManager: P5AsciifyFontManager,
+        options: BrightnessAsciiRendererOptions = BRIGHTNESS_DEFAULT_OPTIONS
+    ) {
         super(p5Instance, captureFramebuffer, grid, fontManager, { ...BRIGHTNESS_DEFAULT_OPTIONS, ...options });
 
         this.colorSampleShader = this._p.createShader(vertexShader, colorSampleShader);

@@ -68,7 +68,7 @@ export class P5AsciifyRendererManager {
         private _p: p5,
 
         /** The framebuffer containing the content to be asciified. */
-        private _captureFramebuffer: p5.Framebuffer,
+        private _captureFramebuffer: p5.Framebuffer | p5.Graphics,
 
         /** The grid instance. */
         private _grid: P5AsciifyGrid,
@@ -210,7 +210,7 @@ export class P5AsciifyRendererManager {
         }
     }
 
-    public updateCaptureFramebuffer(newCaptureFramebuffer: p5.Framebuffer): void {
+    public updateCaptureFramebuffer(newCaptureFramebuffer: p5.Framebuffer | p5.Graphics): void {
 
         this._captureFramebuffer = newCaptureFramebuffer;
         this.resetRendererDimensions();
@@ -279,10 +279,24 @@ export class P5AsciifyRendererManager {
     public add(
         name: string,
         type: string,
-        options: AsciiRendererOptions
-    ): P5AsciifyRenderer {
-        if (typeof name !== 'string' || name.trim() === '') {
-            throw new P5AsciifyError('Renderer name must be a non-empty string');
+        options?: AsciiRendererOptions
+    ): P5AsciifyRenderer | null {
+        // Validate renderer name
+        const isValidName = errorHandler.validate(
+            typeof name === 'string' && name.trim() !== '',
+            'Renderer name must be a non-empty string.',
+            { providedValue: name, method: 'add' }
+        );
+
+        // Validate renderer type
+        const isValidType = errorHandler.validate(
+            typeof type === 'string' && type.trim() !== '',
+            'Renderer type must be a non-empty string.',
+            { providedValue: type, method: 'add' }
+        );
+
+        if (!isValidName || !isValidType) {
+            return null; // Return early if name validation fails
         }
 
         let renderer: P5AsciifyRenderer | undefined;
@@ -308,20 +322,25 @@ export class P5AsciifyRendererManager {
             }
         }
 
-        // If neither built-in nor plugin, throw error
-        if (!renderer) {
-            const availableTypes = [
-                ...Object.keys(RENDERER_TYPES),
-                ...this._pluginRegistry.getIds()
-            ].join(', ');
+        // Validate renderer was created successfully
+        const isValidRenderer = errorHandler.validate(
+            renderer !== undefined,
+            (() => {
+                const availableTypes = [
+                    ...Object.keys(RENDERER_TYPES),
+                    ...this._pluginRegistry.getIds()
+                ].join(', ');
+                return `Invalid renderer type: ${type}. Valid types are: ${availableTypes}`;
+            })(),
+            { providedValue: type, method: 'add' }
+        );
 
-            throw new P5AsciifyError(
-                `Invalid renderer type: ${type}. Valid types are: ${availableTypes}`
-            );
+        if (!isValidRenderer) {
+            return null; // Return early if renderer creation failed
         }
 
-        this._renderers.unshift({ name, renderer });
-        return renderer;
+        this._renderers.unshift({ name, renderer: renderer! });
+        return renderer as P5AsciifyRenderer;
     }
 
     /**
@@ -342,16 +361,33 @@ export class P5AsciifyRendererManager {
      *  }
      * ```
      */
-    public get(rendererName: string): P5AsciifyRenderer {
-        const renderer = this._renderers.find(r => r.name === rendererName)?.renderer;
+    public get(rendererName: string): P5AsciifyRenderer | null {
+        // Validate input parameter
+        const isValidInput = errorHandler.validate(
+            typeof rendererName === 'string' && rendererName.trim() !== '',
+            'Renderer name must be a non-empty string.',
+            { providedValue: rendererName, method: 'get' }
+        );
 
-        if (!renderer) {
-            throw new P5AsciifyError(
-                `Renderer '${rendererName}' not found. Available renderers: ${this._renderers.map(r => r.name).join(', ')}`
-            );
+        if (!isValidInput) {
+            return null; // Return early if input validation fails
         }
 
-        return renderer;
+        // Find the renderer
+        const renderer = this._renderers.find(r => r.name === rendererName)?.renderer;
+
+        // Validate renderer exists
+        const rendererExists = errorHandler.validate(
+            renderer !== undefined,
+            `Renderer '${rendererName}' not found. Available renderers: ${this._renderers.map(r => r.name).join(', ')}`,
+            { providedValue: rendererName, method: 'get' }
+        );
+
+        if (!rendererExists) {
+            return null; // Return early if renderer not found
+        }
+
+        return renderer as P5AsciifyRenderer;
     }
 
     /**
