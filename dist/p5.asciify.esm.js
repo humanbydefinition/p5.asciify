@@ -1,6 +1,6 @@
 var IA = Object.defineProperty;
-var bA = (g, A, e) => A in g ? IA(g, A, { enumerable: !0, configurable: !0, writable: !0, value: e }) : g[A] = e;
-var o = (g, A, e) => bA(g, typeof A != "symbol" ? A + "" : A, e);
+var bA = (B, A, e) => A in B ? IA(B, A, { enumerable: !0, configurable: !0, writable: !0, value: e }) : B[A] = e;
+var o = (B, A, e) => bA(B, typeof A != "symbol" ? A + "" : A, e);
 import b from "p5";
 class wA {
   /**
@@ -138,8 +138,8 @@ class wA {
     this._fixedDimensions = A;
   }
 }
-const M = (g, A) => {
-  const [e, r] = [g, A].map((t) => t.split(".").map(Number));
+const M = (B, A) => {
+  const [e, r] = [B, A].map((t) => t.split(".").map(Number));
   for (let t = 0; t < Math.max(e.length, r.length); t++) {
     const i = e[t] ?? 0, s = r[t] ?? 0;
     if (i !== s) return i > s ? 1 : -1;
@@ -175,7 +175,7 @@ class rA {
       ...i
     }, a = A.characterFramebuffer, E = A.primaryColorFramebuffer, Q = A.secondaryColorFramebuffer, h = A.transformFramebuffer, c = A.rotationFramebuffer;
     a.loadPixels(), E.loadPixels(), Q.loadPixels(), h.loadPixels(), c.loadPixels();
-    const _ = a.pixels, d = E.pixels, l = Q.pixels, m = h.pixels, B = c.pixels, u = e.cols, f = e.rows, I = e.cellWidth, C = e.cellHeight, p = e.width, T = e.height, F = r.characters;
+    const _ = a.pixels, d = E.pixels, l = Q.pixels, m = h.pixels, g = c.pixels, u = e.cols, f = e.rows, I = e.cellWidth, C = e.cellHeight, p = e.width, T = e.height, F = r.characters;
     let y = this.generateSVGHeader(p, T);
     if (s.includeBackgroundRectangles) {
       const G = t, w = this.p.color(G), P = `rgba(${w._array[0] * 255},${w._array[1] * 255},${w._array[2] * 255},${w._array[3]})`;
@@ -206,7 +206,7 @@ class rA {
           const pA = H;
           H = U, U = pA;
         }
-        const q = B[P] * (360 / 256), AA = w * I, PA = G * C;
+        const q = g[P] * (360 / 256), AA = w * I, PA = G * C;
         y += this.generateSVGCellContent(
           x,
           H,
@@ -279,17 +279,17 @@ class rA {
   <rect x="${t}" y="${i}" width="${s}" height="${a}" stroke="${C}" fill="none" stroke-width="${d.strokeWidth || 1}" />` : l += `
   <rect x="${t}" y="${i}" width="${s}" height="${a}" fill="${C}" />`;
     }
-    const m = t + s / 2, B = i + a / 2, u = `rgba(${e.r},${e.g},${e.b},${e.a / 255})`, f = [];
+    const m = t + s / 2, g = i + a / 2, u = `rgba(${e.r},${e.g},${e.b},${e.a / 255})`, f = [];
     if (Q || h) {
       const C = Q ? -1 : 1, p = h ? -1 : 1;
-      f.push(`translate(${m} ${B})`), f.push(`scale(${C} ${p})`), f.push(`translate(${-m} ${-B})`);
+      f.push(`translate(${m} ${g})`), f.push(`scale(${C} ${p})`), f.push(`translate(${-m} ${-g})`);
     }
-    E && f.push(`rotate(${E} ${m} ${B})`);
+    E && f.push(`rotate(${E} ${m} ${g})`);
     const I = f.length ? ` transform="${f.join(" ")}"` : "";
     if (d.drawMode === "text") {
       const C = Math.min(s, a) * 0.8;
       l += `
-  <text x="${m}" y="${B}" font-family="monospace" font-size="${C}px" fill="${u}" text-anchor="middle" dominant-baseline="middle"${I}>${this.escapeXml(_.character)}</text>`;
+  <text x="${m}" y="${g}" font-family="monospace" font-size="${C}px" fill="${u}" text-anchor="middle" dominant-baseline="middle"${I}>${this.escapeXml(_.character)}</text>`;
     } else {
       let C = 1;
       M(this.p.VERSION, "2.0.0") < 0 ? C = c.fontSize / c.font.font.unitsPerEm : C = c.fontSize / c.font.data.head.unitsPerEm;
@@ -354,11 +354,11 @@ class tA {
       ...t
     }, s = A.characterFramebuffer, a = A.primaryColorFramebuffer, E = A.secondaryColorFramebuffer, Q = A.transformFramebuffer, h = A.rotationFramebuffer;
     s.loadPixels(), a.loadPixels(), E.loadPixels(), Q.loadPixels(), h.loadPixels();
-    const c = s.pixels, _ = a.pixels, d = E.pixels, l = Q.pixels, m = h.pixels, B = e.cols, u = e.rows, f = r.characters, I = {
+    const c = s.pixels, _ = a.pixels, d = E.pixels, l = Q.pixels, m = h.pixels, g = e.cols, u = e.rows, f = r.characters, I = {
       version: "1.0",
       created: (/* @__PURE__ */ new Date()).toISOString(),
       gridSize: {
-        cols: B,
+        cols: g,
         rows: u,
         cellWidth: e.cellWidth,
         cellHeight: e.cellHeight,
@@ -368,7 +368,7 @@ class tA {
     }, C = [];
     let p = 0;
     for (let F = 0; F < u; F++)
-      for (let y = 0; y < B; y++) {
+      for (let y = 0; y < g; y++) {
         const D = p * 4, G = c[D], w = c[D + 1];
         let P = G + (w << 8);
         P >= f.length && (P = f.length - 1);
@@ -466,8 +466,8 @@ class tA {
     i.href = t, i.download = `${e}.json`, document.body.appendChild(i), i.click(), document.body.removeChild(i), URL.revokeObjectURL(t);
   }
 }
-function fA(g, A) {
-  const e = g.data.cmap;
+function fA(B, A) {
+  const e = B.data.cmap;
   if (!e || !e.tables) return 0;
   for (const r of e.tables)
     if (r.format === 4) {
@@ -493,10 +493,10 @@ function j() {
     toSVG: () => ""
   };
 }
-function uA(g, A, e, r, t) {
+function uA(B, A, e, r, t) {
   if (!A || !A.xs || A.xs.length === 0)
     return j();
-  const i = t / g.data.head.unitsPerEm;
+  const i = t / B.data.head.unitsPerEm;
   return {
     getBoundingBox: () => ({
       x1: e + A.xMin * i,
@@ -509,9 +509,9 @@ function uA(g, A, e, r, t) {
     toSVG: () => CA(A, e, r, i)
   };
 }
-function CA(g, A, e, r) {
-  if (!g || !g.xs) return "";
-  const { xs: t, ys: i, endPts: s, flags: a } = g;
+function CA(B, A, e, r) {
+  if (!B || !B.xs) return "";
+  const { xs: t, ys: i, endPts: s, flags: a } = B;
   if (!t || !i || !s || !a) return "";
   let E = "", Q = 0;
   for (let h = 0; h < s.length; h++) {
@@ -523,17 +523,17 @@ function CA(g, A, e, r) {
         let l = Q + 1;
         for (; l <= c; )
           if ((a[l] & 1) !== 0) {
-            const B = A + t[l] * r, u = e - i[l] * r;
-            E += `L${B.toFixed(2)},${u.toFixed(2)}`, l++;
+            const g = A + t[l] * r, u = e - i[l] * r;
+            E += `L${g.toFixed(2)},${u.toFixed(2)}`, l++;
           } else {
-            const B = A + t[l] * r, u = e - i[l] * r;
+            const g = A + t[l] * r, u = e - i[l] * r;
             let f = l + 1 > c ? Q : l + 1;
             if ((a[f] & 1) !== 0) {
               const C = A + t[f] * r, p = e - i[f] * r;
-              E += `Q${B.toFixed(2)},${u.toFixed(2)} ${C.toFixed(2)},${p.toFixed(2)}`, l = f + 1;
+              E += `Q${g.toFixed(2)},${u.toFixed(2)} ${C.toFixed(2)},${p.toFixed(2)}`, l = f + 1;
             } else {
-              const C = A + t[f] * r, p = e - i[f] * r, T = (B + C) / 2, F = (u + p) / 2;
-              E += `Q${B.toFixed(2)},${u.toFixed(2)} ${T.toFixed(2)},${F.toFixed(2)}`, l = f;
+              const C = A + t[f] * r, p = e - i[f] * r, T = (g + C) / 2, F = (u + p) / 2;
+              E += `Q${g.toFixed(2)},${u.toFixed(2)} ${T.toFixed(2)},${F.toFixed(2)}`, l = f;
             }
           }
         E += "Z";
@@ -543,7 +543,7 @@ function CA(g, A, e, r) {
   }
   return `<path d="${E}" />`;
 }
-const $A = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const UA = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   P5AsciifyJSONExporter: tA,
   P5AsciifySVGExporter: rA,
@@ -560,7 +560,7 @@ class z extends Error {
     this.name = "P5AsciifyError", this.originalError = r;
   }
 }
-var gA = /* @__PURE__ */ ((g) => (g[g.SILENT = 0] = "SILENT", g[g.WARNING = 1] = "WARNING", g[g.ERROR = 2] = "ERROR", g[g.THROW = 3] = "THROW", g))(gA || {});
+var gA = /* @__PURE__ */ ((B) => (B[B.SILENT = 0] = "SILENT", B[B.WARNING = 1] = "WARNING", B[B.ERROR = 2] = "ERROR", B[B.THROW = 3] = "THROW", B))(gA || {});
 const R = class R {
   constructor() {
     o(this, "_options", {
@@ -616,7 +616,7 @@ const R = class R {
 };
 o(R, "_instance", null);
 let L = R;
-const n = L.getInstance(), JA = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const n = L.getInstance(), $A = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   ErrorLevel: gA,
   P5AsciifyError: z,
@@ -2026,8 +2026,8 @@ void main() {\r
 
     gl_FragColor = edgeColor;\r
 }`;
-const cA = (g, A, e) => `
-precision mediump float;uniform sampler2D u_image;uniform vec2 u_imageSize,u_gridCellDimensions;uniform int u_threshold;const vec3 i=vec3(0);vec3 f[${g}];int u[${g}];float r(float i){return floor(i+.5);}void main(){vec2 v=floor(gl_FragCoord.xy);ivec2 b=ivec2(v);v=u_imageSize/u_gridCellDimensions;b=ivec2(r(float(b.x)*v.x),r(float(b.y)*v.y));int m=0;for(int b=0;b<${g};b++)f[b]=i,u[b]=0;for(int v=0;v<${e};v++)for(int r=0;r<${A};r++){ivec2 y=b+ivec2(r,v);if(y.x<0||y.y<0||y.x>=int(u_imageSize.x)||y.y>=int(u_imageSize.y))continue;vec3 e=texture2D(u_image,(vec2(y)+.5)/u_imageSize).xyz;if(length(e-i)<.001)continue;m++;bool x=false;for(int b=0;b<${g};b++)if(length(e-f[b])<.001){u[b]++;x=true;break;}if(!x)for(int b=0;b<${g};b++)if(u[b]==0){f[b]=e;u[b]=1;break;}}vec3 e=i;int x=0;for(int b=0;b<${g};b++)if(u[b]>x)e=f[b],x=u[b];gl_FragColor=m<u_threshold?vec4(i,0):vec4(e,1);}
+const cA = (B, A, e) => `
+precision mediump float;uniform sampler2D u_image;uniform vec2 u_imageSize,u_gridCellDimensions;uniform int u_threshold;const vec3 i=vec3(0);vec3 f[${B}];int u[${B}];float r(float i){return floor(i+.5);}void main(){vec2 v=floor(gl_FragCoord.xy);ivec2 b=ivec2(v);v=u_imageSize/u_gridCellDimensions;b=ivec2(r(float(b.x)*v.x),r(float(b.y)*v.y));int m=0;for(int b=0;b<${B};b++)f[b]=i,u[b]=0;for(int v=0;v<${e};v++)for(int r=0;r<${A};r++){ivec2 y=b+ivec2(r,v);if(y.x<0||y.y<0||y.x>=int(u_imageSize.x)||y.y>=int(u_imageSize.y))continue;vec3 e=texture2D(u_image,(vec2(y)+.5)/u_imageSize).xyz;if(length(e-i)<.001)continue;m++;bool x=false;for(int b=0;b<${B};b++)if(length(e-f[b])<.001){u[b]++;x=true;break;}if(!x)for(int b=0;b<${B};b++)if(u[b]==0){f[b]=e;u[b]=1;break;}}vec3 e=i;int x=0;for(int b=0;b<${B};b++)if(u[b]>x)e=f[b],x=u[b];gl_FragColor=m<u_threshold?vec4(i,0):vec4(e,1);}
 `, oA = {
   /** Enable/disable the renderer */
   enabled: !1,
@@ -3279,10 +3279,10 @@ class eA {
       };
     try {
       e = typeof A == "string" ? JSON.parse(A) : A;
-    } catch (B) {
+    } catch (g) {
       return n.validate(
         !1,
-        `Invalid JSON format: ${B.message}`,
+        `Invalid JSON format: ${g.message}`,
         { providedValue: A, method: "loadJSON" }
       ), {
         characterFramebuffer: null,
@@ -3315,24 +3315,24 @@ class eA {
       antialias: !1,
       textureFiltering: this._p.NEAREST,
       depthFormat: this._p.UNSIGNED_INT
-    }, h = this._p.createFramebuffer(Q), c = this._p.createFramebuffer(Q), _ = this._p.createFramebuffer(Q), d = this._p.createFramebuffer(Q), l = this._p.createFramebuffer(Q), m = (B, u, f, I) => {
-      B.begin(), this._p.push(), this._p.noStroke(), this._p.fill(I);
+    }, h = this._p.createFramebuffer(Q), c = this._p.createFramebuffer(Q), _ = this._p.createFramebuffer(Q), d = this._p.createFramebuffer(Q), l = this._p.createFramebuffer(Q), m = (g, u, f, I) => {
+      g.begin(), this._p.push(), this._p.noStroke(), this._p.fill(I);
       const C = u - a / 2 + 0.5, p = f - E / 2 + 0.5;
-      this._p.rect(C, p, 1, 1), this._p.pop(), B.end();
+      this._p.rect(C, p, 1, 1), this._p.pop(), g.end();
     };
-    for (const B of e.cells)
-      if (!(B.x < 0 || B.y < 0 || B.x >= a || B.y >= E)) {
-        if (B.character) {
-          const u = this._fontManager.glyphColor(B.character);
-          m(h, B.x, B.y, u);
+    for (const g of e.cells)
+      if (!(g.x < 0 || g.y < 0 || g.x >= a || g.y >= E)) {
+        if (g.character) {
+          const u = this._fontManager.glyphColor(g.character);
+          m(h, g.x, g.y, u);
         }
-        if (B.color && m(c, B.x, B.y, B.color), B.backgroundColor && m(_, B.x, B.y, B.backgroundColor), B.rotation !== void 0) {
-          const u = Math.round(B.rotation % 360 * 0.7083333333333334);
-          m(l, B.x, B.y, u);
+        if (g.color && m(c, g.x, g.y, g.color), g.backgroundColor && m(_, g.x, g.y, g.backgroundColor), g.rotation !== void 0) {
+          const u = Math.round(g.rotation % 360 * 0.7083333333333334);
+          m(l, g.x, g.y, u);
         }
-        if (B.flipHorizontal !== void 0 || B.flipVertical !== void 0 || B.inverted !== void 0) {
-          const u = B.inverted === !0, f = B.flipHorizontal === !0, I = B.flipVertical === !0;
-          m(d, B.x, B.y, [
+        if (g.flipHorizontal !== void 0 || g.flipVertical !== void 0 || g.inverted !== void 0) {
+          const u = g.inverted === !0, f = g.flipHorizontal === !0, I = g.flipVertical === !0;
+          m(d, g.x, g.y, [
             u ? 255 : 0,
             f ? 255 : 0,
             I ? 255 : 0,
@@ -3797,7 +3797,7 @@ const V = class V {
    * @ignore
    */
   async init(A) {
-    this._p = A, M(A.VERSION, "2.0.0") < 0 ? (A._isGlobal || (this._p.preload = () => {
+    this._p = A, this._applyShaderPrecisionFix(), M(A.VERSION, "2.0.0") < 0 ? (A._isGlobal || (this._p.preload = () => {
     }), this._p._incrementPreload(), this._baseFont = A.loadFont(dA, (e) => {
       this._asciifiers.forEach((r) => {
         r.init(A, e);
@@ -3948,6 +3948,34 @@ const V = class V {
     n.setGlobalLevel(A);
   }
   /**
+   * Apply shader precision fix for Android devices.
+   * This fixes p5.js shaders to use highp precision instead of mediump.
+   * Generally fixed in p5.js v1.11.3+, but this provides backwards compatibility.
+   * @private
+   */
+  _applyShaderPrecisionFix() {
+    const A = [
+      ["_getImmediateModeShader", "_defaultImmediateModeShader"],
+      ["_getNormalShader", "_defaultNormalShader"],
+      ["_getColorShader", "_defaultColorShader"],
+      ["_getPointShader", "_defaultPointShader"],
+      ["_getLineShader", "_defaultLineShader"],
+      ["_getFontShader", "_defaultFontShader"]
+    ];
+    for (const [e, r] of A) {
+      const t = b.RendererGL.prototype[e];
+      b.RendererGL.prototype[e] = function() {
+        return this[r] || (this[r] = t.call(this), this[r]._vertSrc = this[r]._vertSrc.replace(
+          /mediump/g,
+          "highp"
+        ), this[r]._fragSrc = this[r]._fragSrc.replace(
+          /mediump/g,
+          "highp"
+        )), this[r];
+      };
+    }
+  }
+  /**
    * Get the plugin registry
    * @returns The plugin registry instance
    */
@@ -3990,36 +4018,17 @@ const RA = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   CUSTOM_DEFAULT_OPTIONS_2D: iA,
   P5AsciifyRenderer2D: $,
   feature: RA
-}, Symbol.toStringTag, { value: "Module" })), OA = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+}, Symbol.toStringTag, { value: "Module" })), JA = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   P5AsciifyDisplayRenderer: DA,
   P5AsciifyRenderer: BA,
   P5AsciifyRendererManager: _A,
   RENDERER_TYPES: O,
   renderer2d: YA
-}, Symbol.toStringTag, { value: "Module" })), jA = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+}, Symbol.toStringTag, { value: "Module" })), OA = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   P5AsciifyPluginRegistry: mA
-}, Symbol.toStringTag, { value: "Module" })), NA = nA.getInstance(), zA = [
-  ["_getImmediateModeShader", "_defaultImmediateModeShader"],
-  ["_getNormalShader", "_defaultNormalShader"],
-  ["_getColorShader", "_defaultColorShader"],
-  ["_getPointShader", "_defaultPointShader"],
-  ["_getLineShader", "_defaultLineShader"],
-  ["_getFontShader", "_defaultFontShader"]
-];
-for (const [g, A] of zA) {
-  const e = b.RendererGL.prototype[g];
-  b.RendererGL.prototype[g] = function() {
-    return this[A] || (this[A] = e.call(this), this[A]._vertSrc = this[A]._vertSrc.replace(
-      /mediump/g,
-      "highp"
-    ), this[A]._fragSrc = this[A]._fragSrc.replace(
-      /mediump/g,
-      "highp"
-    )), this[A];
-  };
-}
+}, Symbol.toStringTag, { value: "Module" })), NA = nA.getInstance();
 typeof window < "u" && (window.p5asciify = NA, window.P5AsciifyAbstractFeatureRenderer2D = Y, window.P5AsciifyRenderer2D = $, window.P5AsciifyRenderer = BA, window.P5AsciifyErrorLevel = gA);
 export {
   eA as P5Asciifier,
@@ -4028,9 +4037,9 @@ export {
   xA as P5AsciifyFontManager,
   wA as P5AsciifyGrid,
   aA as P5AsciifyHookManager,
-  JA as errors,
+  $A as errors,
   NA as p5asciify,
-  jA as plugins,
-  OA as renderers,
-  $A as utils
+  OA as plugins,
+  JA as renderers,
+  UA as utils
 };

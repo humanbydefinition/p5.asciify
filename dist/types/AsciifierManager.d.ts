@@ -130,6 +130,13 @@ export declare class P5AsciifierManager {
      */
     setErrorLevel(level: P5AsciifyErrorLevel): void;
     /**
+     * Apply shader precision fix for Android devices.
+     * This fixes p5.js shaders to use highp precision instead of mediump.
+     * Generally fixed in p5.js v1.11.3+, but this provides backwards compatibility.
+     * @private
+     */
+    private _applyShaderPrecisionFix;
+    /**
      * Get the plugin registry
      * @returns The plugin registry instance
      */
