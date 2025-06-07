@@ -3941,6 +3941,13 @@ const V = class V {
     this._hookManager.deactivateHook(A);
   }
   /**
+   * Set the global error level for the library.
+   * @param level The error level to set.
+   */
+  setErrorLevel(A) {
+    n.setGlobalLevel(A);
+  }
+  /**
    * Get the plugin registry
    * @returns The plugin registry instance
    */

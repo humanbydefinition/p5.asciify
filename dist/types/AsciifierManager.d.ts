@@ -4,6 +4,7 @@ import { P5AsciifyHookManager } from './HookManager';
 import { HookType } from './types';
 import { P5AsciifyRendererPlugin } from './plugins/RendererPlugin';
 import { P5AsciifyPluginRegistry } from './plugins/PluginRegistry';
+import { P5AsciifyErrorLevel } from './errors/ErrorHandler';
 /**
  * Manages the `p5.asciify` library by handling one or more `P5Asciifier` instances.
  *
@@ -123,6 +124,11 @@ export declare class P5AsciifierManager {
      * @param hookType The type of hook to deactivate
      */
     deactivateHook(hookType: HookType): void;
+    /**
+     * Set the global error level for the library.
+     * @param level The error level to set.
+     */
+    setErrorLevel(level: P5AsciifyErrorLevel): void;
     /**
      * Get the plugin registry
      * @returns The plugin registry instance
