@@ -324,7 +324,7 @@ export class P5AsciifySVGExporter {
             // center glyph in cell
 
             let scale = 1;
-            if (compareVersions(this.p.VERSION, "2.0.0") < 0) {
+            if (compareVersions(p5.VERSION, "2.0.0") < 0) {
                 scale = fontManager.fontSize / fontManager.font.font.unitsPerEm;
             } else {
                 scale = fontManager.fontSize / fontManager.font.data.head.unitsPerEm;

@@ -151,6 +151,9 @@ export interface P5AsciifyExtensions {
  * this file extends the `p5.js` types with additional properties and methods used by the `p5.asciify` library.
  */
 declare module 'p5' {
+
+    const VERSION: string;
+
     interface Shader {
         setUniform(
             uniformName: string,

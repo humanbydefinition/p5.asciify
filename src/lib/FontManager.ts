@@ -61,7 +61,7 @@ export class P5AsciifyFontManager {
      * Initializes the character glyphs and characters array.
      */
     private _initializeGlyphsAndCharacters(): void {
-        if (compareVersions(this._p.VERSION, "2.0.0") < 0) {
+        if (compareVersions(p5.VERSION, "2.0.0") < 0) {
             // p5.js versions before 2.0.0 use opentype.js
             const glyphs = Object.values(this._font.font.glyphs.glyphs) as OpenTypeGlyph[];
             this._characters = [];

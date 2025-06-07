@@ -81,7 +81,7 @@ export class P5Asciifier {
     public async setup(captureFramebuffer: p5.Framebuffer | p5.Graphics): Promise<void> {
         this._captureFramebuffer = captureFramebuffer;
 
-        if (compareVersions(this._p.VERSION, "2.0.0") < 0) {
+        if (compareVersions(p5.VERSION, "2.0.0") < 0) {
             this._fontManager.setup(this._fontSize);
         } else {
             await this._fontManager.setup(this._fontSize);
