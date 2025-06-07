@@ -1,5 +1,5 @@
 import { P5AsciifyRendererPlugin } from './RendererPlugin';
-import { P5AsciifyError } from '../AsciifyError';
+import { P5AsciifyError } from '../errors/AsciifyError';
 
 /**
  * Registry that manages renderer plugins for p5.asciify.
@@ -11,7 +11,7 @@ export class P5AsciifyPluginRegistry {
     /**
      * Registers a new renderer plugin.
      * @param plugin The renderer plugin to register
-     * @throws {@link P5AsciifyError} - If a plugin with the same ID is already registered or conflicts with built-in renderers
+     * @throws If a plugin with the same ID is already registered or conflicts with built-in renderers
      */
     public register(plugin: P5AsciifyRendererPlugin): void {
         if (this._plugins.has(plugin.id)) {

@@ -1,5 +1,5 @@
 import p5 from 'p5';
-import { P5AsciifyError } from './AsciifyError';
+import { P5AsciifyError } from './errors/AsciifyError';
 import { compareVersions } from './utils/utils';
 import { HookType, P5AsciifyHookHandlers } from './types';
 

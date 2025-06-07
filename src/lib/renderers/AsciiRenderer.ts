@@ -1,9 +1,9 @@
 import p5 from 'p5';
 import { P5AsciifyGrid } from '../Grid';
-import { P5AsciifyError } from '../AsciifyError';
 import { P5AsciifyFontManager } from '../FontManager';
 
 import { AsciiRendererOptions } from './types';
+import { errorHandler } from '../errors';
 
 /**
  * Abstract ASCII renderer base class that all custom and pre-built ASCII renderers extend from.
@@ -113,7 +113,7 @@ export abstract class P5AsciifyRenderer<T extends AsciiRendererOptions = AsciiRe
      * Enable or disable the renderer.
      * @param enabled - Whether to enable or disable the renderer.
      * @returns The current/new state of the renderer.
-     * @throws {P5AsciifyError} If the provided enabled value is not a boolean.
+     * @throws If the provided enabled value is not a boolean.
      * 
      * @example
      * ```javascript
@@ -133,8 +133,14 @@ export abstract class P5AsciifyRenderer<T extends AsciiRendererOptions = AsciiRe
             return this._options.enabled as boolean;
         }
 
-        if (typeof enabled !== 'boolean') {
-            throw new P5AsciifyError('Enabled must be a boolean.');
+        const isValidType = errorHandler.validate(
+            typeof enabled === 'boolean',
+            'Enabled must be a boolean.',
+            { providedValue: enabled, method: 'enabled' }
+        );
+
+        if (!isValidType) {
+            return this._options.enabled!; // Return the current state if validation fails
         }
 
         this._options.enabled = enabled;

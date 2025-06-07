@@ -10,7 +10,7 @@ import { P5AsciifyDisplayRenderer } from './AsciiDisplayRenderer';
 import { P5AsciifyGrid } from '../Grid';
 import { P5AsciifyFontManager } from '../FontManager';
 
-import { P5AsciifyError } from '../AsciifyError';
+import { P5AsciifyError } from '../errors/AsciifyError';
 
 import { AsciiRendererOptions } from './types';
 
@@ -18,6 +18,7 @@ import { RENDERER_TYPES } from './constants';
 import { P5AsciifyRendererPlugin } from '../plugins/RendererPlugin';
 
 import { P5AsciifyPluginRegistry } from '../plugins/PluginRegistry';
+import { errorHandler } from '../errors';
 
 
 /**
@@ -251,7 +252,7 @@ export class P5AsciifyRendererManager {
      * @param type The type of the renderer to add.
      * @param options The options to use for the renderer.
      * @returns The ASCII renderer instance that was added.
-     * @throws {@link P5AsciifyError} - If the renderer name is an empty string or the renderer type is invalid.
+     * @throws If the renderer name is an empty string or the renderer type is invalid.
      * 
      * @example
      * ```javascript
@@ -381,12 +382,20 @@ export class P5AsciifyRendererManager {
     public moveDown(renderer: string | P5AsciifyRenderer): void {
         const index = this._getRendererIndex(renderer);
 
-        if (index === -1) {
-            throw new P5AsciifyError("Renderer not found.");
-        }
+        const isValidIndex = errorHandler.validate(
+            index >= 0 && index < this._renderers.length,
+            'Renderer not found in the renderer list.',
+            { providedValue: renderer, method: 'moveDown' }
+        );
 
-        if (index >= this._renderers.length - 1) {
-            throw new P5AsciifyError("Renderer is already at the bottom of the list.");
+        const isValidNextIndex = errorHandler.validate(
+            index < this._renderers.length - 1,
+            'Renderer is already at the bottom of the list.',
+            { providedValue: renderer, method: 'moveDown' }
+        );
+
+        if (!isValidIndex || !isValidNextIndex) {
+            return; // If validation fails, do not move the renderer
         }
 
         this.swap(renderer, this._renderers[index + 1].renderer);
@@ -409,12 +418,20 @@ export class P5AsciifyRendererManager {
     public moveUp(renderer: string | P5AsciifyRenderer): void {
         const index = this._getRendererIndex(renderer);
 
-        if (index === -1) {
-            throw new P5AsciifyError("Renderer not found.");
-        }
+        const isValidIndex = errorHandler.validate(
+            index >= 0 && index < this._renderers.length,
+            'Renderer not found in the renderer list.',
+            { providedValue: renderer, method: 'moveUp' }
+        );
 
-        if (index <= 0) {
-            throw new P5AsciifyError("Renderer is already at the top of the list.");
+        const isValidPreviousIndex = errorHandler.validate(
+            index > 0,
+            'Renderer is already at the top of the list.',
+            { providedValue: renderer, method: 'moveUp' }
+        );
+
+        if (!isValidIndex || !isValidPreviousIndex) {
+            return; // If validation fails, do not move the renderer
         }
 
         this.swap(renderer, this._renderers[index - 1].renderer);
@@ -436,9 +453,17 @@ export class P5AsciifyRendererManager {
      */
     public remove(renderer: string | P5AsciifyRenderer): void {
         const index = this._getRendererIndex(renderer);
-        if (index === -1) {
-            throw new P5AsciifyError(`Renderer not found.`);
+
+        const isValidIndex = errorHandler.validate(
+            index >= 0 && index < this._renderers.length,
+            'Renderer not found in the renderer list.',
+            { providedValue: renderer, method: 'remove' }
+        );
+
+        if (!isValidIndex) {
+            return; // If validation fails, do not remove the renderer
         }
+
         this._renderers.splice(index, 1);
     }
 
@@ -465,7 +490,7 @@ export class P5AsciifyRendererManager {
      * Swaps the positions of two renderers in the renderer list.
      * @param renderer1 The name of the first renderer or the renderer instance itself.
      * @param renderer2 The name of the second renderer or the renderer instance itself.
-     * @throws {@link P5AsciifyError} - If one or more renderers are not found.
+     * @throws If one or more renderers are not found.
      * 
      * @example
      * ```javascript
@@ -481,8 +506,15 @@ export class P5AsciifyRendererManager {
         const index1 = this._getRendererIndex(renderer1);
         const index2 = this._getRendererIndex(renderer2);
 
-        if (index1 === -1 || index2 === -1) {
-            throw new P5AsciifyError(`One or more renderers not found.`);
+        const areValidIndices = errorHandler.validate(
+            index1 >= 0 && index1 < this._renderers.length &&
+            index2 >= 0 && index2 < this._renderers.length,
+            'One or more renderers not found in the renderer list.',
+            { providedValues: [renderer1, renderer2], method: 'swap' }
+        );
+
+        if (!areValidIndices) {
+            return; // If validation fails, do not swap the renderers
         }
 
         const temp = this._renderers[index1];

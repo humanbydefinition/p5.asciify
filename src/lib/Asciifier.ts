@@ -3,12 +3,13 @@ import p5 from 'p5';
 import { P5AsciifyGrid } from './Grid';
 import { P5AsciifyFontManager } from './FontManager';
 import { P5AsciifyRendererManager } from './renderers/RendererManager';
-import { P5AsciifyError } from './AsciifyError';
+import { P5AsciifyError } from './errors/AsciifyError';
 import { P5AsciifyAbstractFeatureRenderer2D } from './renderers/2d/feature/AbstractFeatureRenderer2D';
 import { P5AsciifySVGExporter, SVGExportOptions } from './utils/export/SVGExporter';
 import { JSONExportOptions, P5AsciifyJSONExporter } from './utils/export/JSONExporter';
 import { P5AsciifyPluginRegistry } from './plugins/PluginRegistry';
 import { compareVersions } from './utils';
+import { errorHandler } from './errors';
 
 /**
  * Manages a rendering pipeline for ASCII conversion, including font management, grid calculations, and ASCII renderers, 
@@ -128,7 +129,7 @@ export class P5Asciifier {
     /**
      * Sets the font size for the ASCII renderers of the asciifier.
      * @param fontSize The font size to set.
-     * @throws {@link P5AsciifyError} - If the font size is not a positive number.
+     * @throws If the font size is not a positive number.
      * 
      * @example
      * ```javascript
@@ -140,13 +141,14 @@ export class P5Asciifier {
      */
     public fontSize(fontSize: number): void {
 
-        if (typeof fontSize !== 'number' || fontSize <= 0) {
-            throw new P5AsciifyError(`Invalid font size: ${fontSize}. Expected a positive number.`);
-        }
+        const isValid = errorHandler.validate(
+            typeof fontSize === 'number' && fontSize > 0,
+            `Invalid font size: ${fontSize}. Expected a positive number.`,
+            { providedValue: fontSize, method: 'fontSize' }
+        );
 
-        // Early return if the font size is the same
-        if (this._fontSize === fontSize) {
-            return;
+        if (!isValid || this._fontSize === fontSize) {
+            return; // Early return if value is not valid or the same
         }
 
         if (this._setupDone) {
@@ -202,7 +204,7 @@ export class P5Asciifier {
      * @param options.updateCharacters If `true` *(default)*, updates set character sets in pre-defined renderers like the brightness-based ASCII renderer.
      *                                 This might cause an error if the new font does not contain the character sets used with the previous font.
      *                                 If `false`, those character sets are not updated, potentially leading to missing/different characters in the ASCII output if the mapping is not the same.
-     * @throws {@link P5AsciifyError} - If the font parameter is invalid.
+     * @throws If the font parameter is invalid.
      * 
      * @example
      * ```javascript
@@ -259,7 +261,7 @@ export class P5Asciifier {
      * To make the background transparent, pass an appropriate color value with an alpha value of `0`.
      * 
      * @param color The color to set. Needs to be a valid type to pass to the `background()` function provided by p5.js.
-     * @throws {@link P5AsciifyError} - If the color is not a string, array or `p5.Color`.
+     * @throws If the color is not a string, array or `p5.Color`.
      * 
      * @example
      * ```javascript
@@ -270,8 +272,14 @@ export class P5Asciifier {
      * ```
      */
     public background(color: string | p5.Color | [number, number?, number?, number?]) {
-        if (typeof color !== "string" && !Array.isArray(color) && !(color instanceof p5.Color)) {
-            throw new P5AsciifyError(`Invalid color type: ${typeof color}. Expected string, array or p5.Color.`);
+        const isValid = errorHandler.validate(
+            typeof color === 'string' || Array.isArray(color) || color instanceof p5.Color,
+            `Invalid color type: ${typeof color}. Expected string, array or p5.Color.`,
+            { providedValue: color, method: 'background' }
+        );
+
+        if (!isValid) {
+            return; // Early return if the color is not valid
         }
 
         this._backgroundColor = color;
@@ -325,7 +333,7 @@ export class P5Asciifier {
     /**
      * Saves the current ASCII output as an SVG file.
      * @param options The options for saving the SVG file.
-     * @throws {@link P5AsciifyError} - If no renderer is available to fetch ASCII output from.
+     * @throws If no renderer is available to fetch ASCII output from.
      * 
      * @example
      * ```javascript
@@ -360,7 +368,7 @@ export class P5Asciifier {
      * Returns the current ASCII output as an SVG string.
      * @param options Options for SVG generation (same as saveSVG options except filename)
      * @returns SVG string representation of the ASCII output
-     * @throws {@link P5AsciifyError} - If no renderer is available to fetch ASCII output from.
+     * @throws If no renderer is available to fetch ASCII output from.
      * 
      * @example
      * ```javascript
@@ -396,7 +404,7 @@ export class P5Asciifier {
     /**
      * Saves the current ASCII output as a JSON file.
      * @param options The options for saving the JSON file.
-     * @throws {@link P5AsciifyError} - If no renderer is available to fetch ASCII output from.
+     * @throws If no renderer is available to fetch ASCII output from.
      */
     public saveJSON(options: JSONExportOptions = {}): void {
         const svgExporter = new P5AsciifyJSONExporter(this._p);
@@ -412,7 +420,7 @@ export class P5Asciifier {
      * Returns the current ASCII output as a JSON string.
      * @param options Options for JSON generation (same as saveJSON options except filename)
      * @returns JSON string representation of the ASCII output
-     * @throws {@link P5AsciifyError} - If no renderer is available to fetch ASCII output from.
+     * @throws If no renderer is available to fetch ASCII output from.
      * 
      * @example
      * ```javascript
@@ -447,13 +455,10 @@ export class P5Asciifier {
     /**
      * Generates the ASCII output as an array of string rows.
      * @returns Array of strings representing ASCII output.
-     * @throws {@link P5AsciifyError} - If no renderer is available.
+     * @throws If no renderer is available.
      */
     private _generateAsciiTextOutput(): string[] {
         const characterFramebuffer = this._rendererManager.characterFramebuffer;
-        if (!characterFramebuffer) {
-            throw new P5AsciifyError('No renderer available to generate ASCII output');
-        }
 
         // Load pixels from character framebuffer
         characterFramebuffer.loadPixels();
@@ -497,7 +502,7 @@ export class P5Asciifier {
     /**
      * Returns the current ASCII output as a string.
      * @returns Multi-line string representation of the ASCII output.
-     * @throws {@link P5AsciifyError} - If no renderer is available to fetch ASCII output from.
+     * @throws If no renderer is available to fetch ASCII output from.
      * 
      * @example
      * ```javascript
@@ -516,7 +521,7 @@ export class P5Asciifier {
     /**
      * Saves the ASCII output to a text file.
      * @param filename The filename to save the text file as. If not provided, a default filename is used.
-     * @throws {@link P5AsciifyError} - If no renderer is available to fetch ASCII output from.
+     * @throws If no renderer is available to fetch ASCII output from.
      * 
      * @example
      * ```javascript
@@ -551,8 +556,15 @@ export class P5Asciifier {
      * @param bool `true` to render to the canvas, `false` to not render.
      */
     public renderToCanvas(bool: boolean): void {
-        if (typeof bool !== "boolean") {
-            throw new P5AsciifyError(`Invalid type for renderToCanvas: ${typeof bool}. Expected boolean.`);
+
+        const isValid = errorHandler.validate(
+            typeof bool === 'boolean',
+            `Invalid type for renderToCanvas: ${typeof bool}. Expected boolean.`,
+            { providedValue: bool, method: 'renderToCanvas' }
+        );
+
+        if (!isValid) {
+            return; // Early return if the value is not valid
         }
 
         this._renderToCanvas = bool;
@@ -568,8 +580,14 @@ export class P5Asciifier {
      * @param mode The background mode to set. Can be either `"fixed"` or `"sampled"`.
      */
     public backgroundMode(mode: "fixed" | "sampled" = "fixed"): void {
-        if (mode !== "fixed" && mode !== "sampled") {
-            throw new P5AsciifyError(`Invalid background mode: ${mode}. Expected "fixed" or "sampled".`);
+        const isValid = errorHandler.validate(
+            mode === "fixed" || mode === "sampled",
+            `Invalid background mode: ${mode}. Expected "fixed" or "sampled".`,
+            { providedValue: mode, method: 'backgroundMode' }
+        );
+
+        if (!isValid) {
+            return; // Early return if the mode is not valid
         }
 
         this._rendererManager.asciiDisplayRenderer.backgroundMode(mode === "fixed" ? 0 : 1);
@@ -585,7 +603,7 @@ export class P5Asciifier {
      * 
      * @param json The JSON string or object to load.
      * @returns An object containing the framebuffers for character, primary color, secondary color, transform, and rotation.
-     * @throws {@link P5AsciifyError} - If the JSON format is invalid or unsupported.
+     * @throws If the JSON format is invalid or unsupported.
      */
     public loadJSON(json: string | object): {
         characterFramebuffer: p5.Framebuffer,

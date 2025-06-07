@@ -1,5 +1,5 @@
 import p5 from 'p5';
-import { P5AsciifyError } from './AsciifyError';
+import { P5AsciifyError } from './errors/AsciifyError';
 import { OpenTypeGlyph, P5AsciifyCharacter } from './types';
 import { compareVersions } from './utils';
 
@@ -168,7 +168,7 @@ export class P5AsciifyFontManager {
      * Otherwise, other parts of the library are not updated with the new font information.
      * 
      * @param font The p5.Font object to use for ASCII rendering.
-     * @throws {@link P5AsciifyError} If the font parameter is invalid.
+     * @throws If the font parameter is invalid.
      * @ignore
      */
     public loadFont(
@@ -188,7 +188,7 @@ export class P5AsciifyFontManager {
      * @returns An array containing the RGB color values for the character, 
      *          which can be used to set the fill color when drawing to a custom renderers `characterFramebuffer` 
      *          to convert those pixels into the selected character.
-     * @throws {@link P5AsciifyError} If the character is not found in the font.
+     * @throws If the character is not found in the font.
      * 
      * @example
      * ```javascript
@@ -235,7 +235,7 @@ export class P5AsciifyFontManager {
     /**
      * Validates a string of characters against the current font.
      * @param characters The string of characters to validate.
-     * @throws {@link P5AsciifyError} If any characters are not supported by the current font.
+     * @throws If any characters are not supported by the current font.
      * @ignore
      */
     public validateCharacters(characters: string): void {
@@ -249,7 +249,7 @@ export class P5AsciifyFontManager {
      * Gets an array of RGB colors for a given string of characters.
      * @param characters - A string of characters.
      * @returns Array of RGB color values.
-     * @throws {@link P5AsciifyError} If a character is not found in the fonts available characters.
+     * @throws If a character is not found in the fonts available characters.
      * 
      * @example
      * ```javascript

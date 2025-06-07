@@ -4,6 +4,8 @@ import { P5AsciifyAbstractFeatureRenderer2D } from './renderers/2d/feature';
 import { P5AsciifyRenderer2D } from './renderers/2d';
 import { P5AsciifyRenderer } from './renderers';
 
+import { errorHandler, P5AsciifyErrorLevel } from './errors/ErrorHandler';
+
 /**
  * Main instance of p5.asciify *({@link P5AsciifierManager})* providing full access to the library.
  */
@@ -52,8 +54,10 @@ export * as utils from './utils';
 /** Contains plugin interfaces to implement against. */
 export * as plugins from './plugins';
 
+/** Contains error handling functionality and utilities. */
+export * as errors from './errors';
+
 export { P5AsciifierManager } from './AsciifierManager';
-export { P5AsciifyError } from './errors/AsciifyError';
 export { P5Asciifier } from './Asciifier';
 export { P5AsciifyColorPalette } from './ColorPalette';
 export { P5AsciifyGrid } from './Grid';
@@ -67,4 +71,6 @@ if (typeof window !== 'undefined') {
   window.P5AsciifyAbstractFeatureRenderer2D = P5AsciifyAbstractFeatureRenderer2D;
   window.P5AsciifyRenderer2D = P5AsciifyRenderer2D;
   window.P5AsciifyRenderer = P5AsciifyRenderer;
+  
+  window.P5AsciifyErrorLevel = P5AsciifyErrorLevel;
 }

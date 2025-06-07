@@ -1,14 +1,12 @@
 /**
- * Simple error class, representing errors specific to `p5.asciify`.
+ * Custom error class for `p5.asciify` related errors.
  */
 export class P5AsciifyError extends Error {
+    public readonly originalError?: Error;
 
-    /**
-     * Create a new P5AsciifyError instance.
-     * @param message The error message.
-     */
-    constructor(message: string) {
+    constructor(message: string, originalError?: Error) {
         super(message);
-        this.name = "P5AsciifyError";
+        this.name = 'P5AsciifyError';
+        this.originalError = originalError;
     }
 }

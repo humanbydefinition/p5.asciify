@@ -63,7 +63,6 @@ export class P5AsciifySVGExporter {
      * @param backgroundColor The background color for the SVG
      * @param options Options for SVG generation (excludes filename)
      * @returns SVG string representation of the ASCII output
-     * @throws {@link P5AsciifyError} - If no renderer is available to fetch ASCII output from.
      */
     public generateSVG(
         rendererManager: P5AsciifyRendererManager,
@@ -216,7 +215,6 @@ export class P5AsciifySVGExporter {
      * @param grid The grid information for dimensions and cell sizes
      * @param fontManager The font manager with character data
      * @param options Options for SVG export or just the filename as a string for backward compatibility
-     * @throws {@link P5AsciifyError} - If no renderer is available to fetch ASCII output from.
      */
     public saveSVG(
         rendererManager: P5AsciifyRendererManager,

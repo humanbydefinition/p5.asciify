@@ -9,7 +9,7 @@ import { BrightnessAsciiRendererOptions } from '../../../types';
 import vertexShader from '../../../../assets/shaders/vert/shader.vert';
 import colorSampleShader from './shaders/colorSample.frag';
 import asciiCharacterShader from './shaders/asciiCharacter.frag';
-import { P5AsciifyError } from '../../../../AsciifyError';
+import { errorHandler } from '../../../../errors';
 
 /** 
  * Default configuration options for `"brightness"` ASCII renderer. 
@@ -103,17 +103,39 @@ export class P5AsciifyBrightnessRenderer extends P5AsciifyAbstractFeatureRendere
      * ```
      * 
      * @param range A tuple [min, max] representing the brightness range.
-     * @throws {P5AsciifyError} If the start value is greater than the end value, or if the values are not within the range of 0 to 255.
+     * @throws If the provided range is not an array of two numbers, or if the numbers are not within the valid range (0-255).
      */
     public brightnessRange(range: [number, number]): void {
-        const [start, end] = range;
 
-        if (start < 0 || start > 255 || end < 0 || end > 255) {
-            throw new P5AsciifyError('Brightness values must be between 0 and 255.');
+        // Ensure we have exactly 2 elements and they are numbers
+        const isValidArray = errorHandler.validate(
+            Array.isArray(range) && range.length === 2 &&
+            typeof range[0] === 'number' && typeof range[1] === 'number' &&
+            !isNaN(range[0]) && !isNaN(range[1]),
+            'Brightness range must be an array with exactly two numbers.',
+            { providedValue: range, method: 'brightnessRange' }
+        );
+
+        if (!isValidArray) {
+            return;
         }
 
-        if (start > end) {
-            throw new P5AsciifyError('Start value must be less than or equal to the end value.');
+        const [start, end] = range;
+
+        const isValidRange = errorHandler.validate(
+            start >= 0 && start <= 255 && end >= 0 && end <= 255,
+            'Brightness values must be between 0 and 255.',
+            { providedValue: range, method: 'brightnessRange' }
+        );
+
+        const isValidOrder = errorHandler.validate(
+            start <= end,
+            'Start value must be less than or equal to the end value.',
+            { providedValue: range, method: 'brightnessRange' }
+        );
+
+        if (!isValidRange || !isValidOrder) {
+            return; // If validation fails, do not update the brightness range
         }
 
         this._options.brightnessRange = [start, end];

@@ -1,6 +1,6 @@
 import p5 from 'p5';
 import { P5Asciifier } from './Asciifier';
-import { P5AsciifyError } from './AsciifyError';
+import { P5AsciifyError } from './errors/AsciifyError';
 import { P5AsciifyHookManager } from './HookManager';
 import { HookType, P5AsciifyHookHandlers } from './types';
 
@@ -196,7 +196,7 @@ export class P5AsciifierManager {
      * 
      * @param index The index of the `P5Asciifier` instance to return.
      * @returns The `P5Asciifier` instance at the specified index.
-     * @throws {@link P5AsciifyError} If the index is out of bounds.
+     * @throws If the index is out of bounds.
      */
     public asciifier(index: number = 0): P5Asciifier {
         if (index < 0 || index >= this._asciifiers.length) {
@@ -211,7 +211,7 @@ export class P5AsciifierManager {
      * @param framebuffer   The framebuffer to capture for ASCII conversion.
      *                      If not provided, the main canvas of the `p5.js` instance will be used.
      * @returns The newly created `P5Asciifier` instance.
-     * @throws {@link P5AsciifyError} If the framebuffer is not an instance of `p5.Framebuffer`.
+     * @throws If the framebuffer is not an instance of `p5.Framebuffer`.
      */
     public add(framebuffer?: p5.Framebuffer): P5Asciifier | Promise<P5Asciifier> {
         if (!this._p) {
@@ -254,7 +254,7 @@ export class P5AsciifierManager {
     /**
      * Removes a `P5Asciifier` instance.
      * @param indexOrAsciifier The index of the `P5Asciifier` instance to remove, or the `P5Asciifier` instance itself.
-     * @throws {@link P5AsciifyError} If the index is out of bounds or the specified asciifier is not found.
+     * @throws If the index is out of bounds or the specified asciifier is not found.
      */
     public remove(indexOrAsciifier: number | P5Asciifier): void {
         if (typeof indexOrAsciifier === 'number') {

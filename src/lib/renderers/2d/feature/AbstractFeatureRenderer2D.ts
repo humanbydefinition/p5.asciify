@@ -3,8 +3,8 @@ import { P5AsciifyGrid } from '../../../Grid';
 import { P5AsciifyFontManager } from '../../../FontManager';
 import { P5AsciifyRenderer2D } from '../AsciiRenderer2D';
 import { FeatureAsciiRendererOptions } from '../../types';
-import { P5AsciifyError } from '../../../AsciifyError';
 import { P5AsciifyColorPalette } from '../../../ColorPalette';
+import { errorHandler } from '../../../errors';
 
 
 /**
@@ -40,7 +40,7 @@ export abstract class P5AsciifyAbstractFeatureRenderer2D<T extends FeatureAsciiR
     /**
      * Set the characters for the character set.
      * @param characters The characters to set for the character set.
-     * @throws {P5AsciifyError} If characters is not a string.
+     * @throws If characters is not a string.
      * 
      * @example
      * ```javascript
@@ -50,14 +50,15 @@ export abstract class P5AsciifyAbstractFeatureRenderer2D<T extends FeatureAsciiR
      *  }
      * ```
      */
-    public characters(characters: string = ""): void {
-        if (typeof characters !== 'string') {
-            throw new P5AsciifyError('Characters must be a string.');
-        }
+    public characters(characters: string): void {
+        const isValidType = errorHandler.validate(
+            typeof characters === 'string',
+            'Characters must be a string.',
+            { providedValue: characters, method: 'characters' }
+        );
 
-        // Return early if the characters are the same as the current ones
-        if (characters === this._options.characters) {
-            return;
+        if (!isValidType || characters === this._options.characters) {
+            return; // If validation fails or characters are the same, do not update
         }
 
         this._fontManager.validateCharacters(characters);
@@ -71,7 +72,7 @@ export abstract class P5AsciifyAbstractFeatureRenderer2D<T extends FeatureAsciiR
     /**
      * Swap the colors of the ASCII character and cell background colors.
      * @param invert Whether to swap the colors.
-     * @throws {P5AsciifyError} If invert is not a boolean.
+     * @throws If invert is not a boolean.
      * 
      * @example
      * ```javascript
@@ -82,8 +83,14 @@ export abstract class P5AsciifyAbstractFeatureRenderer2D<T extends FeatureAsciiR
      * ```
      */
     public invert(invert: boolean): void {
-        if (typeof invert !== 'boolean') {
-            throw new P5AsciifyError('Invert mode must be a boolean.');
+        const isValidType = errorHandler.validate(
+            typeof invert === 'boolean',
+            'Invert mode must be a boolean.',
+            { providedValue: invert, method: 'invert' }
+        );
+
+        if (!isValidType) {
+            return; // If validation fails, do not update the invert mode
         }
 
         this._options.invertMode = invert;
@@ -117,11 +124,17 @@ export abstract class P5AsciifyAbstractFeatureRenderer2D<T extends FeatureAsciiR
      * ```
      * 
      * @param angle The rotation angle in degrees.
-     * @throws {P5AsciifyError} If angle is not a number.
+     * @throws If angle is not a number.
      */
     public rotation(angle: number): void {
-        if (typeof angle !== 'number') {
-            throw new P5AsciifyError('Rotation angle must be a number');
+        const isValidType = errorHandler.validate(
+            typeof angle === 'number',
+            'Rotation angle must be a number.',
+            { providedValue: angle, method: 'rotation' }
+        );
+
+        if (!isValidType) {
+            return; // If validation fails, do not update the rotation angle
         }
 
         // Normalize angle to 0-360 range
@@ -138,7 +151,7 @@ export abstract class P5AsciifyAbstractFeatureRenderer2D<T extends FeatureAsciiR
     /**
      * Set the color of the ASCII characters, used in the fixed color mode.
      * @param color The fixed color of the ASCII characters.
-     * @throws {P5AsciifyError} If color is not a p5.Color object.
+     * @throws If color is not a p5.Color object.
      * 
      * @example
      * ```javascript
@@ -150,8 +163,14 @@ export abstract class P5AsciifyAbstractFeatureRenderer2D<T extends FeatureAsciiR
      * ```
      */
     public characterColor(color: p5.Color): void {
-        if (!color || !(color instanceof p5.Color)) {
-            throw new P5AsciifyError('Character color must be a valid p5.Color object');
+        const isValidType = errorHandler.validate(
+            color && (color instanceof p5.Color),
+            'Character color must be a valid p5.Color object.',
+            { providedValue: color, method: 'characterColor' }
+        );
+
+        if (!isValidType) {
+            return; // If validation fails, do not update the character color
         }
 
         this._options.characterColor = color;
@@ -160,11 +179,17 @@ export abstract class P5AsciifyAbstractFeatureRenderer2D<T extends FeatureAsciiR
     /**
      * Define whether to flip the ASCII characters horizontally.
      * @param flip Whether to flip the characters horizontally.
-     * @throws {P5AsciifyError} If flip is not a boolean.
+     * @throws If flip is not a boolean.
      */
     public flipHorizontally(flip: boolean): void {
-        if (typeof flip !== 'boolean') {
-            throw new P5AsciifyError('Flip horizontally must be a boolean');
+        const isValidType = errorHandler.validate(
+            typeof flip === 'boolean',
+            'Flip horizontally must be a boolean.',
+            { providedValue: flip, method: 'flipHorizontally' }
+        );
+
+        if (!isValidType) {
+            return; // If validation fails, do not update the flip horizontally option
         }
 
         this._options.flipHorizontally = flip;
@@ -173,11 +198,18 @@ export abstract class P5AsciifyAbstractFeatureRenderer2D<T extends FeatureAsciiR
     /**
      * Define whether to flip the ASCII characters vertically.
      * @param flip Whether to flip the characters vertically.
-     * @throws {P5AsciifyError} If flip is not a boolean.
+     * @throws If flip is not a boolean.
      */
     public flipVertically(flip: boolean): void {
-        if (typeof flip !== 'boolean') {
-            throw new P5AsciifyError('Flip vertically must be a boolean');
+
+        const isValidType = errorHandler.validate(
+            typeof flip === 'boolean',
+            'Flip vertically must be a boolean.',
+            { providedValue: flip, method: 'flipVertically' }
+        );
+
+        if (!isValidType) {
+            return; // If validation fails, do not update the flip vertically option
         }
 
         this._options.flipVertically = flip;
@@ -186,7 +218,7 @@ export abstract class P5AsciifyAbstractFeatureRenderer2D<T extends FeatureAsciiR
     /**
      * Set the background color of the ASCII characters, used in the fixed color mode.
      * @param color The fixed color of the ASCII characters.
-     * @throws {P5AsciifyError} If color is not a p5.Color object.
+     * @throws If color is not a p5.Color object.
      * 
      * @example
      * ```javascript
@@ -198,8 +230,15 @@ export abstract class P5AsciifyAbstractFeatureRenderer2D<T extends FeatureAsciiR
      * ```
      */
     public backgroundColor(color: p5.Color): void {
-        if (!color || !(color instanceof p5.Color)) {
-            throw new P5AsciifyError('Background color must be a valid p5.Color object');
+
+        const isValidType = errorHandler.validate(
+            color && (color instanceof p5.Color),
+            'Background color must be a valid p5.Color object.',
+            { providedValue: color, method: 'backgroundColor' }
+        );
+
+        if (!isValidType) {
+            return; // If validation fails, do not update the background color
         }
 
         this._options.backgroundColor = color;
@@ -208,7 +247,7 @@ export abstract class P5AsciifyAbstractFeatureRenderer2D<T extends FeatureAsciiR
     /**
      * Sets the color mode for ASCII characters.
      * @param mode The color mode ('sampled' or 'fixed')
-     * @throws {P5AsciifyError} If mode is not a string or not one of the allowed values ('sampled' or 'fixed')
+     * @throws If mode is not a string or not one of the allowed values ('sampled' or 'fixed')
      * 
      * @example
      * ```javascript
@@ -219,12 +258,20 @@ export abstract class P5AsciifyAbstractFeatureRenderer2D<T extends FeatureAsciiR
      * ```
      */
     public characterColorMode(mode: string): void {
-        if (typeof mode !== 'string') {
-            throw new P5AsciifyError('Character color mode must be a string');
-        }
+        const isValidType = errorHandler.validate(
+            typeof mode === 'string',
+            'Character color mode must be a string.',
+            { providedValue: mode, method: 'characterColorMode' }
+        );
 
-        if (mode !== 'sampled' && mode !== 'fixed') {
-            throw new P5AsciifyError("Character color mode must be either 'sampled' or 'fixed'");
+        const isValidValue = errorHandler.validate(
+            mode === 'sampled' || mode === 'fixed',
+            "Character color mode must be either 'sampled' or 'fixed'.",
+            { providedValue: mode, method: 'characterColorMode' }
+        );
+
+        if (!isValidType || !isValidValue) {
+            return; // If validation fails, do not update the character color mode
         }
 
         if (mode === 'sampled') {
@@ -237,7 +284,7 @@ export abstract class P5AsciifyAbstractFeatureRenderer2D<T extends FeatureAsciiR
     /**
      * Sets the color mode for the grid cell background.
      * @param mode The color mode ('sampled' or 'fixed')
-     * @throws {P5AsciifyError} If mode is not a string or not one of the allowed values ('sampled' or 'fixed')
+     * @throws If mode is not a string or not one of the allowed values ('sampled' or 'fixed')
      * 
      * @example
      * ```javascript
@@ -248,12 +295,20 @@ export abstract class P5AsciifyAbstractFeatureRenderer2D<T extends FeatureAsciiR
      * ```
      */
     public backgroundColorMode(mode: string): void {
-        if (typeof mode !== 'string') {
-            throw new P5AsciifyError('Background color mode must be a string');
-        }
+        const isValidType = errorHandler.validate(
+            typeof mode === 'string',
+            'Background color mode must be a string.',
+            { providedValue: mode, method: 'backgroundColorMode' }
+        );
 
-        if (mode !== 'sampled' && mode !== 'fixed') {
-            throw new P5AsciifyError("Background color mode must be either 'sampled' or 'fixed'");
+        const isValidValue = errorHandler.validate(
+            mode === 'sampled' || mode === 'fixed',
+            "Background color mode must be either 'sampled' or 'fixed'.",
+            { providedValue: mode, method: 'backgroundColorMode' }
+        );
+
+        if (!isValidType || !isValidValue) {
+            return; // If validation fails, do not update the background color mode
         }
 
         if (mode === 'sampled') {
