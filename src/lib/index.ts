@@ -1,7 +1,5 @@
 import p5 from 'p5';
 import { P5AsciifierManager } from './AsciifierManager';
-import { P5AsciifyError } from './AsciifyError';
-import { compareVersions } from './utils/utils';
 import { P5AsciifyAbstractFeatureRenderer2D } from './renderers/2d/feature';
 import { P5AsciifyRenderer2D } from './renderers/2d';
 import { P5AsciifyRenderer } from './renderers';
@@ -55,7 +53,7 @@ export * as utils from './utils';
 export * as plugins from './plugins';
 
 export { P5AsciifierManager } from './AsciifierManager';
-export { P5AsciifyError } from './AsciifyError';
+export { P5AsciifyError } from './errors/AsciifyError';
 export { P5Asciifier } from './Asciifier';
 export { P5AsciifyColorPalette } from './ColorPalette';
 export { P5AsciifyGrid } from './Grid';
