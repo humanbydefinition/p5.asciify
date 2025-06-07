@@ -1,9 +1,9 @@
 import p5 from 'p5';
-import { P5AsciifyError } from './errors/AsciifyError';
 import { OpenTypeGlyph, P5AsciifyCharacter } from './types';
 import { compareVersions } from './utils';
 
 import { createGlyphPath, getGlyphIndex, createEmptyPath } from './utils/fonts/TyprFontUtils';
+import { errorHandler } from './errors';
 
 /**
  * Manages the font used for the ASCII rendering pipeline and provides methods for working with the font.
@@ -168,14 +168,19 @@ export class P5AsciifyFontManager {
      * Otherwise, other parts of the library are not updated with the new font information.
      * 
      * @param font The p5.Font object to use for ASCII rendering.
-     * @throws If the font parameter is invalid.
      * @ignore
      */
     public loadFont(
         font: p5.Font,
     ): void {
-        if (!(font instanceof p5.Font)) {
-            throw new P5AsciifyError('Invalid font parameter. Expected a path, base64 string, blob URL, or p5.Font object.');
+        const isValidFont = errorHandler.validate(
+            font && (font instanceof p5.Font),
+            'Invalid font parameter. Expected a p5.Font object.',
+            { providedValue: font, method: 'loadFont' }
+        );
+
+        if (!isValidFont) {
+            return; // Return early if validation fails
         }
 
         this._font = font;
@@ -200,49 +205,37 @@ export class P5AsciifyFontManager {
      * ```
      */
     public glyphColor(char: string): [number, number, number] {
+        // Validate input parameter
+        const isValidInput = errorHandler.validate(
+            typeof char === 'string' && char.length > 0,
+            'Character must be a non-empty string.',
+            { providedValue: char, method: 'glyphColor' }
+        );
+
+        if (!isValidInput) {
+            return [0, 0, 0]; // Return early if input validation fails
+        }
+
         const charInfo = this._characters.find(
             c => c.character === char
         );
 
-        if (!charInfo) {
-            const codePoint = char.codePointAt(0);
-            const hexCode = codePoint ? codePoint.toString(16).padStart(4, '0') : 'unknown';
-            throw new P5AsciifyError(`Could not find character in character set: ${char} (U+${hexCode})`);
-        }
-
-        return [charInfo.r, charInfo.g, charInfo.b];
-    }
-
-    /**
-     * Returns an array of characters that are not supported by the current font.
-     * @param characters The string of characters to check.
-     * @returns An array of unsupported characters. List is empty if all characters are supported.
-     * 
-     * @example
-     * ```javascript
-     *  function setupAsciify() {
-     *      // Print a list of potentially unsupported characters.
-     *      console.log(p5asciify.asciifier().fontManager.getUnsupportedCharacters(" .,ABC123"));
-     *  }
-     * ```
-     */
-    public getUnsupportedCharacters(characters: string): string[] {
-        return [...characters].filter(
-            (char: string) => !this._characters.some(c => c.character === char)
+        // Validate character exists in font
+        const characterExists = errorHandler.validate(
+            charInfo !== undefined,
+            (() => {
+                const codePoint = char.codePointAt(0);
+                const hexCode = codePoint ? codePoint.toString(16).padStart(4, '0') : 'unknown';
+                return `Could not find character in character set: ${char} (U+${hexCode})`;
+            })(),
+            { providedValue: char, method: 'glyphColor' }
         );
-    }
 
-    /**
-     * Validates a string of characters against the current font.
-     * @param characters The string of characters to validate.
-     * @throws If any characters are not supported by the current font.
-     * @ignore
-     */
-    public validateCharacters(characters: string): void {
-        const unsupportedChars: string[] = this.getUnsupportedCharacters(characters);
-        if (unsupportedChars.length > 0) {
-            throw new P5AsciifyError(`The following characters are not supported by the current font: [${unsupportedChars.join(', ')}].`);
+        if (!characterExists) {
+            return [0, 0, 0]; // Return early if character not found
         }
+
+        return [charInfo!.r, charInfo!.g, charInfo!.b];
     }
 
     /**
@@ -261,17 +254,25 @@ export class P5AsciifyFontManager {
      * ```
      */
     public glyphColors(characters: string | string[] = ""): Array<[number, number, number]> {
-        return Array.from(characters).map((char: string) => {
-            const charInfo = this._characters.find(c => c.character === char);
+        // Validate input parameter
+        const isValidInput = errorHandler.validate(
+            typeof characters === 'string' || Array.isArray(characters),
+            'Characters must be a string or array of strings.',
+            { providedValue: characters, method: 'glyphColors' }
+        );
 
-            if (!charInfo) {
-                const codePoint = char.codePointAt(0);
-                const hexCode = codePoint ? codePoint.toString(16).padStart(4, '0') : 'unknown';
-                throw new P5AsciifyError(`Could not find character in character set: ${char} (U+${hexCode})`);
-            }
+        if (!isValidInput) {
+            return [[0, 0, 0]]; // Return early if input validation fails
+        }
 
-            return [charInfo.r, charInfo.g, charInfo.b];
-        });
+        const results: Array<[number, number, number]> = [];
+
+        for (const char of Array.from(characters)) {
+            const color = this.glyphColor(char);
+            results.push(color as [number, number, number]);
+        }
+
+        return results;
     }
 
     /**
