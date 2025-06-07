@@ -9,6 +9,7 @@ import { P5AsciifyRendererPlugin } from './plugins/RendererPlugin';
 import { P5AsciifyPluginRegistry } from './plugins/PluginRegistry';
 import { compareVersions } from './utils';
 import { errorHandler } from './errors';
+import { P5AsciifyErrorLevel } from './errors/ErrorHandler';
 
 /**
  * Manages the `p5.asciify` library by handling one or more `P5Asciifier` instances.
@@ -364,6 +365,14 @@ export class P5AsciifierManager {
      */
     public deactivateHook(hookType: HookType): void {
         this._hookManager.deactivateHook(hookType);
+    }
+
+    /**
+     * Set the global error level for the library.
+     * @param level The error level to set.
+     */
+    public setErrorLevel(level: P5AsciifyErrorLevel): void {
+        errorHandler.setGlobalLevel(level);
     }
 
     /**
