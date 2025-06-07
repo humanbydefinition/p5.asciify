@@ -148,7 +148,7 @@ export class P5AsciifyRendererManager {
      * 
      * @ignore
      */
-    public render(inputFramebuffer: p5.Framebuffer): void {
+    public render(backgroundColor: string | p5.Color | [number, number?, number?, number?] = "#000000"): void {
 
         this._characterFramebuffer.draw(() => this._p.clear());
         this._primaryColorFramebuffer.draw(() => this._p.clear());
@@ -184,7 +184,8 @@ export class P5AsciifyRendererManager {
             this._secondaryColorFramebuffer,
             this._transformFramebuffer,
             this._rotationFramebuffer,
-            this._captureFramebuffer
+            this._captureFramebuffer,
+            backgroundColor
         );
 
         this.checkCanvasDimensions();

@@ -112,7 +112,7 @@ export class P5Asciifier {
      * @ignore
      */
     public asciify(): void {
-        this._rendererManager.render(this._captureFramebuffer);
+        this._rendererManager.render(this._backgroundColor);
 
         if (this._renderToCanvas) {
             if (this._rendererManager.hasEnabledRenderers) {
