@@ -183,7 +183,17 @@ export class P5Asciifier {
         return this._rendererManager;
     }
 
-    public updateCaptureFramebuffer(captureFramebuffer: p5.Framebuffer): void {
+
+    /**
+     * Sets the framebuffer or graphics object to capture for ASCII conversion.
+     * 
+     * Updates the capture source that will be processed by the ASCII rendering pipeline.
+     * This allows switching between different rendering targets without recreating the asciifier.
+     * 
+     * @param captureFramebuffer - The framebuffer or graphics object to capture from.
+     *                            Can be a p5.Framebuffer or p5.Graphics.
+     */
+    public setCaptureTexture(captureFramebuffer: p5.Framebuffer | p5.Graphics): void {
         // Early return if the framebuffer is the same
         if (this._captureFramebuffer === captureFramebuffer) {
             return;
@@ -193,7 +203,7 @@ export class P5Asciifier {
 
         // Reset grid dimensions based on new framebuffer
         this._grid.updateTexture(captureFramebuffer);
-        this._rendererManager.updateCaptureFramebuffer(captureFramebuffer);
+        this._rendererManager.setCaptureTexture(captureFramebuffer);
     }
 
     /**

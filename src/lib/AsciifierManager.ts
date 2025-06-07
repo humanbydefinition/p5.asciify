@@ -355,7 +355,8 @@ export class P5AsciifierManager {
     }
 
     /**
-     * Activate a registered hook
+     * Activate a registered hook provided by `p5.asciify`.
+     * 
      * @param hookType The type of hook to activate
      */
     public activateHook(hookType: HookType): void {
@@ -363,7 +364,7 @@ export class P5AsciifierManager {
     }
 
     /**
-     * Deactivate a registered hook
+     * Deactivate a registered hook provided by `p5.asciify`.
      * @param hookType The type of hook to deactivate
      */
     public deactivateHook(hookType: HookType): void {
@@ -372,7 +373,22 @@ export class P5AsciifierManager {
 
     /**
      * Set the global error level for the library.
-     * @param level The error level to set.
+     * 
+     * Controls how validation failures and errors are handled throughout p5.asciify.
+     * This affects all asciifier instances and library operations.
+     * 
+     * @param level - The error level to set. Use {@link P5AsciifyErrorLevel} enum values.
+     * 
+     * @example
+     * ```typescript
+     * // Set to warning level for non-critical applications
+     * p5asciify.setErrorLevel(P5AsciifyErrorLevel.WARNING);
+     * 
+     * // Silent mode for production environments
+     * p5asciify.setErrorLevel(P5AsciifyErrorLevel.SILENT);
+     * ```
+     * 
+     * @see {@link P5AsciifyErrorLevel} for detailed descriptions of each level
      */
     public setErrorLevel(level: P5AsciifyErrorLevel): void {
         errorHandler.setGlobalLevel(level);
@@ -421,14 +437,6 @@ export class P5AsciifierManager {
      */
     get pluginRegistry(): P5AsciifyPluginRegistry {
         return this._pluginRegistry;
-    }
-
-    /**
-     * Get the hook manager
-     * @returns The hook manager instance
-     */
-    get hookManager(): P5AsciifyHookManager {
-        return this._hookManager;
     }
 
     /**

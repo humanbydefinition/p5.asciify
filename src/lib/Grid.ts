@@ -101,7 +101,7 @@ export class P5AsciifyGrid {
      * @param texture The new framebuffer texture to use for the grid.
      * @ignore
      */
-    public updateTexture(texture: p5.Framebuffer): void {
+    public updateTexture(texture: p5.Framebuffer | p5.Graphics): void {
         this._texture = texture;
 
         if (!this._fixedDimensions) {

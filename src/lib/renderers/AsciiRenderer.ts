@@ -108,7 +108,7 @@ export abstract class P5AsciifyRenderer<T extends AsciiRendererOptions = AsciiRe
      * @param newCaptureFramebuffer - The new capture framebuffer or graphics to use.
      * @ignore
      */
-    public updateCaptureFramebuffer(newCaptureFramebuffer: p5.Framebuffer | p5.Graphics): void {
+    public setCaptureTexture(newCaptureFramebuffer: p5.Framebuffer | p5.Graphics): void {
         this._captureFramebuffer = newCaptureFramebuffer;
         this.resizeFramebuffers();
         this.resetShaders();

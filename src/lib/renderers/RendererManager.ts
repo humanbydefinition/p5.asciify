@@ -210,13 +210,17 @@ export class P5AsciifyRendererManager {
         }
     }
 
-    public updateCaptureFramebuffer(newCaptureFramebuffer: p5.Framebuffer | p5.Graphics): void {
-
+    /**
+     * Sets a new capture texture for the renderer manager and its renderers.
+     * @param newCaptureFramebuffer The new capture framebuffer or graphics to use for rendering.
+     * @ignore
+     */
+    public setCaptureTexture(newCaptureFramebuffer: p5.Framebuffer | p5.Graphics): void {
         this._captureFramebuffer = newCaptureFramebuffer;
         this.resetRendererDimensions();
 
         this._renderers.forEach(renderer => {
-            renderer.renderer.updateCaptureFramebuffer(newCaptureFramebuffer);
+            renderer.renderer.setCaptureTexture(newCaptureFramebuffer);
         });
     }
 

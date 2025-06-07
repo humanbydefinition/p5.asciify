@@ -1,6 +1,6 @@
 # Class: P5AsciifierManager
 
-Defined in: [AsciifierManager.ts:25](https://github.com/humanbydefinition/p5.asciify/blob/15d65e5de5ef823bac2dd4f184de81e436dbf1d7/src/lib/AsciifierManager.ts#L25)
+Defined in: [AsciifierManager.ts:27](https://github.com/humanbydefinition/p5.asciify/blob/72903d96d3952ed620f9a2161a4579d7cc8f2a03/src/lib/AsciifierManager.ts#L27)
 
 Manages the `p5.asciify` library by handling one or more `P5Asciifier` instances.
 
@@ -23,7 +23,7 @@ The manager is responsible for:
 
 > **get** **asciifiers**(): [`P5Asciifier`](P5Asciifier.md)[]
 
-Defined in: [AsciifierManager.ts:321](https://github.com/humanbydefinition/p5.asciify/blob/15d65e5de5ef823bac2dd4f184de81e436dbf1d7/src/lib/AsciifierManager.ts#L321)
+Defined in: [AsciifierManager.ts:445](https://github.com/humanbydefinition/p5.asciify/blob/72903d96d3952ed620f9a2161a4579d7cc8f2a03/src/lib/AsciifierManager.ts#L445)
 
 Returns the list of `P5Asciifier` instances managed by the library.
 
@@ -33,31 +33,13 @@ Returns the list of `P5Asciifier` instances managed by the library.
 
 ---
 
-### hookManager
-
-#### Get Signature
-
-> **get** **hookManager**(): [`P5AsciifyHookManager`](P5AsciifyHookManager.md)
-
-Defined in: [AsciifierManager.ts:314](https://github.com/humanbydefinition/p5.asciify/blob/15d65e5de5ef823bac2dd4f184de81e436dbf1d7/src/lib/AsciifierManager.ts#L314)
-
-Get the hook manager
-
-##### Returns
-
-[`P5AsciifyHookManager`](P5AsciifyHookManager.md)
-
-The hook manager instance
-
----
-
 ### pluginRegistry
 
 #### Get Signature
 
 > **get** **pluginRegistry**(): [`P5AsciifyPluginRegistry`](../p5.asciify/namespaces/plugins/classes/P5AsciifyPluginRegistry.md)
 
-Defined in: [AsciifierManager.ts:306](https://github.com/humanbydefinition/p5.asciify/blob/15d65e5de5ef823bac2dd4f184de81e436dbf1d7/src/lib/AsciifierManager.ts#L306)
+Defined in: [AsciifierManager.ts:438](https://github.com/humanbydefinition/p5.asciify/blob/72903d96d3952ed620f9a2161a4579d7cc8f2a03/src/lib/AsciifierManager.ts#L438)
 
 Get the plugin registry
 
@@ -73,9 +55,9 @@ The plugin registry instance
 
 > **activateHook**(`hookType`): `void`
 
-Defined in: [AsciifierManager.ts:290](https://github.com/humanbydefinition/p5.asciify/blob/15d65e5de5ef823bac2dd4f184de81e436dbf1d7/src/lib/AsciifierManager.ts#L290)
+Defined in: [AsciifierManager.ts:362](https://github.com/humanbydefinition/p5.asciify/blob/72903d96d3952ed620f9a2161a4579d7cc8f2a03/src/lib/AsciifierManager.ts#L362)
 
-Activate a registered hook
+Activate a registered hook provided by `p5.asciify`.
 
 #### Parameters
 
@@ -91,35 +73,31 @@ Activate a registered hook
 
 ### add()
 
-> **add**(`framebuffer?`): [`P5Asciifier`](P5Asciifier.md) \| `Promise`\<[`P5Asciifier`](P5Asciifier.md)\>
+> **add**(`framebuffer?`): `null` \| [`P5Asciifier`](P5Asciifier.md) \| `Promise`\<`null` \| [`P5Asciifier`](P5Asciifier.md)\>
 
-Defined in: [AsciifierManager.ts:216](https://github.com/humanbydefinition/p5.asciify/blob/15d65e5de5ef823bac2dd4f184de81e436dbf1d7/src/lib/AsciifierManager.ts#L216)
+Defined in: [AsciifierManager.ts:238](https://github.com/humanbydefinition/p5.asciify/blob/72903d96d3952ed620f9a2161a4579d7cc8f2a03/src/lib/AsciifierManager.ts#L238)
 
 Adds a new `P5Asciifier` instance to the library.
 
 #### Parameters
 
-| Parameter      | Type          | Description                                                                                                             |
-| -------------- | ------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| `framebuffer?` | `Framebuffer` | The framebuffer to capture for ASCII conversion. If not provided, the main canvas of the `p5.js` instance will be used. |
+| Parameter      | Type                        | Description                                                                                                             |
+| -------------- | --------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `framebuffer?` | `Framebuffer` \| `Graphics` | The framebuffer to capture for ASCII conversion. If not provided, the main canvas of the `p5.js` instance will be used. |
 
 #### Returns
 
-[`P5Asciifier`](P5Asciifier.md) \| `Promise`\<[`P5Asciifier`](P5Asciifier.md)\>
+`null` \| [`P5Asciifier`](P5Asciifier.md) \| `Promise`\<`null` \| [`P5Asciifier`](P5Asciifier.md)\>
 
-The newly created `P5Asciifier` instance.
-
-#### Throws
-
-P5AsciifyError If the framebuffer is not an instance of `p5.Framebuffer`.
+The newly created `P5Asciifier` instance, or null if validation fails.
 
 ---
 
 ### asciifier()
 
-> **asciifier**(`index`): [`P5Asciifier`](P5Asciifier.md)
+> **asciifier**(`index`): `null` \| [`P5Asciifier`](P5Asciifier.md)
 
-Defined in: [AsciifierManager.ts:201](https://github.com/humanbydefinition/p5.asciify/blob/15d65e5de5ef823bac2dd4f184de81e436dbf1d7/src/lib/AsciifierManager.ts#L201)
+Defined in: [AsciifierManager.ts:206](https://github.com/humanbydefinition/p5.asciify/blob/72903d96d3952ed620f9a2161a4579d7cc8f2a03/src/lib/AsciifierManager.ts#L206)
 
 Returns the `P5Asciifier` instance at the specified index.
 
@@ -134,13 +112,13 @@ which usually corresponds to the default `P5Asciifier` provided by the library, 
 
 #### Returns
 
-[`P5Asciifier`](P5Asciifier.md)
+`null` \| [`P5Asciifier`](P5Asciifier.md)
 
 The `P5Asciifier` instance at the specified index.
 
 #### Throws
 
-P5AsciifyError If the index is out of bounds.
+If the index is out of bounds.
 
 ---
 
@@ -148,9 +126,9 @@ P5AsciifyError If the index is out of bounds.
 
 > **deactivateHook**(`hookType`): `void`
 
-Defined in: [AsciifierManager.ts:298](https://github.com/humanbydefinition/p5.asciify/blob/15d65e5de5ef823bac2dd4f184de81e436dbf1d7/src/lib/AsciifierManager.ts#L298)
+Defined in: [AsciifierManager.ts:370](https://github.com/humanbydefinition/p5.asciify/blob/72903d96d3952ed620f9a2161a4579d7cc8f2a03/src/lib/AsciifierManager.ts#L370)
 
-Deactivate a registered hook
+Deactivate a registered hook provided by `p5.asciify`.
 
 #### Parameters
 
@@ -168,7 +146,7 @@ Deactivate a registered hook
 
 > **registerPlugin**(`plugin`): `void`
 
-Defined in: [AsciifierManager.ts:282](https://github.com/humanbydefinition/p5.asciify/blob/15d65e5de5ef823bac2dd4f184de81e436dbf1d7/src/lib/AsciifierManager.ts#L282)
+Defined in: [AsciifierManager.ts:353](https://github.com/humanbydefinition/p5.asciify/blob/72903d96d3952ed620f9a2161a4579d7cc8f2a03/src/lib/AsciifierManager.ts#L353)
 
 Register a new renderer plugin with p5.asciify
 
@@ -188,7 +166,7 @@ Register a new renderer plugin with p5.asciify
 
 > **remove**(`indexOrAsciifier`): `void`
 
-Defined in: [AsciifierManager.ts:259](https://github.com/humanbydefinition/p5.asciify/blob/15d65e5de5ef823bac2dd4f184de81e436dbf1d7/src/lib/AsciifierManager.ts#L259)
+Defined in: [AsciifierManager.ts:293](https://github.com/humanbydefinition/p5.asciify/blob/72903d96d3952ed620f9a2161a4579d7cc8f2a03/src/lib/AsciifierManager.ts#L293)
 
 Removes a `P5Asciifier` instance.
 
@@ -202,9 +180,42 @@ Removes a `P5Asciifier` instance.
 
 `void`
 
-#### Throws
+---
 
-P5AsciifyError If the index is out of bounds or the specified asciifier is not found.
+### setErrorLevel()
+
+> **setErrorLevel**(`level`): `void`
+
+Defined in: [AsciifierManager.ts:393](https://github.com/humanbydefinition/p5.asciify/blob/72903d96d3952ed620f9a2161a4579d7cc8f2a03/src/lib/AsciifierManager.ts#L393)
+
+Set the global error level for the library.
+
+Controls how validation failures and errors are handled throughout p5.asciify.
+This affects all asciifier instances and library operations.
+
+#### Parameters
+
+| Parameter | Type                                                                                         | Description                                                                                                                         |
+| --------- | -------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| `level`   | [`P5AsciifyErrorLevel`](../p5.asciify/namespaces/errors/enumerations/P5AsciifyErrorLevel.md) | The error level to set. Use [P5AsciifyErrorLevel](../p5.asciify/namespaces/errors/enumerations/P5AsciifyErrorLevel.md) enum values. |
+
+#### Returns
+
+`void`
+
+#### Example
+
+```typescript
+// Set to warning level for non-critical applications
+p5asciify.setErrorLevel(P5AsciifyErrorLevel.WARNING);
+
+// Silent mode for production environments
+p5asciify.setErrorLevel(P5AsciifyErrorLevel.SILENT);
+```
+
+#### See
+
+[P5AsciifyErrorLevel](../p5.asciify/namespaces/errors/enumerations/P5AsciifyErrorLevel.md) for detailed descriptions of each level
 
 ---
 
@@ -212,7 +223,7 @@ P5AsciifyError If the index is out of bounds or the specified asciifier is not f
 
 > `static` **getInstance**(): `P5AsciifierManager`
 
-Defined in: [AsciifierManager.ts:52](https://github.com/humanbydefinition/p5.asciify/blob/15d65e5de5ef823bac2dd4f184de81e436dbf1d7/src/lib/AsciifierManager.ts#L52)
+Defined in: [AsciifierManager.ts:54](https://github.com/humanbydefinition/p5.asciify/blob/72903d96d3952ed620f9a2161a4579d7cc8f2a03/src/lib/AsciifierManager.ts#L54)
 
 Gets the singleton instance of `P5AsciifierManager`.
 
