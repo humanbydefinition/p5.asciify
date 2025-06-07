@@ -61,8 +61,6 @@ export abstract class P5AsciifyAbstractFeatureRenderer2D<T extends FeatureAsciiR
             return; // If validation fails or characters are the same, do not update
         }
 
-        this._fontManager.validateCharacters(characters);
-
         this._characterColorPalette.setColors(this._fontManager.glyphColors(characters));
         this.resetShaders();
 
