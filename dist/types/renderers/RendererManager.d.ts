@@ -78,7 +78,12 @@ export declare class P5AsciifyRendererManager {
      * and the canvas dimensions are different to the previous {@link render} call.
      */
     private checkCanvasDimensions;
-    updateCaptureFramebuffer(newCaptureFramebuffer: p5.Framebuffer | p5.Graphics): void;
+    /**
+     * Sets a new capture texture for the renderer manager and its renderers.
+     * @param newCaptureFramebuffer The new capture framebuffer or graphics to use for rendering.
+     * @ignore
+     */
+    setCaptureTexture(newCaptureFramebuffer: p5.Framebuffer | p5.Graphics): void;
     /**
      * Resets the dimensions of all renderers.
      *

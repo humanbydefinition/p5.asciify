@@ -63,7 +63,7 @@ export declare class P5AsciifyGrid {
      * @param texture The new framebuffer texture to use for the grid.
      * @ignore
      */
-    updateTexture(texture: p5.Framebuffer): void;
+    updateTexture(texture: p5.Framebuffer | p5.Graphics): void;
     /**
      * Returns the width of each cell in the grid.
      */

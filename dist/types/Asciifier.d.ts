@@ -96,7 +96,16 @@ export declare class P5Asciifier {
      * ```
      */
     renderers(): P5AsciifyRendererManager;
-    updateCaptureFramebuffer(captureFramebuffer: p5.Framebuffer): void;
+    /**
+     * Sets the framebuffer or graphics object to capture for ASCII conversion.
+     *
+     * Updates the capture source that will be processed by the ASCII rendering pipeline.
+     * This allows switching between different rendering targets without recreating the asciifier.
+     *
+     * @param captureFramebuffer - The framebuffer or graphics object to capture from.
+     *                            Can be a p5.Framebuffer or p5.Graphics.
+     */
+    setCaptureTexture(captureFramebuffer: p5.Framebuffer | p5.Graphics): void;
     /**
      * Sets the font for the ascii renderers in the rendering pipeline of the asciifier.
      * @param font The `p5.Font` object to use for ASCII rendering.

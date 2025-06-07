@@ -78,7 +78,7 @@ export declare abstract class P5AsciifyRenderer<T extends AsciiRendererOptions =
      * @param newCaptureFramebuffer - The new capture framebuffer or graphics to use.
      * @ignore
      */
-    updateCaptureFramebuffer(newCaptureFramebuffer: p5.Framebuffer | p5.Graphics): void;
+    setCaptureTexture(newCaptureFramebuffer: p5.Framebuffer | p5.Graphics): void;
     /**
      * Enable or disable the renderer.
      * @param enabled - Whether to enable or disable the renderer.

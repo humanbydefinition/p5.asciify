@@ -1,6 +1,5 @@
 import p5 from 'p5';
 import { P5Asciifier } from './Asciifier';
-import { P5AsciifyHookManager } from './HookManager';
 import { HookType } from './types';
 import { P5AsciifyRendererPlugin } from './plugins/RendererPlugin';
 import { P5AsciifyPluginRegistry } from './plugins/PluginRegistry';
@@ -115,18 +114,34 @@ export declare class P5AsciifierManager {
      */
     registerPlugin(plugin: P5AsciifyRendererPlugin): void;
     /**
-     * Activate a registered hook
+     * Activate a registered hook provided by `p5.asciify`.
+     *
      * @param hookType The type of hook to activate
      */
     activateHook(hookType: HookType): void;
     /**
-     * Deactivate a registered hook
+     * Deactivate a registered hook provided by `p5.asciify`.
      * @param hookType The type of hook to deactivate
      */
     deactivateHook(hookType: HookType): void;
     /**
      * Set the global error level for the library.
-     * @param level The error level to set.
+     *
+     * Controls how validation failures and errors are handled throughout p5.asciify.
+     * This affects all asciifier instances and library operations.
+     *
+     * @param level - The error level to set. Use {@link P5AsciifyErrorLevel} enum values.
+     *
+     * @example
+     * ```typescript
+     * // Set to warning level for non-critical applications
+     * p5asciify.setErrorLevel(P5AsciifyErrorLevel.WARNING);
+     *
+     * // Silent mode for production environments
+     * p5asciify.setErrorLevel(P5AsciifyErrorLevel.SILENT);
+     * ```
+     *
+     * @see {@link P5AsciifyErrorLevel} for detailed descriptions of each level
      */
     setErrorLevel(level: P5AsciifyErrorLevel): void;
     /**
@@ -141,11 +156,6 @@ export declare class P5AsciifierManager {
      * @returns The plugin registry instance
      */
     get pluginRegistry(): P5AsciifyPluginRegistry;
-    /**
-     * Get the hook manager
-     * @returns The hook manager instance
-     */
-    get hookManager(): P5AsciifyHookManager;
     /**
      * Returns the list of `P5Asciifier` instances managed by the library.
      */
