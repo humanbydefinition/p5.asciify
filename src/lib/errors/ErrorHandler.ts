@@ -49,7 +49,7 @@ export class P5AsciifyErrorHandler {
      * Handle an error based on the configured settings
      * @returns true if execution should continue, false if error was handled
      */
-    public handle(
+    private _handle(
         message: string,
         context?: any,
         originalError?: Error
@@ -92,31 +92,10 @@ export class P5AsciifyErrorHandler {
         context?: any
     ): boolean {
         if (!condition) {
-            this.handle(message, context);
+            this._handle(message, context);
             return false; // Validation failed
         }
         return true; // Validation passed
-    }
-
-    /**
-     * Validate a condition with a fallback value
-     * @param condition The condition to validate
-     * @param message Error message if validation fails
-     * @param fallbackValue Value to return if validation fails
-     * @param context Additional context for debugging
-     * @returns The fallbackValue if validation fails, undefined if validation passes
-     */
-    public validateWithFallback<T>(
-        condition: boolean,
-        message: string,
-        fallbackValue: T,
-        context?: any
-    ): T | undefined {
-        if (!condition) {
-            this.handle(message, context);
-            return fallbackValue; // Validation failed, return fallback
-        }
-        return undefined; // Validation passed, no fallback needed
     }
 
     /**
@@ -124,13 +103,6 @@ export class P5AsciifyErrorHandler {
      */
     public setGlobalLevel(level: P5AsciifyErrorLevel): void {
         this._options.globalLevel = level;
-    }
-
-    /**
-     * Get current configuration
-     */
-    public getConfiguration(): ErrorHandlerOptions {
-        return { ...this._options };
     }
 }
 

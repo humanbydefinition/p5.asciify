@@ -2,12 +2,13 @@ import p5 from 'p5';
 import { P5Asciifier } from './Asciifier';
 import { P5AsciifyError } from './errors/AsciifyError';
 import { P5AsciifyHookManager } from './HookManager';
-import { HookType, P5AsciifyHookHandlers } from './types';
+import { HookType } from './types';
 
 import URSAFONT_BASE64 from './assets/fonts/ursafont_base64.txt?raw';
 import { P5AsciifyRendererPlugin } from './plugins/RendererPlugin';
 import { P5AsciifyPluginRegistry } from './plugins/PluginRegistry';
 import { compareVersions } from './utils';
+import { errorHandler } from './errors';
 
 /**
  * Manages the `p5.asciify` library by handling one or more `P5Asciifier` instances.
@@ -198,9 +199,27 @@ export class P5AsciifierManager {
      * @returns The `P5Asciifier` instance at the specified index.
      * @throws If the index is out of bounds.
      */
-    public asciifier(index: number = 0): P5Asciifier {
-        if (index < 0 || index >= this._asciifiers.length) {
-            throw new P5AsciifyError(`Invalid asciifier index: ${index}.`);
+    public asciifier(index: number = 0): P5Asciifier | null {
+        // Validate input parameter
+        const isValidInput = errorHandler.validate(
+            typeof index === 'number' && !isNaN(index) && Number.isInteger(index),
+            'Index must be a valid integer.',
+            { providedValue: index, method: 'asciifier' }
+        );
+
+        if (!isValidInput) {
+            return null; // Return early if input validation fails
+        }
+
+        // Validate index is within bounds
+        const isValidIndex = errorHandler.validate(
+            index >= 0 && index < this._asciifiers.length,
+            `Invalid asciifier index: ${index}. Valid range is 0 to ${this._asciifiers.length - 1}.`,
+            { providedValue: index, method: 'asciifier' }
+        );
+
+        if (!isValidIndex) {
+            return null; // Return early if index validation fails
         }
 
         return this._asciifiers[index];
@@ -210,16 +229,18 @@ export class P5AsciifierManager {
      * Adds a new `P5Asciifier` instance to the library.
      * @param framebuffer   The framebuffer to capture for ASCII conversion.
      *                      If not provided, the main canvas of the `p5.js` instance will be used.
-     * @returns The newly created `P5Asciifier` instance.
-     * @throws If the framebuffer is not an instance of `p5.Framebuffer`.
+     * @returns The newly created `P5Asciifier` instance, or null if validation fails.
      */
-    public add(framebuffer?: p5.Framebuffer): P5Asciifier | Promise<P5Asciifier> {
-        if (!this._p) {
-            throw new P5AsciifyError("Cannot add asciifier before initializing p5.asciify. Ensure p5.asciify is initialized first.");
-        }
+    public add(framebuffer?: p5.Framebuffer | p5.Graphics): P5Asciifier | Promise<P5Asciifier | null> | null {
+        // Validate setup is done
+        const isSetupDone = errorHandler.validate(
+            this._setupDone,
+            "Cannot add asciifier before initializing p5.asciify. Ensure p5.asciify is initialized first.",
+            { providedValue: this._setupDone, method: 'add' }
+        );
 
-        if (framebuffer !== undefined && !(framebuffer instanceof p5.Framebuffer)) {
-            throw new P5AsciifyError("Framebuffer must be an instance of p5.Framebuffer.");
+        if (!isSetupDone) {
+            return null; // Return early if setup validation fails
         }
 
         const asciifier = new P5Asciifier(this._pluginRegistry);
@@ -239,14 +260,24 @@ export class P5AsciifierManager {
         } else {
             // For p5.js 2.0+, return a Promise
             return (async () => {
-                await asciifier.init(this._p, this._baseFont);
+                try {
+                    await asciifier.init(this._p, this._baseFont);
 
-                if (this._setupDone && this._sketchFramebuffer) {
-                    await asciifier.setup(framebuffer ? framebuffer : this._sketchFramebuffer);
+                    if (this._setupDone && this._sketchFramebuffer) {
+                        await asciifier.setup(framebuffer ? framebuffer : this._sketchFramebuffer);
+                    }
+
+                    this._asciifiers.push(asciifier);
+                    return asciifier;
+                } catch (error) {
+                    // If async operations fail, validate and return null
+                    errorHandler.validate(
+                        false,
+                        `Failed to initialize asciifier: ${error instanceof Error ? error.message : 'Unknown error'}`,
+                        { providedValue: error, method: 'add' }
+                    );
+                    return null;
                 }
-
-                this._asciifiers.push(asciifier);
-                return asciifier;
             })();
         }
     }
@@ -254,23 +285,59 @@ export class P5AsciifierManager {
     /**
      * Removes a `P5Asciifier` instance.
      * @param indexOrAsciifier The index of the `P5Asciifier` instance to remove, or the `P5Asciifier` instance itself.
-     * @throws If the index is out of bounds or the specified asciifier is not found.
      */
     public remove(indexOrAsciifier: number | P5Asciifier): void {
         if (typeof indexOrAsciifier === 'number') {
             // Handle removal by index
             const index = indexOrAsciifier;
-            if (index < 0 || index >= this._asciifiers.length) {
-                throw new P5AsciifyError(`Invalid asciifier index: ${index}.`);
+
+            const isValidInput = errorHandler.validate(
+                typeof index === 'number' && !isNaN(index) && Number.isInteger(index),
+                'Index must be a valid integer.',
+                { providedValue: index, method: 'remove' }
+            );
+
+            if (!isValidInput) {
+                return; // Return early if input validation fails
             }
+
+            const isValidIndex = errorHandler.validate(
+                index >= 0 && index < this._asciifiers.length,
+                `Invalid asciifier index: ${index}. Valid range is 0 to ${this._asciifiers.length - 1}.`,
+                { providedValue: index, method: 'remove' }
+            );
+
+            if (!isValidIndex) {
+                return; // Return early if index validation fails
+            }
+
             this._asciifiers.splice(index, 1);
         } else {
             // Handle removal by instance
             const asciifier = indexOrAsciifier;
-            const index = this._asciifiers.indexOf(asciifier);
-            if (index === -1) {
-                throw new P5AsciifyError('The specified asciifier was not found.');
+
+            const isValidInstance = errorHandler.validate(
+                asciifier && asciifier instanceof P5Asciifier,
+                'Asciifier must be a valid P5Asciifier instance.',
+                { providedValue: asciifier, method: 'remove' }
+            );
+
+            if (!isValidInstance) {
+                return; // Return early if instance validation fails
             }
+
+            const index = this._asciifiers.indexOf(asciifier);
+
+            const asciifierExists = errorHandler.validate(
+                index !== -1,
+                'The specified asciifier was not found in the list.',
+                { providedValue: asciifier, method: 'remove' }
+            );
+
+            if (!asciifierExists) {
+                return; // Return early if asciifier not found
+            }
+
             this._asciifiers.splice(index, 1);
         }
     }

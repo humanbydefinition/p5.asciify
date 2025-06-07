@@ -3,7 +3,6 @@ import p5 from 'p5';
 import { P5AsciifyGrid } from './Grid';
 import { P5AsciifyFontManager } from './FontManager';
 import { P5AsciifyRendererManager } from './renderers/RendererManager';
-import { P5AsciifyError } from './errors/AsciifyError';
 import { P5AsciifyAbstractFeatureRenderer2D } from './renderers/2d/feature/AbstractFeatureRenderer2D';
 import { P5AsciifySVGExporter, SVGExportOptions } from './utils/export/SVGExporter';
 import { JSONExportOptions, P5AsciifyJSONExporter } from './utils/export/JSONExporter';
@@ -26,7 +25,7 @@ export class P5Asciifier {
     private _grid!: P5AsciifyGrid;
 
     /** Wraps around the user's `draw()` function to capture it's output for the ascii renderers to asciify. */
-    private _captureFramebuffer!: p5.Framebuffer;
+    private _captureFramebuffer!: p5.Framebuffer | p5.Graphics;
 
     /** Manages the available ASCII renderers and handles rendering the ASCII output to the canvas. */
     private _rendererManager!: P5AsciifyRendererManager;
@@ -79,7 +78,7 @@ export class P5Asciifier {
      * 
      * @ignore
      */
-    public async setup(captureFramebuffer: p5.Framebuffer): Promise<void> {
+    public async setup(captureFramebuffer: p5.Framebuffer | p5.Graphics): Promise<void> {
         this._captureFramebuffer = captureFramebuffer;
 
         if (compareVersions(this._p.VERSION, "2.0.0") < 0) {
@@ -606,36 +605,77 @@ export class P5Asciifier {
      * @throws If the JSON format is invalid or unsupported.
      */
     public loadJSON(json: string | object): {
-        characterFramebuffer: p5.Framebuffer,
-        primaryColorFramebuffer: p5.Framebuffer,
-        secondaryColorFramebuffer: p5.Framebuffer,
-        transformFramebuffer: p5.Framebuffer,
-        rotationFramebuffer: p5.Framebuffer
+        characterFramebuffer: p5.Framebuffer | null,
+        primaryColorFramebuffer: p5.Framebuffer | null,
+        secondaryColorFramebuffer: p5.Framebuffer | null,
+        transformFramebuffer: p5.Framebuffer | null,
+        rotationFramebuffer: p5.Framebuffer | null
     } {
         let jsonData;
 
+        // Validate and parse JSON input
+        const isValidInput = errorHandler.validate(
+            json !== null && json !== undefined,
+            'JSON input cannot be null or undefined.',
+            { providedValue: json, method: 'loadJSON' }
+        );
+
+        if (!isValidInput) {
+            return {
+                characterFramebuffer: null,
+                primaryColorFramebuffer: null,
+                secondaryColorFramebuffer: null,
+                transformFramebuffer: null,
+                rotationFramebuffer: null
+            };
+        }
+
         try {
-            // Parse the JSON string if it's a string
             jsonData = typeof json === 'string' ? JSON.parse(json) : json;
         } catch (e) {
-            throw new P5AsciifyError(`Invalid JSON format: ${(e as Error).message}`);
+            const isValidJson = errorHandler.validate(
+                false,
+                `Invalid JSON format: ${(e as Error).message}`,
+                { providedValue: json, method: 'loadJSON' }
+            );
+
+            return {
+                characterFramebuffer: null,
+                primaryColorFramebuffer: null,
+                secondaryColorFramebuffer: null,
+                transformFramebuffer: null,
+                rotationFramebuffer: null
+            };
         }
 
-        // Validate the JSON structure
-        if (!jsonData.metadata || !jsonData.cells) {
-            throw new P5AsciifyError('Invalid JSON format: missing metadata or cells');
-        }
+        // Validate JSON structure
+        const hasValidStructure = errorHandler.validate(
+            jsonData && typeof jsonData === 'object' && jsonData.metadata && jsonData.cells,
+            'Invalid JSON format: missing metadata or cells',
+            { providedValue: jsonData, method: 'loadJSON' }
+        );
 
         // Validate version
-        if (jsonData.metadata.version !== "1.0") {
-            throw new P5AsciifyError(`Unsupported JSON version: ${jsonData.metadata.version}`);
+        const isValidVersion = errorHandler.validate(
+            jsonData.metadata.version === "1.0",
+            `Unsupported JSON version: ${jsonData.metadata.version}`,
+            { providedValue: jsonData.metadata.version, method: 'loadJSON' }
+        );
+
+        if (!isValidVersion || !hasValidStructure) {
+            return {
+                characterFramebuffer: null,
+                primaryColorFramebuffer: null,
+                secondaryColorFramebuffer: null,
+                transformFramebuffer: null,
+                rotationFramebuffer: null
+            };
         }
 
         // Get grid dimensions from JSON
         const gridSize = jsonData.metadata.gridSize;
         const cols = gridSize.cols;
         const rows = gridSize.rows;
-
 
         // Create new framebuffers with the dimensions from the JSON
         const fbSettings = {
@@ -822,7 +862,7 @@ export class P5Asciifier {
      * 
      * @ignore
      */
-    get captureFramebuffer(): p5.Framebuffer { return this._captureFramebuffer; }
+    get captureFramebuffer(): p5.Framebuffer | p5.Graphics { return this._captureFramebuffer; }
 
     /**
      * Returns the ASCII output texture as a `p5.Framebuffer`, which can be used for further processing or rendering.

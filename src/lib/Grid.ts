@@ -33,7 +33,7 @@ export class P5AsciifyGrid {
      * @ignore
      */
     constructor(
-        private _texture: p5.Framebuffer,
+        private _texture: p5.Framebuffer | p5.Graphics,
         private _cellWidth: number,
         private _cellHeight: number,
     ) {
