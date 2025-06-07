@@ -124,6 +124,9 @@ export class P5AsciifierManager {
     public async init(p: p5): Promise<void> {
         this._p = p;
 
+        // Apply shader precision fix for Android devices
+        this._applyShaderPrecisionFix();
+
         if (compareVersions(p.VERSION, "2.0.0") < 0) {
             // For p5.js 1.x - use preload increment and callback
             // Check if we're in global mode to avoid conflicts
@@ -376,10 +379,47 @@ export class P5AsciifierManager {
     }
 
     /**
+     * Apply shader precision fix for Android devices.
+     * This fixes p5.js shaders to use highp precision instead of mediump.
+     * Generally fixed in p5.js v1.11.3+, but this provides backwards compatibility.
+     * @private
+     */
+    private _applyShaderPrecisionFix(): void {
+        const shadersToReplace = [
+            ['_getImmediateModeShader', '_defaultImmediateModeShader'],
+            ['_getNormalShader', '_defaultNormalShader'],
+            ['_getColorShader', '_defaultColorShader'],
+            ['_getPointShader', '_defaultPointShader'],
+            ['_getLineShader', '_defaultLineShader'],
+            ['_getFontShader', '_defaultFontShader'],
+        ];
+
+        // Apply the fix to the renderer prototype if not already applied
+        for (const [method, cacheKey] of shadersToReplace) {
+            const prevMethod = p5.RendererGL.prototype[method]
+            p5.RendererGL.prototype[method] = function () {
+                if (!this[cacheKey]) {
+                    this[cacheKey] = prevMethod.call(this)
+                    this[cacheKey]._vertSrc = this[cacheKey]._vertSrc.replace(
+                        /mediump/g,
+                        'highp',
+                    )
+                    this[cacheKey]._fragSrc = this[cacheKey]._fragSrc.replace(
+                        /mediump/g,
+                        'highp',
+                    )
+                }
+
+                return this[cacheKey]
+            }
+        }
+    }
+
+    /**
      * Get the plugin registry
      * @returns The plugin registry instance
      */
-    public get pluginRegistry(): P5AsciifyPluginRegistry {
+    get pluginRegistry(): P5AsciifyPluginRegistry {
         return this._pluginRegistry;
     }
 
@@ -387,7 +427,7 @@ export class P5AsciifierManager {
      * Get the hook manager
      * @returns The hook manager instance
      */
-    public get hookManager(): P5AsciifyHookManager {
+    get hookManager(): P5AsciifyHookManager {
         return this._hookManager;
     }
 
