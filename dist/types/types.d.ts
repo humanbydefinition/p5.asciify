@@ -3,6 +3,7 @@ import p5 from 'p5';
 import { P5AsciifyAbstractFeatureRenderer2D } from './renderers/2d/feature';
 import { P5AsciifyRenderer2D } from './renderers/2d';
 import { P5AsciifyRenderer } from './renderers';
+import { P5AsciifyErrorLevel } from './errors/ErrorHandler';
 /**
  * Hook types supported by the p5.asciify hook manager
  */
@@ -25,6 +26,7 @@ declare global {
         P5AsciifyAbstractFeatureRenderer2D: typeof P5AsciifyAbstractFeatureRenderer2D;
         P5AsciifyRenderer2D: typeof P5AsciifyRenderer2D;
         P5AsciifyRenderer: typeof P5AsciifyRenderer;
+        P5AsciifyErrorLevel: typeof P5AsciifyErrorLevel;
         preload?: () => void;
         setupAsciify?: () => void;
         drawAsciify?: () => void;

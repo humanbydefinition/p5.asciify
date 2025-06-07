@@ -47,7 +47,7 @@ export declare class P5AsciifyBrightnessRenderer extends P5AsciifyAbstractFeatur
      * @param options The options for the ASCII renderer.
      * @ignore
      */
-    constructor(p5Instance: p5, captureFramebuffer: p5.Framebuffer, grid: P5AsciifyGrid, fontManager: P5AsciifyFontManager, options?: BrightnessAsciiRendererOptions);
+    constructor(p5Instance: p5, captureFramebuffer: p5.Framebuffer | p5.Graphics, grid: P5AsciifyGrid, fontManager: P5AsciifyFontManager, options?: BrightnessAsciiRendererOptions);
     resetShaders(): void;
     resizeFramebuffers(): void;
     update(newOptions: Partial<BrightnessAsciiRendererOptions>): void;
@@ -67,7 +67,7 @@ export declare class P5AsciifyBrightnessRenderer extends P5AsciifyAbstractFeatur
      * ```
      *
      * @param range A tuple [min, max] representing the brightness range.
-     * @throws {P5AsciifyError} If the start value is greater than the end value, or if the values are not within the range of 0 to 255.
+     * @throws If the provided range is not an array of two numbers, or if the numbers are not within the valid range (0-255).
      */
     brightnessRange(range: [number, number]): void;
     render(): void;

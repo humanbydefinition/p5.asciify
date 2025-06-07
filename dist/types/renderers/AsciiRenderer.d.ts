@@ -7,7 +7,7 @@ import { AsciiRendererOptions } from './types';
  */
 export declare abstract class P5AsciifyRenderer<T extends AsciiRendererOptions = AsciiRendererOptions> {
     protected _p: p5;
-    protected _captureFramebuffer: p5.Framebuffer;
+    protected _captureFramebuffer: p5.Framebuffer | p5.Graphics;
     protected _grid: P5AsciifyGrid;
     protected initialFramebufferDimensions: {
         width: number;
@@ -38,7 +38,7 @@ export declare abstract class P5AsciifyRenderer<T extends AsciiRendererOptions =
      * @param _options The options for the ASCII renderer.
      * @ignore
      */
-    constructor(_p: p5, _captureFramebuffer: p5.Framebuffer, _grid: P5AsciifyGrid, initialFramebufferDimensions: {
+    constructor(_p: p5, _captureFramebuffer: p5.Framebuffer | p5.Graphics, _grid: P5AsciifyGrid, initialFramebufferDimensions: {
         width: number;
         height: number;
     }, _fontManager: P5AsciifyFontManager, _options: T);
@@ -73,12 +73,17 @@ export declare abstract class P5AsciifyRenderer<T extends AsciiRendererOptions =
      * ```
      */
     update(newOptions: T): void;
-    updateCaptureFramebuffer(newCaptureFramebuffer: p5.Framebuffer): void;
+    /**
+     * Update the capture framebuffer used by the renderer.
+     * @param newCaptureFramebuffer - The new capture framebuffer or graphics to use.
+     * @ignore
+     */
+    updateCaptureFramebuffer(newCaptureFramebuffer: p5.Framebuffer | p5.Graphics): void;
     /**
      * Enable or disable the renderer.
      * @param enabled - Whether to enable or disable the renderer.
      * @returns The current/new state of the renderer.
-     * @throws {P5AsciifyError} If the provided enabled value is not a boolean.
+     * @throws If the provided enabled value is not a boolean.
      *
      * @example
      * ```javascript

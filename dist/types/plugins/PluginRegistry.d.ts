@@ -7,9 +7,9 @@ export declare class P5AsciifyPluginRegistry {
     /**
      * Registers a new renderer plugin.
      * @param plugin The renderer plugin to register
-     * @throws {@link P5AsciifyError} - If a plugin with the same ID is already registered or conflicts with built-in renderers
+     * @throws If a plugin with the same ID is already registered or conflicts with built-in renderers
      */
-    register(plugin: P5AsciifyRendererPlugin): void;
+    register(plugin: P5AsciifyRendererPlugin): boolean;
     /**
      * Check if a plugin with the given ID is registered
      * @param id Plugin ID to check

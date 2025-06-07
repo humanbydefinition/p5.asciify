@@ -9,8 +9,9 @@ export * as renderers from './renderers';
 export * as utils from './utils';
 /** Contains plugin interfaces to implement against. */
 export * as plugins from './plugins';
+/** Contains error handling functionality and utilities. */
+export * as errors from './errors';
 export { P5AsciifierManager } from './AsciifierManager';
-export { P5AsciifyError } from './AsciifyError';
 export { P5Asciifier } from './Asciifier';
 export { P5AsciifyColorPalette } from './ColorPalette';
 export { P5AsciifyGrid } from './Grid';

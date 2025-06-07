@@ -54,7 +54,7 @@ export declare class P5AsciifyEdgeRenderer extends P5AsciifyAbstractFeatureRende
      * @param options The options for the ASCII renderer.
      * @ignore
      */
-    constructor(p5Instance: p5, captureFramebuffer: p5.Framebuffer, grid: P5AsciifyGrid, fontManager: P5AsciifyFontManager, options?: EdgeAsciiRendererOptions);
+    constructor(p5Instance: p5, captureFramebuffer: p5.Framebuffer | p5.Graphics, grid: P5AsciifyGrid, fontManager: P5AsciifyFontManager, options?: EdgeAsciiRendererOptions);
     resizeFramebuffers(): void;
     resetShaders(): void;
     /**
@@ -69,7 +69,7 @@ export declare class P5AsciifyEdgeRenderer extends P5AsciifyAbstractFeatureRende
      * ```
      *
      * @param value The threshold value for the Sobel edge detection algorithm.
-     * @throws {P5AsciifyError} If the value is not a valid number between 0 and 1.
+     * @throws If the value is not a valid number between 0 and 1.
      */
     sobelThreshold(value: number): void;
     /**
@@ -84,7 +84,7 @@ export declare class P5AsciifyEdgeRenderer extends P5AsciifyAbstractFeatureRende
      * ```
      *
      * @param value The sample threshold value for the edge detection algorithm.
-     * @throws {P5AsciifyError} If the value is not a valid number greater than or equal to 0.
+     * @throws If the value is not a valid number greater than or equal to 0.
      */
     sampleThreshold(value: number): void;
     update(newOptions: Partial<EdgeAsciiRendererOptions>): void;

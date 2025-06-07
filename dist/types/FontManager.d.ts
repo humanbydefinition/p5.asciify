@@ -43,7 +43,6 @@ export declare class P5AsciifyFontManager {
      * Otherwise, other parts of the library are not updated with the new font information.
      *
      * @param font The p5.Font object to use for ASCII rendering.
-     * @throws {@link P5AsciifyError} If the font parameter is invalid.
      * @ignore
      */
     loadFont(font: p5.Font): void;
@@ -53,7 +52,7 @@ export declare class P5AsciifyFontManager {
      * @returns An array containing the RGB color values for the character,
      *          which can be used to set the fill color when drawing to a custom renderers `characterFramebuffer`
      *          to convert those pixels into the selected character.
-     * @throws {@link P5AsciifyError} If the character is not found in the font.
+     * @throws If the character is not found in the font.
      *
      * @example
      * ```javascript
@@ -66,31 +65,10 @@ export declare class P5AsciifyFontManager {
      */
     glyphColor(char: string): [number, number, number];
     /**
-     * Returns an array of characters that are not supported by the current font.
-     * @param characters The string of characters to check.
-     * @returns An array of unsupported characters. List is empty if all characters are supported.
-     *
-     * @example
-     * ```javascript
-     *  function setupAsciify() {
-     *      // Print a list of potentially unsupported characters.
-     *      console.log(p5asciify.asciifier().fontManager.getUnsupportedCharacters(" .,ABC123"));
-     *  }
-     * ```
-     */
-    getUnsupportedCharacters(characters: string): string[];
-    /**
-     * Validates a string of characters against the current font.
-     * @param characters The string of characters to validate.
-     * @throws {@link P5AsciifyError} If any characters are not supported by the current font.
-     * @ignore
-     */
-    validateCharacters(characters: string): void;
-    /**
      * Gets an array of RGB colors for a given string of characters.
      * @param characters - A string of characters.
      * @returns Array of RGB color values.
-     * @throws {@link P5AsciifyError} If a character is not found in the fonts available characters.
+     * @throws If a character is not found in the fonts available characters.
      *
      * @example
      * ```javascript

@@ -51,9 +51,8 @@ export declare class P5AsciifyHookManager {
      * @param hookType The type of hook to register
      * @param fn The function to execute
      * @param isCore Whether this is a core hook (protected from deactivation)
-     * @ignore
      */
-    registerHook(hookType: HookType, fn: (this: p5) => void | Promise<void>, isCore?: boolean): void;
+    private _registerHook;
     /**
      * Activate a hook by setting its proxy to active
      * @param hookType The type of hook to activate

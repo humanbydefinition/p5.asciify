@@ -1,6 +1,6 @@
 # Interface: P5AsciifyRendererPlugin
 
-Defined in: [plugins/RendererPlugin.ts:12](https://github.com/humanbydefinition/p5.asciify/blob/a53da6374bc6fdee57adbabf14b68a3386934b61/src/lib/plugins/RendererPlugin.ts#L12)
+Defined in: [plugins/RendererPlugin.ts:12](https://github.com/humanbydefinition/p5.asciify/blob/15d65e5de5ef823bac2dd4f184de81e436dbf1d7/src/lib/plugins/RendererPlugin.ts#L12)
 
 Interface that all p5.asciify renderer plugins must implement.
 
@@ -8,11 +8,11 @@ Interface that all p5.asciify renderer plugins must implement.
 
 | Property                               | Modifier   | Type     | Description                             | Defined in                                                                                                                                                          |
 | -------------------------------------- | ---------- | -------- | --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| <a id="author"></a> `author`           | `readonly` | `string` | Author of the plugin                    | [plugins/RendererPlugin.ts:26](https://github.com/humanbydefinition/p5.asciify/blob/a53da6374bc6fdee57adbabf14b68a3386934b61/src/lib/plugins/RendererPlugin.ts#L26) |
-| <a id="description"></a> `description` | `readonly` | `string` | Description of what the renderer does   | [plugins/RendererPlugin.ts:20](https://github.com/humanbydefinition/p5.asciify/blob/a53da6374bc6fdee57adbabf14b68a3386934b61/src/lib/plugins/RendererPlugin.ts#L20) |
-| <a id="id"></a> `id`                   | `readonly` | `string` | Unique identifier for the renderer type | [plugins/RendererPlugin.ts:14](https://github.com/humanbydefinition/p5.asciify/blob/a53da6374bc6fdee57adbabf14b68a3386934b61/src/lib/plugins/RendererPlugin.ts#L14) |
-| <a id="name"></a> `name`               | `readonly` | `string` | Human-readable name of the renderer     | [plugins/RendererPlugin.ts:17](https://github.com/humanbydefinition/p5.asciify/blob/a53da6374bc6fdee57adbabf14b68a3386934b61/src/lib/plugins/RendererPlugin.ts#L17) |
-| <a id="version"></a> `version`         | `readonly` | `string` | Version of the plugin                   | [plugins/RendererPlugin.ts:23](https://github.com/humanbydefinition/p5.asciify/blob/a53da6374bc6fdee57adbabf14b68a3386934b61/src/lib/plugins/RendererPlugin.ts#L23) |
+| <a id="author"></a> `author`           | `readonly` | `string` | Author of the plugin                    | [plugins/RendererPlugin.ts:26](https://github.com/humanbydefinition/p5.asciify/blob/15d65e5de5ef823bac2dd4f184de81e436dbf1d7/src/lib/plugins/RendererPlugin.ts#L26) |
+| <a id="description"></a> `description` | `readonly` | `string` | Description of what the renderer does   | [plugins/RendererPlugin.ts:20](https://github.com/humanbydefinition/p5.asciify/blob/15d65e5de5ef823bac2dd4f184de81e436dbf1d7/src/lib/plugins/RendererPlugin.ts#L20) |
+| <a id="id"></a> `id`                   | `readonly` | `string` | Unique identifier for the renderer type | [plugins/RendererPlugin.ts:14](https://github.com/humanbydefinition/p5.asciify/blob/15d65e5de5ef823bac2dd4f184de81e436dbf1d7/src/lib/plugins/RendererPlugin.ts#L14) |
+| <a id="name"></a> `name`               | `readonly` | `string` | Human-readable name of the renderer     | [plugins/RendererPlugin.ts:17](https://github.com/humanbydefinition/p5.asciify/blob/15d65e5de5ef823bac2dd4f184de81e436dbf1d7/src/lib/plugins/RendererPlugin.ts#L17) |
+| <a id="version"></a> `version`         | `readonly` | `string` | Version of the plugin                   | [plugins/RendererPlugin.ts:23](https://github.com/humanbydefinition/p5.asciify/blob/15d65e5de5ef823bac2dd4f184de81e436dbf1d7/src/lib/plugins/RendererPlugin.ts#L23) |
 
 ## Methods
 
@@ -20,7 +20,7 @@ Interface that all p5.asciify renderer plugins must implement.
 
 > **create**(`p`, `captureFramebuffer`, `grid`, `fontManager`, `options?`): [`P5AsciifyRenderer`](../../renderers/classes/P5AsciifyRenderer.md)\<[`AsciiRendererOptions`](../../renderers/interfaces/AsciiRendererOptions.md)\> \| [`P5AsciifyAbstractFeatureRenderer2D`](../../renderers/namespaces/renderer2d/namespaces/feature/classes/P5AsciifyAbstractFeatureRenderer2D.md)\<[`FeatureAsciiRendererOptions`](../../renderers/interfaces/FeatureAsciiRendererOptions.md)\> \| [`P5AsciifyRenderer2D`](../../renderers/namespaces/renderer2d/classes/P5AsciifyRenderer2D.md)\<[`AsciiRendererOptions`](../../renderers/interfaces/AsciiRendererOptions.md)\>
 
-Defined in: [plugins/RendererPlugin.ts:37](https://github.com/humanbydefinition/p5.asciify/blob/a53da6374bc6fdee57adbabf14b68a3386934b61/src/lib/plugins/RendererPlugin.ts#L37)
+Defined in: [plugins/RendererPlugin.ts:37](https://github.com/humanbydefinition/p5.asciify/blob/15d65e5de5ef823bac2dd4f184de81e436dbf1d7/src/lib/plugins/RendererPlugin.ts#L37)
 
 Creates a new instance of the renderer.
 

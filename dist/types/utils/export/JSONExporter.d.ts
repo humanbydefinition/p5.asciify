@@ -42,7 +42,6 @@ export declare class P5AsciifyJSONExporter {
      * @param fontManager The font manager with character data
      * @param options Options for JSON generation (excludes filename)
      * @returns JSON string representation of the ASCII output
-     * @throws {@link P5AsciifyError} - If no renderer is available to fetch ASCII output from.
      */
     generateJSON(rendererManager: P5AsciifyRendererManager, grid: P5AsciifyGrid, fontManager: P5AsciifyFontManager, options?: Omit<JSONExportOptions, 'filename'>): string;
     /**
@@ -51,7 +50,6 @@ export declare class P5AsciifyJSONExporter {
      * @param grid The grid information for dimensions and cell sizes
      * @param fontManager The font manager with character data
      * @param options Options for JSON export
-     * @throws {@link P5AsciifyError} - If no renderer is available to fetch ASCII output from.
      */
     saveJSON(rendererManager: P5AsciifyRendererManager, grid: P5AsciifyGrid, fontManager: P5AsciifyFontManager, options?: JSONExportOptions): void;
     /**
