@@ -282,10 +282,11 @@ export class P5Asciifier {
      */
     public background(color: string | p5.Color | [number, number?, number?, number?]) {
         const isValid = errorHandler.validate(
-            typeof color === 'string' || Array.isArray(color) || color instanceof p5.Color,
+            typeof color === 'string' || Array.isArray(color) || color instanceof this._p.constructor.Color,
             `Invalid color type: ${typeof color}. Expected string, array or p5.Color.`,
             { providedValue: color, method: 'background' }
         );
+        
 
         if (!isValid) {
             return; // Early return if the color is not valid

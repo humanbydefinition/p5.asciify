@@ -174,7 +174,7 @@ export class P5AsciifyFontManager {
         font: p5.Font,
     ): void {
         const isValidFont = errorHandler.validate(
-            font && (font instanceof p5.Font),
+            font && (font instanceof this._p.constructor.Font),
             'Invalid font parameter. Expected a p5.Font object.',
             { providedValue: font, method: 'loadFont' }
         );

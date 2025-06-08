@@ -162,7 +162,7 @@ export abstract class P5AsciifyAbstractFeatureRenderer2D<T extends FeatureAsciiR
      */
     public characterColor(color: p5.Color): void {
         const isValidType = errorHandler.validate(
-            color && (color instanceof p5.Color),
+            color && (color instanceof this._p.constructor.Color),
             'Character color must be a valid p5.Color object.',
             { providedValue: color, method: 'characterColor' }
         );
@@ -230,7 +230,7 @@ export abstract class P5AsciifyAbstractFeatureRenderer2D<T extends FeatureAsciiR
     public backgroundColor(color: p5.Color): void {
 
         const isValidType = errorHandler.validate(
-            color && (color instanceof p5.Color),
+            color && (color instanceof this._p.constructor.Color),
             'Background color must be a valid p5.Color object.',
             { providedValue: color, method: 'backgroundColor' }
         );
