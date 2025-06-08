@@ -130,7 +130,7 @@ export class P5AsciifierManager {
         if (compareVersions(p5.VERSION, "2.0.0") < 0) {
             // For p5.js 1.x - use preload increment and callback
             // Check if we're in global mode to avoid conflicts
-            if (!p._isGlobal) {
+            if (!p._isGlobal && !this._p.preload) {
                 this._p.preload = () => { };
             }
 
