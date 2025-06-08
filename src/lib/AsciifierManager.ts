@@ -127,7 +127,7 @@ export class P5AsciifierManager {
         // Apply shader precision fix for Android devices
         this._applyShaderPrecisionFix();
 
-        if (compareVersions(p5.VERSION, "2.0.0") < 0) {
+        if (compareVersions(this._p.VERSION, "2.0.0") < 0) {
             // For p5.js 1.x - use preload increment and callback
             // Check if we're in global mode to avoid conflicts
             if (!p._isGlobal && !this._p.preload) {
@@ -165,7 +165,7 @@ export class P5AsciifierManager {
         });
 
         // Check p5.js version to determine sync vs async setup
-        if (compareVersions(p5.VERSION, "2.0.0") < 0) {
+        if (compareVersions(this._p.VERSION, "2.0.0") < 0) {
             // For p5.js 1.x - synchronous setup
             for (const asciifier of this._asciifiers) {
                 asciifier.setup(this._sketchFramebuffer);
@@ -250,7 +250,7 @@ export class P5AsciifierManager {
         const asciifier = new P5Asciifier(this._pluginRegistry);
 
         // For p5.js 1.x, use the synchronous initialization pattern
-        if (compareVersions(p5.VERSION, "2.0.0") < 0) {
+        if (compareVersions(this._p.VERSION, "2.0.0") < 0) {
             // For p5.js 1.x, synchronous init
             asciifier.init(this._p, this._baseFont);
 

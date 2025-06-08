@@ -45,14 +45,14 @@ export class P5AsciifySVGExporter {
     /**
      * The p5.js instance.
      */
-    private p: p5;
+    private _p: p5;
 
     /**
      * Creates a new SVG exporter.
      * @param p The p5.js instance
      */
     constructor(p: p5) {
-        this.p = p;
+        this._p = p;
     }
 
     /**
@@ -118,7 +118,7 @@ export class P5AsciifySVGExporter {
         // Add background rect if needed
         if (exportOptions.includeBackgroundRectangles) {
             const bgColor = backgroundColor;
-            const bgColorObj = this.p.color(bgColor as p5.Color);
+            const bgColorObj = this._p.color(bgColor as p5.Color);
             const bgColorStr = `rgba(${bgColorObj._array[0] * 255},${bgColorObj._array[1] * 255},${bgColorObj._array[2] * 255},${bgColorObj._array[3]})`;
             svgContent += `\n<rect width="${gridWidth}" height="${gridHeight}" fill="${bgColorStr}" />`;
         }
@@ -324,7 +324,7 @@ export class P5AsciifySVGExporter {
             // center glyph in cell
 
             let scale = 1;
-            if (compareVersions(p5.VERSION, "2.0.0") < 0) {
+            if (compareVersions(this._p.VERSION, "2.0.0") < 0) {
                 scale = fontManager.fontSize / fontManager.font.font.unitsPerEm;
             } else {
                 scale = fontManager.fontSize / fontManager.font.data.head.unitsPerEm;
