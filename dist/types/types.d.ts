@@ -193,7 +193,6 @@ declare module 'p5' {
         };
         new (...args: any[]): any;
     }
-    let RendererGL: RendererGLConstructor;
     interface p5InstanceExtensions extends P5AsciifyExtensions {
         _setupDone: boolean;
         _isGlobal: boolean;
@@ -205,6 +204,11 @@ declare module 'p5' {
         registerMethod(name: 'init' | 'beforePreload' | 'afterPreload' | 'beforeSetup' | 'afterSetup' | 'pre' | 'post' | 'remove', f: (this: p5) => void): void;
         unregisterMethod(name: 'init' | 'beforePreload' | 'afterPreload' | 'beforeSetup' | 'afterSetup' | 'pre' | 'post' | 'remove', f: (this: p5) => void): void;
         createFramebuffer(options?: object): p5.Framebuffer;
+        constructor: {
+            Color: new (...args: any[]) => p5.Color;
+            Font: new (...args: any[]) => p5.Font;
+            RendererGL: RendererGLConstructor;
+        };
     }
     const registerAddon: (addon: (p5Core: any, fn: any, lifecycles: any) => void) => void;
 }
