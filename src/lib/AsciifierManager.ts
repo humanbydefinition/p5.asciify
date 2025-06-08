@@ -125,7 +125,7 @@ export class P5AsciifierManager {
         this._p = p;
 
         // Apply shader precision fix for Android devices
-        this._applyShaderPrecisionFix();
+        //this._applyShaderPrecisionFix();
 
         if (compareVersions(p5.VERSION, "2.0.0") < 0) {
             // For p5.js 1.x - use preload increment and callback
