@@ -125,7 +125,7 @@ export class P5AsciifierManager {
         this._p = p;
 
         // Apply shader precision fix for Android devices
-        //this._applyShaderPrecisionFix();
+        this._applyShaderPrecisionFix();
 
         if (compareVersions(this._p.VERSION, "2.0.0") < 0) {
             // For p5.js 1.x - use preload increment and callback
@@ -414,8 +414,8 @@ export class P5AsciifierManager {
 
         // Apply the fix to the renderer prototype if not already applied
         for (const [method, cacheKey] of shadersToReplace) {
-            const prevMethod = p5.RendererGL.prototype[method]
-            p5.RendererGL.prototype[method] = function () {
+            const prevMethod = this._p.constructor.RendererGL.prototype[method]
+            this._p.constructor.RendererGL.prototype[method] = function () {
                 if (!this[cacheKey]) {
                     this[cacheKey] = prevMethod.call(this)
                     this[cacheKey]._vertSrc = this[cacheKey]._vertSrc.replace(
