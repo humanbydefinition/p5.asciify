@@ -38,7 +38,7 @@ export declare class P5AsciifySVGExporter {
     /**
      * The p5.js instance.
      */
-    private p;
+    private _p;
     /**
      * Creates a new SVG exporter.
      * @param p The p5.js instance
