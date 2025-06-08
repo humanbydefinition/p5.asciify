@@ -3805,7 +3805,7 @@ const V = class V {
    * @ignore
    */
   async init(A) {
-    this._p = A, this._applyShaderPrecisionFix(), M(p.VERSION, "2.0.0") < 0 ? (A._isGlobal || (this._p.preload = () => {
+    this._p = A, this._applyShaderPrecisionFix(), M(p.VERSION, "2.0.0") < 0 ? (!A._isGlobal && !this._p.preload && (this._p.preload = () => {
     }), this._p._incrementPreload(), this._baseFont = A.loadFont(dA, (e) => {
       this._asciifiers.forEach((r) => {
         r.init(A, e);
