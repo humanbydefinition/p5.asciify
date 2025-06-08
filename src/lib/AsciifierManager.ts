@@ -164,9 +164,17 @@ export class P5AsciifierManager {
             textureFiltering: this._p.NEAREST
         });
 
-        // For p5.js 2.0+ - asynchronous setup
-        for (const asciifier of this._asciifiers) {
-            await asciifier.setup(this._sketchFramebuffer);
+        // Check p5.js version to determine sync vs async setup
+        if (compareVersions(p5.VERSION, "2.0.0") < 0) {
+            // For p5.js 1.x - synchronous setup
+            for (const asciifier of this._asciifiers) {
+                asciifier.setup(this._sketchFramebuffer);
+            }
+        } else {
+            // For p5.js 2.0+ - asynchronous setup
+            for (const asciifier of this._asciifiers) {
+                await asciifier.setup(this._sketchFramebuffer);
+            }
         }
 
         this._setupDone = true;
