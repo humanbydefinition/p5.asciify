@@ -421,4 +421,22 @@ export class P5AsciifyFontManager {
      * ```
      */
     get characters(): P5AsciifyCharacter[] { return this._characters; }
+
+    /**
+     * Returns all supported characters in the font as a single string.
+     * Useful for quick access to the complete character set or for iteration purposes.
+     * 
+     * @example
+     * ```javascript
+     *  function setupAsciify() {
+     *      // Get all supported characters as a string
+     *      const allChars = p5asciify.asciifier().fontManager.charactersString;
+     *      console.log("Font supports these characters:", allChars);
+     *      console.log("Total character count:", allChars.length);
+     *  }
+     * ```
+     */
+    get charactersString(): string {
+        return this._characters.map(char => char.character).join('');
+    }
 }
