@@ -7,7 +7,7 @@ import { P5AsciifyAbstractFeatureRenderer2D } from './renderers/2d/feature/Abstr
 import { P5AsciifySVGExporter, SVGExportOptions } from './utils/export/SVGExporter';
 import { JSONExportOptions, P5AsciifyJSONExporter } from './utils/export/JSONExporter';
 import { P5AsciifyPluginRegistry } from './plugins/PluginRegistry';
-import { detectP5Version, isP5AsyncCapable } from './utils';
+import { detectP5Version, isP5AsyncCapable, isValidP5Color } from './utils';
 import { errorHandler } from './errors';
 
 /**
@@ -282,7 +282,7 @@ export class P5Asciifier {
      */
     public background(color: string | p5.Color | [number, number?, number?, number?]) {
         const isValid = errorHandler.validate(
-            typeof color === 'string' || Array.isArray(color) || color instanceof this._p.constructor.Color,
+            typeof color === 'string' || Array.isArray(color) || isValidP5Color(this._p, color),
             `Invalid color type: ${typeof color}. Expected string, array or p5.Color.`,
             { providedValue: color, method: 'background' }
         );

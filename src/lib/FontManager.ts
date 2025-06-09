@@ -1,6 +1,6 @@
 import p5 from 'p5';
 import { OpenTypeGlyph, P5AsciifyCharacter } from './types';
-import { detectP5Version, isP5AsyncCapable } from './utils';
+import { detectP5Version, isP5AsyncCapable, isValidP5Font } from './utils';
 
 import { createGlyphPath, getGlyphIndex, createEmptyPath } from './utils/fonts/TyprFontUtils';
 import { errorHandler } from './errors';
@@ -175,7 +175,7 @@ export class P5AsciifyFontManager {
         font: p5.Font,
     ): void {
         const isValidFont = errorHandler.validate(
-            font && (font instanceof this._p.constructor.Font),
+            isValidP5Font(this._p, font),
             'Invalid font parameter. Expected a p5.Font object.',
             { providedValue: font, method: 'loadFont' }
         );

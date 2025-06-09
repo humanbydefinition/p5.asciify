@@ -20,17 +20,17 @@ export const detectP5Version = (p: p5): string => {
     const versionSources = [
         // Instance version (most common in standard setups)
         () => p?.VERSION,
-        
+
         // Global p5 version (works in many environments)
         () => (typeof p5 !== 'undefined' && p5.VERSION) ? p5.VERSION : undefined,
-        
+
         // Window global version (P5LIVE style environments)
-        () => (typeof window !== 'undefined' && (window as any).p5?.VERSION) 
-              ? (window as any).p5.VERSION : undefined,
-        
+        () => (typeof window !== 'undefined' && (window as any).p5?.VERSION)
+            ? (window as any).p5.VERSION : undefined,
+
         // Constructor version (some bundled environments)
         () => p?.constructor?.VERSION,
-        
+
         // Prototype chain version (edge cases)
         () => Object.getPrototypeOf(p)?.constructor?.VERSION,
     ];
@@ -74,6 +74,42 @@ export const detectP5Version = (p: p5): string => {
 export const isP5AsyncCapable = (version: string): boolean => {
     return compareVersions(version, "2.0.0") >= 0;
 };
+
+export const isValidP5Color = (p: p5, color: any): boolean => {
+    if (!color) {
+        return false;
+    }
+
+    // Strategy 1: Instance constructor Color class (works in flok.cc)
+    if (p?.constructor?.Color && color instanceof p.constructor.Color) {
+        return true;
+    }
+
+    // Strategy 2: Global p5 Color class (works in P5LIVE)
+    if (typeof p5 !== 'undefined' && p5.Color && color instanceof p5.Color) {
+        return true;
+    }
+
+    return false;
+}
+
+export const isValidP5Font = (p: p5, font: any): boolean => {
+    if (!font) {
+        return false;
+    }
+
+    // Strategy 1: Instance constructor Font class (works in flok.cc)
+    if (p?.constructor?.Font && font instanceof p.constructor.Font) {
+        return true;
+    }
+
+    // Strategy 2: Global p5 Font class (works in P5LIVE)
+    if (typeof p5 !== 'undefined' && p5.Font && font instanceof p5.Font) {
+        return true;
+    }
+
+    return false;
+}
 
 /**
  * Compares two version strings like `'1.8.0'` and `'1.11.3'`.
