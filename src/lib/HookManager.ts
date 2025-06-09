@@ -137,12 +137,12 @@ export class P5AsciifyHookManager {
      * @private
      */
     private _integrateWithP5(): void {
-        if (typeof p5 === 'undefined' || !p5 || !p5.prototype) {
+        if (typeof p5 === 'undefined' || !p5 || !p5.VERSION) {
             console.log("p5.asciify loading without automatic hooks!")
             return;
         }
 
-        if (compareVersions(p5.prototype.VERSION, "2.0.0") >= 0 && typeof p5.registerAddon === 'function') {
+        if (compareVersions(p5.VERSION, "2.0.0") >= 0 && typeof p5.registerAddon === 'function') {
             // p5.js v2.0.0+ - use addon system
             if (!this.p5AddonRegistered) {
                 p5.registerAddon(this._createP5Addon());

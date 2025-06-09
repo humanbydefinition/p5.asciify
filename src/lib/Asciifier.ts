@@ -7,7 +7,7 @@ import { P5AsciifyAbstractFeatureRenderer2D } from './renderers/2d/feature/Abstr
 import { P5AsciifySVGExporter, SVGExportOptions } from './utils/export/SVGExporter';
 import { JSONExportOptions, P5AsciifyJSONExporter } from './utils/export/JSONExporter';
 import { P5AsciifyPluginRegistry } from './plugins/PluginRegistry';
-import { compareVersions } from './utils';
+import { detectP5Version, isP5AsyncCapable } from './utils';
 import { errorHandler } from './errors';
 
 /**
@@ -81,10 +81,10 @@ export class P5Asciifier {
     public async setup(captureFramebuffer: p5.Framebuffer | p5.Graphics): Promise<void> {
         this._captureFramebuffer = captureFramebuffer;
 
-        if (compareVersions(this._p.VERSION, "2.0.0") < 0) {
-            this._fontManager.setup(this._fontSize);
-        } else {
+        if (isP5AsyncCapable(detectP5Version(this._p))) {
             await this._fontManager.setup(this._fontSize);
+        } else {
+            this._fontManager.setup(this._fontSize);
         }
 
         this._grid = new P5AsciifyGrid(
@@ -286,7 +286,7 @@ export class P5Asciifier {
             `Invalid color type: ${typeof color}. Expected string, array or p5.Color.`,
             { providedValue: color, method: 'background' }
         );
-        
+
 
         if (!isValid) {
             return; // Early return if the color is not valid

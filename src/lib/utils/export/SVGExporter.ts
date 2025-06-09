@@ -3,7 +3,7 @@ import { P5AsciifyGrid } from '../../Grid';
 import { P5AsciifyFontManager } from '../../FontManager';
 import { P5AsciifyRendererManager } from '../../renderers/RendererManager';
 import { P5AsciifyCharacter } from '../../types';
-import { compareVersions } from '../utils';
+import { detectP5Version, isP5AsyncCapable } from '../utils';
 
 /**
  * Options for SVG export.
@@ -324,10 +324,10 @@ export class P5AsciifySVGExporter {
             // center glyph in cell
 
             let scale = 1;
-            if (compareVersions(this._p.VERSION, "2.0.0") < 0) {
-                scale = fontManager.fontSize / fontManager.font.font.unitsPerEm;
-            } else {
+            if (isP5AsyncCapable(detectP5Version(this._p))) {
                 scale = fontManager.fontSize / fontManager.font.data.head.unitsPerEm;
+            } else {
+                scale = fontManager.fontSize / fontManager.font.font.unitsPerEm;
             }
             const xOffset = cellX + (cellWidth - char.advanceWidth * scale) / 2;
             const yOffset = cellY + (cellHeight + fontManager.fontSize * 0.7) / 2;

@@ -1,6 +1,6 @@
 import p5 from 'p5';
 import { OpenTypeGlyph, P5AsciifyCharacter } from './types';
-import { compareVersions } from './utils';
+import { detectP5Version, isP5AsyncCapable } from './utils';
 
 import { createGlyphPath, getGlyphIndex, createEmptyPath } from './utils/fonts/TyprFontUtils';
 import { errorHandler } from './errors';
@@ -61,36 +61,8 @@ export class P5AsciifyFontManager {
      * Initializes the character glyphs and characters array.
      */
     private _initializeGlyphsAndCharacters(): void {
-        if (compareVersions(this._p.VERSION, "2.0.0") < 0) {
-            // p5.js versions before 2.0.0 use opentype.js
-            const glyphs = Object.values(this._font.font.glyphs.glyphs) as OpenTypeGlyph[];
-            this._characters = [];
 
-            // Process all glyphs in a single loop
-            glyphs.forEach((glyph, index) => {
-                // Skip glyphs with no unicode information
-                if ((!glyph.unicode && (!glyph.unicodes || !glyph.unicodes.length))) {
-                    return;
-                }
-
-                // Calculate color values based on current array length
-                const idx = this._characters.length;
-                const r = idx % 256;
-                const g = Math.floor(idx / 256) % 256;
-                const b = Math.floor(idx / 65536);
-
-                // Use either direct unicode or first value from unicodes array
-                const unicode = glyph.unicode ?? glyph.unicodes![0];
-
-                this._characters.push({
-                    character: String.fromCodePoint(unicode),
-                    unicode,
-                    getPath: (x: number, y: number, fontSize: number) => glyph.getPath(x, y, fontSize),
-                    advanceWidth: glyph.advanceWidth,
-                    r, g, b
-                });
-            });
-        } else {
+        if (isP5AsyncCapable(detectP5Version(this._p))) {
             // p5.js 2.0.0+ uses typr.js
             // Extract all supported character codes from the font's cmap table
             const characterList: string[] = [];
@@ -157,6 +129,35 @@ export class P5AsciifyFontManager {
                     advanceWidth,
                     r, g, b
                 };
+            });
+        } else {
+            // p5.js versions before 2.0.0 use opentype.js
+            const glyphs = Object.values(this._font.font.glyphs.glyphs) as OpenTypeGlyph[];
+            this._characters = [];
+
+            // Process all glyphs in a single loop
+            glyphs.forEach((glyph, index) => {
+                // Skip glyphs with no unicode information
+                if ((!glyph.unicode && (!glyph.unicodes || !glyph.unicodes.length))) {
+                    return;
+                }
+
+                // Calculate color values based on current array length
+                const idx = this._characters.length;
+                const r = idx % 256;
+                const g = Math.floor(idx / 256) % 256;
+                const b = Math.floor(idx / 65536);
+
+                // Use either direct unicode or first value from unicodes array
+                const unicode = glyph.unicode ?? glyph.unicodes![0];
+
+                this._characters.push({
+                    character: String.fromCodePoint(unicode),
+                    unicode,
+                    getPath: (x: number, y: number, fontSize: number) => glyph.getPath(x, y, fontSize),
+                    advanceWidth: glyph.advanceWidth,
+                    r, g, b
+                });
             });
         }
     }

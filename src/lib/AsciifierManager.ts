@@ -7,7 +7,7 @@ import { HookType } from './types';
 import URSAFONT_BASE64 from './assets/fonts/ursafont_base64.txt?raw';
 import { P5AsciifyRendererPlugin } from './plugins/RendererPlugin';
 import { P5AsciifyPluginRegistry } from './plugins/PluginRegistry';
-import { compareVersions } from './utils';
+import { detectP5Version, isP5AsyncCapable } from './utils';
 import { errorHandler } from './errors';
 import { P5AsciifyErrorLevel } from './errors/ErrorHandler';
 
@@ -46,7 +46,11 @@ export class P5AsciifierManager {
     /** The hook manager instance. */
     private _hookManager: P5AsciifyHookManager;
 
+    /** Indicates whether the setup phase has been completed. */
     private _setupDone: boolean = false;
+
+    /** The version of the p5.js library used. */
+    private _p5Version!: string;
 
     /**
      * Gets the singleton instance of `P5AsciifierManager`.
@@ -124,10 +128,24 @@ export class P5AsciifierManager {
     public async init(p: p5): Promise<void> {
         this._p = p;
 
+        this._p5Version = detectP5Version(p);
+
+        if (!this._p5Version) {
+            throw new P5AsciifyError("Could not determine p5.js version. Ensure p5.js is properly loaded.");
+        }
+
         // Apply shader precision fix for Android devices
         this._applyShaderPrecisionFix();
 
-        if (compareVersions(this._p.VERSION, "2.0.0") < 0) {
+        if (isP5AsyncCapable(this._p5Version)) {
+            // For p5.js 2.0.0+ - use the Promise-based approach
+            this._baseFont = await this._p.loadFont(URSAFONT_BASE64);
+
+            // Create and wait for all initialization promises to complete
+            await Promise.all(
+                this._asciifiers.map(asciifier => asciifier.init(p, this._baseFont))
+            );
+        } else {
             // For p5.js 1.x - use preload increment and callback
             // Check if we're in global mode to avoid conflicts
             if (!p._isGlobal && !this._p.preload) {
@@ -144,14 +162,6 @@ export class P5AsciifierManager {
                     resolve();
                 })
             });
-        } else {
-            // For p5.js 2.0.0+ - use the Promise-based approach
-            this._baseFont = await this._p.loadFont(URSAFONT_BASE64);
-
-            // Create and wait for all initialization promises to complete
-            await Promise.all(
-                this._asciifiers.map(asciifier => asciifier.init(p, this._baseFont))
-            );
         }
     }
 
@@ -162,22 +172,21 @@ export class P5AsciifierManager {
      * @ignore
      */
     public async setup(): Promise<void> {
-
         this._sketchFramebuffer = this._p.createFramebuffer({
             depthFormat: this._p.UNSIGNED_INT,
             textureFiltering: this._p.NEAREST
         });
 
         // Check p5.js version to determine sync vs async setup
-        if (compareVersions(this._p.VERSION, "2.0.0") < 0) {
-            // For p5.js 1.x - synchronous setup
-            for (const asciifier of this._asciifiers) {
-                asciifier.setup(this._sketchFramebuffer);
-            }
-        } else {
+        if (isP5AsyncCapable(this._p5Version)) {
             // For p5.js 2.0+ - asynchronous setup
             for (const asciifier of this._asciifiers) {
                 await asciifier.setup(this._sketchFramebuffer);
+            }
+        } else {
+            // For p5.js 1.x - synchronous setup
+            for (const asciifier of this._asciifiers) {
+                asciifier.setup(this._sketchFramebuffer);
             }
         }
 
@@ -253,19 +262,7 @@ export class P5AsciifierManager {
 
         const asciifier = new P5Asciifier(this._pluginRegistry);
 
-        // For p5.js 1.x, use the synchronous initialization pattern
-        if (compareVersions(this._p.VERSION, "2.0.0") < 0) {
-            // For p5.js 1.x, synchronous init
-            asciifier.init(this._p, this._baseFont);
-
-            // If setup is done, immediately set up the asciifier
-            if (this._setupDone) {
-                asciifier.setup(framebuffer ? framebuffer : this._sketchFramebuffer);
-            }
-
-            this._asciifiers.push(asciifier);
-            return asciifier;
-        } else {
+        if (isP5AsyncCapable(this._p5Version)) {
             // For p5.js 2.0+, return a Promise
             return (async () => {
                 try {
@@ -287,6 +284,17 @@ export class P5AsciifierManager {
                     return null;
                 }
             })();
+        } else {
+            // For p5.js 1.x, synchronous init
+            asciifier.init(this._p, this._baseFont);
+
+            // If setup is done, immediately set up the asciifier
+            if (this._setupDone) {
+                asciifier.setup(framebuffer ? framebuffer : this._sketchFramebuffer);
+            }
+
+            this._asciifiers.push(asciifier);
+            return asciifier;
         }
     }
 
