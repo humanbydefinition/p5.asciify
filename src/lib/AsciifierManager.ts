@@ -422,23 +422,63 @@ export class P5AsciifierManager {
             ['_getFontShader', '_defaultFontShader'],
         ];
 
-        // Apply the fix to the renderer prototype if not already applied
-        for (const [method, cacheKey] of shadersToReplace) {
-            const prevMethod = this._p.constructor.RendererGL.prototype[method]
-            this._p.constructor.RendererGL.prototype[method] = function () {
-                if (!this[cacheKey]) {
-                    this[cacheKey] = prevMethod.call(this)
-                    this[cacheKey]._vertSrc = this[cacheKey]._vertSrc.replace(
-                        /mediump/g,
-                        'highp',
-                    )
-                    this[cacheKey]._fragSrc = this[cacheKey]._fragSrc.replace(
-                        /mediump/g,
-                        'highp',
-                    )
-                }
+        // Try multiple strategies to find RendererGL class
+        let rendererGL = null;
+        const rendererSources = [
+            // Strategy 1: Instance constructor (works in flok.cc)
+            () => this._p?.constructor?.RendererGL,
 
-                return this[cacheKey]
+            // Strategy 2: Global p5 (works in P5LIVE)
+            () => (typeof p5 !== 'undefined' && p5.RendererGL) ? p5.RendererGL : undefined,
+        ];
+
+        // Try each renderer source until we find one that works
+        for (const getRenderer of rendererSources) {
+            try {
+                const renderer = getRenderer();
+                if (renderer && renderer.prototype) {
+                    rendererGL = renderer;
+                    break;
+                }
+            } catch (e) {
+                // Continue to next strategy if this one fails
+                continue;
+            }
+        }
+
+        // If we couldn't find RendererGL, exit gracefully
+        if (!rendererGL || !rendererGL.prototype) {
+            console.warn('p5.asciify: Could not find RendererGL class, skipping shader precision fix for Android devices running below p5.js v1.11.3.');
+            return;
+        }
+
+        // Apply the fix to the renderer prototype
+        for (const [method, cacheKey] of shadersToReplace) {
+            // Check if the method exists on the prototype
+            if (typeof rendererGL.prototype[method] === 'function') {
+                const prevMethod = rendererGL.prototype[method];
+
+                rendererGL.prototype[method] = function () {
+                    if (!this[cacheKey]) {
+                        this[cacheKey] = prevMethod.call(this);
+
+                        // Safely apply the precision fix
+                        if (this[cacheKey] && this[cacheKey]._vertSrc) {
+                            this[cacheKey]._vertSrc = this[cacheKey]._vertSrc.replace(
+                                /mediump/g,
+                                'highp'
+                            );
+                        }
+                        if (this[cacheKey] && this[cacheKey]._fragSrc) {
+                            this[cacheKey]._fragSrc = this[cacheKey]._fragSrc.replace(
+                                /mediump/g,
+                                'highp'
+                            );
+                        }
+                    }
+
+                    return this[cacheKey];
+                };
             }
         }
     }
