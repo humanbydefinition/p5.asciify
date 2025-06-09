@@ -414,8 +414,6 @@ export class P5AsciifierManager {
             ['_getFontShader', '_defaultFontShader'],
         ];
 
-        console.log(this._p)
-
         // Apply the fix to the renderer prototype if not already applied
         for (const [method, cacheKey] of shadersToReplace) {
             const prevMethod = this._p.constructor.RendererGL.prototype[method]
