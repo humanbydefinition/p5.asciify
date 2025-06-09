@@ -3988,7 +3988,6 @@ const k = class k {
       ["_getLineShader", "_defaultLineShader"],
       ["_getFontShader", "_defaultFontShader"]
     ];
-    console.log(this._p);
     for (const [e, r] of A) {
       const t = this._p.constructor.RendererGL.prototype[e];
       this._p.constructor.RendererGL.prototype[e] = function() {

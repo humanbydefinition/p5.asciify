@@ -10,12 +10,12 @@ import { P5AsciifyErrorLevel } from './errors/ErrorHandler';
  * These hooks integrate with p5.js lifecycle methods to automatically handle
  * ASCII conversion setup and rendering without requiring manual intervention.
  *
- * By default, all hooks are activated, but you can selectively activate or deactivate them.
+ * By default, all hooks are activated, but you can selectively deactivate or re-activate them.
  *
  * - `'init'`: Called once after p5.js is initialized to initialize p5.asciify.
- *             Sets up the core library components and prepares for ASCII conversion.
+ *             Initializes the core library components.
  * - `'afterSetup'`: Called once after the p5.js `setup()` function is complete.
- *                   Initializes asciifier instances and calls user's `setupAsciify()` if defined.
+ *                   Fully sets up the library for use and calls user's `setupAsciify()` if defined.
  * - `'pre'`: Called before each p5.js `draw()` function execution.
  *            Starts capturing the canvas content for ASCII conversion.
  * - `'post'`: Called after each p5.js `draw()` function execution.
