@@ -32,7 +32,10 @@ export declare class P5AsciifierManager {
     private _pluginRegistry;
     /** The hook manager instance. */
     private _hookManager;
+    /** Indicates whether the setup phase has been completed. */
     private _setupDone;
+    /** The version of the p5.js library used. */
+    private _p5Version;
     /**
      * Gets the singleton instance of `P5AsciifierManager`.
      */

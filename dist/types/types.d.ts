@@ -208,6 +208,7 @@ declare module 'p5' {
             Color: new (...args: any[]) => p5.Color;
             Font: new (...args: any[]) => p5.Font;
             RendererGL: RendererGLConstructor;
+            VERSION: string;
         };
     }
     const registerAddon: (addon: (p5Core: any, fn: any, lifecycles: any) => void) => void;
