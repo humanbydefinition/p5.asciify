@@ -3806,9 +3806,11 @@ const k = class k {
    */
   async init(A) {
     this._p = A, this._applyShaderPrecisionFix(), S(this._p.VERSION, "2.0.0") < 0 ? (!A._isGlobal && !this._p.preload && (this._p.preload = () => {
-    }), this._p._incrementPreload(), this._baseFont = A.loadFont(dA, (e) => {
-      this._asciifiers.forEach((r) => {
-        r.init(A, e);
+    }), this._p._incrementPreload(), await new Promise((e) => {
+      this._baseFont = A.loadFont(dA, (r) => {
+        this._asciifiers.forEach((t) => {
+          t.init(A, r);
+        }), e();
       });
     })) : (this._baseFont = await this._p.loadFont(dA), await Promise.all(
       this._asciifiers.map((e) => e.init(A, this._baseFont))
