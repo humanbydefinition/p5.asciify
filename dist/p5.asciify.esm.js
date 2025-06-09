@@ -936,6 +936,23 @@ class SA {
   get characters() {
     return this._characters;
   }
+  /**
+   * Returns all supported characters in the font as a single string.
+   * Useful for quick access to the complete character set or for iteration purposes.
+   * 
+   * @example
+   * ```javascript
+   *  function setupAsciify() {
+   *      // Get all supported characters as a string
+   *      const allChars = p5asciify.asciifier().fontManager.charactersString;
+   *      console.log("Font supports these characters:", allChars);
+   *      console.log("Total character count:", allChars.length);
+   *  }
+   * ```
+   */
+  get charactersString() {
+    return this._characters.map((A) => A.character).join("");
+  }
 }
 class lA {
   /**
@@ -3843,10 +3860,11 @@ const V = class V {
   /**
    * Initializes the `p5.asciify` library by setting the `p5.js` instance.
    * 
-   * For the provided {@link p5asciify} object this method is called automatically when the library is imported.
+   * This method is called automatically by the library when the `p5.js` instance is created.
+   * 
+   * **If the `init` hook is disabled, this method will not be called automatically.**
    * 
    * @param p The p5.js instance to use for the library.
-   * @ignore
    */
   async init(A) {
     if (this._p = A, this._p5Version = O(A), !this._p5Version)
@@ -3865,8 +3883,9 @@ const V = class V {
   /**
    * Sets up the `P5Asciifier` instances managed by the library.
    * 
-   * For the provided {@link p5asciify} object this method is called automatically when the users `setup` function finished executing.
-   * @ignore
+   * This method is called automatically by the library after the `setup()` function of the `p5.js` instance has finished executing.
+   * 
+   * **If the `afterSetup` hook is disabled, this method will not be called automatically.**
    */
   async setup() {
     if (this._sketchFramebuffer = this._p.createFramebuffer({
@@ -3883,9 +3902,10 @@ const V = class V {
   /**
    * Executes the ASCII conversion rendering pipelines for each `P5Asciifier` instance managed by the library.
    * 
-   * For the provided {@link p5asciify} object this method is called automatically when the users `draw` function finished executing.
+   * This method is called automatically by the library after the `draw()` function of the `p5.js` instance has finished executing.
    * 
-   * @ignore
+   * **If the `post` hook is disabled, this method will not be called automatically.**
+   * 
    */
   asciify() {
     this._asciifiers.forEach((A) => {
