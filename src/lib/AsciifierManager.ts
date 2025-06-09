@@ -135,10 +135,14 @@ export class P5AsciifierManager {
             }
 
             this._p._incrementPreload();
-            this._baseFont = p.loadFont(URSAFONT_BASE64, (font) => {
-                this._asciifiers.forEach((asciifier) => {
-                    asciifier.init(p, font);
-                });
+            await new Promise<void>((resolve) => {
+                this._baseFont = p.loadFont(URSAFONT_BASE64, (font) => {
+                    this._asciifiers.forEach((asciifier) => {
+                        asciifier.init(p, font);
+                    });
+
+                    resolve();
+                })
             });
         } else {
             // For p5.js 2.0.0+ - use the Promise-based approach
