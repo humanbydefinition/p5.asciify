@@ -141,6 +141,7 @@ export interface P5AsciifyExtensions {
  */
 declare module 'p5' {
     const VERSION: string;
+    let RendererGL: RendererGLConstructor;
     interface Shader {
         setUniform(uniformName: string, value: p5.Framebuffer | number | boolean | number[] | Image | Graphics | MediaElement): void;
     }

@@ -154,6 +154,8 @@ declare module 'p5' {
 
     const VERSION: string;
 
+    let RendererGL: RendererGLConstructor; 
+
     interface Shader {
         setUniform(
             uniformName: string,
