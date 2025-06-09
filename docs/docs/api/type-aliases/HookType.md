@@ -2,19 +2,19 @@
 
 > **HookType** = `"init"` \| `"afterSetup"` \| `"pre"` \| `"post"`
 
-Defined in: [types.ts:37](https://github.com/humanbydefinition/p5.asciify/blob/37a23a9df59fc8f52f53b0eee3428530adf8d119/src/lib/types.ts#L37)
+Defined in: [types.ts:37](https://github.com/humanbydefinition/p5.asciify/blob/db219ebd919c345fc51a95258e4a8ccb5b2fd6a3/src/lib/types.ts#L37)
 
 Hook types supported by the p5.asciify hook manager.
 
 These hooks integrate with p5.js lifecycle methods to automatically handle
 ASCII conversion setup and rendering without requiring manual intervention.
 
-By default, all hooks are activated, but you can selectively activate or deactivate them.
+By default, all hooks are activated, but you can selectively deactivate or re-activate them.
 
 - `'init'`: Called once after p5.js is initialized to initialize p5.asciify.
-  Sets up the core library components and prepares for ASCII conversion.
+  Initializes the core library components.
 - `'afterSetup'`: Called once after the p5.js `setup()` function is complete.
-  Initializes asciifier instances and calls user's `setupAsciify()` if defined.
+  Fully sets up the library for use and calls user's `setupAsciify()` if defined.
 - `'pre'`: Called before each p5.js `draw()` function execution.
   Starts capturing the canvas content for ASCII conversion.
 - `'post'`: Called after each p5.js `draw()` function execution.

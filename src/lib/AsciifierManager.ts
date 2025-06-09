@@ -120,10 +120,11 @@ export class P5AsciifierManager {
     /**
      * Initializes the `p5.asciify` library by setting the `p5.js` instance.
      * 
-     * For the provided {@link p5asciify} object this method is called automatically when the library is imported.
+     * This method is called automatically by the library when the `p5.js` instance is created.
+     * 
+     * **If the `init` hook is disabled, this method will not be called automatically.**
      * 
      * @param p The p5.js instance to use for the library.
-     * @ignore
      */
     public async init(p: p5): Promise<void> {
         this._p = p;
@@ -168,8 +169,9 @@ export class P5AsciifierManager {
     /**
      * Sets up the `P5Asciifier` instances managed by the library.
      * 
-     * For the provided {@link p5asciify} object this method is called automatically when the users `setup` function finished executing.
-     * @ignore
+     * This method is called automatically by the library after the `setup()` function of the `p5.js` instance has finished executing.
+     * 
+     * **If the `afterSetup` hook is disabled, this method will not be called automatically.**
      */
     public async setup(): Promise<void> {
         this._sketchFramebuffer = this._p.createFramebuffer({
@@ -196,9 +198,10 @@ export class P5AsciifierManager {
     /**
      * Executes the ASCII conversion rendering pipelines for each `P5Asciifier` instance managed by the library.
      * 
-     * For the provided {@link p5asciify} object this method is called automatically when the users `draw` function finished executing.
+     * This method is called automatically by the library after the `draw()` function of the `p5.js` instance has finished executing.
      * 
-     * @ignore
+     * **If the `post` hook is disabled, this method will not be called automatically.**
+     * 
      */
     public asciify(): void {
         this._asciifiers.forEach((asciifier) => {
