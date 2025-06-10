@@ -15,10 +15,6 @@ function setup() {
 }
 ```
 
-:::warning
-Using the latest `1.x.x` or `2.x.x` version of `p5.js` is highly recommended, as the library is designed to work seamlessly with these versions. Compatibility with earlier versions may got lost over time, so it's best to stick with the latest releases for optimal performance and features.
-:::
-
 That's it! You're now ready to install and use `p5.asciify` in your `p5.js` projects.
 
 ## Importing the library
