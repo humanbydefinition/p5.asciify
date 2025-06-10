@@ -149,7 +149,9 @@ export class P5AsciifierManager {
         } else {
             // For p5.js 1.x - use preload increment and callback
             // Check if we're in global mode to avoid conflicts
-            if (!p._isGlobal && !this._p.preload) {
+
+
+            if (!this._p.preload && typeof (globalThis as any).preload !== 'function') {
                 this._p.preload = () => { };
             }
 
