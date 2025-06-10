@@ -1,7 +1,8 @@
 import p5 from 'p5';
-import { P5AsciifyError } from './AsciifyError';
+import { P5AsciifyError } from './errors/AsciifyError';
 import { compareVersions } from './utils/utils';
 import { HookType, P5AsciifyHookHandlers } from './types';
+import { errorHandler } from './errors';
 
 export interface HookFunction {
     originalFn: (this: p5) => void | Promise<void>;
@@ -14,11 +15,12 @@ export interface HookFunction {
 /**
  * Manages `p5.js` lifecycle hooks for both `1.x.x` and `2.x.x` versions.
  * Handles automatic registration with `p5.js` and provides unified hook management
+ * @ignore
  */
 export class P5AsciifyHookManager {
     private registeredHooks: Map<HookType, HookFunction> = new Map();
     private p5AddonRegistered: boolean = false;
-    private hookHandlers: P5AsciifyHookHandlers | null = null;
+    private hookHandlers!: P5AsciifyHookHandlers;
 
     // Cache for user functions
     private _cachedSetupAsciifyFn: (() => void | Promise<void>) | null = null;
@@ -57,17 +59,13 @@ export class P5AsciifyHookManager {
      * @private
      */
     private _registerCoreHooks(): void {
-        if (!this.hookHandlers) {
-            throw new P5AsciifyError("Hook handlers must be provided before registering core hooks.");
-        }
-
-        const handlers = this.hookHandlers;
+        const handlers = this.hookHandlers as P5AsciifyHookHandlers;
 
         // Core init hook - cannot be deactivated
         const initHook = function (this: p5) {
             return handlers.handleInit(this);
         };
-        this.registerHook('init', initHook, true);
+        this._registerHook('init', initHook, false);
 
         // Core setup hook
         const afterSetupHook = function (this: p5) {
@@ -75,6 +73,11 @@ export class P5AsciifyHookManager {
             if (!(this._renderer.drawingContext instanceof WebGLRenderingContext ||
                 this._renderer.drawingContext instanceof WebGL2RenderingContext)) {
                 throw new P5AsciifyError("WebGL renderer is required for p5.asciify to run.");
+            }
+
+            // Ensure p5.js version is 1.8.0 or higher
+            if (compareVersions(this.VERSION, "1.8.0") < 0) {
+                throw new P5AsciifyError("p5.asciify requires p5.js v1.8.0 or higher to run.");
             }
 
             if (compareVersions(this.VERSION, "2.0.0") >= 0) {
@@ -109,13 +112,13 @@ export class P5AsciifyHookManager {
                 }
             }
         };
-        this.registerHook('afterSetup', afterSetupHook, false);
+        this._registerHook('afterSetup', afterSetupHook, false);
 
         // Core pre-draw hook
         const preHook = function (this: p5) {
             handlers.handlePreDraw(this);
         };
-        this.registerHook('pre', preHook, false);
+        this._registerHook('pre', preHook, false);
 
         // Core post-draw hook
         const postHook = function (this: p5) {
@@ -126,7 +129,7 @@ export class P5AsciifyHookManager {
                 hookManager._cachedDrawAsciifyFn.call(this);
             }
         };
-        this.registerHook('post', postHook, false);
+        this._registerHook('post', postHook, false);
     }
 
     /**
@@ -134,9 +137,12 @@ export class P5AsciifyHookManager {
      * @private
      */
     private _integrateWithP5(): void {
-        if (typeof p5 === 'undefined') return;
+        if (typeof p5 === 'undefined' || !p5 || !p5.VERSION) {
+            console.log("p5.asciify loading without automatic hooks!")
+            return;
+        }
 
-        if (compareVersions(p5.prototype.VERSION, "2.0.0") >= 0 && typeof p5.registerAddon === 'function') {
+        if (compareVersions(p5.VERSION, "2.0.0") >= 0 && typeof p5.registerAddon === 'function') {
             // p5.js v2.0.0+ - use addon system
             if (!this.p5AddonRegistered) {
                 p5.registerAddon(this._createP5Addon());
@@ -205,17 +211,12 @@ export class P5AsciifyHookManager {
      * @param hookType The type of hook to register
      * @param fn The function to execute
      * @param isCore Whether this is a core hook (protected from deactivation)
-     * @ignore
      */
-    public registerHook(
+    private _registerHook(
         hookType: HookType,
         fn: (this: p5) => void | Promise<void>,
         isCore: boolean = false
     ): void {
-        if (this.registeredHooks.has(hookType)) {
-            throw new P5AsciifyError(`Hook '${hookType}' is already registered.`);
-        }
-
         // Create a proxy function with direct closure reference to this manager instance
         const manager = this; // Capture manager reference in closure
         const proxyFn = function (this: p5) {
@@ -242,13 +243,32 @@ export class P5AsciifyHookManager {
      * @param hookType The type of hook to activate
      */
     public activateHook(hookType: HookType): void {
+        // Validate hookType parameter
+        const isValidHookType = errorHandler.validate(
+            hookType && typeof hookType === 'string' && hookType.trim() !== '',
+            'Hook type must be a non-empty string.',
+            { providedValue: hookType, method: 'activateHook' }
+        );
+
+        if (!isValidHookType) {
+            return; // Return early if hook type validation fails
+        }
+
         const hookFunction = this.registeredHooks.get(hookType);
-        if (!hookFunction) {
-            throw new P5AsciifyError(`Hook '${hookType}' not found.`);
+
+        // Validate hook exists
+        const hookExists = errorHandler.validate(
+            hookFunction !== undefined,
+            `Hook '${hookType}' not found.`,
+            { providedValue: hookType, method: 'activateHook' }
+        );
+
+        if (!hookExists) {
+            return; // Return early if hook not found
         }
 
         // Always set to active (proxy will execute the function)
-        hookFunction.active = true;
+        hookFunction!.active = true;
     }
 
     /**
@@ -256,17 +276,43 @@ export class P5AsciifyHookManager {
      * @param hookType The type of hook to deactivate
      */
     public deactivateHook(hookType: HookType): void {
-        const hookFunction = this.registeredHooks.get(hookType);
-        if (!hookFunction) {
-            throw new P5AsciifyError(`Hook '${hookType}' not found.`);
+        // Validate hookType parameter
+        const isValidHookType = errorHandler.validate(
+            hookType && typeof hookType === 'string' && hookType.trim() !== '',
+            'Hook type must be a non-empty string.',
+            { providedValue: hookType, method: 'deactivateHook' }
+        );
+
+        if (!isValidHookType) {
+            return; // Return early if hook type validation fails
         }
 
-        if (hookFunction.isCore) {
-            throw new P5AsciifyError(`Core hook '${hookType}' cannot be deactivated.`);
+        const hookFunction = this.registeredHooks.get(hookType);
+
+        // Validate hook exists
+        const hookExists = errorHandler.validate(
+            hookFunction !== undefined,
+            `Hook '${hookType}' not found.`,
+            { providedValue: hookType, method: 'deactivateHook' }
+        );
+
+        if (!hookExists) {
+            return; // Return early if hook not found
+        }
+
+        // Validate hook is not a core hook
+        const isNotCore = errorHandler.validate(
+            !hookFunction!.isCore,
+            `Core hook '${hookType}' cannot be deactivated.`,
+            { providedValue: hookType, method: 'deactivateHook' }
+        );
+
+        if (!isNotCore) {
+            return; // Return early if trying to deactivate core hook
         }
 
         // Simply set to inactive - the proxy will handle the rest
-        hookFunction.active = false;
+        hookFunction!.active = false;
     }
 
     /**

@@ -38,7 +38,7 @@ export declare class P5AsciifySVGExporter {
     /**
      * The p5.js instance.
      */
-    private p;
+    private _p;
     /**
      * Creates a new SVG exporter.
      * @param p The p5.js instance
@@ -52,7 +52,6 @@ export declare class P5AsciifySVGExporter {
      * @param backgroundColor The background color for the SVG
      * @param options Options for SVG generation (excludes filename)
      * @returns SVG string representation of the ASCII output
-     * @throws {@link P5AsciifyError} - If no renderer is available to fetch ASCII output from.
      */
     generateSVG(rendererManager: P5AsciifyRendererManager, grid: P5AsciifyGrid, fontManager: P5AsciifyFontManager, backgroundColor: p5.Color, options?: Omit<SVGExportOptions, 'filename'>): string;
     /**
@@ -61,7 +60,6 @@ export declare class P5AsciifySVGExporter {
      * @param grid The grid information for dimensions and cell sizes
      * @param fontManager The font manager with character data
      * @param options Options for SVG export or just the filename as a string for backward compatibility
-     * @throws {@link P5AsciifyError} - If no renderer is available to fetch ASCII output from.
      */
     saveSVG(rendererManager: P5AsciifyRendererManager, grid: P5AsciifyGrid, fontManager: P5AsciifyFontManager, backgroundColor: p5.Color, options: SVGExportOptions): void;
     /**

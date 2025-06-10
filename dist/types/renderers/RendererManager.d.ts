@@ -41,10 +41,6 @@ export declare class P5AsciifyRendererManager {
     /** Whether any renderers are enabled. */
     private _hasEnabledRenderers;
     /**
-     * Registered plugin renderers
-     */
-    private static _plugins;
-    /**
      * Creates a new ASCII renderer manager instance.
      * @param _p The p5 instance.
      * @param _grid The grid instance.
@@ -55,7 +51,7 @@ export declare class P5AsciifyRendererManager {
     /** The p5 instance. */
     _p: p5, 
     /** The framebuffer containing the content to be asciified. */
-    _captureFramebuffer: p5.Framebuffer, 
+    _captureFramebuffer: p5.Framebuffer | p5.Graphics, 
     /** The grid instance. */
     _grid: P5AsciifyGrid, 
     /** The font texture atlas instance. */
@@ -73,7 +69,7 @@ export declare class P5AsciifyRendererManager {
      *
      * @ignore
      */
-    render(inputFramebuffer: p5.Framebuffer): void;
+    render(backgroundColor?: string | p5.Color | [number, number?, number?, number?]): void;
     /**
      * Checks if the canvas dimensions have changed.
      * If they have, the grid is reset and the renderers are resized.
@@ -82,6 +78,12 @@ export declare class P5AsciifyRendererManager {
      * and the canvas dimensions are different to the previous {@link render} call.
      */
     private checkCanvasDimensions;
+    /**
+     * Sets a new capture texture for the renderer manager and its renderers.
+     * @param newCaptureFramebuffer The new capture framebuffer or graphics to use for rendering.
+     * @ignore
+     */
+    setCaptureTexture(newCaptureFramebuffer: p5.Framebuffer | p5.Graphics): void;
     /**
      * Resets the dimensions of all renderers.
      *
@@ -97,7 +99,7 @@ export declare class P5AsciifyRendererManager {
      * @param type The type of the renderer to add.
      * @param options The options to use for the renderer.
      * @returns The ASCII renderer instance that was added.
-     * @throws {@link P5AsciifyError} - If the renderer name is an empty string or the renderer type is invalid.
+     * @throws If the renderer name is an empty string or the renderer type is invalid.
      *
      * @example
      * ```javascript
@@ -121,7 +123,7 @@ export declare class P5AsciifyRendererManager {
      *  }
      * ```
      */
-    add(name: string, type: string, options: AsciiRendererOptions): P5AsciifyRenderer;
+    add(name: string, type: string, options?: AsciiRendererOptions): P5AsciifyRenderer | null;
     /**
      * Gets the ASCII renderer instance with the given name.
      * @param rendererName The name of the renderer to get.
@@ -140,7 +142,7 @@ export declare class P5AsciifyRendererManager {
      *  }
      * ```
      */
-    get(rendererName: string): P5AsciifyRenderer;
+    get(rendererName: string): P5AsciifyRenderer | null;
     /**
      * Gets a list of all available renderer types (built-in and plugins)
      * @returns An array of available renderer type IDs
@@ -211,7 +213,7 @@ export declare class P5AsciifyRendererManager {
      * Swaps the positions of two renderers in the renderer list.
      * @param renderer1 The name of the first renderer or the renderer instance itself.
      * @param renderer2 The name of the second renderer or the renderer instance itself.
-     * @throws {@link P5AsciifyError} - If one or more renderers are not found.
+     * @throws If one or more renderers are not found.
      *
      * @example
      * ```javascript

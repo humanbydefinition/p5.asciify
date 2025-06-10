@@ -1,9 +1,9 @@
 import p5 from 'p5';
-import { P5AsciifyError } from './AsciifyError';
 import { OpenTypeGlyph, P5AsciifyCharacter } from './types';
-import { compareVersions } from './utils';
+import { detectP5Version, isP5AsyncCapable, isValidP5Font } from './utils';
 
 import { createGlyphPath, getGlyphIndex, createEmptyPath } from './utils/fonts/TyprFontUtils';
+import { errorHandler } from './errors';
 
 /**
  * Manages the font used for the ASCII rendering pipeline and provides methods for working with the font.
@@ -61,36 +61,8 @@ export class P5AsciifyFontManager {
      * Initializes the character glyphs and characters array.
      */
     private _initializeGlyphsAndCharacters(): void {
-        if (compareVersions(this._p.VERSION, "2.0.0") < 0) {
-            // p5.js versions before 2.0.0 use opentype.js
-            const glyphs = Object.values(this._font.font.glyphs.glyphs) as OpenTypeGlyph[];
-            this._characters = [];
 
-            // Process all glyphs in a single loop
-            glyphs.forEach((glyph, index) => {
-                // Skip glyphs with no unicode information
-                if ((!glyph.unicode && (!glyph.unicodes || !glyph.unicodes.length))) {
-                    return;
-                }
-
-                // Calculate color values based on current array length
-                const idx = this._characters.length;
-                const r = idx % 256;
-                const g = Math.floor(idx / 256) % 256;
-                const b = Math.floor(idx / 65536);
-
-                // Use either direct unicode or first value from unicodes array
-                const unicode = glyph.unicode ?? glyph.unicodes![0];
-
-                this._characters.push({
-                    character: String.fromCodePoint(unicode),
-                    unicode,
-                    getPath: (x: number, y: number, fontSize: number) => glyph.getPath(x, y, fontSize),
-                    advanceWidth: glyph.advanceWidth,
-                    r, g, b
-                });
-            });
-        } else {
+        if (isP5AsyncCapable(detectP5Version(this._p))) {
             // p5.js 2.0.0+ uses typr.js
             // Extract all supported character codes from the font's cmap table
             const characterList: string[] = [];
@@ -158,6 +130,35 @@ export class P5AsciifyFontManager {
                     r, g, b
                 };
             });
+        } else {
+            // p5.js versions before 2.0.0 use opentype.js
+            const glyphs = Object.values(this._font.font.glyphs.glyphs) as OpenTypeGlyph[];
+            this._characters = [];
+
+            // Process all glyphs in a single loop
+            glyphs.forEach((glyph, index) => {
+                // Skip glyphs with no unicode information
+                if ((!glyph.unicode && (!glyph.unicodes || !glyph.unicodes.length))) {
+                    return;
+                }
+
+                // Calculate color values based on current array length
+                const idx = this._characters.length;
+                const r = idx % 256;
+                const g = Math.floor(idx / 256) % 256;
+                const b = Math.floor(idx / 65536);
+
+                // Use either direct unicode or first value from unicodes array
+                const unicode = glyph.unicode ?? glyph.unicodes![0];
+
+                this._characters.push({
+                    character: String.fromCodePoint(unicode),
+                    unicode,
+                    getPath: (x: number, y: number, fontSize: number) => glyph.getPath(x, y, fontSize),
+                    advanceWidth: glyph.advanceWidth,
+                    r, g, b
+                });
+            });
         }
     }
 
@@ -168,14 +169,19 @@ export class P5AsciifyFontManager {
      * Otherwise, other parts of the library are not updated with the new font information.
      * 
      * @param font The p5.Font object to use for ASCII rendering.
-     * @throws {@link P5AsciifyError} If the font parameter is invalid.
      * @ignore
      */
     public loadFont(
         font: p5.Font,
     ): void {
-        if (!(font instanceof p5.Font)) {
-            throw new P5AsciifyError('Invalid font parameter. Expected a path, base64 string, blob URL, or p5.Font object.');
+        const isValidFont = errorHandler.validate(
+            isValidP5Font(this._p, font),
+            'Invalid font parameter. Expected a p5.Font object.',
+            { providedValue: font, method: 'loadFont' }
+        );
+
+        if (!isValidFont) {
+            return; // Return early if validation fails
         }
 
         this._font = font;
@@ -188,7 +194,7 @@ export class P5AsciifyFontManager {
      * @returns An array containing the RGB color values for the character, 
      *          which can be used to set the fill color when drawing to a custom renderers `characterFramebuffer` 
      *          to convert those pixels into the selected character.
-     * @throws {@link P5AsciifyError} If the character is not found in the font.
+     * @throws If the character is not found in the font.
      * 
      * @example
      * ```javascript
@@ -200,56 +206,44 @@ export class P5AsciifyFontManager {
      * ```
      */
     public glyphColor(char: string): [number, number, number] {
+        // Validate input parameter
+        const isValidInput = errorHandler.validate(
+            typeof char === 'string' && char.length > 0,
+            'Character must be a non-empty string.',
+            { providedValue: char, method: 'glyphColor' }
+        );
+
+        if (!isValidInput) {
+            return [0, 0, 0]; // Return early if input validation fails
+        }
+
         const charInfo = this._characters.find(
             c => c.character === char
         );
 
-        if (!charInfo) {
-            const codePoint = char.codePointAt(0);
-            const hexCode = codePoint ? codePoint.toString(16).padStart(4, '0') : 'unknown';
-            throw new P5AsciifyError(`Could not find character in character set: ${char} (U+${hexCode})`);
-        }
-
-        return [charInfo.r, charInfo.g, charInfo.b];
-    }
-
-    /**
-     * Returns an array of characters that are not supported by the current font.
-     * @param characters The string of characters to check.
-     * @returns An array of unsupported characters. List is empty if all characters are supported.
-     * 
-     * @example
-     * ```javascript
-     *  function setupAsciify() {
-     *      // Print a list of potentially unsupported characters.
-     *      console.log(p5asciify.asciifier().fontManager.getUnsupportedCharacters(" .,ABC123"));
-     *  }
-     * ```
-     */
-    public getUnsupportedCharacters(characters: string): string[] {
-        return [...characters].filter(
-            (char: string) => !this._characters.some(c => c.character === char)
+        // Validate character exists in font
+        const characterExists = errorHandler.validate(
+            charInfo !== undefined,
+            (() => {
+                const codePoint = char.codePointAt(0);
+                const hexCode = codePoint ? codePoint.toString(16).padStart(4, '0') : 'unknown';
+                return `Could not find character in character set: ${char} (U+${hexCode})`;
+            })(),
+            { providedValue: char, method: 'glyphColor' }
         );
-    }
 
-    /**
-     * Validates a string of characters against the current font.
-     * @param characters The string of characters to validate.
-     * @throws {@link P5AsciifyError} If any characters are not supported by the current font.
-     * @ignore
-     */
-    public validateCharacters(characters: string): void {
-        const unsupportedChars: string[] = this.getUnsupportedCharacters(characters);
-        if (unsupportedChars.length > 0) {
-            throw new P5AsciifyError(`The following characters are not supported by the current font: [${unsupportedChars.join(', ')}].`);
+        if (!characterExists) {
+            return [0, 0, 0]; // Return early if character not found
         }
+
+        return [charInfo!.r, charInfo!.g, charInfo!.b];
     }
 
     /**
      * Gets an array of RGB colors for a given string of characters.
      * @param characters - A string of characters.
      * @returns Array of RGB color values.
-     * @throws {@link P5AsciifyError} If a character is not found in the fonts available characters.
+     * @throws If a character is not found in the fonts available characters.
      * 
      * @example
      * ```javascript
@@ -261,17 +255,25 @@ export class P5AsciifyFontManager {
      * ```
      */
     public glyphColors(characters: string | string[] = ""): Array<[number, number, number]> {
-        return Array.from(characters).map((char: string) => {
-            const charInfo = this._characters.find(c => c.character === char);
+        // Validate input parameter
+        const isValidInput = errorHandler.validate(
+            typeof characters === 'string' || Array.isArray(characters),
+            'Characters must be a string or array of strings.',
+            { providedValue: characters, method: 'glyphColors' }
+        );
 
-            if (!charInfo) {
-                const codePoint = char.codePointAt(0);
-                const hexCode = codePoint ? codePoint.toString(16).padStart(4, '0') : 'unknown';
-                throw new P5AsciifyError(`Could not find character in character set: ${char} (U+${hexCode})`);
-            }
+        if (!isValidInput) {
+            return [[0, 0, 0]]; // Return early if input validation fails
+        }
 
-            return [charInfo.r, charInfo.g, charInfo.b];
-        });
+        const results: Array<[number, number, number]> = [];
+
+        for (const char of Array.from(characters)) {
+            const color = this.glyphColor(char);
+            results.push(color as [number, number, number]);
+        }
+
+        return results;
     }
 
     /**
@@ -419,4 +421,22 @@ export class P5AsciifyFontManager {
      * ```
      */
     get characters(): P5AsciifyCharacter[] { return this._characters; }
+
+    /**
+     * Returns all supported characters in the font as a single string.
+     * Useful for quick access to the complete character set or for iteration purposes.
+     * 
+     * @example
+     * ```javascript
+     *  function setupAsciify() {
+     *      // Get all supported characters as a string
+     *      const allChars = p5asciify.asciifier().fontManager.charactersString;
+     *      console.log("Font supports these characters:", allChars);
+     *      console.log("Total character count:", allChars.length);
+     *  }
+     * ```
+     */
+    get charactersString(): string {
+        return this._characters.map(char => char.character).join('');
+    }
 }

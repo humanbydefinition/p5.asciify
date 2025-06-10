@@ -3,7 +3,7 @@ import { P5AsciifyGrid } from '../../Grid';
 import { P5AsciifyFontManager } from '../../FontManager';
 import { P5AsciifyRendererManager } from '../../renderers/RendererManager';
 import { P5AsciifyCharacter } from '../../types';
-import { compareVersions } from '../utils';
+import { detectP5Version, isP5AsyncCapable } from '../utils';
 
 /**
  * Options for SVG export.
@@ -45,14 +45,14 @@ export class P5AsciifySVGExporter {
     /**
      * The p5.js instance.
      */
-    private p: p5;
+    private _p: p5;
 
     /**
      * Creates a new SVG exporter.
      * @param p The p5.js instance
      */
     constructor(p: p5) {
-        this.p = p;
+        this._p = p;
     }
 
     /**
@@ -63,7 +63,6 @@ export class P5AsciifySVGExporter {
      * @param backgroundColor The background color for the SVG
      * @param options Options for SVG generation (excludes filename)
      * @returns SVG string representation of the ASCII output
-     * @throws {@link P5AsciifyError} - If no renderer is available to fetch ASCII output from.
      */
     public generateSVG(
         rendererManager: P5AsciifyRendererManager,
@@ -119,7 +118,7 @@ export class P5AsciifySVGExporter {
         // Add background rect if needed
         if (exportOptions.includeBackgroundRectangles) {
             const bgColor = backgroundColor;
-            const bgColorObj = this.p.color(bgColor as p5.Color);
+            const bgColorObj = this._p.color(bgColor as p5.Color);
             const bgColorStr = `rgba(${bgColorObj._array[0] * 255},${bgColorObj._array[1] * 255},${bgColorObj._array[2] * 255},${bgColorObj._array[3]})`;
             svgContent += `\n<rect width="${gridWidth}" height="${gridHeight}" fill="${bgColorStr}" />`;
         }
@@ -216,7 +215,6 @@ export class P5AsciifySVGExporter {
      * @param grid The grid information for dimensions and cell sizes
      * @param fontManager The font manager with character data
      * @param options Options for SVG export or just the filename as a string for backward compatibility
-     * @throws {@link P5AsciifyError} - If no renderer is available to fetch ASCII output from.
      */
     public saveSVG(
         rendererManager: P5AsciifyRendererManager,
@@ -326,10 +324,10 @@ export class P5AsciifySVGExporter {
             // center glyph in cell
 
             let scale = 1;
-            if (compareVersions(this.p.VERSION, "2.0.0") < 0) {
-                scale = fontManager.fontSize / fontManager.font.font.unitsPerEm;
-            } else {
+            if (isP5AsyncCapable(detectP5Version(this._p))) {
                 scale = fontManager.fontSize / fontManager.font.data.head.unitsPerEm;
+            } else {
+                scale = fontManager.fontSize / fontManager.font.font.unitsPerEm;
             }
             const xOffset = cellX + (cellWidth - char.advanceWidth * scale) / 2;
             const yOffset = cellY + (cellHeight + fontManager.fontSize * 0.7) / 2;

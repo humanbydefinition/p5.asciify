@@ -1,6 +1,6 @@
 # Interface: AsciiRendererOptions
 
-Defined in: [renderers/types.ts:8](https://github.com/humanbydefinition/p5.asciify/blob/f7ea3aaf85f74af4820425d6e8a41eecf5d02d32/src/lib/renderers/types.ts#L8)
+Defined in: [renderers/types.ts:8](https://github.com/humanbydefinition/p5.asciify/blob/db219ebd919c345fc51a95258e4a8ccb5b2fd6a3/src/lib/renderers/types.ts#L8)
 
 Base ASCII renderer options, applicable to all ASCII renderers.
 
@@ -12,4 +12,4 @@ Base ASCII renderer options, applicable to all ASCII renderers.
 
 | Property                        | Type      | Description                      | Defined in                                                                                                                                            |
 | ------------------------------- | --------- | -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
-| <a id="enabled"></a> `enabled?` | `boolean` | Whether the renderer is enabled. | [renderers/types.ts:10](https://github.com/humanbydefinition/p5.asciify/blob/f7ea3aaf85f74af4820425d6e8a41eecf5d02d32/src/lib/renderers/types.ts#L10) |
+| <a id="enabled"></a> `enabled?` | `boolean` | Whether the renderer is enabled. | [renderers/types.ts:10](https://github.com/humanbydefinition/p5.asciify/blob/db219ebd919c345fc51a95258e4a8ccb5b2fd6a3/src/lib/renderers/types.ts#L10) |

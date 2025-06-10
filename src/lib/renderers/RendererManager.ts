@@ -10,7 +10,7 @@ import { P5AsciifyDisplayRenderer } from './AsciiDisplayRenderer';
 import { P5AsciifyGrid } from '../Grid';
 import { P5AsciifyFontManager } from '../FontManager';
 
-import { P5AsciifyError } from '../AsciifyError';
+import { P5AsciifyError } from '../errors/AsciifyError';
 
 import { AsciiRendererOptions } from './types';
 
@@ -18,6 +18,7 @@ import { RENDERER_TYPES } from './constants';
 import { P5AsciifyRendererPlugin } from '../plugins/RendererPlugin';
 
 import { P5AsciifyPluginRegistry } from '../plugins/PluginRegistry';
+import { errorHandler } from '../errors';
 
 
 /**
@@ -56,11 +57,6 @@ export class P5AsciifyRendererManager {
     private _hasEnabledRenderers: boolean = false;
 
     /**
-     * Registered plugin renderers
-     */
-    private static _plugins = new Map<string, P5AsciifyRendererPlugin>();
-
-    /**
      * Creates a new ASCII renderer manager instance.
      * @param _p The p5 instance.
      * @param _grid The grid instance.
@@ -72,7 +68,7 @@ export class P5AsciifyRendererManager {
         private _p: p5,
 
         /** The framebuffer containing the content to be asciified. */
-        private _captureFramebuffer: p5.Framebuffer,
+        private _captureFramebuffer: p5.Framebuffer | p5.Graphics,
 
         /** The grid instance. */
         private _grid: P5AsciifyGrid,
@@ -153,7 +149,7 @@ export class P5AsciifyRendererManager {
      * 
      * @ignore
      */
-    public render(inputFramebuffer: p5.Framebuffer): void {
+    public render(backgroundColor: string | p5.Color | [number, number?, number?, number?] = "#000000"): void {
 
         this._characterFramebuffer.draw(() => this._p.clear());
         this._primaryColorFramebuffer.draw(() => this._p.clear());
@@ -189,7 +185,8 @@ export class P5AsciifyRendererManager {
             this._secondaryColorFramebuffer,
             this._transformFramebuffer,
             this._rotationFramebuffer,
-            this._captureFramebuffer
+            this._captureFramebuffer,
+            backgroundColor
         );
 
         this.checkCanvasDimensions();
@@ -211,6 +208,20 @@ export class P5AsciifyRendererManager {
 
             this.resetRendererDimensions();
         }
+    }
+
+    /**
+     * Sets a new capture texture for the renderer manager and its renderers.
+     * @param newCaptureFramebuffer The new capture framebuffer or graphics to use for rendering.
+     * @ignore
+     */
+    public setCaptureTexture(newCaptureFramebuffer: p5.Framebuffer | p5.Graphics): void {
+        this._captureFramebuffer = newCaptureFramebuffer;
+        this.resetRendererDimensions();
+
+        this._renderers.forEach(renderer => {
+            renderer.renderer.setCaptureTexture(newCaptureFramebuffer);
+        });
     }
 
     /**
@@ -245,7 +256,7 @@ export class P5AsciifyRendererManager {
      * @param type The type of the renderer to add.
      * @param options The options to use for the renderer.
      * @returns The ASCII renderer instance that was added.
-     * @throws {@link P5AsciifyError} - If the renderer name is an empty string or the renderer type is invalid.
+     * @throws If the renderer name is an empty string or the renderer type is invalid.
      * 
      * @example
      * ```javascript
@@ -272,10 +283,24 @@ export class P5AsciifyRendererManager {
     public add(
         name: string,
         type: string,
-        options: AsciiRendererOptions
-    ): P5AsciifyRenderer {
-        if (typeof name !== 'string' || name.trim() === '') {
-            throw new P5AsciifyError('Renderer name must be a non-empty string');
+        options?: AsciiRendererOptions
+    ): P5AsciifyRenderer | null {
+        // Validate renderer name
+        const isValidName = errorHandler.validate(
+            typeof name === 'string' && name.trim() !== '',
+            'Renderer name must be a non-empty string.',
+            { providedValue: name, method: 'add' }
+        );
+
+        // Validate renderer type
+        const isValidType = errorHandler.validate(
+            typeof type === 'string' && type.trim() !== '',
+            'Renderer type must be a non-empty string.',
+            { providedValue: type, method: 'add' }
+        );
+
+        if (!isValidName || !isValidType) {
+            return null; // Return early if name validation fails
         }
 
         let renderer: P5AsciifyRenderer | undefined;
@@ -301,20 +326,25 @@ export class P5AsciifyRendererManager {
             }
         }
 
-        // If neither built-in nor plugin, throw error
-        if (!renderer) {
-            const availableTypes = [
-                ...Object.keys(RENDERER_TYPES),
-                ...this._pluginRegistry.getIds()
-            ].join(', ');
+        // Validate renderer was created successfully
+        const isValidRenderer = errorHandler.validate(
+            renderer !== undefined,
+            (() => {
+                const availableTypes = [
+                    ...Object.keys(RENDERER_TYPES),
+                    ...this._pluginRegistry.getIds()
+                ].join(', ');
+                return `Invalid renderer type: ${type}. Valid types are: ${availableTypes}`;
+            })(),
+            { providedValue: type, method: 'add' }
+        );
 
-            throw new P5AsciifyError(
-                `Invalid renderer type: ${type}. Valid types are: ${availableTypes}`
-            );
+        if (!isValidRenderer) {
+            return null; // Return early if renderer creation failed
         }
 
-        this._renderers.unshift({ name, renderer });
-        return renderer;
+        this._renderers.unshift({ name, renderer: renderer! });
+        return renderer as P5AsciifyRenderer;
     }
 
     /**
@@ -335,16 +365,33 @@ export class P5AsciifyRendererManager {
      *  }
      * ```
      */
-    public get(rendererName: string): P5AsciifyRenderer {
-        const renderer = this._renderers.find(r => r.name === rendererName)?.renderer;
+    public get(rendererName: string): P5AsciifyRenderer | null {
+        // Validate input parameter
+        const isValidInput = errorHandler.validate(
+            typeof rendererName === 'string' && rendererName.trim() !== '',
+            'Renderer name must be a non-empty string.',
+            { providedValue: rendererName, method: 'get' }
+        );
 
-        if (!renderer) {
-            throw new P5AsciifyError(
-                `Renderer '${rendererName}' not found. Available renderers: ${this._renderers.map(r => r.name).join(', ')}`
-            );
+        if (!isValidInput) {
+            return null; // Return early if input validation fails
         }
 
-        return renderer;
+        // Find the renderer
+        const renderer = this._renderers.find(r => r.name === rendererName)?.renderer;
+
+        // Validate renderer exists
+        const rendererExists = errorHandler.validate(
+            renderer !== undefined,
+            `Renderer '${rendererName}' not found. Available renderers: ${this._renderers.map(r => r.name).join(', ')}`,
+            { providedValue: rendererName, method: 'get' }
+        );
+
+        if (!rendererExists) {
+            return null; // Return early if renderer not found
+        }
+
+        return renderer as P5AsciifyRenderer;
     }
 
     /**
@@ -375,12 +422,20 @@ export class P5AsciifyRendererManager {
     public moveDown(renderer: string | P5AsciifyRenderer): void {
         const index = this._getRendererIndex(renderer);
 
-        if (index === -1) {
-            throw new P5AsciifyError("Renderer not found.");
-        }
+        const isValidIndex = errorHandler.validate(
+            index >= 0 && index < this._renderers.length,
+            'Renderer not found in the renderer list.',
+            { providedValue: renderer, method: 'moveDown' }
+        );
 
-        if (index >= this._renderers.length - 1) {
-            throw new P5AsciifyError("Renderer is already at the bottom of the list.");
+        const isValidNextIndex = errorHandler.validate(
+            index < this._renderers.length - 1,
+            'Renderer is already at the bottom of the list.',
+            { providedValue: renderer, method: 'moveDown' }
+        );
+
+        if (!isValidIndex || !isValidNextIndex) {
+            return; // If validation fails, do not move the renderer
         }
 
         this.swap(renderer, this._renderers[index + 1].renderer);
@@ -403,12 +458,20 @@ export class P5AsciifyRendererManager {
     public moveUp(renderer: string | P5AsciifyRenderer): void {
         const index = this._getRendererIndex(renderer);
 
-        if (index === -1) {
-            throw new P5AsciifyError("Renderer not found.");
-        }
+        const isValidIndex = errorHandler.validate(
+            index >= 0 && index < this._renderers.length,
+            'Renderer not found in the renderer list.',
+            { providedValue: renderer, method: 'moveUp' }
+        );
 
-        if (index <= 0) {
-            throw new P5AsciifyError("Renderer is already at the top of the list.");
+        const isValidPreviousIndex = errorHandler.validate(
+            index > 0,
+            'Renderer is already at the top of the list.',
+            { providedValue: renderer, method: 'moveUp' }
+        );
+
+        if (!isValidIndex || !isValidPreviousIndex) {
+            return; // If validation fails, do not move the renderer
         }
 
         this.swap(renderer, this._renderers[index - 1].renderer);
@@ -430,9 +493,17 @@ export class P5AsciifyRendererManager {
      */
     public remove(renderer: string | P5AsciifyRenderer): void {
         const index = this._getRendererIndex(renderer);
-        if (index === -1) {
-            throw new P5AsciifyError(`Renderer not found.`);
+
+        const isValidIndex = errorHandler.validate(
+            index >= 0 && index < this._renderers.length,
+            'Renderer not found in the renderer list.',
+            { providedValue: renderer, method: 'remove' }
+        );
+
+        if (!isValidIndex) {
+            return; // If validation fails, do not remove the renderer
         }
+
         this._renderers.splice(index, 1);
     }
 
@@ -459,7 +530,7 @@ export class P5AsciifyRendererManager {
      * Swaps the positions of two renderers in the renderer list.
      * @param renderer1 The name of the first renderer or the renderer instance itself.
      * @param renderer2 The name of the second renderer or the renderer instance itself.
-     * @throws {@link P5AsciifyError} - If one or more renderers are not found.
+     * @throws If one or more renderers are not found.
      * 
      * @example
      * ```javascript
@@ -475,8 +546,15 @@ export class P5AsciifyRendererManager {
         const index1 = this._getRendererIndex(renderer1);
         const index2 = this._getRendererIndex(renderer2);
 
-        if (index1 === -1 || index2 === -1) {
-            throw new P5AsciifyError(`One or more renderers not found.`);
+        const areValidIndices = errorHandler.validate(
+            index1 >= 0 && index1 < this._renderers.length &&
+            index2 >= 0 && index2 < this._renderers.length,
+            'One or more renderers not found in the renderer list.',
+            { providedValues: [renderer1, renderer2], method: 'swap' }
+        );
+
+        if (!areValidIndices) {
+            return; // If validation fails, do not swap the renderers
         }
 
         const temp = this._renderers[index1];

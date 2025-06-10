@@ -18,11 +18,11 @@ export declare abstract class P5AsciifyAbstractFeatureRenderer2D<T extends Featu
      * @param options The options for the ASCII renderer.
      * @ignore
      */
-    constructor(p: p5, captureFramebuffer: p5.Framebuffer, grid: P5AsciifyGrid, fontManager: P5AsciifyFontManager, options: T);
+    constructor(p: p5, captureFramebuffer: p5.Framebuffer | p5.Graphics, grid: P5AsciifyGrid, fontManager: P5AsciifyFontManager, options: T);
     /**
      * Set the characters for the character set.
      * @param characters The characters to set for the character set.
-     * @throws {P5AsciifyError} If characters is not a string.
+     * @throws If characters is not a string.
      *
      * @example
      * ```javascript
@@ -32,11 +32,11 @@ export declare abstract class P5AsciifyAbstractFeatureRenderer2D<T extends Featu
      *  }
      * ```
      */
-    characters(characters?: string): void;
+    characters(characters: string): void;
     /**
      * Swap the colors of the ASCII character and cell background colors.
      * @param invert Whether to swap the colors.
-     * @throws {P5AsciifyError} If invert is not a boolean.
+     * @throws If invert is not a boolean.
      *
      * @example
      * ```javascript
@@ -73,13 +73,13 @@ export declare abstract class P5AsciifyAbstractFeatureRenderer2D<T extends Featu
      * ```
      *
      * @param angle The rotation angle in degrees.
-     * @throws {P5AsciifyError} If angle is not a number.
+     * @throws If angle is not a number.
      */
     rotation(angle: number): void;
     /**
      * Set the color of the ASCII characters, used in the fixed color mode.
      * @param color The fixed color of the ASCII characters.
-     * @throws {P5AsciifyError} If color is not a p5.Color object.
+     * @throws If color is not a p5.Color object.
      *
      * @example
      * ```javascript
@@ -94,19 +94,19 @@ export declare abstract class P5AsciifyAbstractFeatureRenderer2D<T extends Featu
     /**
      * Define whether to flip the ASCII characters horizontally.
      * @param flip Whether to flip the characters horizontally.
-     * @throws {P5AsciifyError} If flip is not a boolean.
+     * @throws If flip is not a boolean.
      */
     flipHorizontally(flip: boolean): void;
     /**
      * Define whether to flip the ASCII characters vertically.
      * @param flip Whether to flip the characters vertically.
-     * @throws {P5AsciifyError} If flip is not a boolean.
+     * @throws If flip is not a boolean.
      */
     flipVertically(flip: boolean): void;
     /**
      * Set the background color of the ASCII characters, used in the fixed color mode.
      * @param color The fixed color of the ASCII characters.
-     * @throws {P5AsciifyError} If color is not a p5.Color object.
+     * @throws If color is not a p5.Color object.
      *
      * @example
      * ```javascript
@@ -121,7 +121,7 @@ export declare abstract class P5AsciifyAbstractFeatureRenderer2D<T extends Featu
     /**
      * Sets the color mode for ASCII characters.
      * @param mode The color mode ('sampled' or 'fixed')
-     * @throws {P5AsciifyError} If mode is not a string or not one of the allowed values ('sampled' or 'fixed')
+     * @throws If mode is not a string or not one of the allowed values ('sampled' or 'fixed')
      *
      * @example
      * ```javascript
@@ -135,7 +135,7 @@ export declare abstract class P5AsciifyAbstractFeatureRenderer2D<T extends Featu
     /**
      * Sets the color mode for the grid cell background.
      * @param mode The color mode ('sampled' or 'fixed')
-     * @throws {P5AsciifyError} If mode is not a string or not one of the allowed values ('sampled' or 'fixed')
+     * @throws If mode is not a string or not one of the allowed values ('sampled' or 'fixed')
      *
      * @example
      * ```javascript

@@ -10,6 +10,7 @@ export interface HookFunction {
 /**
  * Manages `p5.js` lifecycle hooks for both `1.x.x` and `2.x.x` versions.
  * Handles automatic registration with `p5.js` and provides unified hook management
+ * @ignore
  */
 export declare class P5AsciifyHookManager {
     private registeredHooks;
@@ -51,9 +52,8 @@ export declare class P5AsciifyHookManager {
      * @param hookType The type of hook to register
      * @param fn The function to execute
      * @param isCore Whether this is a core hook (protected from deactivation)
-     * @ignore
      */
-    registerHook(hookType: HookType, fn: (this: p5) => void | Promise<void>, isCore?: boolean): void;
+    private _registerHook;
     /**
      * Activate a hook by setting its proxy to active
      * @param hookType The type of hook to activate

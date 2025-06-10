@@ -28,5 +28,5 @@ export interface P5AsciifyRendererPlugin {
      * @param options Optional options for the renderer.
      * @returns A new instance of the renderer.
      */
-    create(p: p5, captureFramebuffer: p5.Framebuffer, grid: P5AsciifyGrid, fontManager: P5AsciifyFontManager, options?: FeatureAsciiRendererOptions): P5AsciifyAbstractFeatureRenderer2D | P5AsciifyRenderer2D | P5AsciifyRenderer;
+    create(p: p5, captureFramebuffer: p5.Framebuffer | p5.Graphics, grid: P5AsciifyGrid, fontManager: P5AsciifyFontManager, options?: FeatureAsciiRendererOptions): P5AsciifyAbstractFeatureRenderer2D | P5AsciifyRenderer2D | P5AsciifyRenderer;
 }

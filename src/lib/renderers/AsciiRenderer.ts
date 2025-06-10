@@ -1,9 +1,9 @@
 import p5 from 'p5';
 import { P5AsciifyGrid } from '../Grid';
-import { P5AsciifyError } from '../AsciifyError';
 import { P5AsciifyFontManager } from '../FontManager';
 
 import { AsciiRendererOptions } from './types';
+import { errorHandler } from '../errors';
 
 /**
  * Abstract ASCII renderer base class that all custom and pre-built ASCII renderers extend from.
@@ -40,7 +40,7 @@ export abstract class P5AsciifyRenderer<T extends AsciiRendererOptions = AsciiRe
      */
     constructor(
         protected _p: p5,
-        protected _captureFramebuffer: p5.Framebuffer,
+        protected _captureFramebuffer: p5.Framebuffer | p5.Graphics,
         protected _grid: P5AsciifyGrid,
         protected initialFramebufferDimensions: {
             width: number,
@@ -72,6 +72,12 @@ export abstract class P5AsciifyRenderer<T extends AsciiRendererOptions = AsciiRe
     public abstract resizeFramebuffers(): void;
 
     /**
+     * Reset the shaders used by the renderer.
+     * @ignore
+     */
+    public abstract resetShaders(): void;
+
+    /**
      * Updates renderer options.
      * @param newOptions - The new options to update.
      * 
@@ -98,10 +104,21 @@ export abstract class P5AsciifyRenderer<T extends AsciiRendererOptions = AsciiRe
     }
 
     /**
+     * Update the capture framebuffer used by the renderer.
+     * @param newCaptureFramebuffer - The new capture framebuffer or graphics to use.
+     * @ignore
+     */
+    public setCaptureTexture(newCaptureFramebuffer: p5.Framebuffer | p5.Graphics): void {
+        this._captureFramebuffer = newCaptureFramebuffer;
+        this.resizeFramebuffers();
+        this.resetShaders();
+    }
+
+    /**
      * Enable or disable the renderer.
      * @param enabled - Whether to enable or disable the renderer.
      * @returns The current/new state of the renderer.
-     * @throws {P5AsciifyError} If the provided enabled value is not a boolean.
+     * @throws If the provided enabled value is not a boolean.
      * 
      * @example
      * ```javascript
@@ -121,8 +138,14 @@ export abstract class P5AsciifyRenderer<T extends AsciiRendererOptions = AsciiRe
             return this._options.enabled as boolean;
         }
 
-        if (typeof enabled !== 'boolean') {
-            throw new P5AsciifyError('Enabled must be a boolean.');
+        const isValidType = errorHandler.validate(
+            typeof enabled === 'boolean',
+            'Enabled must be a boolean.',
+            { providedValue: enabled, method: 'enabled' }
+        );
+
+        if (!isValidType) {
+            return this._options.enabled!; // Return the current state if validation fails
         }
 
         this._options.enabled = enabled;

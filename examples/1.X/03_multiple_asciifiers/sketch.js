@@ -72,6 +72,10 @@ export const createSketch = (options = {}) => {
 
       defaultAsciifier.backgroundMode('fixed'); // or 'sampled'
       customAsciifier.backgroundMode('fixed'); // or 'sampled'
+
+      // Set the background color for both asciifiers to transparent
+      defaultAsciifier.background([0, 0, 0, 0]);
+      customAsciifier.background([0, 0, 0, 0]);
     };
 
     p.draw = () => {

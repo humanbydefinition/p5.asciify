@@ -1,7 +1,6 @@
 import p5 from 'p5';
 import { P5AsciifyAbstractFeatureRenderer2D } from '../AbstractFeatureRenderer2D';
 import { P5AsciifyGrid } from '../../../../Grid';
-import { P5AsciifyError } from '../../../../AsciifyError';
 import { P5AsciifyFontManager } from '../../../../FontManager';
 
 import { EdgeAsciiRendererOptions } from '../../../types';
@@ -12,9 +11,9 @@ import transformShader from './shaders/transform.frag';
 import rotationShader from './shaders/rotation.frag';
 import asciiCharacterShader from './shaders/asciiCharacter.frag';
 import sobelShader from './shaders/sobel.frag';
-import flipShader from './shaders/flip.frag';
 
 import { generateSampleShader } from './shaders/shaderGenerators.min';
+import { errorHandler } from '../../../../errors';
 
 /** 
  * Default configuration options for `"edge"` ASCII renderer. 
@@ -71,7 +70,7 @@ export class P5AsciifyEdgeRenderer extends P5AsciifyAbstractFeatureRenderer2D<Ed
      */
     constructor(
         p5Instance: p5,
-        captureFramebuffer: p5.Framebuffer,
+        captureFramebuffer: p5.Framebuffer | p5.Graphics,
         grid: P5AsciifyGrid,
         fontManager: P5AsciifyFontManager,
         options: EdgeAsciiRendererOptions = EDGE_DEFAULT_OPTIONS
@@ -124,15 +123,23 @@ export class P5AsciifyEdgeRenderer extends P5AsciifyAbstractFeatureRenderer2D<Ed
      * ```
      * 
      * @param value The threshold value for the Sobel edge detection algorithm.
-     * @throws {P5AsciifyError} If the value is not a valid number between 0 and 1.
+     * @throws If the value is not a valid number between 0 and 1.
      */
     sobelThreshold(value: number): void {
-        if (typeof value !== 'number' || Number.isNaN(value) || !Number.isFinite(value)) {
-            throw new P5AsciifyError('Sobel threshold must be a valid number');
-        }
+        const isValidNumber = errorHandler.validate(
+            typeof value === 'number' && !Number.isNaN(value) && Number.isFinite(value),
+            'Sobel threshold must be a valid number',
+            { providedValue: value, method: 'sobelThreshold' }
+        );
 
-        if (value < 0 || value > 1) {
-            throw new P5AsciifyError('Sobel threshold must be between 0 and 1');
+        const isInRange = errorHandler.validate(
+            value >= 0 && value <= 1,
+            'Sobel threshold must be between 0 and 1',
+            { providedValue: value, method: 'sobelThreshold' }
+        );
+
+        if (!isValidNumber || !isInRange) {
+            return;
         }
 
         this._options.sobelThreshold = value;
@@ -150,15 +157,24 @@ export class P5AsciifyEdgeRenderer extends P5AsciifyAbstractFeatureRenderer2D<Ed
      * ```
      * 
      * @param value The sample threshold value for the edge detection algorithm.
-     * @throws {P5AsciifyError} If the value is not a valid number greater than or equal to 0.
+     * @throws If the value is not a valid number greater than or equal to 0.
      */
     sampleThreshold(value: number): void {
-        if (typeof value !== 'number' || Number.isNaN(value) || !Number.isFinite(value)) {
-            throw new P5AsciifyError('Sample threshold must be a valid number');
-        }
 
-        if (value < 0) {
-            throw new P5AsciifyError('Sample threshold must be greater than or equal to 0');
+        const isValidNumber = errorHandler.validate(
+            typeof value === 'number' && !Number.isNaN(value) && Number.isFinite(value),
+            'Sample threshold must be a valid number',
+            { providedValue: value, method: 'sampleThreshold' }
+        );
+
+        const isGreaterThanZero = errorHandler.validate(
+            value >= 0,
+            'Sample threshold must be greater than or equal to 0',
+            { providedValue: value, method: 'sampleThreshold' }
+        );
+
+        if (!isValidNumber || !isGreaterThanZero) {
+            return;
         }
 
         this._options.sampleThreshold = value;

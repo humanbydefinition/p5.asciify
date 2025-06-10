@@ -1,9 +1,9 @@
 import p5 from 'p5';
 import { P5Asciifier } from './Asciifier';
-import { P5AsciifyHookManager } from './HookManager';
 import { HookType } from './types';
 import { P5AsciifyRendererPlugin } from './plugins/RendererPlugin';
 import { P5AsciifyPluginRegistry } from './plugins/PluginRegistry';
+import { P5AsciifyErrorLevel } from './errors/ErrorHandler';
 /**
  * Manages the `p5.asciify` library by handling one or more `P5Asciifier` instances.
  *
@@ -32,7 +32,10 @@ export declare class P5AsciifierManager {
     private _pluginRegistry;
     /** The hook manager instance. */
     private _hookManager;
+    /** Indicates whether the setup phase has been completed. */
     private _setupDone;
+    /** The version of the p5.js library used. */
+    private _p5Version;
     /**
      * Gets the singleton instance of `P5AsciifierManager`.
      */
@@ -64,25 +67,28 @@ export declare class P5AsciifierManager {
     /**
      * Initializes the `p5.asciify` library by setting the `p5.js` instance.
      *
-     * For the provided {@link p5asciify} object this method is called automatically when the library is imported.
+     * This method is called automatically by the library when the `p5.js` instance is created.
+     *
+     * **If the `init` hook is disabled, this method will not be called automatically.**
      *
      * @param p The p5.js instance to use for the library.
-     * @ignore
      */
     init(p: p5): Promise<void>;
     /**
      * Sets up the `P5Asciifier` instances managed by the library.
      *
-     * For the provided {@link p5asciify} object this method is called automatically when the users `setup` function finished executing.
-     * @ignore
+     * This method is called automatically by the library after the `setup()` function of the `p5.js` instance has finished executing.
+     *
+     * **If the `afterSetup` hook is disabled, this method will not be called automatically.**
      */
     setup(): Promise<void>;
     /**
      * Executes the ASCII conversion rendering pipelines for each `P5Asciifier` instance managed by the library.
      *
-     * For the provided {@link p5asciify} object this method is called automatically when the users `draw` function finished executing.
+     * This method is called automatically by the library after the `draw()` function of the `p5.js` instance has finished executing.
      *
-     * @ignore
+     * **If the `post` hook is disabled, this method will not be called automatically.**
+     *
      */
     asciify(): void;
     /**
@@ -93,21 +99,19 @@ export declare class P5AsciifierManager {
      *
      * @param index The index of the `P5Asciifier` instance to return.
      * @returns The `P5Asciifier` instance at the specified index.
-     * @throws {@link P5AsciifyError} If the index is out of bounds.
+     * @throws If the index is out of bounds.
      */
-    asciifier(index?: number): P5Asciifier;
+    asciifier(index?: number): P5Asciifier | null;
     /**
      * Adds a new `P5Asciifier` instance to the library.
      * @param framebuffer   The framebuffer to capture for ASCII conversion.
      *                      If not provided, the main canvas of the `p5.js` instance will be used.
-     * @returns The newly created `P5Asciifier` instance.
-     * @throws {@link P5AsciifyError} If the framebuffer is not an instance of `p5.Framebuffer`.
+     * @returns The newly created `P5Asciifier` instance, or null if validation fails.
      */
-    add(framebuffer?: p5.Framebuffer): P5Asciifier | Promise<P5Asciifier>;
+    add(framebuffer?: p5.Framebuffer | p5.Graphics): P5Asciifier | Promise<P5Asciifier | null> | null;
     /**
      * Removes a `P5Asciifier` instance.
      * @param indexOrAsciifier The index of the `P5Asciifier` instance to remove, or the `P5Asciifier` instance itself.
-     * @throws {@link P5AsciifyError} If the index is out of bounds or the specified asciifier is not found.
      */
     remove(indexOrAsciifier: number | P5Asciifier): void;
     /**
@@ -116,25 +120,48 @@ export declare class P5AsciifierManager {
      */
     registerPlugin(plugin: P5AsciifyRendererPlugin): void;
     /**
-     * Activate a registered hook
+     * Activate a registered hook provided by `p5.asciify`.
+     *
      * @param hookType The type of hook to activate
      */
     activateHook(hookType: HookType): void;
     /**
-     * Deactivate a registered hook
+     * Deactivate a registered hook provided by `p5.asciify`.
      * @param hookType The type of hook to deactivate
      */
     deactivateHook(hookType: HookType): void;
+    /**
+     * Set the global error level for the library.
+     *
+     * Controls how validation failures and errors are handled throughout p5.asciify.
+     * This affects all asciifier instances and library operations.
+     *
+     * @param level - The error level to set. Use {@link P5AsciifyErrorLevel} enum values.
+     *
+     * @example
+     * ```typescript
+     * // Set to warning level for non-critical applications
+     * p5asciify.setErrorLevel(P5AsciifyErrorLevel.WARNING);
+     *
+     * // Silent mode for production environments
+     * p5asciify.setErrorLevel(P5AsciifyErrorLevel.SILENT);
+     * ```
+     *
+     * @see {@link P5AsciifyErrorLevel} for detailed descriptions of each level
+     */
+    setErrorLevel(level: P5AsciifyErrorLevel): void;
+    /**
+     * Apply shader precision fix for Android devices.
+     * This fixes p5.js shaders to use highp precision instead of mediump.
+     * Generally fixed in p5.js v1.11.3+, but this provides backwards compatibility.
+     * @private
+     */
+    private _applyShaderPrecisionFix;
     /**
      * Get the plugin registry
      * @returns The plugin registry instance
      */
     get pluginRegistry(): P5AsciifyPluginRegistry;
-    /**
-     * Get the hook manager
-     * @returns The hook manager instance
-     */
-    get hookManager(): P5AsciifyHookManager;
     /**
      * Returns the list of `P5Asciifier` instances managed by the library.
      */

@@ -33,7 +33,7 @@ export class P5AsciifyGrid {
      * @ignore
      */
     constructor(
-        private _texture: p5.Framebuffer,
+        private _texture: p5.Framebuffer | p5.Graphics,
         private _cellWidth: number,
         private _cellHeight: number,
     ) {
@@ -94,6 +94,21 @@ export class P5AsciifyGrid {
     public resetGridDimensions(): void {
         this._fixedDimensions = false;
         this.reset();
+    }
+
+    /**
+     * Update the texture used by the grid, and reset the grid dimensions.
+     * @param texture The new framebuffer texture to use for the grid.
+     * @ignore
+     */
+    public updateTexture(texture: p5.Framebuffer | p5.Graphics): void {
+        this._texture = texture;
+
+        if (!this._fixedDimensions) {
+            this.reset();
+        } else {
+            this._resizeGrid();
+        }
     }
 
     /**

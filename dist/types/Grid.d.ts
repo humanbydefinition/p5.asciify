@@ -27,7 +27,7 @@ export declare class P5AsciifyGrid {
      * @param _cellHeight The height of each cell in the grid.
      * @ignore
      */
-    constructor(_texture: p5.Framebuffer, _cellWidth: number, _cellHeight: number);
+    constructor(_texture: p5.Framebuffer | p5.Graphics, _cellWidth: number, _cellHeight: number);
     /**
      * Reset the grid to the default number of columns and rows based on the current canvas dimensions, and the grid cell dimensions.
      * @ignore
@@ -58,6 +58,12 @@ export declare class P5AsciifyGrid {
      * @ignore
      */
     resetGridDimensions(): void;
+    /**
+     * Update the texture used by the grid, and reset the grid dimensions.
+     * @param texture The new framebuffer texture to use for the grid.
+     * @ignore
+     */
+    updateTexture(texture: p5.Framebuffer | p5.Graphics): void;
     /**
      * Returns the width of each cell in the grid.
      */

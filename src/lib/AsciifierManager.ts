@@ -1,13 +1,15 @@
 import p5 from 'p5';
 import { P5Asciifier } from './Asciifier';
-import { P5AsciifyError } from './AsciifyError';
+import { P5AsciifyError } from './errors/AsciifyError';
 import { P5AsciifyHookManager } from './HookManager';
-import { HookType, P5AsciifyHookHandlers } from './types';
+import { HookType } from './types';
 
 import URSAFONT_BASE64 from './assets/fonts/ursafont_base64.txt?raw';
 import { P5AsciifyRendererPlugin } from './plugins/RendererPlugin';
 import { P5AsciifyPluginRegistry } from './plugins/PluginRegistry';
-import { compareVersions } from './utils';
+import { detectP5Version, isP5AsyncCapable } from './utils';
+import { errorHandler } from './errors';
+import { P5AsciifyErrorLevel } from './errors/ErrorHandler';
 
 /**
  * Manages the `p5.asciify` library by handling one or more `P5Asciifier` instances.
@@ -44,7 +46,11 @@ export class P5AsciifierManager {
     /** The hook manager instance. */
     private _hookManager: P5AsciifyHookManager;
 
+    /** Indicates whether the setup phase has been completed. */
     private _setupDone: boolean = false;
+
+    /** The version of the p5.js library used. */
+    private _p5Version!: string;
 
     /**
      * Gets the singleton instance of `P5AsciifierManager`.
@@ -114,28 +120,25 @@ export class P5AsciifierManager {
     /**
      * Initializes the `p5.asciify` library by setting the `p5.js` instance.
      * 
-     * For the provided {@link p5asciify} object this method is called automatically when the library is imported.
+     * This method is called automatically by the library when the `p5.js` instance is created.
+     * 
+     * **If the `init` hook is disabled, this method will not be called automatically.**
      * 
      * @param p The p5.js instance to use for the library.
-     * @ignore
      */
     public async init(p: p5): Promise<void> {
         this._p = p;
 
-        if (compareVersions(p.VERSION, "2.0.0") < 0) {
-            // For p5.js 1.x - use preload increment and callback
-            // Check if we're in global mode to avoid conflicts
-            if (!p._isGlobal) {
-                this._p.preload = () => { };
-            }
+        this._p5Version = detectP5Version(p);
 
-            this._p._incrementPreload();
-            this._baseFont = p.loadFont(URSAFONT_BASE64, (font) => {
-                this._asciifiers.forEach((asciifier) => {
-                    asciifier.init(p, font);
-                });
-            });
-        } else {
+        if (!this._p5Version) {
+            throw new P5AsciifyError("Could not determine p5.js version. Ensure p5.js is properly loaded.");
+        }
+
+        // Apply shader precision fix for Android devices
+        this._applyShaderPrecisionFix();
+
+        if (isP5AsyncCapable(this._p5Version)) {
             // For p5.js 2.0.0+ - use the Promise-based approach
             this._baseFont = await this._p.loadFont(URSAFONT_BASE64);
 
@@ -143,32 +146,51 @@ export class P5AsciifierManager {
             await Promise.all(
                 this._asciifiers.map(asciifier => asciifier.init(p, this._baseFont))
             );
+        } else {
+            // For p5.js 1.x - use preload increment and callback
+            // Check if we're in global mode to avoid conflicts
+
+
+            if (!this._p.preload && typeof (globalThis as any).preload !== 'function') {
+                this._p.preload = () => { };
+            }
+
+            this._p._incrementPreload();
+            await new Promise<void>((resolve) => {
+                this._baseFont = p.loadFont(URSAFONT_BASE64, (font) => {
+                    this._asciifiers.forEach((asciifier) => {
+                        asciifier.init(p, font);
+                    });
+
+                    resolve();
+                })
+            });
         }
     }
 
     /**
      * Sets up the `P5Asciifier` instances managed by the library.
      * 
-     * For the provided {@link p5asciify} object this method is called automatically when the users `setup` function finished executing.
-     * @ignore
+     * This method is called automatically by the library after the `setup()` function of the `p5.js` instance has finished executing.
+     * 
+     * **If the `afterSetup` hook is disabled, this method will not be called automatically.**
      */
     public async setup(): Promise<void> {
-
         this._sketchFramebuffer = this._p.createFramebuffer({
             depthFormat: this._p.UNSIGNED_INT,
             textureFiltering: this._p.NEAREST
         });
 
         // Check p5.js version to determine sync vs async setup
-        if (compareVersions(this._p.VERSION, "2.0.0") < 0) {
-            // For p5.js 1.x - synchronous setup
-            for (const asciifier of this._asciifiers) {
-                asciifier.setup(this._sketchFramebuffer);
-            }
-        } else {
+        if (isP5AsyncCapable(this._p5Version)) {
             // For p5.js 2.0+ - asynchronous setup
             for (const asciifier of this._asciifiers) {
                 await asciifier.setup(this._sketchFramebuffer);
+            }
+        } else {
+            // For p5.js 1.x - synchronous setup
+            for (const asciifier of this._asciifiers) {
+                asciifier.setup(this._sketchFramebuffer);
             }
         }
 
@@ -178,9 +200,10 @@ export class P5AsciifierManager {
     /**
      * Executes the ASCII conversion rendering pipelines for each `P5Asciifier` instance managed by the library.
      * 
-     * For the provided {@link p5asciify} object this method is called automatically when the users `draw` function finished executing.
+     * This method is called automatically by the library after the `draw()` function of the `p5.js` instance has finished executing.
      * 
-     * @ignore
+     * **If the `post` hook is disabled, this method will not be called automatically.**
+     * 
      */
     public asciify(): void {
         this._asciifiers.forEach((asciifier) => {
@@ -196,11 +219,29 @@ export class P5AsciifierManager {
      * 
      * @param index The index of the `P5Asciifier` instance to return.
      * @returns The `P5Asciifier` instance at the specified index.
-     * @throws {@link P5AsciifyError} If the index is out of bounds.
+     * @throws If the index is out of bounds.
      */
-    public asciifier(index: number = 0): P5Asciifier {
-        if (index < 0 || index >= this._asciifiers.length) {
-            throw new P5AsciifyError(`Invalid asciifier index: ${index}.`);
+    public asciifier(index: number = 0): P5Asciifier | null {
+        // Validate input parameter
+        const isValidInput = errorHandler.validate(
+            typeof index === 'number' && !isNaN(index) && Number.isInteger(index),
+            'Index must be a valid integer.',
+            { providedValue: index, method: 'asciifier' }
+        );
+
+        if (!isValidInput) {
+            return null; // Return early if input validation fails
+        }
+
+        // Validate index is within bounds
+        const isValidIndex = errorHandler.validate(
+            index >= 0 && index < this._asciifiers.length,
+            `Invalid asciifier index: ${index}. Valid range is 0 to ${this._asciifiers.length - 1}.`,
+            { providedValue: index, method: 'asciifier' }
+        );
+
+        if (!isValidIndex) {
+            return null; // Return early if index validation fails
         }
 
         return this._asciifiers[index];
@@ -210,22 +251,45 @@ export class P5AsciifierManager {
      * Adds a new `P5Asciifier` instance to the library.
      * @param framebuffer   The framebuffer to capture for ASCII conversion.
      *                      If not provided, the main canvas of the `p5.js` instance will be used.
-     * @returns The newly created `P5Asciifier` instance.
-     * @throws {@link P5AsciifyError} If the framebuffer is not an instance of `p5.Framebuffer`.
+     * @returns The newly created `P5Asciifier` instance, or null if validation fails.
      */
-    public add(framebuffer?: p5.Framebuffer): P5Asciifier | Promise<P5Asciifier> {
-        if (!this._p) {
-            throw new P5AsciifyError("Cannot add asciifier before initializing p5.asciify. Ensure p5.asciify is initialized first.");
-        }
+    public add(framebuffer?: p5.Framebuffer | p5.Graphics): P5Asciifier | Promise<P5Asciifier | null> | null {
+        // Validate setup is done
+        const isSetupDone = errorHandler.validate(
+            this._setupDone,
+            "Cannot add asciifier before initializing p5.asciify. Ensure p5.asciify is initialized first.",
+            { providedValue: this._setupDone, method: 'add' }
+        );
 
-        if (framebuffer !== undefined && !(framebuffer instanceof p5.Framebuffer)) {
-            throw new P5AsciifyError("Framebuffer must be an instance of p5.Framebuffer.");
+        if (!isSetupDone) {
+            return null; // Return early if setup validation fails
         }
 
         const asciifier = new P5Asciifier(this._pluginRegistry);
 
-        // For p5.js 1.x, use the synchronous initialization pattern
-        if (compareVersions(this._p.VERSION, "2.0.0") < 0) {
+        if (isP5AsyncCapable(this._p5Version)) {
+            // For p5.js 2.0+, return a Promise
+            return (async () => {
+                try {
+                    await asciifier.init(this._p, this._baseFont);
+
+                    if (this._setupDone && this._sketchFramebuffer) {
+                        await asciifier.setup(framebuffer ? framebuffer : this._sketchFramebuffer);
+                    }
+
+                    this._asciifiers.push(asciifier);
+                    return asciifier;
+                } catch (error) {
+                    // If async operations fail, validate and return null
+                    errorHandler.validate(
+                        false,
+                        `Failed to initialize asciifier: ${error instanceof Error ? error.message : 'Unknown error'}`,
+                        { providedValue: error, method: 'add' }
+                    );
+                    return null;
+                }
+            })();
+        } else {
             // For p5.js 1.x, synchronous init
             asciifier.init(this._p, this._baseFont);
 
@@ -236,41 +300,65 @@ export class P5AsciifierManager {
 
             this._asciifiers.push(asciifier);
             return asciifier;
-        } else {
-            // For p5.js 2.0+, return a Promise
-            return (async () => {
-                await asciifier.init(this._p, this._baseFont);
-
-                if (this._setupDone && this._sketchFramebuffer) {
-                    await asciifier.setup(framebuffer ? framebuffer : this._sketchFramebuffer);
-                }
-
-                this._asciifiers.push(asciifier);
-                return asciifier;
-            })();
         }
     }
 
     /**
      * Removes a `P5Asciifier` instance.
      * @param indexOrAsciifier The index of the `P5Asciifier` instance to remove, or the `P5Asciifier` instance itself.
-     * @throws {@link P5AsciifyError} If the index is out of bounds or the specified asciifier is not found.
      */
     public remove(indexOrAsciifier: number | P5Asciifier): void {
         if (typeof indexOrAsciifier === 'number') {
             // Handle removal by index
             const index = indexOrAsciifier;
-            if (index < 0 || index >= this._asciifiers.length) {
-                throw new P5AsciifyError(`Invalid asciifier index: ${index}.`);
+
+            const isValidInput = errorHandler.validate(
+                typeof index === 'number' && !isNaN(index) && Number.isInteger(index),
+                'Index must be a valid integer.',
+                { providedValue: index, method: 'remove' }
+            );
+
+            if (!isValidInput) {
+                return; // Return early if input validation fails
             }
+
+            const isValidIndex = errorHandler.validate(
+                index >= 0 && index < this._asciifiers.length,
+                `Invalid asciifier index: ${index}. Valid range is 0 to ${this._asciifiers.length - 1}.`,
+                { providedValue: index, method: 'remove' }
+            );
+
+            if (!isValidIndex) {
+                return; // Return early if index validation fails
+            }
+
             this._asciifiers.splice(index, 1);
         } else {
             // Handle removal by instance
             const asciifier = indexOrAsciifier;
-            const index = this._asciifiers.indexOf(asciifier);
-            if (index === -1) {
-                throw new P5AsciifyError('The specified asciifier was not found.');
+
+            const isValidInstance = errorHandler.validate(
+                asciifier && asciifier instanceof P5Asciifier,
+                'Asciifier must be a valid P5Asciifier instance.',
+                { providedValue: asciifier, method: 'remove' }
+            );
+
+            if (!isValidInstance) {
+                return; // Return early if instance validation fails
             }
+
+            const index = this._asciifiers.indexOf(asciifier);
+
+            const asciifierExists = errorHandler.validate(
+                index !== -1,
+                'The specified asciifier was not found in the list.',
+                { providedValue: asciifier, method: 'remove' }
+            );
+
+            if (!asciifierExists) {
+                return; // Return early if asciifier not found
+            }
+
             this._asciifiers.splice(index, 1);
         }
     }
@@ -284,7 +372,8 @@ export class P5AsciifierManager {
     }
 
     /**
-     * Activate a registered hook
+     * Activate a registered hook provided by `p5.asciify`.
+     * 
      * @param hookType The type of hook to activate
      */
     public activateHook(hookType: HookType): void {
@@ -292,7 +381,7 @@ export class P5AsciifierManager {
     }
 
     /**
-     * Deactivate a registered hook
+     * Deactivate a registered hook provided by `p5.asciify`.
      * @param hookType The type of hook to deactivate
      */
     public deactivateHook(hookType: HookType): void {
@@ -300,19 +389,111 @@ export class P5AsciifierManager {
     }
 
     /**
-     * Get the plugin registry
-     * @returns The plugin registry instance
+     * Set the global error level for the library.
+     * 
+     * Controls how validation failures and errors are handled throughout p5.asciify.
+     * This affects all asciifier instances and library operations.
+     * 
+     * @param level - The error level to set. Use {@link P5AsciifyErrorLevel} enum values.
+     * 
+     * @example
+     * ```typescript
+     * // Set to warning level for non-critical applications
+     * p5asciify.setErrorLevel(P5AsciifyErrorLevel.WARNING);
+     * 
+     * // Silent mode for production environments
+     * p5asciify.setErrorLevel(P5AsciifyErrorLevel.SILENT);
+     * ```
+     * 
+     * @see {@link P5AsciifyErrorLevel} for detailed descriptions of each level
      */
-    public get pluginRegistry(): P5AsciifyPluginRegistry {
-        return this._pluginRegistry;
+    public setErrorLevel(level: P5AsciifyErrorLevel): void {
+        errorHandler.setGlobalLevel(level);
     }
 
     /**
-     * Get the hook manager
-     * @returns The hook manager instance
+     * Apply shader precision fix for Android devices.
+     * This fixes p5.js shaders to use highp precision instead of mediump.
+     * Generally fixed in p5.js v1.11.3+, but this provides backwards compatibility.
+     * @private
      */
-    public get hookManager(): P5AsciifyHookManager {
-        return this._hookManager;
+    private _applyShaderPrecisionFix(): void {
+        const shadersToReplace = [
+            ['_getImmediateModeShader', '_defaultImmediateModeShader'],
+            ['_getNormalShader', '_defaultNormalShader'],
+            ['_getColorShader', '_defaultColorShader'],
+            ['_getPointShader', '_defaultPointShader'],
+            ['_getLineShader', '_defaultLineShader'],
+            ['_getFontShader', '_defaultFontShader'],
+        ];
+
+        // Try multiple strategies to find RendererGL class
+        let rendererGL = null;
+        const rendererSources = [
+            // Strategy 1: Instance constructor (works in flok.cc)
+            () => this._p?.constructor?.RendererGL,
+
+            // Strategy 2: Global p5 (works in P5LIVE)
+            () => (typeof p5 !== 'undefined' && p5.RendererGL) ? p5.RendererGL : undefined,
+        ];
+
+        // Try each renderer source until we find one that works
+        for (const getRenderer of rendererSources) {
+            try {
+                const renderer = getRenderer();
+                if (renderer && renderer.prototype) {
+                    rendererGL = renderer;
+                    break;
+                }
+            } catch (e) {
+                // Continue to next strategy if this one fails
+                continue;
+            }
+        }
+
+        // If we couldn't find RendererGL, exit gracefully
+        if (!rendererGL || !rendererGL.prototype) {
+            console.warn('p5.asciify: Could not find RendererGL class, skipping shader precision fix for Android devices running below p5.js v1.11.3.');
+            return;
+        }
+
+        // Apply the fix to the renderer prototype
+        for (const [method, cacheKey] of shadersToReplace) {
+            // Check if the method exists on the prototype
+            if (typeof rendererGL.prototype[method] === 'function') {
+                const prevMethod = rendererGL.prototype[method];
+
+                rendererGL.prototype[method] = function () {
+                    if (!this[cacheKey]) {
+                        this[cacheKey] = prevMethod.call(this);
+
+                        // Safely apply the precision fix
+                        if (this[cacheKey] && this[cacheKey]._vertSrc) {
+                            this[cacheKey]._vertSrc = this[cacheKey]._vertSrc.replace(
+                                /mediump/g,
+                                'highp'
+                            );
+                        }
+                        if (this[cacheKey] && this[cacheKey]._fragSrc) {
+                            this[cacheKey]._fragSrc = this[cacheKey]._fragSrc.replace(
+                                /mediump/g,
+                                'highp'
+                            );
+                        }
+                    }
+
+                    return this[cacheKey];
+                };
+            }
+        }
+    }
+
+    /**
+     * Get the plugin registry
+     * @returns The plugin registry instance
+     */
+    get pluginRegistry(): P5AsciifyPluginRegistry {
+        return this._pluginRegistry;
     }
 
     /**

@@ -2,6 +2,31 @@
 
 > **HookType** = `"init"` \| `"afterSetup"` \| `"pre"` \| `"post"`
 
-Defined in: [types.ts:12](https://github.com/humanbydefinition/p5.asciify/blob/f7ea3aaf85f74af4820425d6e8a41eecf5d02d32/src/lib/types.ts#L12)
+Defined in: [types.ts:37](https://github.com/humanbydefinition/p5.asciify/blob/db219ebd919c345fc51a95258e4a8ccb5b2fd6a3/src/lib/types.ts#L37)
 
-Hook types supported by the p5.asciify hook manager
+Hook types supported by the p5.asciify hook manager.
+
+These hooks integrate with p5.js lifecycle methods to automatically handle
+ASCII conversion setup and rendering without requiring manual intervention.
+
+By default, all hooks are activated, but you can selectively deactivate or re-activate them.
+
+- `'init'`: Called once after p5.js is initialized to initialize p5.asciify.
+  Initializes the core library components.
+- `'afterSetup'`: Called once after the p5.js `setup()` function is complete.
+  Fully sets up the library for use and calls user's `setupAsciify()` if defined.
+- `'pre'`: Called before each p5.js `draw()` function execution.
+  Starts capturing the canvas content for ASCII conversion.
+- `'post'`: Called after each p5.js `draw()` function execution.
+  Performs ASCII conversion, renders output to canvas, and calls user's `drawAsciify()` if defined.
+
+## Example
+
+```typescript
+// Activate specific hooks
+p5asciify.activateHook("init");
+p5asciify.activateHook("post");
+
+// Deactivate a hook
+p5asciify.deactivateHook("pre");
+```

@@ -22,6 +22,7 @@ export declare class P5Asciifier {
     private _rendererManager;
     /** The font size for the ASCII renderers. */
     private _fontSize;
+    /** The background color for the ASCII output, which is used to fill the space not covered by cells in the grid. */
     private _backgroundColor;
     /** The `p5.js` instance. */
     private _p;
@@ -29,6 +30,7 @@ export declare class P5Asciifier {
     private _renderToCanvas;
     /** The plugin registry instance. */
     private _pluginRegistry;
+    /** Indicates if the setup has been completed. */
     private _setupDone;
     /**
      * Creates a new instance of the `P5Asciifier` class.
@@ -53,7 +55,7 @@ export declare class P5Asciifier {
      *
      * @ignore
      */
-    setup(captureFramebuffer: p5.Framebuffer): Promise<void>;
+    setup(captureFramebuffer: p5.Framebuffer | p5.Graphics): Promise<void>;
     /**
      * Renders the ASCII output to the canvas.
      *
@@ -65,7 +67,7 @@ export declare class P5Asciifier {
     /**
      * Sets the font size for the ASCII renderers of the asciifier.
      * @param fontSize The font size to set.
-     * @throws {@link P5AsciifyError} - If the font size is not a positive number.
+     * @throws If the font size is not a positive number.
      *
      * @example
      * ```javascript
@@ -95,13 +97,23 @@ export declare class P5Asciifier {
      */
     renderers(): P5AsciifyRendererManager;
     /**
+     * Sets the framebuffer or graphics object to capture for ASCII conversion.
+     *
+     * Updates the capture source that will be processed by the ASCII rendering pipeline.
+     * This allows switching between different rendering targets without recreating the asciifier.
+     *
+     * @param captureFramebuffer - The framebuffer or graphics object to capture from.
+     *                            Can be a p5.Framebuffer or p5.Graphics.
+     */
+    setCaptureTexture(captureFramebuffer: p5.Framebuffer | p5.Graphics): void;
+    /**
      * Sets the font for the ascii renderers in the rendering pipeline of the asciifier.
      * @param font The `p5.Font` object to use for ASCII rendering.
      * @param options An object containing options affecting what happens after the font is loaded.
      * @param options.updateCharacters If `true` *(default)*, updates set character sets in pre-defined renderers like the brightness-based ASCII renderer.
      *                                 This might cause an error if the new font does not contain the character sets used with the previous font.
      *                                 If `false`, those character sets are not updated, potentially leading to missing/different characters in the ASCII output if the mapping is not the same.
-     * @throws {@link P5AsciifyError} - If the font parameter is invalid.
+     * @throws If the font parameter is invalid.
      *
      * @example
      * ```javascript
@@ -127,7 +139,7 @@ export declare class P5Asciifier {
      * To make the background transparent, pass an appropriate color value with an alpha value of `0`.
      *
      * @param color The color to set. Needs to be a valid type to pass to the `background()` function provided by p5.js.
-     * @throws {@link P5AsciifyError} - If the color is not a string, array or `p5.Color`.
+     * @throws If the color is not a string, array or `p5.Color`.
      *
      * @example
      * ```javascript
@@ -169,7 +181,7 @@ export declare class P5Asciifier {
     /**
      * Saves the current ASCII output as an SVG file.
      * @param options The options for saving the SVG file.
-     * @throws {@link P5AsciifyError} - If no renderer is available to fetch ASCII output from.
+     * @throws If no renderer is available to fetch ASCII output from.
      *
      * @example
      * ```javascript
@@ -194,7 +206,7 @@ export declare class P5Asciifier {
      * Returns the current ASCII output as an SVG string.
      * @param options Options for SVG generation (same as saveSVG options except filename)
      * @returns SVG string representation of the ASCII output
-     * @throws {@link P5AsciifyError} - If no renderer is available to fetch ASCII output from.
+     * @throws If no renderer is available to fetch ASCII output from.
      *
      * @example
      * ```javascript
@@ -220,14 +232,14 @@ export declare class P5Asciifier {
     /**
      * Saves the current ASCII output as a JSON file.
      * @param options The options for saving the JSON file.
-     * @throws {@link P5AsciifyError} - If no renderer is available to fetch ASCII output from.
+     * @throws If no renderer is available to fetch ASCII output from.
      */
     saveJSON(options?: JSONExportOptions): void;
     /**
      * Returns the current ASCII output as a JSON string.
      * @param options Options for JSON generation (same as saveJSON options except filename)
      * @returns JSON string representation of the ASCII output
-     * @throws {@link P5AsciifyError} - If no renderer is available to fetch ASCII output from.
+     * @throws If no renderer is available to fetch ASCII output from.
      *
      * @example
      * ```javascript
@@ -253,13 +265,13 @@ export declare class P5Asciifier {
     /**
      * Generates the ASCII output as an array of string rows.
      * @returns Array of strings representing ASCII output.
-     * @throws {@link P5AsciifyError} - If no renderer is available.
+     * @throws If no renderer is available.
      */
     private _generateAsciiTextOutput;
     /**
      * Returns the current ASCII output as a string.
      * @returns Multi-line string representation of the ASCII output.
-     * @throws {@link P5AsciifyError} - If no renderer is available to fetch ASCII output from.
+     * @throws If no renderer is available to fetch ASCII output from.
      *
      * @example
      * ```javascript
@@ -275,7 +287,7 @@ export declare class P5Asciifier {
     /**
      * Saves the ASCII output to a text file.
      * @param filename The filename to save the text file as. If not provided, a default filename is used.
-     * @throws {@link P5AsciifyError} - If no renderer is available to fetch ASCII output from.
+     * @throws If no renderer is available to fetch ASCII output from.
      *
      * @example
      * ```javascript
@@ -320,14 +332,14 @@ export declare class P5Asciifier {
      *
      * @param json The JSON string or object to load.
      * @returns An object containing the framebuffers for character, primary color, secondary color, transform, and rotation.
-     * @throws {@link P5AsciifyError} - If the JSON format is invalid or unsupported.
+     * @throws If the JSON format is invalid or unsupported.
      */
     loadJSON(json: string | object): {
-        characterFramebuffer: p5.Framebuffer;
-        primaryColorFramebuffer: p5.Framebuffer;
-        secondaryColorFramebuffer: p5.Framebuffer;
-        transformFramebuffer: p5.Framebuffer;
-        rotationFramebuffer: p5.Framebuffer;
+        characterFramebuffer: p5.Framebuffer | null;
+        primaryColorFramebuffer: p5.Framebuffer | null;
+        secondaryColorFramebuffer: p5.Framebuffer | null;
+        transformFramebuffer: p5.Framebuffer | null;
+        rotationFramebuffer: p5.Framebuffer | null;
     };
     /**
      * Sets the p5.js `fill()` color to the color of the given character in the font texture atlas.
@@ -419,7 +431,7 @@ export declare class P5Asciifier {
      *
      * @ignore
      */
-    get captureFramebuffer(): p5.Framebuffer;
+    get captureFramebuffer(): p5.Framebuffer | p5.Graphics;
     /**
      * Returns the ASCII output texture as a `p5.Framebuffer`, which can be used for further processing or rendering.
      * Can also be used via the p5.js `texture()` function.

@@ -1,5 +1,5 @@
 import { P5AsciifyRendererPlugin } from './RendererPlugin';
-import { P5AsciifyError } from '../AsciifyError';
+import { errorHandler } from '../errors';
 
 /**
  * Registry that manages renderer plugins for p5.asciify.
@@ -11,16 +11,46 @@ export class P5AsciifyPluginRegistry {
     /**
      * Registers a new renderer plugin.
      * @param plugin The renderer plugin to register
-     * @throws {@link P5AsciifyError} - If a plugin with the same ID is already registered or conflicts with built-in renderers
+     * @throws If a plugin with the same ID is already registered or conflicts with built-in renderers
      */
-    public register(plugin: P5AsciifyRendererPlugin): void {
-        if (this._plugins.has(plugin.id)) {
-            throw new P5AsciifyError(`A plugin with ID '${plugin.id}' is already registered`);
+    public register(plugin: P5AsciifyRendererPlugin): boolean {
+        // Validate plugin parameter
+        const isValidPlugin = errorHandler.validate(
+            plugin && typeof plugin === 'object',
+            'Plugin must be a valid P5AsciifyRendererPlugin object.',
+            { providedValue: plugin, method: 'register' }
+        );
+
+        if (!isValidPlugin) {
+            return false; // Return early if plugin validation fails
         }
-        
+
+        // Validate plugin has required ID property
+        const hasValidId = errorHandler.validate(
+            typeof plugin.id === 'string' && plugin.id.trim() !== '',
+            'Plugin must have a valid non-empty ID.',
+            { providedValue: plugin.id, method: 'register' }
+        );
+
+        if (!hasValidId) {
+            return false; // Return early if ID validation fails
+        }
+
+        // Validate plugin is not already registered
+        const isNotDuplicate = errorHandler.validate(
+            !this._plugins.has(plugin.id),
+            `A plugin with ID '${plugin.id}' is already registered.`,
+            { providedValue: plugin.id, method: 'register' }
+        );
+
+        if (!isNotDuplicate) {
+            return false; // Return early if plugin already exists
+        }
+
         this._plugins.set(plugin.id, plugin);
+        return true;
     }
-    
+
     /**
      * Check if a plugin with the given ID is registered
      * @param id Plugin ID to check
@@ -29,7 +59,7 @@ export class P5AsciifyPluginRegistry {
     public has(id: string): boolean {
         return this._plugins.has(id);
     }
-    
+
     /**
      * Get a plugin by its ID
      * @param id Plugin ID
@@ -38,7 +68,7 @@ export class P5AsciifyPluginRegistry {
     public get(id: string): P5AsciifyRendererPlugin | undefined {
         return this._plugins.get(id);
     }
-    
+
     /**
      * Unregister a plugin by its ID
      * @param id Plugin ID to remove
@@ -47,7 +77,7 @@ export class P5AsciifyPluginRegistry {
     public unregister(id: string): boolean {
         return this._plugins.delete(id);
     }
-    
+
     /**
      * Get all registered plugin IDs
      * @returns Array of plugin IDs
@@ -55,7 +85,7 @@ export class P5AsciifyPluginRegistry {
     public getIds(): string[] {
         return Array.from(this._plugins.keys());
     }
-    
+
     /**
      * Get all registered plugins
      * @returns Array of plugin instances
