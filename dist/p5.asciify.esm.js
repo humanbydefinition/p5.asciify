@@ -3871,7 +3871,7 @@ const V = class V {
       throw new Y("Could not determine p5.js version. Ensure p5.js is properly loaded.");
     this._applyShaderPrecisionFix(), R(this._p5Version) ? (this._baseFont = await this._p.loadFont(CA), await Promise.all(
       this._asciifiers.map((e) => e.init(A, this._baseFont))
-    )) : (!A._isGlobal && !this._p.preload && (this._p.preload = () => {
+    )) : (!this._p.preload && typeof globalThis.preload != "function" && (this._p.preload = () => {
     }), this._p._incrementPreload(), await new Promise((e) => {
       this._baseFont = A.loadFont(CA, (r) => {
         this._asciifiers.forEach((t) => {
