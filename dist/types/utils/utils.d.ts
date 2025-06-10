@@ -38,11 +38,6 @@ export declare const isP5AsyncCapable: (version: string) => boolean;
 export declare const isValidP5Color: (p: p5, color: any) => boolean;
 export declare const isValidP5Font: (p: p5, font: any) => boolean;
 /**
- * Detect if p5.js is running in global mode by checking multiple indicators
- * @private
- */
-export declare const isP5GlobalMode: (p: p5) => boolean;
-/**
  * Compares two version strings like `'1.8.0'` and `'1.11.3'`.
  * @param v1 The first version string.
  * @param v2 The second version string.
