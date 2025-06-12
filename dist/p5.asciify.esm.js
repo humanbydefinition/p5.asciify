@@ -2961,7 +2961,7 @@ class iA {
    * @ignore
    */
   asciify() {
-    this._rendererManager.render(this._backgroundColor), this._renderToCanvas && (this._rendererManager.hasEnabledRenderers ? (this._p.background(this._backgroundColor), this._p.image(this._rendererManager.asciiDisplayRenderer.resultFramebuffer, -(this._p.width / 2) + this._grid.offsetX, -(this._p.height / 2) + this._grid.offsetY)) : (this._p.clear(), this._p.image(this._captureFramebuffer, -(this._captureFramebuffer.width / 2), -(this._captureFramebuffer.height / 2))));
+    this._rendererManager.render(this._backgroundColor), this._renderToCanvas && (this._rendererManager.hasEnabledRenderers ? this._p.image(this._rendererManager.asciiDisplayRenderer.resultFramebuffer, -(this._p.width / 2) + this._grid.offsetX, -(this._p.height / 2) + this._grid.offsetY) : (this._p.clear(), this._p.image(this._captureFramebuffer, -(this._captureFramebuffer.width / 2), -(this._captureFramebuffer.height / 2))));
   }
   /**
    * Sets the font size for the ASCII renderers of the asciifier.
@@ -3067,13 +3067,11 @@ class iA {
    *      p5asciify.asciifier().background('#000000');
    *  }
    * ```
+   * 
+   * @ignore
    */
   background(A) {
-    g.validate(
-      typeof A == "string" || Array.isArray(A) || W(this._p, A),
-      `Invalid color type: ${typeof A}. Expected string, array or p5.Color.`,
-      { providedValue: A, method: "background" }
-    ) && (this._backgroundColor = A);
+    this._backgroundColor = A;
   }
   /**
    * Sets the grid dimensions for the ASCII renderers. 
@@ -3819,6 +3817,8 @@ const V = class V {
     o(this, "_setupDone", !1);
     /** The version of the p5.js library used. */
     o(this, "_p5Version");
+    /** The background color for the ASCII outputs, which is used to fill transparent areas. */
+    o(this, "_backgroundColor", "#000000");
     if (V._instance)
       throw new Y("P5AsciifierManager is a singleton and cannot be instantiated directly. Use P5AsciifierManager.getInstance() instead.");
     this._pluginRegistry = new bA(), this._asciifiers = [new iA(this._pluginRegistry)], this._hookManager = BA.getInstance(), this._hookManager.initialize(this);
@@ -3900,6 +3900,31 @@ const V = class V {
     this._setupDone = !0;
   }
   /**
+   * Sets the background color for the ascii renderers, occupying all the space not covered by cells in the grid. 
+   * 
+   * To make the background transparent, pass an appropriate color value with an alpha value of `0`.
+   * 
+   * @param color The color to set. Needs to be a valid type to pass to the `background()` function provided by p5.js.
+   * @throws If the color is not a string, array or `p5.Color`.
+   * 
+   * @example
+   * ```javascript
+   *  function setupAsciify() {
+   *      // Set the background color to black.
+   *      p5asciify.background('#000000');
+   *  }
+   * ```
+   */
+  background(A) {
+    g.validate(
+      typeof A == "string" || Array.isArray(A) || W(this._p, A),
+      `Invalid color type: ${typeof A}. Expected string, array or p5.Color.`,
+      { providedValue: A, method: "background" }
+    ) && (this._backgroundColor = A, this._asciifiers.forEach((r) => {
+      r.background(A);
+    }));
+  }
+  /**
    * Executes the ASCII conversion rendering pipelines for each `P5Asciifier` instance managed by the library.
    * 
    * This method is called automatically by the library after the `draw()` function of the `p5.js` instance has finished executing.
@@ -3908,7 +3933,7 @@ const V = class V {
    * 
    */
   asciify() {
-    this._asciifiers.forEach((A) => {
+    this._p.background(this._backgroundColor), this._asciifiers.forEach((A) => {
       A.asciify();
     });
   }

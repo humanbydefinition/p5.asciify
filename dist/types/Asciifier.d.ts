@@ -148,6 +148,8 @@ export declare class P5Asciifier {
      *      p5asciify.asciifier().background('#000000');
      *  }
      * ```
+     *
+     * @ignore
      */
     background(color: string | p5.Color | [number, number?, number?, number?]): void;
     /**

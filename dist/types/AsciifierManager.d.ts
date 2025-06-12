@@ -36,6 +36,8 @@ export declare class P5AsciifierManager {
     private _setupDone;
     /** The version of the p5.js library used. */
     private _p5Version;
+    /** The background color for the ASCII outputs, which is used to fill transparent areas. */
+    private _backgroundColor;
     /**
      * Gets the singleton instance of `P5AsciifierManager`.
      */
@@ -82,6 +84,23 @@ export declare class P5AsciifierManager {
      * **If the `afterSetup` hook is disabled, this method will not be called automatically.**
      */
     setup(): Promise<void>;
+    /**
+     * Sets the background color for the ascii renderers, occupying all the space not covered by cells in the grid.
+     *
+     * To make the background transparent, pass an appropriate color value with an alpha value of `0`.
+     *
+     * @param color The color to set. Needs to be a valid type to pass to the `background()` function provided by p5.js.
+     * @throws If the color is not a string, array or `p5.Color`.
+     *
+     * @example
+     * ```javascript
+     *  function setupAsciify() {
+     *      // Set the background color to black.
+     *      p5asciify.background('#000000');
+     *  }
+     * ```
+     */
+    background(color: string | p5.Color | [number, number?, number?, number?]): void;
     /**
      * Executes the ASCII conversion rendering pipelines for each `P5Asciifier` instance managed by the library.
      *
