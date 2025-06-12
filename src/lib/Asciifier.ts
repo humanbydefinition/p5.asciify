@@ -116,7 +116,6 @@ export class P5Asciifier {
 
         if (this._renderToCanvas) {
             if (this._rendererManager.hasEnabledRenderers) {
-                this._p.background(this._backgroundColor as p5.Color);
                 this._p.image(this._rendererManager.asciiDisplayRenderer.resultFramebuffer, -(this._p.width / 2) + this._grid.offsetX, -(this._p.height / 2) + this._grid.offsetY);
             } else {
                 this._p.clear();
@@ -279,19 +278,10 @@ export class P5Asciifier {
      *      p5asciify.asciifier().background('#000000');
      *  }
      * ```
+     * 
+     * @ignore
      */
     public background(color: string | p5.Color | [number, number?, number?, number?]) {
-        const isValid = errorHandler.validate(
-            typeof color === 'string' || Array.isArray(color) || isValidP5Color(this._p, color),
-            `Invalid color type: ${typeof color}. Expected string, array or p5.Color.`,
-            { providedValue: color, method: 'background' }
-        );
-
-
-        if (!isValid) {
-            return; // Early return if the color is not valid
-        }
-
         this._backgroundColor = color;
     }
 

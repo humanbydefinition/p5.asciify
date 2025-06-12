@@ -7,7 +7,7 @@ import { HookType } from './types';
 import URSAFONT_BASE64 from './assets/fonts/ursafont_base64.txt?raw';
 import { P5AsciifyRendererPlugin } from './plugins/RendererPlugin';
 import { P5AsciifyPluginRegistry } from './plugins/PluginRegistry';
-import { detectP5Version, isP5AsyncCapable } from './utils';
+import { detectP5Version, isP5AsyncCapable, isValidP5Color } from './utils';
 import { errorHandler } from './errors';
 import { P5AsciifyErrorLevel } from './errors/ErrorHandler';
 
@@ -51,6 +51,10 @@ export class P5AsciifierManager {
 
     /** The version of the p5.js library used. */
     private _p5Version!: string;
+
+    /** The background color for the ASCII outputs, which is used to fill transparent areas. */
+    private _backgroundColor: string | p5.Color | [number, number?, number?, number?] = "#000000";
+    
 
     /**
      * Gets the singleton instance of `P5AsciifierManager`.
@@ -198,6 +202,40 @@ export class P5AsciifierManager {
     }
 
     /**
+     * Sets the background color for the ascii renderers, occupying all the space not covered by cells in the grid. 
+     * 
+     * To make the background transparent, pass an appropriate color value with an alpha value of `0`.
+     * 
+     * @param color The color to set. Needs to be a valid type to pass to the `background()` function provided by p5.js.
+     * @throws If the color is not a string, array or `p5.Color`.
+     * 
+     * @example
+     * ```javascript
+     *  function setupAsciify() {
+     *      // Set the background color to black.
+     *      p5asciify.background('#000000');
+     *  }
+     * ```
+     */
+    public background(color: string | p5.Color | [number, number?, number?, number?]) {
+        const isValid = errorHandler.validate(
+            typeof color === 'string' || Array.isArray(color) || isValidP5Color(this._p, color),
+            `Invalid color type: ${typeof color}. Expected string, array or p5.Color.`,
+            { providedValue: color, method: 'background' }
+        );
+
+        if (!isValid) {
+            return; // Early return if the color is not valid
+        }
+
+        this._backgroundColor = color;
+
+        this._asciifiers.forEach((asciifier) => {
+            asciifier.background(color);
+        });
+    }
+
+    /**
      * Executes the ASCII conversion rendering pipelines for each `P5Asciifier` instance managed by the library.
      * 
      * This method is called automatically by the library after the `draw()` function of the `p5.js` instance has finished executing.
@@ -206,6 +244,7 @@ export class P5AsciifierManager {
      * 
      */
     public asciify(): void {
+        this._p.background(this._backgroundColor as p5.Color);
         this._asciifiers.forEach((asciifier) => {
             asciifier.asciify();
         });
