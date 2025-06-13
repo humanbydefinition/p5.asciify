@@ -1,6 +1,6 @@
 # Interface: JSONExportOptions
 
-Defined in: [utils/export/JSONExporter.ts:9](https://github.com/humanbydefinition/p5.asciify/blob/acb3864bb87a5b0a5cc804ffa11c35a35c3de1d3/src/lib/utils/export/JSONExporter.ts#L9)
+Defined in: [utils/export/JSONExporter.ts:9](https://github.com/humanbydefinition/p5.asciify/blob/ace1342891258faf7ebc3f7702cd043e86c2060a/src/lib/utils/export/JSONExporter.ts#L9)
 
 Options for JSON export.
 
@@ -8,6 +8,6 @@ Options for JSON export.
 
 | Property                                            | Type      | Description                                                                         | Defined in                                                                                                                                                                |
 | --------------------------------------------------- | --------- | ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| <a id="filename"></a> `filename?`                   | `string`  | The filename to save the JSON file as. If not provided, a default filename is used. | [utils/export/JSONExporter.ts:13](https://github.com/humanbydefinition/p5.asciify/blob/acb3864bb87a5b0a5cc804ffa11c35a35c3de1d3/src/lib/utils/export/JSONExporter.ts#L13) |
-| <a id="includeemptycells"></a> `includeEmptyCells?` | `boolean` | Whether to include empty/space cells in the output. Default is `true`.              | [utils/export/JSONExporter.ts:19](https://github.com/humanbydefinition/p5.asciify/blob/acb3864bb87a5b0a5cc804ffa11c35a35c3de1d3/src/lib/utils/export/JSONExporter.ts#L19) |
-| <a id="prettyprint"></a> `prettyPrint?`             | `boolean` | Whether to pretty-print the JSON with indentation. Default is `true`.               | [utils/export/JSONExporter.ts:25](https://github.com/humanbydefinition/p5.asciify/blob/acb3864bb87a5b0a5cc804ffa11c35a35c3de1d3/src/lib/utils/export/JSONExporter.ts#L25) |
+| <a id="filename"></a> `filename?`                   | `string`  | The filename to save the JSON file as. If not provided, a default filename is used. | [utils/export/JSONExporter.ts:13](https://github.com/humanbydefinition/p5.asciify/blob/ace1342891258faf7ebc3f7702cd043e86c2060a/src/lib/utils/export/JSONExporter.ts#L13) |
+| <a id="includeemptycells"></a> `includeEmptyCells?` | `boolean` | Whether to include empty/space cells in the output. Default is `true`.              | [utils/export/JSONExporter.ts:19](https://github.com/humanbydefinition/p5.asciify/blob/ace1342891258faf7ebc3f7702cd043e86c2060a/src/lib/utils/export/JSONExporter.ts#L19) |
+| <a id="prettyprint"></a> `prettyPrint?`             | `boolean` | Whether to pretty-print the JSON with indentation. Default is `true`.               | [utils/export/JSONExporter.ts:25](https://github.com/humanbydefinition/p5.asciify/blob/ace1342891258faf7ebc3f7702cd043e86c2060a/src/lib/utils/export/JSONExporter.ts#L25) |
