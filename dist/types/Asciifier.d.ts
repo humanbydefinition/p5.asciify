@@ -134,7 +134,7 @@ export declare class P5Asciifier {
         updateCharacters: boolean;
     }): void;
     /**
-     * Sets the background color for the ascii renderers, occupying all the space not covered by cells in the grid.
+     * Sets the background color for the resulting {@link texture} of the ASCII output, and the SVG export.
      *
      * To make the background transparent, pass an appropriate color value with an alpha value of `0`.
      *
