@@ -138,7 +138,7 @@ class FA {
     this._fixedDimensions = A;
   }
 }
-const O = (a) => {
+const J = (a) => {
   const A = [
     // Instance version (most common in standard setups)
     () => a == null ? void 0 : a.VERSION,
@@ -169,7 +169,7 @@ const O = (a) => {
       continue;
     }
   return "1.0.0";
-}, R = (a) => $(a, "2.0.0") >= 0, W = (a, A) => {
+}, R = (a) => $(a, "2.0.0") >= 0, O = (a, A) => {
   var e;
   return A ? !!((e = a == null ? void 0 : a.constructor) != null && e.Color && A instanceof a.constructor.Color || typeof p < "u" && p.Color && A instanceof p.Color) : !1;
 }, DA = (a, A) => {
@@ -224,8 +224,8 @@ class sA {
     let D = 0;
     for (let M = 0; M < f; M++)
       for (let w = 0; w < u; w++) {
-        const P = D * 4, z = _[P], G = _[P + 1];
-        let x = z + (G << 8);
+        const P = D * 4, z = _[P], V = _[P + 1];
+        let x = z + (V << 8);
         x >= y.length && (x = y.length - 1);
         let H = {
           r: d[P],
@@ -238,7 +238,7 @@ class sA {
           b: l[P + 2],
           a: l[P + 3]
         };
-        const Z = m[P], j = m[P + 1], q = m[P + 2], AA = Z === 255, dA = j === 255, eA = q === 255;
+        const Z = m[P], L = m[P + 1], q = m[P + 2], AA = Z === 255, dA = L === 255, eA = q === 255;
         if (AA) {
           const xA = H;
           H = U, U = xA;
@@ -329,7 +329,7 @@ class sA {
   <text x="${m}" y="${B}" font-family="monospace" font-size="${C}px" fill="${u}" text-anchor="middle" dominant-baseline="middle"${b}>${this.escapeXml(_.character)}</text>`;
     } else {
       let C = 1;
-      R(O(this._p)) ? C = c.fontSize / c.font.data.head.unitsPerEm : C = c.fontSize / c.font.font.unitsPerEm;
+      R(J(this._p)) ? C = c.fontSize / c.font.data.head.unitsPerEm : C = c.fontSize / c.font.font.unitsPerEm;
       const I = t + (s - _.advanceWidth * C) / 2, k = i + (n + c.fontSize * 0.7) / 2, D = _.getPath(I, k, c.fontSize).toSVG().match(/d="([^"]+)"/);
       if (D && D[1]) {
         if (b && (l += `
@@ -414,7 +414,7 @@ class oA {
           I++;
           continue;
         }
-        let G = {
+        let V = {
           r: _[D],
           g: _[D + 1],
           b: _[D + 2],
@@ -425,16 +425,16 @@ class oA {
           b: d[D + 2],
           a: d[D + 3]
         };
-        const H = l[D], U = l[D + 1], Z = l[D + 2], j = H === 255, q = U === 255, AA = Z === 255;
-        if (j) {
-          const tA = G;
-          G = x, x = tA;
+        const H = l[D], U = l[D + 1], Z = l[D + 2], L = H === 255, q = U === 255, AA = Z === 255;
+        if (L) {
+          const tA = V;
+          V = x, x = tA;
         }
         const eA = m[D] * (360 / 256), fA = this.rgbaToHex(
-          G.r,
-          G.g,
-          G.b,
-          G.a
+          V.r,
+          V.g,
+          V.b,
+          V.a
         ), rA = this.rgbaToHex(
           x.r,
           x.g,
@@ -449,7 +449,7 @@ class oA {
           color: fA,
           backgroundColor: rA,
           rotation: eA,
-          inverted: j,
+          inverted: L,
           flipHorizontal: q,
           flipVertical: AA
         }), I++;
@@ -587,11 +587,11 @@ const jA = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   compareVersions: $,
   createEmptyPath: K,
   createGlyphPath: mA,
-  detectP5Version: O,
+  detectP5Version: J,
   getGlyphIndex: _A,
   glyphToSVGPath: PA,
   isP5AsyncCapable: R,
-  isValidP5Color: W,
+  isValidP5Color: O,
   isValidP5Font: DA
 }, Symbol.toStringTag, { value: "Module" }));
 class Y extends Error {
@@ -693,7 +693,7 @@ class SA {
    * Initializes the character glyphs and characters array.
    */
   _initializeGlyphsAndCharacters() {
-    if (R(O(this._p))) {
+    if (R(J(this._p))) {
       const A = [], e = /* @__PURE__ */ new Map();
       this._font.data.cmap.tables.forEach((t) => {
         if (t.format === 4)
@@ -1418,7 +1418,7 @@ const nA = {
   /** Enable/disable the renderer */
   enabled: !1
 };
-class J extends lA {
+class j extends lA {
   /**
    * Creates a new `"custom2D"` ASCII renderer instance.
    * @param _p The p5 instance.
@@ -1492,7 +1492,7 @@ class MA {
     return this._framebuffer;
   }
 }
-class N extends J {
+class N extends j {
   /**
    * Creates a new feature-based 2D ASCII renderer instance.
    * @param p The p5 instance.
@@ -1591,7 +1591,7 @@ class N extends J {
    */
   characterColor(e) {
     g.validate(
-      W(this._p, e),
+      O(this._p, e),
       "Character color must be a valid p5.Color object.",
       { providedValue: e, method: "characterColor" }
     ) && (this._options.characterColor = e);
@@ -1636,7 +1636,7 @@ class N extends J {
    */
   backgroundColor(e) {
     g.validate(
-      W(this._p, e),
+      O(this._p, e),
       "Background color must be a valid p5.Color object.",
       { providedValue: e, method: "backgroundColor" }
     ) && (this._options.backgroundColor = e);
@@ -1736,7 +1736,7 @@ void main() {\r
     gl_Position = positionVec4;
 
     v_texCoord = aTexCoord;\r
-}`, GA = `precision mediump float;
+}`, VA = `precision mediump float;
 
 uniform sampler2D u_sketchTexture;             
 uniform vec2 u_gridCellDimensions;             
@@ -1758,7 +1758,7 @@ void main() {\r
 
     
     gl_FragColor = finalColor;\r
-}`, VA = `precision mediump float;
+}`, GA = `precision mediump float;
 
 uniform sampler2D u_colorSampleFramebuffer;\r
 uniform sampler2D u_charPaletteTexture;\r
@@ -1840,7 +1840,7 @@ class hA extends N {
     o(this, "colorSampleShader");
     o(this, "asciiCharacterShader");
     o(this, "colorSampleFramebuffer");
-    this.colorSampleShader = this._p.createShader(S, GA), this.asciiCharacterShader = this._p.createShader(S, VA), this.colorSampleFramebuffer = this._p.createFramebuffer({
+    this.colorSampleShader = this._p.createShader(S, VA), this.asciiCharacterShader = this._p.createShader(S, GA), this.colorSampleFramebuffer = this._p.createFramebuffer({
       density: 1,
       width: this._grid.cols,
       height: this._grid.rows,
@@ -2407,10 +2407,10 @@ class pA {
     return this._resultFramebuffer;
   }
 }
-const L = {
+const W = {
   brightness: hA,
   edge: cA,
-  custom2D: J
+  custom2D: j
 };
 class IA {
   /**
@@ -2446,7 +2446,7 @@ class IA {
       width: this._captureFramebuffer.width,
       height: this._captureFramebuffer.height
     }, this._renderers = [
-      { name: "custom2D", renderer: new J(this._p, this._captureFramebuffer, this._grid, this._fontManager) },
+      { name: "custom2D", renderer: new j(this._p, this._captureFramebuffer, this._grid, this._fontManager) },
       { name: "edge", renderer: new cA(this._p, this._captureFramebuffer, this._grid, this._fontManager) },
       { name: "brightness", renderer: new hA(this._p, this._captureFramebuffer, this._grid, this._fontManager) }
     ], this._primaryColorFramebuffer = this._p.createFramebuffer({
@@ -2593,7 +2593,7 @@ class IA {
     if (!t || !i)
       return null;
     let s;
-    const n = L[e];
+    const n = W[e];
     if (n)
       s = new n(this._p, this._captureFramebuffer, this._grid, this._fontManager, r);
     else {
@@ -2610,7 +2610,7 @@ class IA {
       s !== void 0,
       (() => {
         const Q = [
-          ...Object.keys(L),
+          ...Object.keys(W),
           ...this._pluginRegistry.getIds()
         ].join(", ");
         return `Invalid renderer type: ${e}. Valid types are: ${Q}`;
@@ -2657,7 +2657,7 @@ class IA {
    */
   getAvailableRendererTypes() {
     return [
-      ...Object.keys(L),
+      ...Object.keys(W),
       ...this._pluginRegistry.getIds()
     ];
   }
@@ -2941,7 +2941,7 @@ class iA {
    * @ignore
    */
   async setup(A) {
-    this._captureFramebuffer = A, R(O(this._p)) ? await this._fontManager.setup(this._fontSize) : this._fontManager.setup(this._fontSize), this._grid = new FA(
+    this._captureFramebuffer = A, R(J(this._p)) ? await this._fontManager.setup(this._fontSize) : this._fontManager.setup(this._fontSize), this._grid = new FA(
       this._captureFramebuffer,
       this._fontManager.maxGlyphDimensions.width,
       this._fontManager.maxGlyphDimensions.height
@@ -3053,7 +3053,7 @@ class iA {
     ), this._rendererManager.resetRendererDimensions()));
   }
   /**
-   * Sets the background color for the ascii renderers, occupying all the space not covered by cells in the grid. 
+   * Sets the background color for the resulting {@link texture} of the ASCII output, and the SVG export.
    * 
    * To make the background transparent, pass an appropriate color value with an alpha value of `0`.
    * 
@@ -3067,11 +3067,13 @@ class iA {
    *      p5asciify.asciifier().background('#000000');
    *  }
    * ```
-   * 
-   * @ignore
    */
   background(A) {
-    this._backgroundColor = A;
+    g.validate(
+      typeof A == "string" || Array.isArray(A) || O(this._p, A),
+      `Invalid color type: ${typeof A}. Expected string, array or p5.Color.`,
+      { providedValue: A, method: "background" }
+    ) && (this._backgroundColor = A);
   }
   /**
    * Sets the grid dimensions for the ASCII renderers. 
@@ -3796,7 +3798,7 @@ class bA {
     return Array.from(this._plugins.values());
   }
 }
-const V = class V {
+const G = class G {
   /**
    * Creates a new `P5AsciifierManager` instance.
    */
@@ -3819,7 +3821,7 @@ const V = class V {
     o(this, "_p5Version");
     /** The background color for the ASCII outputs, which is used to fill transparent areas. */
     o(this, "_backgroundColor", "#000000");
-    if (V._instance)
+    if (G._instance)
       throw new Y("P5AsciifierManager is a singleton and cannot be instantiated directly. Use P5AsciifierManager.getInstance() instead.");
     this._pluginRegistry = new bA(), this._asciifiers = [new iA(this._pluginRegistry)], this._hookManager = BA.getInstance(), this._hookManager.initialize(this);
   }
@@ -3827,7 +3829,7 @@ const V = class V {
    * Gets the singleton instance of `P5AsciifierManager`.
    */
   static getInstance() {
-    return V._instance || (V._instance = new V()), V._instance;
+    return G._instance || (G._instance = new G()), G._instance;
   }
   /**
    * Handle initialization hook
@@ -3867,7 +3869,7 @@ const V = class V {
    * @param p The p5.js instance to use for the library.
    */
   async init(A) {
-    if (this._p = A, this._p5Version = O(A), !this._p5Version)
+    if (this._p = A, this._p5Version = J(A), !this._p5Version)
       throw new Y("Could not determine p5.js version. Ensure p5.js is properly loaded.");
     this._applyShaderPrecisionFix(), R(this._p5Version) ? (this._baseFont = await this._p.loadFont(CA), await Promise.all(
       this._asciifiers.map((e) => e.init(A, this._baseFont))
@@ -3900,7 +3902,7 @@ const V = class V {
     this._setupDone = !0;
   }
   /**
-   * Sets the background color for the ascii renderers, occupying all the space not covered by cells in the grid. 
+   * Set the background color when drawing all managed {@link P5Asciifier} instances to the canvas.
    * 
    * To make the background transparent, pass an appropriate color value with an alpha value of `0`.
    * 
@@ -3917,12 +3919,10 @@ const V = class V {
    */
   background(A) {
     g.validate(
-      typeof A == "string" || Array.isArray(A) || W(this._p, A),
+      typeof A == "string" || Array.isArray(A) || O(this._p, A),
       `Invalid color type: ${typeof A}. Expected string, array or p5.Color.`,
       { providedValue: A, method: "background" }
-    ) && (this._backgroundColor = A, this._asciifiers.forEach((r) => {
-      r.background(A);
-    }));
+    ) && (this._backgroundColor = A);
   }
   /**
    * Executes the ASCII conversion rendering pipelines for each `P5Asciifier` instance managed by the library.
@@ -4139,8 +4139,8 @@ const V = class V {
   }
 };
 /** Singleton instance of the manager */
-o(V, "_instance", null);
-let QA = V;
+o(G, "_instance", null);
+let QA = G;
 const HA = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   BRIGHTNESS_DEFAULT_OPTIONS: aA,
@@ -4151,20 +4151,20 @@ const HA = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
 }, Symbol.toStringTag, { value: "Module" })), UA = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   CUSTOM_DEFAULT_OPTIONS_2D: nA,
-  P5AsciifyRenderer2D: J,
+  P5AsciifyRenderer2D: j,
   feature: HA
 }, Symbol.toStringTag, { value: "Module" })), WA = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   P5AsciifyDisplayRenderer: pA,
   P5AsciifyRenderer: lA,
   P5AsciifyRendererManager: IA,
-  RENDERER_TYPES: L,
+  RENDERER_TYPES: W,
   renderer2d: UA
 }, Symbol.toStringTag, { value: "Module" })), KA = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   P5AsciifyPluginRegistry: bA
 }, Symbol.toStringTag, { value: "Module" })), $A = QA.getInstance();
-typeof window < "u" && (window.p5asciify = $A, window.P5AsciifyAbstractFeatureRenderer2D = N, window.P5AsciifyRenderer2D = J, window.P5AsciifyRenderer = lA, window.P5AsciifyErrorLevel = EA);
+typeof window < "u" && (window.p5asciify = $A, window.P5AsciifyAbstractFeatureRenderer2D = N, window.P5AsciifyRenderer2D = j, window.P5AsciifyRenderer = lA, window.P5AsciifyErrorLevel = EA);
 export {
   iA as P5Asciifier,
   QA as P5AsciifierManager,

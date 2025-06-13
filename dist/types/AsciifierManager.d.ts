@@ -85,7 +85,7 @@ export declare class P5AsciifierManager {
      */
     setup(): Promise<void>;
     /**
-     * Sets the background color for the ascii renderers, occupying all the space not covered by cells in the grid.
+     * Set the background color when drawing all managed {@link P5Asciifier} instances to the canvas.
      *
      * To make the background transparent, pass an appropriate color value with an alpha value of `0`.
      *
