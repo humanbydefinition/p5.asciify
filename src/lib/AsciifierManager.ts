@@ -202,7 +202,7 @@ export class P5AsciifierManager {
     }
 
     /**
-     * Set the background color when drawing all asciifiers to the canvas.
+     * Set the background color when drawing all managed {@link P5Asciifier} instances to the canvas.
      * 
      * To make the background transparent, pass an appropriate color value with an alpha value of `0`.
      * 
