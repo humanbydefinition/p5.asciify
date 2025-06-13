@@ -202,7 +202,7 @@ export class P5AsciifierManager {
     }
 
     /**
-     * Sets the background color for the ascii renderers, occupying all the space not covered by cells in the grid. 
+     * Set the background color when drawing all asciifiers to the canvas.
      * 
      * To make the background transparent, pass an appropriate color value with an alpha value of `0`.
      * 
@@ -229,10 +229,6 @@ export class P5AsciifierManager {
         }
 
         this._backgroundColor = color;
-
-        this._asciifiers.forEach((asciifier) => {
-            asciifier.background(color);
-        });
     }
 
     /**
