@@ -2,7 +2,7 @@
 
 > **isP5AsyncCapable**(`version`): `boolean`
 
-Defined in: [utils/utils.ts:74](https://github.com/humanbydefinition/p5.asciify/blob/db219ebd919c345fc51a95258e4a8ccb5b2fd6a3/src/lib/utils/utils.ts#L74)
+Defined in: [utils/utils.ts:74](https://github.com/humanbydefinition/p5.asciify/blob/acb3864bb87a5b0a5cc804ffa11c35a35c3de1d3/src/lib/utils/utils.ts#L74)
 
 Checks if the detected p5.js version supports async operations (Promise-based APIs).
 
