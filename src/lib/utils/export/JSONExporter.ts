@@ -163,9 +163,13 @@ export class P5AsciifyJSONExporter {
                     secondaryColor = tempColor;
                 }
 
-                // Calculate rotation angle from rotationFramebuffer
+                // Calculate rotation angle
                 const rotationRed = rotationPixels[pixelIdx];
-                const rotationAngle = rotationRed * (360 / 256);
+                const rotationGreen = rotationPixels[pixelIdx + 1];
+
+                // Decode using two-channel precision
+                const scaledAngle = rotationRed + (rotationGreen / 255);
+                const rotationAngle = Math.round(((scaledAngle * 360) / 255) * 100) / 100;
 
                 // Convert colors to hex format
                 const primaryColorHex = this.rgbaToHex(

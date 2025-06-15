@@ -49,7 +49,7 @@ void main() {
     // Sample transform texture for inversion and flips
     vec4 transformColor = texture2D(u_transformTexture, charIndexTexCoord);
     bool isInverted = transformColor.r > 0.5; // Inversion in red channel
-    bool flipHorizontal = transformColor.g > 0.5; // Horizontal flip in red channel
+    bool flipHorizontal = transformColor.g > 0.5; // Horizontal flip in green channel
     bool flipVertical = transformColor.b > 0.5;   // Vertical flip in blue channel
 
     // Sample the character index from the ASCII character texture
@@ -75,11 +75,23 @@ void main() {
     // Calculate the texture coordinate of the character in the charset texture
     vec2 charCoord = vec2(float(charCol) / u_charsetDimensions.x, float(charRow) / u_charsetDimensions.y);
 
-    // Sample rotation texture and decode angle
+    // Sample rotation texture and decode angle with two-channel precision
     vec4 rotationColor = texture2D(u_rotationTexture, charIndexTexCoord);
-
-    // Or map directly to radians (0-2π)
-    float rotationAngle = rotationColor.r * 2.0 * 3.14159265359;
+    
+    // Decode using two-channel precision
+    // Red channel: integer part of (angle * 255 / 360)
+    // Green channel: fractional part scaled to 0-255
+    float redValue = rotationColor.r * 255.0;
+    float greenValue = rotationColor.g * 255.0;
+    
+    // Reconstruct the scaled angle
+    float scaledAngle = redValue + (greenValue / 255.0);
+    
+    // Convert back to degrees
+    float angleDegrees = (scaledAngle * 360.0) / 255.0;
+    
+    // Convert to radians for rotation matrix
+    float rotationAngle = angleDegrees * 3.14159265359 / 180.0;
 
     // Calculate fractional part and apply rotation
     vec2 fractionalPart = fract(gridCoord) - 0.5;

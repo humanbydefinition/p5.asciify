@@ -127,8 +127,8 @@ export abstract class P5AsciifyAbstractFeatureRenderer2D<T extends FeatureAsciiR
      */
     public rotation(angle: number): void {
         const isValidType = errorHandler.validate(
-            typeof angle === 'number',
-            'Rotation angle must be a number.',
+            typeof angle === 'number' && !isNaN(angle),
+            'Rotation angle must be a valid number.',
             { providedValue: angle, method: 'rotation' }
         );
 
@@ -140,11 +140,15 @@ export abstract class P5AsciifyAbstractFeatureRenderer2D<T extends FeatureAsciiR
         angle = angle % 360;
         if (angle < 0) angle += 360;
 
-        // Map 0-360 degrees to 0-255 range for the red channel
-        const normalizedValue = angle / 360;
-        const red = Math.round(normalizedValue * 255);
+        // Store the original angle for precise retrieval
+        // We'll use a two-channel encoding for better precision
+        // Red channel: integer part of (angle * 255 / 360)
+        // Green channel: fractional part scaled to 0-255
+        const scaledAngle = (angle * 255) / 360;
+        const red = Math.floor(scaledAngle);
+        const green = Math.round((scaledAngle - red) * 255);
 
-        this._options.rotationAngle = this._p.color(red, 0, 0);
+        this._options.rotationAngle = this._p.color(red, green, 0);
     }
 
     /**
