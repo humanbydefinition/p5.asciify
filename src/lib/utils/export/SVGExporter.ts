@@ -177,7 +177,11 @@ export class P5AsciifySVGExporter {
 
                 // Calculate rotation angle from rotationFramebuffer
                 const rotationRed = rotationPixels[pixelIdx];
-                const rotationAngle = rotationRed * (360 / 256);
+                const rotationGreen = rotationPixels[pixelIdx + 1];
+
+                // Decode using two-channel precision
+                const scaledAngle = rotationRed + (rotationGreen / 255);
+                const rotationAngle = Math.round(((scaledAngle * 360) / 255) * 100) / 100;
 
                 // Calculate position for this cell
                 const cellX = x * cellWidth;
