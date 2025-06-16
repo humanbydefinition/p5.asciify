@@ -54,8 +54,8 @@ export abstract class P5AsciifyRenderer<T extends AsciiRendererOptions = AsciiRe
             antialias: false,
             width: initialFramebufferDimensions.width,
             height: initialFramebufferDimensions.height,
-            depthFormat: this._p.UNSIGNED_INT,
-            textureFiltering: this._p.NEAREST
+            textureFiltering: this._p.NEAREST,
+            depth: false,
         };
 
         this._primaryColorFramebuffer = this._p.createFramebuffer(framebufferSettings);
