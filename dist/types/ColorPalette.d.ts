@@ -16,7 +16,7 @@ export declare class P5AsciifyColorPalette {
      * @param _p The p5 instance.
      * @param _colors The colors to store in the palette as an array of `[r, g, b]` tuples.
      */
-    constructor(_p: p5, _colors: [number, number, number][]);
+    constructor(_p: p5, _colors: p5.Color[]);
     /**
      * Update the framebuffer with the currently selected colors.
      */
@@ -25,11 +25,11 @@ export declare class P5AsciifyColorPalette {
      * Sets the colors of the palette and updates the framebuffer.
      * @param newColors The new colors to set.
      */
-    setColors(newColors: [number, number, number][]): void;
+    setColors(newColors: p5.Color[]): void;
     /**
      * Get the colors of the palette.
      */
-    get colors(): [number, number, number][];
+    get colors(): p5.Color[];
     /**
      * Get the framebuffer containing the colors of the palette.
      */

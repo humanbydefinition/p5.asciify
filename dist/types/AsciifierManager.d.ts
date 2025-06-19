@@ -102,6 +102,32 @@ export declare class P5AsciifierManager {
      */
     background(color: string | p5.Color | [number, number?, number?, number?]): void;
     /**
+     * Sets the font size for all managed `P5Asciifier` instances simultaneously.
+     * @param size The font size to set for the `P5Asciifier` instances.
+     */
+    fontSize(size: number): void;
+    /**
+     * Sets the font for all managed `P5Asciifier` instances simultaneously.
+     * @param font The `p5.Font` instance to set as the font for all managed `P5Asciifier` instances.
+     */
+    font(font: p5.Font): void;
+    /**
+     * Sets the grid dimensions for all managed `P5Asciifier` instances simultaneously.
+     * @param gridCols The number of columns in the ASCII grid.
+     * @param gridRows The number of rows in the ASCII grid.
+     */
+    gridDimensions(gridCols: number, gridRows: number): void;
+    /**
+     * Sets whether the ASCII grid should be responsive to the size of the canvas for all managed `P5Asciifier` instances.
+     * @param bool If `true`, the ASCII grid will adjust its size based on the canvas dimensions. Otherwise, it will always use the set grid dimensions.
+     */
+    gridResponsive(bool?: boolean): void;
+    /**
+     * Sets the background mode for all managed `P5Asciifier` instances simultaneously.
+     * @param mode The background mode to set for the `P5Asciifier` instances.
+     */
+    backgroundMode(mode?: "fixed" | "sampled"): void;
+    /**
      * Executes the ASCII conversion rendering pipelines for each `P5Asciifier` instance managed by the library.
      *
      * This method is called automatically by the library after the `draw()` function of the `p5.js` instance has finished executing.
