@@ -2933,8 +2933,8 @@ class aA {
    * 
    * @ignore
    */
-  async init(A, e) {
-    this._p = A, this._fontManager = new VA(A, e);
+  async init(A) {
+    this._p = A;
   }
   /**
    * Sets up the asciifier by initializing the font texture atlas, grid, and renderer manager.
@@ -2943,8 +2943,8 @@ class aA {
    * 
    * @ignore
    */
-  async setup(A) {
-    this._captureFramebuffer = A, R(J(this._p)) ? await this._fontManager.setup(this._fontSize) : this._fontManager.setup(this._fontSize), this._grid = new MA(
+  async setup(A, e) {
+    this._captureFramebuffer = A, this._fontManager = new VA(this._p, e), R(J(this._p)) ? await this._fontManager.setup(this._fontSize) : this._fontManager.setup(this._fontSize), this._grid = new MA(
       this._captureFramebuffer,
       this._fontManager.maxGlyphDimensions.width,
       this._fontManager.maxGlyphDimensions.height
@@ -3875,12 +3875,12 @@ const G = class G {
     if (this._p = A, this._p5Version = J(A), !this._p5Version)
       throw new Y("Could not determine p5.js version. Ensure p5.js is properly loaded.");
     this._applyShaderPrecisionFix(), R(this._p5Version) ? (this._baseFont = await this._p.loadFont(_A), await Promise.all(
-      this._asciifiers.map((e) => e.init(A, this._baseFont))
+      this._asciifiers.map((e) => e.init(A))
     )) : (!this._p.preload && typeof globalThis.preload != "function" && (this._p.preload = () => {
     }), this._p._incrementPreload(), await new Promise((e) => {
       this._baseFont = A.loadFont(_A, (r) => {
         this._asciifiers.forEach((t) => {
-          t.init(A, r);
+          t.init(A);
         }), e();
       });
     }));
@@ -3898,10 +3898,10 @@ const G = class G {
       textureFiltering: this._p.NEAREST
     }), R(this._p5Version))
       for (const A of this._asciifiers)
-        await A.setup(this._sketchFramebuffer);
+        await A.setup(this._sketchFramebuffer, this._baseFont);
     else
       for (const A of this._asciifiers)
-        A.setup(this._sketchFramebuffer);
+        A.setup(this._sketchFramebuffer, this._baseFont);
     this._setupDone = !0;
   }
   /**
@@ -4023,7 +4023,7 @@ const G = class G {
     const r = new aA(this._pluginRegistry);
     return R(this._p5Version) ? (async () => {
       try {
-        return await r.init(this._p, this._baseFont), this._setupDone && this._sketchFramebuffer && await r.setup(A || this._sketchFramebuffer), this._asciifiers.push(r), r;
+        return await r.init(this._p), this._setupDone && this._sketchFramebuffer && await r.setup(A || this._sketchFramebuffer, this._baseFont), this._asciifiers.push(r), r;
       } catch (t) {
         return g.validate(
           !1,
@@ -4031,7 +4031,7 @@ const G = class G {
           { providedValue: t, method: "add" }
         ), null;
       }
-    })() : (r.init(this._p, this._baseFont), this._setupDone && r.setup(A || this._sketchFramebuffer), this._asciifiers.push(r), r);
+    })() : (r.init(this._p), this._setupDone && r.setup(A || this._sketchFramebuffer, this._baseFont), this._asciifiers.push(r), r);
   }
   /**
    * Removes a `P5Asciifier` instance.
