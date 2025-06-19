@@ -43,7 +43,7 @@ const sketch = new p5((p) => {
 
         // Update the accurate renderer settings
         asciifier.renderers().get("accurate").update({
-            characters: asciifier.fontManager.characters.map(charObj => charObj.character).join(''),
+            characters: asciifier.fontManager.charactersString,
             characterColorMode: "sampled",
             backgroundColorMode: "sampled",
             enabled: true,
