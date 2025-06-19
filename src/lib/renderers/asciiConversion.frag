@@ -125,15 +125,10 @@ void main() {
     // Sample the character texture
     vec4 charTexel = texture2D(u_characterTexture, texCoord);
 
-    // Check if pixel is fully white (considering minor precision issues)
-    bool isFullyWhite = all(greaterThanEqual(charTexel.rgb, vec3(0.99)));
+    // Apply inversion using mix
+    float inv = isInverted ? 1.0 : 0.0;
+    charTexel.rgb = mix(charTexel.rgb, 1.0 - charTexel.rgb, inv);
 
-    // Handle normal and inverted modes
-    if(isInverted) {
-        // In inverted mode, non-white pixels get primary color, white pixels get secondary color
-        gl_FragColor = isFullyWhite ? secondaryColor : primaryColor;
-    } else {
-        // In normal mode, white pixels get primary color, non-white pixels get secondary color
-        gl_FragColor = isFullyWhite ? primaryColor : secondaryColor;
-    }
+    // Use mix to blend between background and foreground based on character color
+    gl_FragColor = mix(secondaryColor, primaryColor, charTexel);
 }
