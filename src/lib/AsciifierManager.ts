@@ -231,6 +231,60 @@ export class P5AsciifierManager {
         this._backgroundColor = color;
     }
 
+    
+
+
+    /**
+     * Sets the font size for all managed `P5Asciifier` instances simultaneously.
+     * @param size The font size to set for the `P5Asciifier` instances.
+     */
+    public fontSize(size: number): void {
+        this._asciifiers.forEach((asciifier) => {
+            asciifier.fontSize(size);
+        });
+    }
+
+    /**
+     * Sets the font for all managed `P5Asciifier` instances simultaneously.
+     * @param font The `p5.Font` instance to set as the font for all managed `P5Asciifier` instances.
+     */
+    public font(font: p5.Font): void {
+        this._asciifiers.forEach((asciifier) => {
+            asciifier.font(font);
+        });
+    } 
+
+    /**
+     * Sets the grid dimensions for all managed `P5Asciifier` instances simultaneously.
+     * @param gridCols The number of columns in the ASCII grid.
+     * @param gridRows The number of rows in the ASCII grid.
+     */
+    public gridDimensions(gridCols: number, gridRows: number): void {
+        this._asciifiers.forEach((asciifier) => {
+            asciifier.gridDimensions(gridCols, gridRows);
+        });
+    }
+
+    /**
+     * Sets whether the ASCII grid should be responsive to the size of the canvas for all managed `P5Asciifier` instances.
+     * @param bool If `true`, the ASCII grid will adjust its size based on the canvas dimensions. Otherwise, it will always use the set grid dimensions.
+     */
+    public gridResponsive(bool: boolean = true): void {
+        this._asciifiers.forEach((asciifier) => {
+            asciifier.gridResponsive(bool);
+        });
+    }
+
+    /**
+     * Sets the background mode for all managed `P5Asciifier` instances simultaneously.
+     * @param mode The background mode to set for the `P5Asciifier` instances.
+     */
+    public backgroundMode(mode: "fixed" | "sampled" = "fixed"): void {
+        this._asciifiers.forEach((asciifier) => {
+            asciifier.backgroundMode(mode);
+        });
+    }
+
     /**
      * Executes the ASCII conversion rendering pipelines for each `P5Asciifier` instance managed by the library.
      * 
