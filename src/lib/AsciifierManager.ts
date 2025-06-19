@@ -231,9 +231,6 @@ export class P5AsciifierManager {
         this._backgroundColor = color;
     }
 
-    
-
-
     /**
      * Sets the font size for all managed `P5Asciifier` instances simultaneously.
      * @param size The font size to set for the `P5Asciifier` instances.
