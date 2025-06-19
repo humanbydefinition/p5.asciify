@@ -19,7 +19,7 @@ export class P5AsciifyColorPalette {
      */
     constructor(
         private _p: p5,
-        private _colors: [number, number, number][]
+        private _colors: p5.Color[]
     ) {
         const width = Math.max(this._colors.length, 1);
         this._framebuffer = this._p.createFramebuffer({
@@ -46,7 +46,7 @@ export class P5AsciifyColorPalette {
 
         for (let lx = 0; lx < sw; lx++) {
             const color = lx < this._colors.length
-                ? this._p.color(this._colors[lx])
+                ? this._colors[lx]
                 : this._p.color(0, 0, 0, 0);
             const index = 4 * lx;
             this._framebuffer.pixels[index] = this._p.red(color);
@@ -61,7 +61,7 @@ export class P5AsciifyColorPalette {
      * Sets the colors of the palette and updates the framebuffer.
      * @param newColors The new colors to set.
      */
-    public setColors(newColors: [number, number, number][]): void {
+    public setColors(newColors: p5.Color[]): void {
         this._colors = newColors;
         this._updateFramebuffer();
     }
@@ -69,7 +69,7 @@ export class P5AsciifyColorPalette {
     /**
      * Get the colors of the palette.
      */
-    get colors(): [number, number, number][] { return this._colors; }
+    get colors(): p5.Color[] { return this._colors; }
 
     /**
      * Get the framebuffer containing the colors of the palette.
