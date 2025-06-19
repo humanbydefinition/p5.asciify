@@ -148,7 +148,7 @@ export class P5AsciifierManager {
 
             // Create and wait for all initialization promises to complete
             await Promise.all(
-                this._asciifiers.map(asciifier => asciifier.init(p, this._baseFont))
+                this._asciifiers.map(asciifier => asciifier.init(p))
             );
         } else {
             // For p5.js 1.x - use preload increment and callback
@@ -163,7 +163,7 @@ export class P5AsciifierManager {
             await new Promise<void>((resolve) => {
                 this._baseFont = p.loadFont(URSAFONT_BASE64, (font) => {
                     this._asciifiers.forEach((asciifier) => {
-                        asciifier.init(p, font);
+                        asciifier.init(p);
                     });
 
                     resolve();
