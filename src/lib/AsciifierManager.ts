@@ -189,12 +189,12 @@ export class P5AsciifierManager {
         if (isP5AsyncCapable(this._p5Version)) {
             // For p5.js 2.0+ - asynchronous setup
             for (const asciifier of this._asciifiers) {
-                await asciifier.setup(this._sketchFramebuffer);
+                await asciifier.setup(this._sketchFramebuffer, this._baseFont);
             }
         } else {
             // For p5.js 1.x - synchronous setup
             for (const asciifier of this._asciifiers) {
-                asciifier.setup(this._sketchFramebuffer);
+                asciifier.setup(this._sketchFramebuffer, this._baseFont);
             }
         }
 
@@ -357,10 +357,10 @@ export class P5AsciifierManager {
             // For p5.js 2.0+, return a Promise
             return (async () => {
                 try {
-                    await asciifier.init(this._p, this._baseFont);
+                    await asciifier.init(this._p);
 
                     if (this._setupDone && this._sketchFramebuffer) {
-                        await asciifier.setup(framebuffer ? framebuffer : this._sketchFramebuffer);
+                        await asciifier.setup(framebuffer ? framebuffer : this._sketchFramebuffer, this._baseFont);
                     }
 
                     this._asciifiers.push(asciifier);
@@ -377,11 +377,11 @@ export class P5AsciifierManager {
             })();
         } else {
             // For p5.js 1.x, synchronous init
-            asciifier.init(this._p, this._baseFont);
+            asciifier.init(this._p);
 
             // If setup is done, immediately set up the asciifier
             if (this._setupDone) {
-                asciifier.setup(framebuffer ? framebuffer : this._sketchFramebuffer);
+                asciifier.setup(framebuffer ? framebuffer : this._sketchFramebuffer, this._baseFont);
             }
 
             this._asciifiers.push(asciifier);
