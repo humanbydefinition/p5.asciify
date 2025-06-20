@@ -1,6 +1,6 @@
 # Class: P5AsciifyRenderer2D\<T\>
 
-Defined in: [renderers/2d/AsciiRenderer2D.ts:20](https://github.com/humanbydefinition/p5.asciify/blob/ace1342891258faf7ebc3f7702cd043e86c2060a/src/lib/renderers/2d/AsciiRenderer2D.ts#L20)
+Defined in: [renderers/2d/AsciiRenderer2D.ts:20](https://github.com/humanbydefinition/p5.asciify/blob/7bcb46eee7a4a607e842b6ccb8c930fbed351f10/src/lib/renderers/2d/AsciiRenderer2D.ts#L20)
 
 ASCII renderer for custom 2D rendering.
 
@@ -26,7 +26,7 @@ ASCII renderer for custom 2D rendering.
 
 > **get** **characterFramebuffer**(): `Framebuffer`
 
-Defined in: [renderers/AsciiRenderer.ts:515](https://github.com/humanbydefinition/p5.asciify/blob/ace1342891258faf7ebc3f7702cd043e86c2060a/src/lib/renderers/AsciiRenderer.ts#L515)
+Defined in: [renderers/AsciiRenderer.ts:563](https://github.com/humanbydefinition/p5.asciify/blob/7bcb46eee7a4a607e842b6ccb8c930fbed351f10/src/lib/renderers/AsciiRenderer.ts#L563)
 
 Get the character framebuffer, whose pixels define the ASCII characters to use in the grid cells.
 
@@ -95,13 +95,39 @@ function draw() {
 
 ---
 
+### framebufferSettings
+
+#### Get Signature
+
+> **get** **framebufferSettings**(): `object`
+
+Defined in: [renderers/AsciiRenderer.ts:510](https://github.com/humanbydefinition/p5.asciify/blob/7bcb46eee7a4a607e842b6ccb8c930fbed351f10/src/lib/renderers/AsciiRenderer.ts#L510)
+
+##### Returns
+
+| Name               | Type      | Description                                         | Defined in                                                                                                                                                            |
+| ------------------ | --------- | --------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `antialias`        | `boolean` | Whether to enable antialiasing for the framebuffer. | [renderers/AsciiRenderer.ts:35](https://github.com/humanbydefinition/p5.asciify/blob/7bcb46eee7a4a607e842b6ccb8c930fbed351f10/src/lib/renderers/AsciiRenderer.ts#L35) |
+| `density`          | `number`  | -                                                   | [renderers/AsciiRenderer.ts:43](https://github.com/humanbydefinition/p5.asciify/blob/7bcb46eee7a4a607e842b6ccb8c930fbed351f10/src/lib/renderers/AsciiRenderer.ts#L43) |
+| `depth?`           | `boolean` | Whether to enable depth for the framebuffer.        | [renderers/AsciiRenderer.ts:41](https://github.com/humanbydefinition/p5.asciify/blob/7bcb46eee7a4a607e842b6ccb8c930fbed351f10/src/lib/renderers/AsciiRenderer.ts#L41) |
+| `depthFormat?`     | `any`     | -                                                   | [renderers/AsciiRenderer.ts:46](https://github.com/humanbydefinition/p5.asciify/blob/7bcb46eee7a4a607e842b6ccb8c930fbed351f10/src/lib/renderers/AsciiRenderer.ts#L46) |
+| `height`           | `number`  | -                                                   | [renderers/AsciiRenderer.ts:45](https://github.com/humanbydefinition/p5.asciify/blob/7bcb46eee7a4a607e842b6ccb8c930fbed351f10/src/lib/renderers/AsciiRenderer.ts#L45) |
+| `textureFiltering` | `any`     | The texture filtering mode for the framebuffer.     | [renderers/AsciiRenderer.ts:38](https://github.com/humanbydefinition/p5.asciify/blob/7bcb46eee7a4a607e842b6ccb8c930fbed351f10/src/lib/renderers/AsciiRenderer.ts#L38) |
+| `width`            | `number`  | -                                                   | [renderers/AsciiRenderer.ts:44](https://github.com/humanbydefinition/p5.asciify/blob/7bcb46eee7a4a607e842b6ccb8c930fbed351f10/src/lib/renderers/AsciiRenderer.ts#L44) |
+
+#### Inherited from
+
+[`P5AsciifyRenderer`](../../../classes/P5AsciifyRenderer.md).[`framebufferSettings`](../../../classes/P5AsciifyRenderer.md#framebuffersettings)
+
+---
+
 ### options
 
 #### Get Signature
 
 > **get** **options**(): `T`
 
-Defined in: [renderers/AsciiRenderer.ts:228](https://github.com/humanbydefinition/p5.asciify/blob/ace1342891258faf7ebc3f7702cd043e86c2060a/src/lib/renderers/AsciiRenderer.ts#L228)
+Defined in: [renderers/AsciiRenderer.ts:273](https://github.com/humanbydefinition/p5.asciify/blob/7bcb46eee7a4a607e842b6ccb8c930fbed351f10/src/lib/renderers/AsciiRenderer.ts#L273)
 
 Get the set options for the ASCII renderer.
 
@@ -135,7 +161,7 @@ function setupAsciify() {
 
 > **get** **primaryColorFramebuffer**(): `Framebuffer`
 
-Defined in: [renderers/AsciiRenderer.ts:282](https://github.com/humanbydefinition/p5.asciify/blob/ace1342891258faf7ebc3f7702cd043e86c2060a/src/lib/renderers/AsciiRenderer.ts#L282)
+Defined in: [renderers/AsciiRenderer.ts:327](https://github.com/humanbydefinition/p5.asciify/blob/7bcb46eee7a4a607e842b6ccb8c930fbed351f10/src/lib/renderers/AsciiRenderer.ts#L327)
 
 Get the primary color framebuffer, whose pixels define the character colors of the grid cells.
 
@@ -210,7 +236,7 @@ function draw() {
 
 > **get** **rotationFramebuffer**(): `Framebuffer`
 
-Defined in: [renderers/AsciiRenderer.ts:462](https://github.com/humanbydefinition/p5.asciify/blob/ace1342891258faf7ebc3f7702cd043e86c2060a/src/lib/renderers/AsciiRenderer.ts#L462)
+Defined in: [renderers/AsciiRenderer.ts:507](https://github.com/humanbydefinition/p5.asciify/blob/7bcb46eee7a4a607e842b6ccb8c930fbed351f10/src/lib/renderers/AsciiRenderer.ts#L507)
 
 Get the rotation framebuffer, whose pixels define the rotation angle of each character in the grid.
 
@@ -295,7 +321,7 @@ function draw() {
 
 > **get** **secondaryColorFramebuffer**(): `Framebuffer`
 
-Defined in: [renderers/AsciiRenderer.ts:336](https://github.com/humanbydefinition/p5.asciify/blob/ace1342891258faf7ebc3f7702cd043e86c2060a/src/lib/renderers/AsciiRenderer.ts#L336)
+Defined in: [renderers/AsciiRenderer.ts:381](https://github.com/humanbydefinition/p5.asciify/blob/7bcb46eee7a4a607e842b6ccb8c930fbed351f10/src/lib/renderers/AsciiRenderer.ts#L381)
 
 Get the secondary color framebuffer, whose pixels define the background colors of the grid cells.
 
@@ -370,7 +396,7 @@ function draw() {
 
 > **get** **transformFramebuffer**(): `Framebuffer`
 
-Defined in: [renderers/AsciiRenderer.ts:401](https://github.com/humanbydefinition/p5.asciify/blob/ace1342891258faf7ebc3f7702cd043e86c2060a/src/lib/renderers/AsciiRenderer.ts#L401)
+Defined in: [renderers/AsciiRenderer.ts:446](https://github.com/humanbydefinition/p5.asciify/blob/7bcb46eee7a4a607e842b6ccb8c930fbed351f10/src/lib/renderers/AsciiRenderer.ts#L446)
 
 Get the transform framebuffer, where each pixels color channel defines a different transformation:
 
@@ -457,7 +483,7 @@ function draw() {
 
 > **disable**(): `boolean`
 
-Defined in: [renderers/AsciiRenderer.ts:212](https://github.com/humanbydefinition/p5.asciify/blob/ace1342891258faf7ebc3f7702cd043e86c2060a/src/lib/renderers/AsciiRenderer.ts#L212)
+Defined in: [renderers/AsciiRenderer.ts:257](https://github.com/humanbydefinition/p5.asciify/blob/7bcb46eee7a4a607e842b6ccb8c930fbed351f10/src/lib/renderers/AsciiRenderer.ts#L257)
 
 Disable the renderer.
 
@@ -494,7 +520,7 @@ function keyPressed() {
 
 > **enable**(): `boolean`
 
-Defined in: [renderers/AsciiRenderer.ts:187](https://github.com/humanbydefinition/p5.asciify/blob/ace1342891258faf7ebc3f7702cd043e86c2060a/src/lib/renderers/AsciiRenderer.ts#L187)
+Defined in: [renderers/AsciiRenderer.ts:232](https://github.com/humanbydefinition/p5.asciify/blob/7bcb46eee7a4a607e842b6ccb8c930fbed351f10/src/lib/renderers/AsciiRenderer.ts#L232)
 
 Enable the renderer.
 
@@ -528,7 +554,7 @@ function keyPressed() {
 
 > **enabled**(`enabled?`): `boolean`
 
-Defined in: [renderers/AsciiRenderer.ts:136](https://github.com/humanbydefinition/p5.asciify/blob/ace1342891258faf7ebc3f7702cd043e86c2060a/src/lib/renderers/AsciiRenderer.ts#L136)
+Defined in: [renderers/AsciiRenderer.ts:181](https://github.com/humanbydefinition/p5.asciify/blob/7bcb46eee7a4a607e842b6ccb8c930fbed351f10/src/lib/renderers/AsciiRenderer.ts#L181)
 
 Enable or disable the renderer.
 
@@ -568,11 +594,39 @@ function keyPressed() {
 
 ---
 
+### setFramebufferSettings()
+
+> **setFramebufferSettings**(`settings`): `void`
+
+Defined in: [renderers/AsciiRenderer.ts:95](https://github.com/humanbydefinition/p5.asciify/blob/7bcb46eee7a4a607e842b6ccb8c930fbed351f10/src/lib/renderers/AsciiRenderer.ts#L95)
+
+Update framebuffer settings (except width/height) and recreate all framebuffers.
+
+#### Parameters
+
+| Parameter                    | Type                                                                                                   | Description                                                      |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------- |
+| `settings`                   | \{ `antialias?`: `boolean`; `depth?`: `boolean`; `depthFormat?`: `any`; `textureFiltering?`: `any`; \} | Partial framebuffer settings (width/height/density are ignored). |
+| `settings.antialias?`        | `boolean`                                                                                              | -                                                                |
+| `settings.depth?`            | `boolean`                                                                                              | -                                                                |
+| `settings.depthFormat?`      | `any`                                                                                                  | -                                                                |
+| `settings.textureFiltering?` | `any`                                                                                                  | -                                                                |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[`P5AsciifyRenderer`](../../../classes/P5AsciifyRenderer.md).[`setFramebufferSettings`](../../../classes/P5AsciifyRenderer.md#setframebuffersettings)
+
+---
+
 ### update()
 
 > **update**(`newOptions`): `void`
 
-Defined in: [renderers/AsciiRenderer.ts:100](https://github.com/humanbydefinition/p5.asciify/blob/ace1342891258faf7ebc3f7702cd043e86c2060a/src/lib/renderers/AsciiRenderer.ts#L100)
+Defined in: [renderers/AsciiRenderer.ts:145](https://github.com/humanbydefinition/p5.asciify/blob/7bcb46eee7a4a607e842b6ccb8c930fbed351f10/src/lib/renderers/AsciiRenderer.ts#L145)
 
 Updates renderer options.
 
