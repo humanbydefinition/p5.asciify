@@ -34,7 +34,7 @@ export class P5AsciifyRenderer2D<T extends AsciiRendererOptions = AsciiRendererO
         fontManager: P5AsciifyFontManager,
         options: T = CUSTOM_DEFAULT_OPTIONS_2D as T
     ) {
-        super(p, captureFramebuffer, grid, {width: grid.cols, height: grid.rows}, fontManager, { ...CUSTOM_DEFAULT_OPTIONS_2D, ...options });
+        super(p, captureFramebuffer, grid, fontManager, { ...CUSTOM_DEFAULT_OPTIONS_2D, ...options });
     }
 
     public resetShaders(): void { };
