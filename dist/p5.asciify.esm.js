@@ -1,6 +1,6 @@
 var FA = Object.defineProperty;
-var SA = (a, A, e) => A in a ? FA(a, A, { enumerable: !0, configurable: !0, writable: !0, value: e }) : a[A] = e;
-var o = (a, A, e) => SA(a, typeof A != "symbol" ? A + "" : A, e);
+var SA = (n, A, e) => A in n ? FA(n, A, { enumerable: !0, configurable: !0, writable: !0, value: e }) : n[A] = e;
+var o = (n, A, e) => SA(n, typeof A != "symbol" ? A + "" : A, e);
 import P from "p5";
 class MA {
   /**
@@ -138,10 +138,10 @@ class MA {
     this._fixedDimensions = A;
   }
 }
-const J = (a) => {
+const J = (n) => {
   const A = [
     // Instance version (most common in standard setups)
-    () => a == null ? void 0 : a.VERSION,
+    () => n == null ? void 0 : n.VERSION,
     // Global p5 version (works in many environments)
     () => typeof P < "u" && P.VERSION ? P.VERSION : void 0,
     // Window global version (P5LIVE style environments)
@@ -152,12 +152,12 @@ const J = (a) => {
     // Constructor version (some bundled environments)
     () => {
       var e;
-      return (e = a == null ? void 0 : a.constructor) == null ? void 0 : e.VERSION;
+      return (e = n == null ? void 0 : n.constructor) == null ? void 0 : e.VERSION;
     },
     // Prototype chain version (edge cases)
     () => {
       var e, r;
-      return (r = (e = Object.getPrototypeOf(a)) == null ? void 0 : e.constructor) == null ? void 0 : r.VERSION;
+      return (r = (e = Object.getPrototypeOf(n)) == null ? void 0 : e.constructor) == null ? void 0 : r.VERSION;
     }
   ];
   for (const e of A)
@@ -169,14 +169,14 @@ const J = (a) => {
       continue;
     }
   return "1.0.0";
-}, R = (a) => $(a, "2.0.0") >= 0, O = (a, A) => {
+}, R = (n) => $(n, "2.0.0") >= 0, O = (n, A) => {
   var e;
-  return A ? !!((e = a == null ? void 0 : a.constructor) != null && e.Color && A instanceof a.constructor.Color || typeof P < "u" && P.Color && A instanceof P.Color) : !1;
-}, mA = (a, A) => {
+  return A ? !!((e = n == null ? void 0 : n.constructor) != null && e.Color && A instanceof n.constructor.Color || typeof P < "u" && P.Color && A instanceof P.Color) : !1;
+}, mA = (n, A) => {
   var e;
-  return A ? !!((e = a == null ? void 0 : a.constructor) != null && e.Font && A instanceof a.constructor.Font || typeof P < "u" && P.Font && A instanceof P.Font) : !1;
-}, $ = (a, A) => {
-  const [e, r] = [a, A].map((t) => t.split(".").map(Number));
+  return A ? !!((e = n == null ? void 0 : n.constructor) != null && e.Font && A instanceof n.constructor.Font || typeof P < "u" && P.Font && A instanceof P.Font) : !1;
+}, $ = (n, A) => {
+  const [e, r] = [n, A].map((t) => t.split(".").map(Number));
   for (let t = 0; t < Math.max(e.length, r.length); t++) {
     const i = e[t] ?? 0, s = r[t] ?? 0;
     if (i !== s) return i > s ? 1 : -1;
@@ -210,9 +210,9 @@ class gA {
       drawMode: "fill",
       strokeWidth: 1,
       ...i
-    }, n = A.characterFramebuffer, E = A.primaryColorFramebuffer, Q = A.secondaryColorFramebuffer, h = A.transformFramebuffer, c = A.rotationFramebuffer;
-    n.loadPixels(), E.loadPixels(), Q.loadPixels(), h.loadPixels(), c.loadPixels();
-    const p = n.pixels, d = E.pixels, l = Q.pixels, _ = h.pixels, B = c.pixels, C = e.cols, f = e.rows, b = e.cellWidth, D = e.cellHeight, I = e.width, k = e.height, y = r.characters;
+    }, a = A.characterFramebuffer, E = A.primaryColorFramebuffer, Q = A.secondaryColorFramebuffer, h = A.transformFramebuffer, c = A.rotationFramebuffer;
+    a.loadPixels(), E.loadPixels(), Q.loadPixels(), h.loadPixels(), c.loadPixels();
+    const p = a.pixels, d = E.pixels, l = Q.pixels, _ = h.pixels, B = c.pixels, C = e.cols, f = e.rows, b = e.cellWidth, D = e.cellHeight, I = e.width, k = e.height, y = r.characters;
     let F = this.generateSVGHeader(I, k);
     if (s.includeBackgroundRectangles) {
       const M = t, w = this._p.color(M), m = `rgba(${w._array[0] * 255},${w._array[1] * 255},${w._array[2] * 255},${w._array[3]})`;
@@ -273,7 +273,7 @@ class gA {
    */
   saveSVG(A, e, r, t, i) {
     if (!i.filename) {
-      const n = /* @__PURE__ */ new Date(), E = n.toISOString().split("T")[0], Q = n.toTimeString().split(" ")[0].replace(/:/g, "-");
+      const a = /* @__PURE__ */ new Date(), E = a.toISOString().split("T")[0], Q = a.toTimeString().split(" ")[0].replace(/:/g, "-");
       i.filename = `asciify_output_${E}_${Q}`;
     }
     const s = this.generateSVG(A, e, r, t, i);
@@ -308,15 +308,15 @@ class gA {
    * @param options The SVG export options
    * @returns The SVG content for the cell
    */
-  generateSVGCellContent(A, e, r, t, i, s, n, E, Q, h, c, p, d) {
+  generateSVGCellContent(A, e, r, t, i, s, a, E, Q, h, c, p, d) {
     let l = "";
     if (d.includeBackgroundRectangles && r.a > 0) {
       const D = `rgba(${r.r},${r.g},${r.b},${r.a / 255})`;
       d.drawMode === "stroke" ? l += `
-  <rect x="${t}" y="${i}" width="${s}" height="${n}" stroke="${D}" fill="none" stroke-width="${d.strokeWidth || 1}" />` : l += `
-  <rect x="${t}" y="${i}" width="${s}" height="${n}" fill="${D}" />`;
+  <rect x="${t}" y="${i}" width="${s}" height="${a}" stroke="${D}" fill="none" stroke-width="${d.strokeWidth || 1}" />` : l += `
+  <rect x="${t}" y="${i}" width="${s}" height="${a}" fill="${D}" />`;
     }
-    const _ = t + s / 2, B = i + n / 2, C = `rgba(${e.r},${e.g},${e.b},${e.a / 255})`, f = [];
+    const _ = t + s / 2, B = i + a / 2, C = `rgba(${e.r},${e.g},${e.b},${e.a / 255})`, f = [];
     if (Q || h) {
       const D = Q ? -1 : 1, I = h ? -1 : 1;
       f.push(`translate(${_} ${B})`), f.push(`scale(${D} ${I})`), f.push(`translate(${-_} ${-B})`);
@@ -324,13 +324,13 @@ class gA {
     E && f.push(`rotate(${E} ${_} ${B})`);
     const b = f.length ? ` transform="${f.join(" ")}"` : "";
     if (d.drawMode === "text") {
-      const D = Math.min(s, n) * 0.8;
+      const D = Math.min(s, a) * 0.8;
       l += `
   <text x="${_}" y="${B}" font-family="monospace" font-size="${D}px" fill="${C}" text-anchor="middle" dominant-baseline="middle"${b}>${this.escapeXml(p.character)}</text>`;
     } else {
       let D = 1;
       R(J(this._p)) ? D = c.fontSize / c.font.data.head.unitsPerEm : D = c.fontSize / c.font.font.unitsPerEm;
-      const I = t + (s - p.advanceWidth * D) / 2, k = i + (n + c.fontSize * 0.7) / 2, u = p.getPath(I, k, c.fontSize).toSVG().match(/d="([^"]+)"/);
+      const I = t + (s - p.advanceWidth * D) / 2, k = i + (a + c.fontSize * 0.7) / 2, u = p.getPath(I, k, c.fontSize).toSVG().match(/d="([^"]+)"/);
       if (u && u[1]) {
         if (b && (l += `
   <g${b}>`), d.drawMode === "stroke") {
@@ -389,9 +389,9 @@ class BA {
       includeEmptyCells: !0,
       prettyPrint: !0,
       ...t
-    }, s = A.characterFramebuffer, n = A.primaryColorFramebuffer, E = A.secondaryColorFramebuffer, Q = A.transformFramebuffer, h = A.rotationFramebuffer;
-    s.loadPixels(), n.loadPixels(), E.loadPixels(), Q.loadPixels(), h.loadPixels();
-    const c = s.pixels, p = n.pixels, d = E.pixels, l = Q.pixels, _ = h.pixels, B = e.cols, C = e.rows, f = r.characters, b = {
+    }, s = A.characterFramebuffer, a = A.primaryColorFramebuffer, E = A.secondaryColorFramebuffer, Q = A.transformFramebuffer, h = A.rotationFramebuffer;
+    s.loadPixels(), a.loadPixels(), E.loadPixels(), Q.loadPixels(), h.loadPixels();
+    const c = s.pixels, p = a.pixels, d = E.pixels, l = Q.pixels, _ = h.pixels, B = e.cols, C = e.rows, f = r.characters, b = {
       version: "1.0",
       created: (/* @__PURE__ */ new Date()).toISOString(),
       gridSize: {
@@ -472,8 +472,8 @@ class BA {
    */
   saveJSON(A, e, r, t = {}) {
     if (!t.filename) {
-      const s = /* @__PURE__ */ new Date(), n = s.toISOString().split("T")[0], E = s.toTimeString().split(" ")[0].replace(/:/g, "-");
-      t.filename = `asciify_output_${n}_${E}`;
+      const s = /* @__PURE__ */ new Date(), a = s.toISOString().split("T")[0], E = s.toTimeString().split(" ")[0].replace(/:/g, "-");
+      t.filename = `asciify_output_${a}_${E}`;
     }
     const i = this.generateJSON(A, e, r, t);
     this.downloadJSON(i, t.filename);
@@ -488,8 +488,8 @@ class BA {
    */
   rgbaToHex(A, e, r, t) {
     const i = (s) => {
-      const n = Math.round(s).toString(16);
-      return n.length === 1 ? "0" + n : n;
+      const a = Math.round(s).toString(16);
+      return a.length === 1 ? "0" + a : a;
     };
     return `#${i(A)}${i(e)}${i(r)}${i(t)}`;
   }
@@ -503,8 +503,8 @@ class BA {
     i.href = t, i.download = `${e}.json`, document.body.appendChild(i), i.click(), document.body.removeChild(i), URL.revokeObjectURL(t);
   }
 }
-function pA(a, A) {
-  const e = a.data.cmap;
+function pA(n, A) {
+  const e = n.data.cmap;
   if (!e || !e.tables) return 0;
   for (const r of e.tables)
     if (r.format === 4) {
@@ -530,10 +530,10 @@ function K() {
     toSVG: () => ""
   };
 }
-function PA(a, A, e, r, t) {
+function PA(n, A, e, r, t) {
   if (!A || !A.xs || A.xs.length === 0)
     return K();
-  const i = t / a.data.head.unitsPerEm;
+  const i = t / n.data.head.unitsPerEm;
   return {
     getBoundingBox: () => ({
       x1: e + A.xMin * i,
@@ -546,10 +546,10 @@ function PA(a, A, e, r, t) {
     toSVG: () => IA(A, e, r, i)
   };
 }
-function IA(a, A, e, r) {
-  if (!a || !a.xs) return "";
-  const { xs: t, ys: i, endPts: s, flags: n } = a;
-  if (!t || !i || !s || !n) return "";
+function IA(n, A, e, r) {
+  if (!n || !n.xs) return "";
+  const { xs: t, ys: i, endPts: s, flags: a } = n;
+  if (!t || !i || !s || !a) return "";
   let E = "", Q = 0;
   for (let h = 0; h < s.length; h++) {
     const c = s[h];
@@ -559,13 +559,13 @@ function IA(a, A, e, r) {
         E += `M${p.toFixed(2)},${d.toFixed(2)}`;
         let l = Q + 1;
         for (; l <= c; )
-          if ((n[l] & 1) !== 0) {
+          if ((a[l] & 1) !== 0) {
             const B = A + t[l] * r, C = e - i[l] * r;
             E += `L${B.toFixed(2)},${C.toFixed(2)}`, l++;
           } else {
             const B = A + t[l] * r, C = e - i[l] * r;
             let f = l + 1 > c ? Q : l + 1;
-            if ((n[f] & 1) !== 0) {
+            if ((a[f] & 1) !== 0) {
               const D = A + t[f] * r, I = e - i[f] * r;
               E += `Q${B.toFixed(2)},${C.toFixed(2)} ${D.toFixed(2)},${I.toFixed(2)}`, l = f + 1;
             } else {
@@ -601,7 +601,7 @@ class Y extends Error {
     this.name = "P5AsciifyError", this.originalError = r;
   }
 }
-var dA = /* @__PURE__ */ ((a) => (a[a.SILENT = 0] = "SILENT", a[a.WARNING = 1] = "WARNING", a[a.ERROR = 2] = "ERROR", a[a.THROW = 3] = "THROW", a))(dA || {});
+var dA = /* @__PURE__ */ ((n) => (n[n.SILENT = 0] = "SILENT", n[n.WARNING = 1] = "WARNING", n[n.ERROR = 2] = "ERROR", n[n.THROW = 3] = "THROW", n))(dA || {});
 const T = class T {
   constructor() {
     o(this, "_options", {
@@ -698,9 +698,9 @@ class VA {
       this._font.data.cmap.tables.forEach((t) => {
         if (t.format === 4)
           for (let i = 0; i < t.startCount.length; i++) {
-            const s = t.startCount[i], n = t.endCount[i];
-            if (!(s === 65535 && n === 65535))
-              for (let E = s; E <= n; E++) {
+            const s = t.startCount[i], a = t.endCount[i];
+            if (!(s === 65535 && a === 65535))
+              for (let E = s; E <= a; E++) {
                 const Q = String.fromCodePoint(E), h = pA(this._font, E);
                 h && h > 0 && (A.push(Q), e.set(Q, h));
               }
@@ -708,17 +708,17 @@ class VA {
       });
       const r = [...new Set(A)];
       this._characters = r.map((t, i) => {
-        const s = t.codePointAt(0), n = e.get(t);
+        const s = t.codePointAt(0), a = e.get(t);
         let E = 0;
-        n !== void 0 && this._font.data.hmtx && this._font.data.hmtx.aWidth && (E = this._font.data.hmtx.aWidth[n]);
+        a !== void 0 && this._font.data.hmtx && this._font.data.hmtx.aWidth && (E = this._font.data.hmtx.aWidth[a]);
         const Q = i % 256, h = Math.floor(i / 256) % 256, c = Math.floor(i / 65536);
         return {
           character: t,
           unicode: s,
           // Create a path generator for this glyph
           getPath: (p, d, l) => {
-            if (n === void 0) return K();
-            const _ = this._font.data.glyf[n];
+            if (a === void 0) return K();
+            const _ = this._font.data.glyf[a];
             return _ ? PA(this._font, _, p, d, l) : K();
           },
           advanceWidth: E,
@@ -730,13 +730,13 @@ class VA {
       this._characters = [], A.forEach((e, r) => {
         if (!e.unicode && (!e.unicodes || !e.unicodes.length))
           return;
-        const t = this._characters.length, i = t % 256, s = Math.floor(t / 256) % 256, n = Math.floor(t / 65536), E = e.unicode ?? e.unicodes[0];
+        const t = this._characters.length, i = t % 256, s = Math.floor(t / 256) % 256, a = Math.floor(t / 65536), E = e.unicode ?? e.unicodes[0];
         this._characters.push({
           character: String.fromCodePoint(E),
           unicode: E,
           getPath: (Q, h, c) => e.getPath(Q, h, c),
           advanceWidth: e.advanceWidth,
-          color: this._p.color(i, s, n)
+          color: this._p.color(i, s, a)
         });
       });
     }
@@ -831,8 +831,8 @@ class VA {
     this._p.textFont(this._font), this._p.textSize(A);
     let e = 0, r = 0;
     for (const t of this._characters) {
-      const i = this._font.textBounds(t.character, 0, 0, A), s = i.h, n = i.w;
-      e = Math.max(e, n), r = Math.max(r, s);
+      const i = this._font.textBounds(t.character, 0, 0, A), s = i.h, a = i.w;
+      e = Math.max(e, a), r = Math.max(r, s);
     }
     return {
       width: Math.ceil(e),
@@ -955,12 +955,11 @@ class fA {
    * Constructs a new ASCII renderer instance. Called by derived classes.
    * @param _p The p5 instance.
    * @param _grid Grid object containing the relevant grid information.
-   * @param initialFramebufferDimensions The initial framebuffer dimensions.
    * @param _fontManager The font manager instance containing the ASCII characters texture.
    * @param _options The options for the ASCII renderer.
    * @ignore
    */
-  constructor(A, e, r, t, i, s) {
+  constructor(A, e, r, t, i) {
     /** The primary color framebuffer, whose pixels define the character colors of the grid cells. */
     o(this, "_primaryColorFramebuffer");
     /** The secondary color framebuffer, whose pixels define the background colors of the grid cells. */
@@ -975,16 +974,38 @@ class fA {
     o(this, "_transformFramebuffer");
     /** The rotation framebuffer, whose pixels define the rotation angle of the characters in the grid. */
     o(this, "_rotationFramebuffer");
-    this._p = A, this._captureFramebuffer = e, this._grid = r, this.initialFramebufferDimensions = t, this._fontManager = i, this._options = s;
-    const n = {
-      density: 1,
+    /** The framebuffer settings that can be modified by the user (width/height/density are managed internally). */
+    o(this, "_framebufferSettings");
+    this._p = A, this._captureFramebuffer = e, this._grid = r, this._fontManager = t, this._options = i, this._framebufferSettings = {
       antialias: !1,
-      width: t.width,
-      height: t.height,
       textureFiltering: this._p.NEAREST,
-      depth: !1
+      depthFormat: this._p.UNSIGNED_INT,
+      density: 1,
+      width: this._grid.cols,
+      height: this._grid.rows
+    }, this._recreateFramebuffers();
+  }
+  _recreateFramebuffers() {
+    const A = {
+      ...this._framebufferSettings,
+      density: 1,
+      width: this._grid.cols,
+      height: this._grid.rows
     };
-    this._primaryColorFramebuffer = this._p.createFramebuffer(n), this._secondaryColorFramebuffer = this._p.createFramebuffer(n), this._transformFramebuffer = this._p.createFramebuffer(n), this._characterFramebuffer = this._p.createFramebuffer(n), this._rotationFramebuffer = this._p.createFramebuffer(n);
+    this._primaryColorFramebuffer = this._p.createFramebuffer(A), this._secondaryColorFramebuffer = this._p.createFramebuffer(A), this._transformFramebuffer = this._p.createFramebuffer(A), this._characterFramebuffer = this._p.createFramebuffer(A), this._rotationFramebuffer = this._p.createFramebuffer(A);
+  }
+  /**
+   * Update framebuffer settings (except width/height) and recreate all framebuffers.
+   * @param settings Partial framebuffer settings (width/height/density are ignored).
+   */
+  setFramebufferSettings(A) {
+    this._framebufferSettings = {
+      ...this._framebufferSettings,
+      ...A,
+      density: 1,
+      width: this._grid.cols,
+      height: this._grid.rows
+    }, this._recreateFramebuffers();
   }
   /**
    * Updates renderer options.
@@ -1355,6 +1376,9 @@ class fA {
   get rotationFramebuffer() {
     return this._rotationFramebuffer;
   }
+  get framebufferSettings() {
+    return this._framebufferSettings;
+  }
   /**
    * Get the character framebuffer, whose pixels define the ASCII characters to use in the grid cells.
    * 
@@ -1424,7 +1448,7 @@ class j extends fA {
    * @ignore
    */
   constructor(A, e, r, t, i = QA) {
-    super(A, e, r, { width: r.cols, height: r.rows }, t, { ...QA, ...i });
+    super(A, e, r, t, { ...QA, ...i });
   }
   resetShaders() {
   }
@@ -1881,12 +1905,12 @@ class uA extends N {
       t >= 0 && t <= 255 && i >= 0 && i <= 255,
       "Brightness values must be between 0 and 255.",
       { providedValue: e, method: "brightnessRange" }
-    ), n = g.validate(
+    ), a = g.validate(
       t <= i,
       "Start value must be less than or equal to the end value.",
       { providedValue: e, method: "brightnessRange" }
     );
-    !s || !n || (this._options.brightnessRange = [t, i]);
+    !s || !a || (this._options.brightnessRange = [t, i]);
   }
   render() {
     this.colorSampleFramebuffer.begin(), this._p.clear(), this._p.shader(this.colorSampleShader), this.colorSampleShader.setUniform("u_sketchTexture", this._captureFramebuffer), this.colorSampleShader.setUniform("u_gridCellDimensions", [this._grid.cols, this._grid.rows]), this._p.rect(0, 0, this.colorSampleFramebuffer.width, this.colorSampleFramebuffer.height), this.colorSampleFramebuffer.end(), this._primaryColorFramebuffer.begin(), this._options.characterColorMode === 1 ? this._p.background(this._options.characterColor) : (this._p.clear(), this._p.image(this.colorSampleFramebuffer, -this._grid.cols / 2, -this._grid.rows / 2, this._grid.cols, this._grid.rows)), this._primaryColorFramebuffer.end(), this._secondaryColorFramebuffer.begin(), this._options.backgroundColorMode === 1 ? this._p.background(this._options.backgroundColor) : (this._p.clear(), this._p.image(this.colorSampleFramebuffer, -this._grid.cols / 2, -this._grid.rows / 2, this._grid.cols, this._grid.rows)), this._secondaryColorFramebuffer.end(), this._transformFramebuffer.begin(), this._p.background(this._options.invertMode ? 255 : 0, this._options.flipHorizontally ? 255 : 0, this._options.flipVertically ? 255 : 0), this._transformFramebuffer.end(), this._rotationFramebuffer.begin(), this._p.background(this._options.rotationAngle), this._rotationFramebuffer.end(), this._characterFramebuffer.begin(), this._p.clear(), this._p.shader(this.asciiCharacterShader), this.asciiCharacterShader.setUniform("u_textureSize", [this._grid.cols, this._grid.rows]), this.asciiCharacterShader.setUniform("u_colorSampleFramebuffer", this.colorSampleFramebuffer), this.asciiCharacterShader.setUniform("u_charPaletteTexture", this._characterColorPalette.framebuffer), this.asciiCharacterShader.setUniform("u_charPaletteSize", [this._characterColorPalette.colors.length, 1]), this.asciiCharacterShader.setUniform("u_brightnessRange", this._options.brightnessRange), this._p.rect(0, 0, this._characterFramebuffer.width, this._characterFramebuffer.height), this._characterFramebuffer.end();
@@ -2074,8 +2098,8 @@ void main() {\r
 
     gl_FragColor = edgeColor;\r
 }`;
-const DA = (a, A, e) => `
-precision mediump float;uniform sampler2D u_image;uniform vec2 u_imageSize,u_gridCellDimensions;uniform int u_threshold;const vec3 i=vec3(0);vec3 f[${a}];int u[${a}];float r(float i){return floor(i+.5);}void main(){vec2 v=floor(gl_FragCoord.xy);ivec2 b=ivec2(v);v=u_imageSize/u_gridCellDimensions;b=ivec2(r(float(b.x)*v.x),r(float(b.y)*v.y));int m=0;for(int b=0;b<${a};b++)f[b]=i,u[b]=0;for(int v=0;v<${e};v++)for(int r=0;r<${A};r++){ivec2 y=b+ivec2(r,v);if(y.x<0||y.y<0||y.x>=int(u_imageSize.x)||y.y>=int(u_imageSize.y))continue;vec3 e=texture2D(u_image,(vec2(y)+.5)/u_imageSize).xyz;if(length(e-i)<.001)continue;m++;bool x=false;for(int b=0;b<${a};b++)if(length(e-f[b])<.001){u[b]++;x=true;break;}if(!x)for(int b=0;b<${a};b++)if(u[b]==0){f[b]=e;u[b]=1;break;}}vec3 e=i;int x=0;for(int b=0;b<${a};b++)if(u[b]>x)e=f[b],x=u[b];gl_FragColor=m<u_threshold?vec4(i,0):vec4(e,1);}
+const DA = (n, A, e) => `
+precision mediump float;uniform sampler2D u_image;uniform vec2 u_imageSize,u_gridCellDimensions;uniform int u_threshold;const vec3 i=vec3(0);vec3 f[${n}];int u[${n}];float r(float i){return floor(i+.5);}void main(){vec2 v=floor(gl_FragCoord.xy);ivec2 b=ivec2(v);v=u_imageSize/u_gridCellDimensions;b=ivec2(r(float(b.x)*v.x),r(float(b.y)*v.y));int m=0;for(int b=0;b<${n};b++)f[b]=i,u[b]=0;for(int v=0;v<${e};v++)for(int r=0;r<${A};r++){ivec2 y=b+ivec2(r,v);if(y.x<0||y.y<0||y.x>=int(u_imageSize.x)||y.y>=int(u_imageSize.y))continue;vec3 e=texture2D(u_image,(vec2(y)+.5)/u_imageSize).xyz;if(length(e-i)<.001)continue;m++;bool x=false;for(int b=0;b<${n};b++)if(length(e-f[b])<.001){u[b]++;x=true;break;}if(!x)for(int b=0;b<${n};b++)if(u[b]==0){f[b]=e;u[b]=1;break;}}vec3 e=i;int x=0;for(int b=0;b<${n};b++)if(u[b]>x)e=f[b],x=u[b];gl_FragColor=m<u_threshold?vec4(i,0):vec4(e,1);}
 `, lA = {
   /** Enable/disable the renderer */
   enabled: !1,
@@ -2365,8 +2389,8 @@ class bA {
    * @param backgroundColor The background color to use for the ASCII output.
    * @ignore
    */
-  render(A, e, r, t, i, s, n = "#000000") {
-    this._resultFramebuffer.begin(), this._p.background(n), this._p.shader(this._shader);
+  render(A, e, r, t, i, s, a = "#000000") {
+    this._resultFramebuffer.begin(), this._p.background(a), this._p.shader(this._shader);
     const E = {
       u_pixelRatio: this._p.pixelDensity(),
       u_characterTexture: this._fontManager.texture,
@@ -2596,9 +2620,9 @@ class wA {
     if (!t || !i)
       return null;
     let s;
-    const n = W[e];
-    if (n)
-      s = new n(this._p, this._captureFramebuffer, this._grid, this._fontManager, r);
+    const a = W[e];
+    if (a)
+      s = new a(this._p, this._captureFramebuffer, this._grid, this._fontManager, r);
     else {
       const Q = this._pluginRegistry.get(e);
       Q && (s = Q.create(
@@ -3233,13 +3257,13 @@ class aA {
     const A = this._rendererManager.characterFramebuffer;
     A.loadPixels();
     const e = A.pixels, r = this._grid.cols, t = this._grid.rows, i = this._fontManager.characters, s = [];
-    let n = 0;
+    let a = 0;
     for (let E = 0; E < t; E++) {
       let Q = "";
       for (let h = 0; h < r; h++) {
-        const c = n * 4, p = e[c], d = e[c + 1];
+        const c = a * 4, p = e[c], d = e[c + 1];
         let l = p + (d << 8);
-        l >= i.length && (l = i.length - 1), Q += i[l].character, n++;
+        l >= i.length && (l = i.length - 1), Q += i[l].character, a++;
       }
       s.push(Q);
     }
@@ -3378,19 +3402,19 @@ class aA {
         transformFramebuffer: null,
         rotationFramebuffer: null
       };
-    const s = e.metadata.gridSize, n = s.cols, E = s.rows, Q = {
-      width: n,
+    const s = e.metadata.gridSize, a = s.cols, E = s.rows, Q = {
+      width: a,
       height: E,
       antialias: !1,
       textureFiltering: this._p.NEAREST,
       depthFormat: this._p.UNSIGNED_INT
     }, h = this._p.createFramebuffer(Q), c = this._p.createFramebuffer(Q), p = this._p.createFramebuffer(Q), d = this._p.createFramebuffer(Q), l = this._p.createFramebuffer(Q), _ = (B, C, f, b) => {
       B.begin(), this._p.push(), this._p.noStroke(), this._p.fill(b);
-      const D = C - n / 2 + 0.5, I = f - E / 2 + 0.5;
+      const D = C - a / 2 + 0.5, I = f - E / 2 + 0.5;
       this._p.rect(D, I, 1, 1), this._p.pop(), B.end();
     };
     for (const B of e.cells)
-      if (!(B.x < 0 || B.y < 0 || B.x >= n || B.y >= E)) {
+      if (!(B.x < 0 || B.y < 0 || B.x >= a || B.y >= E)) {
         if (B.character) {
           const C = this._fontManager.glyphColor(B.character);
           _(h, B.x, B.y, C);
@@ -3625,20 +3649,20 @@ const v = class v {
     return function(r, t, i) {
       i.presetup = async function() {
         const s = A.getHooks("init");
-        for (const n of s)
-          await n.fn.call(this);
+        for (const a of s)
+          await a.fn.call(this);
       }, i.postsetup = async function() {
         const s = A.getHooks("afterSetup");
-        for (const n of s)
-          await n.fn.call(this);
+        for (const a of s)
+          await a.fn.call(this);
       }, i.predraw = function() {
         const s = A.getHooks("pre");
-        for (const n of s)
-          n.fn.call(this);
+        for (const a of s)
+          a.fn.call(this);
       }, i.postdraw = function() {
         const s = A.getHooks("post");
-        for (const n of s)
-          n.fn.call(this);
+        for (const a of s)
+          a.fn.call(this);
       };
     };
   }
@@ -3661,9 +3685,9 @@ const v = class v {
     const t = this, s = {
       originalFn: e,
       proxyFn: function() {
-        const n = t.registeredHooks.get(A);
-        if (n && n.active)
-          return n.originalFn.call(this);
+        const a = t.registeredHooks.get(A);
+        if (a && a.active)
+          return a.originalFn.call(this);
       },
       active: !0,
       // Start active by default

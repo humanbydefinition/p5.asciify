@@ -9,10 +9,6 @@ export declare abstract class P5AsciifyRenderer<T extends AsciiRendererOptions =
     protected _p: p5;
     protected _captureFramebuffer: p5.Framebuffer | p5.Graphics;
     protected _grid: P5AsciifyGrid;
-    protected initialFramebufferDimensions: {
-        width: number;
-        height: number;
-    };
     protected _fontManager: P5AsciifyFontManager;
     protected _options: T;
     /** The primary color framebuffer, whose pixels define the character colors of the grid cells. */
@@ -29,19 +25,39 @@ export declare abstract class P5AsciifyRenderer<T extends AsciiRendererOptions =
     protected _transformFramebuffer: p5.Framebuffer;
     /** The rotation framebuffer, whose pixels define the rotation angle of the characters in the grid. */
     protected _rotationFramebuffer: p5.Framebuffer;
+    /** The framebuffer settings that can be modified by the user (width/height/density are managed internally). */
+    protected _framebufferSettings: {
+        /** Whether to enable antialiasing for the framebuffer. */
+        antialias: boolean;
+        /** The texture filtering mode for the framebuffer. */
+        textureFiltering: any;
+        /** Whether to enable depth for the framebuffer. */
+        depth?: boolean;
+        density: number;
+        width: number;
+        height: number;
+        depthFormat?: any;
+    };
     /**
      * Constructs a new ASCII renderer instance. Called by derived classes.
      * @param _p The p5 instance.
      * @param _grid Grid object containing the relevant grid information.
-     * @param initialFramebufferDimensions The initial framebuffer dimensions.
      * @param _fontManager The font manager instance containing the ASCII characters texture.
      * @param _options The options for the ASCII renderer.
      * @ignore
      */
-    constructor(_p: p5, _captureFramebuffer: p5.Framebuffer | p5.Graphics, _grid: P5AsciifyGrid, initialFramebufferDimensions: {
-        width: number;
-        height: number;
-    }, _fontManager: P5AsciifyFontManager, _options: T);
+    constructor(_p: p5, _captureFramebuffer: p5.Framebuffer | p5.Graphics, _grid: P5AsciifyGrid, _fontManager: P5AsciifyFontManager, _options: T);
+    protected _recreateFramebuffers(): void;
+    /**
+     * Update framebuffer settings (except width/height) and recreate all framebuffers.
+     * @param settings Partial framebuffer settings (width/height/density are ignored).
+     */
+    setFramebufferSettings(settings: {
+        antialias?: boolean;
+        textureFiltering?: any;
+        depth?: boolean;
+        depthFormat?: any;
+    }): void;
     /**
      * Resize the framebuffers to match the grid size.
      * @ignore
@@ -380,6 +396,18 @@ export declare abstract class P5AsciifyRenderer<T extends AsciiRendererOptions =
      * ```
      */
     get rotationFramebuffer(): p5.Framebuffer;
+    get framebufferSettings(): {
+        /** Whether to enable antialiasing for the framebuffer. */
+        antialias: boolean;
+        /** The texture filtering mode for the framebuffer. */
+        textureFiltering: any;
+        /** Whether to enable depth for the framebuffer. */
+        depth?: boolean;
+        density: number;
+        width: number;
+        height: number;
+        depthFormat?: any;
+    };
     /**
      * Get the character framebuffer, whose pixels define the ASCII characters to use in the grid cells.
      *
