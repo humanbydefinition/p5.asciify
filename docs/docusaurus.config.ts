@@ -269,6 +269,10 @@ const config: Config = {
           title: 'More',
           items: [
             {
+              label: 'Showcase',
+              to: '/docs/community/showcase/',
+            },
+            {
               label: 'Donate',
               to: '/docs/donate/',
             },
