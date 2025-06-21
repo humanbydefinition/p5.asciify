@@ -1,6 +1,6 @@
 # Interface: P5AsciifyExtensions
 
-Defined in: [types.ts:71](https://github.com/humanbydefinition/p5.asciify/blob/1b5a6cba0c455984ce43c63ef29d11c26fd6ec65/src/lib/types.ts#L71)
+Defined in: [types.ts:71](https://github.com/humanbydefinition/p5.asciify/blob/e84cef5e536638c5f6d76446c1b5a0c21e26f2d7/src/lib/types.ts#L71)
 
 Interface for additional properties and methods added to the `p5.js` instance by the `p5.asciify` library.
 
@@ -10,7 +10,7 @@ Interface for additional properties and methods added to the `p5.js` instance by
 
 > **drawAsciify**(): `void`
 
-Defined in: [types.ts:146](https://github.com/humanbydefinition/p5.asciify/blob/1b5a6cba0c455984ce43c63ef29d11c26fd6ec65/src/lib/types.ts#L146)
+Defined in: [types.ts:146](https://github.com/humanbydefinition/p5.asciify/blob/e84cef5e536638c5f6d76446c1b5a0c21e26f2d7/src/lib/types.ts#L146)
 
 Called once per frame after the `draw()` loop of `p5.asciify` is complete.
 Use this method to perform any additional drawing steps after the asciified content is rendered.
@@ -62,7 +62,7 @@ function drawAsciify() {
 
 > **setupAsciify**(): `void`
 
-Defined in: [types.ts:108](https://github.com/humanbydefinition/p5.asciify/blob/1b5a6cba0c455984ce43c63ef29d11c26fd6ec65/src/lib/types.ts#L108)
+Defined in: [types.ts:108](https://github.com/humanbydefinition/p5.asciify/blob/e84cef5e536638c5f6d76446c1b5a0c21e26f2d7/src/lib/types.ts#L108)
 
 Called once after the `setup()` of `p5.asciify` is complete.
 Use this method to perform any additional setup steps after the asciify setup is complete.
