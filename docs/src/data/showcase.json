@@ -1,6 +1,6 @@
 [
   {
-    "image": "/img/font_previews/bescii.png",
+    "image": "/img/showcase/textmode-art.png",
     "title": "textmode.art",
     "category": "tool",
     "description": "A web-based tool for creating dynamic textmode art from images, video, and more. Features multi-layer support, custom fonts, creative effects, and flexible export options.",
@@ -14,7 +14,7 @@
     }
   },
   {
-    "image": "/img/font_previews/bescii.png",
+    "image": "/img/showcase/place-textmode-art.png",
     "title": "place.textmode.art",
     "category": "tool",
     "description": "A collaborative textmode art platform inspired by Reddit’s r/place.",
@@ -28,7 +28,7 @@
     }
   },
   {
-    "image": "/img/font_previews/bescii.png",
+    "image": "/img/showcase/face-segmentation.png",
     "title": "Face segmentation with ml5.js",
     "category": "sketch",
     "description": "A sketch that uses ml5.js to segment faces in images, creating a unique textmode art effect.",
