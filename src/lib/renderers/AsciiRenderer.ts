@@ -89,10 +89,14 @@ export abstract class P5AsciifyRenderer<T extends AsciiRendererOptions = AsciiRe
     }
 
     /**
-     * Update framebuffer settings (except width/height) and recreate all framebuffers.
+     * Update framebuffer settings (except width/height/density) and recreate all framebuffers.
+     * 
+     * For a full list of available settings, see the `p5.createFramebuffer()` documentation.
+     * {@link https://p5js.org/reference/p5/createFramebuffer/}
+     * 
      * @param settings Partial framebuffer settings (width/height/density are ignored).
      */
-    public setFramebufferSettings(settings: {
+    public updateFramebufferConfig(settings: {
         antialias?: boolean;
         textureFiltering?: any;
         depth?: boolean;
