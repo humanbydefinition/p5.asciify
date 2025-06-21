@@ -1,4 +1,4 @@
-# p5.asciify v0.10.1
+# p5.asciify v0.10.2
 
 ## Namespaces
 
@@ -14,7 +14,7 @@
 | Class                                                     | Description                                                                                                                                                                            |
 | --------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [P5Asciifier](classes/P5Asciifier.md)                     | Manages a rendering pipeline for ASCII conversion, including font management, grid calculations, and ASCII renderers, which is applied to the main p5.js canvas or a selected texture. |
-| [P5AsciifierManager](classes/P5AsciifierManager.md)       | Manages the `p5.asciify` library by handling one or more `P5Asciifier` instances.                                                                                                      |
+| [P5AsciifierManager](classes/P5AsciifierManager.md)       | Manages the `p5.asciify` library by handling one or more [P5Asciifier](classes/P5Asciifier.md) instances.                                                                              |
 | [P5AsciifyColorPalette](classes/P5AsciifyColorPalette.md) | A 1D color palette stored in a framebuffer that is used to pass colors to shaders.                                                                                                     |
 | [P5AsciifyFontManager](classes/P5AsciifyFontManager.md)   | Manages the font used for the ASCII rendering pipeline and provides methods for working with the font.                                                                                 |
 | [P5AsciifyGrid](classes/P5AsciifyGrid.md)                 | Manages the grid for the ASCII rendering pipeline of an [P5Asciifier](classes/P5Asciifier.md) instance.                                                                                |

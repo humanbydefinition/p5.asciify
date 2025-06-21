@@ -23,6 +23,11 @@ const config: Config = {
   onBrokenLinks: 'warn',
   onBrokenMarkdownLinks: 'warn',
 
+  markdown: {
+    mermaid: true,
+  },
+  themes: ['@docusaurus/theme-mermaid'],
+
   plugins: [
     [
       'docusaurus-plugin-typedoc',
@@ -87,7 +92,7 @@ const config: Config = {
 
   themeConfig: {
     // Replace with your project's social card
-    //image: 'img/docusaurus-social-card.jpg',
+    image: 'img/p5.asciify-social-card.jpg',
 
     // SEO metadata
     metadata: [
@@ -263,6 +268,10 @@ const config: Config = {
         {
           title: 'More',
           items: [
+            {
+              label: 'Showcase',
+              to: '/docs/community/showcase/',
+            },
             {
               label: 'Donate',
               to: '/docs/donate/',

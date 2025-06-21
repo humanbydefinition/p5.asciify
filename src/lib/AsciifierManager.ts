@@ -12,7 +12,7 @@ import { errorHandler } from './errors';
 import { P5AsciifyErrorLevel } from './errors/ErrorHandler';
 
 /**
- * Manages the `p5.asciify` library by handling one or more `P5Asciifier` instances.
+ * Manages the `p5.asciify` library by handling one or more {@link P5Asciifier} instances.
  * 
  * This class is implemented as a singleton, meaning only one instance exists throughout the application.
  * Access the instance through the exposed {@link p5asciify} object or via {@link P5AsciifierManager.getInstance}.
@@ -31,7 +31,7 @@ export class P5AsciifierManager {
     /** The p5.js instance used by the library. */
     private _p!: p5;
 
-    /** The list of `P5Asciifier` instances managed by the library. */
+    /** The list of {@link P5Asciifier} instances managed by the library. */
     private _asciifiers: P5Asciifier[];
 
     /** The base font used by the library. */
@@ -148,7 +148,7 @@ export class P5AsciifierManager {
 
             // Create and wait for all initialization promises to complete
             await Promise.all(
-                this._asciifiers.map(asciifier => asciifier.init(p, this._baseFont))
+                this._asciifiers.map(asciifier => asciifier.init(p))
             );
         } else {
             // For p5.js 1.x - use preload increment and callback
@@ -163,7 +163,7 @@ export class P5AsciifierManager {
             await new Promise<void>((resolve) => {
                 this._baseFont = p.loadFont(URSAFONT_BASE64, (font) => {
                     this._asciifiers.forEach((asciifier) => {
-                        asciifier.init(p, font);
+                        asciifier.init(p);
                     });
 
                     resolve();
@@ -173,7 +173,7 @@ export class P5AsciifierManager {
     }
 
     /**
-     * Sets up the `P5Asciifier` instances managed by the library.
+     * Sets up the {@link P5Asciifier} instances managed by the library.
      * 
      * This method is called automatically by the library after the `setup()` function of the `p5.js` instance has finished executing.
      * 
@@ -189,12 +189,12 @@ export class P5AsciifierManager {
         if (isP5AsyncCapable(this._p5Version)) {
             // For p5.js 2.0+ - asynchronous setup
             for (const asciifier of this._asciifiers) {
-                await asciifier.setup(this._sketchFramebuffer);
+                await asciifier.setup(this._sketchFramebuffer, this._baseFont);
             }
         } else {
             // For p5.js 1.x - synchronous setup
             for (const asciifier of this._asciifiers) {
-                asciifier.setup(this._sketchFramebuffer);
+                asciifier.setup(this._sketchFramebuffer, this._baseFont);
             }
         }
 
@@ -232,7 +232,58 @@ export class P5AsciifierManager {
     }
 
     /**
-     * Executes the ASCII conversion rendering pipelines for each `P5Asciifier` instance managed by the library.
+     * Sets the font size for all managed {@link P5Asciifier} instances simultaneously.
+     * @param size The font size to set for the {@link P5Asciifier} instances.
+     */
+    public fontSize(size: number): void {
+        this._asciifiers.forEach((asciifier) => {
+            asciifier.fontSize(size);
+        });
+    }
+
+    /**
+     * Sets the font for all managed {@link P5Asciifier} instances simultaneously.
+     * @param font The `p5.Font` instance to set as the font for all managed {@link P5Asciifier} instances.
+     */
+    public font(font: p5.Font): void {
+        this._asciifiers.forEach((asciifier) => {
+            asciifier.font(font);
+        });
+    } 
+
+    /**
+     * Sets the grid dimensions for all managed {@link P5Asciifier} instances simultaneously.
+     * @param gridCols The number of columns in the ASCII grid.
+     * @param gridRows The number of rows in the ASCII grid.
+     */
+    public gridDimensions(gridCols: number, gridRows: number): void {
+        this._asciifiers.forEach((asciifier) => {
+            asciifier.gridDimensions(gridCols, gridRows);
+        });
+    }
+
+    /**
+     * Sets whether the ASCII grid should be responsive to the size of the canvas for all managed {@link P5Asciifier} instances.
+     * @param bool If `true`, the ASCII grid will adjust its size based on the canvas dimensions. Otherwise, it will always use the set grid dimensions.
+     */
+    public gridResponsive(bool: boolean = true): void {
+        this._asciifiers.forEach((asciifier) => {
+            asciifier.gridResponsive(bool);
+        });
+    }
+
+    /**
+     * Sets the background mode for all managed {@link P5Asciifier} instances simultaneously.
+     * @param mode The background mode to set for the {@link P5Asciifier} instances.
+     */
+    public backgroundMode(mode: "fixed" | "sampled" = "fixed"): void {
+        this._asciifiers.forEach((asciifier) => {
+            asciifier.backgroundMode(mode);
+        });
+    }
+
+    /**
+     * Executes the ASCII conversion rendering pipelines for each {@link P5Asciifier} instance managed by the library.
      * 
      * This method is called automatically by the library after the `draw()` function of the `p5.js` instance has finished executing.
      * 
@@ -247,13 +298,13 @@ export class P5AsciifierManager {
     }
 
     /**
-     * Returns the `P5Asciifier` instance at the specified index.
+     * Returns the {@link P5Asciifier} instance at the specified index.
      * 
-     * When passing no arguments, the method returns the first `P5Asciifier` instance in the list, 
-     * which usually corresponds to the default `P5Asciifier` provided by the library, which is applied to the main canvas of the `p5.js` instance.
+     * When passing no arguments, the method returns the first {@link P5Asciifier} instance in the list, 
+     * which usually corresponds to the default {@link P5Asciifier} provided by the library, which is applied to the main canvas of the `p5.js` instance.
      * 
-     * @param index The index of the `P5Asciifier` instance to return.
-     * @returns The `P5Asciifier` instance at the specified index.
+     * @param index The index of the {@link P5Asciifier} instance to return.
+     * @returns The {@link P5Asciifier} instance at the specified index.
      * @throws If the index is out of bounds.
      */
     public asciifier(index: number = 0): P5Asciifier | null {
@@ -283,10 +334,10 @@ export class P5AsciifierManager {
     }
 
     /**
-     * Adds a new `P5Asciifier` instance to the library.
+     * Adds a new {@link P5Asciifier} instance to the library.
      * @param framebuffer   The framebuffer to capture for ASCII conversion.
      *                      If not provided, the main canvas of the `p5.js` instance will be used.
-     * @returns The newly created `P5Asciifier` instance, or null if validation fails.
+     * @returns The newly created {@link P5Asciifier} instance, or null if validation fails.
      */
     public add(framebuffer?: p5.Framebuffer | p5.Graphics): P5Asciifier | Promise<P5Asciifier | null> | null {
         // Validate setup is done
@@ -306,10 +357,10 @@ export class P5AsciifierManager {
             // For p5.js 2.0+, return a Promise
             return (async () => {
                 try {
-                    await asciifier.init(this._p, this._baseFont);
+                    await asciifier.init(this._p);
 
                     if (this._setupDone && this._sketchFramebuffer) {
-                        await asciifier.setup(framebuffer ? framebuffer : this._sketchFramebuffer);
+                        await asciifier.setup(framebuffer ? framebuffer : this._sketchFramebuffer, this._baseFont);
                     }
 
                     this._asciifiers.push(asciifier);
@@ -326,11 +377,11 @@ export class P5AsciifierManager {
             })();
         } else {
             // For p5.js 1.x, synchronous init
-            asciifier.init(this._p, this._baseFont);
+            asciifier.init(this._p);
 
             // If setup is done, immediately set up the asciifier
             if (this._setupDone) {
-                asciifier.setup(framebuffer ? framebuffer : this._sketchFramebuffer);
+                asciifier.setup(framebuffer ? framebuffer : this._sketchFramebuffer, this._baseFont);
             }
 
             this._asciifiers.push(asciifier);
@@ -339,8 +390,8 @@ export class P5AsciifierManager {
     }
 
     /**
-     * Removes a `P5Asciifier` instance.
-     * @param indexOrAsciifier The index of the `P5Asciifier` instance to remove, or the `P5Asciifier` instance itself.
+     * Removes a {@link P5Asciifier} instance.
+     * @param indexOrAsciifier The index of the {@link P5Asciifier} instance to remove, or the {@link P5Asciifier} instance itself.
      */
     public remove(indexOrAsciifier: number | P5Asciifier): void {
         if (typeof indexOrAsciifier === 'number') {
@@ -532,7 +583,7 @@ export class P5AsciifierManager {
     }
 
     /**
-     * Returns the list of `P5Asciifier` instances managed by the library.
+     * Returns the list of {@link P5Asciifier} instances managed by the library.
      */
     get asciifiers(): P5Asciifier[] { return this._asciifiers; }
 

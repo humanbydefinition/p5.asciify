@@ -127,7 +127,7 @@ export class P5AsciifyFontManager {
                         return createGlyphPath(this._font, glyphData, x, y, fontSize);
                     },
                     advanceWidth,
-                    r, g, b
+                    color: this._p.color(r, g, b),
                 };
             });
         } else {
@@ -156,7 +156,7 @@ export class P5AsciifyFontManager {
                     unicode,
                     getPath: (x: number, y: number, fontSize: number) => glyph.getPath(x, y, fontSize),
                     advanceWidth: glyph.advanceWidth,
-                    r, g, b
+                    color: this._p.color(r, g, b),
                 });
             });
         }
@@ -205,7 +205,7 @@ export class P5AsciifyFontManager {
      *  }
      * ```
      */
-    public glyphColor(char: string): [number, number, number] {
+    public glyphColor(char: string): p5.Color {
         // Validate input parameter
         const isValidInput = errorHandler.validate(
             typeof char === 'string' && char.length > 0,
@@ -214,7 +214,7 @@ export class P5AsciifyFontManager {
         );
 
         if (!isValidInput) {
-            return [0, 0, 0]; // Return early if input validation fails
+            return this._p.color(0); // Return early if input validation fails
         }
 
         const charInfo = this._characters.find(
@@ -233,10 +233,10 @@ export class P5AsciifyFontManager {
         );
 
         if (!characterExists) {
-            return [0, 0, 0]; // Return early if character not found
+            return this._p.color(0); // Return early if character not found
         }
 
-        return [charInfo!.r, charInfo!.g, charInfo!.b];
+        return charInfo!.color;
     }
 
     /**
@@ -254,7 +254,7 @@ export class P5AsciifyFontManager {
      *  }
      * ```
      */
-    public glyphColors(characters: string | string[] = ""): Array<[number, number, number]> {
+    public glyphColors(characters: string | string[] = ""): p5.Color[] {
         // Validate input parameter
         const isValidInput = errorHandler.validate(
             typeof characters === 'string' || Array.isArray(characters),
@@ -263,14 +263,13 @@ export class P5AsciifyFontManager {
         );
 
         if (!isValidInput) {
-            return [[0, 0, 0]]; // Return early if input validation fails
+            return [this._p.color(0)]; // Return early if input validation fails
         }
 
-        const results: Array<[number, number, number]> = [];
-
+        const results: p5.Color[] = [];
         for (const char of Array.from(characters)) {
             const color = this.glyphColor(char);
-            results.push(color as [number, number, number]);
+            results.push(color);
         }
 
         return results;

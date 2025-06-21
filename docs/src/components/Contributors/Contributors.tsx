@@ -6,7 +6,7 @@ import styles from './Contributors.module.css';
 export default function Contributors() {
   return (
     <div className={styles.container}>
-      {contributors.map((c) => (
+      {[...contributors].reverse().map((c) => (
         <ContributorCard
           key={c.username}
           username={c.username}

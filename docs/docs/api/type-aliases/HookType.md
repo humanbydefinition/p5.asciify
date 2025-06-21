@@ -2,7 +2,7 @@
 
 > **HookType** = `"init"` \| `"afterSetup"` \| `"pre"` \| `"post"`
 
-Defined in: [types.ts:37](https://github.com/humanbydefinition/p5.asciify/blob/ace1342891258faf7ebc3f7702cd043e86c2060a/src/lib/types.ts#L37)
+Defined in: [types.ts:37](https://github.com/humanbydefinition/p5.asciify/blob/e84cef5e536638c5f6d76446c1b5a0c21e26f2d7/src/lib/types.ts#L37)
 
 Hook types supported by the p5.asciify hook manager.
 

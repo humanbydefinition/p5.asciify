@@ -299,12 +299,5 @@ export type P5AsciifyCharacter = {
     /** The advance width of the character. Only relevant for SVG export. To be removed in the future hopefully. */
     advanceWidth: number;
 
-    /** The red component of the character color. */
-    r: number;
-
-    /** The green component of the character color. */
-    g: number;
-
-    /** The blue component of the character color. */
-    b: number;
+    color: p5.Color;
 }

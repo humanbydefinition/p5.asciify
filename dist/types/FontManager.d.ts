@@ -63,7 +63,7 @@ export declare class P5AsciifyFontManager {
      *  }
      * ```
      */
-    glyphColor(char: string): [number, number, number];
+    glyphColor(char: string): p5.Color;
     /**
      * Gets an array of RGB colors for a given string of characters.
      * @param characters - A string of characters.
@@ -79,7 +79,7 @@ export declare class P5AsciifyFontManager {
      *  }
      * ```
      */
-    glyphColors(characters?: string | string[]): Array<[number, number, number]>;
+    glyphColors(characters?: string | string[]): p5.Color[];
     /**
          * Calculates the maximum width and height of all the glyphs in the font.
          * @param fontSize - The font size to use for calculations.

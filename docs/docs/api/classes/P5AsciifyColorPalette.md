@@ -1,6 +1,6 @@
 # Class: P5AsciifyColorPalette
 
-Defined in: [ColorPalette.ts:10](https://github.com/humanbydefinition/p5.asciify/blob/ace1342891258faf7ebc3f7702cd043e86c2060a/src/lib/ColorPalette.ts#L10)
+Defined in: [ColorPalette.ts:10](https://github.com/humanbydefinition/p5.asciify/blob/e84cef5e536638c5f6d76446c1b5a0c21e26f2d7/src/lib/ColorPalette.ts#L10)
 
 A 1D color palette stored in a framebuffer that is used to pass colors to shaders.
 
@@ -14,16 +14,16 @@ But you technically could - _if you wanted to_ - without breaking anything.
 
 > **new P5AsciifyColorPalette**(`_p`, `_colors`): `P5AsciifyColorPalette`
 
-Defined in: [ColorPalette.ts:20](https://github.com/humanbydefinition/p5.asciify/blob/ace1342891258faf7ebc3f7702cd043e86c2060a/src/lib/ColorPalette.ts#L20)
+Defined in: [ColorPalette.ts:20](https://github.com/humanbydefinition/p5.asciify/blob/e84cef5e536638c5f6d76446c1b5a0c21e26f2d7/src/lib/ColorPalette.ts#L20)
 
 Create a new color palette instance.
 
 #### Parameters
 
-| Parameter | Type                               | Description                                                           |
-| --------- | ---------------------------------- | --------------------------------------------------------------------- |
-| `_p`      | `__module`                         | The p5 instance.                                                      |
-| `_colors` | \[`number`, `number`, `number`\][] | The colors to store in the palette as an array of `[r, g, b]` tuples. |
+| Parameter | Type       | Description                                                           |
+| --------- | ---------- | --------------------------------------------------------------------- |
+| `_p`      | `__module` | The p5 instance.                                                      |
+| `_colors` | `Color`[]  | The colors to store in the palette as an array of `[r, g, b]` tuples. |
 
 #### Returns
 
@@ -35,15 +35,15 @@ Create a new color palette instance.
 
 #### Get Signature
 
-> **get** **colors**(): \[`number`, `number`, `number`\][]
+> **get** **colors**(): `Color`[]
 
-Defined in: [ColorPalette.ts:72](https://github.com/humanbydefinition/p5.asciify/blob/ace1342891258faf7ebc3f7702cd043e86c2060a/src/lib/ColorPalette.ts#L72)
+Defined in: [ColorPalette.ts:72](https://github.com/humanbydefinition/p5.asciify/blob/e84cef5e536638c5f6d76446c1b5a0c21e26f2d7/src/lib/ColorPalette.ts#L72)
 
 Get the colors of the palette.
 
 ##### Returns
 
-\[`number`, `number`, `number`\][]
+`Color`[]
 
 ---
 
@@ -53,7 +53,7 @@ Get the colors of the palette.
 
 > **get** **framebuffer**(): `Framebuffer`
 
-Defined in: [ColorPalette.ts:77](https://github.com/humanbydefinition/p5.asciify/blob/ace1342891258faf7ebc3f7702cd043e86c2060a/src/lib/ColorPalette.ts#L77)
+Defined in: [ColorPalette.ts:77](https://github.com/humanbydefinition/p5.asciify/blob/e84cef5e536638c5f6d76446c1b5a0c21e26f2d7/src/lib/ColorPalette.ts#L77)
 
 Get the framebuffer containing the colors of the palette.
 
@@ -67,15 +67,15 @@ Get the framebuffer containing the colors of the palette.
 
 > **setColors**(`newColors`): `void`
 
-Defined in: [ColorPalette.ts:64](https://github.com/humanbydefinition/p5.asciify/blob/ace1342891258faf7ebc3f7702cd043e86c2060a/src/lib/ColorPalette.ts#L64)
+Defined in: [ColorPalette.ts:64](https://github.com/humanbydefinition/p5.asciify/blob/e84cef5e536638c5f6d76446c1b5a0c21e26f2d7/src/lib/ColorPalette.ts#L64)
 
 Sets the colors of the palette and updates the framebuffer.
 
 #### Parameters
 
-| Parameter   | Type                               | Description            |
-| ----------- | ---------------------------------- | ---------------------- |
-| `newColors` | \[`number`, `number`, `number`\][] | The new colors to set. |
+| Parameter   | Type      | Description            |
+| ----------- | --------- | ---------------------- |
+| `newColors` | `Color`[] | The new colors to set. |
 
 #### Returns
 

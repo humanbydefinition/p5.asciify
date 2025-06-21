@@ -1,7 +1,7 @@
 ---
 id: contributing
 title: Contributing
-sidebar_position: 3
+sidebar_position: 4
 description: Learn how to contribute to p5.asciify development. Complete guide for setting up the development environment, running tests, building the project, and submitting pull requests to the open-source ASCII art library.
 keywords: [contribute to p5.asciify, p5.asciify development, p5.asciify pull request, p5.asciify GitHub contribution, open source ASCII library, p5.asciify TypeScript development, Node.js p5.asciify setup, vite p5.asciify build, p5.asciify testing vitest, creative coding contribution]
 ---

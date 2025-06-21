@@ -66,9 +66,8 @@ export class P5Asciifier {
      * 
      * @ignore
      */
-    public async init(p: p5, baseFont: p5.Font): Promise<void> {
+    public async init(p: p5): Promise<void> {
         this._p = p;
-        this._fontManager = new P5AsciifyFontManager(p, baseFont);
     }
 
     /**
@@ -78,8 +77,10 @@ export class P5Asciifier {
      * 
      * @ignore
      */
-    public async setup(captureFramebuffer: p5.Framebuffer | p5.Graphics): Promise<void> {
+    public async setup(captureFramebuffer: p5.Framebuffer | p5.Graphics, baseFont: p5.Font): Promise<void> {
         this._captureFramebuffer = captureFramebuffer;
+
+        this._fontManager = new P5AsciifyFontManager(this._p, baseFont);
 
         if (isP5AsyncCapable(detectP5Version(this._p))) {
             await this._fontManager.setup(this._fontSize);
