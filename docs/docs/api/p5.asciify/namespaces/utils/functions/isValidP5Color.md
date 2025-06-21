@@ -2,7 +2,7 @@
 
 > **isValidP5Color**(`p`, `color`): `boolean`
 
-Defined in: [utils/utils.ts:78](https://github.com/humanbydefinition/p5.asciify/blob/7bcb46eee7a4a607e842b6ccb8c930fbed351f10/src/lib/utils/utils.ts#L78)
+Defined in: [utils/utils.ts:78](https://github.com/humanbydefinition/p5.asciify/blob/b93cb3b16adeabda96c59e2d20e060935e7d746f/src/lib/utils/utils.ts#L78)
 
 ## Parameters
 
