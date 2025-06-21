@@ -12,7 +12,7 @@ import { errorHandler } from './errors';
 import { P5AsciifyErrorLevel } from './errors/ErrorHandler';
 
 /**
- * Manages the `p5.asciify` library by handling one or more `P5Asciifier` instances.
+ * Manages the `p5.asciify` library by handling one or more {@link P5Asciifier} instances.
  * 
  * This class is implemented as a singleton, meaning only one instance exists throughout the application.
  * Access the instance through the exposed {@link p5asciify} object or via {@link P5AsciifierManager.getInstance}.
@@ -31,7 +31,7 @@ export class P5AsciifierManager {
     /** The p5.js instance used by the library. */
     private _p!: p5;
 
-    /** The list of `P5Asciifier` instances managed by the library. */
+    /** The list of {@link P5Asciifier} instances managed by the library. */
     private _asciifiers: P5Asciifier[];
 
     /** The base font used by the library. */
@@ -173,7 +173,7 @@ export class P5AsciifierManager {
     }
 
     /**
-     * Sets up the `P5Asciifier` instances managed by the library.
+     * Sets up the {@link P5Asciifier} instances managed by the library.
      * 
      * This method is called automatically by the library after the `setup()` function of the `p5.js` instance has finished executing.
      * 
@@ -232,8 +232,8 @@ export class P5AsciifierManager {
     }
 
     /**
-     * Sets the font size for all managed `P5Asciifier` instances simultaneously.
-     * @param size The font size to set for the `P5Asciifier` instances.
+     * Sets the font size for all managed {@link P5Asciifier} instances simultaneously.
+     * @param size The font size to set for the {@link P5Asciifier} instances.
      */
     public fontSize(size: number): void {
         this._asciifiers.forEach((asciifier) => {
@@ -242,8 +242,8 @@ export class P5AsciifierManager {
     }
 
     /**
-     * Sets the font for all managed `P5Asciifier` instances simultaneously.
-     * @param font The `p5.Font` instance to set as the font for all managed `P5Asciifier` instances.
+     * Sets the font for all managed {@link P5Asciifier} instances simultaneously.
+     * @param font The `p5.Font` instance to set as the font for all managed {@link P5Asciifier} instances.
      */
     public font(font: p5.Font): void {
         this._asciifiers.forEach((asciifier) => {
@@ -252,7 +252,7 @@ export class P5AsciifierManager {
     } 
 
     /**
-     * Sets the grid dimensions for all managed `P5Asciifier` instances simultaneously.
+     * Sets the grid dimensions for all managed {@link P5Asciifier} instances simultaneously.
      * @param gridCols The number of columns in the ASCII grid.
      * @param gridRows The number of rows in the ASCII grid.
      */
@@ -263,7 +263,7 @@ export class P5AsciifierManager {
     }
 
     /**
-     * Sets whether the ASCII grid should be responsive to the size of the canvas for all managed `P5Asciifier` instances.
+     * Sets whether the ASCII grid should be responsive to the size of the canvas for all managed {@link P5Asciifier} instances.
      * @param bool If `true`, the ASCII grid will adjust its size based on the canvas dimensions. Otherwise, it will always use the set grid dimensions.
      */
     public gridResponsive(bool: boolean = true): void {
@@ -273,8 +273,8 @@ export class P5AsciifierManager {
     }
 
     /**
-     * Sets the background mode for all managed `P5Asciifier` instances simultaneously.
-     * @param mode The background mode to set for the `P5Asciifier` instances.
+     * Sets the background mode for all managed {@link P5Asciifier} instances simultaneously.
+     * @param mode The background mode to set for the {@link P5Asciifier} instances.
      */
     public backgroundMode(mode: "fixed" | "sampled" = "fixed"): void {
         this._asciifiers.forEach((asciifier) => {
@@ -283,7 +283,7 @@ export class P5AsciifierManager {
     }
 
     /**
-     * Executes the ASCII conversion rendering pipelines for each `P5Asciifier` instance managed by the library.
+     * Executes the ASCII conversion rendering pipelines for each {@link P5Asciifier} instance managed by the library.
      * 
      * This method is called automatically by the library after the `draw()` function of the `p5.js` instance has finished executing.
      * 
@@ -298,13 +298,13 @@ export class P5AsciifierManager {
     }
 
     /**
-     * Returns the `P5Asciifier` instance at the specified index.
+     * Returns the {@link P5Asciifier} instance at the specified index.
      * 
-     * When passing no arguments, the method returns the first `P5Asciifier` instance in the list, 
-     * which usually corresponds to the default `P5Asciifier` provided by the library, which is applied to the main canvas of the `p5.js` instance.
+     * When passing no arguments, the method returns the first {@link P5Asciifier} instance in the list, 
+     * which usually corresponds to the default {@link P5Asciifier} provided by the library, which is applied to the main canvas of the `p5.js` instance.
      * 
-     * @param index The index of the `P5Asciifier` instance to return.
-     * @returns The `P5Asciifier` instance at the specified index.
+     * @param index The index of the {@link P5Asciifier} instance to return.
+     * @returns The {@link P5Asciifier} instance at the specified index.
      * @throws If the index is out of bounds.
      */
     public asciifier(index: number = 0): P5Asciifier | null {
@@ -334,10 +334,10 @@ export class P5AsciifierManager {
     }
 
     /**
-     * Adds a new `P5Asciifier` instance to the library.
+     * Adds a new {@link P5Asciifier} instance to the library.
      * @param framebuffer   The framebuffer to capture for ASCII conversion.
      *                      If not provided, the main canvas of the `p5.js` instance will be used.
-     * @returns The newly created `P5Asciifier` instance, or null if validation fails.
+     * @returns The newly created {@link P5Asciifier} instance, or null if validation fails.
      */
     public add(framebuffer?: p5.Framebuffer | p5.Graphics): P5Asciifier | Promise<P5Asciifier | null> | null {
         // Validate setup is done
@@ -390,8 +390,8 @@ export class P5AsciifierManager {
     }
 
     /**
-     * Removes a `P5Asciifier` instance.
-     * @param indexOrAsciifier The index of the `P5Asciifier` instance to remove, or the `P5Asciifier` instance itself.
+     * Removes a {@link P5Asciifier} instance.
+     * @param indexOrAsciifier The index of the {@link P5Asciifier} instance to remove, or the {@link P5Asciifier} instance itself.
      */
     public remove(indexOrAsciifier: number | P5Asciifier): void {
         if (typeof indexOrAsciifier === 'number') {
@@ -583,7 +583,7 @@ export class P5AsciifierManager {
     }
 
     /**
-     * Returns the list of `P5Asciifier` instances managed by the library.
+     * Returns the list of {@link P5Asciifier} instances managed by the library.
      */
     get asciifiers(): P5Asciifier[] { return this._asciifiers; }
 
