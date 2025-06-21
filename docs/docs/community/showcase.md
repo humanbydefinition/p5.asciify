@@ -9,7 +9,7 @@ keywords: [p5.asciify showcase, p5.js ASCII art projects, creative coding exampl
 import ShowcaseGrid from '@site/src/components/ShowcaseGrid/ShowcaseGrid';
 
 :::info
-This page is a showcase of projects built with `p5.asciify`. If you have a project you'd like to share, please consider creating a pull request to the [`showcase.json`](#) file to add it to the list. This is a great way to share your work with the community and inspire others!
+This page is a showcase of projects built with `p5.asciify`. If you have a project you'd like to share, please consider creating a pull request to the [`showcase.json`](https://github.com/humanbydefinition/p5.asciify/blob/main/docs/src/data/showcase.json) file to add it to the list. This is a great way to share your work with the community and inspire others!
 
 The order of items in the showcase is determined randomly each time the page is loaded, so you may see different projects at the top of the list each time you visit. This is done to give equal visibility to all projects and to encourage exploration.
 
