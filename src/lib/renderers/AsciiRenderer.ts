@@ -32,10 +32,10 @@ export abstract class P5AsciifyRenderer<T extends AsciiRendererOptions = AsciiRe
     /** The framebuffer settings that can be modified by the user (width/height/density are managed internally). */
     protected _framebufferSettings: {
         /** Whether to enable antialiasing for the framebuffer. */
-        antialias: boolean;
+        antialias?: boolean;
 
         /** The texture filtering mode for the framebuffer. */
-        textureFiltering: any;
+        textureFiltering?: any;
 
         /** Whether to enable depth for the framebuffer. */
         depth?: boolean;
@@ -44,6 +44,10 @@ export abstract class P5AsciifyRenderer<T extends AsciiRendererOptions = AsciiRe
         width: number;
         height: number;
         depthFormat?: any;
+
+        format?: number;
+        channels?: number;
+        stencil?: boolean;
     };
 
     /**
@@ -97,12 +101,14 @@ export abstract class P5AsciifyRenderer<T extends AsciiRendererOptions = AsciiRe
      * @param settings Partial framebuffer settings (width/height/density are ignored).
      */
     public updateFramebufferConfig(settings: {
-        antialias?: boolean;
-        textureFiltering?: any;
+        format?: number;
+        channels?: number;
         depth?: boolean;
-        depthFormat?: any;
+        depthFormat?: number;
+        stencil?: boolean;
+        antialias?: boolean;
+        textureFiltering?: number;
     }): void {
-        // Update only allowed keys
         this._framebufferSettings = {
             ...this._framebufferSettings,
             ...settings,
