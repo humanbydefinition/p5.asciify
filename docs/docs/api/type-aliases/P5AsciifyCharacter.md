@@ -2,7 +2,7 @@
 
 > **P5AsciifyCharacter** = `object`
 
-Defined in: [types.ts:280](https://github.com/humanbydefinition/p5.asciify/blob/b93cb3b16adeabda96c59e2d20e060935e7d746f/src/lib/types.ts#L280)
+Defined in: [types.ts:280](https://github.com/humanbydefinition/p5.asciify/blob/e388e858755b4fb844e13d1aa48ab2d219cb215c/src/lib/types.ts#L280)
 
 Each character from a loaded font is represented as a `P5AsciifyCharacter` object.
 
@@ -14,7 +14,7 @@ To receive the list of characters from a loaded font, use the [P5AsciifyFontMana
 
 > **advanceWidth**: `number`
 
-Defined in: [types.ts:300](https://github.com/humanbydefinition/p5.asciify/blob/b93cb3b16adeabda96c59e2d20e060935e7d746f/src/lib/types.ts#L300)
+Defined in: [types.ts:300](https://github.com/humanbydefinition/p5.asciify/blob/e388e858755b4fb844e13d1aa48ab2d219cb215c/src/lib/types.ts#L300)
 
 The advance width of the character. Only relevant for SVG export. To be removed in the future hopefully.
 
@@ -24,7 +24,7 @@ The advance width of the character. Only relevant for SVG export. To be removed 
 
 > **character**: `string`
 
-Defined in: [types.ts:282](https://github.com/humanbydefinition/p5.asciify/blob/b93cb3b16adeabda96c59e2d20e060935e7d746f/src/lib/types.ts#L282)
+Defined in: [types.ts:282](https://github.com/humanbydefinition/p5.asciify/blob/e388e858755b4fb844e13d1aa48ab2d219cb215c/src/lib/types.ts#L282)
 
 The character represented by this glyph.
 
@@ -34,7 +34,7 @@ The character represented by this glyph.
 
 > **color**: `p5.Color`
 
-Defined in: [types.ts:302](https://github.com/humanbydefinition/p5.asciify/blob/b93cb3b16adeabda96c59e2d20e060935e7d746f/src/lib/types.ts#L302)
+Defined in: [types.ts:302](https://github.com/humanbydefinition/p5.asciify/blob/e388e858755b4fb844e13d1aa48ab2d219cb215c/src/lib/types.ts#L302)
 
 ---
 
@@ -42,7 +42,7 @@ Defined in: [types.ts:302](https://github.com/humanbydefinition/p5.asciify/blob/
 
 > **unicode**: `number`
 
-Defined in: [types.ts:285](https://github.com/humanbydefinition/p5.asciify/blob/b93cb3b16adeabda96c59e2d20e060935e7d746f/src/lib/types.ts#L285)
+Defined in: [types.ts:285](https://github.com/humanbydefinition/p5.asciify/blob/e388e858755b4fb844e13d1aa48ab2d219cb215c/src/lib/types.ts#L285)
 
 The unicode value of the character.
 
@@ -52,7 +52,7 @@ The unicode value of the character.
 
 > **getPath**(`x`, `y`, `fontSize`): `object`
 
-Defined in: [types.ts:294](https://github.com/humanbydefinition/p5.asciify/blob/b93cb3b16adeabda96c59e2d20e060935e7d746f/src/lib/types.ts#L294)
+Defined in: [types.ts:294](https://github.com/humanbydefinition/p5.asciify/blob/e388e858755b4fb844e13d1aa48ab2d219cb215c/src/lib/types.ts#L294)
 
 Gets the outline path of this character positioned at specified coordinates.
 
@@ -72,5 +72,5 @@ An object with methods to get the bounding box and SVG representation of the cha
 
 | Name               | Type           | Defined in                                                                                                                          |
 | ------------------ | -------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| `getBoundingBox()` | () => `object` | [types.ts:295](https://github.com/humanbydefinition/p5.asciify/blob/b93cb3b16adeabda96c59e2d20e060935e7d746f/src/lib/types.ts#L295) |
-| `toSVG()`          | () => `string` | [types.ts:296](https://github.com/humanbydefinition/p5.asciify/blob/b93cb3b16adeabda96c59e2d20e060935e7d746f/src/lib/types.ts#L296) |
+| `getBoundingBox()` | () => `object` | [types.ts:295](https://github.com/humanbydefinition/p5.asciify/blob/e388e858755b4fb844e13d1aa48ab2d219cb215c/src/lib/types.ts#L295) |
+| `toSVG()`          | () => `string` | [types.ts:296](https://github.com/humanbydefinition/p5.asciify/blob/e388e858755b4fb844e13d1aa48ab2d219cb215c/src/lib/types.ts#L296) |

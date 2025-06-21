@@ -1,6 +1,6 @@
 # Class: `abstract` P5AsciifyRenderer\<T\>
 
-Defined in: [renderers/AsciiRenderer.ts:11](https://github.com/humanbydefinition/p5.asciify/blob/b93cb3b16adeabda96c59e2d20e060935e7d746f/src/lib/renderers/AsciiRenderer.ts#L11)
+Defined in: [renderers/AsciiRenderer.ts:11](https://github.com/humanbydefinition/p5.asciify/blob/e388e858755b4fb844e13d1aa48ab2d219cb215c/src/lib/renderers/AsciiRenderer.ts#L11)
 
 Abstract ASCII renderer base class that all custom and pre-built ASCII renderers extend from.
 
@@ -22,7 +22,7 @@ Abstract ASCII renderer base class that all custom and pre-built ASCII renderers
 
 > **get** **characterFramebuffer**(): `Framebuffer`
 
-Defined in: [renderers/AsciiRenderer.ts:563](https://github.com/humanbydefinition/p5.asciify/blob/b93cb3b16adeabda96c59e2d20e060935e7d746f/src/lib/renderers/AsciiRenderer.ts#L563)
+Defined in: [renderers/AsciiRenderer.ts:616](https://github.com/humanbydefinition/p5.asciify/blob/e388e858755b4fb844e13d1aa48ab2d219cb215c/src/lib/renderers/AsciiRenderer.ts#L616)
 
 Get the character framebuffer, whose pixels define the ASCII characters to use in the grid cells.
 
@@ -87,25 +87,30 @@ function draw() {
 
 ---
 
-### framebufferSettings
+### framebufferOptions
 
 #### Get Signature
 
-> **get** **framebufferSettings**(): `object`
+> **get** **framebufferOptions**(): `object`
 
-Defined in: [renderers/AsciiRenderer.ts:510](https://github.com/humanbydefinition/p5.asciify/blob/b93cb3b16adeabda96c59e2d20e060935e7d746f/src/lib/renderers/AsciiRenderer.ts#L510)
+Defined in: [renderers/AsciiRenderer.ts:563](https://github.com/humanbydefinition/p5.asciify/blob/e388e858755b4fb844e13d1aa48ab2d219cb215c/src/lib/renderers/AsciiRenderer.ts#L563)
+
+Get the framebuffer settings used to configure all internal framebuffers for the renderer.
 
 ##### Returns
 
-| Name               | Type      | Description                                         | Defined in                                                                                                                                                            |
-| ------------------ | --------- | --------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `antialias`        | `boolean` | Whether to enable antialiasing for the framebuffer. | [renderers/AsciiRenderer.ts:35](https://github.com/humanbydefinition/p5.asciify/blob/b93cb3b16adeabda96c59e2d20e060935e7d746f/src/lib/renderers/AsciiRenderer.ts#L35) |
-| `density`          | `number`  | -                                                   | [renderers/AsciiRenderer.ts:43](https://github.com/humanbydefinition/p5.asciify/blob/b93cb3b16adeabda96c59e2d20e060935e7d746f/src/lib/renderers/AsciiRenderer.ts#L43) |
-| `depth?`           | `boolean` | Whether to enable depth for the framebuffer.        | [renderers/AsciiRenderer.ts:41](https://github.com/humanbydefinition/p5.asciify/blob/b93cb3b16adeabda96c59e2d20e060935e7d746f/src/lib/renderers/AsciiRenderer.ts#L41) |
-| `depthFormat?`     | `any`     | -                                                   | [renderers/AsciiRenderer.ts:46](https://github.com/humanbydefinition/p5.asciify/blob/b93cb3b16adeabda96c59e2d20e060935e7d746f/src/lib/renderers/AsciiRenderer.ts#L46) |
-| `height`           | `number`  | -                                                   | [renderers/AsciiRenderer.ts:45](https://github.com/humanbydefinition/p5.asciify/blob/b93cb3b16adeabda96c59e2d20e060935e7d746f/src/lib/renderers/AsciiRenderer.ts#L45) |
-| `textureFiltering` | `any`     | The texture filtering mode for the framebuffer.     | [renderers/AsciiRenderer.ts:38](https://github.com/humanbydefinition/p5.asciify/blob/b93cb3b16adeabda96c59e2d20e060935e7d746f/src/lib/renderers/AsciiRenderer.ts#L38) |
-| `width`            | `number`  | -                                                   | [renderers/AsciiRenderer.ts:44](https://github.com/humanbydefinition/p5.asciify/blob/b93cb3b16adeabda96c59e2d20e060935e7d746f/src/lib/renderers/AsciiRenderer.ts#L44) |
+| Name                | Type      | Description                                                                                                                                                 | Defined in                                                                                                                                                            |
+| ------------------- | --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `antialias?`        | `boolean` | Whether to perform anti-aliasing. If set to `true`, 2 samples will be used by default. The number of samples can also be set (e.g., 4). Default is `false`. | [renderers/AsciiRenderer.ts:53](https://github.com/humanbydefinition/p5.asciify/blob/e388e858755b4fb844e13d1aa48ab2d219cb215c/src/lib/renderers/AsciiRenderer.ts#L53) |
+| `channels?`         | `number`  | Whether to store `RGB` or `RGBA` color channels. Default is to match the main canvas, which is `RGBA`.                                                      | [renderers/AsciiRenderer.ts:77](https://github.com/humanbydefinition/p5.asciify/blob/e388e858755b4fb844e13d1aa48ab2d219cb215c/src/lib/renderers/AsciiRenderer.ts#L77) |
+| `density`           | `number`  | The pixel density of the framebuffers. Always fixed to 1, since they are used for offscreen rendering.                                                      | [renderers/AsciiRenderer.ts:62](https://github.com/humanbydefinition/p5.asciify/blob/e388e858755b4fb844e13d1aa48ab2d219cb215c/src/lib/renderers/AsciiRenderer.ts#L62) |
+| `depth?`            | `boolean` | Whether to include a depth buffer. Default is `true`.                                                                                                       | [renderers/AsciiRenderer.ts:59](https://github.com/humanbydefinition/p5.asciify/blob/e388e858755b4fb844e13d1aa48ab2d219cb215c/src/lib/renderers/AsciiRenderer.ts#L59) |
+| `depthFormat?`      | `any`     | Data format of depth information. Either `UNSIGNED_INT` or `FLOAT`. Default is `UNSIGNED_INT`.                                                              | [renderers/AsciiRenderer.ts:71](https://github.com/humanbydefinition/p5.asciify/blob/e388e858755b4fb844e13d1aa48ab2d219cb215c/src/lib/renderers/AsciiRenderer.ts#L71) |
+| `format?`           | `number`  | Data format of the texture. Either `UNSIGNED_BYTE`, `FLOAT`, or `HALF_FLOAT`. Default is `UNSIGNED_BYTE`.                                                   | [renderers/AsciiRenderer.ts:74](https://github.com/humanbydefinition/p5.asciify/blob/e388e858755b4fb844e13d1aa48ab2d219cb215c/src/lib/renderers/AsciiRenderer.ts#L74) |
+| `height`            | `number`  | Height of the framebuffer. Always matches the grid rows.                                                                                                    | [renderers/AsciiRenderer.ts:68](https://github.com/humanbydefinition/p5.asciify/blob/e388e858755b4fb844e13d1aa48ab2d219cb215c/src/lib/renderers/AsciiRenderer.ts#L68) |
+| `stencil?`          | `boolean` | Whether to include a stencil buffer for masking. `depth` must be `true` for this feature to work. Defaults to the value of `depth` _(which is `true`)_.     | [renderers/AsciiRenderer.ts:80](https://github.com/humanbydefinition/p5.asciify/blob/e388e858755b4fb844e13d1aa48ab2d219cb215c/src/lib/renderers/AsciiRenderer.ts#L80) |
+| `textureFiltering?` | `any`     | How to read values from the framebuffer. Either `LINEAR` (nearby pixels will be interpolated) or `NEAREST` (no interpolation). Default is `NEAREST`.        | [renderers/AsciiRenderer.ts:56](https://github.com/humanbydefinition/p5.asciify/blob/e388e858755b4fb844e13d1aa48ab2d219cb215c/src/lib/renderers/AsciiRenderer.ts#L56) |
+| `width`             | `number`  | Width of the framebuffer. Always matches the grid columns.                                                                                                  | [renderers/AsciiRenderer.ts:65](https://github.com/humanbydefinition/p5.asciify/blob/e388e858755b4fb844e13d1aa48ab2d219cb215c/src/lib/renderers/AsciiRenderer.ts#L65) |
 
 ---
 
@@ -115,7 +120,7 @@ Defined in: [renderers/AsciiRenderer.ts:510](https://github.com/humanbydefinitio
 
 > **get** **options**(): `T`
 
-Defined in: [renderers/AsciiRenderer.ts:273](https://github.com/humanbydefinition/p5.asciify/blob/b93cb3b16adeabda96c59e2d20e060935e7d746f/src/lib/renderers/AsciiRenderer.ts#L273)
+Defined in: [renderers/AsciiRenderer.ts:323](https://github.com/humanbydefinition/p5.asciify/blob/e388e858755b4fb844e13d1aa48ab2d219cb215c/src/lib/renderers/AsciiRenderer.ts#L323)
 
 Get the set options for the ASCII renderer.
 
@@ -145,7 +150,7 @@ function setupAsciify() {
 
 > **get** **primaryColorFramebuffer**(): `Framebuffer`
 
-Defined in: [renderers/AsciiRenderer.ts:327](https://github.com/humanbydefinition/p5.asciify/blob/b93cb3b16adeabda96c59e2d20e060935e7d746f/src/lib/renderers/AsciiRenderer.ts#L327)
+Defined in: [renderers/AsciiRenderer.ts:377](https://github.com/humanbydefinition/p5.asciify/blob/e388e858755b4fb844e13d1aa48ab2d219cb215c/src/lib/renderers/AsciiRenderer.ts#L377)
 
 Get the primary color framebuffer, whose pixels define the character colors of the grid cells.
 
@@ -216,7 +221,7 @@ function draw() {
 
 > **get** **rotationFramebuffer**(): `Framebuffer`
 
-Defined in: [renderers/AsciiRenderer.ts:507](https://github.com/humanbydefinition/p5.asciify/blob/b93cb3b16adeabda96c59e2d20e060935e7d746f/src/lib/renderers/AsciiRenderer.ts#L507)
+Defined in: [renderers/AsciiRenderer.ts:557](https://github.com/humanbydefinition/p5.asciify/blob/e388e858755b4fb844e13d1aa48ab2d219cb215c/src/lib/renderers/AsciiRenderer.ts#L557)
 
 Get the rotation framebuffer, whose pixels define the rotation angle of each character in the grid.
 
@@ -297,7 +302,7 @@ function draw() {
 
 > **get** **secondaryColorFramebuffer**(): `Framebuffer`
 
-Defined in: [renderers/AsciiRenderer.ts:381](https://github.com/humanbydefinition/p5.asciify/blob/b93cb3b16adeabda96c59e2d20e060935e7d746f/src/lib/renderers/AsciiRenderer.ts#L381)
+Defined in: [renderers/AsciiRenderer.ts:431](https://github.com/humanbydefinition/p5.asciify/blob/e388e858755b4fb844e13d1aa48ab2d219cb215c/src/lib/renderers/AsciiRenderer.ts#L431)
 
 Get the secondary color framebuffer, whose pixels define the background colors of the grid cells.
 
@@ -368,7 +373,7 @@ function draw() {
 
 > **get** **transformFramebuffer**(): `Framebuffer`
 
-Defined in: [renderers/AsciiRenderer.ts:446](https://github.com/humanbydefinition/p5.asciify/blob/b93cb3b16adeabda96c59e2d20e060935e7d746f/src/lib/renderers/AsciiRenderer.ts#L446)
+Defined in: [renderers/AsciiRenderer.ts:496](https://github.com/humanbydefinition/p5.asciify/blob/e388e858755b4fb844e13d1aa48ab2d219cb215c/src/lib/renderers/AsciiRenderer.ts#L496)
 
 Get the transform framebuffer, where each pixels color channel defines a different transformation:
 
@@ -451,7 +456,7 @@ function draw() {
 
 > **disable**(): `boolean`
 
-Defined in: [renderers/AsciiRenderer.ts:257](https://github.com/humanbydefinition/p5.asciify/blob/b93cb3b16adeabda96c59e2d20e060935e7d746f/src/lib/renderers/AsciiRenderer.ts#L257)
+Defined in: [renderers/AsciiRenderer.ts:307](https://github.com/humanbydefinition/p5.asciify/blob/e388e858755b4fb844e13d1aa48ab2d219cb215c/src/lib/renderers/AsciiRenderer.ts#L307)
 
 Disable the renderer.
 
@@ -484,7 +489,7 @@ function keyPressed() {
 
 > **enable**(): `boolean`
 
-Defined in: [renderers/AsciiRenderer.ts:232](https://github.com/humanbydefinition/p5.asciify/blob/b93cb3b16adeabda96c59e2d20e060935e7d746f/src/lib/renderers/AsciiRenderer.ts#L232)
+Defined in: [renderers/AsciiRenderer.ts:282](https://github.com/humanbydefinition/p5.asciify/blob/e388e858755b4fb844e13d1aa48ab2d219cb215c/src/lib/renderers/AsciiRenderer.ts#L282)
 
 Enable the renderer.
 
@@ -514,7 +519,7 @@ function keyPressed() {
 
 > **enabled**(`enabled?`): `boolean`
 
-Defined in: [renderers/AsciiRenderer.ts:181](https://github.com/humanbydefinition/p5.asciify/blob/b93cb3b16adeabda96c59e2d20e060935e7d746f/src/lib/renderers/AsciiRenderer.ts#L181)
+Defined in: [renderers/AsciiRenderer.ts:231](https://github.com/humanbydefinition/p5.asciify/blob/e388e858755b4fb844e13d1aa48ab2d219cb215c/src/lib/renderers/AsciiRenderer.ts#L231)
 
 Enable or disable the renderer.
 
@@ -550,23 +555,32 @@ function keyPressed() {
 
 ---
 
-### setFramebufferSettings()
+### setFramebufferOptions()
 
-> **setFramebufferSettings**(`settings`): `void`
+> **setFramebufferOptions**(`settings`): `void`
 
-Defined in: [renderers/AsciiRenderer.ts:95](https://github.com/humanbydefinition/p5.asciify/blob/b93cb3b16adeabda96c59e2d20e060935e7d746f/src/lib/renderers/AsciiRenderer.ts#L95)
+Defined in: [renderers/AsciiRenderer.ts:143](https://github.com/humanbydefinition/p5.asciify/blob/e388e858755b4fb844e13d1aa48ab2d219cb215c/src/lib/renderers/AsciiRenderer.ts#L143)
 
-Update framebuffer settings (except width/height) and recreate all framebuffers.
+Update framebuffer settings (except width/height/density) and recreate all framebuffers.
+
+This method allows you to configure the internal framebuffers used by the renderer.
+Note that width, height, and density are managed internally and cannot be modified.
+
+For a full list of available settings, see the `p5.createFramebuffer()` documentation:
+[https://p5js.org/reference/p5/createFramebuffer/](https://p5js.org/reference/p5/createFramebuffer/)
 
 #### Parameters
 
-| Parameter                    | Type                                                                                                   | Description                                                      |
-| ---------------------------- | ------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------- |
-| `settings`                   | \{ `antialias?`: `boolean`; `depth?`: `boolean`; `depthFormat?`: `any`; `textureFiltering?`: `any`; \} | Partial framebuffer settings (width/height/density are ignored). |
-| `settings.antialias?`        | `boolean`                                                                                              | -                                                                |
-| `settings.depth?`            | `boolean`                                                                                              | -                                                                |
-| `settings.depthFormat?`      | `any`                                                                                                  | -                                                                |
-| `settings.textureFiltering?` | `any`                                                                                                  | -                                                                |
+| Parameter                    | Type                                                                                                                                                                            | Description                                                                                                                                                   |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `settings`                   | \{ `antialias?`: `boolean`; `channels?`: `number`; `depth?`: `boolean`; `depthFormat?`: `number`; `format?`: `number`; `stencil?`: `boolean`; `textureFiltering?`: `number`; \} | Available framebuffer settings. `width`, `height`, and `density` are managed internally and cannot be modified.                                               |
+| `settings.antialias?`        | `boolean`                                                                                                                                                                       | Whether to perform anti-aliasing. If set to `true`, 2 samples will be used by default. The number of samples can also be set _(e.g., 4)_. Default is `false`. |
+| `settings.channels?`         | `number`                                                                                                                                                                        | Whether to store `RGB` or `RGBA` color channels. Default is to match the main canvas which is `RGBA`.                                                         |
+| `settings.depth?`            | `boolean`                                                                                                                                                                       | Whether to include a depth buffer. Default is `true`.                                                                                                         |
+| `settings.depthFormat?`      | `number`                                                                                                                                                                        | Data format of depth information, either `UNSIGNED_INT` or `FLOAT`. Default is `UNSIGNED_INT`.                                                                |
+| `settings.format?`           | `number`                                                                                                                                                                        | Data format of the texture, either `UNSIGNED_BYTE`, `FLOAT`, or `HALF_FLOAT`. Default is `UNSIGNED_BYTE`.                                                     |
+| `settings.stencil?`          | `boolean`                                                                                                                                                                       | Whether to include a stencil buffer for masking. `depth` must be `true` for this feature to work. Defaults to the value of `depth` which is `true`.           |
+| `settings.textureFiltering?` | `number`                                                                                                                                                                        | How to read values from the framebuffer. Either `LINEAR` _(nearby pixels will be interpolated)_ or `NEAREST` _(no interpolation)_. Default is `NEAREST`.      |
 
 #### Returns
 
@@ -578,7 +592,7 @@ Update framebuffer settings (except width/height) and recreate all framebuffers.
 
 > **update**(`newOptions`): `void`
 
-Defined in: [renderers/AsciiRenderer.ts:145](https://github.com/humanbydefinition/p5.asciify/blob/b93cb3b16adeabda96c59e2d20e060935e7d746f/src/lib/renderers/AsciiRenderer.ts#L145)
+Defined in: [renderers/AsciiRenderer.ts:195](https://github.com/humanbydefinition/p5.asciify/blob/e388e858755b4fb844e13d1aa48ab2d219cb215c/src/lib/renderers/AsciiRenderer.ts#L195)
 
 Updates renderer options.
 

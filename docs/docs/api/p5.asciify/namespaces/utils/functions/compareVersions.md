@@ -2,7 +2,7 @@
 
 > **compareVersions**(`v1`, `v2`): `number`
 
-Defined in: [utils/utils.ts:120](https://github.com/humanbydefinition/p5.asciify/blob/b93cb3b16adeabda96c59e2d20e060935e7d746f/src/lib/utils/utils.ts#L120)
+Defined in: [utils/utils.ts:120](https://github.com/humanbydefinition/p5.asciify/blob/e388e858755b4fb844e13d1aa48ab2d219cb215c/src/lib/utils/utils.ts#L120)
 
 Compares two version strings like `'1.8.0'` and `'1.11.3'`.
 
