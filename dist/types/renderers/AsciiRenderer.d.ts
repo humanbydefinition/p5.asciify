@@ -75,6 +75,9 @@ export declare abstract class P5AsciifyRenderer<T extends AsciiRendererOptions =
      * @ignore
      */
     constructor(_p: p5, _captureFramebuffer: p5.Framebuffer | p5.Graphics, _grid: P5AsciifyGrid, _fontManager: P5AsciifyFontManager, _options: T);
+    /**
+     * Recreate all internal framebuffers used by the renderer.
+     */
     protected _recreateFramebuffers(): void;
     /**
      * Update framebuffer settings (except width/height/density) and recreate all framebuffers.

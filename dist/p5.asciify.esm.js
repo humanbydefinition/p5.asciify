@@ -1003,6 +1003,9 @@ class fA {
       height: this._grid.rows
     }, this._recreateFramebuffers();
   }
+  /**
+   * Recreate all internal framebuffers used by the renderer.
+   */
   _recreateFramebuffers() {
     const A = {
       ...this._framebufferOptions,
