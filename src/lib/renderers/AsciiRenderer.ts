@@ -107,6 +107,9 @@ export abstract class P5AsciifyRenderer<T extends AsciiRendererOptions = AsciiRe
         this._recreateFramebuffers();
     }
 
+    /**
+     * Recreate all internal framebuffers used by the renderer.
+     */
     protected _recreateFramebuffers(): void {
         const settings = {
             ...this._framebufferOptions,
