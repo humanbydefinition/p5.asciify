@@ -2,7 +2,7 @@
 
 > **P5AsciifyHookHandlers** = `object`
 
-Defined in: [types.ts:42](https://github.com/humanbydefinition/p5.asciify/blob/e388e858755b4fb844e13d1aa48ab2d219cb215c/src/lib/types.ts#L42)
+Defined in: [types.ts:42](https://github.com/humanbydefinition/p5.asciify/blob/1b5a6cba0c455984ce43c63ef29d11c26fd6ec65/src/lib/types.ts#L42)
 
 Type for core hook handlers
 
@@ -12,7 +12,7 @@ Type for core hook handlers
 
 > **handleInit**: (`p`) => `void` \| `Promise`\<`void`\>
 
-Defined in: [types.ts:43](https://github.com/humanbydefinition/p5.asciify/blob/e388e858755b4fb844e13d1aa48ab2d219cb215c/src/lib/types.ts#L43)
+Defined in: [types.ts:43](https://github.com/humanbydefinition/p5.asciify/blob/1b5a6cba0c455984ce43c63ef29d11c26fd6ec65/src/lib/types.ts#L43)
 
 #### Parameters
 
@@ -30,7 +30,7 @@ Defined in: [types.ts:43](https://github.com/humanbydefinition/p5.asciify/blob/e
 
 > **handlePostDraw**: (`p`) => `void`
 
-Defined in: [types.ts:46](https://github.com/humanbydefinition/p5.asciify/blob/e388e858755b4fb844e13d1aa48ab2d219cb215c/src/lib/types.ts#L46)
+Defined in: [types.ts:46](https://github.com/humanbydefinition/p5.asciify/blob/1b5a6cba0c455984ce43c63ef29d11c26fd6ec65/src/lib/types.ts#L46)
 
 #### Parameters
 
@@ -48,7 +48,7 @@ Defined in: [types.ts:46](https://github.com/humanbydefinition/p5.asciify/blob/e
 
 > **handlePreDraw**: (`p`) => `void`
 
-Defined in: [types.ts:45](https://github.com/humanbydefinition/p5.asciify/blob/e388e858755b4fb844e13d1aa48ab2d219cb215c/src/lib/types.ts#L45)
+Defined in: [types.ts:45](https://github.com/humanbydefinition/p5.asciify/blob/1b5a6cba0c455984ce43c63ef29d11c26fd6ec65/src/lib/types.ts#L45)
 
 #### Parameters
 
@@ -66,7 +66,7 @@ Defined in: [types.ts:45](https://github.com/humanbydefinition/p5.asciify/blob/e
 
 > **handleSetup**: (`p`) => `void` \| `Promise`\<`void`\>
 
-Defined in: [types.ts:44](https://github.com/humanbydefinition/p5.asciify/blob/e388e858755b4fb844e13d1aa48ab2d219cb215c/src/lib/types.ts#L44)
+Defined in: [types.ts:44](https://github.com/humanbydefinition/p5.asciify/blob/1b5a6cba0c455984ce43c63ef29d11c26fd6ec65/src/lib/types.ts#L44)
 
 #### Parameters
 

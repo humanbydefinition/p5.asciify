@@ -974,9 +974,27 @@ class fA {
     o(this, "_transformFramebuffer");
     /** The rotation framebuffer, whose pixels define the rotation angle of the characters in the grid. */
     o(this, "_rotationFramebuffer");
-    /** The framebuffer settings that can be modified by the user (width/height/density are managed internally). */
-    o(this, "_framebufferSettings");
-    this._p = A, this._captureFramebuffer = e, this._grid = r, this._fontManager = t, this._options = i, this._framebufferSettings = {
+    /**
+     * Framebuffer settings used to configure all internal framebuffers for the renderer.
+     * 
+     * These settings are passed to `p5.createFramebuffer()` when creating or recreating framebuffers.
+     * 
+     * **Note:** The `width`, `height`, and `density` properties are managed internally and always match the grid size and pixel density.
+     * 
+     * Properties:
+     * - `format` (number): Data format of the texture. Either `UNSIGNED_BYTE`, `FLOAT`, or `HALF_FLOAT`. Default is `UNSIGNED_BYTE`.
+     * - `channels` (number): Whether to store `RGB` or `RGBA` color channels. Default is to match the main canvas, which is `RGBA`.
+     * - `depth` (boolean): Whether to include a depth buffer. Default is `true`.
+     * - `depthFormat` (number): Data format of depth information. Either `UNSIGNED_INT` or `FLOAT`. Default is `UNSIGNED_INT`.
+     * - `stencil` (boolean): Whether to include a stencil buffer for masking. `depth` must be `true` for this feature to work. Defaults to the value of `depth` (which is `true`).
+     * - `antialias` (boolean): Whether to perform anti-aliasing. If set to `true`, 2 samples will be used by default. The number of samples can also be set (e.g., 4). Default is `false`.
+     * - `textureFiltering` (number): How to read values from the framebuffer. Either `LINEAR` (nearby pixels will be interpolated) or `NEAREST` (no interpolation). Default is `NEAREST`.
+     * - `width` (number): Width of the framebuffer. Always matches the grid columns.
+     * - `height` (number): Height of the framebuffer. Always matches the grid rows.
+     * - `density` (number): Pixel density of the framebuffer. Always matches the main canvas pixel density.
+     */
+    o(this, "_framebufferOptions");
+    this._p = A, this._captureFramebuffer = e, this._grid = r, this._fontManager = t, this._options = i, this._framebufferOptions = {
       antialias: !1,
       textureFiltering: this._p.NEAREST,
       depthFormat: this._p.UNSIGNED_INT,
@@ -987,7 +1005,7 @@ class fA {
   }
   _recreateFramebuffers() {
     const A = {
-      ...this._framebufferSettings,
+      ...this._framebufferOptions,
       density: 1,
       width: this._grid.cols,
       height: this._grid.rows
@@ -995,12 +1013,26 @@ class fA {
     this._primaryColorFramebuffer = this._p.createFramebuffer(A), this._secondaryColorFramebuffer = this._p.createFramebuffer(A), this._transformFramebuffer = this._p.createFramebuffer(A), this._characterFramebuffer = this._p.createFramebuffer(A), this._rotationFramebuffer = this._p.createFramebuffer(A);
   }
   /**
-   * Update framebuffer settings (except width/height) and recreate all framebuffers.
-   * @param settings Partial framebuffer settings (width/height/density are ignored).
+   * Update framebuffer settings (except width/height/density) and recreate all framebuffers.
+   * 
+   * This method allows you to configure the internal framebuffers used by the renderer.
+   * Note that width, height, and density are managed internally and cannot be modified.
+   * 
+   * For a full list of available settings, see the `p5.createFramebuffer()` documentation:
+   * {@link https://p5js.org/reference/p5/createFramebuffer/}
+   * 
+   * @param settings Available framebuffer settings. `width`, `height`, and `density` are managed internally and cannot be modified.
+   * @param settings.format - Data format of the texture, either `UNSIGNED_BYTE`, `FLOAT`, or `HALF_FLOAT`. Default is `UNSIGNED_BYTE`.
+   * @param settings.channels - Whether to store `RGB` or `RGBA` color channels. Default is to match the main canvas which is `RGBA`.
+   * @param settings.depth - Whether to include a depth buffer. Default is `true`.
+   * @param settings.depthFormat - Data format of depth information, either `UNSIGNED_INT` or `FLOAT`. Default is `UNSIGNED_INT`.
+   * @param settings.stencil - Whether to include a stencil buffer for masking. `depth` must be `true` for this feature to work. Defaults to the value of `depth` which is `true`.
+   * @param settings.antialias - Whether to perform anti-aliasing. If set to `true`, 2 samples will be used by default. The number of samples can also be set *(e.g., 4)*. Default is `false`.
+   * @param settings.textureFiltering - How to read values from the framebuffer. Either `LINEAR` *(nearby pixels will be interpolated)* or `NEAREST` *(no interpolation)*. Default is `NEAREST`.
    */
-  setFramebufferSettings(A) {
-    this._framebufferSettings = {
-      ...this._framebufferSettings,
+  setFramebufferOptions(A) {
+    this._framebufferOptions = {
+      ...this._framebufferOptions,
       ...A,
       density: 1,
       width: this._grid.cols,
@@ -1376,8 +1408,11 @@ class fA {
   get rotationFramebuffer() {
     return this._rotationFramebuffer;
   }
-  get framebufferSettings() {
-    return this._framebufferSettings;
+  /**
+   * Get the framebuffer settings used to configure all internal framebuffers for the renderer.
+   */
+  get framebufferOptions() {
+    return this._framebufferOptions;
   }
   /**
    * Get the character framebuffer, whose pixels define the ASCII characters to use in the grid cells.
@@ -3832,7 +3867,7 @@ const G = class G {
   constructor() {
     /** The p5.js instance used by the library. */
     o(this, "_p");
-    /** The list of `P5Asciifier` instances managed by the library. */
+    /** The list of {@link P5Asciifier} instances managed by the library. */
     o(this, "_asciifiers");
     /** The base font used by the library. */
     o(this, "_baseFont");
@@ -3910,7 +3945,7 @@ const G = class G {
     }));
   }
   /**
-   * Sets up the `P5Asciifier` instances managed by the library.
+   * Sets up the {@link P5Asciifier} instances managed by the library.
    * 
    * This method is called automatically by the library after the `setup()` function of the `p5.js` instance has finished executing.
    * 
@@ -3952,8 +3987,8 @@ const G = class G {
     ) && (this._backgroundColor = A);
   }
   /**
-   * Sets the font size for all managed `P5Asciifier` instances simultaneously.
-   * @param size The font size to set for the `P5Asciifier` instances.
+   * Sets the font size for all managed {@link P5Asciifier} instances simultaneously.
+   * @param size The font size to set for the {@link P5Asciifier} instances.
    */
   fontSize(A) {
     this._asciifiers.forEach((e) => {
@@ -3961,8 +3996,8 @@ const G = class G {
     });
   }
   /**
-   * Sets the font for all managed `P5Asciifier` instances simultaneously.
-   * @param font The `p5.Font` instance to set as the font for all managed `P5Asciifier` instances.
+   * Sets the font for all managed {@link P5Asciifier} instances simultaneously.
+   * @param font The `p5.Font` instance to set as the font for all managed {@link P5Asciifier} instances.
    */
   font(A) {
     this._asciifiers.forEach((e) => {
@@ -3970,7 +4005,7 @@ const G = class G {
     });
   }
   /**
-   * Sets the grid dimensions for all managed `P5Asciifier` instances simultaneously.
+   * Sets the grid dimensions for all managed {@link P5Asciifier} instances simultaneously.
    * @param gridCols The number of columns in the ASCII grid.
    * @param gridRows The number of rows in the ASCII grid.
    */
@@ -3980,7 +4015,7 @@ const G = class G {
     });
   }
   /**
-   * Sets whether the ASCII grid should be responsive to the size of the canvas for all managed `P5Asciifier` instances.
+   * Sets whether the ASCII grid should be responsive to the size of the canvas for all managed {@link P5Asciifier} instances.
    * @param bool If `true`, the ASCII grid will adjust its size based on the canvas dimensions. Otherwise, it will always use the set grid dimensions.
    */
   gridResponsive(A = !0) {
@@ -3989,8 +4024,8 @@ const G = class G {
     });
   }
   /**
-   * Sets the background mode for all managed `P5Asciifier` instances simultaneously.
-   * @param mode The background mode to set for the `P5Asciifier` instances.
+   * Sets the background mode for all managed {@link P5Asciifier} instances simultaneously.
+   * @param mode The background mode to set for the {@link P5Asciifier} instances.
    */
   backgroundMode(A = "fixed") {
     this._asciifiers.forEach((e) => {
@@ -3998,7 +4033,7 @@ const G = class G {
     });
   }
   /**
-   * Executes the ASCII conversion rendering pipelines for each `P5Asciifier` instance managed by the library.
+   * Executes the ASCII conversion rendering pipelines for each {@link P5Asciifier} instance managed by the library.
    * 
    * This method is called automatically by the library after the `draw()` function of the `p5.js` instance has finished executing.
    * 
@@ -4011,13 +4046,13 @@ const G = class G {
     });
   }
   /**
-   * Returns the `P5Asciifier` instance at the specified index.
+   * Returns the {@link P5Asciifier} instance at the specified index.
    * 
-   * When passing no arguments, the method returns the first `P5Asciifier` instance in the list, 
-   * which usually corresponds to the default `P5Asciifier` provided by the library, which is applied to the main canvas of the `p5.js` instance.
+   * When passing no arguments, the method returns the first {@link P5Asciifier} instance in the list, 
+   * which usually corresponds to the default {@link P5Asciifier} provided by the library, which is applied to the main canvas of the `p5.js` instance.
    * 
-   * @param index The index of the `P5Asciifier` instance to return.
-   * @returns The `P5Asciifier` instance at the specified index.
+   * @param index The index of the {@link P5Asciifier} instance to return.
+   * @returns The {@link P5Asciifier} instance at the specified index.
    * @throws If the index is out of bounds.
    */
   asciifier(A = 0) {
@@ -4032,10 +4067,10 @@ const G = class G {
     ) ? null : this._asciifiers[A];
   }
   /**
-   * Adds a new `P5Asciifier` instance to the library.
+   * Adds a new {@link P5Asciifier} instance to the library.
    * @param framebuffer   The framebuffer to capture for ASCII conversion.
    *                      If not provided, the main canvas of the `p5.js` instance will be used.
-   * @returns The newly created `P5Asciifier` instance, or null if validation fails.
+   * @returns The newly created {@link P5Asciifier} instance, or null if validation fails.
    */
   add(A) {
     if (!g.validate(
@@ -4058,8 +4093,8 @@ const G = class G {
     })() : (r.init(this._p), this._setupDone && r.setup(A || this._sketchFramebuffer, this._baseFont), this._asciifiers.push(r), r);
   }
   /**
-   * Removes a `P5Asciifier` instance.
-   * @param indexOrAsciifier The index of the `P5Asciifier` instance to remove, or the `P5Asciifier` instance itself.
+   * Removes a {@link P5Asciifier} instance.
+   * @param indexOrAsciifier The index of the {@link P5Asciifier} instance to remove, or the {@link P5Asciifier} instance itself.
    */
   remove(A) {
     if (typeof A == "number") {
@@ -4198,7 +4233,7 @@ const G = class G {
     return this._pluginRegistry;
   }
   /**
-   * Returns the list of `P5Asciifier` instances managed by the library.
+   * Returns the list of {@link P5Asciifier} instances managed by the library.
    */
   get asciifiers() {
     return this._asciifiers;

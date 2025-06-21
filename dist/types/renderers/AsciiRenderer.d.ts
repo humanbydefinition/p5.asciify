@@ -25,18 +25,46 @@ export declare abstract class P5AsciifyRenderer<T extends AsciiRendererOptions =
     protected _transformFramebuffer: p5.Framebuffer;
     /** The rotation framebuffer, whose pixels define the rotation angle of the characters in the grid. */
     protected _rotationFramebuffer: p5.Framebuffer;
-    /** The framebuffer settings that can be modified by the user (width/height/density are managed internally). */
-    protected _framebufferSettings: {
-        /** Whether to enable antialiasing for the framebuffer. */
-        antialias: boolean;
-        /** The texture filtering mode for the framebuffer. */
-        textureFiltering: any;
-        /** Whether to enable depth for the framebuffer. */
+    /**
+     * Framebuffer settings used to configure all internal framebuffers for the renderer.
+     *
+     * These settings are passed to `p5.createFramebuffer()` when creating or recreating framebuffers.
+     *
+     * **Note:** The `width`, `height`, and `density` properties are managed internally and always match the grid size and pixel density.
+     *
+     * Properties:
+     * - `format` (number): Data format of the texture. Either `UNSIGNED_BYTE`, `FLOAT`, or `HALF_FLOAT`. Default is `UNSIGNED_BYTE`.
+     * - `channels` (number): Whether to store `RGB` or `RGBA` color channels. Default is to match the main canvas, which is `RGBA`.
+     * - `depth` (boolean): Whether to include a depth buffer. Default is `true`.
+     * - `depthFormat` (number): Data format of depth information. Either `UNSIGNED_INT` or `FLOAT`. Default is `UNSIGNED_INT`.
+     * - `stencil` (boolean): Whether to include a stencil buffer for masking. `depth` must be `true` for this feature to work. Defaults to the value of `depth` (which is `true`).
+     * - `antialias` (boolean): Whether to perform anti-aliasing. If set to `true`, 2 samples will be used by default. The number of samples can also be set (e.g., 4). Default is `false`.
+     * - `textureFiltering` (number): How to read values from the framebuffer. Either `LINEAR` (nearby pixels will be interpolated) or `NEAREST` (no interpolation). Default is `NEAREST`.
+     * - `width` (number): Width of the framebuffer. Always matches the grid columns.
+     * - `height` (number): Height of the framebuffer. Always matches the grid rows.
+     * - `density` (number): Pixel density of the framebuffer. Always matches the main canvas pixel density.
+     */
+    protected _framebufferOptions: {
+        /** Whether to perform anti-aliasing. If set to `true`, 2 samples will be used by default. The number of samples can also be set (e.g., 4). Default is `false`. */
+        antialias?: boolean;
+        /** How to read values from the framebuffer. Either `LINEAR` (nearby pixels will be interpolated) or `NEAREST` (no interpolation). Default is `NEAREST`. */
+        textureFiltering?: any;
+        /** Whether to include a depth buffer. Default is `true`. */
         depth?: boolean;
+        /** The pixel density of the framebuffers. Always fixed to 1, since they are used for offscreen rendering. */
         density: number;
+        /** Width of the framebuffer. Always matches the grid columns. */
         width: number;
+        /** Height of the framebuffer. Always matches the grid rows. */
         height: number;
+        /** Data format of depth information. Either `UNSIGNED_INT` or `FLOAT`. Default is `UNSIGNED_INT`. */
         depthFormat?: any;
+        /** Data format of the texture. Either `UNSIGNED_BYTE`, `FLOAT`, or `HALF_FLOAT`. Default is `UNSIGNED_BYTE`. */
+        format?: number;
+        /** Whether to store `RGB` or `RGBA` color channels. Default is to match the main canvas, which is `RGBA`. */
+        channels?: number;
+        /** Whether to include a stencil buffer for masking. `depth` must be `true` for this feature to work. Defaults to the value of `depth` *(which is `true`)*. */
+        stencil?: boolean;
     };
     /**
      * Constructs a new ASCII renderer instance. Called by derived classes.
@@ -49,14 +77,31 @@ export declare abstract class P5AsciifyRenderer<T extends AsciiRendererOptions =
     constructor(_p: p5, _captureFramebuffer: p5.Framebuffer | p5.Graphics, _grid: P5AsciifyGrid, _fontManager: P5AsciifyFontManager, _options: T);
     protected _recreateFramebuffers(): void;
     /**
-     * Update framebuffer settings (except width/height) and recreate all framebuffers.
-     * @param settings Partial framebuffer settings (width/height/density are ignored).
+     * Update framebuffer settings (except width/height/density) and recreate all framebuffers.
+     *
+     * This method allows you to configure the internal framebuffers used by the renderer.
+     * Note that width, height, and density are managed internally and cannot be modified.
+     *
+     * For a full list of available settings, see the `p5.createFramebuffer()` documentation:
+     * {@link https://p5js.org/reference/p5/createFramebuffer/}
+     *
+     * @param settings Available framebuffer settings. `width`, `height`, and `density` are managed internally and cannot be modified.
+     * @param settings.format - Data format of the texture, either `UNSIGNED_BYTE`, `FLOAT`, or `HALF_FLOAT`. Default is `UNSIGNED_BYTE`.
+     * @param settings.channels - Whether to store `RGB` or `RGBA` color channels. Default is to match the main canvas which is `RGBA`.
+     * @param settings.depth - Whether to include a depth buffer. Default is `true`.
+     * @param settings.depthFormat - Data format of depth information, either `UNSIGNED_INT` or `FLOAT`. Default is `UNSIGNED_INT`.
+     * @param settings.stencil - Whether to include a stencil buffer for masking. `depth` must be `true` for this feature to work. Defaults to the value of `depth` which is `true`.
+     * @param settings.antialias - Whether to perform anti-aliasing. If set to `true`, 2 samples will be used by default. The number of samples can also be set *(e.g., 4)*. Default is `false`.
+     * @param settings.textureFiltering - How to read values from the framebuffer. Either `LINEAR` *(nearby pixels will be interpolated)* or `NEAREST` *(no interpolation)*. Default is `NEAREST`.
      */
-    setFramebufferSettings(settings: {
-        antialias?: boolean;
-        textureFiltering?: any;
+    setFramebufferOptions(settings: {
+        format?: number;
+        channels?: number;
         depth?: boolean;
-        depthFormat?: any;
+        depthFormat?: number;
+        stencil?: boolean;
+        antialias?: boolean;
+        textureFiltering?: number;
     }): void;
     /**
      * Resize the framebuffers to match the grid size.
@@ -396,17 +441,30 @@ export declare abstract class P5AsciifyRenderer<T extends AsciiRendererOptions =
      * ```
      */
     get rotationFramebuffer(): p5.Framebuffer;
-    get framebufferSettings(): {
-        /** Whether to enable antialiasing for the framebuffer. */
-        antialias: boolean;
-        /** The texture filtering mode for the framebuffer. */
-        textureFiltering: any;
-        /** Whether to enable depth for the framebuffer. */
+    /**
+     * Get the framebuffer settings used to configure all internal framebuffers for the renderer.
+     */
+    get framebufferOptions(): {
+        /** Whether to perform anti-aliasing. If set to `true`, 2 samples will be used by default. The number of samples can also be set (e.g., 4). Default is `false`. */
+        antialias?: boolean;
+        /** How to read values from the framebuffer. Either `LINEAR` (nearby pixels will be interpolated) or `NEAREST` (no interpolation). Default is `NEAREST`. */
+        textureFiltering?: any;
+        /** Whether to include a depth buffer. Default is `true`. */
         depth?: boolean;
+        /** The pixel density of the framebuffers. Always fixed to 1, since they are used for offscreen rendering. */
         density: number;
+        /** Width of the framebuffer. Always matches the grid columns. */
         width: number;
+        /** Height of the framebuffer. Always matches the grid rows. */
         height: number;
+        /** Data format of depth information. Either `UNSIGNED_INT` or `FLOAT`. Default is `UNSIGNED_INT`. */
         depthFormat?: any;
+        /** Data format of the texture. Either `UNSIGNED_BYTE`, `FLOAT`, or `HALF_FLOAT`. Default is `UNSIGNED_BYTE`. */
+        format?: number;
+        /** Whether to store `RGB` or `RGBA` color channels. Default is to match the main canvas, which is `RGBA`. */
+        channels?: number;
+        /** Whether to include a stencil buffer for masking. `depth` must be `true` for this feature to work. Defaults to the value of `depth` *(which is `true`)*. */
+        stencil?: boolean;
     };
     /**
      * Get the character framebuffer, whose pixels define the ASCII characters to use in the grid cells.

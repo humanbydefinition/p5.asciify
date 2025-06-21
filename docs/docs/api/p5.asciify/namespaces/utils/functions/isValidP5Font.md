@@ -2,7 +2,7 @@
 
 > **isValidP5Font**(`p`, `font`): `boolean`
 
-Defined in: [utils/utils.ts:96](https://github.com/humanbydefinition/p5.asciify/blob/e388e858755b4fb844e13d1aa48ab2d219cb215c/src/lib/utils/utils.ts#L96)
+Defined in: [utils/utils.ts:96](https://github.com/humanbydefinition/p5.asciify/blob/1b5a6cba0c455984ce43c63ef29d11c26fd6ec65/src/lib/utils/utils.ts#L96)
 
 ## Parameters
 
