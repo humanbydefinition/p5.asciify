@@ -617,4 +617,10 @@ export abstract class P5AsciifyRenderer<T extends AsciiRendererOptions = AsciiRe
      * ```
      */
     get characterFramebuffer() { return this._characterFramebuffer; }
+
+    /**
+     * Get the grid object containing the relevant grid information.
+     * @ignore
+     */
+    get grid() { return this._grid; }
 }
