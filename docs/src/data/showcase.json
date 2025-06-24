@@ -40,5 +40,18 @@
       "instagram": "https://instagram.com/humanbydefinition",
       "website": "https://p5.textmode.art"
     }
+  },
+  {
+    "image": "/img/showcase/ghastly-wither.png",
+    "title": "Ghastly Wither",
+    "category": "tool",
+    "description": "Transform your 3D models into eye-catching ASCII and dithered art.",
+    "url": "https://anna-rieder.ch/ghastlywither/",
+    "creator": {
+      "name": "Anna Rieder",
+      "github": "anna-rie",
+      "instagram": "annarieder.png",
+      "website": "https://anna-rieder.ch/"
+    }
   }
 ]
