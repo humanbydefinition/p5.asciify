@@ -521,4 +521,9 @@ export declare abstract class P5AsciifyRenderer<T extends AsciiRendererOptions =
      * ```
      */
     get characterFramebuffer(): p5.Framebuffer;
+    /**
+     * Get the grid object containing the relevant grid information.
+     * @ignore
+     */
+    get grid(): P5AsciifyGrid;
 }
