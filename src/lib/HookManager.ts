@@ -49,6 +49,11 @@ export class P5AsciifyHookManager {
      * @ignore
      */
     public initialize(handlers: P5AsciifyHookHandlers): void {
+        // Prevent double initialization
+        if (this.hookHandlers) {
+            return;
+        }
+
         this.hookHandlers = handlers;
         this._registerCoreHooks();
         this._integrateWithP5();

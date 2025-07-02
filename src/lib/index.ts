@@ -5,10 +5,21 @@ import { P5AsciifyRenderer } from './renderers';
 
 import { P5AsciifyErrorLevel } from './errors/ErrorHandler';
 
+// Check if library is already loaded to prevent conflicts
+let p5asciifyInstance: P5AsciifierManager;
+
+if (typeof window !== 'undefined' && window.p5asciify) {
+    // Library already loaded, reuse existing instance
+    p5asciifyInstance = window.p5asciify;
+} else {
+    // First time loading, create new instance
+    p5asciifyInstance = P5AsciifierManager.getInstance();
+}
+
 /**
  * Main instance of p5.asciify *({@link P5AsciifierManager})* providing full access to the library.
  */
-export const p5asciify = P5AsciifierManager.getInstance();
+export const p5asciify = p5asciifyInstance;
 
 /** Contains functionality relevant to the ASCII rendering. */
 export * as renderers from './renderers';
@@ -31,11 +42,22 @@ export { P5AsciifyHookManager } from './HookManager';
 export * from './types';
 
 if (typeof window !== 'undefined') {
-  window.p5asciify = p5asciify;
+  // Use var to allow redeclaration
+  if (!window.p5asciify) {
+    window.p5asciify = p5asciifyInstance;
+  }
 
-  window.P5AsciifyAbstractFeatureRenderer2D = P5AsciifyAbstractFeatureRenderer2D;
-  window.P5AsciifyRenderer2D = P5AsciifyRenderer2D;
-  window.P5AsciifyRenderer = P5AsciifyRenderer;
-  
-  window.P5AsciifyErrorLevel = P5AsciifyErrorLevel;
+  // Only set classes if not already defined
+  if (!window.P5AsciifyAbstractFeatureRenderer2D) {
+    window.P5AsciifyAbstractFeatureRenderer2D = P5AsciifyAbstractFeatureRenderer2D;
+  }
+  if (!window.P5AsciifyRenderer2D) {
+    window.P5AsciifyRenderer2D = P5AsciifyRenderer2D;
+  }
+  if (!window.P5AsciifyRenderer) {
+    window.P5AsciifyRenderer = P5AsciifyRenderer;
+  }
+  if (!window.P5AsciifyErrorLevel) {
+    window.P5AsciifyErrorLevel = P5AsciifyErrorLevel;
+  }
 }
