@@ -53,5 +53,19 @@
       "instagram": "annarieder.png",
       "website": "https://anna-rieder.ch/"
     }
+  },
+  {
+    "image": "/img/showcase/charsets-textmode-art.png",
+    "title": "charsets.textmode.art",
+    "category": "tool",
+    "description": "A font viewer and character set explorer for textmode art enthusiasts. Build and test character sets in a user-friendly interface.",
+    "url": "https://charsets.textmode.art",
+    "creator": {
+      "name": "humanbydefinition",
+      "github": "humanbydefinition",
+      "mastodon": "https://mastodon.social/@humanbydefinition",
+      "instagram": "https://instagram.com/humanbydefinition",
+      "website": "https://p5.textmode.art"
+    }
   }
 ]
