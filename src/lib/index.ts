@@ -21,6 +21,12 @@ if (typeof window !== 'undefined' && window.p5asciify) {
  */
 export const p5asciify = p5asciifyInstance;
 
+/**
+ * Default P5Asciifier instance for direct ASCII rendering operations.
+ * This provides access to the first (default) asciifier managed by the library.
+ */
+export const p5asciifier = p5asciifyInstance.asciifier();
+
 /** Contains functionality relevant to the ASCII rendering. */
 export * as renderers from './renderers';
 
@@ -45,6 +51,11 @@ if (typeof window !== 'undefined') {
   // Use var to allow redeclaration
   if (!window.p5asciify) {
     window.p5asciify = p5asciifyInstance;
+  }
+
+  // Export the default asciifier instance globally
+  if (!window.p5asciifier) {
+    window.p5asciifier = p5asciifyInstance.asciifier();
   }
 
   // Only set classes if not already defined
