@@ -21,9 +21,9 @@ export interface FeatureAsciiRendererOptions extends AsciiRendererOptions {
     /** The background color mode. Can be either `sampled` or `fixed`. */
     backgroundColorMode?: number | string;
     /** Swap the cells ASCII character colors with its cell background colors. */
-    invertMode?: boolean;
+    invert?: boolean;
     /** The rotation angle of all characters affected by a given renderer. */
-    rotationAngle?: number | p5.Color;
+    rotation?: number | p5.Color;
     /** Flip the ASCII characters horizontally. */
     flipHorizontally?: boolean;
     /** Flip the ASCII characters vertically. */

@@ -105,7 +105,7 @@ export declare abstract class P5AsciifyRenderer<T extends AsciiRendererOptions =
         stencil?: boolean;
         antialias?: boolean;
         textureFiltering?: number;
-    }): void;
+    }): this;
     /**
      * Resize the framebuffers to match the grid size.
      * @ignore
@@ -129,20 +129,20 @@ export declare abstract class P5AsciifyRenderer<T extends AsciiRendererOptions =
      *          characterColor: color(255, 0, 0),
      *          backgroundColor: color(0, 0, 255),
      *          characters: '.:-=+*#%@',
-     *          invertMode: true,
-     *          rotationAngle: 90,
+     *          invert: true,
+     *          rotation: 90,
      *          // ...
      *      });
      *  }
      * ```
      */
-    update(newOptions: T): void;
+    update(newOptions: T): this;
     /**
      * Update the capture framebuffer used by the renderer.
      * @param newCaptureFramebuffer - The new capture framebuffer or graphics to use.
      * @ignore
      */
-    setCaptureTexture(newCaptureFramebuffer: p5.Framebuffer | p5.Graphics): void;
+    setCaptureTexture(newCaptureFramebuffer: p5.Framebuffer | p5.Graphics): this;
     /**
      * Enable or disable the renderer.
      * @param enabled - Whether to enable or disable the renderer.
@@ -162,7 +162,7 @@ export declare abstract class P5AsciifyRenderer<T extends AsciiRendererOptions =
      *  }
      * ```
      */
-    enabled(enabled?: boolean): boolean;
+    enabled(enabled?: boolean): this;
     /**
      * Enable the renderer.
      * @returns The new state of the renderer.
@@ -180,7 +180,7 @@ export declare abstract class P5AsciifyRenderer<T extends AsciiRendererOptions =
      *  }
      * ```
      */
-    enable(): boolean;
+    enable(): this;
     /**
      * Disable the renderer.
      *
@@ -202,7 +202,7 @@ export declare abstract class P5AsciifyRenderer<T extends AsciiRendererOptions =
      *  }
      * ```
      */
-    disable(): boolean;
+    disable(): this;
     /**
      * Get the set options for the ASCII renderer.
      *

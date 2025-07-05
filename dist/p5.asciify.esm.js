@@ -138,7 +138,7 @@ class VA {
     this._fixedDimensions = A;
   }
 }
-const J = (n) => {
+const j = (n) => {
   const A = [
     // Instance version (most common in standard setups)
     () => n == null ? void 0 : n.VERSION,
@@ -169,13 +169,13 @@ const J = (n) => {
       continue;
     }
   return "1.0.0";
-}, R = (n) => $(n, "2.0.0") >= 0, O = (n, A) => {
+}, R = (n) => O(n, "2.0.0") >= 0, J = (n, A) => {
   var e;
   return A ? !!((e = n == null ? void 0 : n.constructor) != null && e.Color && A instanceof n.constructor.Color || typeof P < "u" && P.Color && A instanceof P.Color) : !1;
 }, pA = (n, A) => {
   var e;
   return A ? !!((e = n == null ? void 0 : n.constructor) != null && e.Font && A instanceof n.constructor.Font || typeof P < "u" && P.Font && A instanceof P.Font) : !1;
-}, $ = (n, A) => {
+}, O = (n, A) => {
   const [e, r] = [n, A].map((t) => t.split(".").map(Number));
   for (let t = 0; t < Math.max(e.length, r.length); t++) {
     const i = e[t] ?? 0, s = r[t] ?? 0;
@@ -227,27 +227,27 @@ class BA {
         const m = u * 4, z = p[m], V = p[m + 1];
         let x = z + (V << 8);
         x >= y.length && (x = y.length - 1);
-        let H = {
+        let U = {
           r: d[m],
           g: d[m + 1],
           b: d[m + 2],
           a: d[m + 3]
-        }, U = {
+        }, $ = {
           r: l[m],
           g: l[m + 1],
           b: l[m + 2],
           a: l[m + 3]
         };
-        const q = _[m], L = _[m + 1], AA = _[m + 2], eA = q === 255, rA = L === 255, tA = AA === 255;
+        const q = _[m], W = _[m + 1], AA = _[m + 2], eA = q === 255, rA = W === 255, tA = AA === 255;
         if (eA) {
-          const FA = H;
-          H = U, U = FA;
+          const FA = U;
+          U = $, $ = FA;
         }
         const iA = B[m], sA = B[m + 1], oA = iA + sA / 255, nA = Math.round(oA * 360 / 255 * 100) / 100, aA = w * b, yA = M * D;
         F += this.generateSVGCellContent(
           x,
-          H,
           U,
+          $,
           aA,
           yA,
           b,
@@ -302,7 +302,7 @@ class BA {
    * @param cellY The y position of the cell
    * @param cellWidth The width of the cell
    * @param cellHeight The height of the cell
-   * @param rotationAngle The rotation angle for the character
+   * @param rotation The rotation angle for the character
    * @param fontManager The font manager
    * @param char The characters object array
    * @param options The SVG export options
@@ -329,7 +329,7 @@ class BA {
   <text x="${_}" y="${B}" font-family="monospace" font-size="${D}px" fill="${C}" text-anchor="middle" dominant-baseline="middle"${b}>${this.escapeXml(p.character)}</text>`;
     } else {
       let D = 1;
-      R(J(this._p)) ? D = c.fontSize / c.font.data.head.unitsPerEm : D = c.fontSize / c.font.font.unitsPerEm;
+      R(j(this._p)) ? D = c.fontSize / c.font.data.head.unitsPerEm : D = c.fontSize / c.font.font.unitsPerEm;
       const I = t + (s - p.advanceWidth * D) / 2, k = i + (a + c.fontSize * 0.7) / 2, u = p.getPath(I, k, c.fontSize).toSVG().match(/d="([^"]+)"/);
       if (u && u[1]) {
         if (b && (l += `
@@ -425,8 +425,8 @@ class QA {
           b: d[u + 2],
           a: d[u + 3]
         };
-        const H = l[u], U = l[u + 1], q = l[u + 2], L = H === 255, AA = U === 255, eA = q === 255;
-        if (L) {
+        const U = l[u], $ = l[u + 1], q = l[u + 2], W = U === 255, AA = $ === 255, eA = q === 255;
+        if (W) {
           const aA = V;
           V = x, x = aA;
         }
@@ -449,7 +449,7 @@ class QA {
           color: oA,
           backgroundColor: nA,
           rotation: sA,
-          inverted: L,
+          inverted: W,
           flipHorizontal: AA,
           flipVertical: eA
         }), I++;
@@ -524,7 +524,7 @@ function PA(n, A) {
     }
   return 0;
 }
-function K() {
+function X() {
   return {
     getBoundingBox: () => ({ x1: 0, y1: 0, x2: 0, y2: 0 }),
     toSVG: () => ""
@@ -532,7 +532,7 @@ function K() {
 }
 function IA(n, A, e, r, t) {
   if (!A || !A.xs || A.xs.length === 0)
-    return K();
+    return X();
   const i = t / n.data.head.unitsPerEm;
   return {
     getBoundingBox: () => ({
@@ -584,14 +584,14 @@ const WA = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   P5AsciifyJSONExporter: QA,
   P5AsciifySVGExporter: BA,
-  compareVersions: $,
-  createEmptyPath: K,
+  compareVersions: O,
+  createEmptyPath: X,
   createGlyphPath: IA,
-  detectP5Version: J,
+  detectP5Version: j,
   getGlyphIndex: PA,
   glyphToSVGPath: bA,
   isP5AsyncCapable: R,
-  isValidP5Color: O,
+  isValidP5Color: J,
   isValidP5Font: pA
 }, Symbol.toStringTag, { value: "Module" }));
 class Y extends Error {
@@ -650,11 +650,11 @@ const T = class T {
   }
 };
 o(T, "_instance", null);
-let X = T;
-const g = X.getInstance(), KA = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+let Z = T;
+const g = Z.getInstance(), KA = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   P5AsciifyError: Y,
-  P5AsciifyErrorHandler: X,
+  P5AsciifyErrorHandler: Z,
   P5AsciifyErrorLevel: fA,
   errorHandler: g
 }, Symbol.toStringTag, { value: "Module" }));
@@ -693,7 +693,7 @@ class GA {
    * Initializes the character glyphs and characters array.
    */
   _initializeGlyphsAndCharacters() {
-    if (R(J(this._p))) {
+    if (R(j(this._p))) {
       const A = [], e = /* @__PURE__ */ new Map();
       this._font.data.cmap.tables.forEach((t) => {
         if (t.format === 4)
@@ -717,9 +717,9 @@ class GA {
           unicode: s,
           // Create a path generator for this glyph
           getPath: (p, d, l) => {
-            if (a === void 0) return K();
+            if (a === void 0) return X();
             const _ = this._font.data.glyf[a];
-            return _ ? IA(this._font, _, p, d, l) : K();
+            return _ ? IA(this._font, _, p, d, l) : X();
           },
           advanceWidth: E,
           color: this._p.color(Q, h, c)
@@ -1034,13 +1034,13 @@ class uA {
    * @param settings.textureFiltering - How to read values from the framebuffer. Either `LINEAR` *(nearby pixels will be interpolated)* or `NEAREST` *(no interpolation)*. Default is `NEAREST`.
    */
   setFramebufferOptions(A) {
-    this._framebufferOptions = {
+    return this._framebufferOptions = {
       ...this._framebufferOptions,
       ...A,
       density: 1,
       width: this._grid.cols,
       height: this._grid.rows
-    }, this._recreateFramebuffers();
+    }, this._recreateFramebuffers(), this;
   }
   /**
    * Updates renderer options.
@@ -1055,15 +1055,15 @@ class uA {
    *          characterColor: color(255, 0, 0),
    *          backgroundColor: color(0, 0, 255),
    *          characters: '.:-=+*#%@',
-   *          invertMode: true,
-   *          rotationAngle: 90,
+   *          invert: true,
+   *          rotation: 90,
    *          // ...
    *      });
    *  }
    * ```
    */
   update(A) {
-    (A == null ? void 0 : A.enabled) !== void 0 && this.enabled(A.enabled);
+    return (A == null ? void 0 : A.enabled) !== void 0 && this.enabled(A.enabled), this;
   }
   /**
    * Update the capture framebuffer used by the renderer.
@@ -1071,7 +1071,7 @@ class uA {
    * @ignore
    */
   setCaptureTexture(A) {
-    this._captureFramebuffer = A, this.resizeFramebuffers(), this.resetShaders();
+    return this._captureFramebuffer = A, this.resizeFramebuffers(), this.resetShaders(), this;
   }
   /**
    * Enable or disable the renderer.
@@ -1094,13 +1094,13 @@ class uA {
    */
   enabled(A) {
     if (A === void 0)
-      return this._options.enabled;
+      return this;
     if (!g.validate(
       typeof A == "boolean",
       "Enabled must be a boolean.",
       { providedValue: A, method: "enabled" }
     ))
-      return this._options.enabled;
+      return this;
     if (this._options.enabled = A, !A) {
       const r = [
         this._primaryColorFramebuffer,
@@ -1114,7 +1114,7 @@ class uA {
           this._p.clear();
         });
     }
-    return this._options.enabled;
+    return this;
   }
   /**
    * Enable the renderer.
@@ -1483,7 +1483,7 @@ const EA = {
   /** Enable/disable the renderer */
   enabled: !1
 };
-class j extends uA {
+class L extends uA {
   /**
    * Creates a new `"custom2D"` ASCII renderer instance.
    * @param _p The p5 instance.
@@ -1557,7 +1557,7 @@ class kA {
     return this._framebuffer;
   }
 }
-class N extends j {
+class N extends L {
   /**
    * Creates a new feature-based 2D ASCII renderer instance.
    * @param p The p5 instance.
@@ -1586,11 +1586,11 @@ class N extends j {
    * ```
    */
   characters(e) {
-    !g.validate(
+    return !g.validate(
       typeof e == "string",
       "Characters must be a string.",
       { providedValue: e, method: "characters" }
-    ) || e === this._options.characters || (this._characterColorPalette.setColors(this._fontManager.glyphColors(e)), this.resetShaders(), this._options.characters = e);
+    ) || e === this._options.characters ? this : (this._characterColorPalette.setColors(this._fontManager.glyphColors(e)), this.resetShaders(), this._options.characters = e, this);
   }
   /**
    * Swap the colors of the ASCII character and cell background colors.
@@ -1606,11 +1606,11 @@ class N extends j {
    * ```
    */
   invert(e) {
-    g.validate(
+    return g.validate(
       typeof e == "boolean",
       "Invert mode must be a boolean.",
       { providedValue: e, method: "invert" }
-    ) && (this._options.invertMode = e);
+    ) ? (this._options.invert = e, this) : this;
   }
   /**
    * Define the rotation angle of all characters in the grid affected by the renderer in degrees.
@@ -1635,10 +1635,10 @@ class N extends j {
       "Rotation angle must be a valid number.",
       { providedValue: e, method: "rotation" }
     ))
-      return;
+      return this;
     e = e % 360, e < 0 && (e += 360);
     const t = e * 255 / 360, i = Math.floor(t), s = Math.round((t - i) * 255);
-    this._options.rotationAngle = this._p.color(i, s, 0);
+    return this._options.rotation = this._p.color(i, s, 0), this;
   }
   /**
    * Set the color of the ASCII characters, used in the fixed color mode.
@@ -1655,11 +1655,11 @@ class N extends j {
    * ```
    */
   characterColor(e) {
-    g.validate(
-      O(this._p, e),
+    return g.validate(
+      J(this._p, e),
       "Character color must be a valid p5.Color object.",
       { providedValue: e, method: "characterColor" }
-    ) && (this._options.characterColor = e);
+    ) ? (this._options.characterColor = e, this) : this;
   }
   /**
    * Define whether to flip the ASCII characters horizontally.
@@ -1667,11 +1667,11 @@ class N extends j {
    * @throws If flip is not a boolean.
    */
   flipHorizontally(e) {
-    g.validate(
+    return g.validate(
       typeof e == "boolean",
       "Flip horizontally must be a boolean.",
       { providedValue: e, method: "flipHorizontally" }
-    ) && (this._options.flipHorizontally = e);
+    ) ? (this._options.flipHorizontally = e, this) : this;
   }
   /**
    * Define whether to flip the ASCII characters vertically.
@@ -1679,11 +1679,11 @@ class N extends j {
    * @throws If flip is not a boolean.
    */
   flipVertically(e) {
-    g.validate(
+    return g.validate(
       typeof e == "boolean",
       "Flip vertically must be a boolean.",
       { providedValue: e, method: "flipVertically" }
-    ) && (this._options.flipVertically = e);
+    ) ? (this._options.flipVertically = e, this) : this;
   }
   /**
    * Set the background color of the ASCII characters, used in the fixed color mode.
@@ -1700,11 +1700,11 @@ class N extends j {
    * ```
    */
   backgroundColor(e) {
-    g.validate(
-      O(this._p, e),
+    return g.validate(
+      J(this._p, e),
       "Background color must be a valid p5.Color object.",
       { providedValue: e, method: "backgroundColor" }
-    ) && (this._options.backgroundColor = e);
+    ) ? (this._options.backgroundColor = e, this) : this;
   }
   /**
    * Sets the color mode for ASCII characters.
@@ -1729,7 +1729,7 @@ class N extends j {
       "Character color mode must be either 'sampled' or 'fixed'.",
       { providedValue: e, method: "characterColorMode" }
     );
-    !r || !t || (e === "sampled" ? this._options.characterColorMode = 0 : e === "fixed" && (this._options.characterColorMode = 1));
+    return !r || !t ? this : (e === "sampled" ? this._options.characterColorMode = 0 : e === "fixed" && (this._options.characterColorMode = 1), this);
   }
   /**
    * Sets the color mode for the grid cell background.
@@ -1754,7 +1754,7 @@ class N extends j {
       "Background color mode must be either 'sampled' or 'fixed'.",
       { providedValue: e, method: "backgroundColorMode" }
     );
-    !r || !t || (e === "sampled" ? this._options.backgroundColorMode = 0 : e === "fixed" && (this._options.backgroundColorMode = 1));
+    return !r || !t ? this : (e === "sampled" ? this._options.backgroundColorMode = 0 : e === "fixed" && (this._options.backgroundColorMode = 1), this);
   }
   /**
    * Updates renderer options.
@@ -1769,15 +1769,15 @@ class N extends j {
    *          characterColor: color(255, 0, 0),
    *          backgroundColor: color(0, 0, 255),
    *          characters: '.:-=+*#%@',
-   *          invertMode: true,
-   *          rotationAngle: 90,
+   *          invert: true,
+   *          rotation: 90,
    *          // ...
    *      });
    *  }
    * ```
    */
   update(e) {
-    super.update(e), (e == null ? void 0 : e.enabled) !== void 0 && this.enabled(e.enabled), (e == null ? void 0 : e.characterColor) !== void 0 && (e.characterColor = this._p.color(e.characterColor), this.characterColor(e.characterColor)), (e == null ? void 0 : e.backgroundColor) !== void 0 && (e.backgroundColor = this._p.color(e.backgroundColor), this.backgroundColor(e.backgroundColor)), (e == null ? void 0 : e.characters) !== void 0 && this.characters(e.characters), (e == null ? void 0 : e.invertMode) !== void 0 && this.invert(e.invertMode), (e == null ? void 0 : e.rotationAngle) !== void 0 && this.rotation(e.rotationAngle), (e == null ? void 0 : e.characterColorMode) !== void 0 && this.characterColorMode(e.characterColorMode), (e == null ? void 0 : e.backgroundColorMode) !== void 0 && this.backgroundColorMode(e.backgroundColorMode), (e == null ? void 0 : e.flipHorizontally) !== void 0 && this.flipHorizontally(e.flipHorizontally), (e == null ? void 0 : e.flipVertically) !== void 0 && this.flipVertically(e.flipVertically);
+    return super.update(e), (e == null ? void 0 : e.enabled) !== void 0 && this.enabled(e.enabled), (e == null ? void 0 : e.characterColor) !== void 0 && (e.characterColor = this._p.color(e.characterColor), this.characterColor(e.characterColor)), (e == null ? void 0 : e.backgroundColor) !== void 0 && (e.backgroundColor = this._p.color(e.backgroundColor), this.backgroundColor(e.backgroundColor)), (e == null ? void 0 : e.characters) !== void 0 && this.characters(e.characters), (e == null ? void 0 : e.invert) !== void 0 && this.invert(e.invert), (e == null ? void 0 : e.rotation) !== void 0 && this.rotation(e.rotation), (e == null ? void 0 : e.characterColorMode) !== void 0 && this.characterColorMode(e.characterColorMode), (e == null ? void 0 : e.backgroundColorMode) !== void 0 && this.backgroundColorMode(e.backgroundColorMode), (e == null ? void 0 : e.flipHorizontally) !== void 0 && this.flipHorizontally(e.flipHorizontally), (e == null ? void 0 : e.flipVertically) !== void 0 && this.flipVertically(e.flipVertically), this;
   }
   /**
    * Get the {@link P5AsciifyColorPalette} object containing colors that correspond to the defined character set.
@@ -1881,9 +1881,9 @@ const lA = {
   /** Background color mode */
   backgroundColorMode: "fixed",
   /** Swap the cells ASCII character colors with it's cell background colors */
-  invertMode: !1,
+  invert: !1,
   /** Rotation angle of all characters in the grid in degrees */
-  rotationAngle: 0,
+  rotation: 0,
   /** Flip the ASCII characters horizontally */
   flipHorizontally: !1,
   /** Flip the ASCII characters vertically */
@@ -1919,7 +1919,7 @@ class CA extends N {
     super.resizeFramebuffers(), this.colorSampleFramebuffer.resize(this._grid.cols, this._grid.rows);
   }
   update(e) {
-    super.update(e), e.brightnessRange !== void 0 && this.brightnessRange(e.brightnessRange);
+    return super.update(e), e.brightnessRange !== void 0 && this.brightnessRange(e.brightnessRange), this;
   }
   /**
    * Sets the brightness range for the ASCII character mapping.
@@ -1945,7 +1945,7 @@ class CA extends N {
       "Brightness range must be an array with exactly two numbers.",
       { providedValue: e, method: "brightnessRange" }
     ))
-      return;
+      return this;
     const [t, i] = e, s = g.validate(
       t >= 0 && t <= 255 && i >= 0 && i <= 255,
       "Brightness values must be between 0 and 255.",
@@ -1955,10 +1955,10 @@ class CA extends N {
       "Start value must be less than or equal to the end value.",
       { providedValue: e, method: "brightnessRange" }
     );
-    !s || !a || (this._options.brightnessRange = [t, i]);
+    return !s || !a ? this : (this._options.brightnessRange = [t, i], this);
   }
   render() {
-    this.colorSampleFramebuffer.begin(), this._p.clear(), this._p.shader(this.colorSampleShader), this.colorSampleShader.setUniform("u_sketchTexture", this._captureFramebuffer), this.colorSampleShader.setUniform("u_gridCellDimensions", [this._grid.cols, this._grid.rows]), this._p.rect(0, 0, this.colorSampleFramebuffer.width, this.colorSampleFramebuffer.height), this.colorSampleFramebuffer.end(), this._primaryColorFramebuffer.begin(), this._options.characterColorMode === 1 ? this._p.background(this._options.characterColor) : (this._p.clear(), this._p.image(this.colorSampleFramebuffer, -this._grid.cols / 2, -this._grid.rows / 2, this._grid.cols, this._grid.rows)), this._primaryColorFramebuffer.end(), this._secondaryColorFramebuffer.begin(), this._options.backgroundColorMode === 1 ? this._p.background(this._options.backgroundColor) : (this._p.clear(), this._p.image(this.colorSampleFramebuffer, -this._grid.cols / 2, -this._grid.rows / 2, this._grid.cols, this._grid.rows)), this._secondaryColorFramebuffer.end(), this._transformFramebuffer.begin(), this._p.background(this._options.invertMode ? 255 : 0, this._options.flipHorizontally ? 255 : 0, this._options.flipVertically ? 255 : 0), this._transformFramebuffer.end(), this._rotationFramebuffer.begin(), this._p.background(this._options.rotationAngle), this._rotationFramebuffer.end(), this._characterFramebuffer.begin(), this._p.clear(), this._p.shader(this.asciiCharacterShader), this.asciiCharacterShader.setUniform("u_textureSize", [this._grid.cols, this._grid.rows]), this.asciiCharacterShader.setUniform("u_colorSampleFramebuffer", this.colorSampleFramebuffer), this.asciiCharacterShader.setUniform("u_charPaletteTexture", this._characterColorPalette.framebuffer), this.asciiCharacterShader.setUniform("u_charPaletteSize", [this._characterColorPalette.colors.length, 1]), this.asciiCharacterShader.setUniform("u_brightnessRange", this._options.brightnessRange), this._p.rect(0, 0, this._characterFramebuffer.width, this._characterFramebuffer.height), this._characterFramebuffer.end();
+    this.colorSampleFramebuffer.begin(), this._p.clear(), this._p.shader(this.colorSampleShader), this.colorSampleShader.setUniform("u_sketchTexture", this._captureFramebuffer), this.colorSampleShader.setUniform("u_gridCellDimensions", [this._grid.cols, this._grid.rows]), this._p.rect(0, 0, this.colorSampleFramebuffer.width, this.colorSampleFramebuffer.height), this.colorSampleFramebuffer.end(), this._primaryColorFramebuffer.begin(), this._options.characterColorMode === 1 ? this._p.background(this._options.characterColor) : (this._p.clear(), this._p.image(this.colorSampleFramebuffer, -this._grid.cols / 2, -this._grid.rows / 2, this._grid.cols, this._grid.rows)), this._primaryColorFramebuffer.end(), this._secondaryColorFramebuffer.begin(), this._options.backgroundColorMode === 1 ? this._p.background(this._options.backgroundColor) : (this._p.clear(), this._p.image(this.colorSampleFramebuffer, -this._grid.cols / 2, -this._grid.rows / 2, this._grid.cols, this._grid.rows)), this._secondaryColorFramebuffer.end(), this._transformFramebuffer.begin(), this._p.background(this._options.invert ? 255 : 0, this._options.flipHorizontally ? 255 : 0, this._options.flipVertically ? 255 : 0), this._transformFramebuffer.end(), this._rotationFramebuffer.begin(), this._p.background(this._options.rotation), this._rotationFramebuffer.end(), this._characterFramebuffer.begin(), this._p.clear(), this._p.shader(this.asciiCharacterShader), this.asciiCharacterShader.setUniform("u_textureSize", [this._grid.cols, this._grid.rows]), this.asciiCharacterShader.setUniform("u_colorSampleFramebuffer", this.colorSampleFramebuffer), this.asciiCharacterShader.setUniform("u_charPaletteTexture", this._characterColorPalette.framebuffer), this.asciiCharacterShader.setUniform("u_charPaletteSize", [this._characterColorPalette.colors.length, 1]), this.asciiCharacterShader.setUniform("u_brightnessRange", this._options.brightnessRange), this._p.rect(0, 0, this._characterFramebuffer.width, this._characterFramebuffer.height), this._characterFramebuffer.end();
   }
 }
 var YA = `precision mediump float;
@@ -2159,13 +2159,13 @@ precision mediump float;uniform sampler2D u_image;uniform vec2 u_imageSize,u_gri
   /** Background color mode */
   backgroundColorMode: "fixed",
   /** Swap the cells ASCII character colors with it's cell background colors */
-  invertMode: !1,
+  invert: !1,
   /** Threshold for Sobel edge detection. Responsible for edge detection sensitivity */
   sobelThreshold: 0.5,
   /** Sampling threshold for edge detection. In this case, 16 pixels in a grid cell need to contain an edge to render it */
   sampleThreshold: 16,
   /** Rotation angle of all characters in the grid in degrees */
-  rotationAngle: 0,
+  rotation: 0,
   /** Flip the ASCII characters horizontally */
   flipHorizontally: !1,
   /** Flip the ASCII characters vertically */
@@ -2234,7 +2234,7 @@ class DA extends N {
       "Sobel threshold must be between 0 and 1",
       { providedValue: e, method: "sobelThreshold" }
     );
-    !r || !t || (this._options.sobelThreshold = e);
+    return !r || !t ? this : (this._options.sobelThreshold = e, this);
   }
   /**
    * Set the sample threshold value for the edge detection algorithm.
@@ -2260,13 +2260,13 @@ class DA extends N {
       "Sample threshold must be greater than or equal to 0",
       { providedValue: e, method: "sampleThreshold" }
     );
-    !r || !t || (this._options.sampleThreshold = e);
+    return !r || !t ? this : (this._options.sampleThreshold = e, this);
   }
   update(e) {
-    super.update(e), e.sobelThreshold !== void 0 && this.sobelThreshold(e.sobelThreshold), e.sampleThreshold !== void 0 && this.sampleThreshold(e.sampleThreshold);
+    return super.update(e), e.sobelThreshold !== void 0 && this.sobelThreshold(e.sobelThreshold), e.sampleThreshold !== void 0 && this.sampleThreshold(e.sampleThreshold), this;
   }
   render() {
-    this.sobelFramebuffer.begin(), this._p.clear(), this._p.shader(this.sobelShader), this.sobelShader.setUniform("u_texture", this._captureFramebuffer), this.sobelShader.setUniform("u_textureSize", [this._captureFramebuffer.width, this._captureFramebuffer.height]), this.sobelShader.setUniform("u_threshold", this._options.sobelThreshold), this.sobelShader.setUniform("u_colorPaletteTexture", this._characterColorPalette.framebuffer), this.sobelShader.setUniform("u_totalChars", this._options.characters.length), this._p.rect(0, 0, this.sobelFramebuffer.width, this.sobelFramebuffer.height), this.sobelFramebuffer.end(), this.sampleFramebuffer.begin(), this._p.clear(), this._p.shader(this.sampleShader), this.sampleShader.setUniform("u_imageSize", [this._captureFramebuffer.width, this._captureFramebuffer.height]), this.sampleShader.setUniform("u_image", this.sobelFramebuffer), this.sampleShader.setUniform("u_gridCellDimensions", [this._grid.cols, this._grid.rows]), this.sampleShader.setUniform("u_threshold", this._options.sampleThreshold), this._p.rect(0, 0, this.sampleFramebuffer.width, this.sampleFramebuffer.height), this.sampleFramebuffer.end(), this._primaryColorFramebuffer.begin(), this._p.clear(), this._p.shader(this.colorSampleShader), this.colorSampleShader.setUniform("u_sketchTexture", this._captureFramebuffer), this.colorSampleShader.setUniform("u_sampleTexture", this.sampleFramebuffer), this.colorSampleShader.setUniform("u_gridCellDimensions", [this._grid.cols, this._grid.rows]), this.colorSampleShader.setUniform("u_sampleMode", this._options.characterColorMode), this.colorSampleShader.setUniform("u_staticColor", this._options.characterColor._array), this._p.rect(0, 0, this._primaryColorFramebuffer.width, this._primaryColorFramebuffer.height), this._primaryColorFramebuffer.end(), this._secondaryColorFramebuffer.begin(), this._p.clear(), this._p.shader(this.colorSampleShader), this.colorSampleShader.setUniform("u_sketchTexture", this._captureFramebuffer), this.colorSampleShader.setUniform("u_sampleTexture", this.sampleFramebuffer), this.colorSampleShader.setUniform("u_gridCellDimensions", [this._grid.cols, this._grid.rows]), this.colorSampleShader.setUniform("u_sampleMode", this._options.backgroundColorMode), this.colorSampleShader.setUniform("u_staticColor", this._options.backgroundColor._array), this._p.rect(0, 0, this._secondaryColorFramebuffer.width, this._secondaryColorFramebuffer.height), this._secondaryColorFramebuffer.end(), this._transformFramebuffer.begin(), this._p.clear(), this._p.shader(this.transformShader), this.transformShader.setUniform("u_invert", this._options.invertMode), this.transformShader.setUniform("u_flipH", this._options.flipHorizontally), this.transformShader.setUniform("u_flipV", this._options.flipVertically), this.transformShader.setUniform("u_sampleTexture", this.sampleFramebuffer), this.transformShader.setUniform("u_compareColor", [0, 0, 0]), this.transformShader.setUniform("u_gridCellDimensions", [this._grid.cols, this._grid.rows]), this._p.rect(0, 0, this._transformFramebuffer.width, this._transformFramebuffer.height), this._transformFramebuffer.end(), this._rotationFramebuffer.begin(), this._p.clear(), this._p.shader(this.rotationShader), this.rotationShader.setUniform("u_rotationColor", this._options.rotationAngle._array), this.rotationShader.setUniform("u_sampleTexture", this.sampleFramebuffer), this.rotationShader.setUniform("u_compareColor", [0, 0, 0]), this.rotationShader.setUniform("u_gridCellDimensions", [this._grid.cols, this._grid.rows]), this._p.rect(0, 0, this._rotationFramebuffer.width, this._rotationFramebuffer.height), this._rotationFramebuffer.end(), this._characterFramebuffer.begin(), this._p.clear(), this._p.shader(this.asciiCharacterShader), this.asciiCharacterShader.setUniform("u_sketchTexture", this.sampleFramebuffer), this.asciiCharacterShader.setUniform("u_gridCellDimensions", [this._grid.cols, this._grid.rows]), this._p.rect(0, 0, this._characterFramebuffer.width, this._characterFramebuffer.height), this._characterFramebuffer.end();
+    this.sobelFramebuffer.begin(), this._p.clear(), this._p.shader(this.sobelShader), this.sobelShader.setUniform("u_texture", this._captureFramebuffer), this.sobelShader.setUniform("u_textureSize", [this._captureFramebuffer.width, this._captureFramebuffer.height]), this.sobelShader.setUniform("u_threshold", this._options.sobelThreshold), this.sobelShader.setUniform("u_colorPaletteTexture", this._characterColorPalette.framebuffer), this.sobelShader.setUniform("u_totalChars", this._options.characters.length), this._p.rect(0, 0, this.sobelFramebuffer.width, this.sobelFramebuffer.height), this.sobelFramebuffer.end(), this.sampleFramebuffer.begin(), this._p.clear(), this._p.shader(this.sampleShader), this.sampleShader.setUniform("u_imageSize", [this._captureFramebuffer.width, this._captureFramebuffer.height]), this.sampleShader.setUniform("u_image", this.sobelFramebuffer), this.sampleShader.setUniform("u_gridCellDimensions", [this._grid.cols, this._grid.rows]), this.sampleShader.setUniform("u_threshold", this._options.sampleThreshold), this._p.rect(0, 0, this.sampleFramebuffer.width, this.sampleFramebuffer.height), this.sampleFramebuffer.end(), this._primaryColorFramebuffer.begin(), this._p.clear(), this._p.shader(this.colorSampleShader), this.colorSampleShader.setUniform("u_sketchTexture", this._captureFramebuffer), this.colorSampleShader.setUniform("u_sampleTexture", this.sampleFramebuffer), this.colorSampleShader.setUniform("u_gridCellDimensions", [this._grid.cols, this._grid.rows]), this.colorSampleShader.setUniform("u_sampleMode", this._options.characterColorMode), this.colorSampleShader.setUniform("u_staticColor", this._options.characterColor._array), this._p.rect(0, 0, this._primaryColorFramebuffer.width, this._primaryColorFramebuffer.height), this._primaryColorFramebuffer.end(), this._secondaryColorFramebuffer.begin(), this._p.clear(), this._p.shader(this.colorSampleShader), this.colorSampleShader.setUniform("u_sketchTexture", this._captureFramebuffer), this.colorSampleShader.setUniform("u_sampleTexture", this.sampleFramebuffer), this.colorSampleShader.setUniform("u_gridCellDimensions", [this._grid.cols, this._grid.rows]), this.colorSampleShader.setUniform("u_sampleMode", this._options.backgroundColorMode), this.colorSampleShader.setUniform("u_staticColor", this._options.backgroundColor._array), this._p.rect(0, 0, this._secondaryColorFramebuffer.width, this._secondaryColorFramebuffer.height), this._secondaryColorFramebuffer.end(), this._transformFramebuffer.begin(), this._p.clear(), this._p.shader(this.transformShader), this.transformShader.setUniform("u_invert", this._options.invert), this.transformShader.setUniform("u_flipH", this._options.flipHorizontally), this.transformShader.setUniform("u_flipV", this._options.flipVertically), this.transformShader.setUniform("u_sampleTexture", this.sampleFramebuffer), this.transformShader.setUniform("u_compareColor", [0, 0, 0]), this.transformShader.setUniform("u_gridCellDimensions", [this._grid.cols, this._grid.rows]), this._p.rect(0, 0, this._transformFramebuffer.width, this._transformFramebuffer.height), this._transformFramebuffer.end(), this._rotationFramebuffer.begin(), this._p.clear(), this._p.shader(this.rotationShader), this.rotationShader.setUniform("u_rotationColor", this._options.rotation._array), this.rotationShader.setUniform("u_sampleTexture", this.sampleFramebuffer), this.rotationShader.setUniform("u_compareColor", [0, 0, 0]), this.rotationShader.setUniform("u_gridCellDimensions", [this._grid.cols, this._grid.rows]), this._p.rect(0, 0, this._rotationFramebuffer.width, this._rotationFramebuffer.height), this._rotationFramebuffer.end(), this._characterFramebuffer.begin(), this._p.clear(), this._p.shader(this.asciiCharacterShader), this.asciiCharacterShader.setUniform("u_sketchTexture", this.sampleFramebuffer), this.asciiCharacterShader.setUniform("u_gridCellDimensions", [this._grid.cols, this._grid.rows]), this._p.rect(0, 0, this._characterFramebuffer.width, this._characterFramebuffer.height), this._characterFramebuffer.end();
   }
 }
 var $A = `precision mediump float;
@@ -2479,10 +2479,10 @@ class wA {
     return this._resultFramebuffer;
   }
 }
-const W = {
+const K = {
   brightness: CA,
   edge: DA,
-  custom2D: j
+  custom2D: L
 };
 class xA {
   /**
@@ -2518,7 +2518,7 @@ class xA {
       width: this._captureFramebuffer.width,
       height: this._captureFramebuffer.height
     }, this._renderers = [
-      { name: "custom2D", renderer: new j(this._p, this._captureFramebuffer, this._grid, this._fontManager) },
+      { name: "custom2D", renderer: new L(this._p, this._captureFramebuffer, this._grid, this._fontManager) },
       { name: "edge", renderer: new DA(this._p, this._captureFramebuffer, this._grid, this._fontManager) },
       { name: "brightness", renderer: new CA(this._p, this._captureFramebuffer, this._grid, this._fontManager) }
     ], this._primaryColorFramebuffer = this._p.createFramebuffer({
@@ -2665,7 +2665,7 @@ class xA {
     if (!t || !i)
       return null;
     let s;
-    const a = W[e];
+    const a = K[e];
     if (a)
       s = new a(this._p, this._captureFramebuffer, this._grid, this._fontManager, r);
     else {
@@ -2682,7 +2682,7 @@ class xA {
       s !== void 0,
       (() => {
         const Q = [
-          ...Object.keys(W),
+          ...Object.keys(K),
           ...this._pluginRegistry.getIds()
         ].join(", ");
         return `Invalid renderer type: ${e}. Valid types are: ${Q}`;
@@ -2729,7 +2729,7 @@ class xA {
    */
   getAvailableRendererTypes() {
     return [
-      ...Object.keys(W),
+      ...Object.keys(K),
       ...this._pluginRegistry.getIds()
     ];
   }
@@ -3013,7 +3013,7 @@ class gA {
    * @ignore
    */
   async setup(A, e) {
-    this._captureFramebuffer = A, this._fontManager = new GA(this._p, e), R(J(this._p)) ? await this._fontManager.setup(this._fontSize) : this._fontManager.setup(this._fontSize), this._grid = new VA(
+    this._captureFramebuffer = A, this._fontManager = new GA(this._p, e), R(j(this._p)) ? await this._fontManager.setup(this._fontSize) : this._fontManager.setup(this._fontSize), this._grid = new VA(
       this._captureFramebuffer,
       this._fontManager.maxGlyphDimensions.width,
       this._fontManager.maxGlyphDimensions.height
@@ -3071,12 +3071,35 @@ class gA {
    *      defaultBrightnessRenderer = p5asciify.asciifier().renderers().get("brightness");
    * 
    *      // Update any options for the renderer.
-   *      defaultBrightnessRenderer.update({ invertMode: true });
+   *      defaultBrightnessRenderer.update({ invert: true });
    *  }
    * ```
    */
   renderers() {
     return this._rendererManager;
+  }
+  /**
+   * Returns a specific renderer by name from the renderer manager.
+   * @param name The name of the renderer to retrieve.
+   * @returns The renderer instance if found, or null if not found.
+   * 
+   * @example
+   * ```javascript
+   * let brightnessRenderer;
+   * 
+   * function setupAsciify() {
+   *     // Fetch the brightness renderer from the renderer manager.
+   *     brightnessRenderer = p5asciify.asciifier().renderer("brightness");
+   * 
+   *     // Alternatively:
+   *     // brightnessRenderer = p5asciifier.renderer("brightness");
+   *     // brightnessRenderer = p5asciifier.renderers().get("brightness");
+   *     // brightnessRenderer = p5asciify.asciifier().renderers().get("brightness");
+   * }
+   * ```
+   */
+  renderer(A) {
+    return this._rendererManager.get(A);
   }
   /**
    * Sets the framebuffer or graphics object to capture for ASCII conversion.
@@ -3142,7 +3165,7 @@ class gA {
    */
   background(A) {
     g.validate(
-      typeof A == "string" || Array.isArray(A) || O(this._p, A),
+      typeof A == "string" || Array.isArray(A) || J(this._p, A),
       `Invalid color type: ${typeof A}. Expected string, array or p5.Color.`,
       { providedValue: A, method: "background" }
     ) && (this._backgroundColor = A);
@@ -3648,9 +3671,9 @@ const v = class v {
     const r = function() {
       if (!(this._renderer.drawingContext instanceof WebGLRenderingContext || this._renderer.drawingContext instanceof WebGL2RenderingContext))
         throw new Y("WebGL renderer is required for p5.asciify to run.");
-      if ($(this.VERSION, "1.8.0") < 0)
+      if (O(this.VERSION, "1.8.0") < 0)
         throw new Y("p5.asciify requires p5.js v1.8.0 or higher to run.");
-      if ($(this.VERSION, "2.0.0") >= 0)
+      if (O(this.VERSION, "2.0.0") >= 0)
         return (async () => {
           await A.handleSetup(this);
           const s = v.getInstance();
@@ -3683,7 +3706,7 @@ const v = class v {
       console.log("p5.asciify loading without automatic hooks!");
       return;
     }
-    $(P.VERSION, "2.0.0") >= 0 && typeof P.registerAddon == "function" ? this.p5AddonRegistered || (P.registerAddon(this._createP5Addon()), this.p5AddonRegistered = !0) : this._registerLegacyHooks();
+    O(P.VERSION, "2.0.0") >= 0 && typeof P.registerAddon == "function" ? this.p5AddonRegistered || (P.registerAddon(this._createP5Addon()), this.p5AddonRegistered = !0) : this._registerLegacyHooks();
   }
   /**
    * Create p5.js v2.0.0+ addon configuration
@@ -3941,7 +3964,7 @@ const G = class G {
    * @param p The p5.js instance to use for the library.
    */
   async init(A) {
-    if (this._p = A, this._p5Version = J(A), !this._p5Version)
+    if (this._p = A, this._p5Version = j(A), !this._p5Version)
       throw new Y("Could not determine p5.js version. Ensure p5.js is properly loaded.");
     this._applyShaderPrecisionFix(), R(this._p5Version) ? (this._baseFont = await this._p.loadFont(mA), await Promise.all(
       this._asciifiers.map((e) => e.init(A))
@@ -3991,7 +4014,7 @@ const G = class G {
    */
   background(A) {
     g.validate(
-      typeof A == "string" || Array.isArray(A) || O(this._p, A),
+      typeof A == "string" || Array.isArray(A) || J(this._p, A),
       `Invalid color type: ${typeof A}. Expected string, array or p5.Color.`,
       { providedValue: A, method: "background" }
     ) && (this._backgroundColor = A);
@@ -4269,23 +4292,23 @@ const OA = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
 }, Symbol.toStringTag, { value: "Module" })), JA = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   CUSTOM_DEFAULT_OPTIONS_2D: EA,
-  P5AsciifyRenderer2D: j,
+  P5AsciifyRenderer2D: L,
   feature: OA
 }, Symbol.toStringTag, { value: "Module" })), XA = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   P5AsciifyDisplayRenderer: wA,
   P5AsciifyRenderer: uA,
   P5AsciifyRendererManager: xA,
-  RENDERER_TYPES: W,
+  RENDERER_TYPES: K,
   renderer2d: JA
 }, Symbol.toStringTag, { value: "Module" })), ZA = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   P5AsciifyPluginRegistry: vA
 }, Symbol.toStringTag, { value: "Module" }));
-let Z;
-typeof window < "u" && window.p5asciify ? Z = window.p5asciify : Z = dA.getInstance();
-const qA = Z;
-typeof window < "u" && (window.p5asciify || (window.p5asciify = Z), window.P5AsciifyAbstractFeatureRenderer2D || (window.P5AsciifyAbstractFeatureRenderer2D = N), window.P5AsciifyRenderer2D || (window.P5AsciifyRenderer2D = j), window.P5AsciifyRenderer || (window.P5AsciifyRenderer = uA), window.P5AsciifyErrorLevel || (window.P5AsciifyErrorLevel = fA));
+let H;
+typeof window < "u" && window.p5asciify ? H = window.p5asciify : H = dA.getInstance();
+const qA = H, Ae = H.asciifier();
+typeof window < "u" && (window.p5asciify || (window.p5asciify = H), window.p5asciifier || (window.p5asciifier = H.asciifier()), window.P5AsciifyAbstractFeatureRenderer2D || (window.P5AsciifyAbstractFeatureRenderer2D = N), window.P5AsciifyRenderer2D || (window.P5AsciifyRenderer2D = L), window.P5AsciifyRenderer || (window.P5AsciifyRenderer = uA), window.P5AsciifyErrorLevel || (window.P5AsciifyErrorLevel = fA));
 export {
   gA as P5Asciifier,
   dA as P5AsciifierManager,
@@ -4294,6 +4317,7 @@ export {
   VA as P5AsciifyGrid,
   cA as P5AsciifyHookManager,
   KA as errors,
+  Ae as p5asciifier,
   qA as p5asciify,
   ZA as plugins,
   XA as renderers,

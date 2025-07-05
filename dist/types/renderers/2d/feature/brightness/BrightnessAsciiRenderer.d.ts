@@ -22,9 +22,9 @@ export declare const BRIGHTNESS_DEFAULT_OPTIONS: {
     /** Background color mode */
     backgroundColorMode: string;
     /** Swap the cells ASCII character colors with it's cell background colors */
-    invertMode: boolean;
+    invert: boolean;
     /** Rotation angle of all characters in the grid in degrees */
-    rotationAngle: number;
+    rotation: number;
     /** Flip the ASCII characters horizontally */
     flipHorizontally: boolean;
     /** Flip the ASCII characters vertically */
@@ -50,7 +50,7 @@ export declare class P5AsciifyBrightnessRenderer extends P5AsciifyAbstractFeatur
     constructor(p5Instance: p5, captureFramebuffer: p5.Framebuffer | p5.Graphics, grid: P5AsciifyGrid, fontManager: P5AsciifyFontManager, options?: BrightnessAsciiRendererOptions);
     resetShaders(): void;
     resizeFramebuffers(): void;
-    update(newOptions: Partial<BrightnessAsciiRendererOptions>): void;
+    update(newOptions: Partial<BrightnessAsciiRendererOptions>): this;
     /**
      * Sets the brightness range for the ASCII character mapping.
      * This range defines the minimum and maximum brightness values that will be mapped to ASCII characters.
@@ -69,6 +69,6 @@ export declare class P5AsciifyBrightnessRenderer extends P5AsciifyAbstractFeatur
      * @param range A tuple [min, max] representing the brightness range.
      * @throws If the provided range is not an array of two numbers, or if the numbers are not within the valid range (0-255).
      */
-    brightnessRange(range: [number, number]): void;
+    brightnessRange(range: [number, number]): this;
     render(): void;
 }

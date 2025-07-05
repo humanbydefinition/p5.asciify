@@ -22,13 +22,13 @@ export declare const EDGE_DEFAULT_OPTIONS: {
     /** Background color mode */
     backgroundColorMode: string;
     /** Swap the cells ASCII character colors with it's cell background colors */
-    invertMode: boolean;
+    invert: boolean;
     /** Threshold for Sobel edge detection. Responsible for edge detection sensitivity */
     sobelThreshold: number;
     /** Sampling threshold for edge detection. In this case, 16 pixels in a grid cell need to contain an edge to render it */
     sampleThreshold: number;
     /** Rotation angle of all characters in the grid in degrees */
-    rotationAngle: number;
+    rotation: number;
     /** Flip the ASCII characters horizontally */
     flipHorizontally: boolean;
     /** Flip the ASCII characters vertically */
@@ -71,7 +71,7 @@ export declare class P5AsciifyEdgeRenderer extends P5AsciifyAbstractFeatureRende
      * @param value The threshold value for the Sobel edge detection algorithm.
      * @throws If the value is not a valid number between 0 and 1.
      */
-    sobelThreshold(value: number): void;
+    sobelThreshold(value: number): this;
     /**
      * Set the sample threshold value for the edge detection algorithm.
      *
@@ -86,7 +86,7 @@ export declare class P5AsciifyEdgeRenderer extends P5AsciifyAbstractFeatureRende
      * @param value The sample threshold value for the edge detection algorithm.
      * @throws If the value is not a valid number greater than or equal to 0.
      */
-    sampleThreshold(value: number): void;
-    update(newOptions: Partial<EdgeAsciiRendererOptions>): void;
+    sampleThreshold(value: number): this;
+    update(newOptions: Partial<EdgeAsciiRendererOptions>): this;
     render(): void;
 }
