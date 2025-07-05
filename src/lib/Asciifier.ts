@@ -202,6 +202,7 @@ export class P5Asciifier {
      *     // brightnessRenderer = p5asciifier.renderers().get("brightness");
      *     // brightnessRenderer = p5asciify.asciifier().renderers().get("brightness");
      * }
+     * ```
      */
     public renderer(name: string): P5AsciifyRenderer2D | null {
         return this._rendererManager.get(name);
