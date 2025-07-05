@@ -52,6 +52,7 @@ const config: Config = {
         cleanOutputDir: true,
         skipErrorChecking: true,
         formatWithPrettier: true,
+        watch: true,
       },
     ],
     [
