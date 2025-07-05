@@ -85,12 +85,14 @@ export class P5AsciifyBrightnessRenderer extends P5AsciifyAbstractFeatureRendere
         this.colorSampleFramebuffer.resize(this._grid.cols, this._grid.rows);
     }
 
-    public update(newOptions: Partial<BrightnessAsciiRendererOptions>): void {
+    public update(newOptions: Partial<BrightnessAsciiRendererOptions>): this {
         super.update(newOptions);
 
         if (newOptions.brightnessRange !== undefined) {
             this.brightnessRange(newOptions.brightnessRange);
         }
+
+        return this;
     }
 
     /**
@@ -111,8 +113,7 @@ export class P5AsciifyBrightnessRenderer extends P5AsciifyAbstractFeatureRendere
      * @param range A tuple [min, max] representing the brightness range.
      * @throws If the provided range is not an array of two numbers, or if the numbers are not within the valid range (0-255).
      */
-    public brightnessRange(range: [number, number]): void {
-
+    public brightnessRange(range: [number, number]): this {
         // Ensure we have exactly 2 elements and they are numbers
         const isValidArray = errorHandler.validate(
             Array.isArray(range) && range.length === 2 &&
@@ -123,7 +124,7 @@ export class P5AsciifyBrightnessRenderer extends P5AsciifyAbstractFeatureRendere
         );
 
         if (!isValidArray) {
-            return;
+            return this;
         }
 
         const [start, end] = range;
@@ -141,10 +142,11 @@ export class P5AsciifyBrightnessRenderer extends P5AsciifyAbstractFeatureRendere
         );
 
         if (!isValidRange || !isValidOrder) {
-            return; // If validation fails, do not update the brightness range
+            return this; // If validation fails, do not update the brightness range
         }
 
         this._options.brightnessRange = [start, end];
+        return this;
     }
 
     render(): void {

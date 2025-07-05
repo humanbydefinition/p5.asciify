@@ -125,7 +125,7 @@ export class P5AsciifyEdgeRenderer extends P5AsciifyAbstractFeatureRenderer2D<Ed
      * @param value The threshold value for the Sobel edge detection algorithm.
      * @throws If the value is not a valid number between 0 and 1.
      */
-    sobelThreshold(value: number): void {
+    public sobelThreshold(value: number): this {
         const isValidNumber = errorHandler.validate(
             typeof value === 'number' && !Number.isNaN(value) && Number.isFinite(value),
             'Sobel threshold must be a valid number',
@@ -139,10 +139,11 @@ export class P5AsciifyEdgeRenderer extends P5AsciifyAbstractFeatureRenderer2D<Ed
         );
 
         if (!isValidNumber || !isInRange) {
-            return;
+            return this;
         }
 
         this._options.sobelThreshold = value;
+        return this;
     }
 
     /**
@@ -159,8 +160,7 @@ export class P5AsciifyEdgeRenderer extends P5AsciifyAbstractFeatureRenderer2D<Ed
      * @param value The sample threshold value for the edge detection algorithm.
      * @throws If the value is not a valid number greater than or equal to 0.
      */
-    sampleThreshold(value: number): void {
-
+    public sampleThreshold(value: number): this {
         const isValidNumber = errorHandler.validate(
             typeof value === 'number' && !Number.isNaN(value) && Number.isFinite(value),
             'Sample threshold must be a valid number',
@@ -174,13 +174,14 @@ export class P5AsciifyEdgeRenderer extends P5AsciifyAbstractFeatureRenderer2D<Ed
         );
 
         if (!isValidNumber || !isGreaterThanZero) {
-            return;
+            return this;
         }
 
         this._options.sampleThreshold = value;
+        return this;
     }
 
-    public update(newOptions: Partial<EdgeAsciiRendererOptions>): void {
+    public update(newOptions: Partial<EdgeAsciiRendererOptions>): this {
         super.update(newOptions);
 
         if (newOptions.sobelThreshold !== undefined) {
@@ -190,6 +191,8 @@ export class P5AsciifyEdgeRenderer extends P5AsciifyAbstractFeatureRenderer2D<Ed
         if (newOptions.sampleThreshold !== undefined) {
             this.sampleThreshold(newOptions.sampleThreshold as number);
         }
+
+        return this;
     }
 
     render(): void {

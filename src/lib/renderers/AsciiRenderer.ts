@@ -151,7 +151,7 @@ export abstract class P5AsciifyRenderer<T extends AsciiRendererOptions = AsciiRe
         stencil?: boolean;
         antialias?: boolean;
         textureFiltering?: number;
-    }): void {
+    }): this {
         this._framebufferOptions = {
             ...this._framebufferOptions,
             ...settings,
@@ -161,6 +161,7 @@ export abstract class P5AsciifyRenderer<T extends AsciiRendererOptions = AsciiRe
         };
 
         this._recreateFramebuffers();
+        return this;
     }
 
     /**
@@ -195,10 +196,11 @@ export abstract class P5AsciifyRenderer<T extends AsciiRendererOptions = AsciiRe
      *  }
      * ```
      */
-    public update(newOptions: T): void {
+    public update(newOptions: T): this {
         if (newOptions?.enabled !== undefined) {
             this.enabled(newOptions.enabled);
         }
+        return this;
     }
 
     /**
@@ -206,10 +208,11 @@ export abstract class P5AsciifyRenderer<T extends AsciiRendererOptions = AsciiRe
      * @param newCaptureFramebuffer - The new capture framebuffer or graphics to use.
      * @ignore
      */
-    public setCaptureTexture(newCaptureFramebuffer: p5.Framebuffer | p5.Graphics): void {
+    public setCaptureTexture(newCaptureFramebuffer: p5.Framebuffer | p5.Graphics): this {
         this._captureFramebuffer = newCaptureFramebuffer;
         this.resizeFramebuffers();
         this.resetShaders();
+        return this;
     }
 
     /**
@@ -231,9 +234,9 @@ export abstract class P5AsciifyRenderer<T extends AsciiRendererOptions = AsciiRe
      *  }
      * ```
      */
-    public enabled(enabled?: boolean): boolean {
+    public enabled(enabled?: boolean): this {
         if (enabled === undefined) {
-            return this._options.enabled as boolean;
+            return this;
         }
 
         const isValidType = errorHandler.validate(
@@ -243,7 +246,7 @@ export abstract class P5AsciifyRenderer<T extends AsciiRendererOptions = AsciiRe
         );
 
         if (!isValidType) {
-            return this._options.enabled!; // Return the current state if validation fails
+            return this;
         }
 
         this._options.enabled = enabled;
@@ -255,14 +258,14 @@ export abstract class P5AsciifyRenderer<T extends AsciiRendererOptions = AsciiRe
                 this._transformFramebuffer,
                 this._rotationFramebuffer,
                 this._characterFramebuffer
-            ]
+            ];
 
             for (const framebuffer of framebuffers) {
                 framebuffer.draw(() => { this._p.clear(); });
             }
         }
 
-        return this._options.enabled;
+        return this;
     }
 
     /**
@@ -282,7 +285,7 @@ export abstract class P5AsciifyRenderer<T extends AsciiRendererOptions = AsciiRe
      *  }
      * ```
      */
-    public enable(): boolean {
+    public enable(): this {
         return this.enabled(true);
     }
 
@@ -307,7 +310,7 @@ export abstract class P5AsciifyRenderer<T extends AsciiRendererOptions = AsciiRe
      *  }
      * ```
      */
-    public disable(): boolean {
+    public disable(): this {
         return this.enabled(false);
     }
 
