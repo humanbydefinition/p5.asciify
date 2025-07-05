@@ -55,7 +55,7 @@ if (typeof window !== 'undefined') {
 
   // Export the default asciifier instance globally
   if (!window.p5asciifier) {
-    window.p5asciifier = p5asciifyInstance.asciifier();
+    window.p5asciifier = p5asciifyInstance.asciifier()!;
   }
 
   // Only set classes if not already defined
