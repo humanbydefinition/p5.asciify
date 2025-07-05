@@ -30,9 +30,9 @@ export const BRIGHTNESS_DEFAULT_OPTIONS = {
     /** Background color mode */
     backgroundColorMode: "fixed",
     /** Swap the cells ASCII character colors with it's cell background colors */
-    invertMode: false,
+    invert: false,
     /** Rotation angle of all characters in the grid in degrees */
-    rotationAngle: 0,
+    rotation: 0,
     /** Flip the ASCII characters horizontally */
     flipHorizontally: false,
     /** Flip the ASCII characters vertically */
@@ -177,11 +177,11 @@ export class P5AsciifyBrightnessRenderer extends P5AsciifyAbstractFeatureRendere
         this._secondaryColorFramebuffer.end();
 
         this._transformFramebuffer.begin();
-        this._p.background(this._options.invertMode ? 255 : 0, this._options.flipHorizontally ? 255 : 0, this._options.flipVertically ? 255 : 0);
+        this._p.background(this._options.invert ? 255 : 0, this._options.flipHorizontally ? 255 : 0, this._options.flipVertically ? 255 : 0);
         this._transformFramebuffer.end();
 
         this._rotationFramebuffer.begin();
-        this._p.background(this._options.rotationAngle as p5.Color);
+        this._p.background(this._options.rotation as p5.Color);
         this._rotationFramebuffer.end();
 
         this._characterFramebuffer.begin();

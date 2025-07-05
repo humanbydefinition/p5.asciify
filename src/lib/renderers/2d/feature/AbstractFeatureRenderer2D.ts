@@ -93,7 +93,7 @@ export abstract class P5AsciifyAbstractFeatureRenderer2D<T extends FeatureAsciiR
             return this;
         }
 
-        this._options.invertMode = invert;
+        this._options.invert = invert;
         return this;
     }
 
@@ -145,7 +145,7 @@ export abstract class P5AsciifyAbstractFeatureRenderer2D<T extends FeatureAsciiR
         const red = Math.floor(scaledAngle);
         const green = Math.round((scaledAngle - red) * 255);
 
-        this._options.rotationAngle = this._p.color(red, green, 0);
+        this._options.rotation = this._p.color(red, green, 0);
         return this;
     }
 
@@ -336,8 +336,8 @@ export abstract class P5AsciifyAbstractFeatureRenderer2D<T extends FeatureAsciiR
      *          characterColor: color(255, 0, 0),
      *          backgroundColor: color(0, 0, 255),
      *          characters: '.:-=+*#%@',
-     *          invertMode: true,
-     *          rotationAngle: 90,
+     *          invert: true,
+     *          rotation: 90,
      *          // ...
      *      });
      *  }
@@ -364,12 +364,12 @@ export abstract class P5AsciifyAbstractFeatureRenderer2D<T extends FeatureAsciiR
             this.characters(newOptions.characters);
         }
 
-        if (newOptions?.invertMode !== undefined) {
-            this.invert(newOptions.invertMode);
+        if (newOptions?.invert !== undefined) {
+            this.invert(newOptions.invert);
         }
 
-        if (newOptions?.rotationAngle !== undefined) {
-            this.rotation(newOptions.rotationAngle as number);
+        if (newOptions?.rotation !== undefined) {
+            this.rotation(newOptions.rotation as number);
         }
 
         if (newOptions?.characterColorMode !== undefined) {

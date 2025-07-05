@@ -34,13 +34,13 @@ export const EDGE_DEFAULT_OPTIONS = {
     /** Background color mode */
     backgroundColorMode: "fixed",
     /** Swap the cells ASCII character colors with it's cell background colors */
-    invertMode: false,
+    invert: false,
     /** Threshold for Sobel edge detection. Responsible for edge detection sensitivity */
     sobelThreshold: 0.5,
     /** Sampling threshold for edge detection. In this case, 16 pixels in a grid cell need to contain an edge to render it */
     sampleThreshold: 16,
     /** Rotation angle of all characters in the grid in degrees */
-    rotationAngle: 0,
+    rotation: 0,
     /** Flip the ASCII characters horizontally */
     flipHorizontally: false,
     /** Flip the ASCII characters vertically */
@@ -247,7 +247,7 @@ export class P5AsciifyEdgeRenderer extends P5AsciifyAbstractFeatureRenderer2D<Ed
         this._transformFramebuffer.begin();
         this._p.clear();
         this._p.shader(this.transformShader);
-        this.transformShader.setUniform('u_invert', this._options.invertMode as boolean);
+        this.transformShader.setUniform('u_invert', this._options.invert as boolean);
         this.transformShader.setUniform('u_flipH', this._options.flipHorizontally as boolean);
         this.transformShader.setUniform('u_flipV', this._options.flipVertically as boolean);
         this.transformShader.setUniform('u_sampleTexture', this.sampleFramebuffer);
@@ -259,7 +259,7 @@ export class P5AsciifyEdgeRenderer extends P5AsciifyAbstractFeatureRenderer2D<Ed
         this._rotationFramebuffer.begin();
         this._p.clear();
         this._p.shader(this.rotationShader);
-        this.rotationShader.setUniform('u_rotationColor', (this._options.rotationAngle as p5.Color)._array);
+        this.rotationShader.setUniform('u_rotationColor', (this._options.rotation as p5.Color)._array);
         this.rotationShader.setUniform('u_sampleTexture', this.sampleFramebuffer);
         this.rotationShader.setUniform('u_compareColor', [0, 0, 0]);
         this.rotationShader.setUniform('u_gridCellDimensions', [this._grid.cols, this._grid.rows]);

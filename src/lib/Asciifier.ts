@@ -176,7 +176,7 @@ export class P5Asciifier {
      *      defaultBrightnessRenderer = p5asciify.asciifier().renderers().get("brightness");
      * 
      *      // Update any options for the renderer.
-     *      defaultBrightnessRenderer.update({ invertMode: true });
+     *      defaultBrightnessRenderer.update({ invert: true });
      *  }
      * ```
      */

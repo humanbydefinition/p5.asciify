@@ -189,8 +189,8 @@ export abstract class P5AsciifyRenderer<T extends AsciiRendererOptions = AsciiRe
      *          characterColor: color(255, 0, 0),
      *          backgroundColor: color(0, 0, 255),
      *          characters: '.:-=+*#%@',
-     *          invertMode: true,
-     *          rotationAngle: 90,
+     *          invert: true,
+     *          rotation: 90,
      *          // ...
      *      });
      *  }

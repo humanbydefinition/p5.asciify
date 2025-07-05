@@ -370,7 +370,7 @@ void main() {\r
   /** Swap the cells ASCII character colors with it's cell background colors */
   invertMode: !1,
   /** Rotation angle of all characters in the grid in degrees */
-  rotationAngle: 0,
+  rotation: 0,
   /** Flip the ASCII characters horizontally */
   flipHorizontally: !1,
   /** Flip the ASCII characters vertically */
