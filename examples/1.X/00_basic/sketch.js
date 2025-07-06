@@ -43,8 +43,6 @@ export const createSketch = (options = {}) => {
         flipVertically: false,
         brightnessRange: [0, 255],
       });
-
-      p5asciifier.renderer("brightness").characters("0123456789").invert(true);
     };
 
     // Draw anything on the canvas to be asciified
