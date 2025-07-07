@@ -92,13 +92,7 @@ export class P5AsciifyEdgeRenderer extends P5AsciifyAbstractFeatureRenderer2D<Ed
             textureFiltering: this._p.NEAREST
         });
 
-        this.sampleFramebuffer = this._p.createFramebuffer({
-            density: 1,
-            width: this._grid.cols,
-            height: this._grid.rows,
-            depthFormat: this._p.UNSIGNED_INT,
-            textureFiltering: this._p.NEAREST
-        });
+        this.sampleFramebuffer = this._p.createFramebuffer(this._framebufferOptions);
     }
 
     resizeFramebuffers(): void {
@@ -109,6 +103,19 @@ export class P5AsciifyEdgeRenderer extends P5AsciifyAbstractFeatureRenderer2D<Ed
 
     resetShaders(): void {
         this.sampleShader = this._p.createShader(vertexShader, generateSampleShader(16, this._grid.cellHeight, this._grid.cellWidth));
+    }
+
+    protected _recreateFramebuffers(): void {
+        const settings = {
+            ...this._framebufferOptions,
+            density: 1,
+            width: this._grid.cols,
+            height: this._grid.rows,
+        };
+
+        this.sampleFramebuffer = this._p.createFramebuffer(settings);
+
+        super._recreateFramebuffers();
     }
 
     /**

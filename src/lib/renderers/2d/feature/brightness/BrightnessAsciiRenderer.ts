@@ -69,16 +69,23 @@ export class P5AsciifyBrightnessRenderer extends P5AsciifyAbstractFeatureRendere
         this.colorSampleShader = this._p.createShader(vertexShader, colorSampleShader);
         this.asciiCharacterShader = this._p.createShader(vertexShader, asciiCharacterShader);
 
-        this.colorSampleFramebuffer = this._p.createFramebuffer({
-            density: 1,
-            width: this._grid.cols,
-            height: this._grid.rows,
-            depthFormat: this._p.UNSIGNED_INT,
-            textureFiltering: this._p.NEAREST
-        });
+        this.colorSampleFramebuffer = this._p.createFramebuffer(this._framebufferOptions);
     }
 
     resetShaders(): void { return; };
+
+    protected _recreateFramebuffers(): void {
+        const settings = {
+            ...this._framebufferOptions,
+            density: 1,
+            width: this._grid.cols,
+            height: this._grid.rows,
+        };
+
+        this.colorSampleFramebuffer = this._p.createFramebuffer(settings);
+
+        super._recreateFramebuffers();
+    }
 
     resizeFramebuffers(): void {
         super.resizeFramebuffers();
