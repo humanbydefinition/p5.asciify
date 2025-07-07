@@ -51,10 +51,62 @@ export class P5AsciifyRendererManager {
     /** The rotation framebuffer, whose pixels define the rotation angle of the characters in the grid. */
     private _rotationFramebuffer: p5.Framebuffer;
 
+    /** The ASCII display renderer, which performs the final ASCII conversion */
     private _asciiDisplayRenderer2D: P5AsciifyDisplayRenderer;
 
     /** Whether any renderers are enabled. */
     private _hasEnabledRenderers: boolean = false;
+
+    /**
+     * Framebuffer settings used to configure all internal framebuffers for the renderer.
+     * 
+     * These settings are passed to `p5.createFramebuffer()` when creating or recreating framebuffers.
+     * 
+     * **Note:** The `width`, `height`, and `density` properties are managed internally and always match the grid size and pixel density.
+     * 
+     * Properties:
+     * - `format` (number): Data format of the texture. Either `UNSIGNED_BYTE`, `FLOAT`, or `HALF_FLOAT`. Default is `UNSIGNED_BYTE`.
+     * - `channels` (number): Whether to store `RGB` or `RGBA` color channels. Default is to match the main canvas, which is `RGBA`.
+     * - `depth` (boolean): Whether to include a depth buffer. Default is `true`.
+     * - `depthFormat` (number): Data format of depth information. Either `UNSIGNED_INT` or `FLOAT`. Default is `UNSIGNED_INT`.
+     * - `stencil` (boolean): Whether to include a stencil buffer for masking. `depth` must be `true` for this feature to work. Defaults to the value of `depth` (which is `true`).
+     * - `antialias` (boolean): Whether to perform anti-aliasing. If set to `true`, 2 samples will be used by default. The number of samples can also be set (e.g., 4). Default is `false`.
+     * - `textureFiltering` (number): How to read values from the framebuffer. Either `LINEAR` (nearby pixels will be interpolated) or `NEAREST` (no interpolation). Default is `NEAREST`.
+     * - `width` (number): Width of the framebuffer. Always matches the grid columns.
+     * - `height` (number): Height of the framebuffer. Always matches the grid rows.
+     * - `density` (number): Pixel density of the framebuffer. Always matches the main canvas pixel density.
+     */
+    protected _framebufferOptions: {
+        /** Whether to perform anti-aliasing. If set to `true`, 2 samples will be used by default. The number of samples can also be set (e.g., 4). Default is `false`. */
+        antialias?: boolean;
+
+        /** How to read values from the framebuffer. Either `LINEAR` (nearby pixels will be interpolated) or `NEAREST` (no interpolation). Default is `NEAREST`. */
+        textureFiltering?: any;
+
+        /** Whether to include a depth buffer. Default is `true`. */
+        depth?: boolean;
+
+        /** The pixel density of the framebuffers. Always fixed to 1, since they are used for offscreen rendering. */
+        density: number;
+
+        /** Width of the framebuffer. Always matches the grid columns. */
+        width: number;
+
+        /** Height of the framebuffer. Always matches the grid rows. */
+        height: number;
+
+        /** Data format of depth information. Either `UNSIGNED_INT` or `FLOAT`. Default is `UNSIGNED_INT`. */
+        depthFormat?: any;
+
+        /** Data format of the texture. Either `UNSIGNED_BYTE`, `FLOAT`, or `HALF_FLOAT`. Default is `UNSIGNED_BYTE`. */
+        format?: number;
+
+        /** Whether to store `RGB` or `RGBA` color channels. Default is to match the main canvas, which is `RGBA`. */
+        channels?: number;
+
+        /** Whether to include a stencil buffer for masking. `depth` must be `true` for this feature to work. Defaults to the value of `depth` *(which is `true`)*. */
+        stencil?: boolean;
+    };
 
     /**
      * Creates a new ASCII renderer manager instance.
@@ -90,52 +142,18 @@ export class P5AsciifyRendererManager {
             { name: "brightness", renderer: new P5AsciifyBrightnessRenderer(this._p, this._captureFramebuffer, this._grid, this._fontManager) },
         ];
 
-        this._primaryColorFramebuffer = this._p.createFramebuffer({
-            density: 1,
+        this._framebufferOptions = {
             antialias: false,
+            textureFiltering: this._p.NEAREST,
+            depthFormat: this._p.UNSIGNED_INT,
+            density: 1,
             width: this._grid.cols,
             height: this._grid.rows,
-            depthFormat: this._p.UNSIGNED_INT,
-            textureFiltering: this._p.NEAREST
-        });
-
-        this._secondaryColorFramebuffer = this._p.createFramebuffer({
-            density: 1,
-            antialias: false,
-            width: this._grid.cols,
-            height: this._grid.rows,
-            depthFormat: this._p.UNSIGNED_INT,
-            textureFiltering: this._p.NEAREST
-        });
-
-        this._transformFramebuffer = this._p.createFramebuffer({
-            density: 1,
-            antialias: false,
-            width: this._grid.cols,
-            height: this._grid.rows,
-            depthFormat: this._p.UNSIGNED_INT,
-            textureFiltering: this._p.NEAREST
-        });
-
-        this._characterFramebuffer = this._p.createFramebuffer({
-            density: 1,
-            antialias: false,
-            width: this._grid.cols,
-            height: this._grid.rows,
-            depthFormat: this._p.UNSIGNED_INT,
-            textureFiltering: this._p.NEAREST
-        });
-
-        this._rotationFramebuffer = this._p.createFramebuffer({
-            density: 1,
-            antialias: false,
-            width: this._grid.cols,
-            height: this._grid.rows,
-            depthFormat: this._p.UNSIGNED_INT,
-            textureFiltering: this._p.NEAREST
-        });
+        };
 
         this._asciiDisplayRenderer2D = new P5AsciifyDisplayRenderer(this._p, this._grid, this._fontManager);
+
+        this._recreateFramebuffers();
     }
 
     /**
@@ -222,6 +240,63 @@ export class P5AsciifyRendererManager {
         this._renderers.forEach(renderer => {
             renderer.renderer.setCaptureTexture(newCaptureFramebuffer);
         });
+    }
+
+    /**
+     * Update framebuffer settings *(except width/height/density)* and recreate all framebuffers.
+     * 
+     * This method allows you to configure the internal framebuffers used by the renderers.
+     * Note that width, height, and density are managed internally and cannot be modified.
+     * 
+     * For a full list of available settings, see the `p5.createFramebuffer()` documentation:
+     * {@link https://p5js.org/reference/p5/createFramebuffer/}
+     * 
+     * @param settings Available framebuffer settings. `width`, `height`, and `density` are managed internally and cannot be modified.
+     * @param settings.format - Data format of the texture, either `UNSIGNED_BYTE`, `FLOAT`, or `HALF_FLOAT`. Default is `UNSIGNED_BYTE`.
+     * @param settings.channels - Whether to store `RGB` or `RGBA` color channels. Default is to match the main canvas which is `RGBA`.
+     * @param settings.depth - Whether to include a depth buffer. Default is `true`.
+     * @param settings.depthFormat - Data format of depth information, either `UNSIGNED_INT` or `FLOAT`. Default is `UNSIGNED_INT`.
+     * @param settings.stencil - Whether to include a stencil buffer for masking. `depth` must be `true` for this feature to work. Defaults to the value of `depth` which is `true`.
+     * @param settings.antialias - Whether to perform anti-aliasing. If set to `true`, 2 samples will be used by default. The number of samples can also be set *(e.g., 4)*. Default is `false`.
+     * @param settings.textureFiltering - How to read values from the framebuffer. Either `LINEAR` *(nearby pixels will be interpolated)* or `NEAREST` *(no interpolation)*. Default is `NEAREST`.
+     */
+    public setFramebufferOptions(settings: {
+        format?: number;
+        channels?: number;
+        depth?: boolean;
+        depthFormat?: number;
+        stencil?: boolean;
+        antialias?: boolean;
+        textureFiltering?: number;
+    }): void {
+        this._framebufferOptions = {
+            ...this._framebufferOptions,
+            ...settings,
+            density: 1,
+            width: this._grid.cols,
+            height: this._grid.rows,
+        };
+
+        this._recreateFramebuffers();
+
+        for (const renderer of this._renderers) {
+            renderer.renderer.setFramebufferOptions(this._framebufferOptions);
+        }
+    }
+
+    private _recreateFramebuffers(): void {
+        const settings = {
+            ...this._framebufferOptions,
+            density: 1,
+            width: this._grid.cols,
+            height: this._grid.rows,
+        };
+
+        this._primaryColorFramebuffer = this._p.createFramebuffer(settings);
+        this._secondaryColorFramebuffer = this._p.createFramebuffer(settings);
+        this._transformFramebuffer = this._p.createFramebuffer(settings);
+        this._characterFramebuffer = this._p.createFramebuffer(settings);
+        this._rotationFramebuffer = this._p.createFramebuffer(settings);
     }
 
     /**
