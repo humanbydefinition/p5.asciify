@@ -10,12 +10,9 @@ import { P5AsciifyDisplayRenderer } from './AsciiDisplayRenderer';
 import { P5AsciifyGrid } from '../Grid';
 import { P5AsciifyFontManager } from '../FontManager';
 
-import { P5AsciifyError } from '../errors/AsciifyError';
-
 import { AsciiRendererOptions } from './types';
 
 import { RENDERER_TYPES } from './constants';
-import { P5AsciifyRendererPlugin } from '../plugins/RendererPlugin';
 
 import { P5AsciifyPluginRegistry } from '../plugins/PluginRegistry';
 import { errorHandler } from '../errors';
@@ -33,23 +30,23 @@ export class P5AsciifyRendererManager {
     private _renderers: { name: string, renderer: P5AsciifyRenderer }[];
 
     /** The primary color framebuffer, whose pixels define the character colors of the grid cells. */
-    private _primaryColorFramebuffer: p5.Framebuffer;
+    private _primaryColorFramebuffer!: p5.Framebuffer;
 
     /** The secondary color framebuffer, whose pixels define the background colors of the grid cells. */
-    private _secondaryColorFramebuffer: p5.Framebuffer;
+    private _secondaryColorFramebuffer!: p5.Framebuffer;
 
     /** The character framebuffer, whose pixels define the ASCII characters to use in the grid cells. */
-    private _characterFramebuffer: p5.Framebuffer;
+    private _characterFramebuffer!: p5.Framebuffer;
 
     /** The transform framebuffer, where each pixels color channel defines a different transformation:
      * - Red channel: Swap the character and background colors of the grid cells.
      * - Green channel: Flip the ASCII characters horizontally.
      * - Blue channel: Flip the ASCII characters vertically.
      */
-    private _transformFramebuffer: p5.Framebuffer;
+    private _transformFramebuffer!: p5.Framebuffer;
 
     /** The rotation framebuffer, whose pixels define the rotation angle of the characters in the grid. */
-    private _rotationFramebuffer: p5.Framebuffer;
+    private _rotationFramebuffer!: p5.Framebuffer;
 
     /** The ASCII display renderer, which performs the final ASCII conversion */
     private _asciiDisplayRenderer2D: P5AsciifyDisplayRenderer;
