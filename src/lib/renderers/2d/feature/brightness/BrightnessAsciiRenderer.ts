@@ -30,9 +30,9 @@ export const BRIGHTNESS_DEFAULT_OPTIONS = {
     /** Background color mode */
     backgroundColorMode: "fixed",
     /** Swap the cells ASCII character colors with it's cell background colors */
-    invertMode: false,
+    invert: false,
     /** Rotation angle of all characters in the grid in degrees */
-    rotationAngle: 0,
+    rotation: 0,
     /** Flip the ASCII characters horizontally */
     flipHorizontally: false,
     /** Flip the ASCII characters vertically */
@@ -69,28 +69,37 @@ export class P5AsciifyBrightnessRenderer extends P5AsciifyAbstractFeatureRendere
         this.colorSampleShader = this._p.createShader(vertexShader, colorSampleShader);
         this.asciiCharacterShader = this._p.createShader(vertexShader, asciiCharacterShader);
 
-        this.colorSampleFramebuffer = this._p.createFramebuffer({
-            density: 1,
-            width: this._grid.cols,
-            height: this._grid.rows,
-            depthFormat: this._p.UNSIGNED_INT,
-            textureFiltering: this._p.NEAREST
-        });
+        this.colorSampleFramebuffer = this._p.createFramebuffer(this._framebufferOptions);
     }
 
     resetShaders(): void { return; };
+
+    protected _recreateFramebuffers(): void {
+        const settings = {
+            ...this._framebufferOptions,
+            density: 1,
+            width: this._grid.cols,
+            height: this._grid.rows,
+        };
+
+        this.colorSampleFramebuffer = this._p.createFramebuffer(settings);
+
+        super._recreateFramebuffers();
+    }
 
     resizeFramebuffers(): void {
         super.resizeFramebuffers();
         this.colorSampleFramebuffer.resize(this._grid.cols, this._grid.rows);
     }
 
-    public update(newOptions: Partial<BrightnessAsciiRendererOptions>): void {
+    public update(newOptions: Partial<BrightnessAsciiRendererOptions>): this {
         super.update(newOptions);
 
         if (newOptions.brightnessRange !== undefined) {
             this.brightnessRange(newOptions.brightnessRange);
         }
+
+        return this;
     }
 
     /**
@@ -111,8 +120,7 @@ export class P5AsciifyBrightnessRenderer extends P5AsciifyAbstractFeatureRendere
      * @param range A tuple [min, max] representing the brightness range.
      * @throws If the provided range is not an array of two numbers, or if the numbers are not within the valid range (0-255).
      */
-    public brightnessRange(range: [number, number]): void {
-
+    public brightnessRange(range: [number, number]): this {
         // Ensure we have exactly 2 elements and they are numbers
         const isValidArray = errorHandler.validate(
             Array.isArray(range) && range.length === 2 &&
@@ -123,7 +131,7 @@ export class P5AsciifyBrightnessRenderer extends P5AsciifyAbstractFeatureRendere
         );
 
         if (!isValidArray) {
-            return;
+            return this;
         }
 
         const [start, end] = range;
@@ -141,10 +149,11 @@ export class P5AsciifyBrightnessRenderer extends P5AsciifyAbstractFeatureRendere
         );
 
         if (!isValidRange || !isValidOrder) {
-            return; // If validation fails, do not update the brightness range
+            return this; // If validation fails, do not update the brightness range
         }
 
         this._options.brightnessRange = [start, end];
+        return this;
     }
 
     render(): void {
@@ -175,11 +184,11 @@ export class P5AsciifyBrightnessRenderer extends P5AsciifyAbstractFeatureRendere
         this._secondaryColorFramebuffer.end();
 
         this._transformFramebuffer.begin();
-        this._p.background(this._options.invertMode ? 255 : 0, this._options.flipHorizontally ? 255 : 0, this._options.flipVertically ? 255 : 0);
+        this._p.background(this._options.invert ? 255 : 0, this._options.flipHorizontally ? 255 : 0, this._options.flipVertically ? 255 : 0);
         this._transformFramebuffer.end();
 
         this._rotationFramebuffer.begin();
-        this._p.background(this._options.rotationAngle as p5.Color);
+        this._p.background(this._options.rotation as p5.Color);
         this._rotationFramebuffer.end();
 
         this._characterFramebuffer.begin();

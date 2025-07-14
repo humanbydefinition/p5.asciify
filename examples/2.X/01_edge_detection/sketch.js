@@ -76,10 +76,10 @@ const sketch = (p) => {
             characterColorMode: "fixed",
             backgroundColor: "#000000",
             backgroundColorMode: "fixed",
-            invertMode: false,
+            invert: false,
             sobelThreshold: 0.01,
             sampleThreshold: 16,
-            rotationAngle: 0,
+            rotation: 0,
             flipHorizontally: false,
             flipVertically: false,
         });

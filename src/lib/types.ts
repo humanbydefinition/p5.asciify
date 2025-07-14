@@ -6,6 +6,7 @@ import { P5AsciifyAbstractFeatureRenderer2D } from './renderers/2d/feature';
 import { P5AsciifyRenderer2D } from './renderers/2d';
 import { P5AsciifyRenderer } from './renderers';
 import { P5AsciifyErrorLevel } from './errors/ErrorHandler';
+import { P5Asciifier } from './Asciifier';
 
 /**
  * Hook types supported by the p5.asciify hook manager.
@@ -52,6 +53,7 @@ export type P5AsciifyHookHandlers = {
 declare global {
     interface Window {
         p5asciify: P5AsciifierManager;
+        p5asciifier: P5Asciifier;
         P5AsciifyAbstractFeatureRenderer2D: typeof P5AsciifyAbstractFeatureRenderer2D;
         P5AsciifyRenderer2D: typeof P5AsciifyRenderer2D;
         P5AsciifyRenderer: typeof P5AsciifyRenderer;

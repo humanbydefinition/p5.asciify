@@ -50,9 +50,9 @@ export const createSketch = (options = {}) => {
         characterColorMode: 'sampled',
         backgroundColor: "#000000",
         backgroundColorMode: 'fixed',
-        invertMode: false,
+        invert: false,
         fontSize: 16,
-        rotationAngle: 0,
+        rotation: 0,
         brightnessRange: [0, 255],
       });
 
@@ -64,9 +64,9 @@ export const createSketch = (options = {}) => {
         characterColorMode: 'sampled',
         backgroundColor: "#000000",
         backgroundColorMode: 'fixed',
-        invertMode: true,
+        invert: true,
         fontSize: 32,
-        rotationAngle: 0,
+        rotation: 0,
         brightnessRange: [0, 255],
       });
 

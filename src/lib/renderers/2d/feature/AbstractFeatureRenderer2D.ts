@@ -51,7 +51,7 @@ export abstract class P5AsciifyAbstractFeatureRenderer2D<T extends FeatureAsciiR
      *  }
      * ```
      */
-    public characters(characters: string): void {
+    public characters(characters: string): this {
         const isValidType = errorHandler.validate(
             typeof characters === 'string',
             'Characters must be a string.',
@@ -59,13 +59,14 @@ export abstract class P5AsciifyAbstractFeatureRenderer2D<T extends FeatureAsciiR
         );
 
         if (!isValidType || characters === this._options.characters) {
-            return; // If validation fails or characters are the same, do not update
+            return this;
         }
 
         this._characterColorPalette.setColors(this._fontManager.glyphColors(characters));
         this.resetShaders();
 
         this._options.characters = characters;
+        return this;
     }
 
     /**
@@ -81,7 +82,7 @@ export abstract class P5AsciifyAbstractFeatureRenderer2D<T extends FeatureAsciiR
      *  }
      * ```
      */
-    public invert(invert: boolean): void {
+    public invert(invert: boolean): this {
         const isValidType = errorHandler.validate(
             typeof invert === 'boolean',
             'Invert mode must be a boolean.',
@@ -89,10 +90,11 @@ export abstract class P5AsciifyAbstractFeatureRenderer2D<T extends FeatureAsciiR
         );
 
         if (!isValidType) {
-            return; // If validation fails, do not update the invert mode
+            return this;
         }
 
-        this._options.invertMode = invert;
+        this._options.invert = invert;
+        return this;
     }
 
     /**
@@ -125,7 +127,7 @@ export abstract class P5AsciifyAbstractFeatureRenderer2D<T extends FeatureAsciiR
      * @param angle The rotation angle in degrees.
      * @throws If angle is not a number.
      */
-    public rotation(angle: number): void {
+    public rotation(angle: number): this {
         const isValidType = errorHandler.validate(
             typeof angle === 'number' && !isNaN(angle),
             'Rotation angle must be a valid number.',
@@ -133,22 +135,18 @@ export abstract class P5AsciifyAbstractFeatureRenderer2D<T extends FeatureAsciiR
         );
 
         if (!isValidType) {
-            return; // If validation fails, do not update the rotation angle
+            return this;
         }
 
-        // Normalize angle to 0-360 range
         angle = angle % 360;
         if (angle < 0) angle += 360;
 
-        // Store the original angle for precise retrieval
-        // We'll use a two-channel encoding for better precision
-        // Red channel: integer part of (angle * 255 / 360)
-        // Green channel: fractional part scaled to 0-255
         const scaledAngle = (angle * 255) / 360;
         const red = Math.floor(scaledAngle);
         const green = Math.round((scaledAngle - red) * 255);
 
-        this._options.rotationAngle = this._p.color(red, green, 0);
+        this._options.rotation = this._p.color(red, green, 0);
+        return this;
     }
 
     /**
@@ -165,7 +163,7 @@ export abstract class P5AsciifyAbstractFeatureRenderer2D<T extends FeatureAsciiR
      *  }
      * ```
      */
-    public characterColor(color: p5.Color): void {
+    public characterColor(color: p5.Color): this {
         const isValidType = errorHandler.validate(
             isValidP5Color(this._p, color),
             'Character color must be a valid p5.Color object.',
@@ -173,10 +171,11 @@ export abstract class P5AsciifyAbstractFeatureRenderer2D<T extends FeatureAsciiR
         );
 
         if (!isValidType) {
-            return; // If validation fails, do not update the character color
+            return this;
         }
 
         this._options.characterColor = color;
+        return this;
     }
 
     /**
@@ -184,7 +183,7 @@ export abstract class P5AsciifyAbstractFeatureRenderer2D<T extends FeatureAsciiR
      * @param flip Whether to flip the characters horizontally.
      * @throws If flip is not a boolean.
      */
-    public flipHorizontally(flip: boolean): void {
+    public flipHorizontally(flip: boolean): this {
         const isValidType = errorHandler.validate(
             typeof flip === 'boolean',
             'Flip horizontally must be a boolean.',
@@ -192,10 +191,11 @@ export abstract class P5AsciifyAbstractFeatureRenderer2D<T extends FeatureAsciiR
         );
 
         if (!isValidType) {
-            return; // If validation fails, do not update the flip horizontally option
+            return this;
         }
 
         this._options.flipHorizontally = flip;
+        return this;
     }
 
     /**
@@ -203,8 +203,7 @@ export abstract class P5AsciifyAbstractFeatureRenderer2D<T extends FeatureAsciiR
      * @param flip Whether to flip the characters vertically.
      * @throws If flip is not a boolean.
      */
-    public flipVertically(flip: boolean): void {
-
+    public flipVertically(flip: boolean): this {
         const isValidType = errorHandler.validate(
             typeof flip === 'boolean',
             'Flip vertically must be a boolean.',
@@ -212,10 +211,11 @@ export abstract class P5AsciifyAbstractFeatureRenderer2D<T extends FeatureAsciiR
         );
 
         if (!isValidType) {
-            return; // If validation fails, do not update the flip vertically option
+            return this;
         }
 
         this._options.flipVertically = flip;
+        return this;
     }
 
     /**
@@ -232,8 +232,7 @@ export abstract class P5AsciifyAbstractFeatureRenderer2D<T extends FeatureAsciiR
      *  }
      * ```
      */
-    public backgroundColor(color: p5.Color): void {
-
+    public backgroundColor(color: p5.Color): this {
         const isValidType = errorHandler.validate(
             isValidP5Color(this._p, color),
             'Background color must be a valid p5.Color object.',
@@ -241,10 +240,11 @@ export abstract class P5AsciifyAbstractFeatureRenderer2D<T extends FeatureAsciiR
         );
 
         if (!isValidType) {
-            return; // If validation fails, do not update the background color
+            return this;
         }
 
         this._options.backgroundColor = color;
+        return this;
     }
 
     /**
@@ -260,7 +260,7 @@ export abstract class P5AsciifyAbstractFeatureRenderer2D<T extends FeatureAsciiR
      *  }
      * ```
      */
-    public characterColorMode(mode: string): void {
+    public characterColorMode(mode: string): this {
         const isValidType = errorHandler.validate(
             typeof mode === 'string',
             'Character color mode must be a string.',
@@ -274,7 +274,7 @@ export abstract class P5AsciifyAbstractFeatureRenderer2D<T extends FeatureAsciiR
         );
 
         if (!isValidType || !isValidValue) {
-            return; // If validation fails, do not update the character color mode
+            return this;
         }
 
         if (mode === 'sampled') {
@@ -282,6 +282,7 @@ export abstract class P5AsciifyAbstractFeatureRenderer2D<T extends FeatureAsciiR
         } else if (mode === 'fixed') {
             this._options.characterColorMode = 1;
         }
+        return this;
     }
 
     /**
@@ -297,7 +298,7 @@ export abstract class P5AsciifyAbstractFeatureRenderer2D<T extends FeatureAsciiR
      *  }
      * ```
      */
-    public backgroundColorMode(mode: string): void {
+    public backgroundColorMode(mode: string): this {
         const isValidType = errorHandler.validate(
             typeof mode === 'string',
             'Background color mode must be a string.',
@@ -311,7 +312,7 @@ export abstract class P5AsciifyAbstractFeatureRenderer2D<T extends FeatureAsciiR
         );
 
         if (!isValidType || !isValidValue) {
-            return; // If validation fails, do not update the background color mode
+            return this;
         }
 
         if (mode === 'sampled') {
@@ -319,6 +320,7 @@ export abstract class P5AsciifyAbstractFeatureRenderer2D<T extends FeatureAsciiR
         } else if (mode === 'fixed') {
             this._options.backgroundColorMode = 1;
         }
+        return this;
     }
 
     /**
@@ -334,14 +336,14 @@ export abstract class P5AsciifyAbstractFeatureRenderer2D<T extends FeatureAsciiR
      *          characterColor: color(255, 0, 0),
      *          backgroundColor: color(0, 0, 255),
      *          characters: '.:-=+*#%@',
-     *          invertMode: true,
-     *          rotationAngle: 90,
+     *          invert: true,
+     *          rotation: 90,
      *          // ...
      *      });
      *  }
      * ```
      */
-    public update(newOptions: T): void {
+    public update(newOptions: T): this {
         super.update(newOptions);
 
         if (newOptions?.enabled !== undefined) {
@@ -362,12 +364,12 @@ export abstract class P5AsciifyAbstractFeatureRenderer2D<T extends FeatureAsciiR
             this.characters(newOptions.characters);
         }
 
-        if (newOptions?.invertMode !== undefined) {
-            this.invert(newOptions.invertMode);
+        if (newOptions?.invert !== undefined) {
+            this.invert(newOptions.invert);
         }
 
-        if (newOptions?.rotationAngle !== undefined) {
-            this.rotation(newOptions.rotationAngle as number);
+        if (newOptions?.rotation !== undefined) {
+            this.rotation(newOptions.rotation as number);
         }
 
         if (newOptions?.characterColorMode !== undefined) {
@@ -385,6 +387,8 @@ export abstract class P5AsciifyAbstractFeatureRenderer2D<T extends FeatureAsciiR
         if (newOptions?.flipVertically !== undefined) {
             this.flipVertically(newOptions.flipVertically);
         }
+
+        return this;
     }
 
     /**
