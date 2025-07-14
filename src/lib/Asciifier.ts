@@ -232,36 +232,6 @@ export class P5Asciifier {
     }
 
     /**
-     * Update framebuffer settings (except width/height/density) and recreate all framebuffers.
-     * 
-     * This method allows you to configure the internal framebuffers used by the renderer.
-     * Note that width, height, and density are managed internally and cannot be modified.
-     * 
-     * For a full list of available settings, see the `p5.createFramebuffer()` documentation:
-     * {@link https://p5js.org/reference/p5/createFramebuffer/}
-     * 
-     * @param settings Available framebuffer settings. `width`, `height`, and `density` are managed internally and cannot be modified.
-     * @param settings.format - Data format of the texture, either `UNSIGNED_BYTE`, `FLOAT`, or `HALF_FLOAT`. Default is `UNSIGNED_BYTE`.
-     * @param settings.channels - Whether to store `RGB` or `RGBA` color channels. Default is to match the main canvas which is `RGBA`.
-     * @param settings.depth - Whether to include a depth buffer. Default is `true`.
-     * @param settings.depthFormat - Data format of depth information, either `UNSIGNED_INT` or `FLOAT`. Default is `UNSIGNED_INT`.
-     * @param settings.stencil - Whether to include a stencil buffer for masking. `depth` must be `true` for this feature to work. Defaults to the value of `depth` which is `true`.
-     * @param settings.antialias - Whether to perform anti-aliasing. If set to `true`, 2 samples will be used by default. The number of samples can also be set *(e.g., 4)*. Default is `false`.
-     * @param settings.textureFiltering - How to read values from the framebuffer. Either `LINEAR` *(nearby pixels will be interpolated)* or `NEAREST` *(no interpolation)*. Default is `NEAREST`.
-     */
-    public setFramebufferOptions(settings: {
-        format?: number;
-        channels?: number;
-        depth?: boolean;
-        depthFormat?: number;
-        stencil?: boolean;
-        antialias?: boolean;
-        textureFiltering?: number;
-    }): void {
-        this._rendererManager.setFramebufferOptions(settings);
-    }
-
-    /**
      * Sets the font for the ascii renderers in the rendering pipeline of the asciifier.
      * @param font The `p5.Font` object to use for ASCII rendering.
      * @param options An object containing options affecting what happens after the font is loaded.
