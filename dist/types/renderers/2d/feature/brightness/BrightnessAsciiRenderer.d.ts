@@ -49,6 +49,7 @@ export declare class P5AsciifyBrightnessRenderer extends P5AsciifyAbstractFeatur
      */
     constructor(p5Instance: p5, captureFramebuffer: p5.Framebuffer | p5.Graphics, grid: P5AsciifyGrid, fontManager: P5AsciifyFontManager, options?: BrightnessAsciiRendererOptions);
     resetShaders(): void;
+    protected _recreateFramebuffers(): void;
     resizeFramebuffers(): void;
     update(newOptions: Partial<BrightnessAsciiRendererOptions>): this;
     /**

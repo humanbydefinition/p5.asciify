@@ -57,6 +57,7 @@ export declare class P5AsciifyEdgeRenderer extends P5AsciifyAbstractFeatureRende
     constructor(p5Instance: p5, captureFramebuffer: p5.Framebuffer | p5.Graphics, grid: P5AsciifyGrid, fontManager: P5AsciifyFontManager, options?: EdgeAsciiRendererOptions);
     resizeFramebuffers(): void;
     resetShaders(): void;
+    protected _recreateFramebuffers(): void;
     /**
      * Set the threshold value for the Sobel edge detection algorithm.
      *

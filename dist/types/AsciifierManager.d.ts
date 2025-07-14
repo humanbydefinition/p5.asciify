@@ -133,7 +133,6 @@ export declare class P5AsciifierManager {
      * This method is called automatically by the library after the `draw()` function of the `p5.js` instance has finished executing.
      *
      * **If the `post` hook is disabled, this method will not be called automatically.**
-     *
      */
     asciify(): void;
     /**
