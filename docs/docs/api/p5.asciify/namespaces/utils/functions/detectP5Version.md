@@ -2,7 +2,7 @@
 
 > **detectP5Version**(`p`): `string`
 
-Defined in: [utils/utils.ts:19](https://github.com/humanbydefinition/p5.asciify/blob/4c47e97c89b667f4fc3e388c4030c24c198a641c/src/lib/utils/utils.ts#L19)
+Defined in: [utils/utils.ts:19](https://github.com/humanbydefinition/p5.asciify/blob/fec90c4382e90afa818d1e2d47829d9ca98f5310/src/lib/utils/utils.ts#L19)
 
 Detects the p5.js version from various possible sources across different environments.
 
