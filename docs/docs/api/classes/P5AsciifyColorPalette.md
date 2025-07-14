@@ -24,6 +24,10 @@ Create a new color palette instance.
 | --------- | ---------- | -------------------- |
 | `_p`      | `__module` | The p5 instance.     |
 | `_colors` | `Color`[]  | The colors to store. |
+| Parameter | Type       | Description          |
+| --------- | ---------- | -------------------- |
+| `_p`      | `__module` | The p5 instance.     |
+| `_colors` | `Color`[]  | The colors to store. |
 
 #### Returns
 
