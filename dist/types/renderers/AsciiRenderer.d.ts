@@ -80,33 +80,6 @@ export declare abstract class P5AsciifyRenderer<T extends AsciiRendererOptions =
      */
     protected _recreateFramebuffers(): void;
     /**
-     * Update framebuffer settings (except width/height/density) and recreate all framebuffers.
-     *
-     * This method allows you to configure the internal framebuffers used by the renderer.
-     * Note that width, height, and density are managed internally and cannot be modified.
-     *
-     * For a full list of available settings, see the `p5.createFramebuffer()` documentation:
-     * {@link https://p5js.org/reference/p5/createFramebuffer/}
-     *
-     * @param settings Available framebuffer settings. `width`, `height`, and `density` are managed internally and cannot be modified.
-     * @param settings.format - Data format of the texture, either `UNSIGNED_BYTE`, `FLOAT`, or `HALF_FLOAT`. Default is `UNSIGNED_BYTE`.
-     * @param settings.channels - Whether to store `RGB` or `RGBA` color channels. Default is to match the main canvas which is `RGBA`.
-     * @param settings.depth - Whether to include a depth buffer. Default is `true`.
-     * @param settings.depthFormat - Data format of depth information, either `UNSIGNED_INT` or `FLOAT`. Default is `UNSIGNED_INT`.
-     * @param settings.stencil - Whether to include a stencil buffer for masking. `depth` must be `true` for this feature to work. Defaults to the value of `depth` which is `true`.
-     * @param settings.antialias - Whether to perform anti-aliasing. If set to `true`, 2 samples will be used by default. The number of samples can also be set *(e.g., 4)*. Default is `false`.
-     * @param settings.textureFiltering - How to read values from the framebuffer. Either `LINEAR` *(nearby pixels will be interpolated)* or `NEAREST` *(no interpolation)*. Default is `NEAREST`.
-     */
-    setFramebufferOptions(settings: {
-        format?: number;
-        channels?: number;
-        depth?: boolean;
-        depthFormat?: number;
-        stencil?: boolean;
-        antialias?: boolean;
-        textureFiltering?: number;
-    }): void;
-    /**
      * Resize the framebuffers to match the grid size.
      * @ignore
      */
@@ -129,20 +102,20 @@ export declare abstract class P5AsciifyRenderer<T extends AsciiRendererOptions =
      *          characterColor: color(255, 0, 0),
      *          backgroundColor: color(0, 0, 255),
      *          characters: '.:-=+*#%@',
-     *          invertMode: true,
-     *          rotationAngle: 90,
+     *          invert: true,
+     *          rotation: 90,
      *          // ...
      *      });
      *  }
      * ```
      */
-    update(newOptions: T): void;
+    update(newOptions: T): this;
     /**
      * Update the capture framebuffer used by the renderer.
      * @param newCaptureFramebuffer - The new capture framebuffer or graphics to use.
      * @ignore
      */
-    setCaptureTexture(newCaptureFramebuffer: p5.Framebuffer | p5.Graphics): void;
+    setCaptureTexture(newCaptureFramebuffer: p5.Framebuffer | p5.Graphics): this;
     /**
      * Enable or disable the renderer.
      * @param enabled - Whether to enable or disable the renderer.
@@ -162,7 +135,7 @@ export declare abstract class P5AsciifyRenderer<T extends AsciiRendererOptions =
      *  }
      * ```
      */
-    enabled(enabled?: boolean): boolean;
+    enabled(enabled?: boolean): this;
     /**
      * Enable the renderer.
      * @returns The new state of the renderer.
@@ -180,7 +153,7 @@ export declare abstract class P5AsciifyRenderer<T extends AsciiRendererOptions =
      *  }
      * ```
      */
-    enable(): boolean;
+    enable(): this;
     /**
      * Disable the renderer.
      *
@@ -202,7 +175,7 @@ export declare abstract class P5AsciifyRenderer<T extends AsciiRendererOptions =
      *  }
      * ```
      */
-    disable(): boolean;
+    disable(): this;
     /**
      * Get the set options for the ASCII renderer.
      *
@@ -521,4 +494,9 @@ export declare abstract class P5AsciifyRenderer<T extends AsciiRendererOptions =
      * ```
      */
     get characterFramebuffer(): p5.Framebuffer;
+    /**
+     * Get the grid object containing the relevant grid information.
+     * @ignore
+     */
+    get grid(): P5AsciifyGrid;
 }

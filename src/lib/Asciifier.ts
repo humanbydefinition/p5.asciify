@@ -9,6 +9,7 @@ import { JSONExportOptions, P5AsciifyJSONExporter } from './utils/export/JSONExp
 import { P5AsciifyPluginRegistry } from './plugins/PluginRegistry';
 import { detectP5Version, isP5AsyncCapable, isValidP5Color } from './utils';
 import { errorHandler } from './errors';
+import { P5AsciifyRenderer2D } from './renderers/2d';
 
 /**
  * Manages a rendering pipeline for ASCII conversion, including font management, grid calculations, and ASCII renderers, 
@@ -175,12 +176,36 @@ export class P5Asciifier {
      *      defaultBrightnessRenderer = p5asciify.asciifier().renderers().get("brightness");
      * 
      *      // Update any options for the renderer.
-     *      defaultBrightnessRenderer.update({ invertMode: true });
+     *      defaultBrightnessRenderer.update({ invert: true });
      *  }
      * ```
      */
     public renderers(): P5AsciifyRendererManager {
         return this._rendererManager;
+    }
+
+    /**
+     * Returns a specific renderer by name from the renderer manager.
+     * @param name The name of the renderer to retrieve.
+     * @returns The renderer instance if found, or null if not found.
+     * 
+     * @example
+     * ```javascript
+     * let brightnessRenderer;
+     * 
+     * function setupAsciify() {
+     *     // Fetch the brightness renderer from the renderer manager.
+     *     brightnessRenderer = p5asciify.asciifier().renderer("brightness");
+     * 
+     *     // Alternatively:
+     *     // brightnessRenderer = p5asciifier.renderer("brightness");
+     *     // brightnessRenderer = p5asciifier.renderers().get("brightness");
+     *     // brightnessRenderer = p5asciify.asciifier().renderers().get("brightness");
+     * }
+     * ```
+     */
+    public renderer(name: string): P5AsciifyRenderer2D | null {
+        return this._rendererManager.get(name);
     }
 
 

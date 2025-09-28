@@ -34,13 +34,13 @@ export const EDGE_DEFAULT_OPTIONS = {
     /** Background color mode */
     backgroundColorMode: "fixed",
     /** Swap the cells ASCII character colors with it's cell background colors */
-    invertMode: false,
+    invert: false,
     /** Threshold for Sobel edge detection. Responsible for edge detection sensitivity */
     sobelThreshold: 0.5,
     /** Sampling threshold for edge detection. In this case, 16 pixels in a grid cell need to contain an edge to render it */
     sampleThreshold: 16,
     /** Rotation angle of all characters in the grid in degrees */
-    rotationAngle: 0,
+    rotation: 0,
     /** Flip the ASCII characters horizontally */
     flipHorizontally: false,
     /** Flip the ASCII characters vertically */
@@ -92,13 +92,7 @@ export class P5AsciifyEdgeRenderer extends P5AsciifyAbstractFeatureRenderer2D<Ed
             textureFiltering: this._p.NEAREST
         });
 
-        this.sampleFramebuffer = this._p.createFramebuffer({
-            density: 1,
-            width: this._grid.cols,
-            height: this._grid.rows,
-            depthFormat: this._p.UNSIGNED_INT,
-            textureFiltering: this._p.NEAREST
-        });
+        this.sampleFramebuffer = this._p.createFramebuffer(this._framebufferOptions);
     }
 
     resizeFramebuffers(): void {
@@ -109,6 +103,19 @@ export class P5AsciifyEdgeRenderer extends P5AsciifyAbstractFeatureRenderer2D<Ed
 
     resetShaders(): void {
         this.sampleShader = this._p.createShader(vertexShader, generateSampleShader(16, this._grid.cellHeight, this._grid.cellWidth));
+    }
+
+    protected _recreateFramebuffers(): void {
+        const settings = {
+            ...this._framebufferOptions,
+            density: 1,
+            width: this._grid.cols,
+            height: this._grid.rows,
+        };
+
+        this.sampleFramebuffer = this._p.createFramebuffer(settings);
+
+        super._recreateFramebuffers();
     }
 
     /**
@@ -125,7 +132,7 @@ export class P5AsciifyEdgeRenderer extends P5AsciifyAbstractFeatureRenderer2D<Ed
      * @param value The threshold value for the Sobel edge detection algorithm.
      * @throws If the value is not a valid number between 0 and 1.
      */
-    sobelThreshold(value: number): void {
+    public sobelThreshold(value: number): this {
         const isValidNumber = errorHandler.validate(
             typeof value === 'number' && !Number.isNaN(value) && Number.isFinite(value),
             'Sobel threshold must be a valid number',
@@ -139,10 +146,11 @@ export class P5AsciifyEdgeRenderer extends P5AsciifyAbstractFeatureRenderer2D<Ed
         );
 
         if (!isValidNumber || !isInRange) {
-            return;
+            return this;
         }
 
         this._options.sobelThreshold = value;
+        return this;
     }
 
     /**
@@ -159,8 +167,7 @@ export class P5AsciifyEdgeRenderer extends P5AsciifyAbstractFeatureRenderer2D<Ed
      * @param value The sample threshold value for the edge detection algorithm.
      * @throws If the value is not a valid number greater than or equal to 0.
      */
-    sampleThreshold(value: number): void {
-
+    public sampleThreshold(value: number): this {
         const isValidNumber = errorHandler.validate(
             typeof value === 'number' && !Number.isNaN(value) && Number.isFinite(value),
             'Sample threshold must be a valid number',
@@ -174,13 +181,14 @@ export class P5AsciifyEdgeRenderer extends P5AsciifyAbstractFeatureRenderer2D<Ed
         );
 
         if (!isValidNumber || !isGreaterThanZero) {
-            return;
+            return this;
         }
 
         this._options.sampleThreshold = value;
+        return this;
     }
 
-    public update(newOptions: Partial<EdgeAsciiRendererOptions>): void {
+    public update(newOptions: Partial<EdgeAsciiRendererOptions>): this {
         super.update(newOptions);
 
         if (newOptions.sobelThreshold !== undefined) {
@@ -190,6 +198,8 @@ export class P5AsciifyEdgeRenderer extends P5AsciifyAbstractFeatureRenderer2D<Ed
         if (newOptions.sampleThreshold !== undefined) {
             this.sampleThreshold(newOptions.sampleThreshold as number);
         }
+
+        return this;
     }
 
     render(): void {
@@ -244,7 +254,7 @@ export class P5AsciifyEdgeRenderer extends P5AsciifyAbstractFeatureRenderer2D<Ed
         this._transformFramebuffer.begin();
         this._p.clear();
         this._p.shader(this.transformShader);
-        this.transformShader.setUniform('u_invert', this._options.invertMode as boolean);
+        this.transformShader.setUniform('u_invert', this._options.invert as boolean);
         this.transformShader.setUniform('u_flipH', this._options.flipHorizontally as boolean);
         this.transformShader.setUniform('u_flipV', this._options.flipVertically as boolean);
         this.transformShader.setUniform('u_sampleTexture', this.sampleFramebuffer);
@@ -256,7 +266,7 @@ export class P5AsciifyEdgeRenderer extends P5AsciifyAbstractFeatureRenderer2D<Ed
         this._rotationFramebuffer.begin();
         this._p.clear();
         this._p.shader(this.rotationShader);
-        this.rotationShader.setUniform('u_rotationColor', (this._options.rotationAngle as p5.Color)._array);
+        this.rotationShader.setUniform('u_rotationColor', (this._options.rotation as p5.Color)._array);
         this.rotationShader.setUniform('u_sampleTexture', this.sampleFramebuffer);
         this.rotationShader.setUniform('u_compareColor', [0, 0, 0]);
         this.rotationShader.setUniform('u_gridCellDimensions', [this._grid.cols, this._grid.rows]);

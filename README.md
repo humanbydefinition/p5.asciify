@@ -5,8 +5,7 @@
 
 <div align="center">
 
-![p5 asciify animated-logo](https://github.com/user-attachments/assets/bdc42553-c800-43a9-bedb-75a39b2a67d3)
-
+![p5.asciify logo](https://github.com/user-attachments/assets/1eab7a7c-0bf4-4d09-9fed-378715454ec2)
 
 | [![p5.js](https://img.shields.io/badge/p5.js-ED225D?logo=p5.js&logoColor=white)](https://p5js.org/) [![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/) [![WebGL](https://img.shields.io/badge/WebGL1-990000?logo=webgl&logoColor=white)](https://www.khronos.org/webgl/) [![Vite](https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/) | [![docs](https://img.shields.io/badge/docs-docusaurus-3ECC5F?logo=docusaurus&logoColor=white)](https://p5.textmode.art/) [![Discord](https://img.shields.io/discord/1357070706181017691?color=5865F2&label=Discord&logo=discord&logoColor=white)](https://discord.gg/sjrw8QXNks) | [![ko-fi](https://shields.io/badge/ko--fi-donate-ff5f5f?logo=ko-fi)](https://ko-fi.com/V7V8JG2FY) [![Github-sponsors](https://img.shields.io/badge/sponsor-30363D?logo=GitHub-Sponsors&logoColor=#EA4AAA)](https://github.com/sponsors/humanbydefinition) |
 |:-------------|:-------------|:-------------|
@@ -59,7 +58,7 @@ Download the latest `umd` version of `p5.asciify` from the [**GitHub releases pa
 <script src="path/to/library/p5.asciify.umd.js"></script>
 
 <!-- Or import it directly from a CDN like jsDelivr
-<script src="https://cdn.jsdelivr.net/npm/p5.asciify@0.10.2/dist/p5.asciify.umd.min.js"></script> 
+<script src="https://cdn.jsdelivr.net/npm/p5.asciify@0.10.3/dist/p5.asciify.umd.min.js"></script> 
 -->
 ```
 

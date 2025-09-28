@@ -25,9 +25,9 @@ export const BRIGHTNESS_OPTIONS = {
   characterColorMode: 'sampled',
   backgroundColor: "#000000",
   backgroundColorMode: 'fixed',
-  invertMode: false,
+  invert: false,
   fontSize: 16,
-  rotationAngle: 0,
+  rotation: 0,
   flipVertically: false,
   flipHorizontally: false,
 };
@@ -80,8 +80,8 @@ export const createSketch = (options = {}) => {
         characterColorMode: finalOptions.characterColorMode,
         backgroundColor: finalOptions.backgroundColor,
         backgroundColorMode: finalOptions.backgroundColorMode,
-        invertMode: finalOptions.invertMode,
-        rotationAngle: finalOptions.rotationAngle,
+        invert: finalOptions.invert,
+        rotation: finalOptions.rotation,
         flipVertically: finalOptions.flipVertically,
         flipHorizontally: finalOptions.flipHorizontally,
       });

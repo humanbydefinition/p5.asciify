@@ -1,4 +1,4 @@
-# p5.asciify v0.10.2
+# p5.asciify v0.10.3
 
 ## Namespaces
 
@@ -35,6 +35,7 @@
 
 ## Variables
 
-| Variable                            | Description                                                                                                               |
-| ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| [p5asciify](variables/p5asciify.md) | Main instance of p5.asciify _([P5AsciifierManager](classes/P5AsciifierManager.md))_ providing full access to the library. |
+| Variable                                | Description                                                                                                                                       |
+| --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [p5asciifier](variables/p5asciifier.md) | Default P5Asciifier instance for direct ASCII rendering operations. This provides access to the first (default) asciifier managed by the library. |
+| [p5asciify](variables/p5asciify.md)     | Main instance of p5.asciify _([P5AsciifierManager](classes/P5AsciifierManager.md))_ providing full access to the library.                         |

@@ -32,7 +32,7 @@ export declare abstract class P5AsciifyAbstractFeatureRenderer2D<T extends Featu
      *  }
      * ```
      */
-    characters(characters: string): void;
+    characters(characters: string): this;
     /**
      * Swap the colors of the ASCII character and cell background colors.
      * @param invert Whether to swap the colors.
@@ -46,7 +46,7 @@ export declare abstract class P5AsciifyAbstractFeatureRenderer2D<T extends Featu
      *  }
      * ```
      */
-    invert(invert: boolean): void;
+    invert(invert: boolean): this;
     /**
      * Resets relevant shaders for the renderer when certain options are updated.
      * @ignore
@@ -75,7 +75,7 @@ export declare abstract class P5AsciifyAbstractFeatureRenderer2D<T extends Featu
      * @param angle The rotation angle in degrees.
      * @throws If angle is not a number.
      */
-    rotation(angle: number): void;
+    rotation(angle: number): this;
     /**
      * Set the color of the ASCII characters, used in the fixed color mode.
      * @param color The fixed color of the ASCII characters.
@@ -90,19 +90,19 @@ export declare abstract class P5AsciifyAbstractFeatureRenderer2D<T extends Featu
      *  }
      * ```
      */
-    characterColor(color: p5.Color): void;
+    characterColor(color: p5.Color): this;
     /**
      * Define whether to flip the ASCII characters horizontally.
      * @param flip Whether to flip the characters horizontally.
      * @throws If flip is not a boolean.
      */
-    flipHorizontally(flip: boolean): void;
+    flipHorizontally(flip: boolean): this;
     /**
      * Define whether to flip the ASCII characters vertically.
      * @param flip Whether to flip the characters vertically.
      * @throws If flip is not a boolean.
      */
-    flipVertically(flip: boolean): void;
+    flipVertically(flip: boolean): this;
     /**
      * Set the background color of the ASCII characters, used in the fixed color mode.
      * @param color The fixed color of the ASCII characters.
@@ -117,7 +117,7 @@ export declare abstract class P5AsciifyAbstractFeatureRenderer2D<T extends Featu
      *  }
      * ```
      */
-    backgroundColor(color: p5.Color): void;
+    backgroundColor(color: p5.Color): this;
     /**
      * Sets the color mode for ASCII characters.
      * @param mode The color mode ('sampled' or 'fixed')
@@ -131,7 +131,7 @@ export declare abstract class P5AsciifyAbstractFeatureRenderer2D<T extends Featu
      *  }
      * ```
      */
-    characterColorMode(mode: string): void;
+    characterColorMode(mode: string): this;
     /**
      * Sets the color mode for the grid cell background.
      * @param mode The color mode ('sampled' or 'fixed')
@@ -145,7 +145,7 @@ export declare abstract class P5AsciifyAbstractFeatureRenderer2D<T extends Featu
      *  }
      * ```
      */
-    backgroundColorMode(mode: string): void;
+    backgroundColorMode(mode: string): this;
     /**
      * Updates renderer options.
      * @param newOptions - The new options to update.
@@ -159,14 +159,14 @@ export declare abstract class P5AsciifyAbstractFeatureRenderer2D<T extends Featu
      *          characterColor: color(255, 0, 0),
      *          backgroundColor: color(0, 0, 255),
      *          characters: '.:-=+*#%@',
-     *          invertMode: true,
-     *          rotationAngle: 90,
+     *          invert: true,
+     *          rotation: 90,
      *          // ...
      *      });
      *  }
      * ```
      */
-    update(newOptions: T): void;
+    update(newOptions: T): this;
     /**
      * Get the {@link P5AsciifyColorPalette} object containing colors that correspond to the defined character set.
      */

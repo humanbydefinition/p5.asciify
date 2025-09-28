@@ -105,8 +105,8 @@ function setupAsciify() {
     characterColorMode: "sampled", // or "fixed"
     backgroundColor: "#000000",
     backgroundColorMode: "sampled", // or "fixed"
-    invertMode: false, // swap char and bg colors
-    rotationAngle: 0, // rotation angle in degrees
+    invert: false, // swap char and bg colors
+    rotation: 0, // rotation angle in degrees
     flipVertically: false, // flip chars vertically
     flipHorizontally: false, // flip chars horizontally
   });

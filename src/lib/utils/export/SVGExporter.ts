@@ -266,7 +266,7 @@ export class P5AsciifySVGExporter {
      * @param cellY The y position of the cell
      * @param cellWidth The width of the cell
      * @param cellHeight The height of the cell
-     * @param rotationAngle The rotation angle for the character
+     * @param rotation The rotation angle for the character
      * @param fontManager The font manager
      * @param char The characters object array
      * @param options The SVG export options
@@ -280,7 +280,7 @@ export class P5AsciifySVGExporter {
         cellY: number,
         cellWidth: number,
         cellHeight: number,
-        rotationAngle: number,
+        rotation: number,
         flipHorizontal: boolean,
         flipVertical: boolean,
         fontManager: P5AsciifyFontManager,
@@ -312,8 +312,8 @@ export class P5AsciifySVGExporter {
             tx.push(`scale(${sx} ${sy})`);
             tx.push(`translate(${-centerX} ${-centerY})`);
         }
-        if (rotationAngle) {
-            tx.push(`rotate(${rotationAngle} ${centerX} ${centerY})`);
+        if (rotation) {
+            tx.push(`rotate(${rotation} ${centerX} ${centerY})`);
         }
         const transformAttr = tx.length ? ` transform="${tx.join(' ')}"` : '';
 

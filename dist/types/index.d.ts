@@ -3,6 +3,11 @@ import { P5AsciifierManager } from './AsciifierManager';
  * Main instance of p5.asciify *({@link P5AsciifierManager})* providing full access to the library.
  */
 export declare const p5asciify: P5AsciifierManager;
+/**
+ * Default P5Asciifier instance for direct ASCII rendering operations.
+ * This provides access to the first (default) asciifier managed by the library.
+ */
+export declare const p5asciifier: import("./Asciifier").P5Asciifier | null;
 /** Contains functionality relevant to the ASCII rendering. */
 export * as renderers from './renderers';
 /** Contains utility functions and classes used by the `p5.asciify` library. */

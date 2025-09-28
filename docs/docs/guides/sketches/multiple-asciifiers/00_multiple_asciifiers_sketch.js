@@ -31,8 +31,8 @@ function setupAsciify() {
         characterColorMode: 'sampled',
         backgroundColor: "#000000",
         backgroundColorMode: 'fixed',
-        invertMode: false,
-        rotationAngle: 0
+        invert: false,
+        rotation: 0
     });
 
     customAsciifier.renderers().get("brightness").update({
@@ -42,8 +42,8 @@ function setupAsciify() {
         characterColorMode: 'sampled',
         backgroundColor: "#000000",
         backgroundColorMode: 'fixed',
-        invertMode: true,
-        rotationAngle: 0
+        invert: true,
+        rotation: 0
     });
 
     // Make the background of both asciifiers fully transparent.

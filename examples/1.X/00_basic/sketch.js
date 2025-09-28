@@ -9,14 +9,12 @@
  */
 
 import p5 from 'p5';
-import { p5asciify } from '../../../src/lib/index';
+import { p5asciify, p5asciifier } from '../../../src/lib/index';
 
 export const createSketch = (options = {}) => {
   let p5Instance = null;
 
   const sketch = (p) => {
-
-    let asciifier; // Define the `asciifier` variable to store the `P5Asciifier` instance
 
     p.setup = () => {
       p.setAttributes('antialias', false);
@@ -26,23 +24,21 @@ export const createSketch = (options = {}) => {
     // After `p5.asciify` is set up in the background after `setup()`,
     // we can call `setupAsciify()` to configure `p5asciify` and it's `P5Asciifier` instances and rendering pipelines
     p.setupAsciify = () => {
-      // Fetch the default `P5Asciifier` instance provided by the library
-      asciifier = p5asciify.asciifier();
 
-      asciifier.fontSize(16);
+      p5asciifier.fontSize(16);
 
-      asciifier.backgroundMode('fixed'); // or 'sampled'
+      p5asciifier.backgroundMode('fixed'); // or 'sampled'
 
       // Update the pre-defined `brightness` renderer with the provided options
-      asciifier.renderers().get("brightness").update({
+      p5asciifier.renderer("brightness").update({
         enabled: true,
         characters: " .:-=+*#%@",
         characterColor: "#ffffff",
         characterColorMode: 'sampled',
         backgroundColor: "#000000",
         backgroundColorMode: 'fixed',
-        invertMode: false,
-        rotationAngle: 0,
+        invert: false,
+        rotation: 0,
         flipHorizontally: false,
         flipVertically: false,
         brightnessRange: [0, 255],
@@ -67,7 +63,7 @@ export const createSketch = (options = {}) => {
       p.fill(0);
       p.rect(-p.width / 2, p.height / 2 - p.textAscent() - 4, p.textWidth(fpsText), p.textAscent());
 
-      p.textFont(asciifier.fontManager.font);
+      p.textFont(p5asciifier.fontManager.font);
       p.textSize(64);
       p.fill(255, 255, 0);
       p.text(fpsText, -p.width / 2, p.height / 2);

@@ -78,7 +78,7 @@ export declare class P5AsciifySVGExporter {
      * @param cellY The y position of the cell
      * @param cellWidth The width of the cell
      * @param cellHeight The height of the cell
-     * @param rotationAngle The rotation angle for the character
+     * @param rotation The rotation angle for the character
      * @param fontManager The font manager
      * @param char The characters object array
      * @param options The SVG export options
