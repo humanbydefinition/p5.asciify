@@ -1,6 +1,6 @@
 # Class: P5AsciifyError
 
-Defined in: [errors/AsciifyError.ts:4](https://github.com/humanbydefinition/p5.asciify/blob/fec90c4382e90afa818d1e2d47829d9ca98f5310/src/lib/errors/AsciifyError.ts#L4)
+Defined in: [errors/AsciifyError.ts:4](https://github.com/humanbydefinition/p5.asciify/blob/c76212d7fd6acf83c6b8dc00cf95d85b5005d62f/src/lib/errors/AsciifyError.ts#L4)
 
 Custom error class for `p5.asciify` related errors.
 
@@ -14,7 +14,7 @@ Custom error class for `p5.asciify` related errors.
 
 > **new P5AsciifyError**(`message`, `originalError?`): `P5AsciifyError`
 
-Defined in: [errors/AsciifyError.ts:7](https://github.com/humanbydefinition/p5.asciify/blob/fec90c4382e90afa818d1e2d47829d9ca98f5310/src/lib/errors/AsciifyError.ts#L7)
+Defined in: [errors/AsciifyError.ts:7](https://github.com/humanbydefinition/p5.asciify/blob/c76212d7fd6acf83c6b8dc00cf95d85b5005d62f/src/lib/errors/AsciifyError.ts#L7)
 
 #### Parameters
 
@@ -35,4 +35,4 @@ Defined in: [errors/AsciifyError.ts:7](https://github.com/humanbydefinition/p5.a
 
 | Property                                    | Modifier   | Type    | Defined in                                                                                                                                                  |
 | ------------------------------------------- | ---------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| <a id="originalerror"></a> `originalError?` | `readonly` | `Error` | [errors/AsciifyError.ts:5](https://github.com/humanbydefinition/p5.asciify/blob/fec90c4382e90afa818d1e2d47829d9ca98f5310/src/lib/errors/AsciifyError.ts#L5) |
+| <a id="originalerror"></a> `originalError?` | `readonly` | `Error` | [errors/AsciifyError.ts:5](https://github.com/humanbydefinition/p5.asciify/blob/c76212d7fd6acf83c6b8dc00cf95d85b5005d62f/src/lib/errors/AsciifyError.ts#L5) |

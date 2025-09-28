@@ -1,6 +1,6 @@
 # Enumeration: P5AsciifyErrorLevel
 
-Defined in: [errors/ErrorHandler.ts:17](https://github.com/humanbydefinition/p5.asciify/blob/fec90c4382e90afa818d1e2d47829d9ca98f5310/src/lib/errors/ErrorHandler.ts#L17)
+Defined in: [errors/ErrorHandler.ts:17](https://github.com/humanbydefinition/p5.asciify/blob/c76212d7fd6acf83c6b8dc00cf95d85b5005d62f/src/lib/errors/ErrorHandler.ts#L17)
 
 Error handling levels for the p5.asciify library.
 
@@ -18,7 +18,7 @@ p5asciify.setErrorLevel(P5AsciifyErrorLevel.WARNING);
 
 | Enumeration Member             | Value | Description                                                                                                  | Defined in                                                                                                                                                    |
 | ------------------------------ | ----- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| <a id="error"></a> `ERROR`     | `2`   | Log validation failures as errors. Execution continues, but errors are prominently displayed in the console. | [errors/ErrorHandler.ts:34](https://github.com/humanbydefinition/p5.asciify/blob/fec90c4382e90afa818d1e2d47829d9ca98f5310/src/lib/errors/ErrorHandler.ts#L34) |
-| <a id="silent"></a> `SILENT`   | `0`   | Suppress all error output. Validation failures are handled silently without any console messages.            | [errors/ErrorHandler.ts:22](https://github.com/humanbydefinition/p5.asciify/blob/fec90c4382e90afa818d1e2d47829d9ca98f5310/src/lib/errors/ErrorHandler.ts#L22) |
-| <a id="throw"></a> `THROW`     | `3`   | Throw exceptions on validation failures. Stops execution immediately when errors occur (default behavior).   | [errors/ErrorHandler.ts:40](https://github.com/humanbydefinition/p5.asciify/blob/fec90c4382e90afa818d1e2d47829d9ca98f5310/src/lib/errors/ErrorHandler.ts#L40) |
-| <a id="warning"></a> `WARNING` | `1`   | Log validation failures as warnings. Execution continues normally, but issues are reported to the console.   | [errors/ErrorHandler.ts:28](https://github.com/humanbydefinition/p5.asciify/blob/fec90c4382e90afa818d1e2d47829d9ca98f5310/src/lib/errors/ErrorHandler.ts#L28) |
+| <a id="error"></a> `ERROR`     | `2`   | Log validation failures as errors. Execution continues, but errors are prominently displayed in the console. | [errors/ErrorHandler.ts:34](https://github.com/humanbydefinition/p5.asciify/blob/c76212d7fd6acf83c6b8dc00cf95d85b5005d62f/src/lib/errors/ErrorHandler.ts#L34) |
+| <a id="silent"></a> `SILENT`   | `0`   | Suppress all error output. Validation failures are handled silently without any console messages.            | [errors/ErrorHandler.ts:22](https://github.com/humanbydefinition/p5.asciify/blob/c76212d7fd6acf83c6b8dc00cf95d85b5005d62f/src/lib/errors/ErrorHandler.ts#L22) |
+| <a id="throw"></a> `THROW`     | `3`   | Throw exceptions on validation failures. Stops execution immediately when errors occur (default behavior).   | [errors/ErrorHandler.ts:40](https://github.com/humanbydefinition/p5.asciify/blob/c76212d7fd6acf83c6b8dc00cf95d85b5005d62f/src/lib/errors/ErrorHandler.ts#L40) |
+| <a id="warning"></a> `WARNING` | `1`   | Log validation failures as warnings. Execution continues normally, but issues are reported to the console.   | [errors/ErrorHandler.ts:28](https://github.com/humanbydefinition/p5.asciify/blob/c76212d7fd6acf83c6b8dc00cf95d85b5005d62f/src/lib/errors/ErrorHandler.ts#L28) |

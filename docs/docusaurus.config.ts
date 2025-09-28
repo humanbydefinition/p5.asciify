@@ -91,6 +91,15 @@ const config: Config = {
   ],
 
   themeConfig: {
+    announcementBar: {
+      id: 'textmode-js-announcement',
+      content:
+        '⚠️ p5.asciify is no longer being actively maintained. Check out <a target="_blank" rel="noopener noreferrer" href="https://code.textmode.art/"><strong>textmode.js</strong></a> - a new, independent creative coding library for real-time ASCII/textmode graphics. <i>(also works with p5.js!)</i>',
+      backgroundColor: '#25c2a0',
+      textColor: '#ffffff',
+      isCloseable: true,
+    },
+
     // Replace with your project's social card
     image: 'img/p5.asciify-social-card.jpg',
 
