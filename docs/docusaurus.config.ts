@@ -58,7 +58,7 @@ const config: Config = {
       "@dipakparmar/docusaurus-plugin-umami",
       /** @type {import('@dipakparmar/docusaurus-plugin-umami').Options} */
       ({
-        websiteID: "f0717e84-7360-4a4f-91e0-447cf1a0a6d9",
+        websiteID: "3b016a67-2ad7-4a59-a2f8-84155dff0a50",
         analyticsDomain: "analytics.textmode.art",
         dataDomains: "p5.textmode.art",
       }),
