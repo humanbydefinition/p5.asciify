@@ -53,15 +53,6 @@ const config: Config = {
         skipErrorChecking: true,
         formatWithPrettier: true,
       },
-    ],
-    [
-      "@dipakparmar/docusaurus-plugin-umami",
-      /** @type {import('@dipakparmar/docusaurus-plugin-umami').Options} */
-      ({
-        websiteID: "3b016a67-2ad7-4a59-a2f8-84155dff0a50",
-        analyticsDomain: "analytics.textmode.art",
-        dataDomains: "p5.textmode.art",
-      }),
     ]
   ],
 
