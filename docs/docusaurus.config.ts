@@ -283,11 +283,11 @@ const config: Config = {
           items: [
             {
               label: 'Imprint',
-              to: '/docs/legal/imprint-en',
+              href: 'https://legal.textmode.art/projects/p5.textmode.art/en/imprint',
             },
             {
               label: 'Data Protection Policy',
-              to: '/docs/legal/data-protection-policy-en',
+              href: 'https://legal.textmode.art/projects/p5.textmode.art/en/privacy',
             },
           ],
         }
