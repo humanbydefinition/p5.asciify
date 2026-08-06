@@ -1,9 +1,9 @@
 # p5.asciify ( ͡° ͜ʖ ͡°)
 
 > [!IMPORTANT]
-> **p5.asciify is no longer being actively maintained.** I've created a new, independent creative coding library for real-time ASCII/textmode graphics called [**textmode.js**](https://github.com/humanbydefinition/textmode.js), which is framework-agnostic and also works with libraries like p5.js. Check out the [documentation](https://code.textmode.art/) and [web editor](https://editor.textmode.art) to get started!
+> **p5.asciify is archived and no longer maintained.** This repository is now read-only, so issues and pull requests are closed. I've created a new, independent creative coding library for real-time ASCII/textmode graphics called [**textmode.js**](https://github.com/humanbydefinition/textmode.js), which is framework-agnostic and also works with libraries like p5.js. Check out the [documentation](https://code.textmode.art/) and [web editor](https://editor.textmode.art) to get started!
 >
-> The existing `p5.asciify` documentation, examples, and library remain fully available and functional.
+> The existing `p5.asciify` documentation, examples, and library remain fully available and functional, and the package stays installable via npm and jsDelivr.
 
 <div align="center">
 
